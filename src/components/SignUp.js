@@ -36,7 +36,7 @@ export default function SignUp({ onSubmit, onLogin, error }) {
           {error && renderErrorMessage()}
         </div>
         <div className="button-container">
-          <input type="submit" value="Create account" />
+          <input type="submit" value="Create account" id="submit" />
         </div>
         <div className="button-container-text">
           Already have an account?&nbsp;

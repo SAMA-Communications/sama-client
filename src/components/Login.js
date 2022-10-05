@@ -36,7 +36,7 @@ export default function Login({ onSubmit, onSignUp, error }) {
           {error && renderErrorMessage()}
         </div>
         <div className="button-container">
-          <input type="submit" value="Log in" />
+          <input type="submit" value="Log in" id="submit" />
         </div>
         <div className="button-container-text">
           New to app?&nbsp;

@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 import Main from "./components/Main";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
-import ws from ".";
+import { Audio } from "react-loader-spinner";
 
-function App() {
+function App({ webSocket }) {
   const [isLoginView, setIsLoginView] = useState(false);
   const [isCreateUserView, setIsCreateUserView] = useState(false);
 
@@ -22,11 +22,13 @@ function App() {
         user_login: {
           login: login[0].value,
           password: password[0].value,
-          deviceId: "PC",
+          deviceId: navigator.productSub,
         },
       },
     };
-    ws.sendMessage(JSON.stringify(requstData));
+    webSocket.sendMessage(JSON.stringify(requstData));
+    document.getElementById("submit").disabled = true;
+    onDisplayMain();
   };
 
   const onSignUp = () => {
@@ -40,7 +42,9 @@ function App() {
         },
       },
     };
-    ws.sendMessage(JSON.stringify(requstData));
+    webSocket.sendMessage(JSON.stringify(requstData));
+    document.getElementById("submit").disabled = true;
+    onDisplayMain();
   };
 
   const onDisplaySignUp = () => {
@@ -53,14 +57,21 @@ function App() {
     setIsLoginView(true);
   };
 
+  const onDisplayMain = () => {
+    setIsCreateUserView(false);
+    setIsLoginView(false);
+  };
+
   if (isLoginView) {
     return <Login onSubmit={onLogin} onSignUp={onDisplaySignUp} />;
   }
   if (isCreateUserView) {
     return <SignUp onSubmit={onSignUp} onLogin={onDisplayLogin} />;
   }
-
-  return <Main />;
+  return (
+    <Audio height="70" width="70" color="#1a8ee1" wrapperClass="aria-loading" />
+  );
+  // return <Main />;
 }
 
 export default App;
