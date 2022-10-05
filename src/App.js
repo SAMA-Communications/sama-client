@@ -1,10 +1,10 @@
-import './styles/App.css';
+import "./styles/App.css";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import Main from './components/Main'
-import Login from './components/Login'
-import SignUp from './components/SignUp'
+import Main from "./components/Main";
+import Login from "./components/Login";
+import SignUp from "./components/SignUp";
 
 function App() {
   const [isLoginView, setIsLoginView] = useState(false);
@@ -12,32 +12,32 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoginView(!(!!token));
+    setIsLoginView(!!!token);
   }, []);
 
   const onLogin = () => {
-
+    console.log("login");
   };
 
   const onSignUp = () => {
-
+    console.log("create");
   };
 
   const onDisplaySignUp = () => {
-    setIsCreateUserView(true)
-    setIsLoginView(false)
-  }
+    setIsCreateUserView(true);
+    setIsLoginView(false);
+  };
 
   const onDisplayLogin = () => {
-    setIsCreateUserView(false)
-    setIsLoginView(true)
-  }
+    setIsCreateUserView(false);
+    setIsLoginView(true);
+  };
 
   if (isLoginView) {
-    return <Login onSubmit={onLogin} onSignUp={onDisplaySignUp}/>;
+    return <Login onSubmit={onLogin} onSignUp={onDisplaySignUp} />;
   }
   if (isCreateUserView) {
-    return <SignUp onSubmit={onSignUp} onLogin={onDisplayLogin}/>;
+    return <SignUp onSubmit={onSignUp} onLogin={onDisplayLogin} />;
   }
 
   return <Main />;

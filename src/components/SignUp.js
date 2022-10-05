@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import '../styles/SignUp.css';
+import "../styles/Login.css";
 
 export default function SignUp({ onSubmit, onLogin, error }) {
   const handleSubmit = (event) => {
@@ -11,25 +11,39 @@ export default function SignUp({ onSubmit, onLogin, error }) {
   };
 
   // Generate JSX code for error message
-  const renderErrorMessage = () =>
-    <div className="error">{error}</div>;
+  const renderErrorMessage = () => <div className="error">{error}</div>;
 
   const renderForm = (
     <div className="form">
       <form onSubmit={handleSubmit}>
         <div className="input-container">
-          <label>Username </label>
-          <input type="text" name="uname" required />
+          <label>Email ID *</label>
+          <input
+            type="email"
+            name="uname"
+            placeholder="Enter email address"
+            required
+          />
         </div>
         <div className="input-container">
-          <label>Password </label>
-          <input type="password" name="pass" required />
+          <label>Password *</label>
+          <input
+            type="password"
+            name="pass"
+            placeholder="Enter password"
+            required
+          />
           {error && renderErrorMessage()}
         </div>
         <div className="button-container">
-          <input type="submit" />
+          <input type="submit" value="Create account" />
         </div>
-        <a className="signup" onClick={onLogin}>Login</a>
+        <div className="button-container-text">
+          Already have an account?&nbsp;
+          <a className="signup" onClick={onLogin}>
+            Log in
+          </a>
+        </div>
       </form>
     </div>
   );
@@ -37,7 +51,7 @@ export default function SignUp({ onSubmit, onLogin, error }) {
   return (
     <div className="login-container">
       <div className="login-form">
-        <div className="title">Sign Up</div>
+        <div className="title">Create an account</div>
         {renderForm}
       </div>
     </div>
