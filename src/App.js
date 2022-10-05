@@ -1,10 +1,9 @@
-import "./styles/App.css";
-
 import React, { useState, useEffect } from "react";
 
 import Main from "./components/Main";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
+import ws from ".";
 
 function App() {
   const [isLoginView, setIsLoginView] = useState(false);
@@ -16,11 +15,32 @@ function App() {
   }, []);
 
   const onLogin = () => {
-    console.log("login");
+    const login = document.getElementsByName("uname");
+    const password = document.getElementsByName("pass");
+    const requstData = {
+      request: {
+        user_login: {
+          login: login[0].value,
+          password: password[0].value,
+          deviceId: "PC",
+        },
+      },
+    };
+    ws.sendMessage(JSON.stringify(requstData));
   };
 
   const onSignUp = () => {
-    console.log("create");
+    const login = document.getElementsByName("uname");
+    const password = document.getElementsByName("pass");
+    const requstData = {
+      request: {
+        user_create: {
+          login: login[0].value,
+          password: password[0].value,
+        },
+      },
+    };
+    ws.sendMessage(JSON.stringify(requstData));
   };
 
   const onDisplaySignUp = () => {

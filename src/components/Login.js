@@ -1,6 +1,6 @@
 import React from "react";
 
-import "../styles/Login.css";
+import "../styles/SignUp.css";
 
 export default function Login({ onSubmit, onSignUp, error }) {
   const handleSubmit = (event) => {

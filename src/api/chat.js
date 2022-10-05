@@ -1,4 +1,4 @@
-import BaseApi from './base/base';
+import BaseApi from "./base/base";
 
 export default class ChatApi extends BaseApi {
   constructor(baseUrl) {
@@ -21,14 +21,12 @@ export default class ChatApi extends BaseApi {
 
     this.socket.onclose = () => {
       console.log("[socket.onclose]");
-    }
+    };
   }
 
-  async login(params) {
-
-  }
+  async login(params) {}
 
   sendMessage(message) {
-  
+    this.socket.send(message);
   }
 }

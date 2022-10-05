@@ -6,33 +6,64 @@
   flex-direction: column;
   gap: 20px;
   height: 100vh;
-  font-family: Georgia, "Times New Roman", Times, serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
   background-color: #f8f9fd;
 }
 
-input[type="text"],
+input[type="email"],
 input[type="password"] {
-  height: 25px;
+  padding: 15px 10px;
+  font-size: 1em;
+  width: 300px;
   border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 
 input[type="submit"] {
-  margin-top: 10px;
+  padding: 11px 10px;
+  width: 320px;
   cursor: pointer;
   font-size: 15px;
   background: #1a8ee1;
   border: 1px solid #1a8ee1;
+  border-radius: 5px;
   color: #fff;
-  padding: 10px 20px;
 }
 
 input[type="submit"]:hover {
+  color: #000;
   background: #8dc7f0;
 }
 
+label {
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-top: 15px;
+}
+
 .button-container {
+  margin: 10px;
+  margin-top: 30px;
   display: flex;
   justify-content: center;
+}
+
+.button-container-text {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.signup {
+  font-size: 1em;
+  font-weight: bold;
+  color: #1a8ee1;
+}
+
+.signup:hover {
+  cursor: pointer;
+  color: #8dc7f0;
 }
 
 .login-form {
@@ -50,16 +81,10 @@ input[type="submit"]:hover {
   font-size: 12px;
 }
 
-.signup {
-  display: block;
-  font-size: 12px;
-  margin-top: 15px;
-  float: right;
-  text-decoration: underline;
-}
-
 .title {
+  text-align: center;
   font-size: 25px;
+  font-weight: 600;
   margin-bottom: 20px;
 }
 

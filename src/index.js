@@ -1,14 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
+import ReactDOM from "react-dom/client";
 import App from "./App";
-import reportWebVitals from "./reportWebVitals";
+import ChatApi from "./api/chat";
 
-ReactDOM.render(
+const ws = new ChatApi("ws://localhost:9001");
+ws.connect();
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById("root")
+    <App websocket={ws} />
+  </React.StrictMode>
 );
 
-reportWebVitals();
+export default ws;
