@@ -11,16 +11,16 @@ export default class ChatApi extends BaseApi {
     this.socket = new WebSocket(this.baseUrl);
 
     this.socket.onopen = () => {
-      console.log("[socket.onopen]");
+      console.log("[socket.open]");
     };
 
     this.socket.onmessage = (e) => {
-      console.log("[socket.onmessage]", e.data);
+      console.log("[socket.message]", e.data);
       // setMessages([...messagesRef.current, e.data]);
     };
 
     this.socket.onclose = () => {
-      console.log("[socket.onclose]");
+      console.log("[socket.close]");
     };
   }
 

@@ -15,13 +15,13 @@ function App({ webSocket }) {
   }, []);
 
   const onLogin = () => {
-    const login = document.getElementsByName("uname");
-    const password = document.getElementsByName("pass");
+    const login = document.getElementsByName("uname")[0].value;
+    const password = document.getElementsByName("pass")[0].value;
     const requstData = {
       request: {
         user_login: {
-          login: login[0].value,
-          password: password[0].value,
+          login: login,
+          password: password,
           deviceId: navigator.productSub,
         },
       },
@@ -32,13 +32,13 @@ function App({ webSocket }) {
   };
 
   const onSignUp = () => {
-    const login = document.getElementsByName("uname");
-    const password = document.getElementsByName("pass");
+    const login = document.getElementsByName("uname")[0].value;
+    const password = document.getElementsByName("pass")[0].value;
     const requstData = {
       request: {
         user_create: {
-          login: login[0].value,
-          password: password[0].value,
+          login: login,
+          password: password,
         },
       },
     };

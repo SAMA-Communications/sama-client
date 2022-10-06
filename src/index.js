@@ -1,14 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import ChatApi from "./api/chat";
+import ws from "./api/main.js";
 
-const ws = new ChatApi("ws://localhost:9001");
-ws.connect();
+ws["chat"].connect();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App webSocket={ws} />
+    <App webSocket={ws["chat"]} />
   </React.StrictMode>
 );
