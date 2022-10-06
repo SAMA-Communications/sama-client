@@ -1,3 +1,6 @@
+body {
+  background-color: #f8f9fd;
+}
 .login-container {
   font-family: sans-serif;
   display: flex;
@@ -12,8 +15,8 @@
   background-color: #f8f9fd;
 }
 
-input[type="email"],
-input[type="password"] {
+input[name="uname"],
+input[name="pass"] {
   padding: 15px 10px;
   font-size: 1em;
   width: 300px;
@@ -78,7 +81,8 @@ label {
 
 .error {
   color: red;
-  font-size: 12px;
+  font-size: 0.9em;
+  margin-bottom: -15px;
 }
 
 .title {
@@ -93,4 +97,9 @@ label {
   flex-direction: column;
   gap: 8px;
   margin: 10px;
+}
+
+.aria-loading {
+  margin-top: 40vh;
+  justify-content: center;
 }

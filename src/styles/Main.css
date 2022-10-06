@@ -41,7 +41,3 @@
 #messages > li:nth-child(odd) {
   background: #efefef;
 }
-.aria-loading {
-  margin-top: 40vh;
-  justify-content: center;
-}

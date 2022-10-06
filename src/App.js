@@ -1,77 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-import Main from "./components/Main";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import { Audio } from "react-loader-spinner";
 
-function App({ webSocket }) {
-  const [isLoginView, setIsLoginView] = useState(false);
-  const [isCreateUserView, setIsCreateUserView] = useState(false);
+function App() {
+  const [isMainPage, setIsMainPage] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoginView(!!!token);
+    setIsMainPage(!!token ? true : "login");
   }, []);
 
-  const onLogin = () => {
-    const login = document.getElementsByName("uname")[0].value;
-    const password = document.getElementsByName("pass")[0].value;
-    const requstData = {
-      request: {
-        user_login: {
-          login: login,
-          password: password,
-          deviceId: navigator.productSub,
-        },
-      },
-    };
-    webSocket.sendMessage(JSON.stringify(requstData));
-    document.getElementById("submit").disabled = true;
-    onDisplayMain();
-  };
-
-  const onSignUp = () => {
-    const login = document.getElementsByName("uname")[0].value;
-    const password = document.getElementsByName("pass")[0].value;
-    const requstData = {
-      request: {
-        user_create: {
-          login: login,
-          password: password,
-        },
-      },
-    };
-    webSocket.sendMessage(JSON.stringify(requstData));
-    document.getElementById("submit").disabled = true;
-    onDisplayMain();
-  };
-
-  const onDisplaySignUp = () => {
-    setIsCreateUserView(true);
-    setIsLoginView(false);
-  };
-
-  const onDisplayLogin = () => {
-    setIsCreateUserView(false);
-    setIsLoginView(true);
-  };
-
-  const onDisplayMain = () => {
-    setIsCreateUserView(false);
-    setIsLoginView(false);
-  };
-
-  if (isLoginView) {
-    return <Login onSubmit={onLogin} onSignUp={onDisplaySignUp} />;
-  }
-  if (isCreateUserView) {
-    return <SignUp onSubmit={onSignUp} onLogin={onDisplayLogin} />;
-  }
-  return (
-    <Audio height="70" width="70" color="#1a8ee1" wrapperClass="aria-loading" />
-  );
-  // return <Main />;
+  if (isMainPage === "login") return <Login onSignUp={setIsMainPage} />;
+  else if (isMainPage === "register") return <SignUp onLogin={setIsMainPage} />;
+  else
+    return (
+      <Audio
+        height="70"
+        width="70"
+        color="#1a8ee1"
+        wrapperClass="aria-loading"
+      />
+    );
 }
 
 export default App;

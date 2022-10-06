@@ -1,46 +1,52 @@
 import React from "react";
+import api from "../api/api";
+import { useForm } from "react-hook-form";
 
-import "../styles/SignUp.css";
+import "../styles/AuthForm.css";
 
-export default function Login({ onSubmit, onSignUp, error }) {
-  const handleSubmit = (event) => {
-    // Prevent page reload
-    event.preventDefault();
+export default function Login({ onSignUp }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-    onSubmit();
-  };
-
-  // Generate JSX code for error message
-  const renderErrorMessage = () => <div className="error">{error}</div>;
+  const onSubmit = (data) => api.login(data, onSignUp);
+  const renderErrorMessage = (err) => <div className="error">{err}</div>;
 
   const renderForm = (
     <div className="form">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="input-container">
-          <label>Email ID </label>
+          <label>Email ID</label>
           <input
-            type="email"
-            name="uname"
+            {...register("uname", {
+              required: "* Email ID is require field",
+              // pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$/,
+            })}
             placeholder="Enter email address"
-            required
+            autoComplete="off"
           />
+          {errors.uname?.message && renderErrorMessage(errors.uname.message)}
         </div>
         <div className="input-container">
-          <label>Password </label>
+          <label>Password</label>
           <input
-            type="password"
-            name="pass"
+            {...register("pass", {
+              required: "* Password is require field",
+              // minLength: 8,
+            })}
             placeholder="Enter password"
-            required
+            autoComplete="off"
           />
-          {error && renderErrorMessage()}
+          {errors.pass?.message && renderErrorMessage(errors.pass.message)}
         </div>
         <div className="button-container">
-          <input type="submit" value="Log in" id="submit" />
+          <input type="submit" value="Log in" />
         </div>
         <div className="button-container-text">
           New to app?&nbsp;
-          <a className="signup" onClick={onSignUp}>
+          <a className="signup" onClick={() => onSignUp("register")}>
             Create an account
           </a>
         </div>
