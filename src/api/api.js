@@ -17,6 +17,7 @@ class Api {
       const message = JSON.parse(e.data);
       if (message.ask) {
         this.onMessageSent(message.ask.mid, message.ask.t);
+        // setMessages([...messagesRef.current, e.data]);
         return;
       }
       const response = message.response;
@@ -31,7 +32,6 @@ class Api {
         }
         delete this.responsesPromises[responseId];
       }
-      // setMessages([...messagesRef.current, e.data]);
     };
 
     this.socket.onclose = () => {
@@ -60,7 +60,7 @@ class Api {
       };
 
       if (this.responsesPromises[requestData.request.id]) {
-        // localStorage.setItem("token", JSON.parse(this.response.user)._id);
+        // localStorage.setItem("token", requestData.request.user_login.login);
       }
     });
   }
