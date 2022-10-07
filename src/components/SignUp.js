@@ -12,7 +12,7 @@ export default function SignUp({ onLogin }) {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const user = await api.createUser(data);
+    await api.createUser(data);
     onLogin("login");
   };
   const renderErrorMessage = (err) => <div className="error">{err}</div>;
@@ -21,16 +21,16 @@ export default function SignUp({ onLogin }) {
     <div className="form">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="input-container">
-          <label>Email ID *</label>
+          <label>Login *</label>
           <input
-            {...register("uname", {
-              required: "* Email ID is require field",
-              // pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$/,
+            {...register("ulogin", {
+              required: "* Login is require field",
+              // pattern: /^[a-z0-9._%+-]/,
             })}
-            placeholder="Enter email address"
+            placeholder="Enter login"
             autoComplete="off"
           />
-          {errors.uname?.message && renderErrorMessage(errors.uname.message)}
+          {errors.ulogin?.message && renderErrorMessage(errors.ulogin.message)}
         </div>
         <div className="input-container">
           <label>Password *</label>

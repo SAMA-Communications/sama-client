@@ -44,7 +44,7 @@ class Api {
       const requestData = {
         request: {
           user_login: {
-            login: data.uname,
+            login: data.ulogin,
             password: data.pass,
             deviceId: navigator.productSub,
           },
@@ -52,7 +52,7 @@ class Api {
         },
       };
 
-      this.socket.send(JSON.stringify(requestData));
+      sendMessage(this.socket, requestData);
       this.responsesPromises[requestData.request.id] = {
         resolve,
         reject,
@@ -70,14 +70,14 @@ class Api {
       const requestData = {
         request: {
           user_create: {
-            login: data.uname,
+            login: data.ulogin,
             password: data.pass,
           },
           id: Math.floor(Math.random() * 101),
         },
       };
 
-      this.socket.send(JSON.stringify(requestData));
+      sendMessage(this.socket, requestData);
       this.responsesPromises[requestData.request.id] = {
         resolve,
         reject,
@@ -85,6 +85,11 @@ class Api {
       };
     });
   }
+}
+
+function sendMessage(ws, data) {
+  ws.send(JSON.stringify(data));
+  console.log("[socket.send]", data);
 }
 
 const api = new Api(process.env.REACT_APP_SOCKET_CONNECT);

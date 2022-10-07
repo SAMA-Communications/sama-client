@@ -15,7 +15,7 @@ body {
   background-color: #f8f9fd;
 }
 
-input[name="uname"],
+input[name="ulogin"],
 input[name="pass"] {
   padding: 15px 10px;
   font-size: 1em;
