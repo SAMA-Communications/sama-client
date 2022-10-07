@@ -2,7 +2,7 @@ class Api {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
     this.socket = null;
-    this.response = null;
+    this.responsesPromises = {};
   }
 
   async connect() {
@@ -14,7 +14,23 @@ class Api {
 
     this.socket.onmessage = (e) => {
       console.log("[socket.message]", e.data);
-      this.response = JSON.parse(e.data).response;
+      const message = JSON.parse(e.data);
+      if (message.ask) {
+        this.onMessageSent(message.ask.mid, message.ask.t);
+        return;
+      }
+      const response = message.response;
+      if (response) {
+        const responseId = response.id;
+        const { resolve, reject, resObjKey } =
+          this.responsesPromises[responseId];
+        if (response.error) {
+          reject(response.error);
+        } else {
+          resolve(response[resObjKey]);
+        }
+        delete this.responsesPromises[responseId];
+      }
       // setMessages([...messagesRef.current, e.data]);
     };
 
@@ -23,39 +39,55 @@ class Api {
     };
   }
 
-  async login(data, onPage) {
-    const requstData = {
-      request: {
-        user_login: {
-          login: data.uname,
-          password: data.pass,
-          deviceId: navigator.productSub,
+  async login(data) {
+    return new Promise((resolve, reject) => {
+      const requestData = {
+        request: {
+          user_login: {
+            login: data.uname,
+            password: data.pass,
+            deviceId: navigator.productSub,
+          },
+          id: Math.floor(Math.random() * 101),
         },
-      },
-    };
-    this.socket.send(JSON.stringify(requstData));
+      };
 
-    if (this.response) {
-      localStorage.setItem("token", JSON.parse(this.response.user)._id);
-      onPage(true);
-    }
+      this.socket.send(JSON.stringify(requestData));
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "user",
+      };
+
+      if (this.responsesPromises[requestData.request.id]) {
+        // localStorage.setItem("token", JSON.parse(this.response.user)._id);
+      }
+    });
   }
 
-  async createUser(data, onPage) {
-    const requstData = {
-      request: {
-        user_create: {
-          login: data.uname,
-          password: data.pass,
+  async createUser(data) {
+    return new Promise((resolve, reject) => {
+      const requestData = {
+        request: {
+          user_create: {
+            login: data.uname,
+            password: data.pass,
+          },
+          id: Math.floor(Math.random() * 101),
         },
-      },
-    };
-    this.socket.send(JSON.stringify(requstData));
-    onPage("login");
+      };
+
+      this.socket.send(JSON.stringify(requestData));
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "user",
+      };
+    });
   }
 }
 
 const api = new Api(process.env.REACT_APP_SOCKET_CONNECT);
-api.connect();
+api.connect(); //await?
 
 export default api;

@@ -11,7 +11,10 @@ export default function Login({ onSignUp }) {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => api.login(data, onSignUp);
+  const onSubmit = async (data) => {
+    const user = await api.login(data);
+    onSignUp(true);
+  };
   const renderErrorMessage = (err) => <div className="error">{err}</div>;
 
   const renderForm = (
