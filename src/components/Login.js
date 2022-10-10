@@ -12,7 +12,7 @@ export default function Login({ onSignUp }) {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const response = await api.login(data);
+    const response = await api.userLogin(data);
     if (!response.status) {
       onSignUp(true);
     } else {

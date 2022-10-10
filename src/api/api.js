@@ -39,7 +39,7 @@ class Api {
     };
   }
 
-  async login(data) {
+  async userLogin(data) {
     let err = undefined;
     const promise = new Promise((resolve, reject) => {
       const requestData = {
@@ -67,7 +67,7 @@ class Api {
     return err ? err : promise;
   }
 
-  async createUser(data) {
+  async userCreate(data) {
     let err = undefined;
     const promise = new Promise((resolve, reject) => {
       const requestData = {
@@ -90,7 +90,7 @@ class Api {
     return err ? err : promise;
   }
 
-  async logout(data) {
+  async userLogout(data) {
     let err = undefined;
     const promise = new Promise((resolve, reject) => {
       const requestData = {
@@ -114,7 +114,7 @@ class Api {
     return err ? err : promise;
   }
 
-  async delete(data) {
+  async userDelete(data) {
     let err = undefined;
     const promise = new Promise((resolve, reject) => {
       const requestData = {
@@ -134,6 +134,267 @@ class Api {
       if (this.responsesPromises[requestData.request.id]) {
         localStorage.removeItem("token");
       }
+    }).catch((e) => (err = e));
+    return err ? err : promise;
+  }
+
+  async messageCreate(data) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      const requestData = {
+        message: {
+          id: Math.floor(Math.random() * 10001),
+          from: "",
+          body: "hey how is going?",
+          cid: "currentConversationId",
+          x: {
+            param1: "value",
+            param2: "value",
+          },
+        },
+      };
+
+      sendMessage(this.socket, requestData);
+      this.responsesPromises[requestData.id] = {
+        resolve,
+        reject,
+        resObjKey: "success",
+      };
+    }).catch((e) => (err = e));
+    return err ? err : promise;
+  }
+
+  async messageEdit(data) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      const requestData = {
+        request: {
+          message_edit: {
+            id: "include_2",
+            body: "updated message body (UPDATED)",
+          },
+          id: Math.floor(Math.random() * 101),
+        },
+      };
+
+      sendMessage(this.socket, requestData);
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "success",
+      };
+    }).catch((e) => (err = e));
+    return err ? err : promise;
+  }
+
+  async messageList(data) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      const requestData = {
+        request: {
+          message_edit: {
+            cid: "currentConversationId",
+            limit: "numberOf",
+          },
+          id: Math.floor(Math.random() * 101),
+        },
+      };
+
+      sendMessage(this.socket, requestData);
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "messages",
+      };
+    }).catch((e) => (err = e));
+    return err ? err : promise;
+  }
+
+  async messageDelete(data) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      const requestData = {
+        request: {
+          message_delete: {
+            cid: "currentConversationId",
+            type: "all",
+            ids: ["ids"],
+            from: "userId[0]",
+          },
+          id: Math.floor(Math.random() * 101),
+        },
+      };
+
+      sendMessage(this.socket, requestData);
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "success",
+      };
+    }).catch((e) => (err = e));
+    return err ? err : promise;
+  }
+
+  async statusRead(data) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      const requestData = {
+        read: {
+          id: "xyz",
+          type: "start",
+          mid: "message1234",
+          cid: "currentConversationId",
+        },
+      };
+
+      sendMessage(this.socket, requestData);
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "success",
+      };
+    }).catch((e) => (err = e));
+    return err ? err : promise;
+  }
+
+  async statusDelivered(data) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      const requestData = {
+        delivered: {
+          id: "xyz",
+          type: "start",
+          mid: "message1234",
+          cid: "currentConversationId",
+        },
+      };
+
+      sendMessage(this.socket, requestData);
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "success",
+      };
+    }).catch((e) => (err = e));
+    return err ? err : promise;
+  }
+
+  async statusTyping(data) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      const requestData = {
+        typing: {
+          id: "xyz",
+          type: "start",
+          cid: "currentConversationId",
+        },
+      };
+
+      sendMessage(this.socket, requestData);
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "success",
+      };
+    }).catch((e) => (err = e));
+    return err ? err : promise;
+  }
+
+  async conversationCreate(data) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      const requestData = {
+        request: {
+          conversation_create: {
+            name: "chat5",
+            description: "for admin and users",
+            type: "g",
+            participants: ["userId[0]", "userId[1]"],
+          },
+          id: Math.floor(Math.random() * 101),
+        },
+      };
+
+      sendMessage(this.socket, requestData);
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "success",
+      };
+    }).catch((e) => (err = e));
+    return err ? err : promise;
+  }
+
+  async conversationUpdate(data) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      const requestData = {
+        request: {
+          conversation_update: {
+            id: "currentConversationId",
+            description: "test213",
+            participants: {
+              add: ["userId[2]"],
+              remove: ["userId[2]"],
+            },
+          },
+          id: Math.floor(Math.random() * 101),
+        },
+      };
+
+      sendMessage(this.socket, requestData);
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "success",
+      };
+    }).catch((e) => (err = e));
+    return err ? err : promise;
+  }
+
+  async conversationList(data) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      const requestData = {
+        request: {
+          conversation_list: {
+            limit: "numberOf",
+            updated_at: {
+              gt: "filterUpdatedAt",
+            },
+          },
+          id: Math.floor(Math.random() * 101),
+        },
+      };
+
+      sendMessage(this.socket, requestData);
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "success",
+      };
+    }).catch((e) => (err = e));
+    return err ? err : promise;
+  }
+
+  async conversationDelete(data) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      const requestData = {
+        request: {
+          conversation_delete: {
+            id: "currentConversationId",
+          },
+          id: Math.floor(Math.random() * 101),
+        },
+      };
+
+      sendMessage(this.socket, requestData);
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "success",
+      };
     }).catch((e) => (err = e));
     return err ? err : promise;
   }
