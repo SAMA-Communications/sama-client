@@ -61,7 +61,7 @@ class Api {
       };
 
       if (this.responsesPromises[requestData.request.id]) {
-        // localStorage.setItem("token", requestData.request.user_login.login);
+        localStorage.setItem("token", requestData.request.user_login.login);
       }
     }).catch((e) => (err = e));
     return err ? err : promise;
@@ -86,6 +86,54 @@ class Api {
         reject,
         resObjKey: "user",
       };
+    }).catch((e) => (err = e));
+    return err ? err : promise;
+  }
+
+  async logout(data) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      const requestData = {
+        request: {
+          user_logout: {},
+          id: Math.floor(Math.random() * 101),
+        },
+      };
+
+      sendMessage(this.socket, requestData);
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "success",
+      };
+
+      if (this.responsesPromises[requestData.request.id]) {
+        localStorage.removeItem("token");
+      }
+    }).catch((e) => (err = e));
+    return err ? err : promise;
+  }
+
+  async delete(data) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      const requestData = {
+        request: {
+          user_delete: {},
+          id: Math.floor(Math.random() * 101),
+        },
+      };
+
+      sendMessage(this.socket, requestData);
+      this.responsesPromises[requestData.request.id] = {
+        resolve,
+        reject,
+        resObjKey: "success",
+      };
+
+      if (this.responsesPromises[requestData.request.id]) {
+        localStorage.removeItem("token");
+      }
     }).catch((e) => (err = e));
     return err ? err : promise;
   }
