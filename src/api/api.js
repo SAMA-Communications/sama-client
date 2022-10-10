@@ -40,7 +40,8 @@ class Api {
   }
 
   async login(data) {
-    return new Promise((resolve, reject) => {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
       const requestData = {
         request: {
           user_login: {
@@ -62,11 +63,13 @@ class Api {
       if (this.responsesPromises[requestData.request.id]) {
         // localStorage.setItem("token", requestData.request.user_login.login);
       }
-    });
+    }).catch((e) => (err = e));
+    return err ? err : promise;
   }
 
   async createUser(data) {
-    return new Promise((resolve, reject) => {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
       const requestData = {
         request: {
           user_create: {
@@ -83,7 +86,8 @@ class Api {
         reject,
         resObjKey: "user",
       };
-    });
+    }).catch((e) => (err = e));
+    return err ? err : promise;
   }
 }
 

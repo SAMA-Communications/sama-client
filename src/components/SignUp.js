@@ -12,8 +12,14 @@ export default function SignUp({ onLogin }) {
   } = useForm();
 
   const onSubmit = async (data) => {
-    await api.createUser(data);
-    onLogin("login");
+    const response = await api.createUser(data);
+    if (!response.status) {
+      onLogin("login");
+    } else {
+      window.alert = () => {
+        <p className="alert-form">${response.message}</p>;
+      };
+    }
   };
   const renderErrorMessage = (err) => <div className="error">{err}</div>;
 

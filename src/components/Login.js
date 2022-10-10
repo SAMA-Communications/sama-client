@@ -12,8 +12,12 @@ export default function Login({ onSignUp }) {
   } = useForm();
 
   const onSubmit = async (data) => {
-    await api.login(data);
-    onSignUp(true);
+    const response = await api.login(data);
+    if (!response.status) {
+      onSignUp(true);
+    } else {
+      alert(response.message);
+    }
   };
   const renderErrorMessage = (err) => <div className="error">{err}</div>;
 
