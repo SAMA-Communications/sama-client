@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import api from "../api/api";
 
 import "../styles/Chat.css";
@@ -23,14 +23,16 @@ export default function Main() {
     // socket.send(JSON.stringify({}));
     const text = messageInputEl.current.value.trim();
     if (text.length > 0) {
-      api.chat.send(text);
+      api.messageCreate(text);
 
       messageInputEl.current.value = "";
     }
   };
 
   const sendLogout = async (data) => {
-    const response = await api.logout(data);
+    const response = await api.userLogout(data);
+    //тимчасово
+    localStorage.removeItem("conversationId");
     if (!response.status) {
       document.location.reload(true);
     } else {
@@ -38,12 +40,26 @@ export default function Main() {
     }
   };
   const sendDeleteAccount = async (data) => {
-    const response = await api.delete(data);
+    const response = await api.userDelete(data);
+    //тимчасово
+    localStorage.removeItem("conversationId");
     if (!response.status) {
       document.location.reload(true);
     } else {
       alert(response.message);
     }
+  };
+
+  //  fix it when create conversation page mustn`t reload
+  const [isConversationCreate, setIsConversationCreate] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("conversationId")) setIsConversationCreate(true);
+  }, []);
+
+  const createConversation = async (data) => {
+    localStorage.setItem("conversationId", Math.floor(Math.random() * 10001));
+    setIsConversationCreate(true);
   };
 
   return (
@@ -62,10 +78,27 @@ export default function Main() {
         </div>
       </div>
       <ul id="messages">{listItems}</ul>
-      <form id="form" action="">
-        <input id="inputMessage" ref={messageInputEl} autoComplete="off" />
-        <button onClick={sendMessage}>Send</button>
-      </form>
+      {isConversationCreate ? (
+        <form id="messageForm" action="">
+          <input
+            id="inputMessage"
+            ref={messageInputEl}
+            autoComplete="off"
+            placeholder="Message"
+          />
+          <button onClick={sendMessage}>Send</button>
+        </form>
+      ) : (
+        <form id="createChatForm" action="">
+          <input
+            id="inputLogin"
+            ref={messageInputEl}
+            autoComplete="off"
+            placeholder="User login"
+          />
+          <button onClick={createConversation}>Create chat</button>
+        </form>
+      )}
     </div>
   );
 }
