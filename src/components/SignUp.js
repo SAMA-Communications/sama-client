@@ -1,25 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import api from "../api/api";
 import { useForm } from "react-hook-form";
+import { Triangle } from "react-loader-spinner";
 
 import "../styles/AuthForm.css";
 
-export default function SignUp({ onLogin }) {
+export default function SignUp({ onSuccess }) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const [loader, setLoader] = useState(false);
 
   const onSubmit = async (data) => {
+    setLoader(true);
     const response = await api.userCreate(data);
     if (!response.status) {
-      onLogin("login");
+      alert("You have successfully create a new user. Now you can login.");
+      onSuccess("login");
     } else {
-      window.alert = () => {
-        <p className="alert-form">${response.message}</p>;
-      };
+      alert(response.message);
     }
+    setLoader(false);
   };
   const renderErrorMessage = (err) => <div className="error">{err}</div>;
 
@@ -55,7 +58,7 @@ export default function SignUp({ onLogin }) {
         </div>
         <div className="button-container-text">
           Already have an account?&nbsp;
-          <a className="signup" onClick={() => onLogin("login")}>
+          <a className="signup" onClick={() => onSuccess("login")}>
             Log in
           </a>
         </div>
@@ -66,7 +69,17 @@ export default function SignUp({ onLogin }) {
   return (
     <div className="login-container">
       <div className="login-form">
-        <div className="title">Create an account</div>
+        <div className="title">
+          Create an account
+          <Triangle
+            height="50"
+            width="50"
+            color="#1a8ee1"
+            wrapperClass="loader"
+            ariaLabel="triangle-loading"
+            visible={loader}
+          />
+        </div>
         {renderForm}
       </div>
     </div>

@@ -1,23 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import api from "../api/api";
 import { useForm } from "react-hook-form";
+import { Triangle } from "react-loader-spinner";
 
 import "../styles/AuthForm.css";
 
-export default function Login({ onSignUp }) {
+export default function Login({ onSuccess }) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const [loader, setLoader] = useState(false);
 
   const onSubmit = async (data) => {
+    setLoader(true);
     const response = await api.userLogin(data);
     if (!response.status) {
-      onSignUp(true);
+      onSuccess(true);
     } else {
       alert(response.message);
     }
+    setLoader(false);
   };
   const renderErrorMessage = (err) => <div className="error">{err}</div>;
 
@@ -53,7 +57,7 @@ export default function Login({ onSignUp }) {
         </div>
         <div className="button-container-text">
           New to app?&nbsp;
-          <a className="signup" onClick={() => onSignUp("register")}>
+          <a className="signup" onClick={() => onSuccess("register")}>
             Create an account
           </a>
         </div>
@@ -64,7 +68,18 @@ export default function Login({ onSignUp }) {
   return (
     <div className="login-container">
       <div className="login-form">
-        <div className="title">Log in</div>
+        <div className="title">
+          Log in
+          <Triangle
+            height="50"
+            width="50"
+            color="#1a8ee1"
+            wrapperStyle={{ right: "21%" }}
+            wrapperClass="loader"
+            ariaLabel="triangle-loading"
+            visible={loader}
+          />
+        </div>
         {renderForm}
       </div>
     </div>

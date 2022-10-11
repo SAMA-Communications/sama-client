@@ -33,32 +33,30 @@ export default function Main() {
     const response = await api.userLogout(data);
     //тимчасово
     localStorage.removeItem("conversationId");
-    if (!response.status) {
-      document.location.reload(true);
-    } else {
+    if (response.status) {
       alert(response.message);
     }
-  };
-  const sendDeleteAccount = async (data) => {
-    const response = await api.userDelete(data);
-    //тимчасово
-    localStorage.removeItem("conversationId");
-    if (!response.status) {
-      document.location.reload(true);
-    } else {
-      alert(response.message);
-    }
+    document.location.reload(true);
   };
 
-  //  fix it when create conversation page mustn`t reload
   const [isConversationCreate, setIsConversationCreate] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("conversationId")) setIsConversationCreate(true);
   }, []);
 
-  const createConversation = async (data) => {
-    localStorage.setItem("conversationId", Math.floor(Math.random() * 10001));
+  const createConversation = async (event) => {
+    event.preventDefault();
+
+    const conversationName = "Chat";
+    localStorage.setItem("conversationName", conversationName);
+
+    api.conversationCreate({
+      nane: conversationName,
+      description: "Chating",
+      type: "g",
+      participants: [document.getElementById("inputLogin").value],
+    });
     setIsConversationCreate(true);
   };
 
@@ -71,9 +69,6 @@ export default function Main() {
         <div>
           <div className="control-btn">
             <a onClick={sendLogout}>Loguot</a>
-          </div>
-          <div className="control-btn">
-            <a onClick={sendDeleteAccount}>Delete account</a>
           </div>
         </div>
       </div>

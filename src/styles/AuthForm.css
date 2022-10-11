@@ -86,10 +86,17 @@ label {
 }
 
 .title {
+  margin-bottom: 20px;
+  position: relative;
+
   text-align: center;
   font-size: 25px;
   font-weight: 600;
-  margin-bottom: 20px;
+}
+.loader {
+  position: absolute;
+  top: -35%;
+  right: -3%;
 }
 
 .input-container {

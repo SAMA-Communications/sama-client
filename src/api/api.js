@@ -306,10 +306,10 @@ class Api {
       const requestData = {
         request: {
           conversation_create: {
-            name: "chat5",
-            description: "for admin and users",
-            type: "g",
-            participants: ["userId[0]", "userId[1]"],
+            name: data.name,
+            description: data.description,
+            type: data.type,
+            participants: data.participants,
           },
           id: Math.floor(Math.random() * 101),
         },
