@@ -40,369 +40,240 @@ class Api {
   }
 
   async userLogin(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        request: {
-          user_login: {
-            login: data.ulogin,
-            password: data.pass,
-            deviceId: navigator.productSub,
-          },
-          id: Math.floor(Math.random() * 101),
+    const requestData = {
+      request: {
+        user_login: {
+          login: data.ulogin,
+          password: data.pass,
+          deviceId: navigator.productSub,
         },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "user",
-      };
-
-      if (this.responsesPromises[requestData.request.id]) {
-        localStorage.setItem("token", requestData.request.user_login.login);
-      }
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+        id: Math.floor(Math.random() * 101),
+      },
+    };
+    const resObjKey = "user";
+    if (this.responsesPromises[requestData.request.id]) {
+      localStorage.setItem("token", requestData.request.user_login.login);
+    }
+    return await sendPromise(requestData, resObjKey);
   }
 
   async userCreate(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        request: {
-          user_create: {
-            login: data.ulogin,
-            password: data.pass,
-          },
-          id: Math.floor(Math.random() * 101),
+    const requestData = {
+      request: {
+        user_create: {
+          login: data.ulogin,
+          password: data.pass,
         },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "user",
-      };
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+        id: Math.floor(Math.random() * 101),
+      },
+    };
+    const resObjKey = "user";
+    return await sendPromise(requestData, resObjKey);
   }
 
   async userLogout(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        request: {
-          user_logout: {},
-          id: Math.floor(Math.random() * 101),
-        },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "success",
-      };
-
-      if (this.responsesPromises[requestData.request.id]) {
-        localStorage.removeItem("token");
-      }
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+    const requestData = {
+      request: {
+        user_logout: {},
+        id: Math.floor(Math.random() * 101),
+      },
+    };
+    const resObjKey = "success";
+    if (this.responsesPromises[requestData.request.id]) {
+      localStorage.removeItem("token");
+    }
+    return await sendPromise(requestData, resObjKey);
   }
 
   async userDelete(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        request: {
-          user_delete: {},
-          id: Math.floor(Math.random() * 101),
-        },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "success",
-      };
-
-      if (this.responsesPromises[requestData.request.id]) {
-        localStorage.removeItem("token");
-      }
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+    const requestData = {
+      request: {
+        user_delete: {},
+        id: Math.floor(Math.random() * 101),
+      },
+    };
+    const resObjKey = "success";
+    if (this.responsesPromises[requestData.request.id]) {
+      localStorage.removeItem("token");
+    }
+    return await sendPromise(requestData, resObjKey);
   }
 
   async messageCreate(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        message: {
-          id: Math.floor(Math.random() * 10001),
-          from: "",
-          body: "hey how is going?",
-          cid: "currentConversationId",
-          x: {
-            param1: "value",
-            param2: "value",
-          },
+    const requestData = {
+      message: {
+        id: Math.floor(Math.random() * 10001),
+        from: "",
+        body: "hey how is going?",
+        cid: "currentConversationId",
+        x: {
+          param1: "value",
+          param2: "value",
         },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.id] = {
-        resolve,
-        reject,
-        resObjKey: "success",
-      };
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+      },
+    };
+    const resObjKey = "ask"; //???
+    return await sendPromise(requestData, resObjKey);
   }
 
   async messageEdit(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        request: {
-          message_edit: {
-            id: "include_2",
-            body: "updated message body (UPDATED)",
-          },
-          id: Math.floor(Math.random() * 101),
+    const requestData = {
+      request: {
+        message_edit: {
+          id: "include_2",
+          body: "updated message body (UPDATED)",
         },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "success",
-      };
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+        id: Math.floor(Math.random() * 101),
+      },
+    };
+    const resObjKey = "success";
+    return await sendPromise(requestData, resObjKey);
   }
 
   async messageList(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        request: {
-          message_edit: {
-            cid: "currentConversationId",
-            limit: "numberOf",
-          },
-          id: Math.floor(Math.random() * 101),
+    const requestData = {
+      request: {
+        message_edit: {
+          cid: "currentConversationId",
+          limit: "numberOf",
         },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "messages",
-      };
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+        id: Math.floor(Math.random() * 101),
+      },
+    };
+    const resObjKey = "messages";
+    return await sendPromise(requestData, resObjKey);
   }
 
   async messageDelete(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        request: {
-          message_delete: {
-            cid: "currentConversationId",
-            type: "all",
-            ids: ["ids"],
-            from: "userId[0]",
-          },
-          id: Math.floor(Math.random() * 101),
+    const requestData = {
+      request: {
+        message_delete: {
+          cid: "currentConversationId",
+          type: "all",
+          ids: ["ids"],
+          from: "userId[0]",
         },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "success",
-      };
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+        id: Math.floor(Math.random() * 101),
+      },
+    };
+    const resObjKey = "success";
+    return await sendPromise(requestData, resObjKey);
   }
 
   async statusRead(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        read: {
-          id: "xyz",
-          type: "start",
-          mid: "message1234",
-          cid: "currentConversationId",
-        },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "success",
-      };
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+    const requestData = {
+      read: {
+        id: "xyz",
+        type: "start",
+        mid: "message1234",
+        cid: "currentConversationId",
+      },
+    };
+    const resObjKey = "success";
+    return await sendPromise(requestData, resObjKey);
   }
 
   async statusDelivered(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        delivered: {
-          id: "xyz",
-          type: "start",
-          mid: "message1234",
-          cid: "currentConversationId",
-        },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "success",
-      };
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+    const requestData = {
+      delivered: {
+        id: "xyz",
+        type: "start",
+        mid: "message1234",
+        cid: "currentConversationId",
+      },
+    };
+    const resObjKey = "success";
+    return await sendPromise(requestData, resObjKey);
   }
 
   async statusTyping(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        typing: {
-          id: "xyz",
-          type: "start",
-          cid: "currentConversationId",
-        },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "success",
-      };
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+    const requestData = {
+      typing: {
+        id: "xyz",
+        type: "start",
+        cid: "currentConversationId",
+      },
+    };
+    const resObjKey = "success";
+    return await sendPromise(requestData, resObjKey);
   }
 
   async conversationCreate(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        request: {
-          conversation_create: {
-            name: data.name,
-            description: data.description,
-            type: data.type,
-            participants: data.participants,
-          },
-          id: Math.floor(Math.random() * 101),
+    const requestData = {
+      request: {
+        conversation_create: {
+          name: data.name,
+          description: data.description,
+          type: data.type,
+          participants: data.participants,
         },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "success",
-      };
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+        id: Math.floor(Math.random() * 101),
+      },
+    };
+    const resObjKey = "conversation";
+    return await sendPromise(requestData, resObjKey);
   }
 
   async conversationUpdate(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        request: {
-          conversation_update: {
-            id: "currentConversationId",
-            description: "test213",
-            participants: {
-              add: ["userId[2]"],
-              remove: ["userId[2]"],
-            },
+    const requestData = {
+      request: {
+        conversation_update: {
+          id: "currentConversationId",
+          description: "test213",
+          participants: {
+            add: ["userId[2]"],
+            remove: ["userId[2]"],
           },
-          id: Math.floor(Math.random() * 101),
         },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "success",
-      };
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+        id: Math.floor(Math.random() * 101),
+      },
+    };
+    const resObjKey = "conversation";
+    return await sendPromise(requestData, resObjKey);
   }
 
   async conversationList(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        request: {
-          conversation_list: {
-            limit: "numberOf",
-            updated_at: {
-              gt: "filterUpdatedAt",
-            },
+    const requestData = {
+      request: {
+        conversation_list: {
+          limit: "numberOf",
+          updated_at: {
+            gt: "filterUpdatedAt",
           },
-          id: Math.floor(Math.random() * 101),
         },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "success",
-      };
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+        id: Math.floor(Math.random() * 101),
+      },
+    };
+    const resObjKey = "conversations";
+    return await sendPromise(requestData, resObjKey);
   }
 
   async conversationDelete(data) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
-      const requestData = {
-        request: {
-          conversation_delete: {
-            id: "currentConversationId",
-          },
-          id: Math.floor(Math.random() * 101),
+    const requestData = {
+      request: {
+        conversation_delete: {
+          id: "currentConversationId",
         },
-      };
-
-      sendMessage(this.socket, requestData);
-      this.responsesPromises[requestData.request.id] = {
-        resolve,
-        reject,
-        resObjKey: "success",
-      };
-    }).catch((e) => (err = e));
-    return err ? err : promise;
+        id: Math.floor(Math.random() * 101),
+      },
+    };
+    const resObjKey = "success";
+    return await sendPromise(requestData, resObjKey);
   }
 }
 
-function sendMessage(ws, data) {
-  ws.send(JSON.stringify(data));
-  console.log("[socket.send]", data);
+async function sendPromise(req, key) {
+  let err = undefined;
+  const promise = new Promise((resolve, reject) => {
+    this.socket.send(JSON.stringify(req));
+    console.log("[socket.send]", req);
+    this.responsesPromises[req.request.id] = {
+      resolve,
+      reject,
+      resObjKey: key,
+    };
+  }).catch((e) => (err = e));
+  return err ? err : promise;
 }
 
 const api = new Api(process.env.REACT_APP_SOCKET_CONNECT);
