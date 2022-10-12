@@ -1,40 +1,15 @@
 import React, { useState, useRef, useMemo } from "react";
 import api from "../api/api";
+import { VscCommentDiscussion } from "react-icons/vsc";
 
 import "../styles/Main.css";
-import Chat from "./mainPageComponents/Chat";
+import ChatForm from "./mainPageComponents/ChatForm";
 import ChatList from "./mainPageComponents/ChatList";
 
 export default function Main() {
-  const messageInputEl = useRef(null);
-
-  const [messages, _setMessages] = useState([]);
-  const messagesRef = useRef(messages);
-  const setMessages = (data) => {
-    messagesRef.current = data;
-    _setMessages(data);
-  };
-
-  const listItems = useMemo(() => {
-    return messages.map((d) => <li key={d}>{d}</li>);
-  }, [messages]);
-
-  const sendMessage = (event) => {
-    event.preventDefault();
-
-    // socket.send(JSON.stringify({}));
-    const text = messageInputEl.current.value.trim();
-    if (text.length > 0) {
-      api.messageCreate(text);
-
-      messageInputEl.current.value = "";
-    }
-  };
-
   const sendLogout = async (data) => {
     const response = await api.userLogout(data);
-    //тимчасово
-    localStorage.removeItem("conversationId");
+    localStorage.removeItem("token");
     if (response.status) {
       alert(response.message);
     }
@@ -42,29 +17,20 @@ export default function Main() {
   };
 
   return (
-    <main className="Main">
-      <ChatList />
-      <Chat />
-    </main>
+    <div>
+      <nav>
+        <div className="chat-logo">
+          <VscCommentDiscussion />
+          <p>SAMA</p>
+        </div>
+        <div className="chat-logout-btn">
+          <a onClick={sendLogout}>Logout</a>
+        </div>
+      </nav>
+      <main className="Main">
+        <ChatList />
+        <ChatForm />
+      </main>
+    </div>
   );
 }
-/* <div className="control-panel">
-<div>
-<p className="chat-logo">Chat</p>
-</div>
-<div>
-<div className="control-btn">
-  <a onClick={sendLogout}>Loguot</a>
-</div>
-</div>
-</div>
-<ul id="messages">{listItems}</ul>
-<form id="messageForm" action="">
-<input
-id="inputMessage"
-ref={messageInputEl}
-autoComplete="off"
-placeholder="Message"
-/>
-<button onClick={sendMessage}>Send</button>
-</form> */
