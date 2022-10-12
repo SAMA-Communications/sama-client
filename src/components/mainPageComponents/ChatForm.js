@@ -9,7 +9,7 @@ import {
 import "../../styles/ChatForm.css";
 
 export default function ChatForm() {
-  const [chatId, setChatId] = useState(true);
+  const [chatId, setChatId] = useState(false);
 
   // const messageInputEl = useRef(null);
 

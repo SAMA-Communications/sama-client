@@ -208,6 +208,7 @@ class Api {
           name: data.name,
           description: data.description,
           type: data.type,
+          recipient: data.recipient,
           participants: data.participants,
         },
         id: Math.floor(Math.random() * 101),
@@ -239,10 +240,10 @@ class Api {
     const requestData = {
       request: {
         conversation_list: {
-          limit: "numberOf",
-          updated_at: {
-            gt: "filterUpdatedAt",
-          },
+          // limit: "data",
+          // updated_at: {
+          //   gt: "data",
+          // },
         },
         id: Math.floor(Math.random() * 101),
       },

@@ -83,6 +83,11 @@ aside {
   border-radius: 20px;
   background-color: #fff;
 }
+.chat-list > p {
+  text-align: center;
+  font-size: 1.4em;
+  color: lightgray;
+}
 .chat-box {
   width: 97%;
   height: 72px;

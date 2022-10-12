@@ -1,40 +1,61 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
+import api from "../../api/api.js";
 
 import "../../styles/ChatList.css";
 
 export default function ChatList() {
-  const listChats = useMemo(() => {
-    const list = [
-      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4,
-      5, 6, 7, 8, 9, 10,
-    ];
-    return list.map((el) => (
-      <div className="chat-box">
-        <div className="chat-box-icon">
-          <VscDeviceCamera />
-        </div>
-        <div className="chat-box-info">
-          <p className="chat-name">Chat_{el}</p>
-          <p className="chat-message">Messages_chat</p>
-        </div>
-      </div>
-    ));
-  }, []);
+  const userLogin = localStorage.getItem("token");
+  const [list, setList] = useState([]);
+  const [update, setUpdate] = useState(false);
+
+  useEffect(() => {
+    api.conversationList().then((el) => setList(el));
+  }, [update]);
+
+  const createChat = async () => {
+    const idRecipient = prompt("ID user");
+    const requestData = {
+      name: idRecipient,
+      type: "u",
+      recipient: idRecipient,
+      participants: [idRecipient],
+    };
+    await api.conversationCreate(requestData);
+    setUpdate(true);
+  };
 
   return (
     <aside>
       <div className="user-box">
         <div className="user-photo">
-          <VscDeviceCamera />
+          {!userLogin ? (
+            <VscDeviceCamera />
+          ) : (
+            userLogin.slice(0, 2).toUpperCase()
+          )}
         </div>
         <div className="user-info">
-          <p>UserName</p>
+          <p>{userLogin}</p>
         </div>
       </div>
       <div className="chat-list">
-        {listChats}
-        <div className="chat-create-btn">
+        {!list.length ? (
+          <p>No one chat find...</p>
+        ) : (
+          list.map((obj, key) => (
+            <div className="chat-box" key={obj.name}>
+              <div className="chat-box-icon">
+                <VscDeviceCamera />
+              </div>
+              <div className="chat-box-info">
+                <p className="chat-name">{obj.name}</p>
+                <p className="chat-message">{obj.description}</p>
+              </div>
+            </div>
+          ))
+        )}
+        <div className="chat-create-btn" onClick={createChat}>
           <VscComment />
         </div>
       </div>
