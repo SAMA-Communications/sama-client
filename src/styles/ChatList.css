@@ -1,0 +1,131 @@
+* {
+  margin: 0;
+  padding: 0;
+
+  box-sizing: border-box;
+}
+
+aside {
+  position: relative;
+  max-width: 400px;
+  background-color: #1a8ee1;
+  border-right: 2px solid white;
+}
+hr {
+  width: 90%;
+  background-color: #888;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.user-box {
+  padding: 20px;
+  margin: 10px 15px;
+  border-radius: 8px;
+  background-color: #8dc7f0;
+  display: flex;
+  align-items: center;
+}
+.user-photo,
+.chat-box-icon {
+  width: 60px;
+  height: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background-color: lightgrey;
+}
+.user-info {
+  font-size: 1.5em;
+}
+.user-info,
+.chat-box-info {
+  flex-grow: 1;
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.chat-list {
+  padding: 5px 15px;
+
+  display: flex;
+  flex-direction: column;
+}
+.chat-box {
+  margin: 5px 0;
+  padding: 5px;
+  flex-grow: 1;
+
+  background-color: #8dc7f0;
+  border-radius: 7px;
+
+  display: flex;
+  align-items: center;
+  justify-content: left;
+
+  transition: all 0.1s ease-in-out;
+}
+.chat-box-info {
+  align-items: flex-start;
+  justify-content: flex-start;
+  display: flex;
+  flex-direction: column;
+}
+.chat-name {
+  font-size: 1.1em;
+}
+.chat-message {
+  margin-top: 5px;
+  color: #555;
+}
+.chat-box:hover {
+  cursor: pointer;
+  background-color: #69b4e4;
+}
+
+.chat-logo {
+  width: 60%;
+  margin: 20px auto;
+
+  border: 3px solid white;
+  border-radius: 50%;
+  background-color: #1a8ee1;
+  font-size: 3em;
+
+  text-align: center;
+  color: white;
+}
+
+.chat-create-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+
+  width: 55px;
+  height: 55px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  line-height: 100%;
+  font-size: 1.8em;
+  color: #fff;
+
+  background-color: #333;
+  border-radius: 50%;
+
+  transition: all 0.2s ease-in-out;
+}
+.chat-create-btn:hover {
+  cursor: pointer;
+  line-height: 85%;
+  font-size: 2.1em;
+  background-color: #555;
+}

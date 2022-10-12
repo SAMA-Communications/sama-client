@@ -51,10 +51,12 @@ class Api {
       },
     };
     const resObjKey = "user";
+    const response = sendPromise(requestData, resObjKey, this);
+    //check error if error => do not save in localStorage
     if (this.responsesPromises[requestData.request.id]) {
       localStorage.setItem("token", requestData.request.user_login.login);
     }
-    return await sendPromise(requestData, resObjKey);
+    return response;
   }
 
   async userCreate(data) {
@@ -68,7 +70,7 @@ class Api {
       },
     };
     const resObjKey = "user";
-    return await sendPromise(requestData, resObjKey);
+    return await sendPromise(requestData, resObjKey, this);
   }
 
   async userLogout(data) {
@@ -79,10 +81,11 @@ class Api {
       },
     };
     const resObjKey = "success";
+    const response = sendPromise(requestData, resObjKey, this);
     if (this.responsesPromises[requestData.request.id]) {
       localStorage.removeItem("token");
     }
-    return await sendPromise(requestData, resObjKey);
+    return response;
   }
 
   async userDelete(data) {
@@ -96,7 +99,7 @@ class Api {
     if (this.responsesPromises[requestData.request.id]) {
       localStorage.removeItem("token");
     }
-    return await sendPromise(requestData, resObjKey);
+    return await sendPromise(requestData, resObjKey, this);
   }
 
   async messageCreate(data) {
@@ -113,7 +116,7 @@ class Api {
       },
     };
     const resObjKey = "ask"; //???
-    return await sendPromise(requestData, resObjKey);
+    return await sendPromise(requestData, resObjKey, this);
   }
 
   async messageEdit(data) {
@@ -127,7 +130,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await sendPromise(requestData, resObjKey);
+    return await sendPromise(requestData, resObjKey, this);
   }
 
   async messageList(data) {
@@ -141,7 +144,7 @@ class Api {
       },
     };
     const resObjKey = "messages";
-    return await sendPromise(requestData, resObjKey);
+    return await sendPromise(requestData, resObjKey, this);
   }
 
   async messageDelete(data) {
@@ -157,7 +160,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await sendPromise(requestData, resObjKey);
+    return await sendPromise(requestData, resObjKey, this);
   }
 
   async statusRead(data) {
@@ -170,7 +173,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await sendPromise(requestData, resObjKey);
+    return await sendPromise(requestData, resObjKey, this);
   }
 
   async statusDelivered(data) {
@@ -183,7 +186,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await sendPromise(requestData, resObjKey);
+    return await sendPromise(requestData, resObjKey, this);
   }
 
   async statusTyping(data) {
@@ -195,7 +198,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await sendPromise(requestData, resObjKey);
+    return await sendPromise(requestData, resObjKey, this);
   }
 
   async conversationCreate(data) {
@@ -211,7 +214,7 @@ class Api {
       },
     };
     const resObjKey = "conversation";
-    return await sendPromise(requestData, resObjKey);
+    return await sendPromise(requestData, resObjKey, this);
   }
 
   async conversationUpdate(data) {
@@ -229,7 +232,7 @@ class Api {
       },
     };
     const resObjKey = "conversation";
-    return await sendPromise(requestData, resObjKey);
+    return await sendPromise(requestData, resObjKey, this);
   }
 
   async conversationList(data) {
@@ -245,7 +248,7 @@ class Api {
       },
     };
     const resObjKey = "conversations";
-    return await sendPromise(requestData, resObjKey);
+    return await sendPromise(requestData, resObjKey, this);
   }
 
   async conversationDelete(data) {
@@ -258,22 +261,23 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await sendPromise(requestData, resObjKey);
+    return await sendPromise(requestData, resObjKey, this);
   }
 }
 
-async function sendPromise(req, key) {
+function sendPromise(req, key, ws) {
   let err = undefined;
   const promise = new Promise((resolve, reject) => {
-    this.socket.send(JSON.stringify(req));
+    ws.socket.send(JSON.stringify(req));
     console.log("[socket.send]", req);
-    this.responsesPromises[req.request.id] = {
+    ws.responsesPromises[req.request.id] = {
       resolve,
       reject,
       resObjKey: key,
     };
   }).catch((e) => (err = e));
-  return err ? err : promise;
+  const response = err ? err : promise;
+  return response;
 }
 
 const api = new Api(process.env.REACT_APP_SOCKET_CONNECT);

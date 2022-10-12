@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import Login from "./components/Login";
-import Chat from "./components/Chat";
+import Main from "./components/Main";
 import SignUp from "./components/SignUp";
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
   ) : page === "login" ? (
     <Login onSuccess={setPage} />
   ) : (
-    <Chat />
+    <Main />
   );
 }
 
