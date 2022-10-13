@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { VscComment, VscDeviceCamera } from "react-icons/vsc";
 import api from "../../api/api.js";
+import { Link } from "react-router-dom";
+import { VscComment, VscDeviceCamera } from "react-icons/vsc";
 
 import "../../styles/ChatList.css";
 
@@ -22,7 +23,7 @@ export default function ChatList() {
       participants: [idRecipient],
     };
     await api.conversationCreate(requestData);
-    setUpdate(true);
+    update ? setUpdate(false) : setUpdate(true);
   };
 
   return (
@@ -43,16 +44,18 @@ export default function ChatList() {
         {!list.length ? (
           <p>No one chat find...</p>
         ) : (
-          list.map((obj, key) => (
-            <div className="chat-box" key={obj.name}>
-              <div className="chat-box-icon">
-                <VscDeviceCamera />
+          list.map((obj) => (
+            <Link to={`/main/#${obj.name}`}>
+              <div className="chat-box" key={obj.name}>
+                <div className="chat-box-icon">
+                  <VscDeviceCamera />
+                </div>
+                <div className="chat-box-info">
+                  <p className="chat-name">{obj.name}</p>
+                  <p className="chat-message">{obj.description}</p>
+                </div>
               </div>
-              <div className="chat-box-info">
-                <p className="chat-name">{obj.name}</p>
-                <p className="chat-message">{obj.description}</p>
-              </div>
-            </div>
+            </Link>
           ))
         )}
         <div className="chat-create-btn" onClick={createChat}>

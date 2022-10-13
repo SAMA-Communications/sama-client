@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   VscClose,
   VscDeviceCamera,
   VscFileSymlinkDirectory,
   VscRocket,
 } from "react-icons/vsc";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import "../../styles/ChatForm.css";
 
 export default function ChatForm() {
-  const [chatId, setChatId] = useState(false);
+  const url = useLocation();
+  const navigate = useNavigate();
+  const chatId = useMemo(() => {
+    return url.hash ? url.hash.slice(1) : null;
+  }, [url]);
 
   // const messageInputEl = useRef(null);
 
@@ -50,17 +55,24 @@ export default function ChatForm() {
               <VscDeviceCamera />
             </div>
             <div className="chat-recipient-info">
-              <p>UserName</p>
-              <div className="chat-recipient-status">
+              <p>{chatId}</p>
+              <div className="chat-recipient-status hide">
                 <span>|</span>
                 <p>typing...</p>
               </div>
             </div>
-            <div className="chat-close-btn" onClick={() => setChatId(false)}>
+            <div
+              className="chat-close-btn"
+              onClick={() => {
+                navigate("/main");
+              }}
+            >
               <VscClose />
             </div>
           </div>
-          <div className="chat-form-main">List Message</div>
+          <div className="chat-form-main">
+            <div className="chat-empty">Chat is empty..</div>
+          </div>
           <form id="chat-form-send" action="">
             <input
               id="inputMessage"

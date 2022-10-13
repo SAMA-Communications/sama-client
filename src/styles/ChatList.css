@@ -90,6 +90,10 @@ aside {
   font-size: 1.4em;
   color: lightgray;
 }
+.chat-list > a {
+  color: #000;
+  text-decoration: none;
+}
 .chat-box {
   width: 97%;
   height: 72px;
