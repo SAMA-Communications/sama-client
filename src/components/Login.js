@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import api from "../api/api";
+import { Oval } from "react-loader-spinner";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { Triangle } from "react-loader-spinner";
 
 import "../styles/AuthForm.css";
 
-export default function Login({ onSuccess }) {
+export default function Login() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -17,7 +19,7 @@ export default function Login({ onSuccess }) {
     setLoader(true);
     const response = await api.userLogin(data);
     if (!response.status) {
-      onSuccess(true);
+      navigate("/main");
     } else {
       alert(response.message);
     }
@@ -57,9 +59,9 @@ export default function Login({ onSuccess }) {
         </div>
         <div className="button-container-text">
           New to app?&nbsp;
-          <a className="signup" onClick={() => onSuccess("register")}>
+          <Link to={`/signup`} className="signup">
             Create an account
-          </a>
+          </Link>
         </div>
       </form>
     </div>
@@ -70,14 +72,17 @@ export default function Login({ onSuccess }) {
       <div className="login-form">
         <div className="title">
           Log in
-          <Triangle
-            height="50"
-            width="50"
+          <Oval
+            height={40}
+            width={40}
             color="#1a8ee1"
-            wrapperStyle={{ right: "21%" }}
+            wrapperStyle={{ right: "23%" }}
             wrapperClass="loader"
-            ariaLabel="triangle-loading"
             visible={loader}
+            ariaLabel="oval-loading"
+            secondaryColor="#8dc7f0"
+            strokeWidth={2}
+            strokeWidthSecondary={3}
           />
         </div>
         {renderForm}

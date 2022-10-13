@@ -39,6 +39,21 @@ class Api {
     };
   }
 
+  async sendPromise(req, key) {
+    let err = undefined;
+    const promise = new Promise((resolve, reject) => {
+      this.socket.send(JSON.stringify(req));
+      console.log("[socket.send]", req);
+      this.responsesPromises[req.request.id] = {
+        resolve,
+        reject,
+        resObjKey: key,
+      };
+    }).catch((e) => (err = e));
+    const response = err ? err : promise;
+    return response;
+  }
+
   async userLogin(data) {
     const requestData = {
       request: {
@@ -51,7 +66,7 @@ class Api {
       },
     };
     const resObjKey = "user";
-    const response = sendPromise(requestData, resObjKey, this);
+    const response = this.sendPromise(requestData, resObjKey);
     //check error if error => do not save in localStorage
     if (this.responsesPromises[requestData.request.id]) {
       localStorage.setItem("token", requestData.request.user_login.login);
@@ -70,7 +85,7 @@ class Api {
       },
     };
     const resObjKey = "user";
-    return await sendPromise(requestData, resObjKey, this);
+    return await this.sendPromise(requestData, resObjKey);
   }
 
   async userLogout(data) {
@@ -81,7 +96,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    const response = sendPromise(requestData, resObjKey, this);
+    const response = this.sendPromise(requestData, resObjKey, this);
     if (this.responsesPromises[requestData.request.id]) {
       localStorage.removeItem("token");
     }
@@ -99,7 +114,7 @@ class Api {
     if (this.responsesPromises[requestData.request.id]) {
       localStorage.removeItem("token");
     }
-    return await sendPromise(requestData, resObjKey, this);
+    return await this.sendPromise(requestData, resObjKey, this);
   }
 
   async messageCreate(data) {
@@ -116,7 +131,7 @@ class Api {
       },
     };
     const resObjKey = "ask"; //???
-    return await sendPromise(requestData, resObjKey, this);
+    return await this.sendPromise(requestData, resObjKey, this);
   }
 
   async messageEdit(data) {
@@ -130,7 +145,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await sendPromise(requestData, resObjKey, this);
+    return await this.sendPromise(requestData, resObjKey, this);
   }
 
   async messageList(data) {
@@ -144,7 +159,7 @@ class Api {
       },
     };
     const resObjKey = "messages";
-    return await sendPromise(requestData, resObjKey, this);
+    return await this.sendPromise(requestData, resObjKey, this);
   }
 
   async messageDelete(data) {
@@ -160,7 +175,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await sendPromise(requestData, resObjKey, this);
+    return await this.sendPromise(requestData, resObjKey, this);
   }
 
   async statusRead(data) {
@@ -173,7 +188,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await sendPromise(requestData, resObjKey, this);
+    return await this.sendPromise(requestData, resObjKey, this);
   }
 
   async statusDelivered(data) {
@@ -186,7 +201,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await sendPromise(requestData, resObjKey, this);
+    return await this.sendPromise(requestData, resObjKey, this);
   }
 
   async statusTyping(data) {
@@ -198,7 +213,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await sendPromise(requestData, resObjKey, this);
+    return await this.sendPromise(requestData, resObjKey, this);
   }
 
   async conversationCreate(data) {
@@ -215,7 +230,7 @@ class Api {
       },
     };
     const resObjKey = "conversation";
-    return await sendPromise(requestData, resObjKey, this);
+    return await this.sendPromise(requestData, resObjKey, this);
   }
 
   async conversationUpdate(data) {
@@ -233,23 +248,23 @@ class Api {
       },
     };
     const resObjKey = "conversation";
-    return await sendPromise(requestData, resObjKey, this);
+    return await this.sendPromise(requestData, resObjKey, this);
   }
 
   async conversationList(data) {
     const requestData = {
       request: {
         conversation_list: {
-          // limit: "data",
-          // updated_at: {
-          //   gt: "data",
-          // },
+          limit: data.limit,
+          updated_at: {
+            gt: data.update_at,
+          },
         },
         id: Math.floor(Math.random() * 101),
       },
     };
     const resObjKey = "conversations";
-    return await sendPromise(requestData, resObjKey, this);
+    return await this.sendPromise(requestData, resObjKey, this);
   }
 
   async conversationDelete(data) {
@@ -262,26 +277,11 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await sendPromise(requestData, resObjKey, this);
+    return await this.sendPromise(requestData, resObjKey, this);
   }
 }
 
-function sendPromise(req, key, ws) {
-  let err = undefined;
-  const promise = new Promise((resolve, reject) => {
-    ws.socket.send(JSON.stringify(req));
-    console.log("[socket.send]", req);
-    ws.responsesPromises[req.request.id] = {
-      resolve,
-      reject,
-      resObjKey: key,
-    };
-  }).catch((e) => (err = e));
-  const response = err ? err : promise;
-  return response;
-}
-
 const api = new Api(process.env.REACT_APP_SOCKET_CONNECT);
-api.connect(); //await?
+api.connect();
 
 export default api;

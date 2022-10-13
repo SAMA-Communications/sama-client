@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
 import api from "../../api/api.js";
 
@@ -10,7 +10,7 @@ export default function ChatList() {
   const [update, setUpdate] = useState(false);
 
   useEffect(() => {
-    api.conversationList().then((el) => setList(el));
+    api.conversationList({}).then((el) => setList(el));
   }, [update]);
 
   const createChat = async () => {

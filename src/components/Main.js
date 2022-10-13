@@ -1,8 +1,10 @@
-import React, { useState, useRef, useMemo } from "react";
+import React from "react";
 import api from "../api/api";
+import { Link } from "react-router-dom";
 import { VscCommentDiscussion } from "react-icons/vsc";
 
 import "../styles/Main.css";
+
 import ChatForm from "./mainPageComponents/ChatForm";
 import ChatList from "./mainPageComponents/ChatList";
 
@@ -13,7 +15,6 @@ export default function Main() {
     if (response.status) {
       alert(response.message);
     }
-    document.location.reload(true);
   };
 
   return (
@@ -24,7 +25,9 @@ export default function Main() {
           <p>SAMA</p>
         </div>
         <div className="chat-logout-btn">
-          <a onClick={sendLogout}>Logout</a>
+          <Link to={"/login"} onClick={sendLogout} className="logout-btn">
+            Logout
+          </Link>
         </div>
       </nav>
       <main className="Main">

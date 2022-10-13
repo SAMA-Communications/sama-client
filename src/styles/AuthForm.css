@@ -1,17 +1,17 @@
-body {
-  background-color: rgb(235, 235, 235);
-}
 .login-container {
-  font-family: sans-serif;
+  height: 100vh;
+
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
   gap: 20px;
-  height: 100vh;
+  align-items: center;
+  justify-content: center;
+
+  font-family: sans-serif;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
+
   background-color: #f8f9fd;
 }
 
@@ -19,7 +19,6 @@ input[name="ulogin"],
 input[name="pass"] {
   padding: 15px 10px;
   font-size: 1em;
-  width: 300px;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 10px;
 }
@@ -62,6 +61,7 @@ label {
   font-size: 1em;
   font-weight: bold;
   color: #1a8ee1;
+  text-decoration: none;
 }
 
 .signup:hover {
@@ -70,8 +70,9 @@ label {
 }
 
 .login-form {
-  background-color: white;
   padding: 2rem;
+  border-radius: 20px;
+  background-color: white;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -86,8 +87,8 @@ label {
 }
 
 .title {
-  margin-bottom: 20px;
   position: relative;
+  margin-bottom: 20px;
 
   text-align: center;
   font-size: 25px;
@@ -95,8 +96,8 @@ label {
 }
 .loader {
   position: absolute;
-  top: -35%;
-  right: -3%;
+  right: 4%;
+  top: -10%;
 }
 
 .input-container {

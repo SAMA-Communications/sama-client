@@ -1,23 +1,27 @@
-import React, { useEffect, useState } from "react";
+import ErrorPage from "./components/ErrorPage";
+import React, { useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Login from "./components/Login";
 import Main from "./components/Main";
 import SignUp from "./components/SignUp";
 
 function App() {
-  const [page, setPage] = useState();
-
+  const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setPage(!!!token ? "login" : "main");
+    token ? navigate("main") : navigate("/login");
   }, []);
 
-  return page === "register" ? (
-    <SignUp onSuccess={setPage} />
-  ) : page === "login" ? (
-    <Login onSuccess={setPage} />
-  ) : (
-    <Main />
+  return (
+    <>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/main" element={<Main />} />
+        <Route path="/*" element={<ErrorPage />} />
+      </Routes>
+    </>
   );
 }
 

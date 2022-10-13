@@ -24,7 +24,7 @@ aside {
   position: relative;
   width: 22vw;
   min-width: 400px;
-  padding: 20px;
+  margin: 0 20px;
   padding-top: 0;
 
   background-color: inherit;
@@ -37,6 +37,7 @@ aside {
 
   display: flex;
   align-items: center;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .user-photo,
 .chat-box-icon {
@@ -82,6 +83,7 @@ aside {
   border: 12px solid white;
   border-radius: 20px;
   background-color: #fff;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .chat-list > p {
   text-align: center;

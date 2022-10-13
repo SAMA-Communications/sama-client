@@ -6,14 +6,16 @@
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
+body {
+  background-color: #f8f9fd;
+}
+
 .Main {
   width: 100vw;
   height: calc(100vh - 88px);
 
-  background-color: rgb(235, 235, 235);
   display: flex;
 }
-
 nav {
   width: 100%;
   padding: 20px;
@@ -21,6 +23,13 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.logout-btn {
+  color: #000;
+  text-decoration: none;
+}
+.logout-btn:hover {
+  color: #1a8ee1;
 }
 .chat-logout-btn {
   margin-right: 20px;
@@ -31,7 +40,6 @@ nav {
 .chat-logout-btn:hover {
   margin-top: -10px;
   cursor: pointer;
-  color: #1a8ee1;
   text-shadow: 0 10px lightgray;
 }
 
