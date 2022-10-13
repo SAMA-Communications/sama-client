@@ -9,11 +9,11 @@ import ChatForm from "./mainPageComponents/ChatForm";
 import ChatList from "./mainPageComponents/ChatList";
 
 export default function Main() {
-  const sendLogout = async (data) => {
-    const response = await api.userLogout(data);
-    localStorage.removeItem("token");
-    if (response.status) {
-      alert(response.message);
+  const sendLogout = async () => {
+    try {
+      await api.userLogout();
+    } catch (error) {
+      alert(error.message);
     }
   };
 

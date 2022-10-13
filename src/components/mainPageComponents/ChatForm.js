@@ -10,8 +10,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "../../styles/ChatForm.css";
 
 export default function ChatForm() {
-  const url = useLocation();
   const navigate = useNavigate();
+  const url = useLocation();
+
   const chatId = useMemo(() => {
     return url.hash ? url.hash.slice(1) : null;
   }, [url]);

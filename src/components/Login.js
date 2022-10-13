@@ -17,11 +17,11 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     setLoader(true);
-    const response = await api.userLogin(data);
-    if (!response.status) {
+    try {
+      await api.userLogin(data);
       navigate("/main");
-    } else {
-      alert(response.message);
+    } catch (error) {
+      alert(error.message);
     }
     setLoader(false);
   };

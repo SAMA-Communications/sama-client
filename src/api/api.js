@@ -1,3 +1,6 @@
+import getUniqueId from "./uuid.js";
+//xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx:user_login генерувати
+
 class Api {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
@@ -40,8 +43,7 @@ class Api {
   }
 
   async sendPromise(req, key) {
-    let err = undefined;
-    const promise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this.socket.send(JSON.stringify(req));
       console.log("[socket.send]", req);
       this.responsesPromises[req.request.id] = {
@@ -49,9 +51,7 @@ class Api {
         reject,
         resObjKey: key,
       };
-    }).catch((e) => (err = e));
-    const response = err ? err : promise;
-    return response;
+    });
   }
 
   async userLogin(data) {
@@ -62,7 +62,7 @@ class Api {
           password: data.pass,
           deviceId: navigator.productSub,
         },
-        id: Math.floor(Math.random() * 101),
+        id: getUniqueId(data.ulogin),
       },
     };
     const resObjKey = "user";
@@ -81,40 +81,43 @@ class Api {
           login: data.ulogin,
           password: data.pass,
         },
-        id: Math.floor(Math.random() * 101),
+        id: getUniqueId(data.ulogin),
       },
     };
     const resObjKey = "user";
-    return await this.sendPromise(requestData, resObjKey);
+    return this.sendPromise(requestData, resObjKey);
   }
 
-  async userLogout(data) {
+  async userLogout() {
+    const user = getUserLogin();
     const requestData = {
       request: {
         user_logout: {},
-        id: Math.floor(Math.random() * 101),
+        id: getUniqueId(user),
       },
     };
     const resObjKey = "success";
-    const response = this.sendPromise(requestData, resObjKey, this);
+    const response = this.sendPromise(requestData, resObjKey);
     if (this.responsesPromises[requestData.request.id]) {
       localStorage.removeItem("token");
     }
     return response;
   }
 
-  async userDelete(data) {
+  async userDelete() {
+    const user = getUserLogin();
     const requestData = {
       request: {
         user_delete: {},
-        id: Math.floor(Math.random() * 101),
+        id: getUniqueId(user),
       },
     };
     const resObjKey = "success";
+    const response = this.sendPromise(requestData, resObjKey);
     if (this.responsesPromises[requestData.request.id]) {
       localStorage.removeItem("token");
     }
-    return await this.sendPromise(requestData, resObjKey, this);
+    return response;
   }
 
   async messageCreate(data) {
@@ -131,7 +134,7 @@ class Api {
       },
     };
     const resObjKey = "ask"; //???
-    return await this.sendPromise(requestData, resObjKey, this);
+    return this.sendPromise(requestData, resObjKey);
   }
 
   async messageEdit(data) {
@@ -145,7 +148,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await this.sendPromise(requestData, resObjKey, this);
+    return this.sendPromise(requestData, resObjKey);
   }
 
   async messageList(data) {
@@ -159,7 +162,7 @@ class Api {
       },
     };
     const resObjKey = "messages";
-    return await this.sendPromise(requestData, resObjKey, this);
+    return this.sendPromise(requestData, resObjKey);
   }
 
   async messageDelete(data) {
@@ -175,7 +178,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await this.sendPromise(requestData, resObjKey, this);
+    return this.sendPromise(requestData, resObjKey);
   }
 
   async statusRead(data) {
@@ -188,7 +191,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await this.sendPromise(requestData, resObjKey, this);
+    return this.sendPromise(requestData, resObjKey);
   }
 
   async statusDelivered(data) {
@@ -201,7 +204,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await this.sendPromise(requestData, resObjKey, this);
+    return this.sendPromise(requestData, resObjKey);
   }
 
   async statusTyping(data) {
@@ -213,10 +216,11 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await this.sendPromise(requestData, resObjKey, this);
+    return this.sendPromise(requestData, resObjKey);
   }
 
   async conversationCreate(data) {
+    const user = getUserLogin();
     const requestData = {
       request: {
         conversation_create: {
@@ -226,11 +230,11 @@ class Api {
           recipient: data.recipient,
           participants: data.participants,
         },
-        id: Math.floor(Math.random() * 101),
+        id: getUniqueId(user),
       },
     };
     const resObjKey = "conversation";
-    return await this.sendPromise(requestData, resObjKey, this);
+    return this.sendPromise(requestData, resObjKey);
   }
 
   async conversationUpdate(data) {
@@ -248,10 +252,11 @@ class Api {
       },
     };
     const resObjKey = "conversation";
-    return await this.sendPromise(requestData, resObjKey, this);
+    return this.sendPromise(requestData, resObjKey);
   }
 
   async conversationList(data) {
+    const user = getUserLogin();
     const requestData = {
       request: {
         conversation_list: {
@@ -260,11 +265,11 @@ class Api {
             gt: data.update_at,
           },
         },
-        id: Math.floor(Math.random() * 101),
+        id: getUniqueId(user),
       },
     };
     const resObjKey = "conversations";
-    return await this.sendPromise(requestData, resObjKey, this);
+    return this.sendPromise(requestData, resObjKey);
   }
 
   async conversationDelete(data) {
@@ -277,8 +282,13 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return await this.sendPromise(requestData, resObjKey, this);
+    return this.sendPromise(requestData, resObjKey);
   }
+}
+
+function getUserLogin() {
+  const token = localStorage.getItem("token");
+  return token ? token.split(":")[0] : null;
 }
 
 const api = new Api(process.env.REACT_APP_SOCKET_CONNECT);
