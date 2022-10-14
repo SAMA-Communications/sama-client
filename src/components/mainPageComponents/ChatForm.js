@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   VscClose,
   VscDeviceCamera,
@@ -6,6 +6,7 @@ import {
   VscRocket,
 } from "react-icons/vsc";
 import { useLocation, useNavigate } from "react-router-dom";
+import api from "../../api/api";
 
 import "../../styles/ChatForm.css";
 
@@ -17,30 +18,19 @@ export default function ChatForm() {
     return url.hash ? url.hash.slice(1) : null;
   }, [url]);
 
-  // const messageInputEl = useRef(null);
+  const messageInputEl = useRef(null);
+  const [messages, setMessages] = useState([]);
 
-  // const [messages, _setMessages] = useState([]);
-  // const messagesRef = useRef(messages);
-  // const setMessages = (data) => {
-  //   messagesRef.current = data;
-  //   _setMessages(data);
-  // };
+  const sendMessage = async (event) => {
+    event.preventDefault();
 
-  // const listItems = useMemo(() => {
-  //   return messages.map((d) => <li key={d}>{d}</li>);
-  // }, [messages]);
-
-  // const sendMessage = (event) => {
-  //   event.preventDefault();
-
-  //   // socket.send(JSON.stringify({}));
-  //   const text = messageInputEl.current.value.trim();
-  //   if (text.length > 0) {
-  //     api.messageCreate(text);
-
-  //     messageInputEl.current.value = "";
-  //   }
-  // };
+    const text = messageInputEl.current.value.trim();
+    if (text.length > 0) {
+      const message = await api.messageCreate({ text, chatId });
+      setMessages([...messages, message]);
+      messageInputEl.current.value = "";
+    }
+  };
 
   return (
     <section className="chat-form">
@@ -72,16 +62,24 @@ export default function ChatForm() {
             </div>
           </div>
           <div className="chat-form-main">
-            <div className="chat-empty">Chat is empty..</div>
+            {!messages.length ? (
+              <div className="chat-empty">Chat is empty..</div>
+            ) : (
+              <div className="chat-messages">
+                {messages.map((d) => (
+                  <p key={d.mid}>{d.mid.slice(0, 8)}</p>
+                ))}
+              </div>
+            )}
           </div>
           <form id="chat-form-send" action="">
             <input
               id="inputMessage"
-              // ref={}
+              ref={messageInputEl}
               autoComplete="off"
               placeholder="> Write your message..."
             />
-            <button>
+            <button onClick={sendMessage}>
               <p>Send</p>
               <VscRocket />
             </button>

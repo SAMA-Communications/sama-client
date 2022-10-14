@@ -47,7 +47,7 @@ export default function ChatList() {
           <p>No one chat find...</p>
         ) : (
           list.map((obj) => (
-            <Link to={`/main/#${obj.name}`} key={obj.name}>
+            <Link to={`/main/#${obj._id}`} key={obj._id}>
               <div className="chat-box">
                 <div className="chat-box-icon">
                   <VscDeviceCamera />

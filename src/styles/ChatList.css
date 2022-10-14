@@ -61,6 +61,28 @@ aside {
 .user-info {
   font-size: 1.5em;
 }
+.user-menu {
+  position: relative;
+}
+.user-menu-btn {
+  height: 30px;
+  font-size: 1.7em;
+
+  transition: all 0.2s ease-in-out;
+  transform: rotate(-90deg);
+}
+.user-menu-btn:hover {
+  cursor: pointer;
+  color: #1a8ee1;
+
+  transform: rotate(-180deg);
+}
+.user-menu-link {
+  position: absolute;
+  border: 1px solid #000;
+  background-color: #fff;
+}
+
 .user-info,
 .chat-box-info {
   flex-grow: 1;

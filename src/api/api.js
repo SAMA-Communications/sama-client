@@ -19,8 +19,9 @@ class Api {
       console.log("[socket.message]", e.data);
       const message = JSON.parse(e.data);
       if (message.ask) {
-        this.onMessageSent(message.ask.mid, message.ask.t);
-        // setMessages([...messagesRef.current, e.data]);
+        const mid = message.ask.mid;
+        this.responsesPromises[mid](message.ask);
+        delete this.responsesPromises[mid];
         return;
       }
       const response = message.response;
@@ -101,6 +102,7 @@ class Api {
   }
 
   async userDelete() {
+    //only use in app
     const user = getUserLogin();
     const requestData = {
       request: {
@@ -114,23 +116,26 @@ class Api {
   }
 
   async messageCreate(data) {
-    const requestData = {
-      message: {
-        id: Math.floor(Math.random() * 10001),
-        from: "",
-        body: "hey how is going?",
-        cid: "currentConversationId",
-        x: {
-          param1: "value",
-          param2: "value",
+    return new Promise((resolve, reject) => {
+      const requestData = {
+        message: {
+          id: getUniqueId(getUserLogin()),
+          body: data.text,
+          cid: data.chatId,
+          // x: {
+          //   param1: "value",
+          //   param2: "value",
+          // },
         },
-      },
-    };
-    const resObjKey = "ask"; //???
-    return this.sendPromise(requestData, resObjKey);
+      };
+      this.responsesPromises[requestData.message.id] = resolve;
+      this.socket.send(JSON.stringify(requestData));
+      console.log("[socket.send]", requestData);
+    });
   }
 
   async messageEdit(data) {
+    //===============to do
     const requestData = {
       request: {
         message_edit: {
@@ -145,6 +150,7 @@ class Api {
   }
 
   async messageList(data) {
+    //===============to do
     const requestData = {
       request: {
         message_edit: {
@@ -159,6 +165,7 @@ class Api {
   }
 
   async messageDelete(data) {
+    //===============to do
     const requestData = {
       request: {
         message_delete: {
@@ -175,6 +182,7 @@ class Api {
   }
 
   async statusRead(data) {
+    //===============to do
     const requestData = {
       read: {
         id: "xyz",
@@ -188,6 +196,7 @@ class Api {
   }
 
   async statusDelivered(data) {
+    //===============to do
     const requestData = {
       delivered: {
         id: "xyz",
@@ -201,6 +210,7 @@ class Api {
   }
 
   async statusTyping(data) {
+    //===============to do
     const requestData = {
       typing: {
         id: "xyz",
@@ -231,6 +241,7 @@ class Api {
   }
 
   async conversationUpdate(data) {
+    //===============to do
     const requestData = {
       request: {
         conversation_update: {
@@ -266,6 +277,7 @@ class Api {
   }
 
   async conversationDelete(data) {
+    //===============to do
     const requestData = {
       request: {
         conversation_delete: {
