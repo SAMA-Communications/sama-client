@@ -13,12 +13,13 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [loader, setLoader] = useState(false);
 
+  const [loader, setLoader] = useState(false);
   const onSubmit = async (data) => {
     setLoader(true);
     try {
-      await api.userLogin(data);
+      const user = await api.userLogin(data);
+      localStorage.setItem("sessionId", user._id);
       navigate("/main");
     } catch (error) {
       alert(error.message);

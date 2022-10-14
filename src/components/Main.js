@@ -15,6 +15,7 @@ export default function Main() {
     } catch (error) {
       alert(error.message);
     }
+    localStorage.removeItem("sessionId");
   };
 
   return (

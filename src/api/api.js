@@ -57,21 +57,21 @@ class Api {
   async userLogin(data) {
     const requestData = {
       request: {
-        user_login: {
-          login: data.ulogin,
-          password: data.pass,
-          deviceId: navigator.productSub,
-        },
+        user_login: data.token
+          ? {
+              token: data.token,
+              deviceId: navigator.productSub,
+            }
+          : {
+              login: data.ulogin,
+              password: data.pass,
+              deviceId: navigator.productSub,
+            },
         id: getUniqueId(data.ulogin),
       },
     };
     const resObjKey = "user";
-    const response = this.sendPromise(requestData, resObjKey);
-    //check error if error => do not save in localStorage
-    if (this.responsesPromises[requestData.request.id]) {
-      localStorage.setItem("token", requestData.request.user_login.login);
-    }
-    return response;
+    return this.sendPromise(requestData, resObjKey);
   }
 
   async userCreate(data) {
@@ -97,11 +97,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    const response = this.sendPromise(requestData, resObjKey);
-    if (this.responsesPromises[requestData.request.id]) {
-      localStorage.removeItem("token");
-    }
-    return response;
+    return this.sendPromise(requestData, resObjKey);
   }
 
   async userDelete() {
@@ -113,11 +109,8 @@ class Api {
       },
     };
     const resObjKey = "success";
-    const response = this.sendPromise(requestData, resObjKey);
-    if (this.responsesPromises[requestData.request.id]) {
-      localStorage.removeItem("token");
-    }
-    return response;
+    localStorage.removeItem("sessionId");
+    return this.sendPromise(requestData, resObjKey);
   }
 
   async messageCreate(data) {
@@ -287,7 +280,7 @@ class Api {
 }
 
 function getUserLogin() {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("sessionId");
   return token ? token.split(":")[0] : null;
 }
 

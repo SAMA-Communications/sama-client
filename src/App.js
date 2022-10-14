@@ -1,5 +1,6 @@
 import ErrorPage from "./components/ErrorPage";
 import React, { useEffect } from "react";
+import api from "./api/api";
 import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Login from "./components/Login";
@@ -9,9 +10,21 @@ import SignUp from "./components/SignUp";
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    token ? navigate("main") : navigate("/login");
+    const token = localStorage.getItem("sessionId");
+    token ? userLoginByToken(token) : navigate("/login");
   }, []);
+
+  const userLoginByToken = async (token) => {
+    let response;
+    try {
+      response = await api.userLogin({ token });
+      navigate("/main");
+    } catch (error) {
+      localStorage.clear();
+      navigate("/login");
+    }
+    return response;
+  };
 
   return (
     <>
