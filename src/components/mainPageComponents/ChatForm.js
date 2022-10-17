@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   VscClose,
   VscDeviceCamera,
@@ -7,12 +7,15 @@ import {
 } from "react-icons/vsc";
 import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../api/api";
+import jwtDecode from "jwt-decode";
 
 import "../../styles/ChatForm.css";
 
 export default function ChatForm() {
   const navigate = useNavigate();
   const url = useLocation();
+  const sessionId = localStorage.getItem("sessionId");
+  const userInfo = sessionId ? jwtDecode(sessionId) : null;
 
   const chatId = useMemo(() => {
     return url.hash ? url.hash.slice(1) : null;
@@ -20,15 +23,26 @@ export default function ChatForm() {
 
   const messageInputEl = useRef(null);
   const [messages, setMessages] = useState([]);
+  const [update, setUpdate] = useState(false);
+
+  useEffect(() => {
+    const listMessages = api
+      .messageList({ cid: chatId, limit: 10 })
+      .then((arr) => {
+        console.log(arr);
+        setMessages(arr);
+      });
+    console.log(messages);
+  }, [chatId, update]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
 
     const text = messageInputEl.current.value.trim();
     if (text.length > 0) {
-      const message = await api.messageCreate({ text, chatId });
-      setMessages([...messages, message]);
+      await api.messageCreate({ text, chatId });
       messageInputEl.current.value = "";
+      update ? setUpdate(false) : setUpdate(true);
     }
   };
 
@@ -67,7 +81,14 @@ export default function ChatForm() {
             ) : (
               <div className="chat-messages">
                 {messages.map((d) => (
-                  <p key={d.mid}>{d.mid.slice(0, 8)}</p>
+                  <p
+                    key={d.id}
+                    className={
+                      d.from === userInfo._id.toString() ? "my-message" : ""
+                    }
+                  >
+                    {d.body}
+                  </p>
                 ))}
               </div>
             )}

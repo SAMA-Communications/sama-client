@@ -174,3 +174,6 @@
   font-size: 0.8em;
   margin-right: 8px;
 }
+.my-message {
+  text-align: right;
+}

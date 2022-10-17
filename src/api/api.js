@@ -150,14 +150,14 @@ class Api {
   }
 
   async messageList(data) {
-    //===============to do
+    const user = getUserLogin();
     const requestData = {
       request: {
-        message_edit: {
-          cid: "currentConversationId",
-          limit: "numberOf",
+        message_list: {
+          cid: data.cid,
+          limit: data.limit,
         },
-        id: Math.floor(Math.random() * 101),
+        id: getUniqueId(user),
       },
     };
     const resObjKey = "messages";
@@ -292,7 +292,8 @@ class Api {
 }
 
 function getUserLogin() {
-  const token = localStorage.getItem("sessionId");
+  let token = localStorage.getItem("sessionId");
+  token = token ? token.split(".")[1] : token;
   return token ? token.split(0, 6) : token;
 }
 
