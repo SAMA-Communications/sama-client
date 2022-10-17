@@ -18,8 +18,8 @@ export default function Login() {
   const onSubmit = async (data) => {
     setLoader(true);
     try {
-      const user = await api.userLogin(data);
-      localStorage.setItem("sessionId", user._id);
+      const userToken = await api.userLogin(data);
+      localStorage.setItem("sessionId", userToken);
       navigate("/main");
     } catch (error) {
       alert(error.message);

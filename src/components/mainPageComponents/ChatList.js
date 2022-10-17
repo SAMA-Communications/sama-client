@@ -6,7 +6,7 @@ import { VscComment, VscDeviceCamera } from "react-icons/vsc";
 import "../../styles/ChatList.css";
 
 export default function ChatList() {
-  const userLogin = localStorage.getItem("sessionId");
+  const userToken = localStorage.getItem("sessionId");
   const [list, setList] = useState([]);
   const [update, setUpdate] = useState(false);
 
@@ -32,14 +32,14 @@ export default function ChatList() {
     <aside>
       <div className="user-box">
         <div className="user-photo">
-          {!userLogin ? (
+          {!userToken ? (
             <VscDeviceCamera />
           ) : (
-            userLogin?.slice(0, 2).toUpperCase()
+            userToken?.slice(0, 2).toUpperCase()
           )}
         </div>
         <div className="user-info">
-          <p>{userLogin?.slice(-3)}</p>
+          <p>{userToken?.slice(-6)}</p>
         </div>
       </div>
       <div className="chat-list">

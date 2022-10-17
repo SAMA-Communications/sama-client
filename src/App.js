@@ -15,15 +15,16 @@ function App() {
   }, []);
 
   const userLoginByToken = async (token) => {
-    let response;
+    let usertoken;
     try {
-      response = await api.userLogin({ token });
+      usertoken = await api.userLogin({ token });
+      localStorage.setItem("sessionId", usertoken);
       navigate("/main");
     } catch (error) {
       localStorage.clear();
       navigate("/login");
     }
-    return response;
+    return usertoken;
   };
 
   return (

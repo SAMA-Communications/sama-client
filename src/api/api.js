@@ -71,7 +71,7 @@ class Api {
         id: getUniqueId(data.ulogin),
       },
     };
-    const resObjKey = "user";
+    const resObjKey = "token";
     return this.sendPromise(requestData, resObjKey);
   }
 
@@ -293,7 +293,7 @@ class Api {
 
 function getUserLogin() {
   const token = localStorage.getItem("sessionId");
-  return token ? token.split(":")[0] : null;
+  return token ? token.split(0, 6) : token;
 }
 
 const api = new Api(process.env.REACT_APP_SOCKET_CONNECT);
