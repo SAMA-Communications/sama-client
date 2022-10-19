@@ -30,12 +30,16 @@ export default function ChatForm() {
     if (!chatId) {
       return;
     }
-    api.messageList({ cid: chatId, limit: 10 }).then((arr) => {
-      setMessages(arr);
-    });
+    setTimeout(() => {
+      api.messageList({ cid: chatId, limit: 10 }).then((arr) => {
+        setMessages(arr);
+      });
+    }, 500);
   }, [chatId, update]);
 
-  const sendMessage = async () => {
+  const sendMessage = async (event) => {
+    event.preventDefault();
+
     const text = messageInputEl.current.value.trim();
     if (text.length > 0) {
       await api.messageCreate({ text, chatId });

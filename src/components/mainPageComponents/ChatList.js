@@ -8,13 +8,12 @@ import "../../styles/ChatList.css";
 export default function ChatList() {
   const userToken = localStorage.getItem("sessionId");
   const [list, setList] = useState([]);
-  const [update, setUpdate] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
       api.conversationList({}).then((el) => setList(el));
     }, 300);
-  }, [update]);
+  }, []);
 
   const createChat = async () => {
     const idRecipient = prompt("ID user");
@@ -24,8 +23,10 @@ export default function ChatList() {
       recipient: idRecipient,
       participants: [idRecipient],
     };
-    await api.conversationCreate(requestData);
-    update ? setUpdate(false) : setUpdate(true);
+    const newChat = await api.conversationCreate(requestData);
+    if (newChat) {
+      setList([...list, JSON.parse(newChat)]);
+    }
   };
 
   return (
