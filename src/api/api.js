@@ -1,5 +1,6 @@
 import getUniqueId from "./uuid.js";
 //xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx:user_login генерувати
+import getBrowserFingerprint from "get-browser-fingerprint";
 
 class Api {
   constructor(baseUrl) {
@@ -61,12 +62,12 @@ class Api {
         user_login: data.token
           ? {
               token: data.token,
-              deviceId: navigator.productSub,
+              deviceId: getBrowserFingerprint(true),
             }
           : {
               login: data.ulogin,
               password: data.pass,
-              deviceId: navigator.productSub,
+              deviceId: getBrowserFingerprint(true),
             },
         id: getUniqueId(data.ulogin),
       },
@@ -277,13 +278,13 @@ class Api {
   }
 
   async conversationDelete(data) {
-    //===============to do
+    const user = getUserLogin();
     const requestData = {
       request: {
         conversation_delete: {
-          id: "currentConversationId",
+          id: data.cid,
         },
-        id: Math.floor(Math.random() * 101),
+        id: getUniqueId(user),
       },
     };
     const resObjKey = "success";

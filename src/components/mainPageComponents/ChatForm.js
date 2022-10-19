@@ -4,6 +4,7 @@ import {
   VscDeviceCamera,
   VscFileSymlinkDirectory,
   VscRocket,
+  VscTrash,
 } from "react-icons/vsc";
 import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../api/api";
@@ -26,23 +27,32 @@ export default function ChatForm() {
   const [update, setUpdate] = useState(false);
 
   useEffect(() => {
-    const listMessages = api
-      .messageList({ cid: chatId, limit: 10 })
-      .then((arr) => {
-        console.log(arr);
-        setMessages(arr);
-      });
-    console.log(messages);
+    if (!chatId) {
+      return;
+    }
+    api.messageList({ cid: chatId, limit: 10 }).then((arr) => {
+      setMessages(arr);
+    });
   }, [chatId, update]);
 
-  const sendMessage = async (event) => {
-    event.preventDefault();
-
+  const sendMessage = async () => {
     const text = messageInputEl.current.value.trim();
     if (text.length > 0) {
       await api.messageCreate({ text, chatId });
       messageInputEl.current.value = "";
       update ? setUpdate(false) : setUpdate(true);
+    }
+  };
+
+  const deleteChat = async () => {
+    const isConfirm = window.confirm(`Do you want to delete this chat?`);
+    if (isConfirm) {
+      try {
+        await api.conversationDelete({ cid: chatId });
+        navigate("/main");
+      } catch (error) {
+        alert(error.message);
+      }
     }
   };
 
@@ -65,6 +75,9 @@ export default function ChatForm() {
                 <span>|</span>
                 <p>typing...</p>
               </div>
+            </div>
+            <div className="chat-delete-btn" onClick={deleteChat}>
+              <VscTrash />
             </div>
             <div
               className="chat-close-btn"
