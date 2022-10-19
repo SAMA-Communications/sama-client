@@ -101,7 +101,9 @@ export default function ChatForm() {
                   <p
                     key={d.id}
                     className={
-                      d.from === userInfo._id.toString() ? "my-message" : ""
+                      d.from === userInfo._id.toString()
+                        ? "message my-message"
+                        : "message"
                     }
                   >
                     {d.body}

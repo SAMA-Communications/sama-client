@@ -184,6 +184,21 @@
   font-size: 0.8em;
   margin-right: 8px;
 }
+.message {
+  max-width: 80%;
+  width: max-content;
+  padding: 4px 12px;
+  margin-top: 5px;
+
+  font-size: 1.2em;
+  flex-wrap: wrap;
+
+  border: none;
+  border-radius: 8px;
+  background-color: rgb(236, 236, 236);
+}
+
 .my-message {
+  margin-left: auto;
   text-align: right;
 }
