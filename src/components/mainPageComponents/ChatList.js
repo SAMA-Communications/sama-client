@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import UserSearch from "./UserSearch.js";
 import api from "../../api/api.js";
 import { Link } from "react-router-dom";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
@@ -8,26 +9,13 @@ import "../../styles/ChatList.css";
 export default function ChatList() {
   const userToken = localStorage.getItem("sessionId");
   const [list, setList] = useState([]);
+  const [isSearchForm, setIsSearchForm] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
       api.conversationList({}).then((el) => setList(el));
     }, 300);
   }, []);
-
-  const createChat = async () => {
-    const idRecipient = prompt("ID user");
-    const requestData = {
-      name: idRecipient,
-      type: "u",
-      recipient: idRecipient,
-      participants: [idRecipient],
-    };
-    const newChat = await api.conversationCreate(requestData);
-    if (newChat) {
-      setList([...list, JSON.parse(newChat)]);
-    }
-  };
 
   return (
     <aside>
@@ -61,9 +49,10 @@ export default function ChatList() {
             </Link>
           ))
         )}
-        <div className="chat-create-btn" onClick={createChat}>
+        <div className="chat-create-btn" onClick={() => setIsSearchForm(true)}>
           <VscComment />
         </div>
+        {isSearchForm ? <UserSearch close={setIsSearchForm} /> : ""}
       </div>
     </aside>
   );

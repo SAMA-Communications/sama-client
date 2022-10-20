@@ -116,6 +116,22 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
+  async userSearch(data) {
+    const user = getUserLogin();
+    const requestData = {
+      request: {
+        user_search: {
+          login: data.login,
+          limit: data.limit,
+          updated_at: data.updated_at,
+        },
+        id: getUniqueId(user),
+      },
+    };
+    const resObjKey = "users";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
   async messageCreate(data) {
     return new Promise((resolve, reject) => {
       const requestData = {
