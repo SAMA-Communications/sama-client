@@ -12,6 +12,8 @@
 
   background-color: rgba(17, 17, 17, 0.6);
   animation: slowFromTop 0.3s forwards;
+
+  z-index: 1000;
 }
 @keyframes slowFromTop {
   0% {
@@ -97,15 +99,41 @@
   border-bottom: 1px solid lightgray;
 }
 .list-user-message {
-  padding-top: 15px;
+  padding: 15px 0 10px 0;
 
   color: grey;
   text-align: center;
   font-size: 1.2em;
 }
 .list-user-box {
-  margin: 4px 0;
+  margin: 6px 0;
   padding: 5px 10px;
   border: 1px solid lightgray;
   border-radius: 8px;
+}
+.search-create-chat {
+  padding-top: 15px;
+
+  display: flex;
+  justify-content: center;
+}
+.search-create-chat > button {
+  padding: 0.4em 1.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 1.2em;
+  color: #fff;
+
+  border: none;
+  border-radius: 2rem;
+  background-color: #1a8ee1;
+
+  transition: all 0.2s ease-in-out;
+}
+.search-create-chat > button:hover {
+  color: #000;
+  cursor: pointer;
+  background-color: #8dc7f0;
 }

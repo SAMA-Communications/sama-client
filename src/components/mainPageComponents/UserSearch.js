@@ -48,6 +48,9 @@ export default function UserSearch({ close }) {
             <div className="list-user-message">Users not found</div>
           )}
         </div>
+        <div className="search-create-chat">
+          <button>Create chat</button>
+        </div>
       </form>
       <div className="close-form-btn" onClick={() => close(false)}>
         <VscClose />

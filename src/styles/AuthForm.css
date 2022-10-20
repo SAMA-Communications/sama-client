@@ -29,9 +29,10 @@ input[type="submit"] {
   cursor: pointer;
   font-size: 15px;
   background: #1a8ee1;
-  border: 1px solid #1a8ee1;
+  border: none;
   border-radius: 5px;
   color: #fff;
+  transition: all 0.15s ease-in-out;
 }
 
 input[type="submit"]:hover {
