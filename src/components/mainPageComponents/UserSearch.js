@@ -1,10 +1,12 @@
 import React, { useRef, useState } from "react";
-import { VscClose, VscSearch } from "react-icons/vsc";
+import SelectedUser from "../generic/SelectedUser.js";
+import SearchedUser from "../generic/SearchedUser.js";
 import api from "../../api/api";
+import { VscClose, VscSearch } from "react-icons/vsc";
 
-import "../../styles/UserSearch.css";
+import "../../styles/mainPageComponents/UserSearch.css";
 
-export default function UserSearch({ close }) {
+export default function UserSearch({ close, setList }) {
   const inputSearchLogin = useRef(null);
   const [ignoreIds, setIgnoreIds] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -24,6 +26,23 @@ export default function UserSearch({ close }) {
       const users = await api.userSearch(requestData);
       if (users) setListUsers(users);
     }
+  };
+
+  const createChat = async (event) => {
+    event.preventDefault();
+
+    const chatName = window.prompt("Enter chat name:");
+    const requestData = {
+      name: chatName,
+      desciprion: "chat",
+      type: selectedUsers.length > 1 ? "g" : "u", //fix it in future
+      recipient: selectedUsers.length === 1 ? selectedUsers[0]._id : undefined,
+      participants: selectedUsers.map((el) => el._id),
+    };
+    console.log(requestData);
+    const chat = await api.conversationCreate(requestData);
+    setList(JSON.parse(chat));
+    close(false);
   };
 
   const addUserToIgnore = async (data) => {
@@ -51,39 +70,10 @@ export default function UserSearch({ close }) {
             <VscSearch />
           </button>
         </div>
-        <div className="chat-selected-users">
-          {selectedUsers.length
-            ? selectedUsers.map((d) => (
-                <div
-                  key={d._id + "-selected"}
-                  className={"list-user-selected-box"}
-                  onClick={() => removeUserToIgnore(d)}
-                >
-                  <p>{d.login}</p>
-                  <span>
-                    <VscClose />
-                  </span>
-                </div>
-              ))
-            : ""}
-        </div>
-        <div className="list-users">
-          {listUsers.length ? (
-            listUsers.map((d) => (
-              <div
-                key={d._id}
-                className={"list-user-box"}
-                onClick={() => addUserToIgnore(d)}
-              >
-                <p>User: {d.login}</p>
-              </div>
-            ))
-          ) : (
-            <div className="list-user-message">Users not found</div>
-          )}
-        </div>
+        <SelectedUser removeEl={removeUserToIgnore} list={selectedUsers} />
+        <SearchedUser addEl={addUserToIgnore} list={listUsers} />
         <div className="search-create-chat">
-          <button>Create chat</button>
+          <button onClick={createChat}>Create chat</button>
         </div>
       </form>
       <div className="close-form-btn" onClick={() => close(false)}>

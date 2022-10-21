@@ -4,7 +4,7 @@ import api from "../../api/api.js";
 import { Link } from "react-router-dom";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
 
-import "../../styles/ChatList.css";
+import "../../styles/mainPageComponents/ChatList.css";
 
 export default function ChatList() {
   const userToken = localStorage.getItem("sessionId");
@@ -13,7 +13,7 @@ export default function ChatList() {
 
   useEffect(() => {
     setTimeout(() => {
-      api.conversationList({}).then((el) => setList(el));
+      api.conversationList({}).then((arr) => setList(arr));
     }, 300);
   }, []);
 
@@ -52,7 +52,11 @@ export default function ChatList() {
         <div className="chat-create-btn" onClick={() => setIsSearchForm(true)}>
           <VscComment />
         </div>
-        {isSearchForm ? <UserSearch close={setIsSearchForm} /> : ""}
+        {isSearchForm ? (
+          <UserSearch close={setIsSearchForm} setList={setList} />
+        ) : (
+          ""
+        )}
       </div>
     </aside>
   );

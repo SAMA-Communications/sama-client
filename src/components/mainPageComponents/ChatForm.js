@@ -10,7 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../api/api";
 import jwtDecode from "jwt-decode";
 
-import "../../styles/ChatForm.css";
+import "../../styles/mainPageComponents/ChatForm.css";
 
 export default function ChatForm() {
   const navigate = useNavigate();

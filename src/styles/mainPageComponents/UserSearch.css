@@ -153,6 +153,7 @@
 
 .chat-selected-users {
   display: flex;
+  flex-wrap: wrap;
 
   padding-bottom: 5px;
   border-bottom: 1px solid lightgray;

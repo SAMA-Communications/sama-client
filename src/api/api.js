@@ -318,4 +318,5 @@ function getUserLogin() {
 const api = new Api(process.env.REACT_APP_SOCKET_CONNECT);
 api.connect();
 
+export { getUserLogin };
 export default api;
