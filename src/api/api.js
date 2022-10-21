@@ -124,6 +124,7 @@ class Api {
           login: data.login,
           limit: data.limit,
           updated_at: data.updated_at,
+          notSend: data.notSend,
         },
         id: getUniqueId(user),
       },

@@ -38,13 +38,11 @@
   background-color: #fff;
 }
 .search-options {
-  padding-bottom: 15px;
+  padding-bottom: 10px;
 
   display: grid;
   gap: 10px;
-  grid-template-columns: 10fr 1.5fr;
-
-  border-bottom: 1px solid lightgray;
+  grid-template-columns: 10fr 2fr;
 }
 .search-options > button {
   display: flex;
@@ -105,12 +103,61 @@
   text-align: center;
   font-size: 1.2em;
 }
-.list-user-box {
+.list-user-box,
+.list-user-selected-box {
   margin: 6px 0;
   padding: 5px 10px;
+
   border: 1px solid lightgray;
   border-radius: 8px;
+  animation: slowFromRight 0.3s forwards;
 }
+@keyframes slowFromRight {
+  0% {
+    opacity: 0;
+    transform: translateY(20%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.list-user-selected-box {
+  width: max-content;
+  margin-right: 5px;
+
+  display: flex;
+
+  transition: all 0.2s ease-in-out;
+}
+.list-user-selected-box > span {
+  width: 20px;
+  height: 20px;
+
+  margin-left: 10px;
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.list-user-selected-box:hover {
+  cursor: pointer;
+  border: 1px solid red;
+  background-color: rgb(255, 133, 133);
+}
+.list-user-box:hover {
+  cursor: pointer;
+  background-color: rgb(233, 233, 233);
+}
+
+.chat-selected-users {
+  display: flex;
+
+  padding-bottom: 5px;
+  border-bottom: 1px solid lightgray;
+}
+
 .search-create-chat {
   padding-top: 15px;
 
