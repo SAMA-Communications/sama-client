@@ -190,7 +190,7 @@
   padding: 4px 12px;
   margin-top: 5px;
 
-  font-size: 1.2em;
+  font-size: 1.1em;
   flex-wrap: wrap;
 
   border: none;
@@ -201,4 +201,11 @@
 .my-message {
   margin-left: auto;
   text-align: right;
+}
+.message-user-name {
+  margin-bottom: 5px;
+
+  color: rgb(59, 103, 145);
+  font-weight: 600;
+  font-size: 0.75em;
 }

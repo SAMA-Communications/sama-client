@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   VscClose,
   VscDeviceCamera,
@@ -8,8 +8,10 @@ import {
 } from "react-icons/vsc";
 import api from "../../api/api";
 import jwtDecode from "jwt-decode";
+import UserMessage from "../generic/UserMessage.js";
 import { removeChat } from "../../store/ChatList";
-import { useDispatch } from "react-redux";
+import { setArr, addMessage } from "../../store/MessageArray";
+import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import "../../styles/mainPageComponents/ChatForm.css";
@@ -18,36 +20,50 @@ export default function ChatForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const url = useLocation();
-  const sessionId = localStorage.getItem("sessionId");
-  const userInfo = sessionId ? jwtDecode(sessionId) : null;
+
+  const userInfo = localStorage.getItem("sessionId")
+    ? jwtDecode(localStorage.getItem("sessionId"))
+    : null;
 
   const chatId = useMemo(() => {
     return url.hash ? url.hash.slice(1) : null;
   }, [url]);
 
   const messageInputEl = useRef(null);
-  const [messages, setMessages] = useState([]);
-  const [update, setUpdate] = useState(false);
+  const messages = useSelector((state) => state.messageArr.value);
 
   useEffect(() => {
     if (!chatId) {
       return;
     }
-    setTimeout(() => {
-      api.messageList({ cid: chatId, limit: 10 }).then((arr) => {
-        setMessages(arr);
-      });
-    }, 500);
-  }, [chatId, update]);
+    api.messageList({ cid: chatId, limit: 10 }).then((arr) => {
+      dispatch(setArr(arr));
+    });
+  }, [chatId]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
 
     const text = messageInputEl.current.value.trim();
     if (text.length > 0) {
-      await api.messageCreate({ text, chatId });
+      const response = await api.messageCreate({ text, chatId });
+      if (response.mid) {
+        const msg = {
+          _id: response.mid,
+          id: response.server_mid,
+          body: text,
+          cid: chatId,
+          // deleted_for: []
+          from: userInfo._id,
+          // x: {
+          //   param1: "value",
+          //   param2: "value",
+          // },
+          t: response.t,
+        };
+        dispatch(addMessage(msg));
+      }
       messageInputEl.current.value = "";
-      update ? setUpdate(false) : setUpdate(true);
     }
   };
 
@@ -102,16 +118,7 @@ export default function ChatForm() {
             ) : (
               <div className="chat-messages">
                 {messages.map((d) => (
-                  <p
-                    key={d.id}
-                    className={
-                      d.from === userInfo._id.toString()
-                        ? "message my-message"
-                        : "message"
-                    }
-                  >
-                    {d.body}
-                  </p>
+                  <UserMessage key={d.id} data={d} userInfo={userInfo} />
                 ))}
               </div>
             )}

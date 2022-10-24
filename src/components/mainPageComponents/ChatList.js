@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import UserSearch from "./UserSearch.js";
 import api from "../../api/api.js";
+import jwtDecode from "jwt-decode";
 import { Link } from "react-router-dom";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
-import { setValue } from "../../store/ChatList.js";
+import { setList } from "../../store/ChatList.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../styles/mainPageComponents/ChatList.css";
@@ -12,11 +13,14 @@ export default function ChatList() {
   const [isSearchForm, setIsSearchForm] = useState(false);
   const dispatch = useDispatch();
   const list = useSelector((state) => state.chatList.value);
-  const userToken = localStorage.getItem("sessionId");
+
+  const userLogin = localStorage.getItem("sessionId")
+    ? jwtDecode(localStorage.getItem("sessionId")).login
+    : null;
 
   useEffect(() => {
     setTimeout(() => {
-      api.conversationList({}).then((arr) => dispatch(setValue(arr)));
+      api.conversationList({}).then((arr) => dispatch(setList(arr)));
     }, 300);
   }, []);
 
@@ -24,14 +28,14 @@ export default function ChatList() {
     <aside>
       <div className="user-box">
         <div className="user-photo">
-          {!userToken ? (
+          {!userLogin ? (
             <VscDeviceCamera />
           ) : (
-            userToken?.slice(0, 2).toUpperCase()
+            userLogin?.slice(0, 2).toUpperCase()
           )}
         </div>
         <div className="user-info">
-          <p>{userToken?.slice(-6)}</p>
+          <p>{userLogin?.slice(-6)}</p>
         </div>
       </div>
       <div className="chat-list">

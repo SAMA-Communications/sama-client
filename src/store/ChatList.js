@@ -6,7 +6,7 @@ export const chatList = createSlice({
     value: [],
   },
   reducers: {
-    setValue: (state, action) => {
+    setList: (state, action) => {
       state.value = action.payload;
     },
     upsertChat: (state, action) => {
@@ -22,6 +22,6 @@ export const chatList = createSlice({
   },
 });
 
-export const { upsertChat, removeChat, setValue } = chatList.actions;
+export const { setList, upsertChat, removeChat } = chatList.actions;
 
 export default chatList.reducer;

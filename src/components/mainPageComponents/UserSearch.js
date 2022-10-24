@@ -46,7 +46,7 @@ export default function UserSearch({ close }) {
       participants: selectedUsers.map((el) => el._id),
     };
     const chat = await api.conversationCreate(requestData);
-    dispatch(upsertChat(JSON.parse(chat)));
+    dispatch(upsertChat(chat));
     close(false);
   };
 
