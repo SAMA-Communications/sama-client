@@ -9,8 +9,9 @@ export const chatList = createSlice({
     setValue: (state, action) => {
       state.value = action.payload;
     },
-    addChat: (state, action) => {
-      state.value.push(action.payload);
+    upsertChat: (state, action) => {
+      if (!state.value.some((elem) => elem._id === action.payload._id))
+        state.value.push(action.payload);
     },
     removeChat: (state, action) => {
       const index = state.value.findIndex(
@@ -21,6 +22,6 @@ export const chatList = createSlice({
   },
 });
 
-export const { addChat, removeChat, setValue } = chatList.actions;
+export const { upsertChat, removeChat, setValue } = chatList.actions;
 
 export default chatList.reducer;

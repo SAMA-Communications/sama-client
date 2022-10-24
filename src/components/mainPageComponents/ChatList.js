@@ -3,7 +3,7 @@ import UserSearch from "./UserSearch.js";
 import api from "../../api/api.js";
 import { Link } from "react-router-dom";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
-import { setValue } from "../../app/ChatList.js";
+import { setValue } from "../../store/ChatList.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../styles/mainPageComponents/ChatList.css";
@@ -45,7 +45,9 @@ export default function ChatList() {
                   <VscDeviceCamera />
                 </div>
                 <div className="chat-box-info">
-                  <p className="chat-name">{obj.name}</p>
+                  <p className="chat-name">
+                    {obj.name ? obj.name : obj.opponent_id}
+                  </p>
                   <p className="chat-message">{obj.description}</p>
                 </div>
               </div>

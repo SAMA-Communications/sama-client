@@ -3,7 +3,7 @@ import SearchedUser from "../generic/SearchedUser.js";
 import SelectedUser from "../generic/SelectedUser.js";
 import api from "../../api/api";
 import { VscClose, VscSearch } from "react-icons/vsc";
-import { addChat } from "../../app/ChatList.js";
+import { upsertChat } from "../../store/ChatList.js";
 import { useDispatch } from "react-redux";
 
 import "../../styles/mainPageComponents/UserSearch.css";
@@ -34,17 +34,19 @@ export default function UserSearch({ close }) {
   const createChat = async (event) => {
     event.preventDefault();
 
-    const chatName = window.prompt("Enter chat name:");
     const requestData = {
-      name: chatName,
+      name:
+        selectedUsers.length === 1
+          ? undefined
+          : window.prompt("Enter chat name:"),
       desciprion: "chat",
       type: selectedUsers.length > 1 ? "g" : "u", //fix it in future
-      recipient: selectedUsers.length === 1 ? selectedUsers[0]._id : undefined,
+      opponent_id:
+        selectedUsers.length === 1 ? selectedUsers[0]._id : undefined,
       participants: selectedUsers.map((el) => el._id),
     };
-    console.log(requestData);
     const chat = await api.conversationCreate(requestData);
-    dispatch(addChat(JSON.parse(chat)));
+    dispatch(upsertChat(JSON.parse(chat)));
     close(false);
   };
 
@@ -73,8 +75,26 @@ export default function UserSearch({ close }) {
             <VscSearch />
           </button>
         </div>
-        <SelectedUser removeEl={removeUserToIgnore} list={selectedUsers} />
-        <SearchedUser addEl={addUserToIgnore} list={listUsers} />
+        <div className="chat-selected-users">
+          {selectedUsers.length
+            ? selectedUsers.map((d) => (
+                <SelectedUser
+                  key={d._id + "-selected"}
+                  removeEl={removeUserToIgnore}
+                  data={d}
+                />
+              ))
+            : ""}
+        </div>
+        <div className="list-users">
+          {listUsers.length ? (
+            listUsers.map((d) => (
+              <SearchedUser key={d._id} addEl={addUserToIgnore} data={d} />
+            ))
+          ) : (
+            <div className="list-user-message">Users not found</div>
+          )}
+        </div>
         <div className="search-create-chat">
           <button onClick={createChat}>Create chat</button>
         </div>

@@ -248,7 +248,7 @@ class Api {
           name: data.name,
           description: data.description,
           type: data.type,
-          recipient: data.recipient,
+          opponent_id: data.opponent_id,
           participants: data.participants,
         },
         id: getUniqueId(user),

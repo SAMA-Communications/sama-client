@@ -8,11 +8,11 @@ import {
 } from "react-icons/vsc";
 import api from "../../api/api";
 import jwtDecode from "jwt-decode";
+import { removeChat } from "../../store/ChatList";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import "../../styles/mainPageComponents/ChatForm.css";
-import { removeChat } from "../../app/ChatList";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
