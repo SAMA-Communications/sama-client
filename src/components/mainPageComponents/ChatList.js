@@ -3,17 +3,20 @@ import UserSearch from "./UserSearch.js";
 import api from "../../api/api.js";
 import { Link } from "react-router-dom";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
+import { setValue } from "../../app/ChatList.js";
+import { useSelector, useDispatch } from "react-redux";
 
 import "../../styles/mainPageComponents/ChatList.css";
 
 export default function ChatList() {
-  const userToken = localStorage.getItem("sessionId");
-  const [list, setList] = useState([]);
   const [isSearchForm, setIsSearchForm] = useState(false);
+  const dispatch = useDispatch();
+  const list = useSelector((state) => state.chatList.value);
+  const userToken = localStorage.getItem("sessionId");
 
   useEffect(() => {
     setTimeout(() => {
-      api.conversationList({}).then((arr) => setList(arr));
+      api.conversationList({}).then((arr) => dispatch(setValue(arr)));
     }, 300);
   }, []);
 
@@ -52,11 +55,7 @@ export default function ChatList() {
         <div className="chat-create-btn" onClick={() => setIsSearchForm(true)}>
           <VscComment />
         </div>
-        {isSearchForm ? (
-          <UserSearch close={setIsSearchForm} setList={setList} />
-        ) : (
-          ""
-        )}
+        {isSearchForm ? <UserSearch close={setIsSearchForm} /> : ""}
       </div>
     </aside>
   );

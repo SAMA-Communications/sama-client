@@ -1,12 +1,15 @@
 import React, { useRef, useState } from "react";
-import SelectedUser from "../generic/SelectedUser.js";
 import SearchedUser from "../generic/SearchedUser.js";
+import SelectedUser from "../generic/SelectedUser.js";
 import api from "../../api/api";
 import { VscClose, VscSearch } from "react-icons/vsc";
+import { addChat } from "../../app/ChatList.js";
+import { useDispatch } from "react-redux";
 
 import "../../styles/mainPageComponents/UserSearch.css";
 
-export default function UserSearch({ close, setList }) {
+export default function UserSearch({ close }) {
+  const dispatch = useDispatch();
   const inputSearchLogin = useRef(null);
   const [ignoreIds, setIgnoreIds] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -41,7 +44,7 @@ export default function UserSearch({ close, setList }) {
     };
     console.log(requestData);
     const chat = await api.conversationCreate(requestData);
-    setList(JSON.parse(chat));
+    dispatch(addChat(JSON.parse(chat)));
     close(false);
   };
 

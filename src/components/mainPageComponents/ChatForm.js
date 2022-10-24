@@ -6,13 +6,16 @@ import {
   VscRocket,
   VscTrash,
 } from "react-icons/vsc";
-import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../api/api";
 import jwtDecode from "jwt-decode";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import "../../styles/mainPageComponents/ChatForm.css";
+import { removeChat } from "../../app/ChatList";
 
 export default function ChatForm() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const url = useLocation();
   const sessionId = localStorage.getItem("sessionId");
@@ -53,6 +56,7 @@ export default function ChatForm() {
     if (isConfirm) {
       try {
         await api.conversationDelete({ cid: chatId });
+        dispatch(removeChat(chatId));
         navigate("/main");
       } catch (error) {
         alert(error.message);
