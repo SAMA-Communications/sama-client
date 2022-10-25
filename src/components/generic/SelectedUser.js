@@ -1,10 +1,10 @@
 import React from "react";
 import { VscClose } from "react-icons/vsc";
 
-export default function SelectedUser({ removeEl, data }) {
+export default function SelectedUser({ uLogin, onClick }) {
   return (
-    <div className={"list-user-selected-box"} onClick={() => removeEl(data)}>
-      <p>{data.login}</p>
+    <div className={"list-user-selected-box"} onClick={onClick}>
+      <p>{uLogin}</p>
       <span>
         <VscClose />
       </span>

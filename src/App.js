@@ -3,9 +3,9 @@ import React, { useEffect } from "react";
 import api from "./api/api";
 import { Route, Routes, useNavigate } from "react-router-dom";
 
-import Login from "./components/Login";
+import Login from "./components/screens/Login";
 import Main from "./components/Main";
-import SignUp from "./components/SignUp";
+import SignUp from "./components/screens/SignUp";
 
 function App() {
   const navigate = useNavigate();

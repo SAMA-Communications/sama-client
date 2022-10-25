@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import api from "../api/api";
+import api from "../../api/api";
 import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import { useForm } from "react-hook-form";
 
-import "../styles/AuthForm.css";
+import "../../styles/AuthForm.css";
 
 export default function SignUp() {
   const navigate = useNavigate();

@@ -1,10 +1,10 @@
-import chatReducer from "./ChatList";
-import messageReducer from "./MessageArray";
+import conversationReducer from "./Conversations";
+import messageReducer from "./Messages";
 import { configureStore } from "@reduxjs/toolkit";
 
 export default configureStore({
   reducer: {
-    chatList: chatReducer,
-    messageArr: messageReducer,
+    conversations: conversationReducer,
+    messages: messageReducer,
   },
 });

@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const messageArr = createSlice({
-  name: "messageArr",
+export const messages = createSlice({
+  name: "Messages",
   initialState: {
     value: [],
   },
   reducers: {
-    setArr: (state, action) => {
+    setMessages: (state, action) => {
       state.value = action.payload.reverse();
     },
     addMessage: (state, action) => {
@@ -19,6 +19,6 @@ export const messageArr = createSlice({
   },
 });
 
-export const { setArr, addMessage, removeMessage } = messageArr.actions;
+export const { setMessages, addMessage, removeMessage } = messages.actions;
 
-export default messageArr.reducer;
+export default messages.reducer;

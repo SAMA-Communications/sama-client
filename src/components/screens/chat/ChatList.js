@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import UserSearch from "./UserSearch.js";
-import api from "../../api/api.js";
+import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
 import { Link } from "react-router-dom";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
-import { setList } from "../../store/ChatList.js";
+import { setChats } from "../../../store/Conversations.js";
 import { useSelector, useDispatch } from "react-redux";
 
-import "../../styles/mainPageComponents/ChatList.css";
+import "../../../styles/mainPageComponents/ChatList.css";
 
 export default function ChatList() {
   const [isSearchForm, setIsSearchForm] = useState(false);
   const dispatch = useDispatch();
-  const list = useSelector((state) => state.chatList.value);
+  const conversations = useSelector((state) => state.conversations.value);
 
   const userLogin = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId")).login
@@ -20,7 +20,7 @@ export default function ChatList() {
 
   useEffect(() => {
     setTimeout(() => {
-      api.conversationList({}).then((arr) => dispatch(setList(arr)));
+      api.conversationList({}).then((arr) => dispatch(setChats(arr)));
     }, 300);
   }, []);
 
@@ -39,10 +39,10 @@ export default function ChatList() {
         </div>
       </div>
       <div className="chat-list">
-        {!list.length ? (
+        {!conversations.length ? (
           <p>No one chat find...</p>
         ) : (
-          list.map((obj) => (
+          conversations.map((obj) => (
             <Link to={`/main/#${obj._id}`} key={obj._id}>
               <div className="chat-box">
                 <div className="chat-box-icon">

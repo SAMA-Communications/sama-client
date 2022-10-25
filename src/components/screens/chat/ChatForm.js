@@ -6,15 +6,15 @@ import {
   VscRocket,
   VscTrash,
 } from "react-icons/vsc";
-import api from "../../api/api";
+import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
-import UserMessage from "../generic/UserMessage.js";
-import { removeChat } from "../../store/ChatList";
-import { setArr, addMessage } from "../../store/MessageArray";
+import ChatMessage from "../../generic/ChatMessage.js";
+import { removeChat } from "../../../store/Conversations";
+import { setMessages, addMessage } from "../../../store/Messages";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import "../../styles/mainPageComponents/ChatForm.css";
+import "../../../styles/mainPageComponents/ChatForm.css";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -30,14 +30,14 @@ export default function ChatForm() {
   }, [url]);
 
   const messageInputEl = useRef(null);
-  const messages = useSelector((state) => state.messageArr.value);
+  const messages = useSelector((state) => state.messages.value);
 
   useEffect(() => {
     if (!chatId) {
       return;
     }
     api.messageList({ cid: chatId, limit: 10 }).then((arr) => {
-      dispatch(setArr(arr));
+      dispatch(setMessages(arr));
     });
   }, [chatId]);
 
@@ -49,16 +49,10 @@ export default function ChatForm() {
       const response = await api.messageCreate({ text, chatId });
       if (response.mid) {
         const msg = {
-          _id: response.mid,
-          id: response.server_mid,
+          _id: response.server_mid,
           body: text,
           cid: chatId,
-          // deleted_for: []
           from: userInfo._id,
-          // x: {
-          //   param1: "value",
-          //   param2: "value",
-          // },
           t: response.t,
         };
         dispatch(addMessage(msg));
@@ -118,7 +112,12 @@ export default function ChatForm() {
             ) : (
               <div className="chat-messages">
                 {messages.map((d) => (
-                  <UserMessage key={d.id} data={d} userInfo={userInfo} />
+                  <ChatMessage
+                    key={d._id}
+                    fromId={d.from}
+                    userId={userInfo._id}
+                    text={d.body}
+                  />
                 ))}
               </div>
             )}

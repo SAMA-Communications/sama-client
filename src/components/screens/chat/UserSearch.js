@@ -1,19 +1,19 @@
 import React, { useRef, useState } from "react";
-import SearchedUser from "../generic/SearchedUser.js";
-import SelectedUser from "../generic/SelectedUser.js";
-import api from "../../api/api";
+import SearchedUser from "../../generic/SearchedUser.js";
+import SelectedUser from "../../generic/SelectedUser.js";
+import api from "../../../api/api";
 import { VscClose, VscSearch } from "react-icons/vsc";
-import { upsertChat } from "../../store/ChatList.js";
+import { upsertChat } from "../../../store/Conversations.js";
 import { useDispatch } from "react-redux";
 
-import "../../styles/mainPageComponents/UserSearch.css";
+import "../../../styles/mainPageComponents/UserSearch.css";
 
 export default function UserSearch({ close }) {
   const dispatch = useDispatch();
   const inputSearchLogin = useRef(null);
   const [ignoreIds, setIgnoreIds] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [listUsers, setListUsers] = useState([]);
+  const [searchedUsers, setSearchedUsers] = useState([]);
 
   const sendSearchRequest = async (event) => {
     event.preventDefault();
@@ -27,7 +27,7 @@ export default function UserSearch({ close }) {
         ignore_ids: ignoreIds,
       };
       const users = await api.userSearch(requestData);
-      if (users) setListUsers(users);
+      if (users) setSearchedUsers(users);
     }
   };
 
@@ -53,12 +53,12 @@ export default function UserSearch({ close }) {
   const addUserToIgnore = async (data) => {
     setSelectedUsers([...selectedUsers, data]);
     setIgnoreIds([...ignoreIds, data._id]);
-    setListUsers(listUsers.filter((el) => el._id !== data._id));
+    setSearchedUsers(searchedUsers.filter((el) => el._id !== data._id));
   };
   const removeUserToIgnore = async (data) => {
     setSelectedUsers(selectedUsers.filter((el) => el._id !== data._id));
     setIgnoreIds(ignoreIds.filter((id) => id !== data._id));
-    setListUsers([...listUsers, data]);
+    setSearchedUsers([...searchedUsers, data]);
   };
 
   return (
@@ -80,16 +80,20 @@ export default function UserSearch({ close }) {
             ? selectedUsers.map((d) => (
                 <SelectedUser
                   key={d._id + "-selected"}
-                  removeEl={removeUserToIgnore}
-                  data={d}
+                  onClick={() => removeUserToIgnore(d)}
+                  uLogin={d.login}
                 />
               ))
             : ""}
         </div>
         <div className="list-users">
-          {listUsers.length ? (
-            listUsers.map((d) => (
-              <SearchedUser key={d._id} addEl={addUserToIgnore} data={d} />
+          {searchedUsers.length ? (
+            searchedUsers.map((d) => (
+              <SearchedUser
+                key={d._id}
+                onClick={() => addUserToIgnore(d)}
+                uLogin={d.login}
+              />
             ))
           ) : (
             <div className="list-user-message">Users not found</div>

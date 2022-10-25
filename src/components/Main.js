@@ -1,12 +1,11 @@
+import ChatForm from "./screens/chat/ChatForm";
+import ChatList from "./screens/chat/ChatList";
 import React from "react";
 import api from "../api/api";
 import { Link } from "react-router-dom";
 import { VscCommentDiscussion } from "react-icons/vsc";
 
 import "../styles/Main.css";
-
-import ChatForm from "./mainPageComponents/ChatForm";
-import ChatList from "./mainPageComponents/ChatList";
 
 export default function Main() {
   const sendLogout = async () => {

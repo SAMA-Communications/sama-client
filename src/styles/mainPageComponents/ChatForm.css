@@ -33,7 +33,6 @@
   background-color: #fff;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-
 .chat-empty {
   width: 100%;
   height: 100%;
@@ -131,20 +130,19 @@
   color: rgb(255, 62, 62);
   transform: scale(1.2);
 }
-
+.chat-form-messaging {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 .chat-form-main {
-  height: 69vh;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   padding: 10px 0;
   overflow: auto;
 }
 
-#chat-form-send {
-  height: 4.5em;
-
-  display: flex;
-  border-top: 1px solid lightgray;
-  padding: 15px;
-}
 #inputMessage {
   flex-grow: 1;
   height: 100%;
@@ -159,6 +157,13 @@
 }
 #inputMessage:focus {
   outline: none;
+}
+#chat-form-send {
+  height: 3.4em;
+
+  display: flex;
+  border-top: 1px solid lightgray;
+  padding: 15px 15px 0 15px;
 }
 #chat-form-send > button {
   width: 120px;

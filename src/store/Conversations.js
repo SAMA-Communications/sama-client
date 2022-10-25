@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const chatList = createSlice({
-  name: "chatList",
+export const conversations = createSlice({
+  name: "Conversations",
   initialState: {
     value: [],
   },
   reducers: {
-    setList: (state, action) => {
+    setChats: (state, action) => {
       state.value = action.payload;
     },
     upsertChat: (state, action) => {
@@ -22,6 +22,6 @@ export const chatList = createSlice({
   },
 });
 
-export const { setList, upsertChat, removeChat } = chatList.actions;
+export const { setChats, upsertChat, removeChat } = conversations.actions;
 
-export default chatList.reducer;
+export default conversations.reducer;
