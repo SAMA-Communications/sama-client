@@ -10,6 +10,7 @@ import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
 import ChatMessage from "../../generic/ChatMessage.js";
 import { removeChat } from "../../../store/Conversations";
+import { setUsers } from "../../../store/Participants";
 import { setMessages, addMessage } from "../../../store/Messages";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -25,33 +26,43 @@ export default function ChatForm() {
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
 
-  const chatId = useMemo(() => {
-    return url.hash ? url.hash.slice(1) : null;
-  }, [url]);
+  const conversation = useSelector((state) => state.conversation.value);
+  const participants = new Map(
+    useSelector((state) => state.participants.value).map((obj) => [
+      obj._id,
+      obj.login,
+    ])
+  );
 
   const messageInputEl = useRef(null);
   const messages = useSelector((state) => state.messages.value);
 
   useEffect(() => {
-    if (!chatId) {
+    if (!conversation._id) {
       return;
     }
-    api.messageList({ cid: chatId, limit: 10 }).then((arr) => {
+    api.messageList({ cid: conversation._id, limit: 10 }).then((arr) => {
       dispatch(setMessages(arr));
     });
-  }, [chatId]);
+    api.getParticioantsByCid({ cid: conversation._id }).then((users) => {
+      dispatch(setUsers(users));
+    });
+  }, [url]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
 
     const text = messageInputEl.current.value.trim();
     if (text.length > 0) {
-      const response = await api.messageCreate({ text, chatId });
+      const response = await api.messageCreate({
+        text,
+        chatId: conversation._id,
+      });
       if (response.mid) {
         const msg = {
           _id: response.server_mid,
           body: text,
-          cid: chatId,
+          cid: conversation._id,
           from: userInfo._id,
           t: response.t,
         };
@@ -65,8 +76,8 @@ export default function ChatForm() {
     const isConfirm = window.confirm(`Do you want to delete this chat?`);
     if (isConfirm) {
       try {
-        await api.conversationDelete({ cid: chatId });
-        dispatch(removeChat(chatId));
+        await api.conversationDelete({ cid: conversation._id });
+        dispatch(removeChat(conversation._id));
         navigate("/main");
       } catch (error) {
         alert(error.message);
@@ -76,7 +87,7 @@ export default function ChatForm() {
 
   return (
     <section className="chat-form">
-      {!chatId ? (
+      {!conversation._id ? (
         <div className="chat-form-loading">
           <VscFileSymlinkDirectory />
           <p>Select your chat ...</p>
@@ -88,7 +99,7 @@ export default function ChatForm() {
               <VscDeviceCamera />
             </div>
             <div className="chat-recipient-info">
-              <p>{chatId}</p>
+              <p>{conversation.name}</p>
               <div className="chat-recipient-status hide">
                 <span>|</span>
                 <p>typing...</p>
@@ -117,6 +128,7 @@ export default function ChatForm() {
                     fromId={d.from}
                     userId={userInfo._id}
                     text={d.body}
+                    uName={participants.get(d.from)}
                   />
                 ))}
               </div>

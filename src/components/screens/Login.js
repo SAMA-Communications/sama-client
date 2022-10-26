@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import api from "../../api/api";
-import { Oval } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router-dom";
+import { Oval } from "react-loader-spinner";
+import { clearConversation } from "../../store/CurrentConversation";
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 
 import "../../styles/AuthForm.css";
+import { setChats } from "../../store/Conversations";
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -21,6 +25,8 @@ export default function Login() {
       const userToken = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
       navigate("/main");
+      dispatch(clearConversation());
+      dispatch(setChats([]));
     } catch (error) {
       alert(error.message);
     }

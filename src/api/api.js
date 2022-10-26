@@ -133,6 +133,20 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
+  async getParticioantsByCid(data) {
+    const user = getUserLogin();
+    const requestData = {
+      request: {
+        getParticioantsByCid: {
+          cid: data.cid,
+        },
+        id: getUniqueId(user),
+      },
+    };
+    const resObjKey = "users";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
   async messageCreate(data) {
     return new Promise((resolve, reject) => {
       const requestData = {
