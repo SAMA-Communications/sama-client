@@ -122,28 +122,29 @@ class Api {
       request: {
         user_search: {
           login: data.login,
-          limit: data.limit,
-          updated_at: data.updated_at,
           ignore_ids: data.ignore_ids,
         },
         id: getUniqueId(user),
       },
     };
+    if (data.limit) requestData.request.user_search["limit"] = data.limit;
+    if (data.updated_at)
+      requestData.request.user_search["updated_at"] = data.updated_at;
     const resObjKey = "users";
     return this.sendPromise(requestData, resObjKey);
   }
 
-  async getParticioantsByCid(data) {
+  async getParticipantsByCids(data) {
     const user = getUserLogin();
     const requestData = {
       request: {
-        getParticioantsByCid: {
-          cid: data.cid,
+        getParticipantsByCids: {
+          cids: [...data.cids],
         },
         id: getUniqueId(user),
       },
     };
-    const resObjKey = "users";
+    const resObjKey = "participants";
     return this.sendPromise(requestData, resObjKey);
   }
 
@@ -187,11 +188,12 @@ class Api {
       request: {
         message_list: {
           cid: data.cid,
-          limit: data.limit,
         },
         id: getUniqueId(user),
       },
     };
+    if (data.limit) requestData.request.message_list["limit"] = data.limit;
+
     const resObjKey = "messages";
     return this.sendPromise(requestData, resObjKey);
   }
@@ -295,15 +297,14 @@ class Api {
     const user = getUserLogin();
     const requestData = {
       request: {
-        conversation_list: {
-          limit: data.limit,
-          updated_at: {
-            gt: data.update_at,
-          },
-        },
+        conversation_list: {},
         id: getUniqueId(user),
       },
     };
+    if (data.limit) requestData.request.conversation_list["limit"] = data.limit;
+    if (data.updated_at)
+      requestData.request.conversation_list["updated_at"]["gt"] =
+        data.updated_at;
     const resObjKey = "conversations";
     return this.sendPromise(requestData, resObjKey);
   }

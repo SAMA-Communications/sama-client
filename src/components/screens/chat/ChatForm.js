@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   VscClose,
   VscDeviceCamera,
@@ -6,14 +6,14 @@ import {
   VscRocket,
   VscTrash,
 } from "react-icons/vsc";
+import ChatMessage from "../../generic/ChatMessage.js";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
-import ChatMessage from "../../generic/ChatMessage.js";
 import { removeChat } from "../../../store/Conversations";
-import { setUsers } from "../../../store/Participants";
+import { setConversation } from "../../../store/CurrentConversation";
 import { setMessages, addMessage } from "../../../store/Messages";
-import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/mainPageComponents/ChatForm.css";
 
@@ -27,12 +27,6 @@ export default function ChatForm() {
     : null;
 
   const conversation = useSelector((state) => state.conversation.value);
-  const participants = new Map(
-    useSelector((state) => state.participants.value).map((obj) => [
-      obj._id,
-      obj.login,
-    ])
-  );
 
   const messageInputEl = useRef(null);
   const messages = useSelector((state) => state.messages.value);
@@ -43,9 +37,6 @@ export default function ChatForm() {
     }
     api.messageList({ cid: conversation._id, limit: 10 }).then((arr) => {
       dispatch(setMessages(arr));
-    });
-    api.getParticioantsByCid({ cid: conversation._id }).then((users) => {
-      dispatch(setUsers(users));
     });
   }, [url]);
 
@@ -111,6 +102,7 @@ export default function ChatForm() {
             <div
               className="chat-close-btn"
               onClick={() => {
+                dispatch(setConversation({}));
                 navigate("/main");
               }}
             >
@@ -128,7 +120,10 @@ export default function ChatForm() {
                     fromId={d.from}
                     userId={userInfo._id}
                     text={d.body}
-                    uName={participants.get(d.from)}
+                    uName={
+                      conversation.participants.find((el) => el._id === d.from)
+                        ?.login
+                    }
                   />
                 ))}
               </div>

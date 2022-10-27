@@ -84,7 +84,7 @@ export default function UserSearch({ close }) {
                   uLogin={d.login}
                 />
               ))
-            : ""}
+            : null}
         </div>
         <div className="list-users">
           {searchedUsers.length ? (

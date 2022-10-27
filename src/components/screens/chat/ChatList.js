@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import UserSearch from "./UserSearch.js";
 import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
@@ -21,17 +21,53 @@ export default function ChatList() {
 
   useEffect(() => {
     setTimeout(() => {
-      api.conversationList({}).then((arr) => dispatch(setChats(arr)));
+      api.conversationList({}).then((arr) => {
+        api
+          .getParticipantsByCids({ cids: arr.map((obj) => obj._id) })
+          .then((particiapnts) => {
+            let i = 0;
+            for (const cid in particiapnts) {
+              arr[i++]["participants"] = particiapnts[cid];
+            }
+            dispatch(setChats(arr));
+          });
+      });
     }, 300);
   }, []);
 
-  const [opponentName, setOpponentName] = useState(null);
-  const getNameForUTypeChat = (cid, currentUserId) => {
-    api.getParticioantsByCid({ cid: cid }).then((arr) => {
-      setOpponentName(arr.filter((el) => el._id !== currentUserId)[0]?.login);
-    });
-    return opponentName;
-  };
+  const chatsList = useMemo(
+    () =>
+      conversations.map((obj) => {
+        const chatName = obj.name
+          ? obj.name
+          : obj.participants.find((el) => el._id !== userInfo._id).login;
+        return (
+          <Link
+            to={`/main/#${obj._id}`}
+            key={obj._id}
+            onClick={() =>
+              dispatch(
+                setConversation({
+                  ...obj,
+                  name: chatName,
+                })
+              )
+            }
+          >
+            <div className="chat-box">
+              <div className="chat-box-icon">
+                <VscDeviceCamera />
+              </div>
+              <div className="chat-box-info">
+                <p className="chat-name">{chatName}</p>
+                <p className="chat-message">{obj.description}</p>
+              </div>
+            </div>
+          </Link>
+        );
+      }),
+    [conversations]
+  );
 
   return (
     <aside>
@@ -48,40 +84,7 @@ export default function ChatList() {
         </div>
       </div>
       <div className="chat-list">
-        {!conversations.length ? (
-          <p>No one chat find...</p>
-        ) : (
-          conversations.map((obj) => (
-            <Link
-              to={`/main/#${obj._id}`}
-              key={obj._id}
-              onClick={() =>
-                dispatch(
-                  setConversation({
-                    ...obj,
-                    name: obj.name
-                      ? obj.name
-                      : getNameForUTypeChat(obj._id, userInfo._id),
-                  })
-                )
-              }
-            >
-              <div className="chat-box">
-                <div className="chat-box-icon">
-                  <VscDeviceCamera />
-                </div>
-                <div className="chat-box-info">
-                  <p className="chat-name">
-                    {obj.name
-                      ? obj.name
-                      : getNameForUTypeChat(obj._id, userInfo._id)}
-                  </p>
-                  <p className="chat-message">{obj.description}</p>
-                </div>
-              </div>
-            </Link>
-          ))
-        )}
+        {!conversations.length ? <p>No one chat find...</p> : chatsList}
         <div className="chat-create-btn" onClick={() => setIsSearchForm(true)}>
           <VscComment />
         </div>
