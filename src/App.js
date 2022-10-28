@@ -4,6 +4,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Login from "./components/screens/Login";
 import SignUp from "./components/screens/SignUp";
+import PageLoader from "./components/PageLoader";
 const Main = React.lazy(() => import("./components/Main"));
 const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
@@ -25,7 +26,7 @@ function App() {
   };
 
   return (
-    <Suspense fallback={<div>Загрузка...</div>}>
+    <Suspense fallback={<PageLoader />}>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />

@@ -4,9 +4,12 @@ import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
 import { Link } from "react-router-dom";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
+import {
+  participantsSelectors,
+  setUsers,
+} from "../../../store/Participants.js";
 import { setChats } from "../../../store/Conversations.js";
 import { setConversation } from "../../../store/CurrentConversation.js";
-import { setUsers } from "../../../store/Participants.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/mainPageComponents/ChatList.css";
@@ -15,7 +18,19 @@ export default function ChatList() {
   const dispatch = useDispatch();
   const [isSearchForm, setIsSearchForm] = useState(false);
   const conversations = useSelector((state) => state.conversations.value);
-  const participants = useSelector((state) => state.participants.value);
+
+  const allParticipants = useSelector(participantsSelectors.selectEntities);
+  const participants = useMemo(() => {
+    let arrayParticipants = {};
+    for (const id in allParticipants) {
+      if (Object.hasOwnProperty.call(allParticipants, id)) {
+        const participant = allParticipants[id];
+        arrayParticipants[id] = participant.login;
+      }
+    }
+
+    return arrayParticipants;
+  }, [allParticipants]);
 
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
@@ -27,7 +42,7 @@ export default function ChatList() {
       api
         .getParticipantsByCids({ cids: arr.map((obj) => obj._id) })
         .then((users) => {
-          dispatch(setUsers(users));
+          dispatch(setUsers(users.map((u) => ({ id: u._id, login: u.login }))));
         });
     });
   }, []);

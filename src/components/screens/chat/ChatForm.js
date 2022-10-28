@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   VscClose,
   VscDeviceCamera,
@@ -9,6 +9,7 @@ import {
 import ChatMessage from "../../generic/ChatMessage.js";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
+import { participantsSelectors } from "../../../store/Participants.js";
 import { removeChat } from "../../../store/Conversations";
 import { setConversation } from "../../../store/CurrentConversation";
 import { setMessages, addMessage } from "../../../store/Messages";
@@ -27,7 +28,17 @@ export default function ChatForm() {
     : null;
 
   const conversation = useSelector((state) => state.conversation.value);
-  const participants = useSelector((state) => state.participants.value);
+  const allParticipants = useSelector(participantsSelectors.selectEntities);
+  const participants = useMemo(() => {
+    let arrayParticipants = {};
+    for (const id in allParticipants) {
+      if (Object.hasOwnProperty.call(allParticipants, id)) {
+        const participant = allParticipants[id];
+        arrayParticipants[id] = participant.login;
+      }
+    }
+    return arrayParticipants;
+  }, [allParticipants]);
 
   const messageInputEl = useRef(null);
   const messages = useSelector((state) => state.messages.value);
