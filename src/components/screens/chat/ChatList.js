@@ -6,44 +6,44 @@ import { Link } from "react-router-dom";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
 import { setChats } from "../../../store/Conversations.js";
 import { setConversation } from "../../../store/CurrentConversation.js";
+import { setUsers } from "../../../store/Participants.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/mainPageComponents/ChatList.css";
 
 export default function ChatList() {
-  const [isSearchForm, setIsSearchForm] = useState(false);
   const dispatch = useDispatch();
+  const [isSearchForm, setIsSearchForm] = useState(false);
   const conversations = useSelector((state) => state.conversations.value);
+  const participants = useSelector((state) => state.participants.value);
 
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
 
   useEffect(() => {
-    setTimeout(() => {
-      api.conversationList({}).then((arr) => {
-        api
-          .getParticipantsByCids({ cids: arr.map((obj) => obj._id) })
-          .then((particiapnts) => {
-            let i = 0;
-            for (const cid in particiapnts) {
-              arr[i++]["participants"] = particiapnts[cid];
-            }
-            dispatch(setChats(arr));
-          });
-      });
-    }, 300);
+    api.conversationList({}).then((arr) => {
+      dispatch(setChats(arr));
+      api
+        .getParticipantsByCids({ cids: arr.map((obj) => obj._id) })
+        .then((users) => {
+          dispatch(setUsers(users));
+        });
+    });
   }, []);
 
   const chatsList = useMemo(
     () =>
       conversations.map((obj) => {
-        const chatName = obj.name
-          ? obj.name
-          : obj.participants.find((el) => el._id !== userInfo._id).login;
+        const chatName = !obj.name
+          ? obj.owner_id === userInfo._id
+            ? participants[obj.opponent_id]
+            : participants[obj.owner_id]
+          : obj.name;
+
         return (
           <Link
-            to={`/main/#${obj._id}`}
+            to={`/main/#${obj.name ? obj._id : chatName}`}
             key={obj._id}
             onClick={() =>
               dispatch(
@@ -66,7 +66,7 @@ export default function ChatList() {
           </Link>
         );
       }),
-    [conversations]
+    [conversations, participants]
   );
 
   return (
@@ -80,7 +80,7 @@ export default function ChatList() {
           )}
         </div>
         <div className="user-info">
-          <p>{userInfo.login}</p>
+          <p>{userInfo?.login}</p>
         </div>
       </div>
       <div className="chat-list">

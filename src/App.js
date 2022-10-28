@@ -1,11 +1,11 @@
-import ErrorPage from "./components/ErrorPage";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import api from "./api/api";
 import { Route, Routes, useNavigate } from "react-router-dom";
 
 import Login from "./components/screens/Login";
-import Main from "./components/Main";
 import SignUp from "./components/screens/SignUp";
+const Main = React.lazy(() => import("./components/Main"));
+const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
 function App() {
   const navigate = useNavigate();
@@ -20,20 +20,19 @@ function App() {
       localStorage.setItem("sessionId", userToken);
       navigate("/main");
     } catch (error) {
-      localStorage.clear();
       navigate("/login");
     }
   };
 
   return (
-    <>
+    <Suspense fallback={<div>Загрузка...</div>}>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/main/*" element={<Main />} />
         <Route path="/*" element={<ErrorPage />} />
       </Routes>
-    </>
+    </Suspense>
   );
 }
 

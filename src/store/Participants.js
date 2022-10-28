@@ -3,11 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 export const participants = createSlice({
   name: "Participants",
   initialState: {
-    value: [],
+    value: {},
   },
   reducers: {
     setUsers: (state, action) => {
-      state.value = action.payload;
+      action.payload.forEach((user) => {
+        state.value[user._id] = user.login;
+      });
     },
   },
 });

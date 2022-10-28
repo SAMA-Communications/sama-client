@@ -27,6 +27,7 @@ export default function ChatForm() {
     : null;
 
   const conversation = useSelector((state) => state.conversation.value);
+  const participants = useSelector((state) => state.participants.value);
 
   const messageInputEl = useRef(null);
   const messages = useSelector((state) => state.messages.value);
@@ -120,10 +121,7 @@ export default function ChatForm() {
                     fromId={d.from}
                     userId={userInfo._id}
                     text={d.body}
-                    uName={
-                      conversation.participants.find((el) => el._id === d.from)
-                        ?.login
-                    }
+                    uName={participants[d.from]}
                   />
                 ))}
               </div>

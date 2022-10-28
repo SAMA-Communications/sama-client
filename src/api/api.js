@@ -144,7 +144,7 @@ class Api {
         id: getUniqueId(user),
       },
     };
-    const resObjKey = "participants";
+    const resObjKey = "users";
     return this.sendPromise(requestData, resObjKey);
   }
 
