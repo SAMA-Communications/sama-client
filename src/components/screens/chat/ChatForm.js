@@ -16,7 +16,7 @@ import { setMessages, addMessage } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import "../../../styles/mainPageComponents/ChatForm.css";
+import "../../../styles/chat/ChatForm.css";
 
 export default function ChatForm() {
   const dispatch = useDispatch();

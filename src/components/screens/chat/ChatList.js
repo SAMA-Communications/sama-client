@@ -12,7 +12,7 @@ import { setChats } from "../../../store/Conversations.js";
 import { setConversation } from "../../../store/CurrentConversation.js";
 import { useSelector, useDispatch } from "react-redux";
 
-import "../../../styles/mainPageComponents/ChatList.css";
+import "../../../styles/chat/ChatList.css";
 
 export default function ChatList() {
   const dispatch = useDispatch();

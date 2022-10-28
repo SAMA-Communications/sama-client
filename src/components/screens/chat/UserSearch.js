@@ -6,7 +6,7 @@ import { VscClose, VscSearch } from "react-icons/vsc";
 import { upsertChat } from "../../../store/Conversations.js";
 import { useDispatch } from "react-redux";
 
-import "../../../styles/mainPageComponents/UserSearch.css";
+import "../../../styles/chat/UserSearch.css";
 
 export default function UserSearch({ close }) {
   const dispatch = useDispatch();
