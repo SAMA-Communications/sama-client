@@ -1,5 +1,5 @@
 import conversationsReducer from "./Conversations";
-import conversationReducer from "./CurrentConversation";
+import selectedConversationReducer from "./SelectedConversation";
 import participantsReducer from "./Participants";
 import messageReducer from "./Messages";
 import { configureStore } from "@reduxjs/toolkit";
@@ -7,7 +7,7 @@ import { configureStore } from "@reduxjs/toolkit";
 export default configureStore({
   reducer: {
     conversations: conversationsReducer,
-    conversation: conversationReducer,
+    selectedConversation: selectedConversationReducer,
     participants: participantsReducer,
     messages: messageReducer,
   },

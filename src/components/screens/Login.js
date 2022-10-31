@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import api from "../../api/api";
 import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
-import { setConversation } from "../../store/CurrentConversation";
+import { setConversation } from "../../store/SelectedConversation";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 

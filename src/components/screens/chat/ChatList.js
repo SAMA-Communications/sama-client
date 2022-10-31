@@ -5,14 +5,14 @@ import jwtDecode from "jwt-decode";
 import { Link } from "react-router-dom";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
 import {
-  participantsSelectors,
+  selectParticipantsEntities,
   setUsers,
 } from "../../../store/Participants.js";
 import {
-  conversationsSelectors,
+  selectAllConversations,
   setChats,
 } from "../../../store/Conversations.js";
-import { setConversation } from "../../../store/CurrentConversation.js";
+import { setConversation } from "../../../store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatList.css";
@@ -21,19 +21,8 @@ export default function ChatList() {
   const dispatch = useDispatch();
   const [isSearchForm, setIsSearchForm] = useState(false);
 
-  const conversations = useSelector(conversationsSelectors.selectEntities);
-  const allParticipants = useSelector(participantsSelectors.selectEntities);
-  const participants = useMemo(() => {
-    let arrayParticipants = {};
-    for (const id in allParticipants) {
-      if (Object.hasOwnProperty.call(allParticipants, id)) {
-        const participant = allParticipants[id];
-        arrayParticipants[id] = participant.login;
-      }
-    }
-
-    return arrayParticipants;
-  }, [allParticipants]);
+  const conversations = useSelector(selectAllConversations);
+  const participants = useSelector(selectParticipantsEntities);
 
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
@@ -42,11 +31,9 @@ export default function ChatList() {
   useEffect(() => {
     api.conversationList({}).then((arr) => {
       dispatch(setChats(arr));
-      api
-        .getParticipantsByCids({ cids: arr.map((obj) => obj._id) })
-        .then((users) => {
-          dispatch(setUsers(users));
-        });
+      api.getParticipantsByCids(arr.map((obj) => obj._id)).then((users) => {
+        dispatch(setUsers(users));
+      });
     });
   }, []);
 
@@ -56,8 +43,8 @@ export default function ChatList() {
       const obj = conversations[id];
       const chatName = !obj.name
         ? obj.owner_id === userInfo._id
-          ? participants[obj.opponent_id]
-          : participants[obj.owner_id]
+          ? participants[obj.opponent_id]?.login
+          : participants[obj.owner_id]?.login
         : obj.name;
 
       list.push(

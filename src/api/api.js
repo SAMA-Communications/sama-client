@@ -139,7 +139,7 @@ class Api {
     const requestData = {
       request: {
         getParticipantsByCids: {
-          cids: [...data.cids],
+          cids: [...data],
         },
         id: getUniqueId(user),
       },

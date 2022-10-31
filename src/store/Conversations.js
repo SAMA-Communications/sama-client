@@ -2,11 +2,16 @@ import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 
 export const conversationsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
+  sortComparer: (a, b) => a._id.localeCompare(b._id),
 });
 
-export const conversationsSelectors = conversationsAdapter.getSelectors(
-  (state) => state.conversations
-);
+export const {
+  selectAll: selectAllConversations,
+  selectById: selectConversationByCid,
+  selectEntities: selectConversationsEntities,
+  selectIds: selectConversationsIds,
+  selectTotal: selectTotalConversations,
+} = conversationsAdapter.getSelectors((state) => state.conversations);
 
 export const conversations = createSlice({
   name: "Conversations",

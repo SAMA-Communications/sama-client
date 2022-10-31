@@ -9,13 +9,13 @@ import {
 import ChatMessage from "../../generic/ChatMessage.js";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
-import { participantsSelectors } from "../../../store/Participants.js";
+import { selectParticipantsEntities } from "../../../store/Participants.js";
 import { removeChat } from "../../../store/Conversations";
-import { setConversation } from "../../../store/CurrentConversation";
+import { setConversation } from "../../../store/SelectedConversation";
 import {
   setMessages,
   addMessage,
-  messagesSelectors,
+  selectAllMessages,
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -31,29 +31,22 @@ export default function ChatForm() {
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
 
-  const conversation = useSelector((state) => state.conversation.value);
-  const allParticipants = useSelector(participantsSelectors.selectEntities);
-  const participants = useMemo(() => {
-    let arrayParticipants = {};
-    for (const id in allParticipants) {
-      if (Object.hasOwnProperty.call(allParticipants, id)) {
-        const participant = allParticipants[id];
-        arrayParticipants[id] = participant.login;
-      }
-    }
-    return arrayParticipants;
-  }, [allParticipants]);
+  const selectedConversation = useSelector(
+    (state) => state.selectedConversation.value
+  );
+  const participants = useSelector(selectParticipantsEntities);
 
   const messageInputEl = useRef(null);
-  const messages = useSelector(messagesSelectors.selectEntities);
+  const messages = useSelector(selectAllMessages);
 
   useEffect(() => {
-    if (!conversation._id) {
-      return;
+    if (selectedConversation._id) {
+      api
+        .messageList({ cid: selectedConversation._id, limit: 10 })
+        .then((arr) => {
+          dispatch(setMessages(arr));
+        });
     }
-    api.messageList({ cid: conversation._id, limit: 15 }).then((arr) => {
-      dispatch(setMessages(arr));
-    });
   }, [url]);
 
   const sendMessage = async (event) => {
@@ -63,13 +56,13 @@ export default function ChatForm() {
     if (text.length > 0) {
       const response = await api.messageCreate({
         text,
-        chatId: conversation._id,
+        chatId: selectedConversation._id,
       });
       if (response.mid) {
         const msg = {
           _id: response.server_mid,
           body: text,
-          cid: conversation._id,
+          cid: selectedConversation._id,
           from: userInfo._id,
           t: response.t,
         };
@@ -83,8 +76,8 @@ export default function ChatForm() {
     const isConfirm = window.confirm(`Do you want to delete this chat?`);
     if (isConfirm) {
       try {
-        await api.conversationDelete({ cid: conversation._id });
-        dispatch(removeChat(conversation._id));
+        await api.conversationDelete({ cid: selectedConversation._id });
+        dispatch(removeChat(selectedConversation._id));
         navigate("/main");
       } catch (error) {
         alert(error.message);
@@ -92,26 +85,23 @@ export default function ChatForm() {
     }
   };
 
-  const messagesList = useMemo(() => {
-    let list = [];
-    for (const id in messages) {
-      const m = messages[id];
-      list.unshift(
+  const messagesList = useMemo(
+    () =>
+      messages.map((m) => (
         <ChatMessage
           key={m._id}
           fromId={m.from}
           userId={userInfo._id}
           text={m.body}
-          uName={participants[m.from]}
+          uName={participants[m.from]?.login}
         />
-      );
-    }
-    return list;
-  }, [messages]);
+      )),
+    [messages]
+  );
 
   return (
     <section className="chat-form">
-      {!conversation._id ? (
+      {!selectedConversation._id ? (
         <div className="chat-form-loading">
           <VscFileSymlinkDirectory />
           <p>Select your chat ...</p>
@@ -123,7 +113,7 @@ export default function ChatForm() {
               <VscDeviceCamera />
             </div>
             <div className="chat-recipient-info">
-              <p>{conversation.name}</p>
+              <p>{selectedConversation.name}</p>
               <div className="chat-recipient-status hide">
                 <span>|</span>
                 <p>typing...</p>
