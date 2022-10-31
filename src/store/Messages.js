@@ -1,21 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+
+export const messagesAdapter = createEntityAdapter({
+  selectId: ({ _id }) => _id,
+});
+
+export const messagesSelectors = messagesAdapter.getSelectors(
+  (state) => state.messages
+);
 
 export const messages = createSlice({
   name: "Messages",
-  initialState: {
-    value: [],
-  },
+  initialState: messagesAdapter.getInitialState(),
   reducers: {
-    setMessages: (state, action) => {
-      state.value = action.payload.reverse();
-    },
-    addMessage: (state, action) => {
-      state.value.push(action.payload);
-    },
-    removeMessage: (state, action) => {
-      const index = state.value.findIndex((elem) => elem.id === action.payload);
-      if (index) state.value.splice(index, 1);
-    },
+    setMessages: messagesAdapter.setAll,
+    addMessage: messagesAdapter.addOne,
+    removeMessage: messagesAdapter.removeOne,
   },
 });
 

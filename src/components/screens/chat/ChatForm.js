@@ -12,7 +12,11 @@ import jwtDecode from "jwt-decode";
 import { participantsSelectors } from "../../../store/Participants.js";
 import { removeChat } from "../../../store/Conversations";
 import { setConversation } from "../../../store/CurrentConversation";
-import { setMessages, addMessage } from "../../../store/Messages";
+import {
+  setMessages,
+  addMessage,
+  messagesSelectors,
+} from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -41,13 +45,13 @@ export default function ChatForm() {
   }, [allParticipants]);
 
   const messageInputEl = useRef(null);
-  const messages = useSelector((state) => state.messages.value);
+  const messages = useSelector(messagesSelectors.selectEntities);
 
   useEffect(() => {
     if (!conversation._id) {
       return;
     }
-    api.messageList({ cid: conversation._id, limit: 10 }).then((arr) => {
+    api.messageList({ cid: conversation._id, limit: 15 }).then((arr) => {
       dispatch(setMessages(arr));
     });
   }, [url]);
@@ -88,6 +92,23 @@ export default function ChatForm() {
     }
   };
 
+  const messagesList = useMemo(() => {
+    let list = [];
+    for (const id in messages) {
+      const m = messages[id];
+      list.unshift(
+        <ChatMessage
+          key={m._id}
+          fromId={m.from}
+          userId={userInfo._id}
+          text={m.body}
+          uName={participants[m.from]}
+        />
+      );
+    }
+    return list;
+  }, [messages]);
+
   return (
     <section className="chat-form">
       {!conversation._id ? (
@@ -122,20 +143,10 @@ export default function ChatForm() {
             </div>
           </div>
           <div className="chat-form-main">
-            {!messages.length ? (
+            {!Object.keys(messages).length ? (
               <div className="chat-empty">Chat is empty..</div>
             ) : (
-              <div className="chat-messages">
-                {messages.map((d) => (
-                  <ChatMessage
-                    key={d._id}
-                    fromId={d.from}
-                    userId={userInfo._id}
-                    text={d.body}
-                    uName={participants[d.from]}
-                  />
-                ))}
-              </div>
+              <div className="chat-messages">{messagesList}</div>
             )}
           </div>
           <form id="chat-form-send" action="">

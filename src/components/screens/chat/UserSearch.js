@@ -34,20 +34,22 @@ export default function UserSearch({ close }) {
   const createChat = async (event) => {
     event.preventDefault();
 
-    const requestData = {
-      name:
-        selectedUsers.length === 1
-          ? undefined
-          : window.prompt("Enter chat name:"),
-      desciprion: "chat",
-      type: selectedUsers.length > 1 ? "g" : "u", //fix it in future
-      opponent_id:
-        selectedUsers.length === 1 ? selectedUsers[0]._id : undefined,
-      participants: selectedUsers.map((el) => el._id),
-    };
-    const chat = await api.conversationCreate(requestData);
-    dispatch(upsertChat(chat));
-    close(false);
+    if (selectedUsers.length) {
+      const requestData = {
+        name:
+          selectedUsers.length === 1
+            ? undefined
+            : window.prompt("Enter chat name:"),
+        desciprion: "chat",
+        type: selectedUsers.length > 1 ? "g" : "u", //fix it in future
+        opponent_id:
+          selectedUsers.length === 1 ? selectedUsers[0]._id : undefined,
+        participants: selectedUsers.map((el) => el._id),
+      };
+      const chat = await api.conversationCreate(requestData);
+      dispatch(upsertChat(chat));
+      close(false);
+    }
   };
 
   const addUserToIgnore = async (data) => {

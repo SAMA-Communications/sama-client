@@ -8,7 +8,10 @@ import {
   participantsSelectors,
   setUsers,
 } from "../../../store/Participants.js";
-import { setChats } from "../../../store/Conversations.js";
+import {
+  conversationsSelectors,
+  setChats,
+} from "../../../store/Conversations.js";
 import { setConversation } from "../../../store/CurrentConversation.js";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -17,8 +20,8 @@ import "../../../styles/chat/ChatList.css";
 export default function ChatList() {
   const dispatch = useDispatch();
   const [isSearchForm, setIsSearchForm] = useState(false);
-  const conversations = useSelector((state) => state.conversations.value);
 
+  const conversations = useSelector(conversationsSelectors.selectEntities);
   const allParticipants = useSelector(participantsSelectors.selectEntities);
   const participants = useMemo(() => {
     let arrayParticipants = {};
@@ -42,47 +45,49 @@ export default function ChatList() {
       api
         .getParticipantsByCids({ cids: arr.map((obj) => obj._id) })
         .then((users) => {
-          dispatch(setUsers(users.map((u) => ({ id: u._id, login: u.login }))));
+          dispatch(setUsers(users));
         });
     });
   }, []);
 
-  const chatsList = useMemo(
-    () =>
-      conversations.map((obj) => {
-        const chatName = !obj.name
-          ? obj.owner_id === userInfo._id
-            ? participants[obj.opponent_id]
-            : participants[obj.owner_id]
-          : obj.name;
+  const chatsList = useMemo(() => {
+    let list = [];
+    for (const id in conversations) {
+      const obj = conversations[id];
+      const chatName = !obj.name
+        ? obj.owner_id === userInfo._id
+          ? participants[obj.opponent_id]
+          : participants[obj.owner_id]
+        : obj.name;
 
-        return (
-          <Link
-            to={`/main/#${obj.name ? obj._id : chatName}`}
-            key={obj._id}
-            onClick={() =>
-              dispatch(
-                setConversation({
-                  ...obj,
-                  name: chatName,
-                })
-              )
-            }
-          >
-            <div className="chat-box">
-              <div className="chat-box-icon">
-                <VscDeviceCamera />
-              </div>
-              <div className="chat-box-info">
-                <p className="chat-name">{chatName}</p>
-                <p className="chat-message">{obj.description}</p>
-              </div>
+      list.push(
+        <Link
+          to={`/main/#${obj.name ? obj._id : chatName}`}
+          key={obj._id}
+          onClick={() =>
+            dispatch(
+              setConversation({
+                ...obj,
+                name: chatName,
+              })
+            )
+          }
+        >
+          <div className="chat-box">
+            <div className="chat-box-icon">
+              <VscDeviceCamera />
             </div>
-          </Link>
-        );
-      }),
-    [conversations, participants]
-  );
+            <div className="chat-box-info">
+              <p className="chat-name">{chatName}</p>
+              <p className="chat-message">{obj.description}</p>
+            </div>
+          </div>
+        </Link>
+      );
+    }
+
+    return list;
+  }, [conversations, participants]);
 
   return (
     <aside>
@@ -99,7 +104,11 @@ export default function ChatList() {
         </div>
       </div>
       <div className="chat-list">
-        {!conversations.length ? <p>No one chat find...</p> : chatsList}
+        {!Object.keys(conversations).length ? (
+          <p>No one chat find...</p>
+        ) : (
+          chatsList
+        )}
         <div className="chat-create-btn" onClick={() => setIsSearchForm(true)}>
           <VscComment />
         </div>
