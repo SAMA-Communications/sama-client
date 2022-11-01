@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import {
-  VscClose,
   VscDeviceCamera,
   VscFileSymlinkDirectory,
   VscRocket,
@@ -78,11 +77,20 @@ export default function ChatForm() {
       try {
         await api.conversationDelete({ cid: selectedConversation._id });
         dispatch(setSelectedConversation({}));
+        dispatch(setMessages([]));
         dispatch(removeChat(selectedConversation._id));
         navigate("/main");
       } catch (error) {
         alert(error.message);
       }
+    }
+  };
+
+  window.onkeydown = function (event) {
+    if (event.keyCode === 27) {
+      dispatch(setSelectedConversation({}));
+      dispatch(setMessages([]));
+      navigate("/main");
     }
   };
 
