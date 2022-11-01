@@ -77,6 +77,7 @@ export default function ChatForm() {
     if (isConfirm) {
       try {
         await api.conversationDelete({ cid: selectedConversation._id });
+        dispatch(setConversation({}));
         dispatch(removeChat(selectedConversation._id));
         navigate("/main");
       } catch (error) {

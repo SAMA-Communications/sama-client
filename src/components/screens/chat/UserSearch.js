@@ -7,6 +7,7 @@ import { upsertChat } from "../../../store/Conversations.js";
 import { useDispatch } from "react-redux";
 
 import "../../../styles/chat/UserSearch.css";
+import { addUsers } from "../../../store/Participants.js";
 
 export default function UserSearch({ close }) {
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ export default function UserSearch({ close }) {
         participants: selectedUsers.map((el) => el._id),
       };
       const chat = await api.conversationCreate(requestData);
+      dispatch(addUsers(selectedUsers));
       dispatch(upsertChat(chat));
       close(false);
     }
