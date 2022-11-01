@@ -16,7 +16,7 @@ import { setSelectedConversation } from "../../../store/SelectedConversation.js"
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatList.css";
-import { setMessages } from "../../../store/Messages.js";
+import { removeAllMessages } from "../../../store/Messages.js";
 
 export default function ChatList() {
   const dispatch = useDispatch();
@@ -53,7 +53,7 @@ export default function ChatList() {
           to={`/main/#${obj.name ? obj._id : chatName}`}
           key={obj._id}
           onClick={() => {
-            dispatch(setMessages([]));
+            dispatch(removeAllMessages());
             dispatch(
               setSelectedConversation({
                 ...obj,

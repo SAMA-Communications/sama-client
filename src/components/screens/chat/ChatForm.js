@@ -14,6 +14,7 @@ import { setSelectedConversation } from "../../../store/SelectedConversation";
 import {
   setMessages,
   addMessage,
+  removeAllMessages,
   selectAllMessages,
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -77,7 +78,7 @@ export default function ChatForm() {
       try {
         await api.conversationDelete({ cid: selectedConversation._id });
         dispatch(setSelectedConversation({}));
-        dispatch(setMessages([]));
+        dispatch(removeAllMessages());
         dispatch(removeChat(selectedConversation._id));
         navigate("/main");
       } catch (error) {
@@ -89,7 +90,7 @@ export default function ChatForm() {
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
       dispatch(setSelectedConversation({}));
-      dispatch(setMessages([]));
+      dispatch(removeAllMessages());
       navigate("/main");
     }
   };
