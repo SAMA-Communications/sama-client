@@ -12,7 +12,7 @@ import {
   selectAllConversations,
   setChats,
 } from "../../../store/Conversations.js";
-import { setConversation } from "../../../store/SelectedConversation.js";
+import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatList.css";
@@ -53,7 +53,7 @@ export default function ChatList() {
           key={obj._id}
           onClick={() =>
             dispatch(
-              setConversation({
+              setSelectedConversation({
                 ...obj,
                 name: chatName,
               })

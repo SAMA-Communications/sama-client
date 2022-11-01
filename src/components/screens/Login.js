@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import api from "../../api/api";
 import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
-import { setConversation } from "../../store/SelectedConversation";
+import { setSelectedConversation } from "../../store/SelectedConversation";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 
@@ -25,7 +25,7 @@ export default function Login() {
       const userToken = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
       navigate("/main");
-      dispatch(setConversation({}));
+      dispatch(setSelectedConversation({}));
       dispatch(setChats([]));
     } catch (error) {
       alert(error.message);

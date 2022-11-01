@@ -11,7 +11,7 @@ import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
 import { selectParticipantsEntities } from "../../../store/Participants.js";
 import { removeChat } from "../../../store/Conversations";
-import { setConversation } from "../../../store/SelectedConversation";
+import { setSelectedConversation } from "../../../store/SelectedConversation";
 import {
   setMessages,
   addMessage,
@@ -77,7 +77,7 @@ export default function ChatForm() {
     if (isConfirm) {
       try {
         await api.conversationDelete({ cid: selectedConversation._id });
-        dispatch(setConversation({}));
+        dispatch(setSelectedConversation({}));
         dispatch(removeChat(selectedConversation._id));
         navigate("/main");
       } catch (error) {
@@ -122,15 +122,6 @@ export default function ChatForm() {
             </div>
             <div className="chat-delete-btn" onClick={deleteChat}>
               <VscTrash />
-            </div>
-            <div
-              className="chat-close-btn"
-              onClick={() => {
-                dispatch(setConversation({}));
-                navigate("/main");
-              }}
-            >
-              <VscClose />
             </div>
           </div>
           <div className="chat-form-main">

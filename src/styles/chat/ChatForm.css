@@ -105,25 +105,15 @@
   color: rgb(52, 54, 202);
   margin: 0 15px;
 }
-.chat-close-btn,
 .chat-delete-btn {
   position: absolute;
-  top: 17%;
-  right: 0;
+  top: 18%;
+  right: 5px;
 
   color: grey;
-  font-size: 2.5em;
+  font-size: 2.4em;
 
   transition: all 0.3s ease-in-out;
-}
-.chat-close-btn:hover {
-  cursor: pointer;
-  color: rgb(62, 184, 255);
-  transform: scale(1.2);
-}
-.chat-delete-btn {
-  font-size: 2.4em;
-  right: 50px;
 }
 .chat-delete-btn:hover {
   cursor: pointer;

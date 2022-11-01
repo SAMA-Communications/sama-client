@@ -6,12 +6,12 @@ export const selectedConversation = createSlice({
     value: {},
   },
   reducers: {
-    setConversation: (state, action) => {
+    setSelectedConversation: (state, action) => {
       state.value = action.payload;
     },
   },
 });
 
-export const { setConversation } = selectedConversation.actions;
+export const { setSelectedConversation } = selectedConversation.actions;
 
 export default selectedConversation.reducer;
