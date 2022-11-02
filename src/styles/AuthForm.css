@@ -1,0 +1,130 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.login-container {
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+
+  font-family: sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+
+  background-color: #f8f9fd;
+}
+
+input[name="ulogin"],
+input[name="pass"] {
+  padding: 15px 10px;
+  font-size: 1em;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+input[type="submit"] {
+  padding: 11px 10px;
+  width: 320px;
+  cursor: pointer;
+  font-size: 15px;
+  background: #1a8ee1;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  transition: all 0.15s ease-in-out;
+}
+
+input[type="submit"]:hover {
+  color: #000;
+  background: #8dc7f0;
+}
+
+label {
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-top: 15px;
+}
+
+.button-container {
+  margin: 10px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.button-container-text {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.signup {
+  font-size: 1em;
+  font-weight: bold;
+  color: #1a8ee1;
+  text-decoration: none;
+}
+
+.signup:hover {
+  cursor: pointer;
+  color: #8dc7f0;
+}
+
+.login-form {
+  padding: 2rem;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.list-container {
+  display: flex;
+}
+
+.error {
+  color: red;
+  font-size: 0.9em;
+  margin-bottom: -15px;
+}
+
+.title {
+  position: relative;
+  margin-bottom: 20px;
+
+  text-align: center;
+  font-size: 25px;
+  font-weight: 600;
+}
+.loader {
+  position: absolute;
+  right: 4%;
+  top: -10%;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px;
+}
+
+.aria-loading {
+  margin-top: 40vh;
+  justify-content: center;
+}
+
+.pageLoader {
+  width: 100vw;
+  height: 95vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #f8f9fd;
+}

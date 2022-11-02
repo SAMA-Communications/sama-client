@@ -1,44 +1,39 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import ChatForm from "./screens/chat/ChatForm";
+import ChatList from "./screens/chat/ChatList";
+import React from "react";
+import api from "../api/api";
+import { Link } from "react-router-dom";
+import { VscCommentDiscussion } from "react-icons/vsc";
 
-import '../styles/Main.css';
-
-import API from '../api/main';
+import "../styles/Main.css";
 
 export default function Main() {
-  const messageInputEl = useRef(null);
-
-  const [messages, _setMessages] = useState([]);
-  const messagesRef = useRef(messages);
-  const setMessages = data => {
-    messagesRef.current = data;
-    _setMessages(data);
+  const sendLogout = async () => {
+    try {
+      await api.userLogout();
+    } catch (error) {
+      alert(error.message);
+    }
+    localStorage.removeItem("sessionId");
   };
 
-  const listItems = useMemo(() => {
-    return messages.map((d) => <li key={d}>{d}</li>);
-  }, [messages]);
-
-  const sendMessage = (event) => {
-    event.preventDefault();
-
-    // socket.send(JSON.stringify({}));
-    const text = messageInputEl.current.value.trim();
-    if (text.length > 0) {
-      API.chat.send(text);
-
-      messageInputEl.current.value = '';
-    }
-  }
-
   return (
-    <div className="App">
-      <ul id="messages">
-        {listItems}
-      </ul>
-      <form id="form" action="">
-        <input id="inputMessage" ref={messageInputEl} autoComplete="off" />
-        <button onClick={sendMessage}>Send</button>
-      </form>
+    <div>
+      <nav>
+        <div className="chat-logo">
+          <VscCommentDiscussion />
+          <p>SAMA</p>
+        </div>
+        <div className="chat-logout-btn">
+          <Link to={"/login"} onClick={sendLogout} className="logout-btn">
+            Logout
+          </Link>
+        </div>
+      </nav>
+      <main className="Main">
+        <ChatList />
+        <ChatForm />
+      </main>
     </div>
   );
 }

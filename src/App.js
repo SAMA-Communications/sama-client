@@ -1,46 +1,40 @@
-import './styles/App.css';
+import React, { Suspense, useEffect } from "react";
+import api from "./api/api";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
-import React, { useState, useEffect } from 'react';
-
-import Main from './components/Main'
-import Login from './components/Login'
-import SignUp from './components/SignUp'
+import Login from "./components/screens/Login";
+import SignUp from "./components/screens/SignUp";
+import PageLoader from "./components/PageLoader";
+const Main = React.lazy(() => import("./components/Main"));
+const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
 function App() {
-  const [isLoginView, setIsLoginView] = useState(false);
-  const [isCreateUserView, setIsCreateUserView] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoginView(!(!!token));
+    const token = localStorage.getItem("sessionId");
+    token ? userLoginByToken(token) : navigate("/login");
   }, []);
 
-  const onLogin = () => {
-
+  const userLoginByToken = async (token) => {
+    try {
+      const userToken = await api.userLogin({ token });
+      localStorage.setItem("sessionId", userToken);
+      navigate("/main");
+    } catch (error) {
+      navigate("/login");
+    }
   };
 
-  const onSignUp = () => {
-
-  };
-
-  const onDisplaySignUp = () => {
-    setIsCreateUserView(true)
-    setIsLoginView(false)
-  }
-
-  const onDisplayLogin = () => {
-    setIsCreateUserView(false)
-    setIsLoginView(true)
-  }
-
-  if (isLoginView) {
-    return <Login onSubmit={onLogin} onSignUp={onDisplaySignUp}/>;
-  }
-  if (isCreateUserView) {
-    return <SignUp onSubmit={onSignUp} onLogin={onDisplayLogin}/>;
-  }
-
-  return <Main />;
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/main/*" element={<Main />} />
+        <Route path="/*" element={<ErrorPage />} />
+      </Routes>
+    </Suspense>
+  );
 }
 
 export default App;
