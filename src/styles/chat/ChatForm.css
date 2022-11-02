@@ -63,6 +63,9 @@
   margin-left: 15px;
 }
 
+.chat-messages {
+  padding: 6px 3px;
+}
 .chat-messaging-info {
   position: relative;
   display: flex;
@@ -129,7 +132,6 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: 10px 0;
   overflow: auto;
 }
 
@@ -149,7 +151,7 @@
   outline: none;
 }
 #chat-form-send {
-  height: 3.4em;
+  min-height: 54px;
 
   display: flex;
   border-top: 1px solid lightgray;
@@ -180,6 +182,7 @@
   margin-right: 8px;
 }
 .message {
+  position: relative;
   max-width: 80%;
   width: max-content;
   padding: 4px 12px;
@@ -192,8 +195,8 @@
   border-radius: 8px;
   background-color: rgb(236, 236, 236);
 }
-
 .my-message {
+  padding: 4px 28px 4px 12px;
   margin-left: auto;
   text-align: right;
 }
@@ -203,4 +206,15 @@
   color: rgb(59, 103, 145);
   font-weight: 600;
   font-size: 0.75em;
+}
+.message .message-status-icon {
+  display: none;
+}
+.my-message .message-status-icon {
+  position: absolute;
+  display: block;
+  bottom: 0;
+  right: 4px;
+
+  color: rgb(59, 103, 145);
 }

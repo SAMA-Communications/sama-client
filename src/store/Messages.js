@@ -19,12 +19,18 @@ export const messages = createSlice({
   reducers: {
     setMessages: messagesAdapter.setAll,
     addMessage: messagesAdapter.addOne,
+    updateMessage: messagesAdapter.updateOne,
     removeMessage: messagesAdapter.removeOne,
     removeAllMessages: messagesAdapter.removeAll,
   },
 });
 
-export const { setMessages, addMessage, removeMessage, removeAllMessages } =
-  messages.actions;
+export const {
+  setMessages,
+  addMessage,
+  updateMessage,
+  removeMessage,
+  removeAllMessages,
+} = messages.actions;
 
 export default messages.reducer;

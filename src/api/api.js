@@ -135,13 +135,12 @@ class Api {
   }
 
   async getParticipantsByCids(data) {
-    const user = getUserLogin();
     const requestData = {
       request: {
         getParticipantsByCids: {
           cids: data,
         },
-        id: getUniqueId(user),
+        id: getUniqueId(getUserLogin()),
       },
     };
     const resObjKey = "users";
@@ -152,7 +151,7 @@ class Api {
     return new Promise((resolve, reject) => {
       const requestData = {
         message: {
-          id: getUniqueId(getUserLogin()),
+          id: data.mid,
           body: data.text,
           cid: data.chatId,
           // x: {
