@@ -18,7 +18,7 @@ export const messages = createSlice({
   reducers: {
     setMessages: messagesAdapter.setAll,
     addMessage: messagesAdapter.addOne,
-    updateMessage: messagesAdapter.updateOne,
+    upsertMessage: messagesAdapter.upsertOne,
     removeMessage: messagesAdapter.removeOne,
     removeAllMessages: messagesAdapter.removeAll,
   },
@@ -28,6 +28,7 @@ export const {
   setMessages,
   addMessage,
   updateMessage,
+  upsertMessage,
   removeMessage,
   removeAllMessages,
 } = messages.actions;

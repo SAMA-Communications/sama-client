@@ -15,6 +15,7 @@ import {
   addMessage,
   selectMessagesEntities,
   updateMessage,
+  upsertMessage,
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -79,15 +80,13 @@ export default function ChatForm() {
     if (text.length > 0) {
       const mid = generateMID(userInfo._id);
       let msg = {
-        _id: mid,
         body: text,
-        cid: selectedConversation._id,
         from: userInfo._id,
         isSending: true,
         t: Date.now(),
       };
       messageInputEl.current.value = "";
-      dispatch(addMessage(msg));
+      dispatch(upsertMessage({ cid: selectedConversation._id, [mid]: msg }));
 
       const response = await api.messageCreate({
         mid,
@@ -99,10 +98,12 @@ export default function ChatForm() {
       if (response.mid === mid) {
         msg = {
           _id: response.server_mid,
+          body: text,
+          from: userInfo._id,
           isSending: "success",
           t: response.t,
         };
-        dispatch(updateMessage({ id: mid, changes: msg }));
+        dispatch(upsertMessage({ cid: selectedConversation._id, [mid]: msg }));
       }
     }
   };
