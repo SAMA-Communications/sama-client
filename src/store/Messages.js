@@ -1,8 +1,7 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 
 export const messagesAdapter = createEntityAdapter({
-  selectId: ({ _id }) => _id,
-  sortComparer: (a, b) => a._id.localeCompare(b._id),
+  selectId: ({ cid }) => cid,
 });
 
 export const {

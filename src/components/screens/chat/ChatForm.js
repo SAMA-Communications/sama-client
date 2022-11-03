@@ -13,9 +13,7 @@ import { removeChat } from "../../../store/Conversations";
 import { setSelectedConversation } from "../../../store/SelectedConversation";
 import {
   addMessage,
-  removeAllMessages,
-  selectAllMessages,
-  setMessages,
+  selectMessagesEntities,
   updateMessage,
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -38,16 +36,19 @@ export default function ChatForm() {
   const participants = useSelector(selectParticipantsEntities);
 
   const messageInputEl = useRef(null);
-  const messages = useSelector(selectAllMessages);
+  const messages = useSelector(selectMessagesEntities);
 
   useEffect(() => {
-    if (selectedConversation._id) {
+    if (selectedConversation._id && !messages[selectedConversation._id])
       api
         .messageList({ cid: selectedConversation._id, limit: 20 })
         .then((arr) => {
-          dispatch(setMessages(arr));
+          const mList = {};
+          arr.forEach((m) => {
+            mList[m._id] = { body: m.body, from: m.from, t: m.t };
+          });
+          dispatch(addMessage({ cid: selectedConversation._id, ...mList }));
         });
-    }
   }, [url]);
 
   const scrollChatToBottom = () => {
@@ -112,7 +113,6 @@ export default function ChatForm() {
       try {
         await api.conversationDelete({ cid: selectedConversation._id });
         dispatch(setSelectedConversation({}));
-        dispatch(removeAllMessages());
         dispatch(removeChat(selectedConversation._id));
         navigate("/main");
       } catch (error) {
@@ -124,25 +124,31 @@ export default function ChatForm() {
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
       dispatch(setSelectedConversation({}));
-      dispatch(removeAllMessages());
       navigate("/main");
     }
   };
 
-  const messagesList = useMemo(
-    () =>
-      messages.map((m) => (
-        <ChatMessage
-          key={m._id}
-          fromId={m.from}
-          userId={userInfo._id}
-          text={m.body}
-          uName={participants[m.from]?.login}
-          isSending={m.isSending}
-        />
-      )),
-    [messages]
-  );
+  const messagesList = useMemo(() => {
+    const returnArray = [];
+    for (const key in messages[selectedConversation._id]) {
+      if (key === "cid") continue;
+      returnArray.push({
+        _id: key,
+        ...messages[selectedConversation._id][key],
+      });
+    }
+
+    return returnArray.map((m) => (
+      <ChatMessage
+        key={m._id}
+        fromId={m.from}
+        userId={userInfo._id}
+        text={m.body}
+        uName={participants[m.from]?.login}
+        isSending={m.isSending}
+      />
+    ));
+  }, [url, messages]);
 
   return (
     <section className="chat-form">
@@ -169,7 +175,8 @@ export default function ChatForm() {
             </div>
           </div>
           <div className="chat-form-main">
-            {!Object.keys(messages).length ? (
+            {!messages[selectedConversation._id] ||
+            Object.keys(messages[selectedConversation._id]).length <= 1 ? (
               <div className="chat-empty">Chat is empty..</div>
             ) : (
               <div className="chat-messages" id="chat-messages">
