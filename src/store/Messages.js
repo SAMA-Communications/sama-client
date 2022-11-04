@@ -16,21 +16,11 @@ export const messages = createSlice({
   name: "Messages",
   initialState: messagesAdapter.getInitialState(),
   reducers: {
-    setMessages: messagesAdapter.setAll,
-    addMessage: messagesAdapter.addOne,
-    upsertMessage: messagesAdapter.upsertOne,
-    removeMessage: messagesAdapter.removeOne,
-    removeAllMessages: messagesAdapter.removeAll,
+    addChatMessages: messagesAdapter.addOne,
+    upsertMessageInChat: messagesAdapter.upsertOne,
   },
 });
 
-export const {
-  setMessages,
-  addMessage,
-  updateMessage,
-  upsertMessage,
-  removeMessage,
-  removeAllMessages,
-} = messages.actions;
+export const { addChatMessages, upsertMessageInChat } = messages.actions;
 
 export default messages.reducer;

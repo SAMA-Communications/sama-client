@@ -12,10 +12,9 @@ import { selectParticipantsEntities } from "../../../store/Participants.js";
 import { removeChat } from "../../../store/Conversations";
 import { setSelectedConversation } from "../../../store/SelectedConversation";
 import {
-  addMessage,
+  addChatMessages,
   selectMessagesEntities,
-  updateMessage,
-  upsertMessage,
+  upsertMessageInChat,
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -43,68 +42,61 @@ export default function ChatForm() {
     if (selectedConversation._id && !messages[selectedConversation._id])
       api
         .messageList({ cid: selectedConversation._id, limit: 20 })
-        .then((arr) => {
-          const mList = {};
-          arr.forEach((m) => {
-            mList[m._id] = { body: m.body, from: m.from, t: m.t };
-          });
-          dispatch(addMessage({ cid: selectedConversation._id, ...mList }));
-        });
+        .then((arr) =>
+          dispatch(
+            addChatMessages({
+              cid: selectedConversation._id,
+              mArray: arr
+                .map((m) => {
+                  return { ...m, status: "sent" };
+                })
+                .reverse(),
+            })
+          )
+        );
   }, [url]);
-
-  const scrollChatToBottom = () => {
-    const chatMessagesEl = document.getElementById("chat-messages");
-    if (chatMessagesEl) {
-      chatMessagesEl.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        inline: "nearest",
-      });
-    }
-  };
 
   const sendMessage = async (event) => {
     event.preventDefault();
 
-    function generateMID(uId) {
-      let result = "WWW:";
-      const characters =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      for (const i in characters) {
-        if (Math.random() % 2) result += characters[i];
-      }
-      return result + ":" + uId;
-    }
-
     const text = messageInputEl.current.value.trim();
-    if (text.length > 0) {
-      const mid = generateMID(userInfo._id);
-      let msg = {
+    if (text.length === 0) return;
+
+    const mid = userInfo._id + Date.now();
+    let msg = {
+      _id: mid,
+      body: text,
+      from: userInfo._id,
+      t: Date.now(),
+    };
+    messageInputEl.current.value = "";
+    dispatch(
+      upsertMessageInChat({
+        cid: selectedConversation._id,
+        mArray: [...messages[selectedConversation._id].mArray, msg],
+      })
+    );
+
+    const response = await api.messageCreate({
+      mid,
+      text,
+      chatId: selectedConversation._id,
+    });
+
+    if (response.mid) {
+      msg = {
+        _id: response.server_mid,
         body: text,
         from: userInfo._id,
-        isSending: true,
-        t: Date.now(),
+        status: "sent",
+        t: response.t,
       };
-      messageInputEl.current.value = "";
-      dispatch(upsertMessage({ cid: selectedConversation._id, [mid]: msg }));
-
-      const response = await api.messageCreate({
-        mid,
-        text,
-        chatId: selectedConversation._id,
-      });
-
-      scrollChatToBottom();
-      if (response.mid === mid) {
-        msg = {
-          _id: response.server_mid,
-          body: text,
-          from: userInfo._id,
-          isSending: "success",
-          t: response.t,
-        };
-        dispatch(upsertMessage({ cid: selectedConversation._id, [mid]: msg }));
-      }
+      dispatch(
+        upsertMessageInChat({
+          cid: selectedConversation._id,
+          mArray: [...messages[selectedConversation._id].mArray, msg],
+        })
+      );
     }
   };
 
@@ -129,27 +121,29 @@ export default function ChatForm() {
     }
   };
 
-  const messagesList = useMemo(() => {
-    const returnArray = [];
-    for (const key in messages[selectedConversation._id]) {
-      if (key === "cid") continue;
-      returnArray.push({
-        _id: key,
-        ...messages[selectedConversation._id][key],
-      });
-    }
+  const messagesList = useMemo(
+    () =>
+      messages[selectedConversation._id]?.mArray.map((m) => (
+        <ChatMessage
+          key={m._id}
+          fromId={m.from}
+          userId={userInfo._id}
+          text={m.body}
+          uName={participants[m.from]?.login}
+          status={m.status}
+        />
+      )),
+    [url, messages]
+  );
 
-    return returnArray.map((m) => (
-      <ChatMessage
-        key={m._id}
-        fromId={m.from}
-        userId={userInfo._id}
-        text={m.body}
-        uName={participants[m.from]?.login}
-        isSending={m.isSending}
-      />
-    ));
-  }, [url, messages]);
+  const scrollChatToBottom = () => {
+    document.getElementById("chat-messages")?.scrollIntoView({
+      block: "end",
+    });
+  };
+  useEffect(() => {
+    scrollChatToBottom();
+  }, [messagesList]);
 
   return (
     <section className="chat-form">
@@ -176,8 +170,7 @@ export default function ChatForm() {
             </div>
           </div>
           <div className="chat-form-main">
-            {!messages[selectedConversation._id] ||
-            Object.keys(messages[selectedConversation._id]).length <= 1 ? (
+            {!messages[selectedConversation._id]?.mArray.length ? (
               <div className="chat-empty">Chat is empty..</div>
             ) : (
               <div className="chat-messages" id="chat-messages">
