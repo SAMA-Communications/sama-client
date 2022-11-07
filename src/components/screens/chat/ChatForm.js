@@ -162,7 +162,7 @@ export default function ChatForm() {
 
   const messagesList = useMemo(() => {
     const messagesIds = conversations[selectedConversation._id]?.messagesIds;
-    if (!Object.keys(messages).length || !messagesIds.length) return [];
+    if (!Object.keys(messages)?.length || !messagesIds?.length) return [];
     return messagesIds.map((id) => {
       const m = messages[id];
       return m ? (
