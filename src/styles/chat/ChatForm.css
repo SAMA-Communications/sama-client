@@ -199,6 +199,8 @@
   padding: 4px 28px 4px 12px;
   margin-left: auto;
   text-align: right;
+
+  background-color: rgb(201, 226, 235);
 }
 .message-user-name {
   margin-bottom: 5px;

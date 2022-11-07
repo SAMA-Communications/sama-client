@@ -1,7 +1,8 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 
 export const messagesAdapter = createEntityAdapter({
-  selectId: ({ cid }) => cid,
+  selectId: ({ _id }) => _id,
+  sortComparer: (a, b) => a._id.localeCompare(b._id),
 });
 
 export const {
@@ -16,11 +17,12 @@ export const messages = createSlice({
   name: "Messages",
   initialState: messagesAdapter.getInitialState(),
   reducers: {
-    addChatMessages: messagesAdapter.addOne,
-    upsertMessageInChat: messagesAdapter.upsertOne,
+    addMessage: messagesAdapter.addOne,
+    addMessages: messagesAdapter.addMany,
+    upsertMessage: messagesAdapter.upsertOne,
   },
 });
 
-export const { addChatMessages, upsertMessageInChat } = messages.actions;
+export const { addMessage, addMessages, upsertMessage } = messages.actions;
 
 export default messages.reducer;

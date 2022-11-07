@@ -29,12 +29,20 @@ export default function ChatList() {
     : null;
 
   useEffect(() => {
-    api.conversationList({}).then((arr) => {
-      dispatch(setChats(arr));
-      api.getParticipantsByCids(arr.map((obj) => obj._id)).then((users) => {
-        dispatch(setUsers(users));
+    setTimeout(() => {
+      api.conversationList({}).then((arr) => {
+        dispatch(
+          setChats(
+            arr.map((obj) => {
+              return { ...obj, messagesIds: [] };
+            })
+          )
+        );
+        api.getParticipantsByCids(arr.map((obj) => obj._id)).then((users) => {
+          dispatch(setUsers(users));
+        });
       });
-    });
+    }, 300);
   }, []);
 
   const chatsList = useMemo(() => {

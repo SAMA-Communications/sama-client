@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   VscDeviceCamera,
   VscFileSymlinkDirectory,
@@ -9,12 +9,16 @@ import ChatMessage from "../../generic/ChatMessage.js";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
 import { selectParticipantsEntities } from "../../../store/Participants.js";
-import { removeChat } from "../../../store/Conversations";
+import {
+  removeChat,
+  selectConversationsEntities,
+  upsertChat,
+} from "../../../store/Conversations";
 import { setSelectedConversation } from "../../../store/SelectedConversation";
 import {
-  addChatMessages,
+  addMessage,
+  addMessages,
   selectMessagesEntities,
-  upsertMessageInChat,
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -37,24 +41,52 @@ export default function ChatForm() {
 
   const messageInputEl = useRef(null);
   const messages = useSelector(selectMessagesEntities);
+  const conversations = useSelector(selectConversationsEntities);
 
   useEffect(() => {
-    if (selectedConversation._id && !messages[selectedConversation._id])
+    if (
+      selectedConversation._id &&
+      !conversations[selectedConversation._id].messagesIds.length
+    )
       api
         .messageList({ cid: selectedConversation._id, limit: 20 })
-        .then((arr) =>
+        .then((arr) => {
           dispatch(
-            addChatMessages({
-              cid: selectedConversation._id,
-              mArray: arr
-                .map((m) => {
-                  return { ...m, status: "sent" };
-                })
-                .reverse(),
+            addMessages(
+              arr.map((m) => {
+                return { ...m, status: "sent" };
+              })
+            )
+          );
+
+          dispatch(
+            upsertChat({
+              _id: selectedConversation._id,
+              messagesIds: arr.map((el) => el._id).reverse(),
             })
-          )
-        );
+          );
+        });
   }, [url]);
+
+  const [newMessage, setNewMessage] = useState(null);
+  api.onMessageListener = (message) => {
+    setNewMessage(message);
+  };
+
+  useEffect(() => {
+    if (newMessage) {
+      dispatch(addMessage(newMessage));
+      dispatch(
+        upsertChat({
+          _id: selectedConversation._id,
+          messagesIds: [
+            ...conversations[selectedConversation._id].messagesIds,
+            newMessage._id,
+          ],
+        })
+      );
+    }
+  }, [newMessage]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
@@ -70,13 +102,16 @@ export default function ChatForm() {
       t: Date.now(),
     };
     messageInputEl.current.value = "";
+    dispatch(addMessage(msg));
     dispatch(
-      upsertMessageInChat({
-        cid: selectedConversation._id,
-        mArray: [...messages[selectedConversation._id].mArray, msg],
+      upsertChat({
+        _id: selectedConversation._id,
+        messagesIds: [
+          ...conversations[selectedConversation._id].messagesIds,
+          msg._id,
+        ],
       })
     );
-
     const response = await api.messageCreate({
       mid,
       text,
@@ -91,10 +126,14 @@ export default function ChatForm() {
         status: "sent",
         t: response.t,
       };
+      dispatch(addMessage(msg));
       dispatch(
-        upsertMessageInChat({
-          cid: selectedConversation._id,
-          mArray: [...messages[selectedConversation._id].mArray, msg],
+        upsertChat({
+          _id: selectedConversation._id,
+          messagesIds: [
+            ...conversations[selectedConversation._id].messagesIds,
+            msg._id,
+          ],
         })
       );
     }
@@ -121,9 +160,12 @@ export default function ChatForm() {
     }
   };
 
-  const messagesList = useMemo(
-    () =>
-      messages[selectedConversation._id]?.mArray.map((m) => (
+  const messagesList = useMemo(() => {
+    const messagesIds = conversations[selectedConversation._id]?.messagesIds;
+    if (!Object.keys(messages).length || !messagesIds.length) return [];
+    return messagesIds.map((id) => {
+      const m = messages[id];
+      return m ? (
         <ChatMessage
           key={m._id}
           fromId={m.from}
@@ -132,9 +174,9 @@ export default function ChatForm() {
           uName={participants[m.from]?.login}
           status={m.status}
         />
-      )),
-    [url, messages]
-  );
+      ) : null;
+    });
+  }, [url, messages]);
 
   const scrollChatToBottom = () => {
     document.getElementById("chat-messages")?.scrollIntoView({
@@ -170,7 +212,7 @@ export default function ChatForm() {
             </div>
           </div>
           <div className="chat-form-main">
-            {!messages[selectedConversation._id]?.mArray.length ? (
+            {!conversations[selectedConversation._id]?.messagesIds.length ? (
               <div className="chat-empty">Chat is empty..</div>
             ) : (
               <div className="chat-messages" id="chat-messages">
