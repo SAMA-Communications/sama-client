@@ -1,7 +1,6 @@
 import getUniqueId from "./uuid.js";
 //xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx:user_login генерувати
 import getBrowserFingerprint from "get-browser-fingerprint";
-import { storeNewMessage } from "../components/screens/chat/ChatForm.js";
 
 class Api {
   constructor(baseUrl) {
@@ -21,11 +20,8 @@ class Api {
       console.log("[socket.message]", e.data);
       const message = JSON.parse(e.data);
 
-      if (typeof message.message === "string") {
-        const msg = JSON.parse(message.message);
-        if (this.onMessageListener && msg) {
-          this.onMessageListener(msg);
-        }
+      if (message.message) {
+        if (this.onMessageListener) this.onMessageListener(message.message);
         return;
       }
       if (message.ask) {
