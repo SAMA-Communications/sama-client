@@ -28,6 +28,7 @@ export default function Login() {
       dispatch(setSelectedConversation({}));
       dispatch(setChats([]));
     } catch (error) {
+      localStorage.clear();
       alert(error.message);
     }
     setLoader(false);

@@ -16,6 +16,7 @@ import { setSelectedConversation } from "../../../store/SelectedConversation.js"
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatList.css";
+import ChatBox from "../../generic/ChatBox.js";
 
 export default function ChatList() {
   const dispatch = useDispatch();
@@ -68,15 +69,11 @@ export default function ChatList() {
             );
           }}
         >
-          <div className="chat-box">
-            <div className="chat-box-icon">
-              <VscDeviceCamera />
-            </div>
-            <div className="chat-box-info">
-              <p className="chat-name">{chatName}</p>
-              <p className="chat-message">{obj.description}</p>
-            </div>
-          </div>
+          <ChatBox
+            chatName={chatName}
+            chatDescription={obj.description}
+            countOfNewMessage={21232}
+          />
         </Link>
       );
     }

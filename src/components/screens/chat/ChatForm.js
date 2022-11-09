@@ -52,7 +52,7 @@ export default function ChatForm() {
   };
 
   useEffect(() => {
-    if (selectedCID && !selectedMIDs.length)
+    if (selectedCID && !selectedMIDs.length) {
       api.messageList({ cid: selectedCID, limit: 20 }).then((arr) => {
         dispatch(
           addMessages(
@@ -68,6 +68,7 @@ export default function ChatForm() {
           })
         );
       });
+    }
 
     if (newMessage) {
       dispatch(addMessage(newMessage));
@@ -75,10 +76,12 @@ export default function ChatForm() {
         ? conversations[newMessage.cid].messagesIds
         : [];
       if (chatMessages.length) {
+        console.log(new Date());
         dispatch(
           upsertChat({
             _id: newMessage.cid,
             messagesIds: [...chatMessages, newMessage._id],
+            updated_at: new Date(newMessage.t * 1000),
           })
         );
       }
@@ -90,7 +93,9 @@ export default function ChatForm() {
     event.preventDefault();
 
     const text = messageInputEl.current.value.trim();
-    if (text.length === 0) return;
+    if (text.length === 0) {
+      return;
+    }
 
     const mid = userInfo._id + Date.now();
     let msg = {
@@ -126,6 +131,7 @@ export default function ChatForm() {
         upsertChat({
           _id: selectedCID,
           messagesIds: [...selectedMIDs, msg._id],
+          updated_at: new Date(response.t * 1000),
         })
       );
     }
@@ -147,7 +153,9 @@ export default function ChatForm() {
 
   const messagesList = useMemo(() => {
     const messagesIds = selectedMIDs;
-    if (!Object.keys(messages)?.length || !messagesIds?.length) return [];
+    if (!Object.keys(messages)?.length || !messagesIds?.length) {
+      return [];
+    }
 
     return messagesIds.map((id) => (
       <ChatMessage
@@ -157,6 +165,7 @@ export default function ChatForm() {
         text={messages[id].body}
         uName={participants[messages[id].from]?.login}
         status={messages[id].status}
+        tSend={messages[id].t}
       />
     ));
   }, [url, messages]);

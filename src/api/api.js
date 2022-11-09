@@ -21,7 +21,9 @@ class Api {
       const message = JSON.parse(e.data);
 
       if (message.message) {
-        if (this.onMessageListener) this.onMessageListener(message.message);
+        if (this.onMessageListener) {
+          this.onMessageListener(message.message);
+        }
         return;
       }
       if (message.ask) {

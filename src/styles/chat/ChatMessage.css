@@ -1,0 +1,66 @@
+.message {
+  position: relative;
+  max-width: 75%;
+  width: max-content;
+  padding: 4px 8px 8px 12px;
+  margin-top: 5px;
+
+  display: flex;
+
+  font-size: 1.1em;
+  flex-wrap: wrap;
+
+  border: none;
+  border-radius: 8px;
+  background-color: rgb(236, 236, 236);
+}
+.my-message {
+  padding: 4px 16px 8px 12px;
+  margin-left: auto;
+  text-align: right;
+
+  background-color: rgb(201, 226, 235);
+}
+.message-user-name {
+  color: rgb(59, 103, 145);
+  font-weight: 600;
+  font-size: 0.75em;
+}
+
+.message-status {
+  margin-left: 8px;
+  margin-bottom: -6px;
+
+  display: flex;
+  justify-content: flex-end;
+
+  vertical-align: bottom;
+}
+.message-status-time {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  font-size: 0.85em;
+  color: #777;
+}
+.message-status-icon {
+  display: none;
+
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.my-message .message-status-icon {
+  display: flex;
+
+  color: rgb(59, 103, 145);
+}
+.my-message .message-status {
+  margin-right: -12px;
+}
+.my-message .message-status-time {
+  font-size: 0.85em;
+  margin-right: 4px;
+
+  color: #777;
+}

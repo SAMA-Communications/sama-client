@@ -2,7 +2,7 @@ import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 
 export const conversationsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
-  sortComparer: (a, b) => a._id.localeCompare(b._id),
+  sortComparer: (a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at),
 });
 
 export const {
