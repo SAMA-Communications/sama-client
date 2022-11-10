@@ -37,16 +37,10 @@ export default function ChatList() {
 
   useEffect(() => {
     setTimeout(() => {
-      api.conversationList({}).then((arr) => {
-        dispatch(
-          setChats(
-            arr.map((obj) => {
-              return { ...obj, messagesIds: [] };
-            })
-          )
-        );
+      api.conversationList({}).then(chats => {
+        dispatch(setChats(chats));
         api
-          .getParticipantsByCids(arr.map((obj) => obj._id))
+          .getParticipantsByCids(chats.map((obj) => obj._id))
           .then((users) => dispatch(setUsers(users)));
         // api.getCountOfUnreadMessages({ uId: userInfo._id }).then((indicators) =>
         //   dispatch(
