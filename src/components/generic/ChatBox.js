@@ -5,7 +5,9 @@ export default function ChatBox({
   chatName,
   chatDescription,
   countOfNewMessage,
+  timeOfLastUpdate,
 }) {
+  const t = new Date(Date.parse(timeOfLastUpdate));
   return (
     <div className="chat-box">
       <div className="chat-box-icon">
@@ -18,6 +20,11 @@ export default function ChatBox({
       {countOfNewMessage ? (
         <div className="chat-indicator">{countOfNewMessage}</div>
       ) : null}
+      <div className="chat-last-update">
+        {t.getHours() +
+          ":" +
+          (t.getMinutes() > 9 ? t.getMinutes() : "0" + t.getMinutes())}
+      </div>
     </div>
   );
 }

@@ -17,18 +17,18 @@ import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatList.css";
 import ChatBox from "../../generic/ChatBox.js";
-import {
-  selectUnreadMessagesEntities,
-  setIndicators,
-  upsertIndicator,
-} from "../../../store/UnreadMessages.js";
+// import {
+//   selectUnreadMessagesEntities,
+//   setIndicators,
+//   upsertIndicator,
+// } from "../../../store/UnreadMessages.js";
 
 export default function ChatList() {
   const dispatch = useDispatch();
   const [isSearchForm, setIsSearchForm] = useState(false);
 
   const conversations = useSelector(selectAllConversations);
-  const indicators = useSelector(selectUnreadMessagesEntities);
+  // const indicators = useSelector(selectUnreadMessagesEntities);
   const participants = useSelector(selectParticipantsEntities);
 
   const userInfo = localStorage.getItem("sessionId")
@@ -48,15 +48,15 @@ export default function ChatList() {
         api
           .getParticipantsByCids(arr.map((obj) => obj._id))
           .then((users) => dispatch(setUsers(users)));
-        api.getCountOfUnreadMessages({ uId: userInfo._id }).then((indicators) =>
-          dispatch(
-            setIndicators(
-              indicators.map((obj) => {
-                return { cid: obj.conversation_id, count: obj.unread_messages };
-              })
-            )
-          )
-        );
+        // api.getCountOfUnreadMessages({ uId: userInfo._id }).then((indicators) =>
+        //   dispatch(
+        //     setIndicators(
+        //       indicators.map((obj) => {
+        //         return { cid: obj.conversation_id, count: obj.unread_messages };
+        //       })
+        //     )
+        //   )
+        // );
       });
     }, 300);
   }, []);
@@ -76,22 +76,23 @@ export default function ChatList() {
           key={obj._id}
           onClick={() => {
             dispatch(setSelectedConversation({ ...obj, name: chatName }));
-            dispatch(upsertIndicator({ cid: obj._id, count: 0 }));
-            if (indicators[obj._id]?.count) {
-              api.clearIndicatorByCid({ cid: obj._id, uId: userInfo._id });
-            }
+            // dispatch(upsertIndicator({ cid: obj._id, count: 0 }));
+            // if (indicators[obj._id]?.count) {
+            //   api.clearIndicatorByCid({ cid: obj._id, uId: userInfo._id });
+            // }
           }}
         >
           <ChatBox
             chatName={chatName}
             chatDescription={obj.description}
-            countOfNewMessage={indicators[obj._id]?.count}
+            timeOfLastUpdate={obj.updated_at}
+            // countOfNewMessage={indicators[obj._id]?.count}
           />
         </Link>
       );
     }
     return list;
-  }, [conversations, participants, indicators]);
+  }, [conversations, participants]);
 
   return (
     <aside>

@@ -197,3 +197,11 @@ aside {
   border-radius: 12px;
   background-color: rgb(216, 232, 238);
 }
+.chat-last-update {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+
+  font-size: 0.95em;
+  color: #999;
+}

@@ -46,7 +46,7 @@ export default function ChatForm() {
   );
   const selectedCID = selectedConversation._id;
   const selectedMIDs = useSelector(getActiveConversationMessages);
-  const indicators = useSelector(selectUnreadMessagesEntities);
+  // const indicators = useSelector(selectUnreadMessagesEntities);
 
   const messageInputEl = useRef(null);
   const messages = useSelector(selectMessagesEntities);
@@ -88,12 +88,12 @@ export default function ChatForm() {
           })
         );
       }
-      dispatch(
-        upsertIndicator({
-          cid: newMessage.cid,
-          count: indicators[newMessage.cid]?.count + 1,
-        })
-      );
+      // dispatch(
+      //   upsertIndicator({
+      //     cid: newMessage.cid,
+      //     count: indicators[newMessage.cid]?.count + 1,
+      //   })
+      // );
       setNewMessage(null);
     }
   }, [url, newMessage]);
