@@ -19,7 +19,7 @@ export const conversations = createSlice({
   reducers: {
     setChats: (state, action) => {
       const conversations = action.payload;
-      conversations.forEach(conv => {
+      conversations.forEach((conv) => {
         conv.messagesIds = [];
       });
       conversationsAdapter.setAll(state, conversations);

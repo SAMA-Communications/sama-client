@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   VscDeviceCamera,
   VscFileSymlinkDirectory,
@@ -25,10 +25,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatForm.css";
-import {
-  selectUnreadMessagesEntities,
-  upsertIndicator,
-} from "../../../store/UnreadMessages.js";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -50,9 +46,19 @@ export default function ChatForm() {
 
   const messageInputEl = useRef(null);
   const messages = useSelector(selectMessagesEntities);
-  const [newMessage, setNewMessage] = useState(null);
+
   api.onMessageListener = (message) => {
-    setNewMessage(message);
+    dispatch(addMessage(message));
+    const chatMessages = conversations[message.cid]
+      ? conversations[message.cid].messagesIds
+      : [];
+    dispatch(
+      upsertChat({
+        _id: message.cid,
+        messagesIds: [...chatMessages, message._id],
+        updated_at: new Date(message.t * 1000),
+      })
+    );
   };
 
   useEffect(() => {
@@ -73,30 +79,13 @@ export default function ChatForm() {
         );
       });
     }
-
-    if (newMessage) {
-      dispatch(addMessage(newMessage));
-      const chatMessages = conversations[newMessage.cid]
-        ? conversations[newMessage.cid].messagesIds
-        : [];
-      if (chatMessages.length) {
-        dispatch(
-          upsertChat({
-            _id: newMessage.cid,
-            messagesIds: [...chatMessages, newMessage._id],
-            updated_at: new Date(newMessage.t * 1000),
-          })
-        );
-      }
-      // dispatch(
-      //   upsertIndicator({
-      //     cid: newMessage.cid,
-      //     count: indicators[newMessage.cid]?.count + 1,
-      //   })
-      // );
-      setNewMessage(null);
-    }
-  }, [url, newMessage]);
+    // dispatch(
+    //   upsertIndicator({
+    //     cid: newMessage.cid,
+    //     count: indicators[newMessage.cid]?.count + 1,
+    //   })
+    // );
+  }, [url]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
