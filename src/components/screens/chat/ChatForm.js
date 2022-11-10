@@ -26,7 +26,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatForm.css";
 import {
-  incrimment,
   selectUnreadMessagesEntities,
   upsertIndicator,
 } from "../../../store/UnreadMessages.js";
@@ -93,12 +92,6 @@ export default function ChatForm() {
         upsertIndicator({
           cid: newMessage.cid,
           count: indicators[newMessage.cid]?.count + 1,
-        })
-      );
-      dispatch(
-        incrimment({
-          cid: newMessage.cid,
-          count: 124,
         })
       );
       setNewMessage(null);
