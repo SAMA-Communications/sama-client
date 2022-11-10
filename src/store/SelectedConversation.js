@@ -7,7 +7,10 @@ export const selectedConversation = createSlice({
   },
   reducers: {
     setSelectedConversation: (state, action) => {
-      state.value = action.payload;
+      return {
+        ...state, 
+        value: action.payload
+      }
     },
   },
 });

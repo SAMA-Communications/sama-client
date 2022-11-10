@@ -16,7 +16,7 @@ export const {
   selectIds: selectMessagesIds,
   selectTotal: selectTotalMessages,
 } = messagesAdapter.getSelectors((state) => state.messages);
-// getActiveConversationMessages
+
 export const messages = createSlice({
   name: "Messages",
   initialState: messagesAdapter.getInitialState(),
@@ -27,10 +27,12 @@ export const messages = createSlice({
   },
 });
 
-const selectedConversation = (state) => state.selectedConversation.value;
+export const getSelectedConversation = state => {
+  return state.selectedConversation.value;
+}
 
 const getSelectedConversationMessageIds = createSelector(
-  [selectedConversation],
+  [getSelectedConversation],
   (conversation) => {
     return conversation.messagesIds;
   }

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   VscDeviceCamera,
   VscFileSymlinkDirectory,
@@ -17,23 +17,19 @@ import {
 import { setSelectedConversation } from "../../../store/SelectedConversation";
 import {
   addMessage,
+  upsertMessage,
   addMessages,
   getActiveConversationMessages,
-  selectMessagesEntities,
+  getSelectedConversation
 } from "../../../store/Messages";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatForm.css";
-import {
-  selectUnreadMessagesEntities,
-  upsertIndicator,
-} from "../../../store/UnreadMessages.js";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const url = useLocation();
 
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
@@ -41,23 +37,40 @@ export default function ChatForm() {
 
   const conversations = useSelector(selectConversationsEntities);
   const participants = useSelector(selectParticipantsEntities);
-  const selectedConversation = useSelector(
-    (state) => state.selectedConversation.value
-  );
+  const selectedConversation = useSelector(getSelectedConversation);
+  const messages = useSelector(getActiveConversationMessages);
+
   const selectedCID = selectedConversation._id;
-  const selectedMIDs = useSelector(getActiveConversationMessages);
-  // const indicators = useSelector(selectUnreadMessagesEntities);
 
   const messageInputEl = useRef(null);
-  const messages = useSelector(selectMessagesEntities);
-  const [newMessage, setNewMessage] = useState(null);
+
   api.onMessageListener = (message) => {
-    setNewMessage(message);
+    dispatch(addMessage(message));
+
+    const chatMessagesIds = conversations[message.cid]
+      ? conversations[message.cid].messagesIds
+      : [];
+    dispatch(
+      upsertChat({
+        _id: message.cid,
+        messagesIds: [...chatMessagesIds, message._id],
+        updated_at: new Date(message.t * 1000),
+      })
+    );
   };
 
   useEffect(() => {
-    if (selectedCID && !selectedMIDs.length) {
+    if (selectedCID && !messages.length) {
       api.messageList({ cid: selectedCID, limit: 20 }).then((arr) => {
+        const messagesIds = arr.map((el) => el._id).reverse();
+        dispatch(
+          upsertChat({
+            _id: selectedCID,
+            messagesIds,
+          })
+        );
+        // TODO: implement it in a better way
+        dispatch(setSelectedConversation({ ...conversations[selectedCID], messagesIds }));
         dispatch(
           addMessages(
             arr.map((m) => {
@@ -65,38 +78,13 @@ export default function ChatForm() {
             })
           )
         );
-        dispatch(
-          upsertChat({
-            _id: selectedCID,
-            messagesIds: arr.map((el) => el._id).reverse(),
-          })
-        );
       });
     }
+  }, [selectedCID]);
 
-    if (newMessage) {
-      dispatch(addMessage(newMessage));
-      const chatMessages = conversations[newMessage.cid]
-        ? conversations[newMessage.cid].messagesIds
-        : [];
-      if (chatMessages.length) {
-        dispatch(
-          upsertChat({
-            _id: newMessage.cid,
-            messagesIds: [...chatMessages, newMessage._id],
-            updated_at: new Date(newMessage.t * 1000),
-          })
-        );
-      }
-      // dispatch(
-      //   upsertIndicator({
-      //     cid: newMessage.cid,
-      //     count: indicators[newMessage.cid]?.count + 1,
-      //   })
-      // );
-      setNewMessage(null);
-    }
-  }, [url, newMessage]);
+  const messagesIds = useMemo(() => {
+   return messages ? messages.map(m => m._id) : [];
+  }, [messages]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
@@ -113,37 +101,42 @@ export default function ChatForm() {
       from: userInfo._id,
       t: Date.now(),
     };
+    
     messageInputEl.current.value = "";
+
     dispatch(addMessage(msg));
+
+    const updatedMessagesIds = [...messagesIds, msg._id];
     dispatch(
       upsertChat({
         _id: selectedCID,
-        messagesIds: [...selectedMIDs, msg._id],
+        messagesIds: updatedMessagesIds,
       })
     );
+    // TODO: implement it in a better way
+    dispatch(setSelectedConversation({ ...conversations[selectedCID], messagesIds: updatedMessagesIds }));
+
     const response = await api.messageCreate({
       mid,
       text,
       chatId: selectedCID,
     });
 
-    if (response.mid) {
-      msg = {
-        _id: response.server_mid,
-        body: text,
-        from: userInfo._id,
-        status: "sent",
-        t: response.t,
-      };
-      dispatch(addMessage(msg));
-      dispatch(
-        upsertChat({
-          _id: selectedCID,
-          messagesIds: [...selectedMIDs, msg._id],
-          updated_at: new Date(response.t * 1000),
-        })
-      );
-    }
+  //   if (response.mid) {
+  //     msg = {
+  //       _id: response.server_mid,
+  //       status: "sent",
+  //       t: response.t,
+  //     };
+  //     dispatch(upsertMessage(msg));
+  //     dispatch(
+  //       upsertChat({
+  //         _id: selectedCID,
+  //         messagesIds: [...messagesIds, msg._id],
+  //         updated_at: (new Date(response.t * 1000)).toISOString(),
+  //       })
+  //     );
+  //   }
   };
 
   const deleteChat = async () => {
@@ -161,10 +154,10 @@ export default function ChatForm() {
   };
 
   const messagesList = useMemo(() => {
-    if (!Object.keys(messages)?.length || !selectedMIDs?.length) {
+    if (!messages) {
       return [];
     }
-    return selectedMIDs.map((msg) => (
+    return messages.map(msg => (
       <ChatMessage
         key={msg._id}
         fromId={msg.from}
@@ -175,7 +168,7 @@ export default function ChatForm() {
         tSend={msg.t}
       />
     ));
-  }, [url, messages]);
+  }, [messages]);
 
   const scrollChatToBottom = () => {
     document.getElementById("chat-messages")?.scrollIntoView({
@@ -216,7 +209,7 @@ export default function ChatForm() {
             </div>
           </div>
           <div className="chat-form-main">
-            {!selectedMIDs.length ? (
+            {!messages.length ? (
               <div className="chat-empty">Chat is empty..</div>
             ) : (
               <div className="chat-messages" id="chat-messages">

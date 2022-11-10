@@ -17,8 +17,8 @@ class Api {
     };
 
     this.socket.onmessage = (e) => {
-      console.log("[socket.message]", e.data);
       const message = JSON.parse(e.data);
+      console.log("[socket.message]", message);
 
       if (message.message) {
         if (this.onMessageListener) {
