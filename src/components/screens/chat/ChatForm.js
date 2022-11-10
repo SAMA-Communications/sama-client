@@ -24,6 +24,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatForm.css";
+import {
+  selectUnreadMessagesEntities,
+  upsertIndicator,
+} from "../../../store/UnreadMessages.js";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -39,6 +43,7 @@ export default function ChatForm() {
   const selectedConversation = useSelector(
     (state) => state.selectedConversation.value
   );
+  const indicators = useSelector(selectUnreadMessagesEntities);
   const selectedCID = selectedConversation._id;
   const selectedMIDs = conversations[selectedCID]
     ? conversations[selectedCID].messagesIds
@@ -76,7 +81,6 @@ export default function ChatForm() {
         ? conversations[newMessage.cid].messagesIds
         : [];
       if (chatMessages.length) {
-        console.log(new Date());
         dispatch(
           upsertChat({
             _id: newMessage.cid,
@@ -85,6 +89,12 @@ export default function ChatForm() {
           })
         );
       }
+      dispatch(
+        upsertIndicator({
+          cid: newMessage.cid,
+          count: indicators[newMessage.cid]?.count + 1,
+        })
+      );
       setNewMessage(null);
     }
   }, [url, newMessage]);

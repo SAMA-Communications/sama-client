@@ -15,7 +15,9 @@ export default function ChatBox({
         <p className="chat-name">{chatName}</p>
         <p className="chat-message">{chatDescription}</p>
       </div>
-      <div className="chat-indicator">{countOfNewMessage}</div>
+      {countOfNewMessage ? (
+        <div className="chat-indicator">{countOfNewMessage}</div>
+      ) : null}
     </div>
   );
 }
