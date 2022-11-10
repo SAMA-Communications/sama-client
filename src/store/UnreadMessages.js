@@ -14,6 +14,10 @@ export const unreadMessages = createSlice({
     setIndicators: unreadMessagesAdapter.setAll,
     upsertIndicator: unreadMessagesAdapter.upsertOne,
     removeIndicator: unreadMessagesAdapter.removeOne,
+    incrimment(state) {
+      console.log(state, state.value);
+      //state --> count+action.paylod.value
+    },
   },
 });
 
@@ -22,6 +26,7 @@ export const {
   upsertIndicator,
   removeIndicator,
   incrementCount,
+  incrimment,
 } = unreadMessages.actions;
 
 export default unreadMessages.reducer;

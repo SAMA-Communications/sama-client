@@ -18,6 +18,7 @@ import { setSelectedConversation } from "../../../store/SelectedConversation";
 import {
   addMessage,
   addMessages,
+  getActiveConversationMessages,
   selectMessagesEntities,
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -25,6 +26,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatForm.css";
 import {
+  incrimment,
   selectUnreadMessagesEntities,
   upsertIndicator,
 } from "../../../store/UnreadMessages.js";
@@ -43,11 +45,9 @@ export default function ChatForm() {
   const selectedConversation = useSelector(
     (state) => state.selectedConversation.value
   );
-  const indicators = useSelector(selectUnreadMessagesEntities);
   const selectedCID = selectedConversation._id;
-  const selectedMIDs = conversations[selectedCID]
-    ? conversations[selectedCID].messagesIds
-    : [];
+  const selectedMIDs = useSelector(getActiveConversationMessages);
+  const indicators = useSelector(selectUnreadMessagesEntities);
 
   const messageInputEl = useRef(null);
   const messages = useSelector(selectMessagesEntities);
@@ -93,6 +93,12 @@ export default function ChatForm() {
         upsertIndicator({
           cid: newMessage.cid,
           count: indicators[newMessage.cid]?.count + 1,
+        })
+      );
+      dispatch(
+        incrimment({
+          cid: newMessage.cid,
+          count: 124,
         })
       );
       setNewMessage(null);
@@ -162,20 +168,18 @@ export default function ChatForm() {
   };
 
   const messagesList = useMemo(() => {
-    const messagesIds = selectedMIDs;
-    if (!Object.keys(messages)?.length || !messagesIds?.length) {
+    if (!Object.keys(messages)?.length || !selectedMIDs?.length) {
       return [];
     }
-
-    return messagesIds.map((id) => (
+    return selectedMIDs.map((msg) => (
       <ChatMessage
-        key={messages[id]._id}
-        fromId={messages[id].from}
+        key={msg._id}
+        fromId={msg.from}
         userId={userInfo._id}
-        text={messages[id].body}
-        uName={participants[messages[id].from]?.login}
-        status={messages[id].status}
-        tSend={messages[id].t}
+        text={msg.body}
+        uName={participants[msg.from]?.login}
+        status={msg.status}
+        tSend={msg.t}
       />
     ));
   }, [url, messages]);

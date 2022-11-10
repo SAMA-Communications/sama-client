@@ -1,4 +1,8 @@
-import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+import {
+  createEntityAdapter,
+  createSelector,
+  createSlice,
+} from "@reduxjs/toolkit";
 
 export const messagesAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
@@ -12,7 +16,7 @@ export const {
   selectIds: selectMessagesIds,
   selectTotal: selectTotalMessages,
 } = messagesAdapter.getSelectors((state) => state.messages);
-
+// getActiveConversationMessages
 export const messages = createSlice({
   name: "Messages",
   initialState: messagesAdapter.getInitialState(),
@@ -22,6 +26,22 @@ export const messages = createSlice({
     upsertMessage: messagesAdapter.upsertOne,
   },
 });
+
+const selectedConversation = (state) => state.selectedConversation.value;
+
+const getSelectedConversationMessageIds = createSelector(
+  [selectedConversation],
+  (conversation) => {
+    return conversation.messagesIds;
+  }
+);
+
+export const getActiveConversationMessages = createSelector(
+  [getSelectedConversationMessageIds, selectMessagesEntities],
+  (ids, messages) => {
+    return ids?.map((id) => messages[id]);
+  }
+);
 
 export const { addMessage, addMessages, upsertMessage } = messages.actions;
 
