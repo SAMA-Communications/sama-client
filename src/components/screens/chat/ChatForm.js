@@ -60,21 +60,22 @@ export default function ChatForm() {
   };
 
   useEffect(() => {
+    console.log(selectedCID);
     if (selectedCID && !messages.length) {
       api.messageList({ cid: selectedCID, limit: 20 }).then((arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
-        dispatch(
-          upsertChat({
-            _id: selectedCID,
-            messagesIds,
-          })
-        );
         dispatch(
           addMessages(
             arr.map((m) => {
               return { ...m, status: "sent" };
             })
           )
+        );
+        dispatch(
+          upsertChat({
+            _id: selectedCID,
+            messagesIds,
+          })
         );
       });
     }
