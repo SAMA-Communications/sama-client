@@ -10,20 +10,21 @@ import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
 import { selectParticipantsEntities } from "../../../store/Participants.js";
 import {
+  getConverastionById,
   removeChat,
+  selectConversationByCid,
   selectConversationsEntities,
   upsertChat,
 } from "../../../store/Conversations";
 import {
+  getSelectedConversationId,
   setSelectedConversation,
   upsertSelectedConversation,
 } from "../../../store/SelectedConversation";
 import {
   addMessage,
-  upsertMessage,
   addMessages,
   getActiveConversationMessages,
-  getSelectedConversation,
   removeMessage,
 } from "../../../store/Messages";
 import { useNavigate } from "react-router-dom";
@@ -41,11 +42,10 @@ export default function ChatForm() {
 
   const conversations = useSelector(selectConversationsEntities);
   const participants = useSelector(selectParticipantsEntities);
-  const selectedConversation = useSelector(getSelectedConversation);
+  const selectedConversation = useSelector(getConverastionById);
+  const selectedCID = selectedConversation?._id;
+
   const messages = useSelector(getActiveConversationMessages);
-
-  const selectedCID = selectedConversation._id;
-
   const messageInputEl = useRef(null);
 
   api.onMessageListener = (message) => {
@@ -73,7 +73,6 @@ export default function ChatForm() {
             messagesIds,
           })
         );
-        dispatch(upsertSelectedConversation({ messagesIds }));
         dispatch(
           addMessages(
             arr.map((m) => {
@@ -129,7 +128,7 @@ export default function ChatForm() {
           messagesIds: updatedMessagesIds,
         })
       );
-      dispatch(upsertMessage(msg));
+      dispatch(addMessage(msg));
       dispatch(
         upsertChat({
           _id: selectedCID,

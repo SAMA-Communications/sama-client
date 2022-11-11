@@ -1,4 +1,9 @@
-import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+import {
+  createEntityAdapter,
+  createSelector,
+  createSlice,
+} from "@reduxjs/toolkit";
+import { getSelectedConversationId } from "./SelectedConversation";
 
 export const conversationsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
@@ -7,7 +12,6 @@ export const conversationsAdapter = createEntityAdapter({
 
 export const {
   selectAll: selectAllConversations,
-  selectById: selectConversationByCid,
   selectEntities: selectConversationsEntities,
   selectIds: selectConversationsIds,
   selectTotal: selectTotalConversations,
@@ -28,6 +32,13 @@ export const conversations = createSlice({
     removeChat: conversationsAdapter.removeOne,
   },
 });
+
+export const getConverastionById = createSelector(
+  [getSelectedConversationId, selectConversationsEntities],
+  (id, conversations) => {
+    return conversations[id];
+  }
+);
 
 export const { setChats, upsertChat, removeChat } = conversations.actions;
 

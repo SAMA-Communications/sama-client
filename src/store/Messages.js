@@ -3,6 +3,7 @@ import {
   createSelector,
   createSlice,
 } from "@reduxjs/toolkit";
+import { getConverastionById } from "./Conversations";
 
 export const messagesAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
@@ -28,21 +29,10 @@ export const messages = createSlice({
   },
 });
 
-export const getSelectedConversation = (state) => {
-  return state.selectedConversation.value;
-};
-
-const getSelectedConversationMessageIds = createSelector(
-  [getSelectedConversation],
-  (conversation) => {
-    return conversation.messagesIds;
-  }
-);
-
 export const getActiveConversationMessages = createSelector(
-  [getSelectedConversationMessageIds, selectMessagesEntities],
-  (ids, messages) => {
-    return ids?.map((id) => messages[id]);
+  [getConverastionById, selectMessagesEntities],
+  (conversation, messages) => {
+    return conversation?.messagesIds.map((id) => messages[id]);
   }
 );
 

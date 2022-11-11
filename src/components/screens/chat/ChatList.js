@@ -69,7 +69,7 @@ export default function ChatList() {
           to={`/main/#${obj.name ? obj._id : chatName}`}
           key={obj._id}
           onClick={() => {
-            dispatch(setSelectedConversation({ ...obj, name: chatName }));
+            dispatch(setSelectedConversation({ id: obj._id }));
             // dispatch(upsertIndicator({ cid: obj._id, count: 0 }));
             // if (indicators[obj._id]?.count) {
             //   api.clearIndicatorByCid({ cid: obj._id, uId: userInfo._id });
