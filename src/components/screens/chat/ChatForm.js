@@ -12,22 +12,17 @@ import { selectParticipantsEntities } from "../../../store/Participants.js";
 import {
   getConverastionById,
   removeChat,
-  selectConversationByCid,
   selectConversationsEntities,
   upsertChat,
 } from "../../../store/Conversations";
-import {
-  getSelectedConversationId,
-  setSelectedConversation,
-  upsertSelectedConversation,
-} from "../../../store/SelectedConversation";
+import { setSelectedConversation } from "../../../store/SelectedConversation";
 import {
   addMessage,
   addMessages,
   getActiveConversationMessages,
   removeMessage,
 } from "../../../store/Messages";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatForm.css";
@@ -35,6 +30,7 @@ import "../../../styles/chat/ChatForm.css";
 export default function ChatForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const url = useLocation();
 
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
@@ -198,7 +194,11 @@ export default function ChatForm() {
               <VscDeviceCamera />
             </div>
             <div className="chat-recipient-info">
-              <p>{selectedConversation.name}</p>
+              <p>
+                {selectedConversation.name
+                  ? selectedConversation.name
+                  : url.hash?.slice(1)}
+              </p>
               <div className="chat-recipient-status hide">
                 <span>|</span>
                 <p>typing...</p>
