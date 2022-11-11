@@ -37,7 +37,7 @@ export default function ChatList() {
 
   useEffect(() => {
     setTimeout(() => {
-      api.conversationList({}).then(chats => {
+      api.conversationList({}).then((chats) => {
         dispatch(setChats(chats));
         api
           .getParticipantsByCids(chats.map((obj) => obj._id))

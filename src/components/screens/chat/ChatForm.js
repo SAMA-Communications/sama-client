@@ -14,13 +14,17 @@ import {
   selectConversationsEntities,
   upsertChat,
 } from "../../../store/Conversations";
-import { setSelectedConversation } from "../../../store/SelectedConversation";
+import {
+  setSelectedConversation,
+  upsertSelectedConversation,
+} from "../../../store/SelectedConversation";
 import {
   addMessage,
   upsertMessage,
   addMessages,
   getActiveConversationMessages,
-  getSelectedConversation
+  getSelectedConversation,
+  removeMessage,
 } from "../../../store/Messages";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -54,7 +58,7 @@ export default function ChatForm() {
       upsertChat({
         _id: message.cid,
         messagesIds: [...chatMessagesIds, message._id],
-        updated_at: new Date(message.t * 1000),
+        updated_at: new Date(message.t * 1000).toISOString(),
       })
     );
   };
@@ -69,8 +73,7 @@ export default function ChatForm() {
             messagesIds,
           })
         );
-        // TODO: implement it in a better way
-        dispatch(setSelectedConversation({ ...conversations[selectedCID], messagesIds }));
+        dispatch(upsertSelectedConversation({ messagesIds }));
         dispatch(
           addMessages(
             arr.map((m) => {
@@ -83,7 +86,7 @@ export default function ChatForm() {
   }, [selectedCID]);
 
   const messagesIds = useMemo(() => {
-   return messages ? messages.map(m => m._id) : [];
+    return messages ? messages.map((m) => m._id) : [];
   }, [messages]);
 
   const sendMessage = async (event) => {
@@ -101,20 +104,8 @@ export default function ChatForm() {
       from: userInfo._id,
       t: Date.now(),
     };
-    
     messageInputEl.current.value = "";
-
     dispatch(addMessage(msg));
-
-    const updatedMessagesIds = [...messagesIds, msg._id];
-    dispatch(
-      upsertChat({
-        _id: selectedCID,
-        messagesIds: updatedMessagesIds,
-      })
-    );
-    // TODO: implement it in a better way
-    dispatch(setSelectedConversation({ ...conversations[selectedCID], messagesIds: updatedMessagesIds }));
 
     const response = await api.messageCreate({
       mid,
@@ -122,21 +113,31 @@ export default function ChatForm() {
       chatId: selectedCID,
     });
 
-  //   if (response.mid) {
-  //     msg = {
-  //       _id: response.server_mid,
-  //       status: "sent",
-  //       t: response.t,
-  //     };
-  //     dispatch(upsertMessage(msg));
-  //     dispatch(
-  //       upsertChat({
-  //         _id: selectedCID,
-  //         messagesIds: [...messagesIds, msg._id],
-  //         updated_at: (new Date(response.t * 1000)).toISOString(),
-  //       })
-  //     );
-  //   }
+    if (response.mid) {
+      msg = {
+        _id: response.server_mid,
+        body: text,
+        from: userInfo._id,
+        status: "sent",
+        t: response.t,
+      };
+      dispatch(removeMessage(mid));
+      const updatedMessagesIds = [...messagesIds, msg._id];
+      dispatch(
+        upsertChat({
+          _id: selectedCID,
+          messagesIds: updatedMessagesIds,
+        })
+      );
+      dispatch(upsertMessage(msg));
+      dispatch(
+        upsertChat({
+          _id: selectedCID,
+          messagesIds: [...messagesIds, msg._id],
+          updated_at: new Date(response.t * 1000).toISOString(),
+        })
+      );
+    }
   };
 
   const deleteChat = async () => {
@@ -157,7 +158,7 @@ export default function ChatForm() {
     if (!messages) {
       return [];
     }
-    return messages.map(msg => (
+    return messages.map((msg) => (
       <ChatMessage
         key={msg._id}
         fromId={msg.from}

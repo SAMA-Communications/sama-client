@@ -24,12 +24,13 @@ export const messages = createSlice({
     addMessage: messagesAdapter.addOne,
     addMessages: messagesAdapter.addMany,
     upsertMessage: messagesAdapter.upsertOne,
+    removeMessage: messagesAdapter.removeOne,
   },
 });
 
-export const getSelectedConversation = state => {
+export const getSelectedConversation = (state) => {
   return state.selectedConversation.value;
-}
+};
 
 const getSelectedConversationMessageIds = createSelector(
   [getSelectedConversation],
@@ -45,6 +46,7 @@ export const getActiveConversationMessages = createSelector(
   }
 );
 
-export const { addMessage, addMessages, upsertMessage } = messages.actions;
+export const { addMessage, addMessages, upsertMessage, removeMessage } =
+  messages.actions;
 
 export default messages.reducer;
