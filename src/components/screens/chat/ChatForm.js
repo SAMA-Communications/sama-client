@@ -101,6 +101,12 @@ export default function ChatForm() {
     };
     messageInputEl.current.value = "";
     dispatch(addMessage(msg));
+    dispatch(
+      upsertChat({
+        _id: selectedCID,
+        messagesIds: [...messagesIds, msg._id],
+      })
+    );
 
     const response = await api.messageCreate({
       mid,
@@ -116,14 +122,6 @@ export default function ChatForm() {
         status: "sent",
         t: response.t,
       };
-      dispatch(removeMessage(mid));
-      const updatedMessagesIds = [...messagesIds, msg._id];
-      dispatch(
-        upsertChat({
-          _id: selectedCID,
-          messagesIds: updatedMessagesIds,
-        })
-      );
       dispatch(addMessage(msg));
       dispatch(
         upsertChat({
@@ -132,6 +130,7 @@ export default function ChatForm() {
           updated_at: new Date(response.t * 1000).toISOString(),
         })
       );
+      dispatch(removeMessage(mid));
     }
   };
 
