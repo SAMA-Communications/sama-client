@@ -17,9 +17,7 @@ export default function ChatBox({
         <p className="chat-name">{chatName}</p>
         <p className="chat-message">{chatDescription}</p>
       </div>
-      {countOfNewMessage ? (
-        <div className="chat-indicator">{countOfNewMessage}</div>
-      ) : null}
+      {countOfNewMessage ? <div className="chat-indicator"></div> : null}
       <div className="chat-last-update">
         {t.getHours() +
           ":" +

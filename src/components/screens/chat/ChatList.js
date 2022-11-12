@@ -80,7 +80,7 @@ export default function ChatList() {
             chatName={chatName}
             chatDescription={obj.description}
             timeOfLastUpdate={obj.updated_at}
-            // countOfNewMessage={indicators[obj._id]?.count}
+            countOfNewMessage={false}
           />
         </Link>
       );

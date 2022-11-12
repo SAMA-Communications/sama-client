@@ -186,6 +186,7 @@ aside {
   padding: 0 6px;
 
   position: absolute;
+  top: 33px;
   right: 15px;
 
   display: flex;

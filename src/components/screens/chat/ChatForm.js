@@ -45,8 +45,9 @@ export default function ChatForm() {
   const messageInputEl = useRef(null);
 
   api.onMessageListener = (message) => {
-    dispatch(addMessage(message));
-
+    message.from === userInfo._id
+      ? dispatch(addMessage({ ...message, status: "sent" }))
+      : dispatch(addMessage(message));
     const chatMessagesIds = conversations[message.cid]
       ? conversations[message.cid].messagesIds
       : [];
@@ -60,8 +61,7 @@ export default function ChatForm() {
   };
 
   useEffect(() => {
-    console.log(selectedCID);
-    if (selectedCID && !messages.length) {
+    if (selectedCID && !conversations[selectedCID].preloadMessages) {
       api.messageList({ cid: selectedCID, limit: 20 }).then((arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
         dispatch(
@@ -75,6 +75,7 @@ export default function ChatForm() {
           upsertChat({
             _id: selectedCID,
             messagesIds,
+            preloadMessages: "success",
           })
         );
       });
