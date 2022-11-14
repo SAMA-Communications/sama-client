@@ -2,6 +2,8 @@ import React, { Suspense, useEffect } from "react";
 import api from "./api/api";
 import { Route, Routes, useNavigate } from "react-router-dom";
 
+import "./styles/themes/DefaultTheme.css";
+
 import Login from "./components/screens/Login";
 import SignUp from "./components/screens/SignUp";
 import PageLoader from "./components/PageLoader";

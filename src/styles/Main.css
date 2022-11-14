@@ -6,8 +6,27 @@
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: lightgray;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
 body {
-  background-color: #f8f9fd;
+  background-color: var(--color-default-bg);
+}
+
+.hide {
+  display: none !important;
 }
 
 .Main {
@@ -25,11 +44,11 @@ nav {
   justify-content: space-between;
 }
 .logout-btn {
-  color: #000;
+  color: var(--color-black);
   text-decoration: none;
 }
 .logout-btn:hover {
-  color: #1a8ee1;
+  color: var(--color-blue);
 }
 .chat-logout-btn {
   margin-right: 20px;
@@ -40,9 +59,35 @@ nav {
 .chat-logout-btn:hover {
   margin-top: -10px;
   cursor: pointer;
-  text-shadow: 0 10px lightgray;
+  text-shadow: 0 10px var(--color-text-shadow);
 }
+.chat-navigate-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.change-themes {
+  width: 40px;
+  height: 40px;
 
+  margin-right: 30px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 50%;
+  background-color: var(--color-default-bg);
+
+  font-size: 1.7em;
+  line-height: 100%;
+
+  transition: all 0.2s ease-in-out;
+}
+.change-themes:hover {
+  cursor: pointer;
+  background-color: var(--color-lightblue);
+}
 .chat-logo {
   margin-left: 25px;
   display: flex;
@@ -50,7 +95,7 @@ nav {
 
   line-height: 100%;
   font-size: 3em;
-  color: #000;
+  color: var(--color-black);
 }
 .chat-logo > p {
   margin-left: 10px;

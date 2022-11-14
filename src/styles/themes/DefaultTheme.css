@@ -1,0 +1,36 @@
+:root {
+  --color-white: #fff;
+  --color-black: #000;
+  --color-grey: rgba(128, 128, 128, 0.5);
+
+  --bg-default-color: #f9f7f7;
+  --bg-main-color: #fff;
+  --bg-chatPhoto-color: 1;
+  --bg-userPhoto-color: 2;
+  --border-color: rgba(0, 0, 0, 0.2);
+
+  --text-main-color: #000;
+  --text-light-color: 1;
+  --text-accent-color: 1;
+  --text-hover-color: 1;
+  --text-danger: #ff0000;
+
+  --shdaow-text: 1;
+  --shadow-block: 1;
+
+  --btn-bg-color: 1;
+  --btn-hover-color: 1;
+
+  --bg-message-all: 1;
+  --bg-message-my: 2;
+
+  --color-lightblue: #dbe2ef;
+  --color-blue: #3f72af;
+  --color-darkblue: #112d4e;
+  --color-text-shadow: #e0e0e0;
+  --color-text-danger: #ff0000;
+  --color-box-shadow: #d3d3d3;
+  --color-hover-blue: #81c6e8;
+  --color-border: rgba(0, 0, 0, 0.2);
+  /* scroll bar */
+}

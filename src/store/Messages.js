@@ -7,7 +7,7 @@ import { getConverastionById } from "./Conversations";
 
 export const messagesAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
-  sortComparer: (a, b) => a._id.localeCompare(b._id),
+  sortComparer: (a, b) => a.t - b.t,
 });
 
 export const {
