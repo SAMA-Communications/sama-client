@@ -17,8 +17,15 @@ class Api {
     };
 
     this.socket.onmessage = (e) => {
-      console.log("[socket.message]", e.data);
       const message = JSON.parse(e.data);
+      console.log("[socket.message]", message);
+
+      if (message.message) {
+        if (this.onMessageListener) {
+          this.onMessageListener(message.message);
+        }
+        return;
+      }
       if (message.ask) {
         const mid = message.ask.mid;
         this.responsesPromises[mid](message.ask);
@@ -69,7 +76,7 @@ class Api {
               password: data.pass,
               deviceId: getBrowserFingerprint(true),
             },
-        id: getUniqueId(data.ulogin),
+        id: getUniqueId("userLogin"),
       },
     };
     const resObjKey = "token";
@@ -83,7 +90,7 @@ class Api {
           login: data.ulogin,
           password: data.pass,
         },
-        id: getUniqueId(data.ulogin),
+        id: getUniqueId("userCreate"),
       },
     };
     const resObjKey = "user";
@@ -91,11 +98,10 @@ class Api {
   }
 
   async userLogout() {
-    const user = getUserLogin();
     const requestData = {
       request: {
         user_logout: {},
-        id: getUniqueId(user),
+        id: getUniqueId("userLogout"),
       },
     };
     const resObjKey = "success";
@@ -104,11 +110,10 @@ class Api {
 
   async userDelete() {
     //only use in app
-    const user = getUserLogin();
     const requestData = {
       request: {
         user_delete: {},
-        id: getUniqueId(user),
+        id: getUniqueId("userDelete"),
       },
     };
     const resObjKey = "success";
@@ -117,14 +122,13 @@ class Api {
   }
 
   async userSearch(data) {
-    const user = getUserLogin();
     const requestData = {
       request: {
         user_search: {
           login: data.login,
           ignore_ids: data.ignore_ids,
         },
-        id: getUniqueId(user),
+        id: getUniqueId("userSearch"),
       },
     };
     if (data.limit) requestData.request.user_search["limit"] = data.limit;
@@ -135,13 +139,12 @@ class Api {
   }
 
   async getParticipantsByCids(data) {
-    const user = getUserLogin();
     const requestData = {
       request: {
         getParticipantsByCids: {
           cids: data,
         },
-        id: getUniqueId(user),
+        id: getUniqueId("getParticipantsByCids"),
       },
     };
     const resObjKey = "users";
@@ -152,7 +155,7 @@ class Api {
     return new Promise((resolve, reject) => {
       const requestData = {
         message: {
-          id: getUniqueId(getUserLogin()),
+          id: data.mid,
           body: data.text,
           cid: data.chatId,
           // x: {
@@ -183,13 +186,12 @@ class Api {
   }
 
   async messageList(data) {
-    const user = getUserLogin();
     const requestData = {
       request: {
         message_list: {
           cid: data.cid,
         },
-        id: getUniqueId(user),
+        id: getUniqueId("messageList"),
       },
     };
     if (data.limit) requestData.request.message_list["limit"] = data.limit;
@@ -257,7 +259,6 @@ class Api {
   }
 
   async conversationCreate(data) {
-    const user = getUserLogin();
     const requestData = {
       request: {
         conversation_create: {
@@ -267,7 +268,7 @@ class Api {
           opponent_id: data.opponent_id,
           participants: data.participants,
         },
-        id: getUniqueId(user),
+        id: getUniqueId("conversationCreate"),
       },
     };
     const resObjKey = "conversation";
@@ -294,11 +295,10 @@ class Api {
   }
 
   async conversationList(data) {
-    const user = getUserLogin();
     const requestData = {
       request: {
         conversation_list: {},
-        id: getUniqueId(user),
+        id: getUniqueId("conversationList"),
       },
     };
     if (data.limit) requestData.request.conversation_list["limit"] = data.limit;
@@ -310,13 +310,39 @@ class Api {
   }
 
   async conversationDelete(data) {
-    const user = getUserLogin();
     const requestData = {
       request: {
         conversation_delete: {
           id: data.cid,
         },
-        id: getUniqueId(user),
+        id: getUniqueId("conversationDelete"),
+      },
+    };
+    const resObjKey = "success";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
+  async getCountOfUnreadMessages(data) {
+    const requestData = {
+      request: {
+        getCountOfUnreadMessages: {
+          user_id: data.uId,
+        },
+        id: getUniqueId("getCountOfUnreadMessages"),
+      },
+    };
+    const resObjKey = "indicators";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
+  async clearIndicatorByCid(data) {
+    const requestData = {
+      request: {
+        clearIndicatorByCid: {
+          cid: data.cid,
+          user_id: data.uId,
+        },
+        id: getUniqueId("clearIndicatorByCid"),
       },
     };
     const resObjKey = "success";

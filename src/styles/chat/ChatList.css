@@ -117,6 +117,8 @@ aside {
   text-decoration: none;
 }
 .chat-box {
+  position: relative;
+
   width: 97%;
   height: 72px;
   margin: 6px auto;
@@ -175,4 +177,32 @@ aside {
   cursor: pointer;
   transform: rotateZ(27deg);
   background-color: #777;
+}
+.chat-indicator {
+  width: max-content;
+  min-width: 28px;
+  height: 28px;
+
+  padding: 0 6px;
+
+  position: absolute;
+  top: 33px;
+  right: 15px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  line-height: 100%;
+
+  border-radius: 12px;
+  background-color: rgb(216, 232, 238);
+}
+.chat-last-update {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+
+  font-size: 0.95em;
+  color: #999;
 }

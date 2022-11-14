@@ -63,6 +63,9 @@
   margin-left: 15px;
 }
 
+.chat-messages {
+  padding: 6px 3px;
+}
 .chat-messaging-info {
   position: relative;
   display: flex;
@@ -129,7 +132,6 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: 10px 0;
   overflow: auto;
 }
 
@@ -149,7 +151,7 @@
   outline: none;
 }
 #chat-form-send {
-  height: 3.4em;
+  min-height: 54px;
 
   display: flex;
   border-top: 1px solid lightgray;
@@ -178,29 +180,4 @@
 #chat-form-send > button > p {
   font-size: 0.8em;
   margin-right: 8px;
-}
-.message {
-  max-width: 80%;
-  width: max-content;
-  padding: 4px 12px;
-  margin-top: 5px;
-
-  font-size: 1.1em;
-  flex-wrap: wrap;
-
-  border: none;
-  border-radius: 8px;
-  background-color: rgb(236, 236, 236);
-}
-
-.my-message {
-  margin-left: auto;
-  text-align: right;
-}
-.message-user-name {
-  margin-bottom: 5px;
-
-  color: rgb(59, 103, 145);
-  font-weight: 600;
-  font-size: 0.75em;
 }

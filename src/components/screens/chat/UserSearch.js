@@ -49,7 +49,7 @@ export default function UserSearch({ close }) {
       };
       const chat = await api.conversationCreate(requestData);
       dispatch(addUsers(selectedUsers));
-      dispatch(upsertChat(chat));
+      dispatch(upsertChat({ ...chat, messagesIds: [] }));
       close(false);
     }
   };

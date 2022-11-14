@@ -1,4 +1,9 @@
-import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+import {
+  createEntityAdapter,
+  createSelector,
+  createSlice,
+} from "@reduxjs/toolkit";
+import { getConverastionById } from "./Conversations";
 
 export const messagesAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
@@ -17,14 +22,21 @@ export const messages = createSlice({
   name: "Messages",
   initialState: messagesAdapter.getInitialState(),
   reducers: {
-    setMessages: messagesAdapter.setAll,
     addMessage: messagesAdapter.addOne,
+    addMessages: messagesAdapter.addMany,
+    upsertMessage: messagesAdapter.upsertOne,
     removeMessage: messagesAdapter.removeOne,
-    removeAllMessages: messagesAdapter.removeAll,
   },
 });
 
-export const { setMessages, addMessage, removeMessage, removeAllMessages } =
+export const getActiveConversationMessages = createSelector(
+  [getConverastionById, selectMessagesEntities],
+  (conversation, messages) => {
+    return conversation?.messagesIds.map((id) => messages[id]);
+  }
+);
+
+export const { addMessage, addMessages, upsertMessage, removeMessage } =
   messages.actions;
 
 export default messages.reducer;

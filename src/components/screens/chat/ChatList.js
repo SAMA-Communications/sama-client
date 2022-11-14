@@ -16,13 +16,19 @@ import { setSelectedConversation } from "../../../store/SelectedConversation.js"
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatList.css";
-import { removeAllMessages } from "../../../store/Messages.js";
+import ChatBox from "../../generic/ChatBox.js";
+// import {
+//   selectUnreadMessagesEntities,
+//   setIndicators,
+//   upsertIndicator,
+// } from "../../../store/UnreadMessages.js";
 
 export default function ChatList() {
   const dispatch = useDispatch();
   const [isSearchForm, setIsSearchForm] = useState(false);
 
   const conversations = useSelector(selectAllConversations);
+  // const indicators = useSelector(selectUnreadMessagesEntities);
   const participants = useSelector(selectParticipantsEntities);
 
   const userInfo = localStorage.getItem("sessionId")
@@ -30,18 +36,28 @@ export default function ChatList() {
     : null;
 
   useEffect(() => {
-    api.conversationList({}).then((arr) => {
-      dispatch(setChats(arr));
-      api.getParticipantsByCids(arr.map((obj) => obj._id)).then((users) => {
-        dispatch(setUsers(users));
+    setTimeout(() => {
+      api.conversationList({}).then((chats) => {
+        dispatch(setChats(chats));
+        api
+          .getParticipantsByCids(chats.map((obj) => obj._id))
+          .then((users) => dispatch(setUsers(users)));
+        // api.getCountOfUnreadMessages({ uId: userInfo._id }).then((indicators) =>
+        //   dispatch(
+        //     setIndicators(
+        //       indicators.map((obj) => {
+        //         return { cid: obj.conversation_id, count: obj.unread_messages };
+        //       })
+        //     )
+        //   )
+        // );
       });
-    });
+    }, 300);
   }, []);
 
   const chatsList = useMemo(() => {
     let list = [];
-    for (const id in conversations) {
-      const obj = conversations[id];
+    for (const obj of conversations) {
       const chatName = !obj.name
         ? obj.owner_id === userInfo._id
           ? participants[obj.opponent_id]?.login
@@ -53,28 +69,22 @@ export default function ChatList() {
           to={`/main/#${obj.name ? obj._id : chatName}`}
           key={obj._id}
           onClick={() => {
-            dispatch(removeAllMessages());
-            dispatch(
-              setSelectedConversation({
-                ...obj,
-                name: chatName,
-              })
-            );
+            dispatch(setSelectedConversation({ id: obj._id }));
+            // dispatch(upsertIndicator({ cid: obj._id, count: 0 }));
+            // if (indicators[obj._id]?.count) {
+            //   api.clearIndicatorByCid({ cid: obj._id, uId: userInfo._id });
+            // }
           }}
         >
-          <div className="chat-box">
-            <div className="chat-box-icon">
-              <VscDeviceCamera />
-            </div>
-            <div className="chat-box-info">
-              <p className="chat-name">{chatName}</p>
-              <p className="chat-message">{obj.description}</p>
-            </div>
-          </div>
+          <ChatBox
+            chatName={chatName}
+            chatDescription={obj.description}
+            timeOfLastUpdate={obj.updated_at}
+            countOfNewMessage={false}
+          />
         </Link>
       );
     }
-
     return list;
   }, [conversations, participants]);
 
