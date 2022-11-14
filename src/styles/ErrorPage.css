@@ -4,7 +4,7 @@
   height: 100vh;
 
   font-size: 4em;
-  color: rgba(128, 128, 128, 0.5);
+  color: var(--text-smoke);
 
   display: flex;
   align-items: flex-start;

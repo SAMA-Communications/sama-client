@@ -1,0 +1,38 @@
+:root {
+  --bg-default-color: #f7fbfc;
+  --bg-main-color: #fff;
+  --bg-chatPhoto-color: #8ecae6;
+  --bg-userPhoto-color: #023047;
+  --bg-block-hover: #8ecae6;
+  --bg-dark-block: rgba(0, 0, 0, 0.6);
+
+  --border-light-color: rgba(0, 0, 0, 0.12);
+  --border-color: rgba(0, 0, 0, 0.2);
+  --border-dark-color: rgba(0, 0, 0, 0.25);
+  --border-danger: #ff0000;
+
+  --block-selected: rgba(0, 0, 0, 0.1);
+  --block-hover: rgba(0, 0, 0, 0.1);
+  --block-danger: rgb(255, 133, 133);
+
+  --text-main: #000;
+  --text-smoke: rgba(0, 0, 0, 0.45);
+  --text-light: #fff;
+  --text-accent: #3f72af;
+  --text-hover: #8ecae6;
+  --text-danger: #ff0000;
+
+  --shdaow-text: #e0e0e0;
+  --shadow-block: rgba(0, 0, 0, 0.2);
+
+  --btn-bg-color: #3f72af;
+  --btn-hover-color: #8ecae6;
+
+  --bg-message-all: rgba(0, 0, 0, 0.12);
+  --bg-message-my: #bce0f0;
+  --bg-chat-indicator: #bce0f0;
+
+  --scrollbar-track-color: #f1f1f1;
+  --scrollbar-thumb-color: #d3d3d3;
+  --scrollbar-thumb-hover-color: #999;
+}

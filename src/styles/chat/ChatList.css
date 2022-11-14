@@ -1,25 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-
-  box-sizing: border-box;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  border-radius: 8px;
-  background: #f1f1f1;
-}
-::-webkit-scrollbar-thumb {
-  border-radius: 8px;
-  background: lightgray;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #999;
-}
-
 aside {
   position: relative;
   width: 22vw;
@@ -33,11 +11,11 @@ aside {
 .user-box {
   padding: 15px;
   border-radius: 20px;
-  background-color: #fff;
+  background-color: var(--bg-main-color);
 
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 4px 8px 0 var(--shadow-block), 0 6px 20px 0 var(--shadow-block);
 }
 .user-photo,
 .chat-box-icon {
@@ -49,40 +27,20 @@ aside {
   align-items: center;
   justify-content: center;
 
+  color: var(--text-light);
+
   border-radius: 50%;
-  background-color: lightblue;
+  background-color: var(--bg-chatPhoto-color);
 }
 .user-photo {
   width: 70px;
   height: 70px;
-  color: #fff;
-  background-color: #777;
+  color: var(--text-light);
+  background-color: var(--bg-userPhoto-color);
 }
 .user-info {
   font-size: 1.5em;
 }
-.user-menu {
-  position: relative;
-}
-.user-menu-btn {
-  height: 30px;
-  font-size: 1.7em;
-
-  transition: all 0.2s ease-in-out;
-  transform: rotate(-90deg);
-}
-.user-menu-btn:hover {
-  cursor: pointer;
-  color: #1a8ee1;
-
-  transform: rotate(-180deg);
-}
-.user-menu-link {
-  position: absolute;
-  border: 1px solid #000;
-  background-color: #fff;
-}
-
 .user-info,
 .chat-box-info {
   flex-grow: 1;
@@ -102,18 +60,18 @@ aside {
   flex-direction: column;
   overflow: auto;
 
-  border: 12px solid white;
+  border: 10px solid transparent;
   border-radius: 20px;
-  background-color: #fff;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-color: var(--bg-main-color);
+  box-shadow: 0 4px 8px 0 var(--shadow-block), 0 6px 20px 0 var(--shadow-block);
 }
 .chat-list > p {
   text-align: center;
   font-size: 1.4em;
-  color: lightgray;
+  color: var(--text-smoke);
 }
 .chat-list > a {
-  color: #000;
+  color: var(--text-main);
   text-decoration: none;
 }
 .chat-box {
@@ -124,8 +82,8 @@ aside {
   margin: 6px auto;
   padding: 8px 4px;
 
-  border-bottom: 1px solid rgba(211, 211, 211, 0.4);
-  border-top: 1px solid rgba(211, 211, 211, 0.4);
+  border-bottom: 1px solid var(--border-light-color);
+  border-top: 1px solid var(--border-light-color);
   border-radius: 15px;
 
   display: flex;
@@ -135,11 +93,13 @@ aside {
   transition: all 0.1s ease-in-out;
 }
 .selected {
-  background-color: rgba(211, 211, 211, 0.7);
+  background-color: var(--block-selected);
 }
 .chat-box:hover {
   cursor: pointer;
-  background-color: rgba(211, 211, 211, 0.7);
+  border-bottom: 1px solid var(--border-dark-color);
+  border-top: 1px solid var(--border-dark-color);
+  background-color: var(--block-hover);
 }
 .chat-box-info {
   display: flex;
@@ -152,31 +112,38 @@ aside {
 }
 .chat-message {
   margin-top: 5px;
-  color: #555;
+  color: var(--text-smoke);
 }
 
 .chat-create-btn {
   padding: 12px;
+
   position: absolute;
   bottom: 35px;
-  right: 45px;
+  right: 20px;
 
   width: auto;
   height: auto;
 
   display: flex;
   font-size: 1.8em;
-  color: #fff;
 
-  background-color: #555;
+  background-color: var(--block-hover);
   border-radius: 50%;
 
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 .chat-create-btn:hover {
   cursor: pointer;
-  transform: rotateZ(27deg);
-  background-color: #777;
+  transform: translateY(-5px);
+  color: var(--text-light);
+  background-color: var(--bg-dark-block);
+}
+.chat-create-btn > svg > path {
+  transition: all 0.3s ease-in-out;
+}
+.chat-create-btn:hover > svg > path {
+  color: var(--text-light);
 }
 .chat-indicator {
   width: max-content;
@@ -196,7 +163,7 @@ aside {
   line-height: 100%;
 
   border-radius: 12px;
-  background-color: rgb(216, 232, 238);
+  background-color: var(--bg-chat-indicator);
 }
 .chat-last-update {
   position: absolute;
@@ -204,5 +171,33 @@ aside {
   right: 16px;
 
   font-size: 0.95em;
-  color: #999;
+  color: var(--text-smoke);
+}
+.chat-indicator {
+  width: max-content;
+  min-width: 28px;
+  height: 28px;
+
+  padding: 0 6px;
+
+  position: absolute;
+  top: 33px;
+  right: 15px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  line-height: 100%;
+
+  border-radius: 12px;
+  background-color: var(--bg-chat-indicator);
+}
+.chat-last-update {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+
+  font-size: 0.95em;
+  color: var(--text-smoke);
 }

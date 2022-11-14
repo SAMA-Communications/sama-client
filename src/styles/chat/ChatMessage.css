@@ -12,17 +12,17 @@
 
   border: none;
   border-radius: 8px;
-  background-color: rgb(236, 236, 236);
+  background-color: var(--bg-message-all);
 }
 .my-message {
   padding: 4px 16px 8px 12px;
   margin-left: auto;
   text-align: right;
 
-  background-color: rgb(201, 226, 235);
+  background-color: var(--bg-message-my);
 }
 .message-user-name {
-  color: rgb(59, 103, 145);
+  color: var(--text-accent);
   font-weight: 600;
   font-size: 0.75em;
 }
@@ -42,7 +42,7 @@
   justify-content: flex-end;
 
   font-size: 0.85em;
-  color: #777;
+  color: var(--text-smoke);
 }
 .message-status-icon {
   display: none;
@@ -52,8 +52,9 @@
 }
 .my-message .message-status-icon {
   display: flex;
-
-  color: rgb(59, 103, 145);
+}
+.my-message .message-status-icon > svg > path {
+  color: var(--text-accent);
 }
 .my-message .message-status {
   margin-right: -12px;
@@ -62,5 +63,5 @@
   font-size: 0.85em;
   margin-right: 4px;
 
-  color: #777;
+  color: var(--text-smoke);
 }
