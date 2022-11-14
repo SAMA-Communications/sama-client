@@ -4,8 +4,8 @@
   padding: 20px;
 
   border-radius: 25px;
-  background-color: var(--color-white);
-  box-shadow: 0 4px 8px 0 var(--color-border), 0 6px 20px 0 var(--color-border);
+  background-color: var(--bg-main-color);
+  box-shadow: 0 4px 8px 0 var(--border-color), 0 6px 20px 0 var(--border-color);
 }
 .chat-empty {
   width: 100%;
@@ -16,7 +16,7 @@
   justify-content: center;
 
   font-size: 4em;
-  color: var(--color-text-shadow);
+  color: var(--text-smoke);
   text-align: center;
 }
 
@@ -29,12 +29,15 @@
   justify-content: center;
 
   font-size: 5em;
-  color: var(--color-text-shadow);
   text-align: center;
 }
 .chat-form-loading > P {
+  color: var(--text-smoke);
   font-size: 0.7em;
   margin-left: 15px;
+}
+.chat-form-loading > svg > path {
+  color: var(--text-smoke);
 }
 
 .chat-messages {
@@ -44,7 +47,7 @@
   position: relative;
   display: flex;
   padding-bottom: 15px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--border-color);
 }
 .chat-recipient-photo {
   width: 70px;
@@ -56,8 +59,8 @@
   justify-content: center;
 
   border-radius: 50%;
-  color: var(--color-white);
-  background-color: var(--color-blue);
+  color: var(--text-light);
+  background-color: var(--bg-chatPhoto-color);
 }
 .chat-recipient-info {
   font-size: 1.7em;
@@ -71,28 +74,36 @@
   display: flex;
 
   font-size: 1em;
-  color: var(--color-blue);
 
   transition: all 0.1s ease-in-out;
 }
+.chat-recipient-status p {
+  color: var(--text-accent);
+}
 .chat-recipient-status span {
   margin: 0 15px;
-  color: var(--color-darkblue);
+  color: var(--text-accent);
 }
 .chat-delete-btn {
   position: absolute;
   top: 18%;
   right: 5px;
 
-  color: var(--color-grey);
   font-size: 2.4em;
+
+  transition: all 0.3s ease-in-out;
+}
+.chat-delete-btn > svg > path {
+  color: var(--text-smoke);
 
   transition: all 0.3s ease-in-out;
 }
 .chat-delete-btn:hover {
   cursor: pointer;
-  color: var(--color-text-danger);
   transform: scale(1.2);
+}
+.chat-delete-btn:hover > svg > path {
+  color: var(--text-danger);
 }
 .chat-form-messaging {
   height: 100%;
@@ -116,7 +127,7 @@
 
   border: none;
   border-radius: 2rem;
-  background-color: var(--color-text-shadow);
+  background-color: var(--bg-message-all);
 }
 #inputMessage:focus {
   outline: none;
@@ -125,7 +136,7 @@
   min-height: 54px;
 
   display: flex;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--border-color);
   padding: 15px 15px 0 15px;
 }
 #chat-form-send > button {
@@ -135,20 +146,30 @@
   justify-content: center;
 
   font-size: 1.5em;
-  color: var(--color-white);
 
   border: none;
   border-radius: 20px;
-  background-color: var(--color-blue);
+  background-color: var(--btn-bg-color);
 
   transition: all 0.2s ease-in-out;
 }
 #chat-form-send > button:hover {
   cursor: pointer;
-  color: var(--color-black);
-  background-color: var(--color-light-blue);
+  background-color: var(--btn-hover-color);
 }
 #chat-form-send > button > p {
   font-size: 0.8em;
   margin-right: 8px;
+  color: var(--text-light);
+
+  transition: all 0.2s ease-in-out;
+}
+#chat-form-send > button > svg > path {
+  color: var(--text-light);
+
+  transition: all 0.2s ease-in-out;
+}
+#chat-form-send > button:hover p,
+#chat-form-send > button:hover > svg > path {
+  color: var(--text-main);
 }

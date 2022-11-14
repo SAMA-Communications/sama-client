@@ -10,7 +10,7 @@
   justify-content: center;
   padding: 10vh 0;
 
-  background-color: rgba(17, 17, 17, 0.6);
+  background-color: var(--bg-dark-block);
   animation: slowFromTop 0.3s forwards;
 
   z-index: 1000;
@@ -35,7 +35,7 @@
 
   border: none;
   border-radius: 20px;
-  background-color: #fff;
+  background-color: var(--bg-main-color);
 }
 .search-options {
   padding-bottom: 10px;
@@ -50,19 +50,25 @@
   align-items: center;
 
   font-size: 1.4em;
-  color: #fff;
 
   border: none;
   border-radius: 2rem;
-  background-color: #1a8ee1;
+  background-color: var(--btn-bg-color);
+
+  transition: all 0.2s ease-in-out;
+}
+.search-options button > svg > path {
+  color: var(--text-light);
 
   transition: all 0.2s ease-in-out;
 }
 
-.search-options > button:hover {
-  color: #000;
+.search-options button:hover {
   cursor: pointer;
-  background-color: #8dc7f0;
+  background-color: var(--btn-hover-color);
+}
+.search-options button:hover > svg > path {
+  color: var(--text-main);
 }
 
 #inputSearchLogin {
@@ -72,34 +78,36 @@
 
   border: none;
   border-radius: 2rem;
-  background-color: rgb(224, 224, 224);
+  background-color: var(--bg-message-all);
 }
 #inputSearchLogin:focus {
   outline: none;
 }
 .close-form-btn {
   position: absolute;
-  top: 2vh;
-  right: 2vw;
+  top: 1vh;
+  right: 1vw;
 
-  color: #fff;
   font-size: 4.5em;
-
+}
+.close-form-btn > svg > path {
+  color: var(--text-light);
   transition: all 0.2s ease-in-out;
 }
-.close-form-btn:hover {
+
+.close-form-btn:hover > svg > path {
   cursor: pointer;
-  color: #8dc7f0;
+  color: var(--text-hover);
 }
 .list-users {
   padding: 4px 0;
 
-  border-bottom: 1px solid lightgray;
+  border-bottom: 1px solid var(--border-color);
 }
 .list-user-message {
   padding: 15px 0 10px 0;
 
-  color: grey;
+  color: var(--text-smoke);
   text-align: center;
   font-size: 1.2em;
 }
@@ -108,7 +116,7 @@
   margin: 6px 0;
   padding: 5px 10px;
 
-  border: 1px solid lightgray;
+  border: 1px solid var(--border-light-color);
   border-radius: 8px;
   animation: slowFromRight 0.3s forwards;
 }
@@ -143,12 +151,13 @@
 }
 .list-user-selected-box:hover {
   cursor: pointer;
-  border: 1px solid red;
-  background-color: rgb(255, 133, 133);
+  border: 1px solid var(--text-danger);
+  background-color: var(--block-danger);
 }
 .list-user-box:hover {
   cursor: pointer;
-  background-color: rgb(233, 233, 233);
+  border-color: var(--border-dark-color);
+  background-color: var(--block-hover);
 }
 
 .chat-selected-users {
@@ -156,7 +165,7 @@
   flex-wrap: wrap;
 
   padding-bottom: 5px;
-  border-bottom: 1px solid lightgray;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .search-create-chat {
@@ -172,16 +181,16 @@
   align-items: center;
 
   font-size: 1.2em;
-  color: #fff;
+  color: var(--text-light);
 
   border: none;
   border-radius: 2rem;
-  background-color: #1a8ee1;
+  background-color: var(--btn-bg-color);
 
   transition: all 0.2s ease-in-out;
 }
 .search-create-chat > button:hover {
-  color: #000;
+  color: var(--text-main);
   cursor: pointer;
-  background-color: #8dc7f0;
+  background-color: var(--btn-hover-color);
 }
