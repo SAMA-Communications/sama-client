@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { VscDeviceCamera } from "react-icons/vsc";
 
 export default function ChatBox({
@@ -7,7 +7,45 @@ export default function ChatBox({
   countOfNewMessage,
   timeOfLastUpdate,
 }) {
-  const t = new Date(Date.parse(timeOfLastUpdate));
+  let tView = useMemo(() => {
+    const t = new Date(Date.parse(timeOfLastUpdate));
+    const tToday = new Date(Date.now());
+    if (
+      tToday.getFullYear() - t.getFullYear() ||
+      tToday.getMonth() - t.getMonth() ||
+      tToday.getDate() - t.getDate() > 6
+    ) {
+      return (
+        t.getDate() +
+        "." +
+        t.getMonth() +
+        "." +
+        t.getFullYear().toString().slice(2)
+      );
+    } else if (tToday.getDay() - t.getDay()) {
+      switch (t.getDay()) {
+        case 0:
+          return "Su";
+        case 1:
+          return "Mo";
+        case 2:
+          return "Tu";
+        case 3:
+          return "We";
+        case 4:
+          return "Th";
+        case 5:
+          return "Fr";
+        case 6:
+          return "Sa";
+        default:
+          break;
+      }
+    } else {
+      return t.getHours() + ":" + t.getMinutes();
+    }
+  }, [timeOfLastUpdate]);
+
   return (
     <div className="chat-box">
       <div className="chat-box-icon">
@@ -18,11 +56,7 @@ export default function ChatBox({
         <p className="chat-message">{chatDescription}</p>
       </div>
       {countOfNewMessage ? <div className="chat-indicator"></div> : null}
-      <div className="chat-last-update">
-        {t.getHours() +
-          ":" +
-          (t.getMinutes() > 9 ? t.getMinutes() : "0" + t.getMinutes())}
-      </div>
+      <div className="chat-last-update">{tView}</div>
     </div>
   );
 }

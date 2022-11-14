@@ -61,7 +61,7 @@ export default function ChatForm() {
   };
 
   useEffect(() => {
-    if (selectedCID && !conversations[selectedCID].preloadMessages) {
+    if (selectedCID && !conversations[selectedCID].activated) {
       api.messageList({ cid: selectedCID, limit: 20 }).then((arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
         dispatch(
@@ -75,7 +75,7 @@ export default function ChatForm() {
           upsertChat({
             _id: selectedCID,
             messagesIds,
-            preloadMessages: "success",
+            activated: true,
           })
         );
       });
