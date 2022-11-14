@@ -1,28 +1,30 @@
 :root {
-  --color-white: #fff;
-  --color-black: #000;
-  --color-grey: rgba(128, 128, 128, 0.5);
-
-  --bg-default-color: #f9f7f7;
+  --bg-default-color: #f7fbfc;
   --bg-main-color: #fff;
   --bg-chatPhoto-color: 1;
   --bg-userPhoto-color: 2;
+  --bg-block-hover: #8ecae6;
   --border-color: rgba(0, 0, 0, 0.2);
 
-  --text-main-color: #000;
-  --text-light-color: 1;
-  --text-accent-color: 1;
-  --text-hover-color: 1;
+  --text-main: #000;
+  --text-smoke: rgba(128, 128, 128, 0.5);
+  --text-light: #fff;
+  --text-accent: #219ebc;
+  --text-hover: #8ecae6;
   --text-danger: #ff0000;
 
-  --shdaow-text: 1;
+  --shdaow-text: #e0e0e0;
   --shadow-block: 1;
 
-  --btn-bg-color: 1;
-  --btn-hover-color: 1;
+  --btn-bg-color: #219ebc;
+  --btn-hover-color: #8ecae6;
 
   --bg-message-all: 1;
   --bg-message-my: 2;
+
+  --scrollbar-track-color: #f1f1f1;
+  --scrollbar-thumb-color: #d3d3d3; /*lightgrey*/
+  --scrollbar-thumb-hover-color: #999;
 
   --color-lightblue: #dbe2ef;
   --color-blue: #3f72af;
@@ -32,5 +34,4 @@
   --color-box-shadow: #d3d3d3;
   --color-hover-blue: #81c6e8;
   --color-border: rgba(0, 0, 0, 0.2);
-  /* scroll bar */
 }

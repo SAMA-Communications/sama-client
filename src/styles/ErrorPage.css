@@ -4,7 +4,7 @@
   height: 100vh;
 
   font-size: 4em;
-  color: var(--color-grey);
+  color: var(--text-smoke);
 
   display: flex;
   align-items: flex-start;

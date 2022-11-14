@@ -17,32 +17,31 @@ body {
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
 
-  background-color: var(--color-default-bg);
+  background-color: var(--bg-default-color);
 }
 
 input[name="ulogin"],
 input[name="pass"] {
   padding: 15px 10px;
   font-size: 1em;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border-color);
   border-radius: 10px;
 }
-
 input[type="submit"] {
   padding: 11px 10px;
   width: 320px;
   cursor: pointer;
   font-size: 15px;
-  background: var(--color-blue);
+  background: var(--btn-bg-color);
   border: none;
   border-radius: 5px;
-  color: var(--color-white);
+  color: var(--text-light);
   transition: all 0.15s ease-in-out;
 }
 
 input[type="submit"]:hover {
   color: #000;
-  background: var(--color-hover-blue);
+  background: var(--btn-hover-color);
 }
 
 label {
@@ -66,20 +65,20 @@ label {
 .signup {
   font-size: 1em;
   font-weight: bold;
-  color: var(--color-blue);
+  color: var(--text-accent);
   text-decoration: none;
 }
 
 .signup:hover {
   cursor: pointer;
-  color: var(--color-hover-blue);
+  color: var(--text-hover);
 }
 
 .login-form {
   padding: 2rem;
   border-radius: 20px;
-  background-color: var(--color-white);
-  box-shadow: 0 4px 8px 0 var(--color-border), 0 6px 20px 0 var(--color-border);
+  background-color: var(--bg-main-color);
+  box-shadow: 0 4px 8px 0 var(--border-color), 0 6px 20px 0 var(--border-color);
 }
 
 .list-container {
@@ -87,7 +86,7 @@ label {
 }
 
 .error {
-  color: var(--color-text-danger);
+  color: var(--text-danger);
   font-size: 0.9em;
   margin-bottom: -15px;
 }
@@ -126,5 +125,5 @@ label {
   justify-content: center;
   align-items: center;
 
-  background-color: var(--color-default-bg);
+  background-color: var(--bg-default-color);
 }
