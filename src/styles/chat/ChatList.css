@@ -191,7 +191,7 @@ aside {
   line-height: 100%;
 
   border-radius: 12px;
-  background-color: rgb(216, 232, 238);
+  background-color: var(--bg-chat-indicator);
 }
 .chat-last-update {
   position: absolute;
@@ -199,5 +199,5 @@ aside {
   right: 16px;
 
   font-size: 0.95em;
-  color: #999;
+  color: var(--text-smoke);
 }
