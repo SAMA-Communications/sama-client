@@ -46,22 +46,31 @@ nav {
   align-items: center;
   justify-content: space-between;
 }
-.logout-btn {
-  text-decoration: none;
-}
-.logout-btn:hover {
-  color: var(--text-accent);
-}
+
 .chat-logout-btn {
-  margin-right: 20px;
+  padding: 0px 15px 5px 15px;
   font-size: 1.8em;
+
+  border-radius: 20px;
+  border: 1px solid transparent;
+  background-color: transparent;
 
   transition: all 0.2s ease-in-out;
 }
+.chat-logout-btn > a {
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
 .chat-logout-btn:hover {
-  margin-top: -10px;
+  margin-top: -5px;
   cursor: pointer;
-  text-shadow: 0 10px var(--shdaow-text);
+
+  border: 1px solid var(--border-light-color);
+  box-shadow: 0 5px 3px var(--shdaow-text);
+  background-color: var(--bg-main-color);
+}
+.chat-logout-btn:hover a {
+  color: var(--text-accent);
 }
 .chat-navigate-bar {
   display: flex;
@@ -78,7 +87,7 @@ nav {
 
   border-radius: 50%;
   border: 1px solid transparent;
-  background-color: var(--bg-default-color);
+  background-color: transparent;
 
   font-size: 1.7em;
   line-height: 100%;
@@ -90,12 +99,12 @@ nav {
   cursor: pointer;
 
   border: 1px solid var(--border-light-color);
-
   box-shadow: 0 5px 3px var(--shdaow-text);
+  background-color: var(--bg-main-color);
 }
 .chat-navigate-slice {
-  margin-left: 10px;
-  margin-right: 20px;
+  margin-left: 12px;
+  margin-right: 10px;
 }
 .chat-navigate-slice span {
   color: var(--text-accent);
