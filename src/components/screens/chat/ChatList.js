@@ -78,9 +78,10 @@ export default function ChatList() {
         >
           <ChatBox
             chatName={chatName}
-            chatDescription={obj.description}
             timeOfLastUpdate={obj.updated_at}
             countOfNewMessage={false}
+            lastMessage={obj.last_message}
+            uId={userInfo._id}
           />
         </Link>
       );

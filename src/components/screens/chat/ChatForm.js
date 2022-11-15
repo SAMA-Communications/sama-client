@@ -55,6 +55,7 @@ export default function ChatForm() {
       upsertChat({
         _id: message.cid,
         messagesIds: [...chatMessagesIds, message._id],
+        last_message: message,
         updated_at: new Date(message.t * 1000).toISOString(),
       })
     );
@@ -107,6 +108,7 @@ export default function ChatForm() {
       upsertChat({
         _id: selectedCID,
         messagesIds: [...messagesIds, msg._id],
+        last_message: msg,
       })
     );
 
@@ -129,6 +131,7 @@ export default function ChatForm() {
         upsertChat({
           _id: selectedCID,
           messagesIds: [...messagesIds, msg._id],
+          last_message: msg,
           updated_at: new Date(response.t * 1000).toISOString(),
         })
       );
