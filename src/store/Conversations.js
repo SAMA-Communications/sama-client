@@ -7,15 +7,7 @@ import { getSelectedConversationId } from "./SelectedConversation";
 
 export const conversationsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
-  sortComparer: (a, b) => {
-    if (!b.lastMessage) {
-      return -1;
-    }
-    if (!a.lastMessage) {
-      return -1;
-    }
-    return b.last_message?.t - a.last_message?.t;
-  },
+  sortComparer: (a, b) => b.last_message?.t - a.last_message?.t,
 });
 
 export const {
@@ -33,6 +25,11 @@ export const conversations = createSlice({
       const conversations = action.payload;
       conversations.forEach((conv) => {
         conv.messagesIds = [];
+        if (!conv.last_message) {
+          conv.last_message = {
+            t: Math.round(Date.parse(conv.updated_at) / 1000),
+          };
+        }
       });
       conversationsAdapter.setAll(state, conversations);
     },
