@@ -1,0 +1,43 @@
+.dark-theme {
+  --bg-default-color: #1b1b1d;
+  --bg-main-color: #26262c;
+  --bg-chatPhoto-color: #415a77;
+  --bg-userPhoto-color: #545e75;
+  --bg-block-hover: #415a77;
+  --bg-dark-block: rgba(0, 0, 0, 0.6);
+
+  --border-light-color: rgba(255, 255, 255, 0.12);
+  --border-color: rgba(255, 255, 255, 0.2);
+  --border-dark-color: rgba(255, 255, 255, 0.25);
+  --border-danger: #ff9595;
+
+  --block-selected: rgba(255, 255, 255, 0.1);
+  --block-hover: rgba(255, 255, 255, 0.1);
+  --block-danger: #8a0000;
+
+  --text-main: #fff;
+  --text-smoke: rgba(255, 255, 255, 0.45);
+  --text-light: #000;
+  --text-accent: #54a6d8;
+  --text-hover: #9bcae9;
+  --text-danger: #ff9595;
+
+  --input-text: #fff;
+  --input-bg-color: rgba(255, 255, 255, 0.1);
+
+  --shdaow-text: #f1faee;
+  --shadow-block: rgba(0, 0, 0, 0.4);
+
+  --btn-bg-color: #1d70a2;
+  --btn-hover-color: #9bcae9;
+  --btn-text-default: #000;
+  --btn-text-hover: #fff;
+
+  --bg-message-all: rgba(255, 255, 255, 0.12);
+  --bg-message-my: #2b4565;
+  --bg-chat-indicator: #bce0f0;
+
+  --scrollbar-track-color: #444;
+  --scrollbar-thumb-color: #686868;
+  --scrollbar-thumb-hover-color: #7a7a7a;
+}

@@ -5,7 +5,7 @@
 
   border-radius: 25px;
   background-color: var(--bg-main-color);
-  box-shadow: 0 4px 8px 0 var(--border-color), 0 6px 20px 0 var(--border-color);
+  box-shadow: 0 4px 8px 0 var(--shadow-block), 0 6px 20px 0 var(--shadow-block);
 }
 .chat-empty {
   width: 100%;
@@ -123,6 +123,7 @@
   margin-right: 15px;
   padding: 0 1rem;
 
+  color: var(--text-main);
   font-size: 1.1em;
 
   border: none;
@@ -160,16 +161,16 @@
 #chat-form-send > button > p {
   font-size: 0.8em;
   margin-right: 8px;
-  color: var(--text-light);
 
+  color: var(--btn-text-hover);
   transition: all 0.2s ease-in-out;
 }
 #chat-form-send > button > svg > path {
-  color: var(--text-light);
+  color: var(--btn-text-hover);
 
   transition: all 0.2s ease-in-out;
 }
 #chat-form-send > button:hover p,
 #chat-form-send > button:hover > svg > path {
-  color: var(--text-main);
+  color: var(--btn-text-default);
 }

@@ -35,7 +35,7 @@ aside {
 .user-photo {
   width: 70px;
   height: 70px;
-  color: var(--text-light);
+  color: var(--text-main);
   background-color: var(--bg-userPhoto-color);
 }
 .user-info {
@@ -137,6 +137,7 @@ aside {
   height: auto;
 
   display: flex;
+  color: var(--btn-text-default);
   font-size: 1.8em;
 
   background-color: var(--block-hover);
@@ -147,14 +148,14 @@ aside {
 .chat-create-btn:hover {
   cursor: pointer;
   transform: translateY(-5px);
-  color: var(--text-light);
+  color: var(--btn-text-hover);
   background-color: var(--bg-dark-block);
 }
 .chat-create-btn > svg > path {
   transition: all 0.3s ease-in-out;
 }
 .chat-create-btn:hover > svg > path {
-  color: var(--text-light);
+  color: var(--btn-text-hover);
 }
 .chat-indicator {
   width: max-content;

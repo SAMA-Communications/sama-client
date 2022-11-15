@@ -1,8 +1,8 @@
 :root {
   --bg-default-color: #f7fbfc;
   --bg-main-color: #fff;
-  --bg-chatPhoto-color: #8ecae6;
-  --bg-userPhoto-color: #023047;
+  --bg-chatPhoto-color: #c4e0f9;
+  --bg-userPhoto-color: #a3bcf9;
   --bg-block-hover: #8ecae6;
   --bg-dark-block: rgba(0, 0, 0, 0.6);
 
@@ -22,11 +22,16 @@
   --text-hover: #8ecae6;
   --text-danger: #ff0000;
 
+  --input-text: #000;
+  --input-bg-color: #fff;
+
   --shdaow-text: #e0e0e0;
   --shadow-block: rgba(0, 0, 0, 0.2);
 
   --btn-bg-color: #3f72af;
   --btn-hover-color: #8ecae6;
+  --btn-text-default: #000;
+  --btn-text-hover: #fff;
 
   --bg-message-all: rgba(0, 0, 0, 0.12);
   --bg-message-my: #bce0f0;
