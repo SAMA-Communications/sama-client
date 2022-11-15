@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import UserSearch from "./UserSearch.js";
 import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
 import {
   selectParticipantsEntities,
@@ -65,7 +65,8 @@ export default function ChatList() {
         : obj.name;
 
       list.push(
-        <Link
+        <NavLink
+          exact
           to={`/main/#${obj.name ? obj._id : chatName}`}
           key={obj._id}
           onClick={() => {
@@ -83,7 +84,7 @@ export default function ChatList() {
             lastMessage={obj.last_message}
             uId={userInfo._id}
           />
-        </Link>
+        </NavLink>
       );
     }
     return list;
