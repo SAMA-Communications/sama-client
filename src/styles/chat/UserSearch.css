@@ -58,7 +58,7 @@
   transition: all 0.2s ease-in-out;
 }
 .search-options button > svg > path {
-  color: var(--text-light);
+  color: var(--btn-text-hover);
 
   transition: all 0.2s ease-in-out;
 }
@@ -68,7 +68,7 @@
   background-color: var(--btn-hover-color);
 }
 .search-options button:hover > svg > path {
-  color: var(--text-main);
+  color: var(--btn-text-default);
 }
 
 #inputSearchLogin {
@@ -91,7 +91,7 @@
   font-size: 4.5em;
 }
 .close-form-btn > svg > path {
-  color: var(--text-light);
+  color: var(--btn-text-hover);
   transition: all 0.2s ease-in-out;
 }
 
@@ -181,7 +181,7 @@
   align-items: center;
 
   font-size: 1.2em;
-  color: var(--text-light);
+  color: var(--btn-text-hover);
 
   border: none;
   border-radius: 2rem;
@@ -190,7 +190,7 @@
   transition: all 0.2s ease-in-out;
 }
 .search-create-chat > button:hover {
-  color: var(--text-main);
+  color: var(--btn-text-default);
   cursor: pointer;
   background-color: var(--btn-hover-color);
 }

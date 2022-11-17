@@ -7,9 +7,7 @@ import { getSelectedConversationId } from "./SelectedConversation";
 
 export const conversationsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
-  sortComparer: (a, b) => {
-    return Date.parse(b.updated_at) - Date.parse(a.updated_at);
-  },
+  sortComparer: (a, b) => b.last_message?.t - a.last_message?.t,
 });
 
 export const {

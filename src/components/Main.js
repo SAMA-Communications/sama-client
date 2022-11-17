@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import api from "../api/api";
 import { Link } from "react-router-dom";
 import { VscCommentDiscussion } from "react-icons/vsc";
@@ -18,6 +18,32 @@ export default function Main() {
     localStorage.removeItem("sessionId");
   };
 
+  const [currentTheme, setCurrentTheme] = useState(
+    localStorage.getItem("theme")
+  );
+  const changeToDarkTheme = () => {
+    localStorage.setItem("theme", "dark");
+    document.body.classList.add("dark-theme");
+    setCurrentTheme("dark");
+  };
+  const changeToLightTheme = () => {
+    localStorage.setItem("theme", "light");
+    document.body.classList.remove("dark-theme");
+    setCurrentTheme("light");
+  };
+
+  const changeThemeBtn = useMemo(() => {
+    return currentTheme === "dark" ? (
+      <div className="change-themes" onClick={changeToLightTheme}>
+        <IoSunnyOutline />
+      </div>
+    ) : (
+      <div className="change-themes" onClick={changeToDarkTheme}>
+        <IoMoonOutline />
+      </div>
+    );
+  }, [currentTheme]);
+
   return (
     <div>
       <nav>
@@ -26,10 +52,7 @@ export default function Main() {
           <p>SAMA</p>
         </div>
         <div className="chat-navigate-bar">
-          <div className="change-themes">
-            <IoMoonOutline />
-            {/* <IoSunnyOutline /> */}
-          </div>
+          {changeThemeBtn}
           <div className="chat-navigate-slice">
             <span>|</span>
           </div>

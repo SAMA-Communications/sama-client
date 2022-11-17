@@ -1,13 +1,15 @@
 import React, { useMemo } from "react";
 import { VscDeviceCamera } from "react-icons/vsc";
+import { IoCheckmark, IoCheckmarkDone, IoTimeOutline } from "react-icons/io5";
 
 export default function ChatBox({
   chatName,
-  chatDescription,
   countOfNewMessage,
   timeOfLastUpdate,
+  lastMessage,
+  uId,
 }) {
-  let tView = useMemo(() => {
+  const tView = useMemo(() => {
     const t = new Date(Date.parse(timeOfLastUpdate));
     const tToday = new Date(Date.now());
     if (
@@ -46,6 +48,16 @@ export default function ChatBox({
     }
   }, [timeOfLastUpdate]);
 
+  const mStatusView = useMemo(() => {
+    if (lastMessage) {
+      const mStatus = lastMessage.status;
+      if (lastMessage.from !== uId) {
+        return null;
+      }
+      return mStatus === "sent" ? <IoCheckmark /> : <IoTimeOutline />;
+    }
+  }, [lastMessage]);
+
   return (
     <div className="chat-box">
       <div className="chat-box-icon">
@@ -53,7 +65,10 @@ export default function ChatBox({
       </div>
       <div className="chat-box-info">
         <p className="chat-name">{chatName}</p>
-        <p className="chat-message">{chatDescription}</p>
+        <p className="chat-message">
+          {lastMessage?.body}
+          <span>{mStatusView}</span>
+        </p>
       </div>
       {countOfNewMessage ? <div className="chat-indicator"></div> : null}
       <div className="chat-last-update">{tView}</div>

@@ -1,6 +1,10 @@
 body {
   padding: 0;
   margin: 0;
+
+  color: var(--text-main);
+  transition: all 0.3s ease-in-out;
+  transition-property: background-color, color;
 }
 
 .login-container {
@@ -24,8 +28,10 @@ input[name="ulogin"],
 input[name="pass"] {
   padding: 15px 10px;
   font-size: 1em;
+  color: var(--input-text);
   border: 1px solid var(--border-color);
   border-radius: 10px;
+  background-color: var(--input-bg-color);
 }
 input[name="ulogin"]:focus,
 input[name="pass"]:focus {
@@ -36,15 +42,15 @@ input[type="submit"] {
   width: 320px;
   cursor: pointer;
   font-size: 15px;
+  color: var(--btn-text-hover);
   background: var(--btn-bg-color);
   border: none;
   border-radius: 5px;
-  color: var(--text-light);
   transition: all 0.15s ease-in-out;
 }
 
 input[type="submit"]:hover {
-  color: #000;
+  color: var(--btn-text-default);
   background: var(--btn-hover-color);
 }
 
@@ -82,7 +88,7 @@ label {
   padding: 2rem;
   border-radius: 20px;
   background-color: var(--bg-main-color);
-  box-shadow: 0 4px 8px 0 var(--border-color), 0 6px 20px 0 var(--border-color);
+  box-shadow: 0 4px 8px 0 var(--shadow-block), 0 6px 20px 0 var(--shadow-block);
 }
 
 .list-container {
