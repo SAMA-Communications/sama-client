@@ -66,7 +66,6 @@ export default function ChatList() {
 
       list.push(
         <NavLink
-          exact
           to={`/main/#${obj.name ? obj._id : chatName}`}
           key={obj._id}
           onClick={() => {

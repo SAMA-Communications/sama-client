@@ -25,11 +25,6 @@ export const conversations = createSlice({
       const conversations = action.payload;
       conversations.forEach((conv) => {
         conv.messagesIds = [];
-        if (!conv.last_message) {
-          conv.last_message = {
-            t: Math.round(Date.parse(conv.updated_at) / 1000),
-          };
-        }
       });
       conversationsAdapter.setAll(state, conversations);
     },
