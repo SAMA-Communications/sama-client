@@ -200,6 +200,22 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
+  async messageRead(data) {
+    //===============to do
+    const requestData = {
+      request: {
+        message_read: {
+          cid: data.cid,
+          ids: data.ids,
+        },
+        id: getUniqueId("messageList"),
+      },
+    };
+
+    const resObjKey = "success";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
   async messageDelete(data) {
     //===============to do
     const requestData = {
@@ -316,33 +332,6 @@ class Api {
           id: data.cid,
         },
         id: getUniqueId("conversationDelete"),
-      },
-    };
-    const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
-  }
-
-  async getCountOfUnreadMessages(data) {
-    const requestData = {
-      request: {
-        getCountOfUnreadMessages: {
-          user_id: data.uId,
-        },
-        id: getUniqueId("getCountOfUnreadMessages"),
-      },
-    };
-    const resObjKey = "indicators";
-    return this.sendPromise(requestData, resObjKey);
-  }
-
-  async clearIndicatorByCid(data) {
-    const requestData = {
-      request: {
-        clearIndicatorByCid: {
-          cid: data.cid,
-          user_id: data.uId,
-        },
-        id: getUniqueId("clearIndicatorByCid"),
       },
     };
     const resObjKey = "success";

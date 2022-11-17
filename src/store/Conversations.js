@@ -25,6 +25,7 @@ export const conversations = createSlice({
       const conversations = action.payload;
       conversations.forEach((conv) => {
         conv.messagesIds = [];
+        conv.unread_message_count = 0;
       });
       conversationsAdapter.setAll(state, conversations);
     },
