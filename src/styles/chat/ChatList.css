@@ -200,6 +200,7 @@ aside {
   justify-content: center;
   align-items: center;
 
+  color: var(--btn-text-default);
   line-height: 100%;
 
   border-radius: 12px;

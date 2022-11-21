@@ -4,7 +4,7 @@ import { IoCheckmark, IoCheckmarkDone, IoTimeOutline } from "react-icons/io5";
 
 export default function ChatBox({
   chatName,
-  countOfNewMessage,
+  countOfNewMessages,
   timeOfLastUpdate,
   lastMessage,
   uId,
@@ -44,18 +44,27 @@ export default function ChatBox({
           break;
       }
     } else {
-      return t.getHours() + ":" + t.getMinutes();
+      return (
+        t.getHours() +
+        ":" +
+        (t.getMinutes() < 10 ? "0" + t.getMinutes() : t.getMinutes())
+      );
     }
   }, [timeOfLastUpdate]);
 
   const mStatusView = useMemo(() => {
-    if (lastMessage) {
-      const mStatus = lastMessage.status;
-      if (lastMessage.from !== uId) {
-        return null;
-      }
-      return mStatus === "sent" ? <IoCheckmark /> : <IoTimeOutline />;
+    if (lastMessage.from !== uId) {
+      return null;
     }
+    return lastMessage.status === "sent" ? (
+      lastMessage.read ? (
+        <IoCheckmarkDone />
+      ) : (
+        <IoCheckmark />
+      )
+    ) : (
+      <IoTimeOutline />
+    );
   }, [lastMessage]);
 
   return (
@@ -70,7 +79,9 @@ export default function ChatBox({
           <span>{mStatusView}</span>
         </p>
       </div>
-      {countOfNewMessage ? <div className="chat-indicator"></div> : null}
+      {countOfNewMessages ? (
+        <div className="chat-indicator">{countOfNewMessages}</div>
+      ) : null}
       <div className="chat-last-update">{tView}</div>
     </div>
   );

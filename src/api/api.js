@@ -201,19 +201,20 @@ class Api {
   }
 
   async messageRead(data) {
-    //===============to do
+    // if (data?.ids.length) {
     const requestData = {
       request: {
         message_read: {
           cid: data.cid,
           ids: data.ids,
         },
-        id: getUniqueId("messageList"),
+        id: getUniqueId("messageRead"),
       },
     };
 
     const resObjKey = "success";
     return this.sendPromise(requestData, resObjKey);
+    // }
   }
 
   async messageDelete(data) {

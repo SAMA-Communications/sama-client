@@ -164,6 +164,7 @@ export default function ChatForm() {
         userId={userInfo._id}
         text={msg.body}
         uName={participants[msg.from]?.login}
+        read={msg.read}
         status={msg.status}
         tSend={msg.t}
       />

@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import UserSearch from "./UserSearch.js";
 import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
+import ChatBox from "../../generic/ChatBox.js";
+import UserSearch from "./UserSearch.js";
 import { NavLink } from "react-router-dom";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
 import {
@@ -12,11 +13,11 @@ import {
   selectAllConversations,
   setChats,
 } from "../../../store/Conversations.js";
+import { getUnreadMessagesIds } from "../../../store/Messages.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatList.css";
-import ChatBox from "../../generic/ChatBox.js";
 
 export default function ChatList() {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ export default function ChatList() {
   const conversations = useSelector(selectAllConversations);
   const participants = useSelector(selectParticipantsEntities);
 
+  const unreadMids = useSelector(getUnreadMessagesIds);
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
@@ -53,12 +55,17 @@ export default function ChatList() {
         <NavLink
           to={`/main/#${obj.name ? obj._id : chatName}`}
           key={obj._id}
-          onClick={() => dispatch(setSelectedConversation({ id: obj._id }))}
+          onClick={async () => {
+            dispatch(setSelectedConversation({ id: obj._id }));
+            //next function send request only when prev functione done
+            api.messageRead({ cid: obj._id, ids: unreadMids });
+            //clear unreadMids
+          }}
         >
           <ChatBox
             chatName={chatName}
             timeOfLastUpdate={obj.updated_at}
-            countOfNewMessage={false}
+            countOfNewMessages={obj.unread_messages_count}
             lastMessage={obj.last_message}
             uId={userInfo._id}
           />

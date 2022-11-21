@@ -17,6 +17,13 @@ export const {
   selectTotal: selectTotalConversations,
 } = conversationsAdapter.getSelectors((state) => state.conversations);
 
+export const getConverastionById = createSelector(
+  [getSelectedConversationId, selectConversationsEntities],
+  (id, conversations) => {
+    return conversations[id];
+  }
+);
+
 export const conversations = createSlice({
   name: "Conversations",
   initialState: conversationsAdapter.getInitialState(),
@@ -25,7 +32,6 @@ export const conversations = createSlice({
       const conversations = action.payload;
       conversations.forEach((conv) => {
         conv.messagesIds = [];
-        conv.unread_message_count = 0;
       });
       conversationsAdapter.setAll(state, conversations);
     },
@@ -33,13 +39,6 @@ export const conversations = createSlice({
     removeChat: conversationsAdapter.removeOne,
   },
 });
-
-export const getConverastionById = createSelector(
-  [getSelectedConversationId, selectConversationsEntities],
-  (id, conversations) => {
-    return conversations[id];
-  }
-);
 
 export const { setChats, upsertChat, removeChat } = conversations.actions;
 

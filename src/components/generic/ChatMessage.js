@@ -8,10 +8,12 @@ export default function ChatMessage({
   text,
   userId,
   uName,
+  read,
   status,
   tSend,
 }) {
   const timeSend = new Date(tSend * 1000);
+
   return (
     <div
       className={
@@ -31,8 +33,15 @@ export default function ChatMessage({
               : "0" + timeSend.getMinutes())}
         </div>
         <div className="message-status-icon">
-          {!status ? <IoTimeOutline /> : <IoCheckmark />}
-          {/* also use  IoCheckmarkDone for delivered status*/}
+          {status === "sent" ? (
+            read ? (
+              <IoCheckmarkDone />
+            ) : (
+              <IoCheckmark />
+            )
+          ) : (
+            <IoTimeOutline />
+          )}
         </div>
       </div>
     </div>
