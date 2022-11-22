@@ -49,27 +49,22 @@ export default function ChatForm() {
   const messageInputEl = useRef(null);
 
   api.onMessageListener = (message) => {
-    if (message.readMessages) {
+    if (message.message_read) {
+      const mids = message.message_read.ids;
       dispatch(
         upsertMessages(
-          message.readMessages.map((msg) => {
-            return { _id: msg._id, read: true };
+          mids.map((id) => {
+            return { _id: id, read: true };
           })
         )
       );
-      const msg = message.readMessages[message.readMessages.length - 1];
+
+      const msg = messages.find((msg) => msg._id === mids[mids.length - 1]);
       if (msg) {
         dispatch(
           upsertChat({
-            _id: selectedCID,
-            last_message: {
-              _id: msg._id,
-              body: msg.body,
-              from: msg.from,
-              status: "sent",
-              read: true,
-              t: msg.t,
-            },
+            _id: message.message_read.cid,
+            last_message: { ...msg, read: true },
           })
         );
       }
