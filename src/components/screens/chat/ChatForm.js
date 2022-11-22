@@ -39,7 +39,10 @@ export default function ChatForm() {
   const conversations = useSelector(selectConversationsEntities);
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
-  const selectedCID = selectedConversation?._id;
+  const selectedCID = useMemo(
+    () => selectedConversation?._id,
+    [selectedConversation]
+  );
 
   const messages = useSelector(getActiveConversationMessages);
   const messageInputEl = useRef(null);
@@ -51,14 +54,18 @@ export default function ChatForm() {
     const chatMessagesIds = conversations[message.cid]
       ? conversations[message.cid].messagesIds
       : [];
-    dispatch(
-      upsertChat({
-        _id: message.cid,
-        messagesIds: [...chatMessagesIds, message._id],
-        last_message: message,
-        updated_at: new Date(message.t * 1000).toISOString(),
-      })
-    );
+
+    const upsertChatParams = {
+      _id: message.cid,
+      messagesIds: [...chatMessagesIds, message._id],
+      last_message: message,
+      updated_at: new Date(message.t * 1000).toISOString(),
+    };
+    message.cid === selectedCID
+      ? api.messageRead({ cid: selectedCID })
+      : (upsertChatParams["unread_messages_count"] =
+          conversations[message.cid].unread_messages_count + 1);
+    dispatch(upsertChat(upsertChatParams));
   };
 
   useEffect(() => {

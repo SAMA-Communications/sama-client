@@ -12,8 +12,8 @@ import {
 import {
   selectAllConversations,
   setChats,
+  upsertChat,
 } from "../../../store/Conversations.js";
-import { getUnreadMessagesIds } from "../../../store/Messages.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -26,7 +26,6 @@ export default function ChatList() {
   const conversations = useSelector(selectAllConversations);
   const participants = useSelector(selectParticipantsEntities);
 
-  const unreadMids = useSelector(getUnreadMessagesIds);
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
@@ -56,10 +55,14 @@ export default function ChatList() {
           to={`/main/#${obj.name ? obj._id : chatName}`}
           key={obj._id}
           onClick={async () => {
+            api.messageRead({ cid: obj._id });
             dispatch(setSelectedConversation({ id: obj._id }));
-            //next function send request only when prev functione done
-            api.messageRead({ cid: obj._id, ids: unreadMids });
-            //clear unreadMids
+            dispatch(
+              upsertChat({
+                ...conversations.find((conv) => conv._id === obj._id),
+                unread_messages_count: 0,
+              })
+            );
           }}
         >
           <ChatBox

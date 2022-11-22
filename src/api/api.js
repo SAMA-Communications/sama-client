@@ -201,12 +201,10 @@ class Api {
   }
 
   async messageRead(data) {
-    // if (data?.ids.length) {
     const requestData = {
       request: {
         message_read: {
           cid: data.cid,
-          ids: data.ids,
         },
         id: getUniqueId("messageRead"),
       },
@@ -214,7 +212,6 @@ class Api {
 
     const resObjKey = "success";
     return this.sendPromise(requestData, resObjKey);
-    // }
   }
 
   async messageDelete(data) {
