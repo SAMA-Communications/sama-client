@@ -21,6 +21,7 @@ import {
   addMessages,
   getActiveConversationMessages,
   removeMessage,
+  upsertMessages,
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -48,6 +49,33 @@ export default function ChatForm() {
   const messageInputEl = useRef(null);
 
   api.onMessageListener = (message) => {
+    if (message.readMessages) {
+      dispatch(
+        upsertMessages(
+          message.readMessages.map((msg) => {
+            return { _id: msg._id, read: true };
+          })
+        )
+      );
+      const msg = message.readMessages[message.readMessages.length - 1];
+      if (msg) {
+        dispatch(
+          upsertChat({
+            _id: selectedCID,
+            last_message: {
+              _id: msg._id,
+              body: msg.body,
+              from: msg.from,
+              status: "sent",
+              read: true,
+              t: msg.t,
+            },
+          })
+        );
+      }
+      return;
+    }
+
     message.from === userInfo._id
       ? dispatch(addMessage({ ...message, status: "sent" }))
       : dispatch(addMessage(message));

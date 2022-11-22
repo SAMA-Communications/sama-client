@@ -35,11 +35,15 @@ export const conversations = createSlice({
       });
       conversationsAdapter.setAll(state, conversations);
     },
+    updateChatIndicator: (state) => {
+      conversationsAdapter.updateOne();
+    },
     upsertChat: conversationsAdapter.upsertOne,
     removeChat: conversationsAdapter.removeOne,
   },
 });
 
-export const { setChats, upsertChat, removeChat } = conversations.actions;
+export const { setChats, updateChatIndicator, upsertChat, removeChat } =
+  conversations.actions;
 
 export default conversations.reducer;
