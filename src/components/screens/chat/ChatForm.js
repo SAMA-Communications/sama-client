@@ -58,16 +58,15 @@ export default function ChatForm() {
           })
         )
       );
-
-      const msg = messages.find((msg) => msg._id === mids[mids.length - 1]);
-      if (msg) {
-        dispatch(
-          upsertChat({
-            _id: message.message_read.cid,
-            last_message: { ...msg, read: true },
-          })
-        );
-      }
+      dispatch(
+        upsertChat({
+          _id: message.message_read.cid,
+          last_message: {
+            ...conversations[message.message_read.cid].last_message,
+            read: true,
+          },
+        })
+      );
       return;
     }
 
