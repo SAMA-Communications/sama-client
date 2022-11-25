@@ -53,18 +53,17 @@ export default function ChatBox({
   }, [timeOfLastUpdate]);
 
   const mStatusView = useMemo(() => {
-    if (lastMessage.from !== uId) {
+    if (lastMessage && lastMessage.from === uId) {
+      if (!lastMessage.status) {
+        return <IoTimeOutline />;
+      } else if (lastMessage.status === "read") {
+        return <IoCheckmarkDone />;
+      } else {
+        return <IoCheckmark />;
+      }
+    } else {
       return null;
     }
-    return lastMessage.status === "sent" ? (
-      lastMessage.read ? (
-        <IoCheckmarkDone />
-      ) : (
-        <IoCheckmark />
-      )
-    ) : (
-      <IoTimeOutline />
-    );
   }, [lastMessage]);
 
   return (

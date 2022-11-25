@@ -54,7 +54,7 @@ export default function ChatForm() {
       dispatch(
         upsertMessages(
           mids.map((id) => {
-            return { _id: id, read: true };
+            return { _id: id, status: "read" };
           })
         )
       );
@@ -63,7 +63,7 @@ export default function ChatForm() {
           _id: message.message_read.cid,
           last_message: {
             ...conversations[message.message_read.cid].last_message,
-            read: true,
+            status: "read",
           },
         })
       );
@@ -94,13 +94,7 @@ export default function ChatForm() {
     if (selectedCID && !conversations[selectedCID].activated) {
       api.messageList({ cid: selectedCID, limit: 20 }).then((arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
-        dispatch(
-          addMessages(
-            arr.map((m) => {
-              return { ...m, status: "sent" };
-            })
-          )
-        );
+        dispatch(addMessages(arr));
         dispatch(
           upsertChat({
             _id: selectedCID,

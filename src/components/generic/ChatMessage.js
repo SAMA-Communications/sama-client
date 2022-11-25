@@ -33,8 +33,8 @@ export default function ChatMessage({
               : "0" + timeSend.getMinutes())}
         </div>
         <div className="message-status-icon">
-          {status === "sent" ? (
-            read ? (
+          {status ? (
+            status === "read" ? (
               <IoCheckmarkDone />
             ) : (
               <IoCheckmark />
