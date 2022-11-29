@@ -49,11 +49,12 @@
 
   flex-direction: column;
   justify-content: flex-end;
+  line-height: 100%;
 }
 .my-message .message-status-icon {
   display: flex;
 }
-.my-message .message-status-icon > svg > path {
+.my-message .message-status-icon span > svg > path {
   color: var(--text-accent);
 }
 .my-message .message-status {

@@ -1,14 +1,13 @@
 import React from "react";
-import { IoCheckmark, IoCheckmarkDone, IoTimeOutline } from "react-icons/io5";
 
 import "../../styles/chat/ChatMessage.css";
+import MessageStatus from "./MessageStatus";
 
 export default function ChatMessage({
   fromId,
   text,
   userId,
   uName,
-  read,
   status,
   tSend,
 }) {
@@ -33,15 +32,7 @@ export default function ChatMessage({
               : "0" + timeSend.getMinutes())}
         </div>
         <div className="message-status-icon">
-          {status ? (
-            status === "read" ? (
-              <IoCheckmarkDone />
-            ) : (
-              <IoCheckmark />
-            )
-          ) : (
-            <IoTimeOutline />
-          )}
+          <MessageStatus status={status} />
         </div>
       </div>
     </div>

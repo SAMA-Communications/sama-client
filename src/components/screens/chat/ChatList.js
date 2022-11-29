@@ -55,7 +55,6 @@ export default function ChatList() {
           to={`/main/#${obj.name ? obj._id : chatName}`}
           key={obj._id}
           onClick={async () => {
-            api.messageRead({ cid: obj._id });
             dispatch(setSelectedConversation({ id: obj._id }));
             dispatch(
               upsertChat({
@@ -63,6 +62,9 @@ export default function ChatList() {
                 unread_messages_count: 0,
               })
             );
+            if (obj.unread_messages_count) {
+              api.messageRead({ cid: obj._id });
+            }
           }}
         >
           <ChatBox

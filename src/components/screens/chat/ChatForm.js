@@ -40,10 +40,7 @@ export default function ChatForm() {
   const conversations = useSelector(selectConversationsEntities);
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
-  const selectedCID = useMemo(
-    () => selectedConversation?._id,
-    [selectedConversation]
-  );
+  const selectedCID = selectedConversation?._id;
 
   const messages = useSelector(getActiveConversationMessages);
   const messageInputEl = useRef(null);
@@ -187,7 +184,6 @@ export default function ChatForm() {
         userId={userInfo._id}
         text={msg.body}
         uName={participants[msg.from]?.login}
-        read={msg.read}
         status={msg.status}
         tSend={msg.t}
       />
