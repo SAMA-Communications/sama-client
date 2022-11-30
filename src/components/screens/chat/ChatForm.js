@@ -17,7 +17,7 @@ import {
   updateLastMessageFiled,
   upsertChat,
 } from "../../../store/Conversations";
-import { setSelectedConversation } from "../../../store/SelectedConversation";
+import { clearSelectedConversation } from "../../../store/SelectedConversation";
 import {
   addMessage,
   addMessages,
@@ -133,7 +133,7 @@ export default function ChatForm() {
     if (isConfirm) {
       try {
         await api.conversationDelete({ cid: selectedCID });
-        dispatch(setSelectedConversation({}));
+        dispatch(clearSelectedConversation());
         dispatch(removeChat(selectedCID));
         navigate("/main");
       } catch (error) {
@@ -168,7 +168,7 @@ export default function ChatForm() {
 
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
-      dispatch(setSelectedConversation({}));
+      dispatch(clearSelectedConversation());
       navigate("/main");
     }
   };

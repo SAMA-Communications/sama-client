@@ -9,6 +9,9 @@ export const selectedConversation = createSlice({
     setSelectedConversation: (state, action) => {
       state.value.id = action.payload.id;
     },
+    clearSelectedConversation: (state) => {
+      state.value.id = {};
+    },
   },
 });
 
@@ -16,6 +19,7 @@ export const getSelectedConversationId = (state) => {
   return state.selectedConversation.value.id;
 };
 
-export const { setSelectedConversation } = selectedConversation.actions;
+export const { setSelectedConversation, clearSelectedConversation } =
+  selectedConversation.actions;
 
 export default selectedConversation.reducer;
