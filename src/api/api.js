@@ -7,6 +7,7 @@ class Api {
     this.baseUrl = baseUrl;
     this.socket = null;
     this.responsesPromises = {};
+    this.onMessageStatusListener = {};
   }
 
   async connect() {
@@ -20,6 +21,12 @@ class Api {
       const message = JSON.parse(e.data);
       console.log("[socket.message]", message);
 
+      if (message.message?.message_read) {
+        if (this.onMessageStatusListener) {
+          this.onMessageStatusListener(message.message.message_read);
+        }
+        return;
+      }
       if (message.message) {
         if (this.onMessageListener) {
           this.onMessageListener(message.message);

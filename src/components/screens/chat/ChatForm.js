@@ -11,8 +11,10 @@ import jwtDecode from "jwt-decode";
 import { selectParticipantsEntities } from "../../../store/Participants.js";
 import {
   getConverastionById,
+  markConversationAsRead,
   removeChat,
   selectConversationsEntities,
+  updateLastMessageFiled,
   upsertChat,
 } from "../../../store/Conversations";
 import { setSelectedConversation } from "../../../store/SelectedConversation";
@@ -20,8 +22,8 @@ import {
   addMessage,
   addMessages,
   getActiveConversationMessages,
+  markMessagesAsRead,
   removeMessage,
-  upsertMessages,
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -45,28 +47,12 @@ export default function ChatForm() {
   const messages = useSelector(getActiveConversationMessages);
   const messageInputEl = useRef(null);
 
-  api.onMessageListener = (message) => {
-    if (message.message_read) {
-      const mids = message.message_read.ids;
-      dispatch(
-        upsertMessages(
-          mids.map((id) => {
-            return { _id: id, status: "read" };
-          })
-        )
-      );
-      dispatch(
-        upsertChat({
-          _id: message.message_read.cid,
-          last_message: {
-            ...conversations[message.message_read.cid].last_message,
-            status: "read",
-          },
-        })
-      );
-      return;
-    }
+  api.onMessageStatusListener = (message) => {
+    dispatch(markMessagesAsRead(message.ids));
+    dispatch(markConversationAsRead(message.cid));
+  };
 
+  api.onMessageListener = (message) => {
     message.from === userInfo._id
       ? dispatch(addMessage({ ...message, status: "sent" }))
       : dispatch(addMessage(message));
@@ -103,10 +89,6 @@ export default function ChatForm() {
     }
   }, [selectedCID]);
 
-  const messagesIds = useMemo(() => {
-    return messages ? messages.map((m) => m._id) : [];
-  }, [messages]);
-
   const sendMessage = async (event) => {
     event.preventDefault();
 
@@ -124,13 +106,7 @@ export default function ChatForm() {
     };
     messageInputEl.current.value = "";
     dispatch(addMessage(msg));
-    dispatch(
-      upsertChat({
-        _id: selectedCID,
-        messagesIds: [...messagesIds, msg._id],
-        last_message: msg,
-      })
-    );
+    dispatch(updateLastMessageFiled({ cid: selectedCID, msg }));
 
     const response = await api.messageCreate({
       mid,
@@ -147,14 +123,7 @@ export default function ChatForm() {
         t: response.t,
       };
       dispatch(addMessage(msg));
-      dispatch(
-        upsertChat({
-          _id: selectedCID,
-          messagesIds: [...messagesIds, msg._id],
-          last_message: msg,
-          updated_at: new Date(response.t * 1000).toISOString(),
-        })
-      );
+      dispatch(updateLastMessageFiled({ cid: selectedCID, isLastMsg: 1, msg }));
       dispatch(removeMessage(mid));
     }
   };

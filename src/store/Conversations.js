@@ -43,15 +43,41 @@ export const conversations = createSlice({
       });
       conversationsAdapter.setAll(state, conversations);
     },
-    updateChatIndicator: (state) => {
-      conversationsAdapter.updateOne();
-    },
     upsertChat: conversationsAdapter.upsertOne,
     removeChat: conversationsAdapter.removeOne,
+
+    updateLastMessageFiled: (state, { payload }) => {
+      const { cid, msg, isLastMsg } = payload;
+      const conv = state.entities[cid];
+      let mids = [...conv.messagesIds];
+      if (isLastMsg) {
+        mids.pop();
+      }
+      conversationsAdapter.upsertOne(state, {
+        _id: cid,
+        messagesIds: [...mids, msg._id],
+        last_message: msg,
+        update_at: new Date(msg.t * 1000).toISOString(),
+      });
+    },
+    markConversationAsRead: (state, action) => {
+      const cid = action.payload;
+      const lastMessageField = state.entities[cid].last_message;
+      conversationsAdapter.upsertOne(state, {
+        _id: cid,
+        last_message: { ...lastMessageField, status: "read" },
+      });
+    },
   },
 });
 
-export const { setChats, updateChatIndicator, upsertChat, removeChat } =
-  conversations.actions;
+export const {
+  setChats,
+  updateChatIndicator,
+  upsertChat,
+  removeChat,
+  markConversationAsRead,
+  updateLastMessageFiled,
+} = conversations.actions;
 
 export default conversations.reducer;
