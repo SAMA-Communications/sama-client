@@ -207,13 +207,13 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
-  async messageRead(data) {
+  async markConversationAsRead(data) {
     const requestData = {
       request: {
         message_read: {
           cid: data.cid,
         },
-        id: getUniqueId("messageRead"),
+        id: getUniqueId("markConversationAsRead"),
       },
     };
 

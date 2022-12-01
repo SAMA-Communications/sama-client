@@ -10,6 +10,7 @@ import {
   setUsers,
 } from "../../../store/Participants.js";
 import {
+  clearCountOfUnreadMessages,
   selectAllConversations,
   setChats,
   upsertChat,
@@ -56,14 +57,9 @@ export default function ChatList() {
           key={obj._id}
           onClick={async () => {
             dispatch(setSelectedConversation({ id: obj._id }));
-            dispatch(
-              upsertChat({
-                ...conversations.find((conv) => conv._id === obj._id),
-                unread_messages_count: 0,
-              })
-            );
-            if (obj.unread_messages_count) {
-              api.messageRead({ cid: obj._id });
+            dispatch(clearCountOfUnreadMessages(obj._id));
+            if (obj.unread_messages_count > 0) {
+              api.markConversationAsRead({ cid: obj._id });
             }
           }}
         >
@@ -103,7 +99,7 @@ export default function ChatList() {
         <div className="chat-create-btn" onClick={() => setIsSearchForm(true)}>
           <VscComment />
         </div>
-        {isSearchForm ? <UserSearch close={setIsSearchForm} /> : ""}
+        {isSearchForm && <UserSearch close={setIsSearchForm} />}
       </div>
     </aside>
   );

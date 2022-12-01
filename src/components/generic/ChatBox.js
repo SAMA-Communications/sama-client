@@ -75,9 +75,9 @@ export default function ChatBox({
         <p className="chat-name">{chatName}</p>
         <p className="chat-message">{lastMessageView}</p>
       </div>
-      {countOfNewMessages ? (
+      {countOfNewMessages > 0 && (
         <div className="chat-indicator">{countOfNewMessages}</div>
-      ) : null}
+      )}
       <div className="chat-last-update">{tView}</div>
     </div>
   );

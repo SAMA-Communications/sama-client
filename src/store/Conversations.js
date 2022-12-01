@@ -46,18 +46,32 @@ export const conversations = createSlice({
     upsertChat: conversationsAdapter.upsertOne,
     removeChat: conversationsAdapter.removeOne,
 
-    updateLastMessageFiled: (state, { payload }) => {
-      const { cid, msg, isLastMsg } = payload;
+    updateLastMessageField: (state, { payload }) => {
+      const { cid, msg, resaveLastMessage, countOfNewMessages } = payload;
       const conv = state.entities[cid];
       let mids = [...conv.messagesIds];
-      if (isLastMsg) {
+
+      if (resaveLastMessage) {
         mids.pop();
       }
-      conversationsAdapter.upsertOne(state, {
+      const updateParams = {
         _id: cid,
         messagesIds: [...mids, msg._id],
         last_message: msg,
         update_at: new Date(msg.t * 1000).toISOString(),
+      };
+      if (countOfNewMessages) {
+        updateParams.unread_messages_count =
+          conv.unread_messages_count + countOfNewMessages;
+      }
+
+      conversationsAdapter.upsertOne(state, updateParams);
+    },
+    clearCountOfUnreadMessages: (state, action) => {
+      const cid = action.payload;
+      conversationsAdapter.upsertOne(state, {
+        _id: cid,
+        unread_messages_count: 0,
       });
     },
     markConversationAsRead: (state, action) => {
@@ -77,7 +91,8 @@ export const {
   upsertChat,
   removeChat,
   markConversationAsRead,
-  updateLastMessageFiled,
+  clearCountOfUnreadMessages,
+  updateLastMessageField,
 } = conversations.actions;
 
 export default conversations.reducer;

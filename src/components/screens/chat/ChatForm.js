@@ -14,7 +14,7 @@ import {
   markConversationAsRead,
   removeChat,
   selectConversationsEntities,
-  updateLastMessageFiled,
+  updateLastMessageField,
   upsertChat,
 } from "../../../store/Conversations";
 import { clearSelectedConversation } from "../../../store/SelectedConversation";
@@ -56,21 +56,17 @@ export default function ChatForm() {
     message.from === userInfo._id
       ? dispatch(addMessage({ ...message, status: "sent" }))
       : dispatch(addMessage(message));
-    const chatMessagesIds = conversations[message.cid]
-      ? conversations[message.cid].messagesIds
-      : [];
-
-    const upsertChatParams = {
-      _id: message.cid,
-      messagesIds: [...chatMessagesIds, message._id],
-      last_message: message,
-      updated_at: new Date(message.t * 1000).toISOString(),
-    };
+    let countOfNewMessages = "0";
     message.cid === selectedCID
-      ? api.messageRead({ cid: selectedCID })
-      : (upsertChatParams["unread_messages_count"] =
-          conversations[message.cid].unread_messages_count + 1);
-    dispatch(upsertChat(upsertChatParams));
+      ? api.markConversationAsRead({ cid: selectedCID })
+      : (countOfNewMessages = 1);
+    dispatch(
+      updateLastMessageField({
+        cid: message.cid,
+        msg: message,
+        countOfNewMessages,
+      })
+    );
   };
 
   useEffect(() => {
@@ -106,7 +102,7 @@ export default function ChatForm() {
     };
     messageInputEl.current.value = "";
     dispatch(addMessage(msg));
-    dispatch(updateLastMessageFiled({ cid: selectedCID, msg }));
+    dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
     const response = await api.messageCreate({
       mid,
@@ -123,7 +119,13 @@ export default function ChatForm() {
         t: response.t,
       };
       dispatch(addMessage(msg));
-      dispatch(updateLastMessageFiled({ cid: selectedCID, isLastMsg: 1, msg }));
+      dispatch(
+        updateLastMessageField({
+          cid: selectedCID,
+          resaveLastMessage: 1,
+          msg,
+        })
+      );
       dispatch(removeMessage(mid));
     }
   };
