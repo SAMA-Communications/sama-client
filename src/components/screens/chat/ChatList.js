@@ -11,9 +11,9 @@ import {
 } from "../../../store/Participants.js";
 import {
   clearCountOfUnreadMessages,
+  getConverastionById,
   selectAllConversations,
   setChats,
-  upsertChat,
 } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
@@ -26,6 +26,8 @@ export default function ChatList() {
 
   const conversations = useSelector(selectAllConversations);
   const participants = useSelector(selectParticipantsEntities);
+  const selectedConversation = useSelector(getConverastionById);
+  const activeConv = selectedConversation?._id;
 
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
@@ -55,6 +57,7 @@ export default function ChatList() {
         <NavLink
           to={`/main/#${obj.name ? obj._id : chatName}`}
           key={obj._id}
+          className={activeConv === obj._id ? "selected" : ""}
           onClick={async () => {
             dispatch(setSelectedConversation({ id: obj._id }));
             dispatch(clearCountOfUnreadMessages(obj._id));
