@@ -77,7 +77,7 @@ export default function ChatList() {
       );
     }
     return list;
-  }, [conversations, participants]);
+  }, [conversations, participants, activeConv]);
 
   return (
     <aside>
