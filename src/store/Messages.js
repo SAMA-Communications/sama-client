@@ -25,6 +25,12 @@ export const messages = createSlice({
     addMessage: messagesAdapter.addOne,
     addMessages: messagesAdapter.addMany,
     upsertMessage: messagesAdapter.upsertOne,
+    markMessagesAsRead: (state, action) => {
+      const mids = action.payload.map((id) => {
+        return { _id: id, status: "read" };
+      });
+      messagesAdapter.upsertMany(state, mids);
+    },
     removeMessage: messagesAdapter.removeOne,
   },
 });
@@ -36,7 +42,12 @@ export const getActiveConversationMessages = createSelector(
   }
 );
 
-export const { addMessage, addMessages, upsertMessage, removeMessage } =
-  messages.actions;
+export const {
+  addMessage,
+  addMessages,
+  upsertMessage,
+  markMessagesAsRead,
+  removeMessage,
+} = messages.actions;
 
 export default messages.reducer;

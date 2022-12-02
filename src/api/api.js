@@ -7,6 +7,7 @@ class Api {
     this.baseUrl = baseUrl;
     this.socket = null;
     this.responsesPromises = {};
+    this.onMessageStatusListener = {};
   }
 
   async connect() {
@@ -20,6 +21,12 @@ class Api {
       const message = JSON.parse(e.data);
       console.log("[socket.message]", message);
 
+      if (message.message?.message_read) {
+        if (this.onMessageStatusListener) {
+          this.onMessageStatusListener(message.message.message_read);
+        }
+        return;
+      }
       if (message.message) {
         if (this.onMessageListener) {
           this.onMessageListener(message.message);
@@ -200,6 +207,20 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
+  async markConversationAsRead(data) {
+    const requestData = {
+      request: {
+        message_read: {
+          cid: data.cid,
+        },
+        id: getUniqueId("markConversationAsRead"),
+      },
+    };
+
+    const resObjKey = "success";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
   async messageDelete(data) {
     //===============to do
     const requestData = {
@@ -316,33 +337,6 @@ class Api {
           id: data.cid,
         },
         id: getUniqueId("conversationDelete"),
-      },
-    };
-    const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
-  }
-
-  async getCountOfUnreadMessages(data) {
-    const requestData = {
-      request: {
-        getCountOfUnreadMessages: {
-          user_id: data.uId,
-        },
-        id: getUniqueId("getCountOfUnreadMessages"),
-      },
-    };
-    const resObjKey = "indicators";
-    return this.sendPromise(requestData, resObjKey);
-  }
-
-  async clearIndicatorByCid(data) {
-    const requestData = {
-      request: {
-        clearIndicatorByCid: {
-          cid: data.cid,
-          user_id: data.uId,
-        },
-        id: getUniqueId("clearIndicatorByCid"),
       },
     };
     const resObjKey = "success";

@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import UserSearch from "./UserSearch.js";
 import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
+import ChatBox from "../../generic/ChatBox.js";
+import UserSearch from "./UserSearch.js";
 import { NavLink } from "react-router-dom";
 import { VscComment, VscDeviceCamera } from "react-icons/vsc";
 import {
@@ -9,6 +10,8 @@ import {
   setUsers,
 } from "../../../store/Participants.js";
 import {
+  clearCountOfUnreadMessages,
+  getConverastionById,
   selectAllConversations,
   setChats,
 } from "../../../store/Conversations.js";
@@ -16,20 +19,15 @@ import { setSelectedConversation } from "../../../store/SelectedConversation.js"
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatList.css";
-import ChatBox from "../../generic/ChatBox.js";
-// import {
-//   selectUnreadMessagesEntities,
-//   setIndicators,
-//   upsertIndicator,
-// } from "../../../store/UnreadMessages.js";
 
 export default function ChatList() {
   const dispatch = useDispatch();
   const [isSearchForm, setIsSearchForm] = useState(false);
 
   const conversations = useSelector(selectAllConversations);
-  // const indicators = useSelector(selectUnreadMessagesEntities);
   const participants = useSelector(selectParticipantsEntities);
+  const selectedConversation = useSelector(getConverastionById);
+  const activeConv = selectedConversation?._id;
 
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
@@ -42,15 +40,6 @@ export default function ChatList() {
         api
           .getParticipantsByCids(chats.map((obj) => obj._id))
           .then((users) => dispatch(setUsers(users)));
-        // api.getCountOfUnreadMessages({ uId: userInfo._id }).then((indicators) =>
-        //   dispatch(
-        //     setIndicators(
-        //       indicators.map((obj) => {
-        //         return { cid: obj.conversation_id, count: obj.unread_messages };
-        //       })
-        //     )
-        //   )
-        // );
       });
     }, 300);
   }, []);
@@ -68,18 +57,19 @@ export default function ChatList() {
         <NavLink
           to={`/main/#${obj.name ? obj._id : chatName}`}
           key={obj._id}
-          onClick={() => {
+          className={activeConv === obj._id ? "selected" : ""}
+          onClick={async () => {
             dispatch(setSelectedConversation({ id: obj._id }));
-            // dispatch(upsertIndicator({ cid: obj._id, count: 0 }));
-            // if (indicators[obj._id]?.count) {
-            //   api.clearIndicatorByCid({ cid: obj._id, uId: userInfo._id });
-            // }
+            if (obj.unread_messages_count > 0) {
+              dispatch(clearCountOfUnreadMessages(obj._id));
+              api.markConversationAsRead({ cid: obj._id });
+            }
           }}
         >
           <ChatBox
             chatName={chatName}
             timeOfLastUpdate={obj.updated_at}
-            countOfNewMessage={false}
+            countOfNewMessages={obj.unread_messages_count}
             lastMessage={obj.last_message}
             uId={userInfo._id}
           />
@@ -87,7 +77,7 @@ export default function ChatList() {
       );
     }
     return list;
-  }, [conversations, participants]);
+  }, [conversations, participants, activeConv]);
 
   return (
     <aside>
@@ -112,7 +102,7 @@ export default function ChatList() {
         <div className="chat-create-btn" onClick={() => setIsSearchForm(true)}>
           <VscComment />
         </div>
-        {isSearchForm ? <UserSearch close={setIsSearchForm} /> : ""}
+        {isSearchForm && <UserSearch close={setIsSearchForm} />}
       </div>
     </aside>
   );

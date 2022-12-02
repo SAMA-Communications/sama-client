@@ -11,15 +11,18 @@ import jwtDecode from "jwt-decode";
 import { selectParticipantsEntities } from "../../../store/Participants.js";
 import {
   getConverastionById,
+  markConversationAsRead,
   removeChat,
   selectConversationsEntities,
+  updateLastMessageField,
   upsertChat,
 } from "../../../store/Conversations";
-import { setSelectedConversation } from "../../../store/SelectedConversation";
+import { clearSelectedConversation } from "../../../store/SelectedConversation";
 import {
   addMessage,
   addMessages,
   getActiveConversationMessages,
+  markMessagesAsRead,
   removeMessage,
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -44,19 +47,29 @@ export default function ChatForm() {
   const messages = useSelector(getActiveConversationMessages);
   const messageInputEl = useRef(null);
 
+  api.onMessageStatusListener = (message) => {
+    dispatch(markMessagesAsRead(message.ids));
+    dispatch(
+      markConversationAsRead({
+        cid: message.cid,
+        mid: Array.isArray(message.ids) ? message.ids[0] : message.ids,
+      })
+    );
+  };
+
   api.onMessageListener = (message) => {
     message.from === userInfo._id
       ? dispatch(addMessage({ ...message, status: "sent" }))
       : dispatch(addMessage(message));
-    const chatMessagesIds = conversations[message.cid]
-      ? conversations[message.cid].messagesIds
-      : [];
+    let countOfNewMessages = 0;
+    message.cid === selectedCID
+      ? api.markConversationAsRead({ cid: selectedCID })
+      : (countOfNewMessages = 1);
     dispatch(
-      upsertChat({
-        _id: message.cid,
-        messagesIds: [...chatMessagesIds, message._id],
-        last_message: message,
-        updated_at: new Date(message.t * 1000).toISOString(),
+      updateLastMessageField({
+        cid: message.cid,
+        msg: message,
+        countOfNewMessages,
       })
     );
   };
@@ -65,13 +78,7 @@ export default function ChatForm() {
     if (selectedCID && !conversations[selectedCID].activated) {
       api.messageList({ cid: selectedCID, limit: 20 }).then((arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
-        dispatch(
-          addMessages(
-            arr.map((m) => {
-              return { ...m, status: "sent" };
-            })
-          )
-        );
+        dispatch(addMessages(arr));
         dispatch(
           upsertChat({
             _id: selectedCID,
@@ -82,10 +89,6 @@ export default function ChatForm() {
       });
     }
   }, [selectedCID]);
-
-  const messagesIds = useMemo(() => {
-    return messages ? messages.map((m) => m._id) : [];
-  }, [messages]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
@@ -104,13 +107,7 @@ export default function ChatForm() {
     };
     messageInputEl.current.value = "";
     dispatch(addMessage(msg));
-    dispatch(
-      upsertChat({
-        _id: selectedCID,
-        messagesIds: [...messagesIds, msg._id],
-        last_message: msg,
-      })
-    );
+    dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
     const response = await api.messageCreate({
       mid,
@@ -128,11 +125,10 @@ export default function ChatForm() {
       };
       dispatch(addMessage(msg));
       dispatch(
-        upsertChat({
-          _id: selectedCID,
-          messagesIds: [...messagesIds, msg._id],
-          last_message: msg,
-          updated_at: new Date(response.t * 1000).toISOString(),
+        updateLastMessageField({
+          cid: selectedCID,
+          resaveLastMessage: 1,
+          msg,
         })
       );
       dispatch(removeMessage(mid));
@@ -144,7 +140,7 @@ export default function ChatForm() {
     if (isConfirm) {
       try {
         await api.conversationDelete({ cid: selectedCID });
-        dispatch(setSelectedConversation({}));
+        dispatch(clearSelectedConversation());
         dispatch(removeChat(selectedCID));
         navigate("/main");
       } catch (error) {
@@ -179,7 +175,7 @@ export default function ChatForm() {
 
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
-      dispatch(setSelectedConversation({}));
+      dispatch(clearSelectedConversation());
       navigate("/main");
     }
   };

@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
 import { VscDeviceCamera } from "react-icons/vsc";
-import { IoCheckmark, IoCheckmarkDone, IoTimeOutline } from "react-icons/io5";
+import MessageStatus from "./MessageStatus";
 
 export default function ChatBox({
   chatName,
-  countOfNewMessage,
+  countOfNewMessages,
   timeOfLastUpdate,
   lastMessage,
   uId,
@@ -44,17 +44,25 @@ export default function ChatBox({
           break;
       }
     } else {
-      return t.getHours() + ":" + t.getMinutes();
+      return (
+        t.getHours() +
+        ":" +
+        (t.getMinutes() < 10 ? "0" + t.getMinutes() : t.getMinutes())
+      );
     }
   }, [timeOfLastUpdate]);
 
-  const mStatusView = useMemo(() => {
+  const lastMessageView = useMemo(() => {
     if (lastMessage) {
-      const mStatus = lastMessage.status;
-      if (lastMessage.from !== uId) {
-        return null;
+      const param = { text: lastMessage.body };
+      if (lastMessage.from === uId) {
+        param.status = (
+          <MessageStatus key={lastMessage._id} status={lastMessage.status} />
+        );
       }
-      return mStatus === "sent" ? <IoCheckmark /> : <IoTimeOutline />;
+      return [param.text, param.status];
+    } else {
+      return null;
     }
   }, [lastMessage]);
 
@@ -65,12 +73,11 @@ export default function ChatBox({
       </div>
       <div className="chat-box-info">
         <p className="chat-name">{chatName}</p>
-        <p className="chat-message">
-          {lastMessage?.body}
-          <span>{mStatusView}</span>
-        </p>
+        <p className="chat-message">{lastMessageView}</p>
       </div>
-      {countOfNewMessage ? <div className="chat-indicator"></div> : null}
+      {countOfNewMessages > 0 && (
+        <div className="chat-indicator">{countOfNewMessages}</div>
+      )}
       <div className="chat-last-update">{tView}</div>
     </div>
   );
