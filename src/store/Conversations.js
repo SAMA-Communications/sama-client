@@ -74,13 +74,15 @@ export const conversations = createSlice({
         unread_messages_count: 0,
       });
     },
-    markConversationAsRead: (state, action) => {
-      const cid = action.payload;
+    markConversationAsRead: (state, { payload }) => {
+      const { cid, mid } = payload;
       const lastMessageField = state.entities[cid].last_message;
-      conversationsAdapter.upsertOne(state, {
-        _id: cid,
-        last_message: { ...lastMessageField, status: "read" },
-      });
+      console.log(mid, lastMessageField._id);
+      mid === lastMessageField._id &&
+        conversationsAdapter.upsertOne(state, {
+          _id: cid,
+          last_message: { ...lastMessageField, status: "read" },
+        });
     },
   },
 });

@@ -49,14 +49,19 @@ export default function ChatForm() {
 
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
-    dispatch(markConversationAsRead(message.cid));
+    dispatch(
+      markConversationAsRead({
+        cid: message.cid,
+        mid: Array.isArray(message.ids) ? message.ids[0] : message.ids,
+      })
+    );
   };
 
   api.onMessageListener = (message) => {
     message.from === userInfo._id
       ? dispatch(addMessage({ ...message, status: "sent" }))
       : dispatch(addMessage(message));
-    let countOfNewMessages = "0";
+    let countOfNewMessages = 0;
     message.cid === selectedCID
       ? api.markConversationAsRead({ cid: selectedCID })
       : (countOfNewMessages = 1);

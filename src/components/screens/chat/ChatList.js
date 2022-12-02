@@ -60,8 +60,8 @@ export default function ChatList() {
           className={activeConv === obj._id ? "selected" : ""}
           onClick={async () => {
             dispatch(setSelectedConversation({ id: obj._id }));
-            dispatch(clearCountOfUnreadMessages(obj._id));
             if (obj.unread_messages_count > 0) {
+              dispatch(clearCountOfUnreadMessages(obj._id));
               api.markConversationAsRead({ cid: obj._id });
             }
           }}
