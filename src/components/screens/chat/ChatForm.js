@@ -8,7 +8,10 @@ import {
 import ChatMessage from "../../generic/ChatMessage.js";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
-import { selectParticipantsEntities } from "../../../store/Participants.js";
+import {
+  selectParticipantsEntities,
+  upsertUser,
+} from "../../../store/Participants.js";
 import {
   getConverastionById,
   markConversationAsRead,
@@ -55,6 +58,11 @@ export default function ChatForm() {
         mid: Array.isArray(message.ids) ? message.ids[0] : message.ids,
       })
     );
+  };
+
+  api.onUserActivityListener = (user) => {
+    const uId = Object.keys(user)[0];
+    dispatch(upsertUser({ _id: uId, recent_activity: user[uId] }));
   };
 
   api.onMessageListener = (message) => {
@@ -180,6 +188,19 @@ export default function ChatForm() {
     }
   };
 
+  const recentActivityView = () => {
+    if (selectedConversation.name) {
+      return null;
+    }
+
+    for (const uId in participants) {
+      if (participants[uId].login === url.hash?.slice(1)) {
+        return participants[uId].recent_activity;
+      }
+    }
+    return null;
+  };
+
   return (
     <section className="chat-form">
       {!selectedCID ? (
@@ -199,9 +220,8 @@ export default function ChatForm() {
                   ? selectedConversation.name
                   : url.hash?.slice(1)}
               </p>
-              <div className="chat-recipient-status hide">
-                <span>|</span>
-                <p>typing...</p>
+              <div className="chat-recipient-status">
+                {recentActivityView()}
               </div>
             </div>
             <div className="chat-delete-btn" onClick={deleteChat}>

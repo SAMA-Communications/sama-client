@@ -8,6 +8,7 @@ import { VscComment, VscDeviceCamera } from "react-icons/vsc";
 import {
   selectParticipantsEntities,
   setUsers,
+  upsertUser,
 } from "../../../store/Participants.js";
 import {
   clearCountOfUnreadMessages,
@@ -63,6 +64,19 @@ export default function ChatList() {
             if (obj.unread_messages_count > 0) {
               dispatch(clearCountOfUnreadMessages(obj._id));
               api.markConversationAsRead({ cid: obj._id });
+            }
+            if (!obj.name) {
+              const uId =
+                obj.owner_id === userInfo._id
+                  ? participants[obj.opponent_id]?._id
+                  : participants[obj.owner_id]?._id;
+              const uLastActivity = await api.subscribeToUserActivity(uId);
+              dispatch(
+                upsertUser({
+                  _id: uId,
+                  recent_activity: Object.values(uLastActivity)[0],
+                })
+              );
             }
           }}
         >

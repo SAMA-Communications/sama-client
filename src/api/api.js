@@ -8,6 +8,7 @@ class Api {
     this.socket = null;
     this.responsesPromises = {};
     this.onMessageStatusListener = {};
+    this.onUserActivityListener = {};
   }
 
   async connect() {
@@ -21,18 +22,27 @@ class Api {
       const message = JSON.parse(e.data);
       console.log("[socket.message]", message);
 
+      if (message.message?.user_activity_update) {
+        if (this.onUserActivityListener) {
+          this.onUserActivityListener(message.message.user_activity_update);
+        }
+        return;
+      }
+
       if (message.message?.message_read) {
         if (this.onMessageStatusListener) {
           this.onMessageStatusListener(message.message.message_read);
         }
         return;
       }
+
       if (message.message) {
         if (this.onMessageListener) {
           this.onMessageListener(message.message);
         }
         return;
       }
+
       if (message.ask) {
         const mid = message.ask.mid;
         this.responsesPromises[mid](message.ask);
@@ -235,6 +245,19 @@ class Api {
       },
     };
     const resObjKey = "success";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
+  async subscribeToUserActivity(data) {
+    const requestData = {
+      request: {
+        user_last_activity_subscribe: {
+          id: data,
+        },
+        id: getUniqueId("subscribeToUserActivity"),
+      },
+    };
+    const resObjKey = "last_activity";
     return this.sendPromise(requestData, resObjKey);
   }
 
