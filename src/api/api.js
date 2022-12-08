@@ -7,8 +7,8 @@ class Api {
     this.baseUrl = baseUrl;
     this.socket = null;
     this.responsesPromises = {};
-    this.onMessageStatusListener = {};
-    this.onUserActivityListener = {};
+    this.onMessageStatusListener = null;
+    this.onUserActivityListener = null;
   }
 
   async connect() {
@@ -258,6 +258,17 @@ class Api {
       },
     };
     const resObjKey = "last_activity";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
+  async unsubscribeFromUserActivity(data) {
+    const requestData = {
+      request: {
+        user_last_activity_unsubscribe: {},
+        id: getUniqueId("unsubscribeFromUserActivity"),
+      },
+    };
+    const resObjKey = "success";
     return this.sendPromise(requestData, resObjKey);
   }
 
