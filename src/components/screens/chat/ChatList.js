@@ -8,7 +8,6 @@ import { VscComment, VscDeviceCamera } from "react-icons/vsc";
 import {
   selectParticipantsEntities,
   setUsers,
-  upsertUser,
 } from "../../../store/Participants.js";
 import {
   clearCountOfUnreadMessages,
