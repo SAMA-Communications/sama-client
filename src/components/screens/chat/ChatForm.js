@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   VscDeviceCamera,
   VscFileSymlinkDirectory,
@@ -83,7 +83,10 @@ export default function ChatForm() {
   };
 
   useEffect(() => {
-    if (selectedCID && !conversations[selectedCID].activated) {
+    if (!selectedCID) {
+      return;
+    }
+    if (!conversations[selectedCID].activated) {
       api.messageList({ cid: selectedCID, limit: 20 }).then((arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
         dispatch(addMessages(arr));
@@ -92,6 +95,22 @@ export default function ChatForm() {
             _id: selectedCID,
             messagesIds,
             activated: true,
+          })
+        );
+      });
+    }
+
+    if (conversations[selectedCID].type === "u") {
+      const obj = conversations[selectedCID];
+      const uId =
+        obj.owner_id === userInfo._id
+          ? participants[obj.opponent_id]?._id
+          : participants[obj.owner_id]?._id;
+      api.subscribeToUserActivity(uId).then((activity) => {
+        dispatch(
+          upsertUser({
+            _id: uId,
+            recent_activity: activity[uId],
           })
         );
       });
@@ -193,12 +212,9 @@ export default function ChatForm() {
       return null;
     }
 
-    for (const uId in participants) {
-      if (participants[uId].login === url.hash?.slice(1)) {
-        return participants[uId].recent_activity;
-      }
-    }
-    return null;
+    return selectedConversation.opponent_id === userInfo._id
+      ? participants[selectedConversation.owner_id].recent_activity
+      : participants[selectedConversation.opponent_id].recent_activity;
   };
 
   return (
