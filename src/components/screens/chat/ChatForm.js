@@ -8,7 +8,10 @@ import {
 import ChatMessage from "../../generic/ChatMessage.js";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
-import { selectParticipantsEntities } from "../../../store/Participants.js";
+import {
+  selectParticipantsEntities,
+  upsertUser,
+} from "../../../store/Participants.js";
 import {
   getConverastionById,
   markConversationAsRead,
@@ -57,6 +60,11 @@ export default function ChatForm() {
     );
   };
 
+  api.onUserActivityListener = (user) => {
+    const uId = Object.keys(user)[0];
+    dispatch(upsertUser({ _id: uId, recent_activity: user[uId] }));
+  };
+
   api.onMessageListener = (message) => {
     message.from === userInfo._id
       ? dispatch(addMessage({ ...message, status: "sent" }))
@@ -75,7 +83,10 @@ export default function ChatForm() {
   };
 
   useEffect(() => {
-    if (selectedCID && !conversations[selectedCID].activated) {
+    if (!selectedCID) {
+      return;
+    }
+    if (!conversations[selectedCID].activated) {
       api.messageList({ cid: selectedCID, limit: 20 }).then((arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
         dispatch(addMessages(arr));
@@ -84,6 +95,22 @@ export default function ChatForm() {
             _id: selectedCID,
             messagesIds,
             activated: true,
+          })
+        );
+      });
+    }
+
+    if (conversations[selectedCID].type === "u") {
+      const obj = conversations[selectedCID];
+      const uId =
+        obj.owner_id === userInfo._id
+          ? participants[obj.opponent_id]?._id
+          : participants[obj.owner_id]?._id;
+      api.subscribeToUserActivity(uId).then((activity) => {
+        dispatch(
+          upsertUser({
+            _id: uId,
+            recent_activity: activity[uId],
           })
         );
       });
@@ -180,6 +207,16 @@ export default function ChatForm() {
     }
   };
 
+  const recentActivityView = () => {
+    if (selectedConversation.name) {
+      return null;
+    }
+
+    return selectedConversation.opponent_id === userInfo._id
+      ? participants[selectedConversation.owner_id].recent_activity
+      : participants[selectedConversation.opponent_id].recent_activity;
+  };
+
   return (
     <section className="chat-form">
       {!selectedCID ? (
@@ -199,9 +236,8 @@ export default function ChatForm() {
                   ? selectedConversation.name
                   : url.hash?.slice(1)}
               </p>
-              <div className="chat-recipient-status hide">
-                <span>|</span>
-                <p>typing...</p>
+              <div className="chat-recipient-status">
+                {recentActivityView()}
               </div>
             </div>
             <div className="chat-delete-btn" onClick={deleteChat}>

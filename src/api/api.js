@@ -7,7 +7,8 @@ class Api {
     this.baseUrl = baseUrl;
     this.socket = null;
     this.responsesPromises = {};
-    this.onMessageStatusListener = {};
+    this.onMessageStatusListener = null;
+    this.onUserActivityListener = null;
   }
 
   async connect() {
@@ -21,18 +22,27 @@ class Api {
       const message = JSON.parse(e.data);
       console.log("[socket.message]", message);
 
+      if (message.last_activity) {
+        if (this.onUserActivityListener) {
+          this.onUserActivityListener(message.last_activity);
+        }
+        return;
+      }
+
       if (message.message?.message_read) {
         if (this.onMessageStatusListener) {
           this.onMessageStatusListener(message.message.message_read);
         }
         return;
       }
+
       if (message.message) {
         if (this.onMessageListener) {
           this.onMessageListener(message.message);
         }
         return;
       }
+
       if (message.ask) {
         const mid = message.ask.mid;
         this.responsesPromises[mid](message.ask);
@@ -232,6 +242,30 @@ class Api {
           from: "userId[0]",
         },
         id: Math.floor(Math.random() * 101),
+      },
+    };
+    const resObjKey = "success";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
+  async subscribeToUserActivity(data) {
+    const requestData = {
+      request: {
+        user_last_activity_subscribe: {
+          id: data,
+        },
+        id: getUniqueId("subscribeToUserActivity"),
+      },
+    };
+    const resObjKey = "last_activity";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
+  async unsubscribeFromUserActivity(data) {
+    const requestData = {
+      request: {
+        user_last_activity_unsubscribe: {},
+        id: getUniqueId("unsubscribeFromUserActivity"),
       },
     };
     const resObjKey = "success";

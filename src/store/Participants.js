@@ -19,10 +19,11 @@ const participants = createSlice({
   reducers: {
     addUser: participantsAdapter.addOne,
     addUsers: participantsAdapter.addMany,
+    upsertUser: participantsAdapter.upsertOne,
     setUsers: participantsAdapter.setAll,
   },
 });
 
-export const { addUser, addUsers, setUsers } = participants.actions;
+export const { addUser, addUsers, setUsers, upsertUser } = participants.actions;
 
 export default participants.reducer;

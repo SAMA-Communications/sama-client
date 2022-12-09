@@ -73,7 +73,10 @@
 .chat-recipient-status {
   display: flex;
 
-  font-size: 1em;
+  margin-left: 15px;
+
+  font-size: 0.7em;
+  color: var(--text-hover);
 
   transition: all 0.1s ease-in-out;
 }
