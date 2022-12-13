@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import "../../styles/chat/ChatMessage.css";
 import MessageStatus from "./MessageStatus";
@@ -9,9 +9,16 @@ export default function ChatMessage({
   userId,
   uName,
   status,
+  attachments,
   tSend,
 }) {
   const timeSend = new Date(tSend * 1000);
+
+  const attachmentsView = useMemo(
+    () =>
+      attachments ? <img src={attachments && attachments[0].file_url} /> : null,
+    [attachments]
+  );
 
   return (
     <div
@@ -21,7 +28,10 @@ export default function ChatMessage({
     >
       <div className="message-info">
         <p className="message-user-name">{uName}</p>
-        <p className="message-body">{text}</p>
+        <p className="message-body">
+          {text}
+          <div>{attachmentsView}</div>
+        </p>
       </div>
       <div className="message-status">
         <div className="message-status-time">

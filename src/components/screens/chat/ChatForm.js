@@ -145,6 +145,7 @@ export default function ChatForm() {
       chatId: selectedCID,
     };
 
+    const attachments = [];
     if (file) {
       //get uploadlink
       const fileUpload = await api.createUploadUrlForFile({
@@ -166,6 +167,13 @@ export default function ChatForm() {
         file_id: fileUpload.file_id,
       });
 
+      attachments.push({
+        file_id: fileUpload.file_id,
+        file_name: fileUpload.name,
+        file_size: fileUpload.size,
+        file_url: fileDownloadUrl,
+        content_type: fileUpload.content_type,
+      });
       console.log("fileUploadUrl: ", fileUpload.upload_url);
       console.log("fileDownloadUrl: ", fileDownloadUrl);
     }
@@ -179,6 +187,7 @@ export default function ChatForm() {
         from: userInfo._id,
         status: "sent",
         t: response.t,
+        attachments: attachments,
       };
       dispatch(addMessage(msg));
       dispatch(
@@ -217,6 +226,7 @@ export default function ChatForm() {
         userId={userInfo._id}
         text={msg.body}
         uName={participants[msg.from]?.login}
+        attachments={msg.attachments}
         status={msg.status}
         tSend={msg.t}
       />
