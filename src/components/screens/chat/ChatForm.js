@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   VscDeviceCamera,
   VscFileSymlinkDirectory,
+  VscNewFile,
   VscRocket,
   VscTrash,
 } from "react-icons/vsc";
@@ -49,6 +50,8 @@ export default function ChatForm() {
 
   const messages = useSelector(getActiveConversationMessages);
   const messageInputEl = useRef(null);
+  const filePicker = useRef(null);
+  const [file, setFile] = useState(null);
 
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
@@ -136,11 +139,19 @@ export default function ChatForm() {
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
-    const response = await api.messageCreate({
+    const reqData = {
       mid,
       text,
       chatId: selectedCID,
+    };
+
+    const fileUploadUrl = await api.fileUploadUrlCreate({
+      name: file.name,
+      size: file.size,
+      content_type: file.content_type,
     });
+    console.log(fileUploadUrl);
+    const response = await api.messageCreate(reqData);
 
     if (response.mid) {
       msg = {
@@ -217,6 +228,13 @@ export default function ChatForm() {
       : participants[selectedConversation.opponent_id].recent_activity;
   };
 
+  const pickUserFiles = () => {
+    filePicker.current.click();
+  };
+  const handlerChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
   return (
     <section className="chat-form">
       {!selectedCID ? (
@@ -254,6 +272,17 @@ export default function ChatForm() {
             )}
           </div>
           <form id="chat-form-send" action="">
+            <div className="form-send-file">
+              <VscNewFile onClick={pickUserFiles} />
+              <input
+                id="inputFile"
+                ref={filePicker}
+                onChange={handlerChange}
+                type="file"
+                accept="image/*"
+                multiple
+              />
+            </div>
             <input
               id="inputMessage"
               ref={messageInputEl}
