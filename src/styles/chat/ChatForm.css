@@ -178,7 +178,7 @@
   color: var(--btn-text-default);
 }
 .form-send-file {
-  width: 30px;
+  width: 2rem;
 
   margin-right: 10px;
 
@@ -196,10 +196,10 @@
 .form-send-file > svg:hover {
   cursor: pointer;
 }
-.form-send-file > svg > path {
+.form-send-file > svg > * {
   transition: 0.2s ease-in-out;
 }
-.form-send-file > svg:hover > path {
+.form-send-file > svg:hover > * {
   color: var(--text-accent);
 
   transform: translateY(-2px);

@@ -168,7 +168,7 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
-  async fileUploadUrlCreate(data) {
+  async createUploadUrlForFile(data) {
     const requestData = {
       request: {
         create_file: {
@@ -176,10 +176,23 @@ class Api {
           size: data.size,
           content_type: data.content_type,
         },
-        id: getUniqueId("fileUploadUrlCreate"),
+        id: getUniqueId("createUploadUrlForFile"),
       },
     };
     const resObjKey = "file";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
+  async getDownloadUrlForFile(data) {
+    const requestData = {
+      request: {
+        get_file_url: {
+          file_id: data.file_id,
+        },
+        id: getUniqueId("getDownloadUrlForFile"),
+      },
+    };
+    const resObjKey = "file_url";
     return this.sendPromise(requestData, resObjKey);
   }
 
