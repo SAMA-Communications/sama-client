@@ -145,12 +145,31 @@ export default function ChatForm() {
       chatId: selectedCID,
     };
 
-    const fileUploadUrl = await api.fileUploadUrlCreate({
-      name: file.name,
-      size: file.size,
-      content_type: file.content_type,
-    });
-    console.log(fileUploadUrl);
+    if (file) {
+      //get uploadlink
+      const fileUpload = await api.createUploadUrlForFile({
+        name: file.name,
+        size: file.size,
+        content_type: file.type,
+      });
+
+      //store file at link
+      const requestOptions = {
+        method: "PUT",
+        headers: { "Content-Type": fileUpload.content_type },
+        body: file,
+      };
+      await fetch(fileUpload.upload_url, requestOptions);
+
+      //get download link for another users
+      const fileDownloadUrl = await api.getDownloadUrlForFile({
+        file_id: fileUpload.file_id,
+      });
+
+      console.log("fileUploadUrl: ", fileUpload.upload_url);
+      console.log("fileDownloadUrl: ", fileDownloadUrl);
+    }
+
     const response = await api.messageCreate(reqData);
 
     if (response.mid) {
