@@ -66,3 +66,9 @@
 
   color: var(--text-smoke);
 }
+.message-file {
+  width: 300px;
+}
+.message-file > img {
+  width: 100%;
+}

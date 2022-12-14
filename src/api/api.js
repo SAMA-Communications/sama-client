@@ -203,7 +203,7 @@ class Api {
           id: data.mid,
           body: data.text,
           cid: data.chatId,
-          x: data.x,
+          attachments: data.attachments,
         },
       };
       this.responsesPromises[requestData.message.id] = resolve;

@@ -16,7 +16,11 @@ export default function ChatMessage({
 
   const attachmentsView = useMemo(
     () =>
-      attachments ? <img src={attachments && attachments[0].file_url} /> : null,
+      attachments ? (
+        <div className="message-file">
+          <img src={attachments[0].file_url} alt={attachments[0].file_name} />
+        </div>
+      ) : null,
     [attachments]
   );
 
@@ -28,10 +32,8 @@ export default function ChatMessage({
     >
       <div className="message-info">
         <p className="message-user-name">{uName}</p>
-        <p className="message-body">
-          {text}
-          <div>{attachmentsView}</div>
-        </p>
+        <p className="message-body">{text}</p>
+        {attachmentsView}
       </div>
       <div className="message-status">
         <div className="message-status-time">

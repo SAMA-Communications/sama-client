@@ -139,22 +139,19 @@ export default function ChatForm() {
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
+    const attachments = [];
     const reqData = {
       mid,
       text,
       chatId: selectedCID,
     };
-
-    const attachments = [];
     if (file) {
-      //get uploadlink
       const fileUpload = await api.createUploadUrlForFile({
         name: file.name,
         size: file.size,
         content_type: file.type,
       });
 
-      //store file at link
       const requestOptions = {
         method: "PUT",
         headers: { "Content-Type": fileUpload.content_type },
@@ -162,7 +159,6 @@ export default function ChatForm() {
       };
       await fetch(fileUpload.upload_url, requestOptions);
 
-      //get download link for another users
       const fileDownloadUrl = await api.getDownloadUrlForFile({
         file_id: fileUpload.file_id,
       });
@@ -170,10 +166,10 @@ export default function ChatForm() {
       attachments.push({
         file_id: fileUpload.file_id,
         file_name: fileUpload.name,
-        file_size: fileUpload.size,
         file_url: fileDownloadUrl,
-        content_type: fileUpload.content_type,
       });
+      reqData["attachments"] = attachments;
+
       console.log("fileUploadUrl: ", fileUpload.upload_url);
       console.log("fileDownloadUrl: ", fileDownloadUrl);
     }
