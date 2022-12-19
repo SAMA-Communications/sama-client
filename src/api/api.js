@@ -168,31 +168,27 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
-  async createUploadUrlForFile(data) {
+  async createUploadUrlForFiles(data) {
     const requestData = {
       request: {
-        create_file: {
-          name: data.name,
-          size: data.size,
-          content_type: data.content_type,
-        },
+        create_files: data.files,
         id: getUniqueId("createUploadUrlForFile"),
       },
     };
-    const resObjKey = "file";
+    const resObjKey = "files";
     return this.sendPromise(requestData, resObjKey);
   }
 
-  async getDownloadUrlForFile(data) {
+  async getDownloadUrlForFiles(data) {
     const requestData = {
       request: {
-        get_file_url: {
-          file_id: data.file_id,
+        get_files_url: {
+          file_ids: data.file_ids,
         },
-        id: getUniqueId("getDownloadUrlForFile"),
+        id: getUniqueId("getDownloadUrlForFiles"),
       },
     };
-    const resObjKey = "file_url";
+    const resObjKey = "file_urls";
     return this.sendPromise(requestData, resObjKey);
   }
 

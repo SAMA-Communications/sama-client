@@ -51,7 +51,7 @@ export default function ChatForm() {
   const messages = useSelector(getActiveConversationMessages);
   const messageInputEl = useRef(null);
   const filePicker = useRef(null);
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState(null);
 
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
@@ -68,7 +68,16 @@ export default function ChatForm() {
     dispatch(upsertUser({ _id: uId, recent_activity: user[uId] }));
   };
 
-  api.onMessageListener = (message) => {
+  api.onMessageListener = async (message) => {
+    const attachments = message.attachments;
+    if (attachments) {
+      const urls = await api.getDownloadUrlForFiles({
+        file_ids: attachments.map((obj) => obj.file_id),
+      });
+      message.attachments = attachments.map((obj) => {
+        return { ...obj, file_url: urls[obj.file_id] };
+      });
+    }
     message.from === userInfo._id
       ? dispatch(addMessage({ ...message, status: "sent" }))
       : dispatch(addMessage(message));
@@ -90,16 +99,44 @@ export default function ChatForm() {
       return;
     }
     if (!conversations[selectedCID].activated) {
-      api.messageList({ cid: selectedCID, limit: 20 }).then((arr) => {
+      api.messageList({ cid: selectedCID, limit: 20 }).then(async (arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
-        dispatch(addMessages(arr));
-        dispatch(
-          upsertChat({
-            _id: selectedCID,
-            messagesIds,
-            activated: true,
-          })
-        );
+        const mAttachments = {};
+        for (let i = 0; i < arr.length; i++) {
+          const attachments = arr[i].attachments;
+          attachments?.forEach(
+            (obj) => (mAttachments[obj.file_id] = arr[i]._id)
+          );
+        }
+        if (Object.keys(mAttachments).length > 0) {
+          api
+            .getDownloadUrlForFiles({ file_ids: Object.keys(mAttachments) })
+            .then((urls) => {
+              const message = arr.map((msg) => {
+                msg.attachments = msg.attachments?.map((att) => {
+                  return { ...att, file_url: urls[att.file_id] };
+                });
+                return msg;
+              });
+              dispatch(addMessages(message));
+              dispatch(
+                upsertChat({
+                  _id: selectedCID,
+                  messagesIds,
+                  activated: true,
+                })
+              );
+            });
+        } else {
+          dispatch(addMessages(arr));
+          dispatch(
+            upsertChat({
+              _id: selectedCID,
+              messagesIds,
+              activated: true,
+            })
+          );
+        }
       });
     }
 
@@ -124,14 +161,16 @@ export default function ChatForm() {
     event.preventDefault();
 
     const text = messageInputEl.current.value.trim();
-    if (text.length === 0) {
+    if (text.length === 0 && !files) {
       return;
     }
+
+    messageInputEl.current.value = "";
 
     const mid = userInfo._id + Date.now();
     let msg = {
       _id: mid,
-      body: text,
+      body: text || "*photo*",
       from: userInfo._id,
       t: Date.now(),
     };
@@ -139,47 +178,56 @@ export default function ChatForm() {
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
-    const attachments = [];
+    let attachments = [];
     const reqData = {
       mid,
-      text,
+      text: text || "*photo*",
       chatId: selectedCID,
     };
-    if (file) {
-      const fileUpload = await api.createUploadUrlForFile({
-        name: file.name,
-        size: file.size,
-        content_type: file.type,
+
+    if (files) {
+      const filesParams = [];
+      for (let i = 0; i < files.length; i++) {
+        filesParams.push(files[i]);
+      }
+      const fileUploadUrls = await api.createUploadUrlForFiles({
+        files: filesParams.map((file) => {
+          return {
+            name: file.name,
+            size: file.size,
+            content_type: file.type,
+          };
+        }),
       });
 
-      const requestOptions = {
-        method: "PUT",
-        headers: { "Content-Type": fileUpload.content_type },
-        body: file,
-      };
-      await fetch(fileUpload.upload_url, requestOptions);
+      for (let i = 0; i < fileUploadUrls.length; i++) {
+        const file = fileUploadUrls[i];
+        const requestOptions = {
+          method: "PUT",
+          headers: { "Content-Type": file.content_type },
+          body: files[i],
+        };
+        await fetch(file.upload_url, requestOptions);
 
-      const fileDownloadUrl = await api.getDownloadUrlForFile({
-        file_id: fileUpload.file_id,
-      });
-
-      attachments.push({
-        file_id: fileUpload.file_id,
-        file_name: fileUpload.name,
-        file_url: fileDownloadUrl,
-      });
+        attachments.push({
+          file_id: file.object_id,
+          file_name: file.name,
+        });
+      }
       reqData["attachments"] = attachments;
-
-      console.log("fileUploadUrl: ", fileUpload.upload_url);
-      console.log("fileDownloadUrl: ", fileDownloadUrl);
+      const fileDownloadUrl = await api.getDownloadUrlForFiles({
+        file_ids: fileUploadUrls.map((obj) => obj.object_id),
+      });
+      attachments = attachments.map((att) => {
+        return { ...att, file_url: fileDownloadUrl[att.file_id] };
+      });
     }
-
     const response = await api.messageCreate(reqData);
 
     if (response.mid) {
       msg = {
         _id: response.server_mid,
-        body: text,
+        body: text || "*photo*",
         from: userInfo._id,
         status: "sent",
         t: response.t,
@@ -195,6 +243,7 @@ export default function ChatForm() {
       );
       dispatch(removeMessage(mid));
     }
+    setFiles(null);
   };
 
   const deleteChat = async () => {
@@ -257,7 +306,7 @@ export default function ChatForm() {
     filePicker.current.click();
   };
   const handlerChange = (event) => {
-    setFile(event.target.files[0]);
+    setFiles(event.target.files);
   };
 
   return (
