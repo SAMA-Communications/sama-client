@@ -182,7 +182,7 @@ class Api {
   async getDownloadUrlForFiles(data) {
     const requestData = {
       request: {
-        get_files_url: {
+        get_file_urls: {
           file_ids: data.file_ids,
         },
         id: getUniqueId("getDownloadUrlForFiles"),

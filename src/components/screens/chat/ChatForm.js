@@ -104,21 +104,28 @@ export default function ChatForm() {
         const mAttachments = {};
         for (let i = 0; i < arr.length; i++) {
           const attachments = arr[i].attachments;
-          attachments?.forEach(
+          if (!attachments) {
+            continue;
+          }
+          attachments.forEach(
             (obj) => (mAttachments[obj.file_id] = arr[i]._id)
           );
         }
+
         if (Object.keys(mAttachments).length > 0) {
           api
             .getDownloadUrlForFiles({ file_ids: Object.keys(mAttachments) })
             .then((urls) => {
-              const message = arr.map((msg) => {
-                msg.attachments = msg.attachments?.map((att) => {
+              for (let i = 0; i < arr.length; i++) {
+                const attachments = arr[i].attachments;
+                if (!attachments) {
+                  continue;
+                }
+                arr[i].attachments = attachments.map((att) => {
                   return { ...att, file_url: urls[att.file_id] };
                 });
-                return msg;
-              });
-              dispatch(addMessages(message));
+              }
+              dispatch(addMessages(arr));
               dispatch(
                 upsertChat({
                   _id: selectedCID,
@@ -166,7 +173,6 @@ export default function ChatForm() {
     }
 
     messageInputEl.current.value = "";
-
     const mid = userInfo._id + Date.now();
     let msg = {
       _id: mid,
@@ -174,7 +180,7 @@ export default function ChatForm() {
       from: userInfo._id,
       t: Date.now(),
     };
-    messageInputEl.current.value = "";
+
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
@@ -190,6 +196,7 @@ export default function ChatForm() {
       for (let i = 0; i < files.length; i++) {
         filesParams.push(files[i]);
       }
+
       const fileUploadUrls = await api.createUploadUrlForFiles({
         files: filesParams.map((file) => {
           return {
@@ -215,6 +222,7 @@ export default function ChatForm() {
         });
       }
       reqData["attachments"] = attachments;
+
       const fileDownloadUrl = await api.getDownloadUrlForFiles({
         file_ids: fileUploadUrls.map((obj) => obj.object_id),
       });
@@ -222,8 +230,8 @@ export default function ChatForm() {
         return { ...att, file_url: fileDownloadUrl[att.file_id] };
       });
     }
-    const response = await api.messageCreate(reqData);
 
+    const response = await api.messageCreate(reqData);
     if (response.mid) {
       msg = {
         _id: response.server_mid,
@@ -233,6 +241,7 @@ export default function ChatForm() {
         t: response.t,
         attachments: attachments,
       };
+
       dispatch(addMessage(msg));
       dispatch(
         updateLastMessageField({
