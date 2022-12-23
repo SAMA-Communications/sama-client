@@ -67,7 +67,7 @@
   color: var(--text-smoke);
 }
 .message-file > img {
-  width: 250px;
+  width: 15vh;
   margin: 5px 5px 0 5px;
 }
 

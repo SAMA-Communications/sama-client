@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   VscDeviceCamera,
   VscFileSymlinkDirectory,
+  VscLayersActive,
   VscNewFile,
   VscRocket,
   VscTrash,
@@ -342,17 +343,23 @@ export default function ChatForm() {
             )}
           </div>
           <form id="chat-form-send" action="">
-            <div className="form-send-file">
-              <VscNewFile onClick={pickUserFiles} />
-              <input
-                id="inputFile"
-                ref={filePicker}
-                onChange={handlerChange}
-                type="file"
-                accept="image/*"
-                multiple
-              />
-            </div>
+            {!files ? (
+              <div className="form-send-file">
+                <VscNewFile onClick={pickUserFiles} />
+                <input
+                  id="inputFile"
+                  ref={filePicker}
+                  onChange={handlerChange}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                />
+              </div>
+            ) : (
+              <div className="form-send-file">
+                <VscLayersActive />
+              </div>
+            )}
             <input
               id="inputMessage"
               ref={messageInputEl}
