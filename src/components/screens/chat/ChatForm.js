@@ -9,7 +9,7 @@ import {
 import ChatMessage from "../../generic/ChatMessage.js";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
-import getFileLinks from "../../../api/getFileLinks.js";
+import getDownloadFileLinks from "../../../api/download_manager.js";
 import {
   selectParticipantsEntities,
   upsertUser,
@@ -127,7 +127,7 @@ export default function ChatForm() {
         }
 
         if (Object.keys(mAttachments).length > 0) {
-          getFileLinks(mAttachments).then((msgs) =>
+          getDownloadFileLinks(mAttachments).then((msgs) =>
             dispatch(upsertMessages(msgs))
           );
         }

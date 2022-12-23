@@ -1,6 +1,6 @@
 import api from "./api";
 
-export default async function getFileLinks(attachments) {
+export default async function getDownloadFileLinks(attachments) {
   const attIds = Object.keys(attachments);
   const mUpdate = {};
 
