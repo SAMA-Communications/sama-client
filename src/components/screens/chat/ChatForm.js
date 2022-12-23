@@ -9,6 +9,7 @@ import {
 import ChatMessage from "../../generic/ChatMessage.js";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
+import getFileLinks from "../../../api/getFileLinks.js";
 import {
   selectParticipantsEntities,
   upsertUser,
@@ -28,6 +29,7 @@ import {
   getActiveConversationMessages,
   markMessagesAsRead,
   removeMessage,
+  upsertMessages,
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -101,6 +103,14 @@ export default function ChatForm() {
     if (!conversations[selectedCID].activated) {
       api.messageList({ cid: selectedCID, limit: 20 }).then(async (arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
+        dispatch(addMessages(arr));
+        dispatch(
+          upsertChat({
+            _id: selectedCID,
+            messagesIds,
+            activated: true,
+          })
+        );
         const mAttachments = {};
         for (let i = 0; i < arr.length; i++) {
           const attachments = arr[i].attachments;
@@ -108,40 +118,17 @@ export default function ChatForm() {
             continue;
           }
           attachments.forEach(
-            (obj) => (mAttachments[obj.file_id] = arr[i]._id)
+            (obj) =>
+              (mAttachments[obj.file_id] = {
+                _id: arr[i]._id,
+                ...obj,
+              })
           );
         }
 
         if (Object.keys(mAttachments).length > 0) {
-          api
-            .getDownloadUrlForFiles({ file_ids: Object.keys(mAttachments) })
-            .then((urls) => {
-              for (let i = 0; i < arr.length; i++) {
-                const attachments = arr[i].attachments;
-                if (!attachments) {
-                  continue;
-                }
-                arr[i].attachments = attachments.map((att) => {
-                  return { ...att, file_url: urls[att.file_id] };
-                });
-              }
-              dispatch(addMessages(arr));
-              dispatch(
-                upsertChat({
-                  _id: selectedCID,
-                  messagesIds,
-                  activated: true,
-                })
-              );
-            });
-        } else {
-          dispatch(addMessages(arr));
-          dispatch(
-            upsertChat({
-              _id: selectedCID,
-              messagesIds,
-              activated: true,
-            })
+          getFileLinks(mAttachments).then((msgs) =>
+            dispatch(upsertMessages(msgs))
           );
         }
       });
