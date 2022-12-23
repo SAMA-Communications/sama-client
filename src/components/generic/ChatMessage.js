@@ -1,6 +1,7 @@
-import React, { useMemo } from "react";
+import React from "react";
 
 import "../../styles/chat/ChatMessage.css";
+import MessageAttachments from "./MessageAttachments";
 import MessageStatus from "./MessageStatus";
 
 export default function ChatMessage({
@@ -14,30 +15,6 @@ export default function ChatMessage({
 }) {
   const timeSend = new Date(tSend * 1000);
 
-  const attachmentsView = useMemo(
-    () =>
-      attachments ? (
-        <div className="message-file">
-          {attachments.map((el) =>
-            el.file_url ? (
-              <img src={el.file_url} alt={el.file_name} key={el.file_url} />
-            ) : (
-              <div
-                key={el.file_name}
-                style={{
-                  backgroundColor: "#fff",
-                  width: "100px",
-                  height: "100px",
-                  margin: "5px 5px  0 5px",
-                }}
-              ></div>
-            )
-          )}
-        </div>
-      ) : null,
-    [attachments]
-  );
-
   return (
     <div
       className={
@@ -47,7 +24,7 @@ export default function ChatMessage({
       <div className="message-info">
         <p className="message-user-name">{uName}</p>
         <p className="message-body">{text}</p>
-        {attachmentsView}
+        <MessageAttachments attachments={attachments} />
       </div>
       <div className="message-status">
         <div className="message-status-time">
