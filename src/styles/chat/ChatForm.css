@@ -207,3 +207,9 @@
 #inputFile {
   display: none;
 }
+
+.chat-files-preview {
+  padding: 5px 0;
+
+  border-top: 1px solid var(--border-color);
+}

@@ -342,6 +342,14 @@ export default function ChatForm() {
               </div>
             )}
           </div>
+          {files ? (
+            <div className="chat-files-preview">
+              {Object.values(files).map((el) => (
+                <p key={el.name}>{el.name}</p>
+              ))}
+            </div>
+          ) : null}
+
           <form id="chat-form-send" action="">
             {!files ? (
               <div className="form-send-file">
