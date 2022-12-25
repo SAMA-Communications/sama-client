@@ -8,6 +8,7 @@ import {
   VscTrash,
 } from "react-icons/vsc";
 import ChatMessage from "../../generic/ChatMessage.js";
+import AttachmentsList from "../../generic/AttachmentsList.js";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
 import getDownloadFileLinks from "../../../api/download_manager.js";
@@ -342,14 +343,7 @@ export default function ChatForm() {
               </div>
             )}
           </div>
-          {files ? (
-            <div className="chat-files-preview">
-              {Object.values(files).map((el) => (
-                <p key={el.name}>{el.name}</p>
-              ))}
-            </div>
-          ) : null}
-
+          {files ? <AttachmentsList files={files} /> : null}
           <form id="chat-form-send" action="">
             {!files ? (
               <div className="form-send-file">

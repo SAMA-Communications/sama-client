@@ -1,8 +1,8 @@
 import React from "react";
+import MessageAttachments from "../screens/chat/MessageAttachments";
+import MessageStatus from "./MessageStatus";
 
 import "../../styles/chat/ChatMessage.css";
-import MessageAttachments from "./MessageAttachments";
-import MessageStatus from "./MessageStatus";
 
 export default function ChatMessage({
   fromId,
