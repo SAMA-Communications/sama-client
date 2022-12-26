@@ -12,7 +12,6 @@ export default function MessageAttachments({ attachments }) {
       }}
     ></div>
   );
-  console.log(attachments);
 
   return attachments ? (
     <div className="message-file">

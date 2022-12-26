@@ -1,6 +1,6 @@
 import api from "./api";
 
-export default async function getDownloadFileLinks(attachments) {
+async function getDownloadFileLinks(attachments) {
   const attIds = Object.keys(attachments);
   const mUpdate = {};
 
@@ -24,3 +24,43 @@ export default async function getDownloadFileLinks(attachments) {
     return Object.values(mUpdate);
   }
 }
+
+async function getFileObjects(files) {
+  const attachments = [];
+  const filesParams = [...files];
+
+  const fileUploadUrls = await api.createUploadUrlForFiles({
+    files: filesParams.map((file) => {
+      return {
+        name: file.name,
+        size: file.size,
+        content_type: file.type,
+      };
+    }),
+  });
+
+  for (let i = 0; i < fileUploadUrls.length; i++) {
+    const file = fileUploadUrls[i];
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": file.content_type },
+      body: files[i],
+    };
+    await fetch(file.upload_url, requestOptions);
+
+    attachments.push({
+      file_id: file.object_id,
+      file_name: file.name,
+    });
+  }
+
+  const fileDownloadUrl = await api.getDownloadUrlForFiles({
+    file_ids: fileUploadUrls.map((obj) => obj.object_id),
+  });
+
+  return attachments.map((att) => {
+    return { ...att, file_url: fileDownloadUrl[att.file_id] };
+  });
+}
+
+export { getDownloadFileLinks, getFileObjects };

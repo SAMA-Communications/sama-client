@@ -11,7 +11,10 @@ import ChatMessage from "../../generic/ChatMessage.js";
 import AttachmentsList from "../../generic/AttachmentsList.js";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
-import getDownloadFileLinks from "../../../api/download_manager.js";
+import {
+  getDownloadFileLinks,
+  getFileObjects,
+} from "../../../api/download_manager.js";
 import {
   selectParticipantsEntities,
   upsertUser,
@@ -165,7 +168,7 @@ export default function ChatForm() {
     const mid = userInfo._id + Date.now();
     let msg = {
       _id: mid,
-      body: text || "*photo*",
+      body: text,
       from: userInfo._id,
       t: Date.now(),
     };
@@ -176,47 +179,14 @@ export default function ChatForm() {
     let attachments = [];
     const reqData = {
       mid,
-      text: text || "*photo*",
+      text: text,
       chatId: selectedCID,
     };
 
     if (files) {
-      const filesParams = [];
-      for (let i = 0; i < files.length; i++) {
-        filesParams.push(files[i]);
-      }
-
-      const fileUploadUrls = await api.createUploadUrlForFiles({
-        files: filesParams.map((file) => {
-          return {
-            name: file.name,
-            size: file.size,
-            content_type: file.type,
-          };
-        }),
-      });
-
-      for (let i = 0; i < fileUploadUrls.length; i++) {
-        const file = fileUploadUrls[i];
-        const requestOptions = {
-          method: "PUT",
-          headers: { "Content-Type": file.content_type },
-          body: files[i],
-        };
-        await fetch(file.upload_url, requestOptions);
-
-        attachments.push({
-          file_id: file.object_id,
-          file_name: file.name,
-        });
-      }
-      reqData["attachments"] = attachments;
-
-      const fileDownloadUrl = await api.getDownloadUrlForFiles({
-        file_ids: fileUploadUrls.map((obj) => obj.object_id),
-      });
-      attachments = attachments.map((att) => {
-        return { ...att, file_url: fileDownloadUrl[att.file_id] };
+      attachments = await getFileObjects(files);
+      reqData["attachments"] = attachments.map((obj) => {
+        return { file_id: obj.file_id, file_name: obj.file_name };
       });
     }
 
@@ -224,11 +194,11 @@ export default function ChatForm() {
     if (response.mid) {
       msg = {
         _id: response.server_mid,
-        body: text || "*photo*",
+        body: text,
         from: userInfo._id,
         status: "sent",
         t: response.t,
-        attachments: attachments,
+        attachments,
       };
 
       dispatch(addMessage(msg));
