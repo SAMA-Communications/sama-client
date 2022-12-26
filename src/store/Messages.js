@@ -25,6 +25,7 @@ export const messages = createSlice({
     addMessage: messagesAdapter.addOne,
     addMessages: messagesAdapter.addMany,
     upsertMessage: messagesAdapter.upsertOne,
+    upsertMessages: messagesAdapter.upsertMany,
     markMessagesAsRead: (state, action) => {
       const mids = action.payload.map((id) => {
         return { _id: id, status: "read" };
@@ -46,6 +47,7 @@ export const {
   addMessage,
   addMessages,
   upsertMessage,
+  upsertMessages,
   markMessagesAsRead,
   removeMessage,
 } = messages.actions;

@@ -1,13 +1,20 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   VscDeviceCamera,
   VscFileSymlinkDirectory,
+  VscLayersActive,
+  VscNewFile,
   VscRocket,
   VscTrash,
 } from "react-icons/vsc";
 import ChatMessage from "../../generic/ChatMessage.js";
+import AttachmentsList from "../../generic/AttachmentsList.js";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
+import {
+  getDownloadFileLinks,
+  getFileObjects,
+} from "../../../api/download_manager.js";
 import {
   selectParticipantsEntities,
   upsertUser,
@@ -27,6 +34,7 @@ import {
   getActiveConversationMessages,
   markMessagesAsRead,
   removeMessage,
+  upsertMessages,
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -49,6 +57,8 @@ export default function ChatForm() {
 
   const messages = useSelector(getActiveConversationMessages);
   const messageInputEl = useRef(null);
+  const filePicker = useRef(null);
+  const [files, setFiles] = useState(null);
 
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
@@ -65,7 +75,16 @@ export default function ChatForm() {
     dispatch(upsertUser({ _id: uId, recent_activity: user[uId] }));
   };
 
-  api.onMessageListener = (message) => {
+  api.onMessageListener = async (message) => {
+    const attachments = message.attachments;
+    if (attachments) {
+      const urls = await api.getDownloadUrlForFiles({
+        file_ids: attachments.map((obj) => obj.file_id),
+      });
+      message.attachments = attachments.map((obj) => {
+        return { ...obj, file_url: urls[obj.file_id] };
+      });
+    }
     message.from === userInfo._id
       ? dispatch(addMessage({ ...message, status: "sent" }))
       : dispatch(addMessage(message));
@@ -87,7 +106,7 @@ export default function ChatForm() {
       return;
     }
     if (!conversations[selectedCID].activated) {
-      api.messageList({ cid: selectedCID, limit: 20 }).then((arr) => {
+      api.messageList({ cid: selectedCID, limit: 20 }).then(async (arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
         dispatch(addMessages(arr));
         dispatch(
@@ -97,6 +116,26 @@ export default function ChatForm() {
             activated: true,
           })
         );
+        const mAttachments = {};
+        for (let i = 0; i < arr.length; i++) {
+          const attachments = arr[i].attachments;
+          if (!attachments) {
+            continue;
+          }
+          attachments.forEach(
+            (obj) =>
+              (mAttachments[obj.file_id] = {
+                _id: arr[i]._id,
+                ...obj,
+              })
+          );
+        }
+
+        if (Object.keys(mAttachments).length > 0) {
+          getDownloadFileLinks(mAttachments).then((msgs) =>
+            dispatch(upsertMessages(msgs))
+          );
+        }
       });
     }
 
@@ -121,10 +160,11 @@ export default function ChatForm() {
     event.preventDefault();
 
     const text = messageInputEl.current.value.trim();
-    if (text.length === 0) {
+    if (text.length === 0 && !files) {
       return;
     }
 
+    messageInputEl.current.value = "";
     const mid = userInfo._id + Date.now();
     let msg = {
       _id: mid,
@@ -132,16 +172,25 @@ export default function ChatForm() {
       from: userInfo._id,
       t: Date.now(),
     };
-    messageInputEl.current.value = "";
+
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
-    const response = await api.messageCreate({
+    let attachments = [];
+    const reqData = {
       mid,
-      text,
+      text: text,
       chatId: selectedCID,
-    });
+    };
 
+    if (files) {
+      attachments = await getFileObjects(files);
+      reqData["attachments"] = attachments.map((obj) => {
+        return { file_id: obj.file_id, file_name: obj.file_name };
+      });
+    }
+
+    const response = await api.messageCreate(reqData);
     if (response.mid) {
       msg = {
         _id: response.server_mid,
@@ -149,7 +198,9 @@ export default function ChatForm() {
         from: userInfo._id,
         status: "sent",
         t: response.t,
+        attachments,
       };
+
       dispatch(addMessage(msg));
       dispatch(
         updateLastMessageField({
@@ -160,6 +211,7 @@ export default function ChatForm() {
       );
       dispatch(removeMessage(mid));
     }
+    setFiles(null);
   };
 
   const deleteChat = async () => {
@@ -187,6 +239,7 @@ export default function ChatForm() {
         userId={userInfo._id}
         text={msg.body}
         uName={participants[msg.from]?.login}
+        attachments={msg.attachments}
         status={msg.status}
         tSend={msg.t}
       />
@@ -215,6 +268,13 @@ export default function ChatForm() {
     return selectedConversation.opponent_id === userInfo._id
       ? participants[selectedConversation.owner_id].recent_activity
       : participants[selectedConversation.opponent_id].recent_activity;
+  };
+
+  const pickUserFiles = () => {
+    filePicker.current.click();
+  };
+  const handlerChange = (event) => {
+    setFiles(event.target.files);
   };
 
   return (
@@ -253,7 +313,25 @@ export default function ChatForm() {
               </div>
             )}
           </div>
+          {files ? <AttachmentsList files={files} /> : null}
           <form id="chat-form-send" action="">
+            {!files ? (
+              <div className="form-send-file">
+                <VscNewFile onClick={pickUserFiles} />
+                <input
+                  id="inputFile"
+                  ref={filePicker}
+                  onChange={handlerChange}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                />
+              </div>
+            ) : (
+              <div className="form-send-file">
+                <VscLayersActive />
+              </div>
+            )}
             <input
               id="inputMessage"
               ref={messageInputEl}

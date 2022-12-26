@@ -66,3 +66,16 @@
 
   color: var(--text-smoke);
 }
+.message-file > img {
+  width: 15vh;
+  margin: 5px 5px 0 5px;
+}
+
+.message-file {
+  width: 100%;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  overflow: hidden;
+}

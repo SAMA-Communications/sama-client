@@ -168,6 +168,30 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
+  async createUploadUrlForFiles(data) {
+    const requestData = {
+      request: {
+        create_files: data.files,
+        id: getUniqueId("createUploadUrlForFile"),
+      },
+    };
+    const resObjKey = "files";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
+  async getDownloadUrlForFiles(data) {
+    const requestData = {
+      request: {
+        get_file_urls: {
+          file_ids: data.file_ids,
+        },
+        id: getUniqueId("getDownloadUrlForFiles"),
+      },
+    };
+    const resObjKey = "file_urls";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
   async messageCreate(data) {
     return new Promise((resolve, reject) => {
       const requestData = {
@@ -175,10 +199,7 @@ class Api {
           id: data.mid,
           body: data.text,
           cid: data.chatId,
-          // x: {
-          //   param1: "value",
-          //   param2: "value",
-          // },
+          attachments: data.attachments,
         },
       };
       this.responsesPromises[requestData.message.id] = resolve;

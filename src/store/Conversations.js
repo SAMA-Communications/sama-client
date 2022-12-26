@@ -77,7 +77,6 @@ export const conversations = createSlice({
     markConversationAsRead: (state, { payload }) => {
       const { cid, mid } = payload;
       const lastMessageField = state.entities[cid].last_message;
-      console.log(mid, lastMessageField._id);
       mid === lastMessageField._id &&
         conversationsAdapter.upsertOne(state, {
           _id: cid,

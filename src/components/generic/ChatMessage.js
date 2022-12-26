@@ -1,7 +1,8 @@
 import React from "react";
+import MessageAttachments from "../screens/chat/MessageAttachments";
+import MessageStatus from "./MessageStatus";
 
 import "../../styles/chat/ChatMessage.css";
-import MessageStatus from "./MessageStatus";
 
 export default function ChatMessage({
   fromId,
@@ -9,6 +10,7 @@ export default function ChatMessage({
   userId,
   uName,
   status,
+  attachments,
   tSend,
 }) {
   const timeSend = new Date(tSend * 1000);
@@ -22,6 +24,7 @@ export default function ChatMessage({
       <div className="message-info">
         <p className="message-user-name">{uName}</p>
         <p className="message-body">{text}</p>
+        <MessageAttachments attachments={attachments} />
       </div>
       <div className="message-status">
         <div className="message-status-time">

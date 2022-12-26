@@ -177,3 +177,39 @@
 #chat-form-send > button:hover > svg > path {
   color: var(--btn-text-default);
 }
+.form-send-file {
+  width: 2rem;
+
+  margin-right: 10px;
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.form-send-file > svg {
+  width: 100%;
+  height: 100%;
+}
+.form-send-file > svg:hover {
+  cursor: pointer;
+}
+.form-send-file > svg > * {
+  transition: 0.2s ease-in-out;
+}
+.form-send-file > svg:hover > * {
+  color: var(--text-accent);
+
+  transform: translateY(-2px);
+}
+#inputFile {
+  display: none;
+}
+
+.chat-files-preview {
+  padding: 5px 0;
+
+  border-top: 1px solid var(--border-color);
+}
