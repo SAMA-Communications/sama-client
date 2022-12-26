@@ -3,7 +3,7 @@
   width: 100vw;
   height: 100vh;
 
-  font-size: 4em;
+  font-size: calc(var(--font-size) * 4);
   color: var(--text-smoke);
 
   display: flex;
@@ -11,6 +11,6 @@
   justify-content: center;
 }
 .text-error > p {
-  line-height: 100%;
+  line-height: calc(var(--font-size) * 4);
   margin-right: 10px;
 }

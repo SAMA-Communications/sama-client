@@ -6,7 +6,7 @@
   --bg-block-hover: #415a77;
   --bg-dark-block: rgba(0, 0, 0, 0.6);
 
-  --border-light-color: rgba(255, 255, 255, 0.12);
+  --border-light-color: #73737e;
   --border-color: rgba(255, 255, 255, 0.2);
   --border-dark-color: rgba(255, 255, 255, 0.25);
   --border-danger: #ff9595;
@@ -16,19 +16,19 @@
   --block-danger: #8a0000;
 
   --text-main: #fff;
-  --text-smoke: rgba(255, 255, 255, 0.45);
+  --text-smoke: #c2c2c2;
   --text-light: #000;
-  --text-accent: #54a6d8;
+  --text-accent: #055c9d;
   --text-hover: #9bcae9;
-  --text-danger: #ff9595;
+  --text-danger: #cc1616;
 
   --input-text: #fff;
-  --input-bg-color: rgba(255, 255, 255, 0.1);
+  --input-bg-color: #3b3b43;
 
   --shdaow-text: #f1faee;
   --shadow-block: rgba(0, 0, 0, 0.4);
 
-  --btn-bg-color: #1d70a2;
+  --btn-bg-color: #055c9d;
   --btn-hover-color: #9bcae9;
   --btn-text-default: #000;
   --btn-text-hover: #fff;

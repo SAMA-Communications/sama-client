@@ -1,11 +1,13 @@
 import React, { Suspense, useEffect } from "react";
 import api from "./api/api";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
 import Login from "./components/screens/Login";
 import SignUp from "./components/screens/SignUp";
 import PageLoader from "./components/PageLoader";
 
+import "./styles/GlobalParam.css";
 import("./styles/themes/DarkTheme.css");
 import("./styles/themes/DefaultTheme.css");
 const Main = React.lazy(() => import("./components/Main"));
@@ -13,6 +15,7 @@ const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
   useEffect(() => {
     if (window.matchMedia("(prefers-color-scheme: dark)").matches === true) {
       if (localStorage.getItem("theme") !== "light") {
@@ -42,12 +45,14 @@ function App() {
 
   return (
     <Suspense fallback={<PageLoader />}>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/main/*" element={<Main />} />
-        <Route path="/*" element={<ErrorPage />} />
-      </Routes>
+      <AnimatePresence initial={false} mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/main/*" element={<Main />} />
+          <Route path="/*" element={<ErrorPage />} />
+        </Routes>
+      </AnimatePresence>
     </Suspense>
   );
 }
