@@ -16,6 +16,9 @@ const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
+  const keyLocation =
+    location.pathname.split("/")[1] === "main" ? "/main" : location.pathname;
+
   useEffect(() => {
     if (window.matchMedia("(prefers-color-scheme: dark)").matches === true) {
       if (localStorage.getItem("theme") !== "light") {
@@ -46,7 +49,7 @@ function App() {
   return (
     <Suspense fallback={<PageLoader />}>
       <AnimatePresence initial={false} mode="wait">
-        <Routes location={location} key={location.pathname}>
+        <Routes location={location} key={keyLocation}>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/main/*" element={<Main />} />

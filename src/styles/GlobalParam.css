@@ -21,7 +21,30 @@
   font-size: var(--font-size);
   line-height: var(--font-size);
   font-weight: 200;
+
+  transition: background 0.3s ease, background-color 0.3s ease,
+    background-image 0.3s ease;
 }
 body {
   overflow: hidden;
+
+  background-color: var(--bg-default-color);
+}
+.hide {
+  display: none !important;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background: var(--scrollbar-track-color);
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: var(--scrollbar-thumb-color);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover-color);
 }
