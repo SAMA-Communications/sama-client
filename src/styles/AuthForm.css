@@ -46,26 +46,8 @@
 #logo-icon-line {
   position: absolute;
 }
-#logo-icon-fill > path {
-  fill: transparent;
-}
-#logo-text-login,
-#logo-text-create {
+#logo-text {
   margin: 0 12px;
-}
-#logo-text-login {
-  animation: fill-color 0.7s ease forwards 3.65s;
-}
-#logo-text-create {
-  animation: fill-color 0.7s ease forwards 3.65s;
-}
-@keyframes fill-color {
-  from {
-    fill: transparent;
-  }
-  to {
-    fill: var(--text-main);
-  }
 }
 .login-box-right {
   position: relative;
