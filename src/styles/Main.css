@@ -82,7 +82,7 @@ nav {
   justify-content: center;
   align-items: center;
 
-  border-radius: 10px;
+  border-radius: var(--border-second-radius);
 
   cursor: pointer;
 

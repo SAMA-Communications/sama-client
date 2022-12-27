@@ -3,6 +3,7 @@
 :root {
   --border-main-radius: 20px;
   --border-second-radius: 10px;
+  --border-indicator: 6px;
 
   --font-family: "Inter", sans-serif;
   --font-size: 1rem;
