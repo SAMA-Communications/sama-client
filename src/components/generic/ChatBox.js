@@ -10,6 +10,16 @@ export default function ChatBox({
   chatType,
   uId,
 }) {
+  const days = {
+    0: "Su",
+    1: "Mo",
+    2: "Tu",
+    3: "We",
+    4: "Th",
+    5: "Fr",
+    6: "Sa",
+  };
+
   const tView = useMemo(() => {
     const t = new Date(Date.parse(timeOfLastUpdate));
     const tToday = new Date(Date.now());
@@ -26,24 +36,7 @@ export default function ChatBox({
         t.getFullYear().toString().slice(2)
       );
     } else if (tToday.getDay() - t.getDay()) {
-      switch (t.getDay()) {
-        case 0:
-          return "Su";
-        case 1:
-          return "Mo";
-        case 2:
-          return "Tu";
-        case 3:
-          return "We";
-        case 4:
-          return "Th";
-        case 5:
-          return "Fr";
-        case 6:
-          return "Sa";
-        default:
-          break;
-      }
+      return days[t.getDay()];
     } else {
       return (
         t.getHours() +

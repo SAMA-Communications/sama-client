@@ -117,6 +117,9 @@ aside {
   background-color: var(--block-hover);
 }
 .chat-box-info {
+  max-width: 288px;
+  margin-top: calc(var(--font-size) * 0.2);
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -128,15 +131,19 @@ aside {
   line-height: calc(var(--fonr-size) * 1.125);
 }
 .chat-message {
-  width: 100%;
+  max-width: 90%;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   font-size: var(--font-size);
-  line-height: var(--font-size);
+  line-height: calc(var(--font-size) * 1.2);
   color: var(--text-smoke);
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+}
+.chat-message span {
+  position: absolute;
+  right: 10px;
 }
 .chat-indicator,
 .chat-indicator-group {
