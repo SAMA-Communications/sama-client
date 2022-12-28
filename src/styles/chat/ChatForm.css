@@ -1,7 +1,5 @@
 .chat-form {
-  margin: 0 20px 20px 0;
-  padding: 15px;
-  margin-left: auto;
+  margin: 0 20px 20px auto;
 
   border-radius: var(--border-main-radius);
   background-color: var(--bg-main-color);
@@ -106,6 +104,11 @@
   stroke: var(--text-danger);
 }
 
+.chat-messages {
+  padding-right: 3px;
+  padding-bottom: 12px;
+}
+
 .chat-form-messaging {
   height: 100%;
   display: flex;
@@ -113,101 +116,95 @@
 }
 .chat-form-main {
   display: flex;
-  flex-direction: column;
   flex-grow: 1;
+  flex-direction: column;
   overflow: auto;
-}
-
-.chat-messages {
-  padding: 6px 3px;
 }
 
 #inputMessage {
   flex-grow: 1;
   height: 100%;
-  margin-right: 15px;
-  padding: 0 1rem;
+  padding: 0 60px 0 19px;
 
   color: var(--text-main);
-  font-size: 1.1em;
+  font-weight: 300;
+  font-size: var(--font-size);
+  line-height: var(--font-size);
 
-  border: none;
-  border-radius: 2rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-second-radius);
   background-color: var(--bg-message-all);
+}
+#inputMessage::placeholder {
+  color: var(--text-smoke);
+  font-size: calc(var(--font-size) * 0.875);
+  line-height: calc(var(--font-size) * 0.875);
 }
 #inputMessage:focus {
   outline: none;
 }
+
 #chat-form-send {
-  min-height: 54px;
+  padding-top: 15px;
+  height: 55px;
 
   display: flex;
+  gap: 15px;
+  flex-direction: row;
+  flex-wrap: nowrap;
   border-top: 1px solid var(--border-color);
-  padding: 15px 15px 0 15px;
 }
-#chat-form-send > button {
-  width: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
-  font-size: 1.5em;
-
-  border: none;
-  border-radius: 20px;
-  background-color: var(--btn-bg-color);
-
-  transition: all 0.2s ease-in-out;
-}
-#chat-form-send > button:hover {
-  cursor: pointer;
-  background-color: var(--btn-hover-color);
-}
-#chat-form-send > button > p {
-  font-size: 0.8em;
-  margin-right: 8px;
-
-  color: var(--btn-text-hover);
-  transition: all 0.2s ease-in-out;
-}
-#chat-form-send > button > svg > path {
-  color: var(--btn-text-hover);
-
-  transition: all 0.2s ease-in-out;
-}
-#chat-form-send > button:hover p,
-#chat-form-send > button:hover > svg > path {
-  color: var(--btn-text-default);
-}
 .form-send-file {
-  width: 2rem;
-
-  margin-right: 10px;
-
-  position: relative;
+  cursor: pointer;
 
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.form-send-file > svg {
-  width: 100%;
-  height: 100%;
+.form-send-file > svg > path {
+  transition: 0.3s;
 }
-.form-send-file > svg:hover {
-  cursor: pointer;
-}
-.form-send-file > svg > * {
-  transition: 0.2s ease-in-out;
-}
-.form-send-file > svg:hover > * {
-  color: var(--text-accent);
-
-  transform: translateY(-2px);
+.form-send-file:hover > svg > path {
+  stroke: var(--text-accent);
 }
 #inputFile {
   display: none;
+}
+.form-send-text {
+  position: relative;
+  width: 100%;
+  display: flex;
+}
+#send-message {
+  position: absolute;
+  right: 0;
+  top: 50%;
+
+  height: 70%;
+  padding: 0 18px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-left: 1px solid var(--border-color);
+  border-radius: 0 var(--border-second-radius) var(--border-second-radius) 0;
+  background-color: transparent;
+
+  transform: translateY(-50%);
+}
+#send-message > svg > path {
+  transition: 0.3s;
+}
+#send-message:hover > svg > path {
+  stroke: var(--text-accent);
+}
+#send-message:active > svg {
+  transform: translateX(5px);
 }
 
 .chat-files-preview {

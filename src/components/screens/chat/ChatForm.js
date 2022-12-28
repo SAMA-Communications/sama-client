@@ -283,12 +283,13 @@ export default function ChatForm() {
 
   return (
     <m.section
-      initial={{ width: 0 }}
+      initial={{ width: 0, padding: 0 }}
       animate={{
-        width: "100%",
+        width: "calc(100% - 460px)",
+        padding: "15px",
         transition: { delay: 0.1, duration: 1.7 },
       }}
-      exit={{ width: 0, transition: { duration: 0.3 } }}
+      exit={{ width: 0, padding: 0, transition: { duration: 0.3 } }}
       className="chat-form"
     >
       {!selectedCID ? (
@@ -296,7 +297,7 @@ export default function ChatForm() {
           initial={{ opacity: 0, padding: 0 }}
           animate={{
             opacity: 1,
-            transition: { delay: 0.9, duration: 1 },
+            transition: { delay: 1.2, duration: 1 },
           }}
           exit={{ opacity: 0, transition: { duration: 0.15 } }}
           className="chat-form-loading"
@@ -316,7 +317,7 @@ export default function ChatForm() {
               }}
               animate={{
                 ...iconViewOptions,
-                transition: { delay: 1, duration: 2.1 },
+                transition: { delay: 1.2, duration: 1.5 },
               }}
               exit={exitOptions}
               d="M32.5834 72.8333H30.6667C15.3334 72.8333 7.66669 69 7.66669 49.8333V30.6667C7.66669 15.3333 15.3334 7.66666 30.6667 7.66666H61.3334C76.6667 7.66666 84.3334 15.3333 84.3334 30.6667V49.8333C84.3334 65.1667 76.6667 72.8333 61.3334 72.8333H59.4167C58.2284 72.8333 57.0784 73.4083 56.35 74.3667L50.6 82.0333C48.07 85.4067 43.93 85.4067 41.4 82.0333L35.65 74.3667C35.0367 73.5233 33.6184 72.8333 32.5834 72.8333V72.8333Z"
@@ -334,7 +335,10 @@ export default function ChatForm() {
           <p>Select your chat ...</p>
         </m.div>
       ) : (
-        <div className="chat-form-messaging">
+        <m.div
+          exit={{ opacity: 0, transition: { duration: 0.15 } }}
+          className="chat-form-messaging"
+        >
           <div className="chat-messaging-info">
             <div className="chat-info-block">
               <div className="chat-recipient-photo">
@@ -406,35 +410,53 @@ export default function ChatForm() {
           </div>
           {files ? <AttachmentsList files={files} /> : null}
           <form id="chat-form-send" action="">
-            {!files ? (
-              <div className="form-send-file">
-                <VscNewFile onClick={pickUserFiles} />
-                <input
-                  id="inputFile"
-                  ref={filePicker}
-                  onChange={handlerChange}
-                  type="file"
-                  accept="image/*"
-                  multiple
+            <div className="form-send-file">
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                onClick={pickUserFiles}
+              >
+                <path
+                  d="M20.55 20.25L16.4334 24.3667C15.8906 24.9078 15.46 25.5507 15.1662 26.2585C14.8724 26.9664 14.7212 27.7253 14.7212 28.4917C14.7212 29.2581 14.8724 30.0169 15.1662 30.7248C15.46 31.4326 15.8906 32.0755 16.4334 32.6167C16.9745 33.1594 17.6174 33.59 18.3253 33.8838C19.0331 34.1776 19.792 34.3289 20.5584 34.3289C21.3248 34.3289 22.0837 34.1776 22.7915 33.8838C23.4993 33.59 24.1423 33.1594 24.6834 32.6167L31.1667 26.1333C33.352 23.9439 34.5794 20.9768 34.5794 17.8833C34.5794 14.7899 33.352 11.8228 31.1667 9.63333C28.9772 7.448 26.0102 6.22064 22.9167 6.22064C19.8233 6.22064 16.8562 7.448 14.6667 9.63333L7.60005 16.7C3.70005 20.6 3.70005 26.9333 7.60005 30.85"
+                  stroke="white"
                 />
-              </div>
-            ) : (
-              <div className="form-send-file">
-                <VscLayersActive />
-              </div>
-            )}
-            <input
-              id="inputMessage"
-              ref={messageInputEl}
-              autoComplete="off"
-              placeholder="> Write your message..."
-            />
-            <button onClick={sendMessage}>
-              <p>Send</p>
-              <VscRocket />
-            </button>
+              </svg>
+              <input
+                id="inputFile"
+                ref={filePicker}
+                onChange={handlerChange}
+                type="file"
+                accept="image/*"
+                multiple
+              />
+            </div>
+            <div className="form-send-text">
+              <input
+                id="inputMessage"
+                ref={messageInputEl}
+                autoComplete="off"
+                placeholder="> Write your message..."
+              />
+              <button id="send-message" onClick={sendMessage}>
+                <svg
+                  width="30"
+                  height="30"
+                  viewBox="0 0 30 30"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M24.1124 11.4625L9.62494 3.8375C6.18744 2.025 2.44994 5.6875 4.18744 9.1625L6.21244 13.2125C6.77494 14.3375 6.77494 15.6625 6.21244 16.7875L4.18744 20.8375C2.44994 24.3125 6.18744 27.9625 9.62494 26.1625L24.1124 18.5375C26.9624 17.0375 26.9624 12.9625 24.1124 11.4625Z"
+                    stroke="white"
+                  />
+                </svg>
+              </button>
+            </div>
           </form>
-        </div>
+        </m.div>
       )}
     </m.section>
   );
