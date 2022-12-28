@@ -59,7 +59,7 @@ export default function ChatForm() {
   const messages = useSelector(getActiveConversationMessages);
   const messageInputEl = useRef(null);
   const filePicker = useRef(null);
-  const [files, setFiles] = useState(null);
+  const [files, setFiles] = useState([]);
 
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
@@ -106,6 +106,7 @@ export default function ChatForm() {
     if (!selectedCID) {
       return;
     }
+
     if (!conversations[selectedCID].activated) {
       api.messageList({ cid: selectedCID, limit: 20 }).then(async (arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
@@ -155,6 +156,8 @@ export default function ChatForm() {
         );
       });
     }
+
+    setFiles([]);
   }, [selectedCID]);
 
   const sendMessage = async (event) => {
@@ -184,7 +187,7 @@ export default function ChatForm() {
       chatId: selectedCID,
     };
 
-    if (files) {
+    if (files.length) {
       attachments = await getFileObjects(files);
       reqData["attachments"] = attachments.map((obj) => {
         return { file_id: obj.file_id, file_name: obj.file_name };
@@ -275,7 +278,16 @@ export default function ChatForm() {
     filePicker.current.click();
   };
   const handlerChange = (event) => {
-    setFiles(event.target.files);
+    if (!event.target.files.length) {
+      return;
+    }
+
+    if (files.length + event.target.files.length >= 10) {
+      alert("Max limit to upload files 10");
+      return;
+    }
+
+    setFiles([...files, ...event.target.files]);
   };
 
   const exitOptions = { opacity: 0, transition: { delay: 0, duration: 0.25 } };
@@ -408,7 +420,9 @@ export default function ChatForm() {
               </div>
             )}
           </div>
-          {files ? <AttachmentsList files={files} /> : null}
+          {files?.length ? (
+            <AttachmentsList files={files} funcUpdateFile={setFiles} />
+          ) : null}
           <form id="chat-form-send" action="">
             <div className="form-send-file">
               <svg

@@ -208,7 +208,66 @@
 }
 
 .chat-files-preview {
-  padding: 5px 0;
+  position: relative;
+  padding: 10px 45px 10px 0;
+
+  max-height: 70px;
+  min-height: 60px;
+
+  overflow: hidden;
 
   border-top: 1px solid var(--border-color);
+}
+.chat-files-block {
+  height: 100%;
+
+  display: flex;
+  row-gap: 5px;
+  column-gap: 10px;
+  flex-wrap: wrap;
+
+  overflow-y: auto;
+}
+.file-pin-box {
+  padding: 10px;
+
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  font-size: calc(var(--font-size) * 0.875);
+
+  cursor: pointer;
+
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-second-radius);
+  background: transparent;
+
+  transition: 0.3s;
+}
+.file-pin-box svg line {
+  transition: 0.3s;
+}
+.file-pin-box:hover {
+  border-color: var(--border-danger);
+  background-color: var(--block-danger);
+}
+.file-pin-box:hover svg line {
+  stroke: var(--border-danger);
+}
+
+.btn-clear-files {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+
+  cursor: pointer;
+
+  transform: translateY(-50%);
+}
+.btn-clear-files svg line {
+  transition: 0.3s;
+}
+.btn-clear-files:hover svg line {
+  stroke: var(--text-danger);
 }

@@ -27,10 +27,9 @@ async function getDownloadFileLinks(attachments) {
 
 async function getFileObjects(files) {
   const attachments = [];
-  const filesParams = [...files];
 
   const fileUploadUrls = await api.createUploadUrlForFiles({
-    files: filesParams.map((file) => {
+    files: files.map((file) => {
       return {
         name: file.name,
         size: file.size,
