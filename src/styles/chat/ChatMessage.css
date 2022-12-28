@@ -17,6 +17,7 @@
   border-radius: var(--border-second-radius) var(--border-second-radius)
     var(--border-second-radius) 0;
   background-color: var(--bg-message-all);
+  overflow: hidden;
 }
 .my-message > .message-content {
   background-color: var(--bg-message-my);
@@ -36,6 +37,9 @@
 }
 .m-pb {
   padding-bottom: 17px;
+}
+.br-tl {
+  border-top-left-radius: 0;
 }
 
 .message-body {
@@ -75,10 +79,10 @@
 
 .message-status {
   position: absolute;
-  bottom: 5px;
-  right: 5px;
+  bottom: 4px;
+  right: 4px;
 
-  padding: 4px 7px 2px 7px;
+  padding: 4px 7px 3px 7px;
 
   display: flex;
   gap: 5px;
@@ -96,7 +100,6 @@
   display: flex;
 }
 
-/* attachments */
 .attachment-preloader {
   width: 150px;
   height: 150px;
@@ -107,9 +110,8 @@
   width: 100%;
 
   display: flex;
-  gap: 2px;
-
-  overflow: hidden;
+  gap: 3px;
+  flex-wrap: wrap;
 }
 .attachment-img {
   position: relative;
@@ -117,11 +119,10 @@
   height: 300px;
 
   display: flex;
+  flex: 1 0 245px;
   justify-content: center;
 
   overflow: hidden;
-
-  border-radius: var(--border-second-radius);
 }
 .attachment-img img {
   height: 100%;

@@ -308,7 +308,10 @@ export default function ChatForm() {
 
   return (
     <m.section
-      initial={{ width: 0, padding: 0 }}
+      initial={{
+        width: 0,
+        padding: 0,
+      }}
       animate={{
         width: "calc(100% - 460px)",
         padding: "15px",

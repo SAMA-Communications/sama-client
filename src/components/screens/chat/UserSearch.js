@@ -1,17 +1,18 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useTransition } from "react";
 import SearchedUser from "../../generic/SearchedUser.js";
 import SelectedUser from "../../generic/SelectedUser.js";
 import api from "../../../api/api";
-import { VscClose, VscSearch } from "react-icons/vsc";
 import { upsertChat } from "../../../store/Conversations.js";
 import { useDispatch } from "react-redux";
+import { addUsers } from "../../../store/Participants.js";
+import { motion as m } from "framer-motion";
 
 import "../../../styles/chat/UserSearch.css";
-import { addUsers } from "../../../store/Participants.js";
 
 export default function UserSearch({ close }) {
   const dispatch = useDispatch();
   const inputSearchLogin = useRef(null);
+  const [isPending, startTransition] = useTransition();
   const [ignoreIds, setIgnoreIds] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [searchedUsers, setSearchedUsers] = useState([]);
@@ -19,17 +20,20 @@ export default function UserSearch({ close }) {
   const sendSearchRequest = async (event) => {
     event.preventDefault();
 
-    const login = inputSearchLogin.current.value.trim();
-    if (login.length > 1) {
-      const requestData = {
-        login: login,
-        //   limit: 10,
-        //   updated_at: undefined,
-        ignore_ids: ignoreIds,
-      };
-      const users = await api.userSearch(requestData);
-      if (users) setSearchedUsers(users);
-    }
+    //Todo optimize
+    startTransition(async () => {
+      const login = inputSearchLogin.current.value.trim();
+      if (login.length > 1) {
+        const requestData = {
+          login: login,
+          //   limit: 10,
+          //   updated_at: undefined,
+          ignore_ids: ignoreIds,
+        };
+        const users = await api.userSearch(requestData);
+        if (users) setSearchedUsers(users);
+      }
+    });
   };
 
   const createChat = async (event) => {
@@ -65,19 +69,48 @@ export default function UserSearch({ close }) {
     setSearchedUsers([...searchedUsers, data]);
   };
 
+  window.onkeydown = function (event) {
+    if (event.keyCode === 27) {
+      close(false);
+    }
+  };
+
   return (
-    <div className="search-bg">
+    <m.div
+      initial={{
+        opacity: 0,
+      }}
+      animate={{
+        opacity: 1,
+        transition: { delay: 0, duration: 0.3 },
+      }}
+      className="search-bg"
+    >
       <form id="search-form">
         <div className="search-options">
           <input
             id="inputSearchLogin"
             ref={inputSearchLogin}
             autoComplete="off"
+            onChange={sendSearchRequest}
             placeholder="Input user login.. (2+ charactes)"
           />
-          <button onClick={sendSearchRequest}>
-            <VscSearch />
-          </button>
+          {isPending && (
+            <span className="search-indicator">
+              <svg
+                width="26"
+                height="26"
+                viewBox="0 0 26 26"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M23.8334 23.8333L21.6667 21.6666M12.4584 22.75C13.8099 22.75 15.1482 22.4838 16.3969 21.9666C17.6455 21.4493 18.7801 20.6913 19.7357 19.7356C20.6914 18.7799 21.4495 17.6454 21.9667 16.3967C22.4839 15.1481 22.7501 13.8098 22.7501 12.4583C22.7501 11.1068 22.4839 9.76848 21.9667 8.51984C21.4495 7.2712 20.6914 6.13665 19.7357 5.18099C18.7801 4.22532 17.6455 3.46724 16.3969 2.95003C15.1482 2.43283 13.8099 2.16663 12.4584 2.16663C9.72889 2.16663 7.11117 3.25092 5.18111 5.18099C3.25105 7.11105 2.16675 9.72877 2.16675 12.4583C2.16675 15.1878 3.25105 17.8055 5.18111 19.7356C7.11117 21.6657 9.72889 22.75 12.4584 22.75V22.75Z"
+                  stroke="white"
+                />
+              </svg>
+            </span>
+          )}
         </div>
         <div className="chat-selected-users">
           {selectedUsers.length
@@ -103,13 +136,15 @@ export default function UserSearch({ close }) {
             <div className="list-user-message">Users not found</div>
           )}
         </div>
-        <div className="search-create-chat">
-          <button onClick={createChat}>Create chat</button>
+        <div className="search-buttons">
+          <div className="search-create-chat" onClick={createChat}>
+            <p>Create chat</p>
+          </div>
+          <div className="search-close-chat" onClick={() => close(false)}>
+            <p>X</p>
+          </div>
         </div>
       </form>
-      <div className="close-form-btn" onClick={() => close(false)}>
-        <VscClose />
-      </div>
-    </div>
+    </m.div>
   );
 }

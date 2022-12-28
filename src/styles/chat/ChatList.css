@@ -205,14 +205,15 @@ aside {
   background-size: 0;
   background-repeat: no-repeat;
   background-position: bottom;
-  background-image: linear-gradient(0, var(--text-hover), var(--text-hover));
+  background-image: linear-gradient(
+    0,
+    var(--bg-dark-block),
+    var(--bg-dark-block)
+  );
 }
 .chat-create-btn svg path {
   transition: 0.3s;
 }
 .chat-create-btn:hover {
   background-size: 100%;
-}
-.chat-create-btn:hover svg path {
-  stroke: var(--text-light);
 }

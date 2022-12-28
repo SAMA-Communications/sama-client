@@ -9,11 +9,11 @@
   --border-light-color: #4e4e4e;
   --border-color: rgba(255, 255, 255, 0.2);
   --border-dark-color: rgba(255, 255, 255, 0.25);
-  --border-danger: #ff9595;
+  --border-danger: #8a0000;
 
   --block-selected: rgba(255, 255, 255, 0.1);
   --block-hover: rgba(255, 255, 255, 0.1);
-  --block-danger: #8a0000;
+  --block-danger: #8a000086;
 
   --text-main: #fff;
   --text-smoke: #c2c2c2;
@@ -21,6 +21,8 @@
   --text-accent: #055c9d;
   --text-hover: #9bcae9;
   --text-danger: #cc1616;
+
+  --icon-stroke-color: #fff;
 
   --input-text: #fff;
   --input-bg-color: #3b3b43;

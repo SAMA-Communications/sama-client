@@ -22,6 +22,8 @@ export default function ChatMessage({
     let status = "message-content";
     if (!isPrevMesssageYours) {
       status += " mt-10";
+    } else {
+      status += " br-tl";
     }
 
     if (!attachments?.length) {
