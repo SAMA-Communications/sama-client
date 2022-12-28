@@ -187,7 +187,7 @@ export default function ChatForm() {
       chatId: selectedCID,
     };
 
-    if (files.length) {
+    if (files?.length) {
       attachments = await getFileObjects(files);
       reqData["attachments"] = attachments.map((obj) => {
         return { file_id: obj.file_id, file_name: obj.file_name };
@@ -236,18 +236,31 @@ export default function ChatForm() {
     if (!messages) {
       return [];
     }
-    return messages.map((msg) => (
-      <ChatMessage
-        key={msg._id}
-        fromId={msg.from}
-        userId={userInfo._id}
-        text={msg.body}
-        uName={participants[msg.from]?.login}
-        attachments={msg.attachments}
-        status={msg.status}
-        tSend={msg.t}
-      />
-    ));
+    const msgsArray = [];
+    for (let i = 0; i < messages.length; i++) {
+      const msg = messages[i];
+      msgsArray.push(
+        <ChatMessage
+          key={msg._id}
+          fromId={msg.from}
+          userId={userInfo._id}
+          text={msg.body}
+          uName={participants[msg.from]?.login}
+          isPrevMesssageYours={
+            i > 0 ? messages[i - 1].from === messages[i].from : false
+          }
+          isNextMessageYours={
+            i < messages.length - 1
+              ? messages[i].from === messages[i + 1].from
+              : false
+          }
+          attachments={msg.attachments}
+          status={msg.status}
+          tSend={msg.t}
+        />
+      );
+    }
+    return msgsArray;
   }, [messages]);
 
   const scrollChatToBottom = () => {
@@ -282,7 +295,7 @@ export default function ChatForm() {
       return;
     }
 
-    if (files.length + event.target.files.length >= 10) {
+    if (files?.length + event.target.files.length >= 10) {
       alert("Max limit to upload files 10");
       return;
     }

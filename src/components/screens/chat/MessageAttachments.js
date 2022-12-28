@@ -2,30 +2,29 @@ import MessageAttachment from "../../generic/MessageAttachment";
 
 export default function MessageAttachments({ attachments }) {
   const attachmentPreloader = (key) => (
-    <div
-      key={key}
-      style={{
-        backgroundColor: "#fff",
-        width: "100px",
-        height: "100px",
-        margin: "5px 5px 0 5px",
-      }}
-    ></div>
+    <div key={key} className="attachment-preloader"></div>
   );
 
-  return attachments ? (
-    <div className="message-file">
-      {attachments.map((el) =>
-        el.file_url ? (
+  if (attachments) {
+    const arrayAtts = [];
+
+    for (let i = 0; i < attachments.length; i++) {
+      const att = attachments[i];
+      if (att.file_url) {
+        arrayAtts.push(
           <MessageAttachment
-            key={el.file_url}
-            url={el.file_url}
-            name={el.file_name}
+            key={att.file_url}
+            url={att.file_url}
+            name={att.file_name}
           />
-        ) : (
-          attachmentPreloader(el.file_name)
-        )
-      )}
-    </div>
-  ) : null;
+        );
+      } else {
+        arrayAtts.push(attachmentPreloader(att.file_name));
+      }
+    }
+
+    return <div className="message-file">{arrayAtts}</div>;
+  } else {
+    return null;
+  }
 }

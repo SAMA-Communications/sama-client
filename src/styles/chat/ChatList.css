@@ -71,6 +71,14 @@ aside {
 .chat-list > a {
   text-decoration: none;
 }
+.empty-list {
+  margin-top: 20px;
+
+  text-align: center;
+  color: var(--text-smoke);
+  font-size: calc(var(--font-size) * 1.5);
+  line-height: calc(var(--font-size) * 1.5);
+}
 
 .chat-box {
   position: relative;
@@ -115,6 +123,14 @@ aside {
   border-bottom: 1px solid var(--border-dark-color);
   border-top: 1px solid var(--border-dark-color);
   background-color: var(--block-hover);
+}
+.last-message-img-preview {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.last-message-img-preview p {
+  color: var(--text-smoke);
 }
 .chat-box-info {
   max-width: 288px;
