@@ -56,13 +56,17 @@ nav {
   background-size: 0;
   background-repeat: no-repeat;
   background-position: bottom;
-  background-image: linear-gradient(0, var(--text-hover), var(--text-hover));
+  background-image: linear-gradient(
+    0,
+    var(--btn-hover-color),
+    var(--btn-hover-color)
+  );
 }
 .nav-logout-btn:hover {
   background-size: 100%;
 }
 .nav-logout-btn:hover a {
-  color: var(--text-accent);
+  color: var(--btn-text-hover);
 }
 
 .nav-navigate-slice {
@@ -91,7 +95,11 @@ nav {
   background-size: 0;
   background-repeat: no-repeat;
   background-position: bottom;
-  background-image: linear-gradient(0, var(--text-hover), var(--text-hover));
+  background-image: linear-gradient(
+    0,
+    var(--btn-hover-color),
+    var(--btn-hover-color)
+  );
 }
 .change-themes > svg > path {
   fill: var(--text-main);
@@ -102,5 +110,5 @@ nav {
   background-size: 100%;
 }
 .change-themes:hover > svg > path {
-  fill: var(--text-accent);
+  fill: var(--btn-text-hover);
 }

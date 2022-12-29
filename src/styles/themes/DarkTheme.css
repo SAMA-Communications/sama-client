@@ -19,10 +19,11 @@
   --text-smoke: #c2c2c2;
   --text-light: #000;
   --text-accent: #055c9d;
-  --text-hover: #9bcae9;
+  --text-hover: #219be4;
   --text-danger: #cc1616;
 
   --icon-stroke-color: #fff;
+  --icon-indicator-color: #63b3ef;
 
   --input-text: #fff;
   --input-bg-color: #3b3b43;
@@ -31,12 +32,12 @@
   --shadow-block: rgba(0, 0, 0, 0.4);
 
   --btn-bg-color: #055c9d;
-  --btn-hover-color: #9bcae9;
+  --btn-hover-color: #219be4;
   --btn-text-default: #000;
   --btn-text-hover: #fff;
 
   --bg-message-all: #3b3b43;
-  --bg-message-my: #2b4565;
+  --bg-message-my: #2b5378;
   --bg-chat-indicator: #1d70a2;
   --bg-chat-indicator-group: #4e4e4e;
 

@@ -137,7 +137,11 @@
   background-size: 0;
   background-repeat: no-repeat;
   background-position: bottom;
-  background-image: linear-gradient(0, var(--text-hover), var(--text-hover));
+  background-image: linear-gradient(
+    0,
+    var(--btn-hover-color),
+    var(--btn-hover-color)
+  );
 }
 .search-create-chat p {
   font-size: 400;
@@ -148,7 +152,7 @@
   background-size: 100%;
 }
 .search-create-chat:hover p {
-  color: var(--text-light);
+  color: var(--btn-text-hover);
 }
 
 .search-close-chat {

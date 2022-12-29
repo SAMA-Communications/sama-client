@@ -1,12 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  VscDeviceCamera,
-  VscFileSymlinkDirectory,
-  VscLayersActive,
-  VscNewFile,
-  VscRocket,
-  VscTrash,
-} from "react-icons/vsc";
 import ChatMessage from "../../generic/ChatMessage.js";
 import AttachmentsList from "../../generic/AttachmentsList.js";
 import api from "../../../api/api";

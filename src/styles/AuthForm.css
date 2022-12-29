@@ -237,12 +237,16 @@ input[type="submit"] {
   background-size: 0;
   background-repeat: no-repeat;
   background-position: bottom;
-  background-image: linear-gradient(0, var(--text-hover), var(--text-hover));
+  background-image: linear-gradient(
+    0,
+    var(--btn-hover-color),
+    var(--btn-hover-color)
+  );
 }
 
 input[type="submit"]:hover {
   background-size: 100%;
-  color: var(--btn-text-default);
+  color: var(--btn-text-hover);
 }
 
 .password-visibility {

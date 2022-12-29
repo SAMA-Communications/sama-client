@@ -10,6 +10,7 @@ export default function MessageAttachments({ attachments }) {
 
     for (let i = 0; i < attachments.length; i++) {
       const att = attachments[i];
+
       if (att.file_url) {
         arrayAtts.push(
           <MessageAttachment
