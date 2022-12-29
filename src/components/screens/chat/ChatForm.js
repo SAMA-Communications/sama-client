@@ -308,16 +308,16 @@ export default function ChatForm() {
 
   return (
     <m.section
-      initial={{
-        width: 0,
-        padding: 0,
-      }}
       animate={{
-        width: "calc(100% - 460px)",
-        padding: "15px",
+        scale: [0, 1, 1],
+        borderRadius: ["50%", "2%"],
         transition: { delay: 0.1, duration: 1.7 },
+        transitionEnd: { borderRadius: "var(--border-main-radius)" },
       }}
-      exit={{ width: 0, padding: 0, transition: { duration: 0.3 } }}
+      exit={{
+        opacity: 0,
+        transition: { duration: 0.3 },
+      }}
       className="chat-form"
     >
       {!selectedCID ? (

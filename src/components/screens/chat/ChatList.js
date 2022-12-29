@@ -86,13 +86,16 @@ export default function ChatList() {
   return (
     <aside>
       <m.div
-        initial={{ width: 0 }}
         animate={{
-          width: "100%",
-          padding: "10px 15px",
-          transition: { delay: 0.1, duration: 1 },
+          scale: [0, 1, 1],
+          borderRadius: ["40%", "50px", "20px"],
+          transition: { delay: 0.1, duration: 1.7 },
+          transitionEnd: { borderRadius: "var(--border-main-radius)" },
         }}
-        exit={{ width: 0, padding: 0, transition: { duration: 0.3 } }}
+        exit={{
+          opacity: 0,
+          transition: { duration: 0.3 },
+        }}
         className="user-box"
       >
         <m.div
@@ -135,21 +138,15 @@ export default function ChatList() {
         </m.div>
       </m.div>
       <m.div
-        initial={{
-          width: 0,
-          borderRight: 0,
-          borderLeft: 0,
-        }}
+        initial={{}}
         animate={{
-          width: "100%",
-          borderRight: "15px solid transparent",
-          borderLeft: "15px solid transparent",
-          transition: { delay: 0.1, duration: 1 },
+          scale: [0, 1, 1],
+          borderRadius: ["50%", "100px", "20px"],
+          transition: { delay: 0.1, duration: 1.7 },
+          transitionEnd: { borderRadius: "var(--border-main-radius)" },
         }}
         exit={{
-          width: 0,
-          borderRight: 0,
-          borderLeft: 0,
+          opacity: 0,
           transition: { duration: 0.3 },
         }}
         className="chat-list"

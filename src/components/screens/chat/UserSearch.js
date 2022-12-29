@@ -1,4 +1,4 @@
-import React, { useRef, useState, useTransition } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import SearchedUser from "../../generic/SearchedUser.js";
 import SelectedUser from "../../generic/SelectedUser.js";
 import api from "../../../api/api";
@@ -11,18 +11,20 @@ import "../../../styles/chat/UserSearch.css";
 
 export default function UserSearch({ close }) {
   const dispatch = useDispatch();
-  const inputSearchLogin = useRef(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
   const [ignoreIds, setIgnoreIds] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [searchedUsers, setSearchedUsers] = useState([]);
 
-  const sendSearchRequest = async (event) => {
-    event.preventDefault();
+  useEffect(() => {
+    const debounce = setTimeout(() => sendSearchRequest(searchTerm), 400);
+    return () => clearTimeout(debounce);
+  }, [searchTerm]);
 
+  const sendSearchRequest = (login) => {
     //Todo optimize
     startTransition(async () => {
-      const login = inputSearchLogin.current.value.trim();
       if (login.length > 1) {
         const requestData = {
           login: login,
@@ -90,10 +92,10 @@ export default function UserSearch({ close }) {
         <div className="search-options">
           <input
             id="inputSearchLogin"
-            ref={inputSearchLogin}
             autoComplete="off"
-            onChange={sendSearchRequest}
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Input user login.. (2+ charactes)"
+            autoFocus
           />
           {isPending && (
             <span className="search-indicator">

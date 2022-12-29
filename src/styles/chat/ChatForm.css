@@ -1,5 +1,7 @@
 .chat-form {
+  width: calc(100% - 460px);
   margin: 0 20px 20px auto;
+  padding: 15px;
 
   border-radius: var(--border-main-radius);
   background-color: var(--bg-main-color);

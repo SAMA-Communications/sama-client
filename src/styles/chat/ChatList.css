@@ -9,6 +9,7 @@ aside {
 
 .user-box {
   height: 100px;
+  padding: 10px 15px;
 
   border-radius: var(--border-main-radius);
   background-color: var(--bg-main-color);
@@ -61,8 +62,7 @@ aside {
   overflow-y: auto;
   overflow-x: hidden;
 
-  border-top: 15px solid transparent;
-  border-bottom: 15px solid transparent;
+  border: 15px solid transparent;
 
   border-radius: var(--border-main-radius);
   background-color: var(--bg-main-color);
