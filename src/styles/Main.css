@@ -33,13 +33,7 @@ nav {
   justify-content: right;
   align-items: center;
 }
-.nav-logout-btn > a {
-  text-decoration: none;
-  font-size: calc(var(--font-size) * 2);
-  line-height: calc(var(--font-size) * 2);
 
-  transition: 0.3s;
-}
 .nav-logout-btn {
   padding: calc(var(--font-size) * 0.5) calc(var(--font-size) * 1.5);
 
@@ -62,11 +56,15 @@ nav {
     var(--btn-hover-color)
   );
 }
+.nav-logout-btn > a {
+  text-decoration: none;
+  font-size: calc(var(--font-size) * 2);
+  line-height: calc(var(--font-size) * 2);
+
+  transition: 0.3s;
+}
 .nav-logout-btn:hover {
   background-size: 100%;
-}
-.nav-logout-btn:hover a {
-  color: var(--btn-text-hover);
 }
 
 .nav-navigate-slice {
@@ -108,7 +106,4 @@ nav {
 }
 .change-themes:hover {
   background-size: 100%;
-}
-.change-themes:hover > svg > path {
-  fill: var(--btn-text-hover);
 }

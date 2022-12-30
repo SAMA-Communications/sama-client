@@ -9,10 +9,10 @@ import {
   selectParticipantsEntities,
 } from "../../../store/Participants.js";
 import { useNavigate } from "react-router-dom";
+import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { motion as m } from "framer-motion";
 
 import "../../../styles/chat/UserSearch.css";
-import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 
 export default function UserSearch({ close }) {
   const dispatch = useDispatch();
@@ -28,22 +28,6 @@ export default function UserSearch({ close }) {
     const debounce = setTimeout(() => sendSearchRequest(searchTerm), 400);
     return () => clearTimeout(debounce);
   }, [searchTerm]);
-
-  const sendSearchRequest = (login) => {
-    //Todo optimize
-    startTransition(async () => {
-      if (login.length > 1) {
-        const requestData = {
-          login: login,
-          //   limit: 10,
-          //   updated_at: undefined,
-          ignore_ids: ignoreIds,
-        };
-        const users = await api.userSearch(requestData);
-        if (users) setSearchedUsers(users);
-      }
-    });
-  };
 
   const createChat = async (event) => {
     event.preventDefault();
@@ -82,6 +66,35 @@ export default function UserSearch({ close }) {
     setSelectedUsers(selectedUsers.filter((el) => el._id !== data._id));
     setIgnoreIds(ignoreIds.filter((id) => id !== data._id));
     setSearchedUsers([...searchedUsers, data]);
+  };
+
+  const sendSearchRequest = (login) => {
+    startTransition(async () => {
+      if (login.length > 1) {
+        const requestData = {
+          login: login,
+          //   limit: 10,
+          //   updated_at: undefined,
+          ignore_ids: ignoreIds,
+        };
+        const users = await api.userSearch(requestData);
+        if (users.length) {
+          setSearchedUsers(
+            users.map((d) => (
+              <SearchedUser
+                key={d._id}
+                onClick={() => addUserToIgnore(d)}
+                uLogin={d.login}
+              />
+            ))
+          );
+        } else {
+          setSearchedUsers(
+            <div className="list-user-message">User not found</div>
+          );
+        }
+      }
+    });
   };
 
   window.onkeydown = function (event) {
@@ -140,17 +153,7 @@ export default function UserSearch({ close }) {
         </div>
         <div className="list-users">
           {searchedUsers ? (
-            searchedUsers.length ? (
-              searchedUsers.map((d) => (
-                <SearchedUser
-                  key={d._id}
-                  onClick={() => addUserToIgnore(d)}
-                  uLogin={d.login}
-                />
-              ))
-            ) : (
-              <div className="list-user-message">User not found</div>
-            )
+            searchedUsers
           ) : (
             <div className="list-user-message">Search results</div>
           )}
