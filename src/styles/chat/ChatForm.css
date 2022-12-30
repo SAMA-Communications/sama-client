@@ -136,8 +136,6 @@
   border: 1px solid var(--border-color);
   border-radius: var(--border-second-radius);
   background-color: var(--bg-message-all);
-
-  z-index: -1;
 }
 #inputMessage::placeholder {
   color: var(--text-smoke);

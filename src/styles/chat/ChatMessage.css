@@ -27,7 +27,7 @@
 }
 .bg-status-att {
   border-radius: var(--border-second-radius);
-  background-color: var(--bg-dark-block);
+  background-color: var(--shadow-block);
 }
 .m-pr {
   padding-right: 40px;
@@ -112,6 +112,8 @@
   display: flex;
   gap: 3px;
   flex-wrap: wrap;
+
+  border: 3px solid transparent;
 }
 .attachment-img {
   position: relative;

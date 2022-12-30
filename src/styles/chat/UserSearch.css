@@ -145,6 +145,7 @@
 }
 .search-create-chat p {
   font-size: 400;
+  color: var(--btn-text-hover);
 
   transition: 0.3s;
 }
@@ -171,8 +172,8 @@
   background-position: bottom;
   background-image: linear-gradient(
     0,
-    var(--bg-dark-block),
-    var(--bg-dark-block)
+    var(--shadow-block),
+    var(--shadow-block)
   );
 }
 .search-close-chat p {

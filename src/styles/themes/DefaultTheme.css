@@ -6,9 +6,9 @@
   --bg-block-hover: #8ecae6;
   --bg-dark-block: rgba(0, 0, 0, 0.6);
 
-  --border-light-color: rgba(0, 0, 0, 0.12);
+  --border-light-color: rgba(0, 0, 0, 0.2);
   --border-color: rgba(0, 0, 0, 0.2);
-  --border-dark-color: rgba(0, 0, 0, 0.25);
+  --border-dark-color: rgba(0, 0, 0, 0.3);
   --border-danger: #ff0000;
 
   --block-selected: rgba(0, 0, 0, 0.1);
@@ -16,11 +16,14 @@
   --block-danger: rgb(255, 133, 133);
 
   --text-main: #000;
-  --text-smoke: rgba(0, 0, 0, 0.45);
+  --text-smoke: rgba(0, 0, 0, 0.9);
   --text-light: #fff;
   --text-accent: #3f72af;
   --text-hover: #8ecae6;
   --text-danger: #ff0000;
+
+  --icon-stroke-color: #000;
+  --icon-indicator-color: #63b3ef;
 
   --input-text: #000;
   --input-bg-color: #fff;
@@ -31,11 +34,12 @@
   --btn-bg-color: #3f72af;
   --btn-hover-color: #8ecae6;
   --btn-text-default: #000;
-  --btn-text-hover: #fff;
+  --btn-text-hover: #000;
 
   --bg-message-all: rgba(0, 0, 0, 0.12);
   --bg-message-my: #bce0f0;
   --bg-chat-indicator: #bce0f0;
+  --bg-chat-indicator-group: #4e4e4e;
 
   --scrollbar-track-color: #f1f1f1;
   --scrollbar-thumb-color: #d3d3d3;

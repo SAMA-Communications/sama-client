@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { motion as m } from "framer-motion";
 
 import "../../styles/AuthForm.css";
+import { loginBox } from "../../styles/animations/AuthForm";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -128,27 +129,14 @@ export default function SignUp() {
 
   const exitOptions = { opacity: 0, transition: { duration: 0.25 } };
   const textViewOptions = { strokeDashoffset: 0, opacity: 1 };
-  const containerInitOptions = {
-    width: 0,
-    boxShadow: 0,
-    marginRight: "-200px",
-  };
 
   return (
     <div className="login-container">
       <m.div
-        initial={containerInitOptions}
-        animate={{
-          width: "min(98vw, 1000px)",
-          marginRight: 0,
-          opacity: 1,
-          boxShadow: "0px 0px 60px 30px var(--shadow-block)",
-          transition: { duration: 0.7 },
-        }}
-        exit={{
-          ...containerInitOptions,
-          transition: { duration: 0.5 },
-        }}
+        variants={loginBox}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
         className="login-box login-box-create"
       >
         <div className="login-box-left bg-create">

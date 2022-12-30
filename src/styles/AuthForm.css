@@ -158,12 +158,12 @@
   transition: 0.3s;
 }
 .input-container .input-border-focus:before {
-  border-top: 1px solid #fff;
-  border-left: 1px solid #fff;
+  border-top: 1px solid var(--input-text);
+  border-left: 1px solid var(--input-text);
 }
 .input-container .input-border-focus:after {
-  border-bottom: 1px solid #fff;
-  border-right: 1px solid #fff;
+  border-bottom: 1px solid var(--input-text);
+  border-right: 1px solid var(--input-text);
 }
 
 .input-container .input-border-focus:after {
