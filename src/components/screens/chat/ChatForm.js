@@ -224,6 +224,19 @@ export default function ChatForm() {
     }
   };
 
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const close = () => setModalOpen(false);
+  const open = (options) => setModalOpen(options);
+
+  const modalWindow = () => {
+    return (
+      <div exit="exit" className="modal-window" onClick={() => close()}>
+        <img src={modalOpen?.url} alt={modalOpen?.name} />
+      </div>
+    );
+  };
+
   const messagesList = useMemo(() => {
     if (!messages) {
       return [];
@@ -247,6 +260,7 @@ export default function ChatForm() {
               : false
           }
           attachments={msg.attachments}
+          openModalParam={open}
           status={msg.status}
           tSend={msg.t}
         />
@@ -482,6 +496,7 @@ export default function ChatForm() {
               </button>
             </div>
           </form>
+          {modalOpen && modalWindow()}
         </m.div>
       )}
     </m.section>

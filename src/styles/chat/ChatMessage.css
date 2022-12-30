@@ -111,6 +111,7 @@
 
   display: flex;
   gap: 3px;
+  justify-content: center;
   flex-wrap: wrap;
 
   border: 3px solid transparent;
@@ -140,6 +141,8 @@
   width: 100vw;
   height: 100vh;
 
+  cursor: pointer;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -149,6 +152,8 @@
   background-color: var(--bg-dark-block);
 }
 .modal-window img {
-  max-width: 80vh;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
   height: auto;
 }

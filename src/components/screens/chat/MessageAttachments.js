@@ -1,6 +1,6 @@
 import MessageAttachment from "../../generic/MessageAttachment";
 
-export default function MessageAttachments({ attachments }) {
+export default function MessageAttachments({ attachments, openModalParam }) {
   const attachmentPreloader = (key) => (
     <div key={key} className="attachment-preloader"></div>
   );
@@ -17,6 +17,7 @@ export default function MessageAttachments({ attachments }) {
             key={att.file_url}
             url={att.file_url}
             name={att.file_name}
+            openModalParam={openModalParam}
           />
         );
       } else {
