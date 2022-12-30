@@ -67,7 +67,7 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 50%;
+  border-radius: var(--border-second-radius);
   background-color: var(--bg-chatPhoto-color);
   box-shadow: inset 0px 0px 10px var(--shadow-block);
 }

@@ -69,9 +69,12 @@
 
   color: var(--text-main);
 
-  border-radius: 50%;
-  box-shadow: inset 0px 0px 10px var(--shadow-block);
+  border-radius: var(--border-second-radius);
   background-color: var(--bg-userPhoto-color);
+  box-shadow: inset 0px 0px 10px var(--shadow-block);
+}
+.my-message .message-user-photo {
+  background-color: var(--bg-chatPhoto-color);
 }
 .message-user-photo-none {
   width: 40px;

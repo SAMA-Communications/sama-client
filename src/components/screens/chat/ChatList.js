@@ -88,7 +88,7 @@ export default function ChatList() {
       <m.div
         animate={{
           scale: [0, 1, 1],
-          borderRadius: ["40%", "50px", "20px"],
+          borderRadius: ["50px", "20px"],
           transition: { delay: 0.1, duration: 1.7 },
           transitionEnd: { borderRadius: "var(--border-main-radius)" },
         }}
@@ -141,7 +141,7 @@ export default function ChatList() {
         initial={{}}
         animate={{
           scale: [0, 1, 1],
-          borderRadius: ["50%", "100px", "20px"],
+          borderRadius: ["50px", "20px"],
           transition: { delay: 0.1, duration: 1.7 },
           transitionEnd: { borderRadius: "var(--border-main-radius)" },
         }}
@@ -171,7 +171,7 @@ export default function ChatList() {
           animate={{
             opacity: 1,
             marginBottom: 0,
-            transition: { delay: 0.9, duration: 0.5 },
+            transition: { delay: 1, duration: 0.5 },
           }}
           exit={{ opacity: 0, transition: { delay: 0, duration: 0 } }}
           className="chat-create-btn"

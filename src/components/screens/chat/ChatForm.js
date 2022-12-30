@@ -320,7 +320,7 @@ export default function ChatForm() {
     <m.section
       animate={{
         scale: [0, 1, 1],
-        borderRadius: ["50%", "2%"],
+        borderRadius: ["100px", "20px"],
         transition: { delay: 0.1, duration: 1.7 },
         transitionEnd: { borderRadius: "var(--border-main-radius)" },
       }}
