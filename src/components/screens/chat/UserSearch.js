@@ -3,19 +3,26 @@ import SearchedUser from "../../generic/SearchedUser.js";
 import SelectedUser from "../../generic/SelectedUser.js";
 import api from "../../../api/api";
 import { upsertChat } from "../../../store/Conversations.js";
-import { useDispatch } from "react-redux";
-import { addUsers } from "../../../store/Participants.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addUsers,
+  selectParticipantsEntities,
+} from "../../../store/Participants.js";
+import { useNavigate } from "react-router-dom";
 import { motion as m } from "framer-motion";
 
 import "../../../styles/chat/UserSearch.css";
+import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 
 export default function UserSearch({ close }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const participants = useSelector(selectParticipantsEntities);
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
   const [ignoreIds, setIgnoreIds] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [searchedUsers, setSearchedUsers] = useState([]);
+  const [searchedUsers, setSearchedUsers] = useState(null);
 
   useEffect(() => {
     const debounce = setTimeout(() => sendSearchRequest(searchTerm), 400);
@@ -56,6 +63,12 @@ export default function UserSearch({ close }) {
       const chat = await api.conversationCreate(requestData);
       dispatch(addUsers(selectedUsers));
       dispatch(upsertChat({ ...chat, messagesIds: [] }));
+
+      navigate(
+        `/main/#${chat.name ? chat._id : participants[chat.opponent_id]?.login}`
+      );
+      dispatch(setSelectedConversation({ id: chat._id }));
+
       close(false);
     }
   };
@@ -126,16 +139,20 @@ export default function UserSearch({ close }) {
             : null}
         </div>
         <div className="list-users">
-          {searchedUsers.length ? (
-            searchedUsers.map((d) => (
-              <SearchedUser
-                key={d._id}
-                onClick={() => addUserToIgnore(d)}
-                uLogin={d.login}
-              />
-            ))
+          {searchedUsers ? (
+            searchedUsers.length ? (
+              searchedUsers.map((d) => (
+                <SearchedUser
+                  key={d._id}
+                  onClick={() => addUserToIgnore(d)}
+                  uLogin={d.login}
+                />
+              ))
+            ) : (
+              <div className="list-user-message">User not found</div>
+            )
           ) : (
-            <div className="list-user-message">Users not found</div>
+            <div className="list-user-message">Search results</div>
           )}
         </div>
         <div className="search-buttons">

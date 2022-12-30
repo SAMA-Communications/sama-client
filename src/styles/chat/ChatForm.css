@@ -19,10 +19,12 @@
   text-align: center;
 }
 .chat-form-loading > P {
+  width: auto;
   margin-left: 15px;
 
   color: var(--text-smoke);
-  font-size: calc(var(--font-size) * 4);
+  font-size: calc(var(--font-size) * 2.5);
+  line-height: calc(var(--font-size) * 2.5);
 }
 
 .chat-empty {
@@ -32,11 +34,13 @@
   gap: 20px;
   align-items: center;
   justify-content: center;
+
+  text-align: center;
 }
 .chat-empty p {
   color: var(--text-smoke);
-  font-size: calc(var(--font-size) * 4);
-  line-height: calc(var(--font-size) * 5);
+  font-size: calc(var(--font-size) * 2.5);
+  line-height: calc(var(--font-size) * 2.5);
 }
 
 .chat-messaging-info {
