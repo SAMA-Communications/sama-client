@@ -19,6 +19,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { motion as m } from "framer-motion";
 
 import "../../../styles/chat/ChatList.css";
+import { ReactComponent as UserIcon } from "./../../../assets/icons/chatList/UserIcon.svg";
+import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
 
 export default function ChatList() {
   const dispatch = useDispatch();
@@ -107,22 +109,7 @@ export default function ChatList() {
           exit={{ opacity: 0, transition: { duration: 0.15 } }}
           className="user-photo"
         >
-          {!userInfo ? (
-            <svg
-              width="56"
-              height="56"
-              viewBox="0 0 56 56"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M48.0433 51.3333C48.0433 42.3033 39.06 35 28 35C16.94 35 7.95667 42.3033 7.95667 51.3333M28 28C31.0942 28 34.0617 26.7708 36.2496 24.5829C38.4375 22.395 39.6667 19.4275 39.6667 16.3333C39.6667 13.2391 38.4375 10.2717 36.2496 8.08375C34.0617 5.89583 31.0942 4.66666 28 4.66666C24.9058 4.66666 21.9383 5.89583 19.7504 8.08375C17.5625 10.2717 16.3333 13.2391 16.3333 16.3333C16.3333 19.4275 17.5625 22.395 19.7504 24.5829C21.9383 26.7708 24.9058 28 28 28V28Z"
-                stroke="white"
-              />
-            </svg>
-          ) : (
-            userInfo?.login.slice(0, 2).toUpperCase()
-          )}
+          {!userInfo ? <UserIcon /> : userInfo?.login.slice(0, 2).toUpperCase()}
         </m.div>
         <m.div
           initial={{ opacity: 0, padding: 0 }}
@@ -177,18 +164,7 @@ export default function ChatList() {
           className="chat-create-btn"
           onClick={() => setIsSearchForm(true)}
         >
-          <svg
-            width="34"
-            height="34"
-            viewBox="0 0 34 34"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M26.2083 27.625H20.5417M23.375 30.4583V24.7916M16.9858 30.8975C14.4075 30.8975 11.8433 30.2458 9.88833 28.9425C6.45999 26.6475 6.45999 22.9075 9.88833 20.6266C13.7842 18.02 20.1733 18.02 24.0692 20.6266M17.2267 15.3991C17.085 15.385 16.915 15.385 16.7592 15.3991C15.1331 15.3439 13.5924 14.658 12.4633 13.4866C11.3342 12.3152 10.7054 10.7503 10.71 9.12331C10.7078 8.29786 10.8685 7.48009 11.1829 6.71686C11.4973 5.95364 11.9593 5.25998 12.5423 4.67564C13.1253 4.09129 13.8179 3.62777 14.5805 3.31162C15.343 2.99548 16.1604 2.83294 16.9858 2.83331C20.4567 2.83331 23.2758 5.65248 23.2758 9.12331C23.2758 12.5233 20.5842 15.2858 17.2267 15.3991V15.3991Z"
-              stroke="var(--icon-stroke-color)"
-            />
-          </svg>
+          <CreateChatButton />
         </m.div>
         {isSearchForm && <UserSearch close={setIsSearchForm} />}
       </m.div>

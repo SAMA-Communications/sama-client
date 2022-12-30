@@ -33,6 +33,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { motion as m } from "framer-motion";
 
 import "../../../styles/chat/ChatForm.css";
+import { ReactComponent as EmptyChat } from "./../../../assets/icons/chatForm/EmptyChat.svg";
+import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
+import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
+import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -342,8 +346,8 @@ export default function ChatForm() {
         >
           <svg
             id="chat-form-loading-icon"
-            width="92"
-            height="92"
+            width="64"
+            height="64"
             viewBox="0 0 92 92"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -405,39 +409,13 @@ export default function ChatForm() {
               </div>
             </div>
             <div className="chat-delete-btn" onClick={deleteChat}>
-              <svg
-                width="36"
-                height="36"
-                viewBox="0 0 36 36"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M31.5 8.97C26.505 8.475 21.48 8.22 16.47 8.22C13.5 8.22 10.53 8.37 7.56 8.67L4.5 8.97M12.75 7.455L13.08 5.49C13.32 4.065 13.5 3 16.035 3H19.965C22.5 3 22.695 4.125 22.92 5.505L23.25 7.455M28.275 13.71L27.3 28.815C27.135 31.17 27 33 22.815 33H13.185C9 33 8.865 31.17 8.7 28.815L7.725 13.71M15.495 24.75H20.49M14.25 18.75H21.75"
-                  stroke="var(--icon-stroke-color)"
-                />
-              </svg>
+              <TrashCan />
             </div>
           </div>
           <div className="chat-form-main">
             {!messages.length ? (
               <div className="chat-empty">
-                <svg
-                  width="68"
-                  height="68"
-                  viewBox="0 0 68 68"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M37.5699 10.2L14.3082 34.8217C13.4299 35.7567 12.5799 37.5984 12.4099 38.8734L11.3616 48.0534C10.9932 51.3684 13.3732 53.635 16.6599 53.0684L25.7832 51.51C27.0582 51.2834 28.8432 50.3484 29.7216 49.385L52.9832 24.7634C57.0066 20.5134 58.8199 15.6684 52.5582 9.74669C46.3249 3.88169 41.5932 5.95002 37.5699 10.2V10.2Z"
-                    stroke="var(--icon-stroke-color)"
-                  />
-                  <path
-                    d="M33.6883 14.3083C34.2823 18.1074 36.121 21.6017 38.9159 24.2427C41.7107 26.8837 45.3034 28.5218 49.13 28.9M8.5 62.3334H59.5"
-                    stroke="var(--icon-stroke-color)"
-                  />
-                </svg>
+                <EmptyChat />
                 <p>Write your message...</p>
               </div>
             ) : (
@@ -451,19 +429,7 @@ export default function ChatForm() {
           ) : null}
           <form id="chat-form-send" action="">
             <div className="form-send-file">
-              <svg
-                width="40"
-                height="40"
-                viewBox="0 0 40 40"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                onClick={pickUserFiles}
-              >
-                <path
-                  d="M20.55 20.25L16.4334 24.3667C15.8906 24.9078 15.46 25.5507 15.1662 26.2585C14.8724 26.9664 14.7212 27.7253 14.7212 28.4917C14.7212 29.2581 14.8724 30.0169 15.1662 30.7248C15.46 31.4326 15.8906 32.0755 16.4334 32.6167C16.9745 33.1594 17.6174 33.59 18.3253 33.8838C19.0331 34.1776 19.792 34.3289 20.5584 34.3289C21.3248 34.3289 22.0837 34.1776 22.7915 33.8838C23.4993 33.59 24.1423 33.1594 24.6834 32.6167L31.1667 26.1333C33.352 23.9439 34.5794 20.9768 34.5794 17.8833C34.5794 14.7899 33.352 11.8228 31.1667 9.63333C28.9772 7.448 26.0102 6.22064 22.9167 6.22064C19.8233 6.22064 16.8562 7.448 14.6667 9.63333L7.60005 16.7C3.70005 20.6 3.70005 26.9333 7.60005 30.85"
-                  stroke="var(--icon-stroke-color)"
-                />
-              </svg>
+              <SendFilesButton onClick={pickUserFiles} />
               <input
                 id="inputFile"
                 ref={filePicker}
@@ -481,18 +447,7 @@ export default function ChatForm() {
                 placeholder="> Write your message..."
               />
               <button id="send-message" onClick={sendMessage}>
-                <svg
-                  width="30"
-                  height="30"
-                  viewBox="0 0 30 30"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M24.1124 11.4625L9.62494 3.8375C6.18744 2.025 2.44994 5.6875 4.18744 9.1625L6.21244 13.2125C6.77494 14.3375 6.77494 15.6625 6.21244 16.7875L4.18744 20.8375C2.44994 24.3125 6.18744 27.9625 9.62494 26.1625L24.1124 18.5375C26.9624 17.0375 26.9624 12.9625 24.1124 11.4625Z"
-                    stroke="var(--icon-stroke-color)"
-                  />
-                </svg>
+                <SendMessageButton />
               </button>
             </div>
           </form>

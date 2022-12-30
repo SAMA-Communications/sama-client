@@ -8,9 +8,7 @@ export default function MessageAttachments({ attachments, openModalParam }) {
   if (attachments) {
     const arrayAtts = [];
 
-    for (let i = 0; i < attachments.length; i++) {
-      const att = attachments[i];
-
+    for (const att of attachments) {
       if (att.file_url) {
         arrayAtts.push(
           <MessageAttachment

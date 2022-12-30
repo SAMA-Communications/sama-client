@@ -3,10 +3,12 @@ import api from "../../api/api";
 import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import { useForm } from "react-hook-form";
+import { loginBox } from "../../styles/animations/AuthForm";
 import { motion as m } from "framer-motion";
 
 import "../../styles/AuthForm.css";
-import { loginBox } from "../../styles/animations/AuthForm";
+import { ReactComponent as HidePassword } from "./../../assets/icons/authForm/HidePassword.svg";
+import { ReactComponent as ShowPassword } from "./../../assets/icons/authForm/ShowPassword.svg";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -61,55 +63,9 @@ export default function SignUp() {
           />
           <span className="password-visibility">
             {passwordType === "password" ? (
-              <svg
-                width="24"
-                height="21"
-                viewBox="0 0 24 21"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                onClick={() => setPasswordType("text")}
-              >
-                <path
-                  d="M14.2188 8.28623L9.31697 12.7137C8.66694 12.1266 8.30176 11.3303 8.30176 10.5C8.30176 10.0888 8.39141 9.68174 8.5656 9.3019C8.73979 8.92207 8.99511 8.57694 9.31697 8.28623C9.63883 7.99551 10.0209 7.76491 10.4415 7.60757C10.862 7.45024 11.3127 7.36926 11.7679 7.36926C12.6872 7.36926 13.5688 7.6991 14.2188 8.28623V8.28623Z"
-                  stroke="white"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M17.4059 5.04873C15.7106 3.89373 13.7731 3.26373 11.7678 3.26373C8.34811 3.26373 5.16092 5.08373 2.94248 8.23373C2.07061 9.46748 2.07061 11.5412 2.94248 12.775C3.70779 13.86 4.59904 14.7962 5.56779 15.5487M8.29967 17.0887C9.40404 17.5087 10.5762 17.7362 11.7678 17.7362C15.1875 17.7362 18.3747 15.9162 20.5931 12.7662C21.465 11.5325 21.465 9.45873 20.5931 8.22498C20.2734 7.76998 19.9247 7.34123 19.5662 6.93873"
-                  stroke="white"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M15.1681 11.1125C15.0369 11.7229 14.7067 12.2839 14.2199 12.7236C13.7332 13.1632 13.112 13.4615 12.4363 13.58M9.31689 12.7138L2.08032 19.25M21.4553 1.75L14.2188 8.28625"
-                  stroke="white"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <HidePassword onClick={() => setPasswordType("text")} />
             ) : (
-              <svg
-                width="24"
-                height="21"
-                viewBox="0 0 24 21"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                onClick={() => setPasswordType("password")}
-              >
-                <path
-                  d="M15.2359 10.5C15.2359 12.2325 13.6859 13.6325 11.7678 13.6325C9.84968 13.6325 8.29968 12.2325 8.29968 10.5C8.29968 8.76749 9.84968 7.36749 11.7678 7.36749C13.6859 7.36749 15.2359 8.76749 15.2359 10.5Z"
-                  stroke="white"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M11.7678 17.7363C15.1875 17.7363 18.3747 15.9163 20.5931 12.7663C21.465 11.5325 21.465 9.45875 20.5931 8.225C18.3747 5.075 15.1875 3.255 11.7678 3.255C8.34811 3.255 5.16092 5.075 2.94248 8.225C2.07061 9.45875 2.07061 11.5325 2.94248 12.7663C5.16092 15.9163 8.34811 17.7363 11.7678 17.7363Z"
-                  stroke="white"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <ShowPassword onClick={() => setPasswordType("password")} />
             )}
           </span>
           <span className="input-placeholder">Password *</span>
