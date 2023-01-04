@@ -1,4 +1,5 @@
 import React from "react";
+import { changeOpacity } from "../../styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
 
 import { ReactComponent as CloseButtonMini } from "./../../assets/icons/chatForm/CloseButtonMini.svg";
@@ -6,9 +7,10 @@ import { ReactComponent as CloseButtonMini } from "./../../assets/icons/chatForm
 export default function SelectedUser({ uLogin, onClick }) {
   return (
     <m.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, transition: { delay: 0, duration: 0.3 } }}
-      exit={{ opacity: 0, transition: { delay: 0, duration: 0.3 } }}
+      variants={changeOpacity(0, 0.3, 0, 0.3)}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
       className="list-user-selected-box"
       onClick={onClick}
     >

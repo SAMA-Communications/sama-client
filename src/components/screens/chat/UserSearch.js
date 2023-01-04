@@ -10,9 +10,9 @@ import {
 } from "../../../store/Participants.js";
 import { useNavigate } from "react-router-dom";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
-import { motion as m } from "framer-motion";
 
 import "../../../styles/chat/UserSearch.css";
+import { ReactComponent as SearchIndicator } from "./../../../assets/icons/SearchIndicator.svg";
 
 export default function UserSearch({ close }) {
   const dispatch = useDispatch();
@@ -22,10 +22,11 @@ export default function UserSearch({ close }) {
   const [isPending, startTransition] = useTransition();
   const [ignoreIds, setIgnoreIds] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [searchedUsers, setSearchedUsers] = useState(null);
+  const [searchedUsers, setSearchedUsers] = useState([]);
+  const [isUserSearched, setIsUserSearched] = useState("Search results");
 
   useEffect(() => {
-    const debounce = setTimeout(() => sendSearchRequest(searchTerm), 400);
+    const debounce = setTimeout(() => sendSearchRequest(searchTerm), 700);
     return () => clearTimeout(debounce);
   }, [searchTerm]);
 
@@ -68,30 +69,20 @@ export default function UserSearch({ close }) {
     setSearchedUsers([...searchedUsers, data]);
   };
 
-  const sendSearchRequest = (login) => {
+  const sendSearchRequest = async (login) => {
     startTransition(async () => {
       if (login.length > 1) {
         const requestData = {
           login: login,
           //   limit: 10,
-          //   updated_at: undefined,
           ignore_ids: ignoreIds,
         };
+
         const users = await api.userSearch(requestData);
-        if (users.length) {
-          setSearchedUsers(
-            users.map((d) => (
-              <SearchedUser
-                key={d._id}
-                onClick={() => addUserToIgnore(d)}
-                uLogin={d.login}
-              />
-            ))
-          );
-        } else {
-          setSearchedUsers(
-            <div className="list-user-message">User not found</div>
-          );
+        setSearchedUsers(users);
+
+        if (isUserSearched === "Search results") {
+          setIsUserSearched("User not found");
         }
       }
     });
@@ -104,16 +95,7 @@ export default function UserSearch({ close }) {
   };
 
   return (
-    <m.div
-      initial={{
-        opacity: 0,
-      }}
-      animate={{
-        opacity: 1,
-        transition: { delay: 0, duration: 0.3 },
-      }}
-      className="search-bg"
-    >
+    <div className="search-bg">
       <form id="search-form">
         <div className="search-options">
           <input
@@ -125,18 +107,7 @@ export default function UserSearch({ close }) {
           />
           {isPending && (
             <span className="search-indicator">
-              <svg
-                width="26"
-                height="26"
-                viewBox="0 0 26 26"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M23.8334 23.8333L21.6667 21.6666M12.4584 22.75C13.8099 22.75 15.1482 22.4838 16.3969 21.9666C17.6455 21.4493 18.7801 20.6913 19.7357 19.7356C20.6914 18.7799 21.4495 17.6454 21.9667 16.3967C22.4839 15.1481 22.7501 13.8098 22.7501 12.4583C22.7501 11.1068 22.4839 9.76848 21.9667 8.51984C21.4495 7.2712 20.6914 6.13665 19.7357 5.18099C18.7801 4.22532 17.6455 3.46724 16.3969 2.95003C15.1482 2.43283 13.8099 2.16663 12.4584 2.16663C9.72889 2.16663 7.11117 3.25092 5.18111 5.18099C3.25105 7.11105 2.16675 9.72877 2.16675 12.4583C2.16675 15.1878 3.25105 17.8055 5.18111 19.7356C7.11117 21.6657 9.72889 22.75 12.4584 22.75V22.75Z"
-                  stroke="white"
-                />
-              </svg>
+              <SearchIndicator />
             </span>
           )}
         </div>
@@ -152,10 +123,16 @@ export default function UserSearch({ close }) {
             : null}
         </div>
         <div className="list-users">
-          {searchedUsers ? (
-            searchedUsers
+          {searchedUsers.length ? (
+            searchedUsers.map((d) => (
+              <SearchedUser
+                key={d._id}
+                onClick={() => addUserToIgnore(d)}
+                uLogin={d.login}
+              />
+            ))
           ) : (
-            <div className="list-user-message">Search results</div>
+            <div className="list-user-message">{isUserSearched}</div>
           )}
         </div>
         <div className="search-buttons">
@@ -167,6 +144,6 @@ export default function UserSearch({ close }) {
           </div>
         </div>
       </form>
-    </m.div>
+    </div>
   );
 }

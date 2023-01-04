@@ -16,6 +16,11 @@ import {
 } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
+import {
+  changeOpacity,
+  createChatButton,
+  scaleAndRound,
+} from "../../../styles/animations/animationBlocks.js";
 import { motion as m } from "framer-motion";
 
 import "../../../styles/chat/ChatList.css";
@@ -36,17 +41,16 @@ export default function ChatList() {
     : null;
 
   useEffect(() => {
-    setTimeout(() => {
-      api.conversationList({}).then((chats) => {
-        if (!chats) {
-          return;
-        }
-        dispatch(setChats(chats));
-        api
-          .getParticipantsByCids(chats.map((obj) => obj._id))
-          .then((users) => dispatch(setUsers(users)));
-      });
-    }, 300);
+    api.conversationList({}).then((chats) => {
+      if (!chats) {
+        return;
+      }
+
+      dispatch(setChats(chats));
+      api
+        .getParticipantsByCids(chats.map((obj) => obj._id))
+        .then((users) => dispatch(setUsers(users)));
+    });
   }, []);
 
   const chatsList = useMemo(() => {
@@ -88,36 +92,26 @@ export default function ChatList() {
   return (
     <aside>
       <m.div
-        animate={{
-          scale: [0, 1, 1],
-          borderRadius: ["50px", "20px"],
-          transition: { delay: 0.1, duration: 1.7 },
-          transitionEnd: { borderRadius: "var(--border-main-radius)" },
-        }}
-        exit={{
-          opacity: 0,
-          transition: { duration: 0.3 },
-        }}
+        variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
         className="user-box"
       >
         <m.div
-          initial={{ opacity: 0, padding: 0 }}
-          animate={{
-            opacity: 1,
-            transition: { delay: 0.9, duration: 1 },
-          }}
-          exit={{ opacity: 0, transition: { duration: 0.15 } }}
+          variants={changeOpacity(0.9, 1, 0, 0.15)}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           className="user-photo"
         >
           {!userInfo ? <UserIcon /> : userInfo?.login.slice(0, 2).toUpperCase()}
         </m.div>
         <m.div
-          initial={{ opacity: 0, padding: 0 }}
-          animate={{
-            opacity: 1,
-            transition: { delay: 0.9, duration: 1 },
-          }}
-          exit={{ opacity: 0, transition: { duration: 0.15 } }}
+          variants={changeOpacity(0.9, 1, 0, 0.15)}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           className="user-info"
         >
           <p className="user-info-name">{userInfo?.login}</p>
@@ -125,27 +119,18 @@ export default function ChatList() {
         </m.div>
       </m.div>
       <m.div
-        initial={{}}
-        animate={{
-          scale: [0, 1, 1],
-          borderRadius: ["50px", "20px"],
-          transition: { delay: 0.1, duration: 1.7 },
-          transitionEnd: { borderRadius: "var(--border-main-radius)" },
-        }}
-        exit={{
-          opacity: 0,
-          transition: { duration: 0.3 },
-        }}
+        variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
         className="chat-list"
       >
         {!Object.keys(conversations).length ? (
           <m.p
-            initial={{ opacity: 0, padding: 0 }}
-            animate={{
-              opacity: 1,
-              transition: { delay: 0.9, duration: 1 },
-            }}
-            exit={{ opacity: 0, transition: { duration: 0.15 } }}
+            variants={changeOpacity(0.9, 1, 0, 0.15)}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             className="empty-list"
           >
             No one chat find...
@@ -154,13 +139,10 @@ export default function ChatList() {
           chatsList
         )}
         <m.div
-          initial={{ opacity: 0, marginBottom: "-10px" }}
-          animate={{
-            opacity: 1,
-            marginBottom: 0,
-            transition: { delay: 1, duration: 0.5 },
-          }}
-          exit={{ opacity: 0, transition: { delay: 0, duration: 0 } }}
+          variants={createChatButton}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           className="chat-create-btn"
           onClick={() => setIsSearchForm(true)}
         >

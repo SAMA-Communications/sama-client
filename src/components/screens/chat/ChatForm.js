@@ -30,13 +30,19 @@ import {
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import {
+  scaleAndRound,
+  changeOpacity,
+} from "../../../styles/animations/animationBlocks.js";
+import { animateSVG } from "../../../styles/animations/animationSVG.js";
 import { motion as m } from "framer-motion";
 
 import "../../../styles/chat/ChatForm.css";
 import { ReactComponent as EmptyChat } from "./../../../assets/icons/chatForm/EmptyChat.svg";
-import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
-import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
+import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatForm/RecipientPhoto.svg";
 import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
+import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
+import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -317,31 +323,20 @@ export default function ChatForm() {
     );
   };
 
-  const exitOptions = { opacity: 0, transition: { delay: 0, duration: 0.25 } };
-  const iconViewOptions = { strokeDashoffset: 0, opacity: 1 };
-
   return (
     <m.section
-      animate={{
-        scale: [0, 1, 1],
-        borderRadius: ["100px", "20px"],
-        transition: { delay: 0.1, duration: 1.7 },
-        transitionEnd: { borderRadius: "var(--border-main-radius)" },
-      }}
-      exit={{
-        opacity: 0,
-        transition: { duration: 0.3 },
-      }}
+      variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
       className="chat-form"
     >
       {!selectedCID ? (
         <m.div
-          initial={{ opacity: 0, padding: 0 }}
-          animate={{
-            opacity: 1,
-            transition: { delay: 1.2, duration: 1 },
-          }}
-          exit={{ opacity: 0, transition: { duration: 0.15 } }}
+          variants={changeOpacity(1.2, 1, 0, 0.15)}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           className="chat-form-loading"
         >
           <svg
@@ -353,20 +348,16 @@ export default function ChatForm() {
             xmlns="http://www.w3.org/2000/svg"
           >
             <m.path
-              initial={{
-                strokeDasharray: "260px",
-                strokeDashoffset: "260px",
-              }}
-              animate={{
-                ...iconViewOptions,
-                transition: { delay: 1.2, duration: 1.5 },
-              }}
-              exit={exitOptions}
+              variants={animateSVG(260, 1.2, 1.5, 0, 0.25)}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
               d="M32.5834 72.8333H30.6667C15.3334 72.8333 7.66669 69 7.66669 49.8333V30.6667C7.66669 15.3333 15.3334 7.66666 30.6667 7.66666H61.3334C76.6667 7.66666 84.3334 15.3333 84.3334 30.6667V49.8333C84.3334 65.1667 76.6667 72.8333 61.3334 72.8333H59.4167C58.2284 72.8333 57.0784 73.4083 56.35 74.3667L50.6 82.0333C48.07 85.4067 43.93 85.4067 41.4 82.0333L35.65 74.3667C35.0367 73.5233 33.6184 72.8333 32.5834 72.8333V72.8333Z"
               stroke="var(--icon-stroke-color)"
             />
             <m.path
-              exit={exitOptions}
+              variants={animateSVG(0, 0, 0, 0, 0.25)}
+              exit="exit"
               d="M61.318 42.1667H61.3564M45.9809 42.1667H46.0192M30.6475 42.1667H30.6782"
               stroke="var(--icon-stroke-color)"
               strokeWidth="3"
@@ -378,24 +369,14 @@ export default function ChatForm() {
         </m.div>
       ) : (
         <m.div
-          exit={{ opacity: 0, transition: { duration: 0.15 } }}
+          variants={animateSVG(0, 0, 0, 0, 0.15)}
+          exit="exit"
           className="chat-form-messaging"
         >
           <div className="chat-messaging-info">
             <div className="chat-info-block">
               <div className="chat-recipient-photo">
-                <svg
-                  width="56"
-                  height="56"
-                  viewBox="0 0 56 56"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M38.29 9.33335C42.8167 9.33335 46.4567 12.9967 46.4567 17.5C46.4567 21.91 42.9567 25.5033 38.5933 25.6667C38.3918 25.6433 38.1882 25.6433 37.9867 25.6667M42.7933 46.6667C44.4733 46.3167 46.06 45.64 47.3667 44.6367C51.0067 41.9067 51.0067 37.4033 47.3667 34.6733C46.0833 33.6933 44.52 33.04 42.8633 32.6667M21.3733 25.3633C21.14 25.34 20.86 25.34 20.6033 25.3633C17.9252 25.2724 15.3875 24.1426 13.5278 22.2133C11.6681 20.2839 10.6324 17.7064 10.64 15.0267C10.64 9.31001 15.26 4.66668 21 4.66668C23.7446 4.61717 26.3964 5.65996 28.3721 7.56564C30.3478 9.47132 31.4855 12.0838 31.535 14.8283C31.5845 17.5729 30.5417 20.2247 28.636 22.2004C26.7304 24.1761 24.1179 25.3138 21.3733 25.3633ZM9.70668 33.9733C4.06001 37.7533 4.06001 43.9134 9.70668 47.67C16.1233 51.9634 26.6467 51.9634 33.0633 47.67C38.71 43.89 38.71 37.73 33.0633 33.9733C26.67 29.7033 16.1467 29.7033 9.70668 33.9733V33.9733Z"
-                    stroke="var(--icon-stroke-color)"
-                  />
-                </svg>
+                <RecipientPhoto />
               </div>
               <div className="chat-recipient-info">
                 <p>
