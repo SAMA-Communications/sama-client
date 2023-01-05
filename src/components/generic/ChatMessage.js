@@ -5,6 +5,7 @@ import { changeOpacity } from "../../styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
 
 import "../../styles/chat/ChatMessage.css";
+
 import { ReactComponent as UserPhoto } from "./../../assets/icons/chatForm/UserPhotoIconChat.svg";
 
 export default function ChatMessage({

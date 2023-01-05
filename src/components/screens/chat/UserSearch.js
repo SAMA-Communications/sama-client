@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 
 import "../../../styles/chat/UserSearch.css";
+
 import { ReactComponent as SearchIndicator } from "./../../../assets/icons/SearchIndicator.svg";
 
 export default function UserSearch({ close }) {

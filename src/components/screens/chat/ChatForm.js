@@ -38,6 +38,7 @@ import { animateSVG } from "../../../styles/animations/animationSVG.js";
 import { motion as m } from "framer-motion";
 
 import "../../../styles/chat/ChatForm.css";
+
 import { ReactComponent as EmptyChat } from "./../../../assets/icons/chatForm/EmptyChat.svg";
 import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatForm/RecipientPhoto.svg";
 import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";

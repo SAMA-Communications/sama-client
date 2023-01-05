@@ -11,6 +11,7 @@ import { animateSVG } from "../../styles/animations/animationSVG";
 import { motion as m } from "framer-motion";
 
 import "../../styles/AuthForm.css";
+
 import { ReactComponent as HidePassword } from "./../../assets/icons/authForm/HidePassword.svg";
 import { ReactComponent as ShowPassword } from "./../../assets/icons/authForm/ShowPassword.svg";
 

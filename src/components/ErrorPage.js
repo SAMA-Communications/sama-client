@@ -1,6 +1,7 @@
 import React from "react";
 
 import "../styles/ErrorPage.css";
+
 import { ReactComponent as PageNotFound } from "./../assets/icons/PageNotFound.svg";
 
 export default function ErrorPage() {

@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
 import MessageStatus from "./MessageStatus";
+import { changeOpacity } from "../../styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
 
 import { ReactComponent as ChatIcon } from "./../../assets/icons/chatList/ChatIcon.svg";
 import { ReactComponent as ImagePreviewIcon } from "./../../assets/icons/chatList/ImagePreviewIcon.svg";
-import { changeOpacity } from "../../styles/animations/animationBlocks";
 
 export default function ChatBox({
   chatName,

@@ -24,6 +24,7 @@ import {
 import { motion as m } from "framer-motion";
 
 import "../../../styles/chat/ChatList.css";
+
 import { ReactComponent as UserIcon } from "./../../../assets/icons/chatList/UserIcon.svg";
 import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
 
