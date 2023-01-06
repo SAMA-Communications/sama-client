@@ -3,11 +3,8 @@ import SearchedUser from "../../generic/SearchedUser.js";
 import SelectedUser from "../../generic/SelectedUser.js";
 import api from "../../../api/api";
 import { upsertChat } from "../../../store/Conversations.js";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addUsers,
-  selectParticipantsEntities,
-} from "../../../store/Participants.js";
+import { useDispatch } from "react-redux";
+import { addUsers } from "../../../store/Participants.js";
 import { useNavigate } from "react-router-dom";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 
@@ -18,7 +15,6 @@ import { ReactComponent as SearchIndicator } from "./../../../assets/icons/Searc
 export default function UserSearch({ close }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const participants = useSelector(selectParticipantsEntities);
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
   const [ignoreIds, setIgnoreIds] = useState([]);
@@ -50,9 +46,7 @@ export default function UserSearch({ close }) {
       dispatch(addUsers(selectedUsers));
       dispatch(upsertChat({ ...chat, messagesIds: [] }));
 
-      navigate(
-        `/main/#${chat.name ? chat._id : participants[chat.opponent_id]?.login}`
-      );
+      navigate(`/main/#${chat.name ? chat._id : selectedUsers[0].login}`);
       dispatch(setSelectedConversation({ id: chat._id }));
 
       close(false);
