@@ -33,7 +33,11 @@ function App() {
     }
 
     const token = localStorage.getItem("sessionId");
-    token ? userLoginByToken(token) : navigate("/login");
+    if (token && token !== "undefined") {
+      userLoginByToken(token);
+    } else {
+      navigate("/login");
+    }
   }, []);
 
   const userLoginByToken = async (token) => {
