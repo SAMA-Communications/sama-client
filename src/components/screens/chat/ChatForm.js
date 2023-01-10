@@ -316,7 +316,7 @@ export default function ChatForm() {
       alert("Max limit to upload files 10");
       return;
     }
-    console.log(files);
+
     setFiles(
       files?.length
         ? [...files, ...event.target.files]

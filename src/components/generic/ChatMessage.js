@@ -60,10 +60,12 @@ export default function ChatMessage({
       <div className={messageStyle()}>
         <div className="message-info">
           {!isPrevMesssageYours && <p className="message-user-name">{uName}</p>}
-          <MessageAttachments
-            attachments={attachments}
-            openModalParam={openModalParam}
-          />
+          {!!attachments?.length && (
+            <MessageAttachments
+              attachments={attachments}
+              openModalParam={openModalParam}
+            />
+          )}
           {text && (
             <p
               className={

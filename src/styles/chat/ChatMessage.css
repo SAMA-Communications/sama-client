@@ -130,6 +130,8 @@
   flex: 1 0 245px;
   justify-content: center;
 
+  border-radius: var(--border-second-radius);
+
   overflow: hidden;
 }
 .attachment-img img {
