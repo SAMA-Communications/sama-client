@@ -1,5 +1,4 @@
-import getUniqueId from "../../api/uuid";
-import { ReactComponent as CloseButtonMini } from "./../../assets/icons/chatForm/CloseButtonMini.svg";
+import AttachmentsListItem from "./AttachmentsListItem";
 import { ReactComponent as ClearFilesButton } from "./../../assets/icons/chatForm/ClearFilesButton.svg";
 
 export default function AttachmentsList({ files, funcUpdateFile }) {
@@ -7,18 +6,11 @@ export default function AttachmentsList({ files, funcUpdateFile }) {
     <div className="chat-files-preview">
       <div className="chat-files-block">
         {Object.values(files).map((el) => (
-          <div
-            className="file-pin-box"
-            key={getUniqueId(el.name)}
-            onClick={() =>
-              funcUpdateFile(files.filter((obj) => obj.name !== el.name))
-            }
-          >
-            <p>{el.name}</p>
-            <span>
-              <CloseButtonMini />
-            </span>
-          </div>
+          <AttachmentsListItem
+            name={el.name}
+            files={files}
+            funcUpdateFile={funcUpdateFile}
+          />
         ))}
       </div>
       <div className="btn-clear-files" onClick={() => funcUpdateFile([])}>

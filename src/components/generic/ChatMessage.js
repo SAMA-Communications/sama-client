@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import MessageAttachments from "../screens/chat/MessageAttachments";
 import MessageStatus from "./MessageStatus";
 import { changeOpacity } from "../../styles/animations/animationBlocks";
@@ -20,14 +20,21 @@ export default function ChatMessage({
   tSend,
   openModalParam,
 }) {
-  const timeSend = new Date(tSend * 1000);
+  const timeSend = useMemo(() => {
+    const t = new Date(tSend * 1000);
+    return (
+      t.getHours() +
+      ":" +
+      (t.getMinutes() > 9 ? t.getMinutes() : "0" + t.getMinutes())
+    );
+  }, []);
 
-  const messageStyle = () => {
+  const messageStyle = useMemo(() => {
     let status = "message-content";
-    if (!isPrevMesssageYours) {
-      status += " mt-10";
-    } else {
+    if (isPrevMesssageYours) {
       status += " br-tl";
+    } else {
+      status += " mt-10";
     }
 
     if (!attachments?.length) {
@@ -39,7 +46,7 @@ export default function ChatMessage({
     }
 
     return status;
-  };
+  }, []);
 
   return (
     <m.div
@@ -50,14 +57,14 @@ export default function ChatMessage({
         fromId === userId.toString() ? "message my-message" : "message"
       }
     >
-      {!isNextMessageYours ? (
+      {isNextMessageYours ? (
+        <div className="message-user-photo-none"></div>
+      ) : (
         <div className="message-user-photo">
           {uName ? uName.slice(0, 2) : <UserPhoto />}
         </div>
-      ) : (
-        <div className="message-user-photo-none"></div>
       )}
-      <div className={messageStyle()}>
+      <div className={messageStyle}>
         <div className="message-info">
           {!isPrevMesssageYours && <p className="message-user-name">{uName}</p>}
           {!!attachments?.length && (
@@ -85,13 +92,7 @@ export default function ChatMessage({
               : "message-status"
           }
         >
-          <div className="message-status-time">
-            {timeSend.getHours() +
-              ":" +
-              (timeSend.getMinutes() > 9
-                ? timeSend.getMinutes()
-                : "0" + timeSend.getMinutes())}
-          </div>
+          <div className="message-status-time">{timeSend}</div>
           <div className="message-status-icon">
             <MessageStatus status={status} />
           </div>

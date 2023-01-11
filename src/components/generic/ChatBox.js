@@ -25,7 +25,13 @@ export default function ChatBox({
   };
 
   const tView = useMemo(() => {
-    const t = new Date(Date.parse(timeOfLastUpdate));
+    const t = new Date(
+      lastMessage
+        ? lastMessage.t / 1000000000 < 10
+          ? lastMessage.t * 1000
+          : lastMessage.t
+        : Date.parse(timeOfLastUpdate)
+    );
     const tToday = new Date(Date.now());
     if (
       tToday.getFullYear() - t.getFullYear() ||
@@ -48,7 +54,7 @@ export default function ChatBox({
         (t.getMinutes() < 10 ? "0" + t.getMinutes() : t.getMinutes())
       );
     }
-  }, [timeOfLastUpdate]);
+  }, [timeOfLastUpdate, lastMessage]);
 
   const lastMessageView = useMemo(() => {
     if (lastMessage) {
