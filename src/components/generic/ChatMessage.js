@@ -27,7 +27,7 @@ export default function ChatMessage({
       ":" +
       (t.getMinutes() > 9 ? t.getMinutes() : "0" + t.getMinutes())
     );
-  }, []);
+  }, [tSend]);
 
   const messageStyle = useMemo(() => {
     let status = "message-content";
@@ -46,7 +46,7 @@ export default function ChatMessage({
     }
 
     return status;
-  }, []);
+  }, [isPrevMesssageYours, attachments]);
 
   return (
     <m.div
