@@ -4,7 +4,6 @@ import jwtDecode from "jwt-decode";
 import ChatBox from "../../generic/ChatBox.js";
 import UserSearch from "./UserSearch.js";
 import { NavLink } from "react-router-dom";
-import { VscComment, VscDeviceCamera } from "react-icons/vsc";
 import {
   selectParticipantsEntities,
   setUsers,
@@ -17,8 +16,17 @@ import {
 } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
+import {
+  changeOpacity,
+  createChatButton,
+  scaleAndRound,
+} from "../../../styles/animations/animationBlocks.js";
+import { motion as m } from "framer-motion";
 
 import "../../../styles/chat/ChatList.css";
+
+import { ReactComponent as UserIcon } from "./../../../assets/icons/chatList/UserIcon.svg";
+import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
 
 export default function ChatList() {
   const dispatch = useDispatch();
@@ -34,17 +42,16 @@ export default function ChatList() {
     : null;
 
   useEffect(() => {
-    setTimeout(() => {
-      api.conversationList({}).then((chats) => {
-        if (!chats) {
-          return;
-        }
-        dispatch(setChats(chats));
-        api
-          .getParticipantsByCids(chats.map((obj) => obj._id))
-          .then((users) => dispatch(setUsers(users)));
-      });
-    }, 300);
+    api.conversationList({}).then((chats) => {
+      if (!chats) {
+        return;
+      }
+
+      dispatch(setChats(chats));
+      api
+        .getParticipantsByCids(chats.map((obj) => obj._id))
+        .then((users) => dispatch(setUsers(users)));
+    });
   }, []);
 
   const chatsList = useMemo(() => {
@@ -73,6 +80,7 @@ export default function ChatList() {
             chatName={chatName}
             timeOfLastUpdate={obj.updated_at}
             countOfNewMessages={obj.unread_messages_count}
+            chatType={obj.type}
             lastMessage={obj.last_message}
             uId={userInfo._id}
           />
@@ -84,29 +92,65 @@ export default function ChatList() {
 
   return (
     <aside>
-      <div className="user-box">
-        <div className="user-photo">
-          {!userInfo ? (
-            <VscDeviceCamera />
-          ) : (
-            userInfo?.login.slice(0, 2).toUpperCase()
-          )}
-        </div>
-        <div className="user-info">
-          <p>{userInfo?.login}</p>
-        </div>
-      </div>
-      <div className="chat-list">
+      <m.div
+        variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        className="user-box"
+      >
+        <m.div
+          variants={changeOpacity(0.9, 1, 0, 0.15)}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="user-photo"
+        >
+          {!userInfo ? <UserIcon /> : userInfo?.login.slice(0, 2).toUpperCase()}
+        </m.div>
+        <m.div
+          variants={changeOpacity(0.9, 1, 0, 0.15)}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="user-info"
+        >
+          <p className="user-info-name">{userInfo?.login}</p>
+          {/* <p className="user-info-status"></p> */}
+        </m.div>
+      </m.div>
+      <m.div
+        variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        className="chat-list"
+      >
         {!Object.keys(conversations).length ? (
-          <p>No one chat find...</p>
+          <m.p
+            variants={changeOpacity(0.9, 1, 0, 0.15)}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="empty-list"
+          >
+            No one chat find...
+          </m.p>
         ) : (
           chatsList
         )}
-        <div className="chat-create-btn" onClick={() => setIsSearchForm(true)}>
-          <VscComment />
-        </div>
+        <m.div
+          variants={createChatButton}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="chat-create-btn"
+          onClick={() => setIsSearchForm(true)}
+        >
+          <CreateChatButton />
+        </m.div>
         {isSearchForm && <UserSearch close={setIsSearchForm} />}
-      </div>
+      </m.div>
     </aside>
   );
 }

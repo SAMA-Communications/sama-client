@@ -1,13 +1,21 @@
 import React from "react";
-import { VscClose } from "react-icons/vsc";
+import { changeOpacity } from "../../styles/animations/animationBlocks";
+import { motion as m } from "framer-motion";
+
+import { ReactComponent as CloseButtonMini } from "./../../assets/icons/chatForm/CloseButtonMini.svg";
 
 export default function SelectedUser({ uLogin, onClick }) {
   return (
-    <div className={"list-user-selected-box"} onClick={onClick}>
+    <m.div
+      variants={changeOpacity(0, 0.3, 0, 0.3)}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="list-user-selected-box"
+      onClick={onClick}
+    >
       <p>{uLogin}</p>
-      <span>
-        <VscClose />
-      </span>
-    </div>
+      <CloseButtonMini />
+    </m.div>
   );
 }

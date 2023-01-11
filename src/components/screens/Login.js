@@ -1,13 +1,22 @@
 import React, { useState } from "react";
 import api from "../../api/api";
+import MainLogo from "../static/MainLogo";
 import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
+import {
+  changeOpacity,
+  loginBox,
+} from "../../styles/animations/animationBlocks";
+import { setChats } from "../../store/Conversations";
 import { setSelectedConversation } from "../../store/SelectedConversation";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
+import { motion as m } from "framer-motion";
 
 import "../../styles/AuthForm.css";
-import { setChats } from "../../store/Conversations";
+
+import { ReactComponent as HidePassword } from "./../../assets/icons/authForm/HidePassword.svg";
+import { ReactComponent as ShowPassword } from "./../../assets/icons/authForm/ShowPassword.svg";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,6 +27,7 @@ export default function Login() {
     formState: { errors },
   } = useForm();
 
+  const [passwordType, setPasswordType] = useState("password");
   const [loader, setLoader] = useState(false);
   const onSubmit = async (data) => {
     setLoader(true);
@@ -36,38 +46,48 @@ export default function Login() {
   const renderErrorMessage = (err) => <div className="error">{err}</div>;
 
   const renderForm = (
-    <div className="form">
+    <div className="login-form">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="input-container">
-          <label>Login</label>
           <input
             {...register("ulogin", {
-              required: "* Login is require field",
+              required: "* Username is required field",
               // pattern: /^[a-z0-9._%+-]$/,
             })}
-            placeholder="Enter login"
+            placeholder=" "
+            type={"text"}
             autoComplete="off"
+            autoFocus
           />
+          <span className="input-placeholder">Username</span>
+          <span className="input-border-focus"></span>
           {errors.ulogin?.message && renderErrorMessage(errors.ulogin.message)}
         </div>
         <div className="input-container">
-          <label>Password</label>
           <input
             {...register("pass", {
-              required: "* Password is require field",
+              required: "* Password is required field",
               // minLength: 8,
             })}
-            placeholder="Enter password"
+            placeholder=" "
+            type={passwordType}
             autoComplete="off"
           />
+          <span className="password-visibility">
+            {passwordType === "password" ? (
+              <HidePassword onClick={() => setPasswordType("text")} />
+            ) : (
+              <ShowPassword onClick={() => setPasswordType("password")} />
+            )}
+          </span>
+          <span className="input-placeholder">Password</span>
+          <span className="input-border-focus"></span>
           {errors.pass?.message && renderErrorMessage(errors.pass.message)}
         </div>
+        <input type="submit" value="Log in" />
         <div className="button-container">
-          <input type="submit" value="Log in" />
-        </div>
-        <div className="button-container-text">
           New to app?&nbsp;
-          <Link to={`/signup`} className="signup">
+          <Link to={`/signup`} className="btn-signup">
             Create an account
           </Link>
         </div>
@@ -77,14 +97,31 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <div className="login-form">
-        <div className="title">
-          Log in
+      <m.div
+        variants={loginBox}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        className="login-box"
+      >
+        <div className="login-box-left bg-login">
+          <MainLogo />
+        </div>
+        <m.div
+          variants={changeOpacity(0.72, 0.7, 0, 0.25)}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="login-box-right"
+        >
+          <p className="login-form-title">user login</p>
+          <p className="login-form-text">Welcome</p>
+          <hr className="login-form-dash" />
           <Oval
             height={40}
             width={40}
             color="#1a8ee1"
-            wrapperStyle={{ right: "23%" }}
+            wrapperStyle={{ right: "10%", top: "9.2%" }}
             wrapperClass="loader"
             visible={loader}
             ariaLabel="oval-loading"
@@ -92,9 +129,9 @@ export default function Login() {
             strokeWidth={2}
             strokeWidthSecondary={3}
           />
-        </div>
-        {renderForm}
-      </div>
+          {renderForm}
+        </m.div>
+      </m.div>
     </div>
   );
 }

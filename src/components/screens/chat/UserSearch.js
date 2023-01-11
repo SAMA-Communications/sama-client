@@ -1,36 +1,31 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import SearchedUser from "../../generic/SearchedUser.js";
 import SelectedUser from "../../generic/SelectedUser.js";
 import api from "../../../api/api";
-import { VscClose, VscSearch } from "react-icons/vsc";
 import { upsertChat } from "../../../store/Conversations.js";
 import { useDispatch } from "react-redux";
+import { addUsers } from "../../../store/Participants.js";
+import { useNavigate } from "react-router-dom";
+import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 
 import "../../../styles/chat/UserSearch.css";
-import { addUsers } from "../../../store/Participants.js";
+
+import { ReactComponent as SearchIndicator } from "./../../../assets/icons/SearchIndicator.svg";
 
 export default function UserSearch({ close }) {
   const dispatch = useDispatch();
-  const inputSearchLogin = useRef(null);
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isPending, startTransition] = useTransition();
   const [ignoreIds, setIgnoreIds] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [searchedUsers, setSearchedUsers] = useState([]);
+  const [isUserSearched, setIsUserSearched] = useState("Search results");
 
-  const sendSearchRequest = async (event) => {
-    event.preventDefault();
-
-    const login = inputSearchLogin.current.value.trim();
-    if (login.length > 1) {
-      const requestData = {
-        login: login,
-        //   limit: 10,
-        //   updated_at: undefined,
-        ignore_ids: ignoreIds,
-      };
-      const users = await api.userSearch(requestData);
-      if (users) setSearchedUsers(users);
-    }
-  };
+  useEffect(() => {
+    const debounce = setTimeout(() => sendSearchRequest(searchTerm), 700);
+    return () => clearTimeout(debounce);
+  }, [searchTerm]);
 
   const createChat = async (event) => {
     event.preventDefault();
@@ -50,6 +45,10 @@ export default function UserSearch({ close }) {
       const chat = await api.conversationCreate(requestData);
       dispatch(addUsers(selectedUsers));
       dispatch(upsertChat({ ...chat, messagesIds: [] }));
+
+      navigate(`/main/#${chat.name ? chat._id : selectedUsers[0].login}`);
+      dispatch(setSelectedConversation({ id: chat._id }));
+
       close(false);
     }
   };
@@ -65,19 +64,47 @@ export default function UserSearch({ close }) {
     setSearchedUsers([...searchedUsers, data]);
   };
 
+  const sendSearchRequest = async (login) => {
+    startTransition(async () => {
+      if (login.length > 1) {
+        const requestData = {
+          login: login,
+          //   limit: 10,
+          ignore_ids: ignoreIds,
+        };
+
+        const users = await api.userSearch(requestData);
+        setSearchedUsers(users);
+
+        if (isUserSearched === "Search results") {
+          setIsUserSearched("User not found");
+        }
+      }
+    });
+  };
+
+  window.onkeydown = function (event) {
+    if (event.keyCode === 27) {
+      close(false);
+    }
+  };
+
   return (
     <div className="search-bg">
       <form id="search-form">
         <div className="search-options">
           <input
             id="inputSearchLogin"
-            ref={inputSearchLogin}
             autoComplete="off"
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Input user login.. (2+ charactes)"
+            autoFocus
           />
-          <button onClick={sendSearchRequest}>
-            <VscSearch />
-          </button>
+          {isPending && (
+            <span className="search-indicator">
+              <SearchIndicator />
+            </span>
+          )}
         </div>
         <div className="chat-selected-users">
           {selectedUsers.length
@@ -100,16 +127,18 @@ export default function UserSearch({ close }) {
               />
             ))
           ) : (
-            <div className="list-user-message">Users not found</div>
+            <div className="list-user-message">{isUserSearched}</div>
           )}
         </div>
-        <div className="search-create-chat">
-          <button onClick={createChat}>Create chat</button>
+        <div className="search-buttons">
+          <div className="search-create-chat" onClick={createChat}>
+            <p>Create chat</p>
+          </div>
+          <div className="search-close-chat" onClick={() => close(false)}>
+            <p>X</p>
+          </div>
         </div>
       </form>
-      <div className="close-form-btn" onClick={() => close(false)}>
-        <VscClose />
-      </div>
     </div>
   );
 }

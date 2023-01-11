@@ -1,12 +1,14 @@
 import React from "react";
-import { VscFileCode } from "react-icons/vsc";
 
 import "../styles/ErrorPage.css";
 
-export default function ErrorPage(params) {
+import { ReactComponent as PageNotFound } from "./../assets/icons/PageNotFound.svg";
+
+export default function ErrorPage() {
   return (
     <div className="text-error">
-      <p>Page not found</p> <VscFileCode />
+      <p>Page not found</p>
+      <PageNotFound />
     </div>
   );
 }

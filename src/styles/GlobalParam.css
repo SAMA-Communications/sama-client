@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+:root {
+  --border-main-radius: 20px;
+  --border-second-radius: 10px;
+  --border-indicator: 6px;
+
+  --font-family: "Inter", sans-serif;
+  --font-size: 1rem;
+
+  --darken-color: rgba(0, 0, 0, 0.6);
+  --preloader-bg: #fff;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+
+  box-sizing: border-box;
+
+  color: var(--text-main);
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  line-height: var(--font-size);
+  font-weight: 200;
+
+  transition: background 0.3s ease, background-color 0.3s ease,
+    background-image 0.3s ease;
+}
+body {
+  overflow: hidden;
+
+  background-color: var(--bg-default-color);
+}
+.hide {
+  display: none !important;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background: var(--scrollbar-track-color);
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: var(--scrollbar-thumb-color);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover-color);
+}

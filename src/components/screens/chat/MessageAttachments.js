@@ -1,31 +1,30 @@
 import MessageAttachment from "../../generic/MessageAttachment";
 
-export default function MessageAttachments({ attachments }) {
+export default function MessageAttachments({ attachments, openModalParam }) {
   const attachmentPreloader = (key) => (
-    <div
-      key={key}
-      style={{
-        backgroundColor: "#fff",
-        width: "100px",
-        height: "100px",
-        margin: "5px 5px 0 5px",
-      }}
-    ></div>
+    <div key={key} className="attachment-preloader"></div>
   );
 
-  return attachments ? (
-    <div className="message-file">
-      {attachments.map((el) =>
-        el.file_url ? (
-          <MessageAttachment
-            key={el.file_url}
-            url={el.file_url}
-            name={el.file_name}
-          />
-        ) : (
-          attachmentPreloader(el.file_name)
-        )
-      )}
-    </div>
-  ) : null;
+  if (!attachments) {
+    return null;
+  }
+
+  const arrayAtts = [];
+
+  for (const att of attachments) {
+    if (att.file_url) {
+      arrayAtts.push(
+        <MessageAttachment
+          key={att.file_url}
+          url={att.file_url}
+          name={att.file_name}
+          openModalParam={openModalParam}
+        />
+      );
+    } else {
+      arrayAtts.push(attachmentPreloader(att.file_name));
+    }
+  }
+
+  return <div className="message-file">{arrayAtts}</div>;
 }

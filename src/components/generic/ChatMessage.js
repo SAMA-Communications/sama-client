@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useMemo } from "react";
 import MessageAttachments from "../screens/chat/MessageAttachments";
 import MessageStatus from "./MessageStatus";
+import { changeOpacity } from "../../styles/animations/animationBlocks";
+import { motion as m } from "framer-motion";
 
 import "../../styles/chat/ChatMessage.css";
+
+import { ReactComponent as UserPhoto } from "./../../assets/icons/chatForm/UserPhotoIconChat.svg";
 
 export default function ChatMessage({
   fromId,
@@ -10,34 +14,90 @@ export default function ChatMessage({
   userId,
   uName,
   status,
+  isPrevMesssageYours,
+  isNextMessageYours,
   attachments,
   tSend,
+  openModalParam,
 }) {
-  const timeSend = new Date(tSend * 1000);
+  const timeSend = useMemo(() => {
+    const t = new Date(tSend * 1000);
+    return (
+      t.getHours() +
+      ":" +
+      (t.getMinutes() > 9 ? t.getMinutes() : "0" + t.getMinutes())
+    );
+  }, [tSend]);
+
+  const messageStyle = useMemo(() => {
+    let status = "message-content";
+    if (isPrevMesssageYours) {
+      status += " br-tl";
+    } else {
+      status += " mt-10";
+    }
+
+    if (!attachments?.length) {
+      if (text.length < 50) {
+        status += " m-pr";
+      } else {
+        status += " m-pb";
+      }
+    }
+
+    return status;
+  }, [isPrevMesssageYours, attachments]);
 
   return (
-    <div
+    <m.div
+      variants={changeOpacity(0, 0.25, 0, 0)}
+      initial="hidden"
+      animate="visible"
       className={
         fromId === userId.toString() ? "message my-message" : "message"
       }
     >
-      <div className="message-info">
-        <p className="message-user-name">{uName}</p>
-        <p className="message-body">{text}</p>
-        <MessageAttachments attachments={attachments} />
-      </div>
-      <div className="message-status">
-        <div className="message-status-time">
-          {timeSend.getHours() +
-            ":" +
-            (timeSend.getMinutes() > 9
-              ? timeSend.getMinutes()
-              : "0" + timeSend.getMinutes())}
+      {isNextMessageYours ? (
+        <div className="message-user-photo-none"></div>
+      ) : (
+        <div className="message-user-photo">
+          {uName ? uName.slice(0, 2) : <UserPhoto />}
         </div>
-        <div className="message-status-icon">
-          <MessageStatus status={status} />
+      )}
+      <div className={messageStyle}>
+        <div className="message-info">
+          {!isPrevMesssageYours && <p className="message-user-name">{uName}</p>}
+          {!!attachments?.length && (
+            <MessageAttachments
+              attachments={attachments}
+              openModalParam={openModalParam}
+            />
+          )}
+          {text && (
+            <p
+              className={
+                attachments?.length || isPrevMesssageYours
+                  ? "message-body mt-10"
+                  : "message-body"
+              }
+            >
+              {text}
+            </p>
+          )}
+        </div>
+        <div
+          className={
+            attachments?.length && !text
+              ? "message-status bg-status-att"
+              : "message-status"
+          }
+        >
+          <div className="message-status-time">{timeSend}</div>
+          <div className="message-status-icon">
+            <MessageStatus status={status} />
+          </div>
         </div>
       </div>
-    </div>
+    </m.div>
   );
 }

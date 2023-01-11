@@ -1,12 +1,4 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  VscDeviceCamera,
-  VscFileSymlinkDirectory,
-  VscLayersActive,
-  VscNewFile,
-  VscRocket,
-  VscTrash,
-} from "react-icons/vsc";
 import ChatMessage from "../../generic/ChatMessage.js";
 import AttachmentsList from "../../generic/AttachmentsList.js";
 import api from "../../../api/api";
@@ -38,8 +30,21 @@ import {
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import {
+  scaleAndRound,
+  changeOpacity,
+} from "../../../styles/animations/animationBlocks.js";
+import { animateSVG } from "../../../styles/animations/animationSVG.js";
+import { motion as m } from "framer-motion";
 
 import "../../../styles/chat/ChatForm.css";
+
+import { ReactComponent as EmptyChat } from "./../../../assets/icons/chatForm/EmptyChat.svg";
+import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatForm/RecipientPhoto.svg";
+import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
+import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
+import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
+import NoChatSelected from "../../static/NoChatSelected.js";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -58,7 +63,7 @@ export default function ChatForm() {
   const messages = useSelector(getActiveConversationMessages);
   const messageInputEl = useRef(null);
   const filePicker = useRef(null);
-  const [files, setFiles] = useState(null);
+  const [files, setFiles] = useState([]);
 
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
@@ -105,6 +110,7 @@ export default function ChatForm() {
     if (!selectedCID) {
       return;
     }
+
     if (!conversations[selectedCID].activated) {
       api.messageList({ cid: selectedCID, limit: 20 }).then(async (arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
@@ -154,6 +160,8 @@ export default function ChatForm() {
         );
       });
     }
+
+    setFiles([]);
   }, [selectedCID]);
 
   const sendMessage = async (event) => {
@@ -183,7 +191,7 @@ export default function ChatForm() {
       chatId: selectedCID,
     };
 
-    if (files) {
+    if (files?.length) {
       attachments = await getFileObjects(files);
       reqData["attachments"] = attachments.map((obj) => {
         return { file_id: obj.file_id, file_name: obj.file_name };
@@ -228,22 +236,49 @@ export default function ChatForm() {
     }
   };
 
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const close = () => setModalOpen(false);
+  const open = (options) => setModalOpen(options);
+
+  const modalWindow = () => {
+    return (
+      <div exit="exit" className="modal-window" onClick={() => close()}>
+        <img src={modalOpen?.url} alt={modalOpen?.name} />
+      </div>
+    );
+  };
+
   const messagesList = useMemo(() => {
     if (!messages) {
       return [];
     }
-    return messages.map((msg) => (
-      <ChatMessage
-        key={msg._id}
-        fromId={msg.from}
-        userId={userInfo._id}
-        text={msg.body}
-        uName={participants[msg.from]?.login}
-        attachments={msg.attachments}
-        status={msg.status}
-        tSend={msg.t}
-      />
-    ));
+    const msgsArray = [];
+    for (let i = 0; i < messages.length; i++) {
+      const msg = messages[i];
+      msgsArray.push(
+        <ChatMessage
+          key={msg._id}
+          fromId={msg.from}
+          userId={userInfo._id}
+          text={msg.body}
+          uName={participants[msg.from]?.login}
+          isPrevMesssageYours={
+            i > 0 ? messages[i - 1].from === messages[i].from : false
+          }
+          isNextMessageYours={
+            i < messages.length - 1
+              ? messages[i].from === messages[i + 1].from
+              : false
+          }
+          attachments={msg.attachments}
+          openModalParam={open}
+          status={msg.status}
+          tSend={msg.t}
+        />
+      );
+    }
+    return msgsArray;
   }, [messages]);
 
   const scrollChatToBottom = () => {
@@ -274,77 +309,96 @@ export default function ChatForm() {
     filePicker.current.click();
   };
   const handlerChange = (event) => {
-    setFiles(event.target.files);
+    if (!event.target.files.length) {
+      return;
+    }
+
+    if (files?.length + event.target.files.length >= 10) {
+      alert("Max limit to upload files 10");
+      return;
+    }
+
+    setFiles(
+      files?.length
+        ? [...files, ...event.target.files]
+        : [...event.target.files]
+    );
   };
 
   return (
-    <section className="chat-form">
+    <m.section
+      variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="chat-form"
+    >
       {!selectedCID ? (
-        <div className="chat-form-loading">
-          <VscFileSymlinkDirectory />
-          <p>Select your chat ...</p>
-        </div>
+        <NoChatSelected />
       ) : (
-        <div className="chat-form-messaging">
+        <m.div
+          variants={animateSVG(0, 0, 0, 0, 0.15)}
+          exit="exit"
+          className="chat-form-messaging"
+        >
           <div className="chat-messaging-info">
-            <div className="chat-recipient-photo">
-              <VscDeviceCamera />
-            </div>
-            <div className="chat-recipient-info">
-              <p>
-                {selectedConversation.name
-                  ? selectedConversation.name
-                  : url.hash?.slice(1)}
-              </p>
-              <div className="chat-recipient-status">
-                {recentActivityView()}
+            <div className="chat-info-block">
+              <div className="chat-recipient-photo">
+                <RecipientPhoto />
+              </div>
+              <div className="chat-recipient-info">
+                <p>{selectedConversation.name || url.hash?.slice(1)}</p>
+                <div className="chat-recipient-status">
+                  {recentActivityView()}
+                </div>
               </div>
             </div>
             <div className="chat-delete-btn" onClick={deleteChat}>
-              <VscTrash />
+              <TrashCan />
             </div>
           </div>
           <div className="chat-form-main">
             {!messages.length ? (
-              <div className="chat-empty">Chat is empty..</div>
+              <div className="chat-empty">
+                <EmptyChat />
+                <p>Write your message...</p>
+              </div>
             ) : (
               <div className="chat-messages" id="chat-messages">
                 {messagesList}
               </div>
             )}
           </div>
-          {files ? <AttachmentsList files={files} /> : null}
+          {files?.length ? (
+            <AttachmentsList files={files} funcUpdateFile={setFiles} />
+          ) : null}
           <form id="chat-form-send" action="">
-            {!files ? (
-              <div className="form-send-file">
-                <VscNewFile onClick={pickUserFiles} />
-                <input
-                  id="inputFile"
-                  ref={filePicker}
-                  onChange={handlerChange}
-                  type="file"
-                  accept="image/*"
-                  multiple
-                />
-              </div>
-            ) : (
-              <div className="form-send-file">
-                <VscLayersActive />
-              </div>
-            )}
-            <input
-              id="inputMessage"
-              ref={messageInputEl}
-              autoComplete="off"
-              placeholder="> Write your message..."
-            />
-            <button onClick={sendMessage}>
-              <p>Send</p>
-              <VscRocket />
-            </button>
+            <div className="form-send-file">
+              <SendFilesButton onClick={pickUserFiles} />
+              <input
+                id="inputFile"
+                ref={filePicker}
+                onChange={handlerChange}
+                type="file"
+                accept="image/*"
+                multiple
+              />
+            </div>
+            <div className="form-send-text">
+              <input
+                id="inputMessage"
+                ref={messageInputEl}
+                autoComplete="off"
+                placeholder="> Write your message..."
+              />
+              <button id="send-message" onClick={sendMessage}>
+                <SendMessageButton />
+              </button>
+            </div>
           </form>
-        </div>
+          {modalOpen && modalWindow()}
+        </m.div>
       )}
-    </section>
+    </m.section>
   );
 }

@@ -1,16 +1,37 @@
 import React, { useMemo } from "react";
-import { VscDeviceCamera } from "react-icons/vsc";
 import MessageStatus from "./MessageStatus";
+import { changeOpacity } from "../../styles/animations/animationBlocks";
+import { motion as m } from "framer-motion";
+
+import { ReactComponent as ChatIcon } from "./../../assets/icons/chatList/ChatIcon.svg";
+import { ReactComponent as ImagePreviewIcon } from "./../../assets/icons/chatList/ImagePreviewIcon.svg";
 
 export default function ChatBox({
   chatName,
   countOfNewMessages,
   timeOfLastUpdate,
   lastMessage,
+  chatType,
   uId,
 }) {
+  const days = {
+    0: "Su",
+    1: "Mo",
+    2: "Tu",
+    3: "We",
+    4: "Th",
+    5: "Fr",
+    6: "Sa",
+  };
+
   const tView = useMemo(() => {
-    const t = new Date(Date.parse(timeOfLastUpdate));
+    const t = new Date(
+      lastMessage
+        ? lastMessage.t / 1000000000 < 10
+          ? lastMessage.t * 1000
+          : lastMessage.t
+        : Date.parse(timeOfLastUpdate)
+    );
     const tToday = new Date(Date.now());
     if (
       tToday.getFullYear() - t.getFullYear() ||
@@ -25,24 +46,7 @@ export default function ChatBox({
         t.getFullYear().toString().slice(2)
       );
     } else if (tToday.getDay() - t.getDay()) {
-      switch (t.getDay()) {
-        case 0:
-          return "Su";
-        case 1:
-          return "Mo";
-        case 2:
-          return "Tu";
-        case 3:
-          return "We";
-        case 4:
-          return "Th";
-        case 5:
-          return "Fr";
-        case 6:
-          return "Sa";
-        default:
-          break;
-      }
+      return days[t.getDay()];
     } else {
       return (
         t.getHours() +
@@ -50,7 +54,7 @@ export default function ChatBox({
         (t.getMinutes() < 10 ? "0" + t.getMinutes() : t.getMinutes())
       );
     }
-  }, [timeOfLastUpdate]);
+  }, [timeOfLastUpdate, lastMessage]);
 
   const lastMessageView = useMemo(() => {
     if (lastMessage) {
@@ -67,18 +71,38 @@ export default function ChatBox({
   }, [lastMessage]);
 
   return (
-    <div className="chat-box">
+    <m.div
+      variants={changeOpacity(0.9, 1, 0, 0.15)}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="chat-box"
+    >
       <div className="chat-box-icon">
-        <VscDeviceCamera />
+        <ChatIcon />
       </div>
       <div className="chat-box-info">
         <p className="chat-name">{chatName}</p>
-        <p className="chat-message">{lastMessageView}</p>
+        {lastMessage &&
+          (lastMessageView[0] === "" ? (
+            <div className="last-message-img-preview">
+              <ImagePreviewIcon />
+              <p>photo</p>
+            </div>
+          ) : (
+            <p className="chat-message">{lastMessageView}</p>
+          ))}
       </div>
       {countOfNewMessages > 0 && (
-        <div className="chat-indicator">{countOfNewMessages}</div>
+        <div
+          className={
+            chatType === "g" ? "chat-indicator-group" : "chat-indicator"
+          }
+        >
+          {countOfNewMessages}
+        </div>
       )}
       <div className="chat-last-update">{tView}</div>
-    </div>
+    </m.div>
   );
 }

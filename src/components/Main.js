@@ -1,11 +1,15 @@
+import ChatList from "./screens/chat/ChatList";
 import React, { useMemo, useState } from "react";
 import api from "../api/api";
+import MiniLogo from "./static/MiniLogo.js";
 import { Link } from "react-router-dom";
-import { VscCommentDiscussion } from "react-icons/vsc";
-import { IoMoonOutline, IoSunnyOutline } from "react-icons/io5";
+import { changeOpacity } from "../styles/animations/animationBlocks";
+import { motion as m } from "framer-motion";
 
 import "../styles/Main.css";
-import ChatList from "./screens/chat/ChatList";
+
+import { ReactComponent as IconSun } from "./../assets/icons/ThemeSun.svg";
+import { ReactComponent as IconMoon } from "./../assets/icons/ThemeMoon.svg";
 const ChatForm = React.lazy(() => import("./screens/chat/ChatForm"));
 
 export default function Main() {
@@ -35,11 +39,11 @@ export default function Main() {
   const changeThemeBtn = useMemo(() => {
     return currentTheme === "dark" ? (
       <div className="change-themes" onClick={changeToLightTheme}>
-        <IoSunnyOutline />
+        <IconSun />
       </div>
     ) : (
       <div className="change-themes" onClick={changeToDarkTheme}>
-        <IoMoonOutline />
+        <IconMoon />
       </div>
     );
   }, [currentTheme]);
@@ -47,23 +51,28 @@ export default function Main() {
   return (
     <div>
       <nav>
-        <div className="chat-logo">
-          <VscCommentDiscussion />
-          <p>SAMA</p>
+        <div className="nav-logo">
+          <MiniLogo />
         </div>
-        <div className="chat-navigate-bar">
+        <m.div
+          variants={changeOpacity(0.1, 1, 0, 0.25)}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="nav-navigate-bar"
+        >
           {changeThemeBtn}
-          <div className="chat-navigate-slice">
+          <div className="nav-navigate-slice">
             <span>|</span>
           </div>
-          <div className="chat-logout-btn">
+          <div className="nav-logout-btn">
             <Link to={"/login"} onClick={sendLogout} className="logout-btn">
               Logout
             </Link>
           </div>
-        </div>
+        </m.div>
       </nav>
-      <main className="Main">
+      <main>
         <ChatList />
         <ChatForm />
       </main>
