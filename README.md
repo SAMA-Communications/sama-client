@@ -12,4 +12,4 @@ This is a frontend demo app for the SAMA server https://github.com/SAMA-Communic
 - Copy `.env.example` to `.env`.
 - `npm install` to install dependencies 
 - `npm run start` to run server
-- access http://localhost:3000
+- access http://localhost:3000 in your browser 
