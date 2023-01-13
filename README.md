@@ -8,7 +8,7 @@ This is a frontend demo app for the SAMA server https://github.com/SAMA-Communic
 
 ## Development
 
-- Make sure you followed Sama server Development guide first https://github.com/SAMA-Communications/sama-server/blob/main/README.md#development
+- Make sure you followed SAMA server Development guide first https://github.com/SAMA-Communications/sama-server/blob/main/README.md#development
 - Copy `.env.example` to `.env`.
 - `npm install` to install dependencies 
 - `npm run start` to run server
