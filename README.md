@@ -1,6 +1,6 @@
 # SAMA - Simple but Advanced Messaging Alternative - Client app 
 
-<img width="597" alt="Screenshot 2022-12-31 at 14 15 04" src="https://user-images.githubusercontent.com/70977170/210136404-b1811eaa-b058-4fd4-a7db-14b8d059a118.png">
+<img width="1282" alt="Screenshot 2023-01-13 at 12 54 16" src="https://user-images.githubusercontent.com/70977170/212303479-06e2169f-a609-4fa2-9ef0-7bf2f8fb68a6.png">
 
 ## Overview 
 
@@ -12,3 +12,4 @@ This is a frontend demo app for the SAMA server https://github.com/SAMA-Communic
 - Copy `.env.example` to `.env`.
 - `npm install` to install dependencies 
 - `npm run start` to run server
+- access http://localhost:3000
