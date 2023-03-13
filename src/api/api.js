@@ -22,9 +22,9 @@ class Api {
       const message = JSON.parse(e.data);
       console.log("[socket.message]", message);
 
-      if (message.last_activity) {
+      if (message.message?.last_activity) {
         if (this.onUserActivityListener) {
-          this.onUserActivityListener(message.last_activity);
+          this.onUserActivityListener(message.message?.last_activity);
         }
         return;
       }
