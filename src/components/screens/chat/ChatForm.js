@@ -93,7 +93,7 @@ export default function ChatForm() {
     let countOfNewMessages = 0;
     message.cid === selectedCID
       ? api.markConversationAsRead({ cid: selectedCID })
-      : (countOfNewMessages = 1);
+      : (countOfNewMessages = message.from === userInfo._id ? 0 : 1);
     dispatch(
       updateLastMessageField({
         cid: message.cid,
