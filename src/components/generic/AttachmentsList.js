@@ -1,4 +1,5 @@
 import AttachmentsListItem from "./AttachmentsListItem";
+import getUniqueId from "../../api/uuid";
 import { ReactComponent as ClearFilesButton } from "./../../assets/icons/chatForm/ClearFilesButton.svg";
 
 export default function AttachmentsList({ files, funcUpdateFile }) {
@@ -7,6 +8,7 @@ export default function AttachmentsList({ files, funcUpdateFile }) {
       <div className="chat-files-block">
         {Object.values(files).map((el) => (
           <AttachmentsListItem
+            key={getUniqueId(el.name)}
             name={el.name}
             files={files}
             funcUpdateFile={funcUpdateFile}
