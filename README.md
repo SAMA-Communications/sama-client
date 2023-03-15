@@ -15,3 +15,11 @@ Read a complete medium post **Introducing SAMA** about what is SAMA and what pro
 - `npm install` to install dependencies 
 - `npm run start` to run server
 - access http://localhost:3000 in your browser 
+
+## License 
+
+[MIT](LICENSE)
+
+## Help us!
+
+Any thought, feedback is welcome!
