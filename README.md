@@ -6,6 +6,8 @@
 
 This is a frontend demo app for the SAMA server https://github.com/SAMA-Communications/sama-server
 
+Read a complete medium post **Introducing SAMA** about what is SAMA and what problems we are trying to solve with it https://medium.com/sama-communications/introducing-sama-simple-but-advanced-messaging-alternative-chat-server-524a532e2040
+
 ## Development
 
 - Make sure you followed SAMA server Development guide first https://github.com/SAMA-Communications/sama-server/blob/main/README.md#development
