@@ -49,6 +49,10 @@ export const conversations = createSlice({
     updateLastMessageField: (state, { payload }) => {
       const { cid, msg, resaveLastMessage, countOfNewMessages } = payload;
       const conv = state.entities[cid];
+
+      if (!conv) {
+        return;
+      }
       let mids = [...conv.messagesIds];
 
       if (resaveLastMessage) {

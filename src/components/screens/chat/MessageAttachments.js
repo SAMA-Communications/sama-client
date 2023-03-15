@@ -15,14 +15,14 @@ export default function MessageAttachments({ attachments, openModalParam }) {
     if (att.file_url) {
       arrayAtts.push(
         <MessageAttachment
-          key={att.file_url}
+          key={att.file_id}
           url={att.file_url}
           name={att.file_name}
           openModalParam={openModalParam}
         />
       );
     } else {
-      arrayAtts.push(attachmentPreloader(att.file_name));
+      arrayAtts.push(attachmentPreloader(att.file_id));
     }
   }
 
