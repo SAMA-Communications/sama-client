@@ -397,6 +397,22 @@ class Api {
     const resObjKey = "success";
     return this.sendPromise(requestData, resObjKey);
   }
+
+  async pushSubscriptionCreate(data) {
+    const requestData = {
+      request: {
+        push_subscription_create: {
+          platform: "web",
+          push_token: data.endpoint,
+          device_udid: getBrowserFingerprint(true)?.toString(),
+        },
+        id: getUniqueId("pushSubscriptionCreate"),
+      },
+    };
+    console.log(data);
+    const resObjKey = "user";
+    return this.sendPromise(requestData, resObjKey);
+  }
 }
 
 function getUserLogin() {

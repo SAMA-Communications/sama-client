@@ -12,6 +12,36 @@ import { ReactComponent as IconSun } from "./../assets/icons/ThemeSun.svg";
 import { ReactComponent as IconMoon } from "./../assets/icons/ThemeMoon.svg";
 const ChatForm = React.lazy(() => import("./screens/chat/ChatForm"));
 
+function urlBase64ToUint8Array(base64String) {
+  var padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  var base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
+
+  var rawData = window.atob(base64);
+  var outputArray = new Uint8Array(rawData.length);
+
+  for (var i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+if ("serviceWorker" in navigator) {
+  const publicVapidKey =
+    "BEDl13AheorvsFF1em9iDmcVVtNe96dzOJac0eZven3TqtreoXvsSfZdPG1xnELHnLVaKXQEzaqReisx9ZKbvsM";
+  navigator.serviceWorker
+    .register("/sw.js")
+    .then((reg) => {
+      const options = {
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+      };
+      reg.pushManager
+        .subscribe(options)
+        .then((sub) => api.pushSubscriptionCreate(sub));
+    })
+    .catch((err) => console.log(err));
+}
+
 export default function Main() {
   const sendLogout = async () => {
     try {
