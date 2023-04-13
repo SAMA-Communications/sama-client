@@ -1,7 +1,8 @@
 import ChatList from "./screens/chat/ChatList";
+import MiniLogo from "./static/MiniLogo.js";
 import React, { useMemo, useState } from "react";
 import api from "../api/api";
-import MiniLogo from "./static/MiniLogo.js";
+import urlBase64ToUint8Array from "../api/base64_to_uint8Array.js";
 import { Link } from "react-router-dom";
 import { changeOpacity } from "../styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
@@ -12,33 +13,30 @@ import { ReactComponent as IconSun } from "./../assets/icons/ThemeSun.svg";
 import { ReactComponent as IconMoon } from "./../assets/icons/ThemeMoon.svg";
 const ChatForm = React.lazy(() => import("./screens/chat/ChatForm"));
 
-function urlBase64ToUint8Array(base64String) {
-  var padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  var base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
-
-  var rawData = window.atob(base64);
-  var outputArray = new Uint8Array(rawData.length);
-
-  for (var i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-
 if ("serviceWorker" in navigator) {
-  const publicVapidKey =
-    "BEDl13AheorvsFF1em9iDmcVVtNe96dzOJac0eZven3TqtreoXvsSfZdPG1xnELHnLVaKXQEzaqReisx9ZKbvsM";
   navigator.serviceWorker
     .register("/sw.js")
-    .then((reg) => {
-      const options = {
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
-      };
+    .then((reg) =>
       reg.pushManager
-        .subscribe(options)
-        .then((sub) => api.pushSubscriptionCreate(sub));
-    })
+        .subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(
+            process.env.REACT_APP_PUBLIC_VAPID_KEY
+          ),
+        })
+        .then((sub) =>
+          //TODO: optimize ?btoa?
+          api.pushSubscriptionCreate({
+            web_endpoint: sub.endpoint,
+            web_key_auth: btoa(
+              String.fromCharCode(...new Uint8Array(sub.getKey("auth")))
+            ),
+            web_key_p256dh: btoa(
+              String.fromCharCode(...new Uint8Array(sub.getKey("p256dh")))
+            ),
+          })
+        )
+    )
     .catch((err) => console.log(err));
 }
 

@@ -1,5 +1,4 @@
 import getUniqueId from "./uuid.js";
-//xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx:user_login генерувати
 import getBrowserFingerprint from "get-browser-fingerprint";
 
 class Api {
@@ -403,13 +402,15 @@ class Api {
       request: {
         push_subscription_create: {
           platform: "web",
-          push_token: data.endpoint,
+          web_endpoint: data.web_endpoint,
+          web_key_auth: data.web_key_auth,
+          web_key_p256dh: data.web_key_p256dh,
           device_udid: getBrowserFingerprint(true)?.toString(),
         },
         id: getUniqueId("pushSubscriptionCreate"),
       },
     };
-    console.log(data);
+
     const resObjKey = "user";
     return this.sendPromise(requestData, resObjKey);
   }
