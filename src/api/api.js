@@ -414,6 +414,20 @@ class Api {
     const resObjKey = "user";
     return this.sendPromise(requestData, resObjKey);
   }
+
+  async pushSubscriptionDelete(data) {
+    const requestData = {
+      request: {
+        push_subscription_delete: {
+          device_udid: getBrowserFingerprint(true)?.toString(),
+        },
+        id: getUniqueId("pushSubscriptionDelete"),
+      },
+    };
+
+    const resObjKey = "user";
+    return this.sendPromise(requestData, resObjKey);
+  }
 }
 
 function getUserLogin() {
