@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import api from "../../api/api";
 import MainLogo from "../static/MainLogo";
-import urlBase64ToUint8Array from "../../api/base64_to_uint8Array.js";
+import subscribeForNotifications from "../../services/notifications";
 import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import {
@@ -36,32 +36,7 @@ export default function Login() {
       const userToken = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
       navigate("/main");
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker
-          .register("/sw.js")
-          .then((reg) =>
-            reg.pushManager
-              .subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(
-                  process.env.REACT_APP_PUBLIC_VAPID_KEY
-                ),
-              })
-              .then((sub) =>
-                //TODO: optimize ?btoa?
-                api.pushSubscriptionCreate({
-                  web_endpoint: sub.endpoint,
-                  web_key_auth: btoa(
-                    String.fromCharCode(...new Uint8Array(sub.getKey("auth")))
-                  ),
-                  web_key_p256dh: btoa(
-                    String.fromCharCode(...new Uint8Array(sub.getKey("p256dh")))
-                  ),
-                })
-              )
-          )
-          .catch((err) => console.log(err));
-      }
+      subscribeForNotifications();
       dispatch(setSelectedConversation({}));
       dispatch(setChats([]));
     } catch (error) {
