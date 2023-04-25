@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import api from "../../api/api";
 import MainLogo from "../static/MainLogo";
+import subscribeForNotifications from "../../services/notifications";
 import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import {
@@ -35,6 +36,7 @@ export default function Login() {
       const userToken = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
       navigate("/main");
+      subscribeForNotifications();
       dispatch(setSelectedConversation({}));
       dispatch(setChats([]));
     } catch (error) {

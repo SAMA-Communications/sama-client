@@ -1,7 +1,7 @@
 import ChatList from "./screens/chat/ChatList";
+import MiniLogo from "./static/MiniLogo.js";
 import React, { useMemo, useState } from "react";
 import api from "../api/api";
-import MiniLogo from "./static/MiniLogo.js";
 import { Link } from "react-router-dom";
 import { changeOpacity } from "../styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
@@ -15,7 +15,16 @@ const ChatForm = React.lazy(() => import("./screens/chat/ChatForm"));
 export default function Main() {
   const sendLogout = async () => {
     try {
-      await api.userLogout();
+      navigator.serviceWorker.ready
+        .then((reg) =>
+          reg.pushManager.getSubscription().then((sub) =>
+            sub.unsubscribe().then(async () => {
+              await api.pushSubscriptionDelete();
+              await api.userLogout();
+            })
+          )
+        )
+        .catch((err) => console.log(err));
     } catch (error) {
       alert(error.message);
     }
