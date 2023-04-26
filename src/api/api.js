@@ -64,6 +64,16 @@ class Api {
 
     this.socket.onclose = () => {
       console.log("[socket.close]");
+
+      if (navigator.onLine && document.visibilityState === "visible") {
+        this.connect();
+      } else {
+        window.addEventListener("online", () => this.connect());
+        document.addEventListener(
+          "visibilitychange",
+          () => document.visibilityState === "visible" && this.connect()
+        );
+      }
     };
   }
 
