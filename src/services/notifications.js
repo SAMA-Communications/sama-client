@@ -1,5 +1,5 @@
-import api from "../../api/api";
-import urlBase64ToUint8Array from "../../api/base64_to_uint8Array.js";
+import api from "../api/api";
+import urlBase64ToUint8Array from "../api/base64_to_uint8Array.js";
 
 export default function subscribeForNotifications() {
   if ("serviceWorker" in navigator) {
