@@ -22,12 +22,12 @@ import {
   scaleAndRound,
 } from "../../../styles/animations/animationBlocks.js";
 import { motion as m } from "framer-motion";
+import { default as EventEmitter } from "../../../event/eventEmitter.js";
 
 import "../../../styles/chat/ChatList.css";
 
 import { ReactComponent as UserIcon } from "./../../../assets/icons/chatList/UserIcon.svg";
 import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
-
 export default function ChatList() {
   const dispatch = useDispatch();
   const [isSearchForm, setIsSearchForm] = useState(false);
@@ -42,6 +42,18 @@ export default function ChatList() {
     : null;
 
   useEffect(() => {
+    EventEmitter.subscribe("onConnect", () =>
+      api.conversationList({}).then((chats) => {
+        if (!chats) {
+          return;
+        }
+
+        dispatch(setChats(chats));
+        api
+          .getParticipantsByCids(chats.map((obj) => obj._id))
+          .then((users) => dispatch(setUsers(users)));
+      })
+    );
     api.conversationList({}).then((chats) => {
       if (!chats) {
         return;

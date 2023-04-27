@@ -1,5 +1,6 @@
-import getUniqueId from "./uuid.js";
 import getBrowserFingerprint from "get-browser-fingerprint";
+import getUniqueId from "./uuid.js";
+import { default as EventEmitter } from "../event/eventEmitter.js";
 
 class Api {
   constructor(baseUrl) {
@@ -15,6 +16,7 @@ class Api {
 
     this.socket.onopen = () => {
       console.log("[socket.open]");
+      EventEmitter.emit("onConnect");
     };
 
     this.socket.onmessage = (e) => {
@@ -69,10 +71,9 @@ class Api {
         this.connect();
       } else {
         window.addEventListener("online", () => this.connect());
-        document.addEventListener(
-          "visibilitychange",
-          () => document.visibilityState === "visible" && this.connect()
-        );
+        document.addEventListener("visibilitychange", function () {
+          document.visibilityState === "visible" && this.connect();
+        });
       }
     };
   }

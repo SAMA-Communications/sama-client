@@ -1,7 +1,8 @@
 import React, { Suspense, useEffect } from "react";
 import api from "./api/api";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { default as EventEmitter } from "./event/eventEmitter";
 
 import Login from "./components/screens/Login";
 import SignUp from "./components/screens/SignUp";
@@ -33,6 +34,9 @@ function App() {
     }
 
     const token = localStorage.getItem("sessionId");
+    EventEmitter.subscribe("onConnect", () =>
+      userLoginByToken(localStorage.getItem("sessionId"))
+    );
     if (token && token !== "undefined") {
       userLoginByToken(token);
     } else {

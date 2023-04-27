@@ -1,4 +1,4 @@
-export default class EventEmitter {
+class EventEmitter {
   constructor() {
     this.events = {};
   }
@@ -8,9 +8,13 @@ export default class EventEmitter {
     this.events[eventName].push(callback);
   }
 
-  emit(eventName, args) {
+  async emit(eventName, args) {
     const event = this.events[eventName];
-    event && event.forEach((callback) => callback.call(null, args));
+    if (event) {
+      for (const callback of event) {
+        await callback.call(null, args);
+      }
+    }
   }
 
   unsubscribe(eventName, callback) {
@@ -23,3 +27,5 @@ export default class EventEmitter {
     this.events = {};
   }
 }
+
+export default new EventEmitter();
