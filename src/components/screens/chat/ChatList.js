@@ -13,6 +13,7 @@ import {
   getConverastionById,
   selectAllConversations,
   setChats,
+  upsertChats,
 } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
@@ -47,8 +48,7 @@ export default function ChatList() {
         if (!chats) {
           return;
         }
-
-        dispatch(setChats(chats));
+        dispatch(upsertChats(chats));
         api
           .getParticipantsByCids(chats.map((obj) => obj._id))
           .then((users) => dispatch(setUsers(users)));
