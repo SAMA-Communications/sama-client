@@ -9,8 +9,8 @@ import SignUp from "./components/screens/SignUp";
 import PageLoader from "./components/PageLoader";
 
 import "./styles/GlobalParam.css";
-import("./styles/themes/DarkTheme.css");
-import("./styles/themes/DefaultTheme.css");
+import "./styles/themes/DarkTheme.css";
+import "./styles/themes/DefaultTheme.css";
 const Main = React.lazy(() => import("./components/Main"));
 const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
@@ -40,6 +40,7 @@ function App() {
     if (token && token !== "undefined") {
       userLoginByToken(token);
     } else {
+      localStorage.removeItem("sessionId");
       navigate("/login");
     }
   }, []);
@@ -47,7 +48,9 @@ function App() {
   const userLoginByToken = async (token) => {
     try {
       const userToken = await api.userLogin({ token });
-      localStorage.setItem("sessionId", userToken);
+      userToken
+        ? localStorage.setItem("sessionId", userToken)
+        : navigate("/login");
       navigate("/main");
     } catch (error) {
       navigate("/login");

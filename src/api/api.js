@@ -17,6 +17,7 @@ class Api {
     this.socket.onopen = () => {
       console.log("[socket.open]");
       EventEmitter.emit("onConnect");
+      EventEmitter.emit("setConnectStatus", true);
     };
 
     this.socket.onmessage = (e) => {
@@ -66,14 +67,16 @@ class Api {
 
     this.socket.onclose = () => {
       console.log("[socket.close]");
+      EventEmitter.emit("setConnectStatus", false);
 
       if (navigator.onLine && document.visibilityState === "visible") {
         this.connect();
       } else {
         window.addEventListener("online", () => this.connect());
-        document.addEventListener("visibilitychange", function () {
-          document.visibilityState === "visible" && this.connect();
-        });
+        document.addEventListener(
+          "visibilitychange",
+          () => document.visibilityState === "visible" && this.connect()
+        );
       }
     };
   }
