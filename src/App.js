@@ -48,7 +48,6 @@ function App() {
   const userLoginByToken = async (token) => {
     try {
       const userToken = await api.userLogin({ token });
-      console.log("userToken_1: ", userToken);
       if (userToken) {
         localStorage.setItem("sessionId", userToken);
         navigate("/main");

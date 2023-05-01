@@ -297,7 +297,7 @@ export default function ChatForm() {
       return null;
     }
 
-    return selectedConversation.opponent_id === userInfo._id
+    return selectedConversation.opponent_id === userInfo?._id
       ? participants[selectedConversation.owner_id].recent_activity
       : participants[selectedConversation.opponent_id].recent_activity;
   };
