@@ -48,10 +48,14 @@ function App() {
   const userLoginByToken = async (token) => {
     try {
       const userToken = await api.userLogin({ token });
-      userToken
-        ? localStorage.setItem("sessionId", userToken)
-        : navigate("/login");
-      navigate("/main");
+      console.log("userToken_1: ", userToken);
+      if (userToken) {
+        localStorage.setItem("sessionId", userToken);
+        navigate("/main");
+      } else {
+        localStorage.removeItem("sessionId");
+        navigate("/login");
+      }
     } catch (error) {
       navigate("/login");
     }
