@@ -68,17 +68,19 @@ class Api {
       console.log("[socket.close]");
       EventEmitter.emit("onDisconnect");
 
-      const checkConnection = () => {
+      const reConnect = () => {
         if (navigator.onLine && document.visibilityState === "visible") {
           this.connect();
+          window.removeEventListener("online", reConnect);
+          document.removeEventListener("visibilitychange", reConnect);
         }
       };
 
       if (navigator.onLine && document.visibilityState === "visible") {
         this.connect();
       } else {
-        window.addEventListener("online", checkConnection);
-        document.addEventListener("visibilitychange", checkConnection);
+        window.addEventListener("online", reConnect);
+        document.addEventListener("visibilitychange", reConnect);
       }
     };
   }
