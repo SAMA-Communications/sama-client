@@ -43,7 +43,8 @@ export const conversations = createSlice({
       });
       conversationsAdapter.setAll(state, conversations);
     },
-    upsertChats: (state, action) => {
+
+    insertChats: (state, action) => {
       const conversations = action.payload;
       const conversationsToUpdate = [];
       conversations.forEach((conv) => {
@@ -58,6 +59,7 @@ export const conversations = createSlice({
       }
       conversationsAdapter.upsertMany(state, conversationsToUpdate);
     },
+
     upsertChat: conversationsAdapter.upsertOne,
     removeChat: conversationsAdapter.removeOne,
 
@@ -106,14 +108,14 @@ export const conversations = createSlice({
 });
 
 export const {
+  clearCountOfUnreadMessages,
+  insertChats,
+  markConversationAsRead,
+  removeChat,
   setChats,
   updateChatIndicator,
-  upsertChat,
-  upsertChats,
-  removeChat,
-  markConversationAsRead,
-  clearCountOfUnreadMessages,
   updateLastMessageField,
+  upsertChat,
 } = conversations.actions;
 
 export default conversations.reducer;

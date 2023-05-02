@@ -11,9 +11,8 @@ import {
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
+  insertChats,
   selectAllConversations,
-  setChats,
-  upsertChats,
 } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
@@ -29,6 +28,7 @@ import "../../../styles/chat/ChatList.css";
 
 import { ReactComponent as UserIcon } from "./../../../assets/icons/chatList/UserIcon.svg";
 import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
+
 export default function ChatList() {
   const dispatch = useDispatch();
   const [isSearchForm, setIsSearchForm] = useState(false);
@@ -43,27 +43,19 @@ export default function ChatList() {
     : null;
 
   useEffect(() => {
-    EventEmitter.subscribe("onConnect", () =>
+    function getChatsAndParticipants() {
       api.conversationList({}).then((chats) => {
         if (!chats) {
           return;
         }
-        dispatch(upsertChats(chats));
+        dispatch(insertChats(chats));
         api
           .getParticipantsByCids(chats.map((obj) => obj._id))
           .then((users) => dispatch(setUsers(users)));
-      })
-    );
-    api.conversationList({}).then((chats) => {
-      if (!chats) {
-        return;
-      }
-
-      dispatch(setChats(chats));
-      api
-        .getParticipantsByCids(chats.map((obj) => obj._id))
-        .then((users) => dispatch(setUsers(users)));
-    });
+      });
+    }
+    getChatsAndParticipants();
+    EventEmitter.subscribe("onConnect", getChatsAndParticipants);
   }, []);
 
   const chatsList = useMemo(() => {

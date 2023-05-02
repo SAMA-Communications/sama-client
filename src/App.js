@@ -48,7 +48,7 @@ function App() {
   const userLoginByToken = async (token) => {
     try {
       const userToken = await api.userLogin({ token });
-      if (userToken) {
+      if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
         navigate("/main");
       } else {
