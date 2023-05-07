@@ -1,6 +1,8 @@
 import getBrowserFingerprint from "get-browser-fingerprint";
 import getUniqueId from "./uuid.js";
 import { default as EventEmitter } from "../event/eventEmitter.js";
+import { default as reduxStore } from "../store/store.js";
+import { updateState } from "../store/ConnectState.js";
 
 class Api {
   constructor(baseUrl) {
@@ -17,6 +19,7 @@ class Api {
     this.socket.onopen = () => {
       console.log("[socket.open]");
       EventEmitter.emit("onConnect");
+      reduxStore.dispatch(updateState(true));
     };
 
     this.socket.onmessage = (e) => {
@@ -66,7 +69,7 @@ class Api {
 
     this.socket.onclose = () => {
       console.log("[socket.close]");
-      EventEmitter.emit("onDisconnect");
+      reduxStore.dispatch(updateState(false));
 
       const reConnect = () => {
         if (navigator.onLine && document.visibilityState === "visible") {

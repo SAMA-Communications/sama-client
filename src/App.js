@@ -11,6 +11,7 @@ import PageLoader from "./components/PageLoader";
 import "./styles/GlobalParam.css";
 import "./styles/themes/DarkTheme.css";
 import "./styles/themes/DefaultTheme.css";
+
 const Main = React.lazy(() => import("./components/Main"));
 const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 

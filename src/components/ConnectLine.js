@@ -1,15 +1,12 @@
-import { default as EventEmitter } from "../event/eventEmitter";
+import { getConnectState } from "../store/ConnectState";
 import { motion as m } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
 
 import "./../styles/ConnectLine.css";
 
 export default function ConnectLine() {
-  const [isSocketConnect, setIsSocketConnect] = useState(null);
-  if (isSocketConnect === null) {
-    EventEmitter.subscribe("onConnect", () => setIsSocketConnect(true));
-    EventEmitter.subscribe("onDisconnect", () => setIsSocketConnect(false));
-  }
+  const isSocketConnect = useSelector(getConnectState);
 
   const visibleLine = useMemo(() => {
     return isSocketConnect ? (
@@ -17,18 +14,8 @@ export default function ConnectLine() {
     ) : (
       <m.div
         variants={{
-          hidden: {
-            marginTop: "-28px",
-            transition: { duration: 0.3 },
-          },
-          visible: {
-            marginTop: "0",
-            transition: { duration: 0.3 },
-          },
-          exit: {
-            marginTop: "-28px",
-            transition: { duration: 0.3 },
-          },
+          hidden: { marginTop: "-28px" },
+          visible: { marginTop: "0", transition: { duration: 0.3 } },
         }}
         initial="hidden"
         animate="visible"
