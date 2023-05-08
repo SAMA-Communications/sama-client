@@ -11,8 +11,8 @@ import {
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
+  insertChats,
   selectAllConversations,
-  setChats,
 } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
@@ -22,6 +22,7 @@ import {
   scaleAndRound,
 } from "../../../styles/animations/animationBlocks.js";
 import { motion as m } from "framer-motion";
+import { default as EventEmitter } from "../../../event/eventEmitter.js";
 
 import "../../../styles/chat/ChatList.css";
 
@@ -42,16 +43,19 @@ export default function ChatList() {
     : null;
 
   useEffect(() => {
-    api.conversationList({}).then((chats) => {
-      if (!chats) {
-        return;
-      }
-
-      dispatch(setChats(chats));
-      api
-        .getParticipantsByCids(chats.map((obj) => obj._id))
-        .then((users) => dispatch(setUsers(users)));
-    });
+    function getChatsAndParticipants() {
+      api.conversationList({}).then((chats) => {
+        if (!chats) {
+          return;
+        }
+        dispatch(insertChats(chats));
+        api
+          .getParticipantsByCids(chats.map((obj) => obj._id))
+          .then((users) => dispatch(setUsers(users)));
+      });
+    }
+    getChatsAndParticipants();
+    EventEmitter.subscribe("onConnect", getChatsAndParticipants);
   }, []);
 
   const chatsList = useMemo(() => {

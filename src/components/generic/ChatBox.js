@@ -39,9 +39,9 @@ export default function ChatBox({
       tToday.getDate() - t.getDate() > 6
     ) {
       return (
-        t.getDate() +
+        (t.getDate() < 10 ? "0" + t.getDate() : t.getDate()) +
         "." +
-        t.getMonth() +
+        (t.getMonth() < 10 ? "0" + t.getMonth() : t.getMonth()) +
         "." +
         t.getFullYear().toString().slice(2)
       );

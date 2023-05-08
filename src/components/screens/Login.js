@@ -1,6 +1,6 @@
+import MainLogo from "../static/MainLogo";
 import React, { useState } from "react";
 import api from "../../api/api";
-import MainLogo from "../static/MainLogo";
 import subscribeForNotifications from "../../services/notifications";
 import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";

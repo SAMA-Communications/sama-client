@@ -1,14 +1,16 @@
+import connectStateReducer from "./ConnectState";
 import conversationsReducer from "./Conversations";
-import selectedConversationReducer from "./SelectedConversation";
-import participantsReducer from "./Participants";
 import messageReducer from "./Messages";
+import participantsReducer from "./Participants";
+import selectedConversationReducer from "./SelectedConversation";
 import { configureStore } from "@reduxjs/toolkit";
 
 export default configureStore({
   reducer: {
+    connectState: connectStateReducer,
     conversations: conversationsReducer,
-    selectedConversation: selectedConversationReducer,
-    participants: participantsReducer,
     messages: messageReducer,
+    participants: participantsReducer,
+    selectedConversation: selectedConversationReducer,
   },
 });

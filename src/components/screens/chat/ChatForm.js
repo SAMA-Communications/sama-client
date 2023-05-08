@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import ChatMessage from "../../generic/ChatMessage.js";
 import AttachmentsList from "../../generic/AttachmentsList.js";
+import ChatMessage from "../../generic/ChatMessage.js";
+import NoChatSelected from "../../static/NoChatSelected.js";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
 import {
@@ -41,7 +42,6 @@ import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatFo
 import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
-import NoChatSelected from "../../static/NoChatSelected.js";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -297,7 +297,7 @@ export default function ChatForm() {
       return null;
     }
 
-    return selectedConversation.opponent_id === userInfo._id
+    return selectedConversation.opponent_id === userInfo?._id
       ? participants[selectedConversation.owner_id].recent_activity
       : participants[selectedConversation.opponent_id].recent_activity;
   };

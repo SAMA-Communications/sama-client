@@ -1,15 +1,17 @@
 import React, { Suspense, useEffect } from "react";
 import api from "./api/api";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { default as EventEmitter } from "./event/eventEmitter";
 
 import Login from "./components/screens/Login";
 import SignUp from "./components/screens/SignUp";
 import PageLoader from "./components/PageLoader";
 
 import "./styles/GlobalParam.css";
-import("./styles/themes/DarkTheme.css");
-import("./styles/themes/DefaultTheme.css");
+import "./styles/themes/DarkTheme.css";
+import "./styles/themes/DefaultTheme.css";
+
 const Main = React.lazy(() => import("./components/Main"));
 const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
@@ -33,9 +35,13 @@ function App() {
     }
 
     const token = localStorage.getItem("sessionId");
+    EventEmitter.subscribe("onConnect", () =>
+      userLoginByToken(localStorage.getItem("sessionId"))
+    );
     if (token && token !== "undefined") {
       userLoginByToken(token);
     } else {
+      localStorage.removeItem("sessionId");
       navigate("/login");
     }
   }, []);
@@ -43,8 +49,13 @@ function App() {
   const userLoginByToken = async (token) => {
     try {
       const userToken = await api.userLogin({ token });
-      localStorage.setItem("sessionId", userToken);
-      navigate("/main");
+      if (userToken && userToken !== "undefined") {
+        localStorage.setItem("sessionId", userToken);
+        navigate("/main");
+      } else {
+        localStorage.removeItem("sessionId");
+        navigate("/login");
+      }
     } catch (error) {
       navigate("/login");
     }
