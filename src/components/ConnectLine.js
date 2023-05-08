@@ -6,10 +6,10 @@ import { useSelector } from "react-redux";
 import "./../styles/ConnectLine.css";
 
 export default function ConnectLine() {
-  const isSocketConnect = useSelector(getConnectState);
+  const isSocketConnected = useSelector(getConnectState);
 
   const visibleLine = useMemo(() => {
-    return isSocketConnect ? (
+    return isSocketConnected ? (
       <></>
     ) : (
       <m.div
@@ -22,10 +22,10 @@ export default function ConnectLine() {
         exit="exit"
         className="connect-line"
       >
-        <p className="connect-line-text">Connection...</p>
+        <p className="connect-line-text">Connecting...</p>
       </m.div>
     );
-  }, [isSocketConnect]);
+  }, [isSocketConnected]);
 
   return visibleLine;
 }
