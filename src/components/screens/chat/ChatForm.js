@@ -302,7 +302,11 @@ export default function ChatForm() {
         ? participants[selectedConversation.owner_id].recent_activity
         : participants[selectedConversation.opponent_id].recent_activity;
 
-    return timestamp === "online" ? timestamp : getLastVisitTime(timestamp);
+    if (timestamp === "online") {
+      return timestamp;
+    }
+
+    return getLastVisitTime(timestamp);
   };
 
   const pickUserFiles = () => {
