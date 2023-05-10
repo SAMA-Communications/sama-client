@@ -87,6 +87,9 @@ export default function UserSearch({ close }) {
     if (event.keyCode === 27) {
       close(false);
     }
+    if (event.keyCode === 13) {
+      event.preventDefault();
+    }
   };
 
   return (
