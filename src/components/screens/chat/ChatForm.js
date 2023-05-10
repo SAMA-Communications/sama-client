@@ -305,7 +305,7 @@ export default function ChatForm() {
     if (timestamp === "online") {
       return timestamp;
     }
-
+    console.log("getLastVisitTime -->");
     return getLastVisitTime(timestamp);
   };
 

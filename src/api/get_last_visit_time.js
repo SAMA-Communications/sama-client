@@ -4,7 +4,9 @@ export default function getLastVisitTime(timestamp) {
   yesterday.setDate(yesterday.getDate() - 1);
 
   const visitTime = new Date(timestamp * 1000);
-  console.log(visitTime, today, yesterday);
+  console.log(visitTime);
+  console.log(today);
+  console.log(yesterday);
 
   if (visitTime >= today) {
     return (
