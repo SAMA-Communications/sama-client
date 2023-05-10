@@ -302,25 +302,23 @@ export default function ChatForm() {
         ? participants[selectedConversation.owner_id].recent_activity
         : participants[selectedConversation.opponent_id].recent_activity;
 
+    if (timestamp === "online") {
+      return "Online";
+    }
+
     const now = Date.now();
     const lastVisit = timestamp * 1000;
-
     const timeDiff = now - lastVisit;
+
     console.log(timestamp, now, timeDiff);
-    if (timeDiff > 7 * 24 * 60 * 60 * 1000) {
+    if (timeDiff > 604800000) {
       // Більше тижня тому
       const options = { day: "numeric", month: "long" };
       return new Date(lastVisit).toLocaleDateString("en-US", options);
-    } else if (timeDiff > 2 * 24 * 60 * 60 * 1000) {
+    } else if (timeDiff > 172800000) {
       // Вчора або раніше
       const options = { hour: "numeric", minute: "numeric" };
       return new Date(lastVisit).toLocaleString("en-US", options);
-    } else if (timeDiff > 24 * 60 * 60 * 1000) {
-      // Сьогодні
-      return "Сьогодні";
-    } else {
-      // Онлайн
-      return "Онлайн";
     }
   };
 
