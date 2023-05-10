@@ -1,14 +1,14 @@
 export default function getLastVisitTime(timestamp) {
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
+  if (!timestamp) {
+    return null;
+  }
+  timestamp *= 1000;
+  const now = Date.now();
+  const todayStart = new Date().setHours(0, 0, 0, 0);
+  const yesterdayStart = todayStart - 24 * 60 * 60 * 1000;
 
-  const visitTime = new Date(timestamp * 1000);
-  console.log(visitTime);
-  console.log(today);
-  console.log(yesterday);
-
-  if (visitTime >= today) {
+  if (timestamp >= todayStart && timestamp <= now) {
+    const visitTime = new Date(timestamp);
     return (
       "був у мережі о " +
       visitTime.toLocaleTimeString("uk-UA", {
@@ -16,7 +16,8 @@ export default function getLastVisitTime(timestamp) {
         minute: "2-digit",
       })
     );
-  } else if (visitTime >= yesterday) {
+  } else if (timestamp >= yesterdayStart && timestamp < todayStart) {
+    const visitTime = new Date(timestamp);
     return (
       "був у мережі вчора о " +
       visitTime.toLocaleTimeString("uk-UA", {
@@ -25,11 +26,12 @@ export default function getLastVisitTime(timestamp) {
       })
     );
   } else {
+    const visitDate = new Date(timestamp);
     return (
       "був у мережі " +
-      visitTime.getDate() +
+      visitDate.getDate() +
       " " +
-      getMonthName(visitTime.getMonth())
+      getMonthName(visitDate.getMonth())
     );
   }
 }
