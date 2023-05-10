@@ -306,19 +306,53 @@ export default function ChatForm() {
       return "Online";
     }
 
-    const now = Date.now();
-    const lastVisit = timestamp * 1000;
-    const timeDiff = now - lastVisit;
+    function getMonthName(monthIndex) {
+      const monthNames = [
+        "січня",
+        "лютого",
+        "березня",
+        "квітня",
+        "травня",
+        "червня",
+        "липня",
+        "серпня",
+        "вересня",
+        "жовтня",
+        "листопада",
+        "грудня",
+      ];
+      return monthNames[monthIndex];
+    }
 
-    console.log(timestamp, now, timeDiff);
-    if (timeDiff > 604800000) {
-      // Більше тижня тому
-      const options = { day: "numeric", month: "long" };
-      return new Date(lastVisit).toLocaleDateString("en-US", options);
-    } else if (timeDiff > 172800000) {
-      // Вчора або раніше
-      const options = { hour: "numeric", minute: "numeric" };
-      return new Date(lastVisit).toLocaleString("en-US", options);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const visitTime = new Date(timestamp * 1000);
+
+    if (visitTime >= today) {
+      return (
+        "був у мережі о " +
+        visitTime.toLocaleTimeString("uk-UA", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      );
+    } else if (visitTime >= yesterday) {
+      return (
+        "був у мережі вчора о " +
+        visitTime.toLocaleTimeString("uk-UA", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      );
+    } else {
+      return (
+        "був у мережі " +
+        visitTime.getDate() +
+        " " +
+        getMonthName(visitTime.getMonth())
+      );
     }
   };
 
