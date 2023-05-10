@@ -297,9 +297,29 @@ export default function ChatForm() {
       return null;
     }
 
-    return selectedConversation.opponent_id === userInfo?._id
-      ? participants[selectedConversation.owner_id].recent_activity
-      : participants[selectedConversation.opponent_id].recent_activity;
+    const timestamp =
+      selectedConversation.opponent_id === userInfo?._id
+        ? participants[selectedConversation.owner_id].recent_activity
+        : participants[selectedConversation.opponent_id].recent_activity;
+
+    const now = new Date(); // поточний час
+    const lastVisit = new Date(timestamp); // час останнього відвідину
+
+    const timeDiff = now.getTime() - lastVisit.getTime(); // різниця в мілісекундах
+    const seconds = Math.floor(timeDiff / 1000); // різниця в секундах
+    const minutes = Math.floor(seconds / 60); // різниця в хвилинах
+    const hours = Math.floor(minutes / 60); // різниця в годинах
+    const days = Math.floor(hours / 24); // різниця в днях
+
+    if (days > 0) {
+      return days + " дн. назад";
+    } else if (hours > 0) {
+      return hours + " год. назад";
+    } else if (minutes > 0) {
+      return minutes + " хв. назад";
+    } else {
+      return "Щойно";
+    }
   };
 
   const pickUserFiles = () => {
