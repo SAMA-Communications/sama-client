@@ -26,11 +26,11 @@ export default function getLastVisitTime(timestamp) {
         minute: "2-digit",
       })
     );
-  } else {
+  } else if (timestamp <= yesterdayStart) {
     return (
       "last visited on " +
       //maybe replace to navigator.language
-      visitDate.toLocaleDateString("uk-UA", {
+      visitDate.toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
