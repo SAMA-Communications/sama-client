@@ -3,6 +3,7 @@ import ChatMessage from "../../generic/ChatMessage.js";
 import NoChatSelected from "../../static/NoChatSelected.js";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import api from "../../../api/api";
+import getLastVisitTime from "../../../api/get_last_visit_time.js";
 import jwtDecode from "jwt-decode";
 import {
   getDownloadFileLinks,
@@ -296,69 +297,18 @@ export default function ChatForm() {
     if (selectedConversation.name) {
       return null;
     }
-
     const timestamp =
       selectedConversation.opponent_id === userInfo?._id
         ? participants[selectedConversation.owner_id].recent_activity
         : participants[selectedConversation.opponent_id].recent_activity;
 
-    if (timestamp === "online") {
-      return "Online";
-    }
-
-    function getMonthName(monthIndex) {
-      const monthNames = [
-        "січня",
-        "лютого",
-        "березня",
-        "квітня",
-        "травня",
-        "червня",
-        "липня",
-        "серпня",
-        "вересня",
-        "жовтня",
-        "листопада",
-        "грудня",
-      ];
-      return monthNames[monthIndex];
-    }
-
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-
-    const visitTime = new Date(timestamp * 1000);
-
-    if (visitTime >= today) {
-      return (
-        "був у мережі о " +
-        visitTime.toLocaleTimeString("uk-UA", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      );
-    } else if (visitTime >= yesterday) {
-      return (
-        "був у мережі вчора о " +
-        visitTime.toLocaleTimeString("uk-UA", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      );
-    } else {
-      return (
-        "був у мережі " +
-        visitTime.getDate() +
-        " " +
-        getMonthName(visitTime.getMonth())
-      );
-    }
+    return timestamp === "online" ? timestamp : getLastVisitTime(timestamp);
   };
 
   const pickUserFiles = () => {
     filePicker.current.click();
   };
+
   const handlerChange = (event) => {
     if (!event.target.files.length) {
       return;
