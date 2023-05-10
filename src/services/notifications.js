@@ -2,6 +2,7 @@ import api from "../api/api";
 import urlBase64ToUint8Array from "../api/base64_to_uint8Array.js";
 
 export default function subscribeForNotifications() {
+  console.log(process.env.REACT_APP_PUBLIC_VAPID_KEY);
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker
       .register("/sw.js")
