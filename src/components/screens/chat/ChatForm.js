@@ -303,18 +303,18 @@ export default function ChatForm() {
         : participants[selectedConversation.opponent_id].recent_activity;
 
     const now = Date.now();
-    const lastVisit = new Date(timestamp * 1000);
+    const lastVisit = timestamp * 1000;
 
     const timeDiff = now - lastVisit;
-
+    console.log(timestamp, now, timeDiff);
     if (timeDiff > 7 * 24 * 60 * 60 * 1000) {
       // Більше тижня тому
       const options = { day: "numeric", month: "long" };
-      return lastVisit.toLocaleDateString("en-US", options);
+      return new Date(lastVisit).toLocaleDateString("en-US", options);
     } else if (timeDiff > 2 * 24 * 60 * 60 * 1000) {
       // Вчора або раніше
       const options = { hour: "numeric", minute: "numeric" };
-      return lastVisit.toLocaleString("en-US", options);
+      return new Date(lastVisit).toLocaleString("en-US", options);
     } else if (timeDiff > 24 * 60 * 60 * 1000) {
       // Сьогодні
       return "Сьогодні";
