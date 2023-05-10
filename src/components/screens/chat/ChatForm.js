@@ -293,20 +293,20 @@ export default function ChatForm() {
     }
   };
 
-  const timestamp =
-    selectedConversation.opponent_id === userInfo?._id
-      ? participants[selectedConversation.owner_id].recent_activity
-      : participants[selectedConversation.opponent_id].recent_activity;
-  const recentActivityView = useMemo(() => {
+  const recentActivityView = () => {
     if (selectedConversation.name) {
       return null;
     }
+    const timestamp =
+      selectedConversation.opponent_id === userInfo?._id
+        ? participants[selectedConversation.owner_id].recent_activity
+        : participants[selectedConversation.opponent_id].recent_activity;
 
     if (timestamp === "online") {
       return timestamp;
     }
     return getLastVisitTime(timestamp);
-  }, [timestamp]);
+  };
 
   const pickUserFiles = () => {
     filePicker.current.click();
