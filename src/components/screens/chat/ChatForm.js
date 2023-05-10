@@ -302,23 +302,25 @@ export default function ChatForm() {
         ? participants[selectedConversation.owner_id].recent_activity
         : participants[selectedConversation.opponent_id].recent_activity;
 
-    const now = new Date(); // поточний час
-    const lastVisit = new Date(timestamp); // час останнього відвідину
+    const now = Date.now();
+    const lastVisit = new Date(timestamp * 1000);
 
-    const timeDiff = now.getTime() - lastVisit.getTime(); // різниця в мілісекундах
-    const seconds = Math.floor(timeDiff / 1000); // різниця в секундах
-    const minutes = Math.floor(seconds / 60); // різниця в хвилинах
-    const hours = Math.floor(minutes / 60); // різниця в годинах
-    const days = Math.floor(hours / 24); // різниця в днях
+    const timeDiff = now - lastVisit;
 
-    if (days > 0) {
-      return days + " дн. назад";
-    } else if (hours > 0) {
-      return hours + " год. назад";
-    } else if (minutes > 0) {
-      return minutes + " хв. назад";
+    if (timeDiff > 7 * 24 * 60 * 60 * 1000) {
+      // Більше тижня тому
+      const options = { day: "numeric", month: "long" };
+      return lastVisit.toLocaleDateString("en-US", options);
+    } else if (timeDiff > 2 * 24 * 60 * 60 * 1000) {
+      // Вчора або раніше
+      const options = { hour: "numeric", minute: "numeric" };
+      return lastVisit.toLocaleString("en-US", options);
+    } else if (timeDiff > 24 * 60 * 60 * 1000) {
+      // Сьогодні
+      return "Сьогодні";
     } else {
-      return "Щойно";
+      // Онлайн
+      return "Онлайн";
     }
   };
 
