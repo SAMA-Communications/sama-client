@@ -49,6 +49,7 @@ export default function ChatForm() {
   const navigate = useNavigate();
   const url = useLocation();
 
+  const [opponentLastActivity, setOpponentLastActivity] = useState(null);
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
@@ -76,6 +77,7 @@ export default function ChatForm() {
   api.onUserActivityListener = (user) => {
     const uId = Object.keys(user)[0];
     dispatch(upsertUser({ _id: uId, recent_activity: user[uId] }));
+    setOpponentLastActivity(user[uId]);
   };
 
   api.onMessageListener = async (message) => {
@@ -156,6 +158,7 @@ export default function ChatForm() {
             recent_activity: activity[uId],
           })
         );
+        setOpponentLastActivity(activity[uId]);
       });
     }
 
@@ -289,30 +292,29 @@ export default function ChatForm() {
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
       dispatch(clearSelectedConversation());
-      api.unsubscribeFromUserActivity();
+      api.unsubscribeFromUserActivity({});
       navigate("/main");
     }
   };
 
-  const recentActivityView = () => {
-    if (selectedConversation.name) {
+  const [reloadActivity, setReloadActivty] = useState(false);
+  useEffect(() => {
+    const debounce = setTimeout(() => setReloadActivty((prev) => !prev), 250);
+    return () => clearTimeout(debounce);
+  }, [opponentLastActivity, selectedConversation]);
+
+  const recentActivityView = useMemo(() => {
+    if (selectedConversation?.name) {
       return null;
     }
-    const timestamp =
-      selectedConversation.opponent_id === userInfo?._id
-        ? participants[selectedConversation.owner_id].recent_activity
-        : participants[selectedConversation.opponent_id].recent_activity;
 
-    if (timestamp === "online") {
-      return timestamp;
+    if (opponentLastActivity === "online") {
+      return opponentLastActivity;
     }
-    return getLastVisitTime(timestamp);
-  };
+    return getLastVisitTime(opponentLastActivity);
+  }, [reloadActivity]);
 
-  const pickUserFiles = () => {
-    filePicker.current.click();
-  };
-
+  const pickUserFiles = () => filePicker.current.click();
   const handlerChange = (event) => {
     if (!event.target.files.length) {
       return;
@@ -354,7 +356,7 @@ export default function ChatForm() {
               <div className="chat-recipient-info">
                 <p>{selectedConversation.name || url.hash?.slice(1)}</p>
                 <div className="chat-recipient-status">
-                  {recentActivityView()}
+                  {recentActivityView}
                 </div>
               </div>
             </div>
