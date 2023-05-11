@@ -1,4 +1,5 @@
 export default function getLastVisitTime(timestamp) {
+  console.log("Timestamp: ", timestamp);
   if (!timestamp) {
     return null;
   }
