@@ -297,9 +297,9 @@ export default function ChatForm() {
     }
   };
 
-  const [reloadActivity, setReloadActivty] = useState(false);
+  const [reloadActivity, setReloadActivity] = useState(false);
   useEffect(() => {
-    const debounce = setTimeout(() => setReloadActivty((prev) => !prev), 250);
+    const debounce = setTimeout(() => setReloadActivity((prev) => !prev), 250);
     return () => clearTimeout(debounce);
   }, [opponentLastActivity, selectedConversation]);
 
@@ -308,11 +308,9 @@ export default function ChatForm() {
       return null;
     }
 
-    if (opponentLastActivity === "online") {
-      return opponentLastActivity;
-    } else {
-      return getLastVisitTime(opponentLastActivity);
-    }
+    return opponentLastActivity === "online"
+      ? opponentLastActivity
+      : getLastVisitTime(opponentLastActivity);
   }, [reloadActivity]);
 
   const pickUserFiles = () => filePicker.current.click();

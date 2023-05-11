@@ -1,10 +1,9 @@
 export default function getLastVisitTime(timestamp) {
-  console.log("Timestamp: ", timestamp);
   if (!timestamp) {
     return null;
   }
   timestamp *= 1000;
-  const now = Date.now();
+  const now = Math.round(Date.now() / 1000) * 1000;
   const todayStart = new Date().setHours(0, 0, 0, 0);
   const yesterdayStart = todayStart - 24 * 60 * 60 * 1000;
   const visitDate = new Date(timestamp);
@@ -27,7 +26,7 @@ export default function getLastVisitTime(timestamp) {
         minute: "2-digit",
       })
     );
-  } else if (timestamp <= yesterdayStart) {
+  } else {
     return (
       "last visited on " +
       //maybe replace to navigator.language
