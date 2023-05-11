@@ -310,10 +310,9 @@ export default function ChatForm() {
 
     if (opponentLastActivity === "online") {
       return opponentLastActivity;
+    } else {
+      return getLastVisitTime(opponentLastActivity);
     }
-    const viewTime = getLastVisitTime(opponentLastActivity);
-    console.log(opponentLastActivity, viewTime);
-    return viewTime;
   }, [reloadActivity]);
 
   const pickUserFiles = () => filePicker.current.click();
