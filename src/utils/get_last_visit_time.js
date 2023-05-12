@@ -14,14 +14,13 @@ export default function getLastVisitTime(timestamp) {
     minute: "2-digit",
   };
   if (timestamp >= todayStart && timestamp <= now) {
-    baseMessage += "at " + visitDate.toLocaleTimeString("uk-UA", options);
+    baseMessage += "at " + visitDate.toLocaleTimeString([], options);
   } else if (timestamp >= yesterdayStart && timestamp < todayStart) {
-    baseMessage +=
-      "yesterday at " + visitDate.toLocaleTimeString("uk-UA", options);
+    baseMessage += "yesterday at " + visitDate.toLocaleTimeString([], options);
   } else {
     baseMessage +=
       "on " +
-      visitDate.toLocaleDateString("en-US", {
+      visitDate.toLocaleDateString([], {
         year: "numeric",
         month: "long",
         day: "numeric",
