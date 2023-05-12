@@ -84,9 +84,8 @@ export default function UserSearch({ close }) {
   };
 
   window.onkeydown = function (event) {
-    if (event.keyCode === 27) {
-      close(false);
-    }
+    event.keyCode === 27 && close(false);
+    event.keyCode === 13 && event.preventDefault();
   };
 
   return (

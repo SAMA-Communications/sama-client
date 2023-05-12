@@ -4,15 +4,15 @@ import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { default as EventEmitter } from "./event/eventEmitter";
 
-import Login from "./components/screens/Login";
-import SignUp from "./components/screens/SignUp";
 import PageLoader from "./components/PageLoader";
+import SignUp from "./components/screens/SignUp";
 
 import "./styles/GlobalParam.css";
 import "./styles/themes/DarkTheme.css";
 import "./styles/themes/DefaultTheme.css";
 
 const Main = React.lazy(() => import("./components/Main"));
+const Login = React.lazy(() => import("./components/screens/Login"));
 const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
 function App() {
@@ -47,6 +47,7 @@ function App() {
   }, []);
 
   const userLoginByToken = async (token) => {
+    navigate("/loading");
     try {
       const userToken = await api.userLogin({ token });
       if (userToken && userToken !== "undefined") {
@@ -65,9 +66,10 @@ function App() {
     <Suspense fallback={<PageLoader />}>
       <AnimatePresence initial={false} mode="wait">
         <Routes location={location} key={keyLocation}>
+          <Route path="/loading" element={<PageLoader />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
           <Route path="/main/*" element={<Main />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/*" element={<ErrorPage />} />
         </Routes>
       </AnimatePresence>
