@@ -8,33 +8,25 @@ export default function getLastVisitTime(timestamp) {
   const yesterdayStart = todayStart - 24 * 60 * 60 * 1000;
   const visitDate = new Date(timestamp);
 
+  let baseMessage = "last visited ";
+  const options = {
+    hour: "2-digit",
+    minute: "2-digit",
+  };
   if (timestamp >= todayStart && timestamp <= now) {
-    return (
-      "last visited at " +
-      //maybe replace to navigator.language
-      visitDate.toLocaleTimeString("uk-UA", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    );
+    baseMessage += "at " + visitDate.toLocaleTimeString("uk-UA", options);
   } else if (timestamp >= yesterdayStart && timestamp < todayStart) {
-    return (
-      "last visited yesterday at " +
-      //maybe replace to navigator.language
-      visitDate.toLocaleTimeString("uk-UA", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    );
+    baseMessage +=
+      "yesterday at " + visitDate.toLocaleTimeString("uk-UA", options);
   } else {
-    return (
-      "last visited on " +
-      //maybe replace to navigator.language
+    baseMessage +=
+      "on " +
       visitDate.toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
-      })
-    );
+      });
   }
+
+  return baseMessage;
 }

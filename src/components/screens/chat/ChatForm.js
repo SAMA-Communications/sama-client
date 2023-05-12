@@ -3,7 +3,7 @@ import ChatMessage from "../../generic/ChatMessage.js";
 import NoChatSelected from "../../static/NoChatSelected.js";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import api from "../../../api/api";
-import getLastVisitTime from "../../../api/get_last_visit_time.js";
+import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import jwtDecode from "jwt-decode";
 import {
   getDownloadFileLinks,
