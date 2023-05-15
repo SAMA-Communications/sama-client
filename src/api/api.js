@@ -11,6 +11,7 @@ class Api {
     this.responsesPromises = {};
     this.onMessageStatusListener = null;
     this.onUserActivityListener = null;
+    this.onConversationCreateListener = null;
   }
 
   async connect() {
@@ -28,7 +29,7 @@ class Api {
 
       if (message.message?.last_activity) {
         if (this.onUserActivityListener) {
-          this.onUserActivityListener(message.message?.last_activity);
+          this.onUserActivityListener(message.message.last_activity);
         }
         return;
       }
@@ -36,6 +37,15 @@ class Api {
       if (message.message?.message_read) {
         if (this.onMessageStatusListener) {
           this.onMessageStatusListener(message.message.message_read);
+        }
+        return;
+      }
+
+      if (message.message?.conversation_create) {
+        if (this.onConversationCreateListener) {
+          this.onConversationCreateListener(
+            message.message.conversation_create
+          );
         }
         return;
       }

@@ -43,7 +43,8 @@ export default function UserSearch({ close }) {
         participants: selectedUsers.map((el) => el._id),
       };
       const chat = await api.conversationCreate(requestData);
-      dispatch(addUsers(selectedUsers));
+      const users = await api.getParticipantsByCids([chat._id]);
+      dispatch(addUsers(users));
       dispatch(upsertChat({ ...chat, messagesIds: [] }));
 
       navigate(`/main/#${chat.name ? chat._id : selectedUsers[0].login}`);
