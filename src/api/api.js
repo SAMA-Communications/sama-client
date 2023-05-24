@@ -41,10 +41,10 @@ class Api {
         return;
       }
 
-      if (message.message?.conversation_create) {
+      if (message.message?.event_conversation_create) {
         if (this.onConversationCreateListener) {
           this.onConversationCreateListener(
-            message.message.conversation_create
+            message.message.event_conversation_create
           );
         }
         return;
