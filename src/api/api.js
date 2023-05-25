@@ -188,7 +188,7 @@ class Api {
   async getParticipantsByCids(data) {
     const requestData = {
       request: {
-        getParticipantsByCids: {
+        get_participants_by_cids: {
           cids: data,
         },
         id: getUniqueId("getParticipantsByCids"),
