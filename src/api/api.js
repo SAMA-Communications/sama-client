@@ -27,6 +27,18 @@ class Api {
       const message = JSON.parse(e.data);
       console.log("[socket.message]", message);
 
+      if (message.event) {
+        if (message.event.conversation_created) {
+          if (this.onConversationCreateListener) {
+            this.onConversationCreateListener(
+              message.event.conversation_created
+            );
+          }
+          return;
+        }
+        return;
+      }
+
       if (message.last_activity) {
         if (this.onUserActivityListener) {
           this.onUserActivityListener(message.last_activity);
@@ -37,13 +49,6 @@ class Api {
       if (message.message_read) {
         if (this.onMessageStatusListener) {
           this.onMessageStatusListener(message.message_read);
-        }
-        return;
-      }
-
-      if (message.event_conversation_create) {
-        if (this.onConversationCreateListener) {
-          this.onConversationCreateListener(message.event_conversation_create);
         }
         return;
       }
