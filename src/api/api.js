@@ -27,25 +27,23 @@ class Api {
       const message = JSON.parse(e.data);
       console.log("[socket.message]", message);
 
-      if (message.message?.last_activity) {
+      if (message.last_activity) {
         if (this.onUserActivityListener) {
-          this.onUserActivityListener(message.message.last_activity);
+          this.onUserActivityListener(message.last_activity);
         }
         return;
       }
 
-      if (message.message?.message_read) {
+      if (message.message_read) {
         if (this.onMessageStatusListener) {
-          this.onMessageStatusListener(message.message.message_read);
+          this.onMessageStatusListener(message.message_read);
         }
         return;
       }
 
-      if (message.message?.event_conversation_create) {
+      if (message.event_conversation_create) {
         if (this.onConversationCreateListener) {
-          this.onConversationCreateListener(
-            message.message.event_conversation_create
-          );
+          this.onConversationCreateListener(message.event_conversation_create);
         }
         return;
       }
@@ -63,6 +61,7 @@ class Api {
         delete this.responsesPromises[mid];
         return;
       }
+
       const response = message.response;
       if (response) {
         const responseId = response.id;
