@@ -42,14 +42,15 @@
   font-size: calc(var(--font-size) * 2.5);
   line-height: calc(var(--font-size) * 2.5);
 }
-
+.chat-form-menu-btn {
+  display: none;
+}
 .chat-messaging-info {
   position: relative;
   padding-bottom: 15px;
 
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 45px;
 
   border-bottom: 1px solid var(--border-color);
 }
@@ -276,4 +277,15 @@
 }
 .btn-clear-files:hover svg line {
   stroke: var(--text-danger);
+}
+
+@media (max-width: 1023px) {
+  .chat-form-menu-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .chat-messaging-info {
+    grid-template-columns: 55px 1fr 45px;
+  }
 }

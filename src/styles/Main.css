@@ -107,3 +107,13 @@ nav {
 .change-themes:hover {
   background-size: 100%;
 }
+
+@media (max-width: 1023px) {
+  aside {
+    display: none;
+  }
+  .chat-form {
+    width: 98vw !important;
+    margin-left: 20px !important;
+  }
+}

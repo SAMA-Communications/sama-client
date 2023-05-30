@@ -348,6 +348,7 @@ export default function ChatForm() {
           className="chat-form-messaging"
         >
           <div className="chat-messaging-info">
+            <div className="chat-form-menu-btn">{`<`}</div>
             <div className="chat-info-block">
               <div className="chat-recipient-photo">
                 <RecipientPhoto />
