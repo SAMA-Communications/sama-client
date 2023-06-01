@@ -39,6 +39,7 @@ import { motion as m } from "framer-motion";
 import "../../../styles/chat/ChatForm.css";
 
 import { ReactComponent as EmptyChat } from "./../../../assets/icons/chatForm/EmptyChat.svg";
+import { ReactComponent as BurgerMenu } from "./../../../assets/icons/chatForm/BurgerMenu.svg";
 import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatForm/RecipientPhoto.svg";
 import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
@@ -331,6 +332,13 @@ export default function ChatForm() {
     );
   };
 
+  const openChatList = () => {
+    const aside = document.getElementsByTagName("aside")[0];
+    const chatFormBg = document.querySelector(".chat-menu-bg");
+    aside.style.display = "block";
+    chatFormBg.style.display = "flex";
+  };
+
   return (
     <m.section
       variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
@@ -339,6 +347,9 @@ export default function ChatForm() {
       exit="exit"
       className="chat-form"
     >
+      <div className="chat-menu-btn" onClick={openChatList}>
+        <BurgerMenu />
+      </div>
       {!selectedCID ? (
         <NoChatSelected />
       ) : (
@@ -348,7 +359,6 @@ export default function ChatForm() {
           className="chat-form-messaging"
         >
           <div className="chat-messaging-info">
-            <div className="chat-form-menu-btn">{`<`}</div>
             <div className="chat-info-block">
               <div className="chat-recipient-photo">
                 <RecipientPhoto />

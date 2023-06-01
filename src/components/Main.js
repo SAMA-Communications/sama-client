@@ -9,6 +9,7 @@ import { motion as m } from "framer-motion";
 import "../styles/Main.css";
 
 import { ReactComponent as IconSun } from "./../assets/icons/ThemeSun.svg";
+import { ReactComponent as CloseChatList } from "./../assets/icons/CloseChatList.svg";
 import { ReactComponent as IconMoon } from "./../assets/icons/ThemeMoon.svg";
 const ChatForm = React.lazy(() => import("./screens/chat/ChatForm"));
 
@@ -57,8 +58,18 @@ export default function Main() {
     );
   }, [currentTheme]);
 
+  const closeChatList = () => {
+    const aside = document.getElementsByTagName("aside")[0];
+    const chatFormBg = document.querySelector(".chat-menu-bg");
+    aside.style.display = "none";
+    chatFormBg.style.display = "none";
+  };
+
   return (
     <div>
+      <div className="chat-menu-bg" onClick={closeChatList}>
+        <CloseChatList />
+      </div>
       <nav>
         <div className="nav-logo">
           <MiniLogo />

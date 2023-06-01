@@ -1,6 +1,7 @@
 aside {
+  box-sizing: border-box;
   position: relative;
-  width: 400px;
+  width: min(400px, 100vw);
   margin: 0 20px 20px 20px;
   padding-top: 0;
 
@@ -216,4 +217,13 @@ aside {
 }
 .chat-create-btn:hover {
   background-size: 100%;
+}
+
+@media (max-width: 1023px) {
+  aside {
+    display: none;
+    position: absolute;
+    width: min(400px, calc(100vw - 40px));
+    z-index: 111;
+  }
 }

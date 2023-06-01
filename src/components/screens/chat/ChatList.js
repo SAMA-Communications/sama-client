@@ -89,6 +89,11 @@ export default function ChatList() {
               dispatch(clearCountOfUnreadMessages(obj._id));
               api.markConversationAsRead({ cid: obj._id });
             }
+
+            const aside = document.getElementsByTagName("aside")[0];
+            const chatFormBg = document.querySelector(".chat-menu-bg");
+            aside.style.display = "none";
+            chatFormBg.style.display = "none";
           }}
         >
           <ChatBox

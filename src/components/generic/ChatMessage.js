@@ -38,6 +38,7 @@ export default function ChatMessage({
     }
 
     if (!attachments?.length) {
+      //ypeError: Cannot read properties of undefined (reading 'length')
       if (text.length < 50) {
         status += " m-pr";
       } else {
