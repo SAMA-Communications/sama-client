@@ -11,6 +11,7 @@ class Api {
     this.responsesPromises = {};
     this.onMessageStatusListener = null;
     this.onUserActivityListener = null;
+    this.onConversationCreateListener = null;
   }
 
   async connect() {
@@ -26,16 +27,28 @@ class Api {
       const message = JSON.parse(e.data);
       console.log("[socket.message]", message);
 
-      if (message.message?.last_activity) {
-        if (this.onUserActivityListener) {
-          this.onUserActivityListener(message.message?.last_activity);
+      if (message.event) {
+        if (message.event.conversation_created) {
+          if (this.onConversationCreateListener) {
+            this.onConversationCreateListener(
+              message.event.conversation_created
+            );
+          }
+          return;
         }
         return;
       }
 
-      if (message.message?.message_read) {
+      if (message.last_activity) {
+        if (this.onUserActivityListener) {
+          this.onUserActivityListener(message.last_activity);
+        }
+        return;
+      }
+
+      if (message.message_read) {
         if (this.onMessageStatusListener) {
-          this.onMessageStatusListener(message.message.message_read);
+          this.onMessageStatusListener(message.message_read);
         }
         return;
       }
@@ -53,6 +66,7 @@ class Api {
         delete this.responsesPromises[mid];
         return;
       }
+
       const response = message.response;
       if (response) {
         const responseId = response.id;
@@ -178,7 +192,7 @@ class Api {
   async getParticipantsByCids(data) {
     const requestData = {
       request: {
-        getParticipantsByCids: {
+        get_participants_by_cids: {
           cids: data,
         },
         id: getUniqueId("getParticipantsByCids"),

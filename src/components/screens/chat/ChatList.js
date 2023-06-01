@@ -5,6 +5,7 @@ import ChatBox from "../../generic/ChatBox.js";
 import UserSearch from "./UserSearch.js";
 import { NavLink } from "react-router-dom";
 import {
+  addUsers,
   selectParticipantsEntities,
   setUsers,
 } from "../../../store/Participants.js";
@@ -13,6 +14,7 @@ import {
   getConverastionById,
   insertChats,
   selectAllConversations,
+  upsertChat,
 } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
@@ -41,6 +43,15 @@ export default function ChatList() {
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
+
+  api.onConversationCreateListener = (chat) => {
+    dispatch(
+      upsertChat({ ...chat, unread_messages_count: 0, messagesIds: [] })
+    );
+    api
+      .getParticipantsByCids([chat._id])
+      .then((users) => dispatch(addUsers(users)));
+  };
 
   useEffect(() => {
     function getChatsAndParticipants() {
