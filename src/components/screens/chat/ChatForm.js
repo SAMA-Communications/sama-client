@@ -347,9 +347,19 @@ export default function ChatForm() {
       exit="exit"
       className="chat-form"
     >
-      <div className="chat-menu-btn" onClick={openChatList}>
+      <m.div
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 0.7,
+            transition: { delay: 0.5, duration: 1.5 },
+          },
+        }}
+        className="chat-menu-btn"
+        onClick={openChatList}
+      >
         <BurgerMenu />
-      </div>
+      </m.div>
       {!selectedCID ? (
         <NoChatSelected />
       ) : (

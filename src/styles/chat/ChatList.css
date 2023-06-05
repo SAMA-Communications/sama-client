@@ -219,6 +219,15 @@ aside {
   background-size: 100%;
 }
 
+@media (min-width: 1023px) {
+  aside {
+    display: block !important;
+  }
+  .chat-menu-bg {
+    display: none !important;
+  }
+}
+
 @media (max-width: 1023px) {
   aside {
     display: none;

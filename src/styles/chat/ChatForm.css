@@ -51,6 +51,7 @@
   display: none;
 
   z-index: 59;
+  opacity: 0.7;
 }
 .chat-menu-btn svg:hover {
   cursor: pointer;
@@ -324,8 +325,6 @@
 
   .chat-menu-btn {
     position: absolute;
-    top: 10;
-    left: 10;
 
     width: 55px;
     display: flex;

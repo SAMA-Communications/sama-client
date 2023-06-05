@@ -67,9 +67,22 @@ export default function Main() {
 
   return (
     <div>
-      <div className="chat-menu-bg" onClick={closeChatList}>
+      <m.div
+        variants={{
+          hidden: {
+            width: 0,
+            transition: { delay: 1, duration: 5.5 },
+          },
+          visible: {
+            width: "55px",
+            transition: { delay: 1, duration: 5.5 },
+          },
+        }}
+        className="chat-menu-bg"
+        onClick={closeChatList}
+      >
         <CloseChatList />
-      </div>
+      </m.div>
       <nav>
         <div className="nav-logo">
           <MiniLogo />
