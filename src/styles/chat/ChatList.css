@@ -196,9 +196,9 @@ aside {
 
   position: absolute;
   bottom: 30px;
-  right: 20px;
+  right: 25px;
 
-  background-color: var(--block-hover);
+  background-color: var(--scrollbar-track-color);
   border-radius: var(--border-second-radius);
 
   transition: 0.3s;
@@ -208,8 +208,8 @@ aside {
   background-position: bottom;
   background-image: linear-gradient(
     0,
-    var(--shadow-block),
-    var(--shadow-block)
+    var(--scrollbar-thumb-hover-color),
+    var(--scrollbar-thumb-hover-color)
   );
 }
 .chat-create-btn svg path {
