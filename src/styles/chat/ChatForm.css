@@ -314,7 +314,7 @@
   cursor: pointer;
 }
 .chat-menu-bg svg path {
-  stroke: var(--input-text);
+  stroke: var(--btn-text-hover);
 }
 
 @media (max-width: 1023px) {

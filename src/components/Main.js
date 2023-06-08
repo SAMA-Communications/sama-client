@@ -1,6 +1,6 @@
 import ChatList from "./screens/chat/ChatList";
 import MiniLogo from "./static/MiniLogo.js";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import api from "../api/api";
 import { Link } from "react-router-dom";
 import { changeOpacity } from "../styles/animations/animationBlocks";
@@ -14,6 +14,8 @@ import { ReactComponent as IconMoon } from "./../assets/icons/ThemeMoon.svg";
 const ChatForm = React.lazy(() => import("./screens/chat/ChatForm"));
 
 export default function Main() {
+  const [asideRef, chatFormBgRef] = [useRef(null), useRef(null)];
+
   const sendLogout = async () => {
     navigator.serviceWorker.ready
       .then((reg) =>
@@ -58,30 +60,15 @@ export default function Main() {
   }, [currentTheme]);
 
   const closeChatList = () => {
-    const aside = document.getElementsByTagName("aside")[0];
-    const chatFormBg = document.querySelector(".chat-menu-bg");
-    aside.style.display = "none";
-    chatFormBg.style.display = "none";
+    asideRef.current.style.display = "none";
+    chatFormBgRef.current.style.display = "none";
   };
 
   return (
     <div>
-      <m.div
-        variants={{
-          hidden: {
-            width: 0,
-            transition: { delay: 1, duration: 5.5 },
-          },
-          visible: {
-            width: "55px",
-            transition: { delay: 1, duration: 5.5 },
-          },
-        }}
-        className="chat-menu-bg"
-        onClick={closeChatList}
-      >
+      <div ref={chatFormBgRef} className="chat-menu-bg" onClick={closeChatList}>
         <CloseChatList />
-      </m.div>
+      </div>
       <nav>
         <div className="nav-logo">
           <MiniLogo />
@@ -105,8 +92,8 @@ export default function Main() {
         </m.div>
       </nav>
       <main>
-        <ChatList />
-        <ChatForm />
+        <ChatList asideRef={asideRef} chatFormBgRef={chatFormBgRef} />
+        <ChatForm asideRef={asideRef} chatFormBgRef={chatFormBgRef} />
       </main>
     </div>
   );
