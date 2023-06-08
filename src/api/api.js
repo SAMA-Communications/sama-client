@@ -8,6 +8,7 @@ class Api {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
     this.socket = null;
+    this.urlBeforReconect = null;
     this.responsesPromises = {};
     this.onMessageStatusListener = null;
     this.onUserActivityListener = null;
@@ -84,6 +85,7 @@ class Api {
     this.socket.onclose = () => {
       console.log("[socket.close]");
       reduxStore.dispatch(updateState(false));
+      this.urlBeforReconect = document.URL;
 
       const reConnect = () => {
         if (navigator.onLine && document.visibilityState === "visible") {
