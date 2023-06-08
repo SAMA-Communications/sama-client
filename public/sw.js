@@ -5,9 +5,9 @@ self.addEventListener("push", (e) => {
   const options = {
     body: data.body,
     icon: "logo.webp",
-    data: {
-      url: data.url,
-    },
+    // data: {
+    //   url: data.url,
+    // },
   };
 
   e.waitUntil(
@@ -17,8 +17,8 @@ self.addEventListener("push", (e) => {
   );
 });
 
-self.addEventListener("notificationclick", (e) => {
-  clients.openWindow("http://localhost:3000/main" + e.notification.data?.url);
-});
+// self.addEventListener("notificationclick", (e) => {
+//   clients.openWindow("http://localhost:3000/main" + e.notification.data?.url);
+// });
 
 //CLIENT TODO: add reconect to chat after update tocken
