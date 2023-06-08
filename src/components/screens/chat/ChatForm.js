@@ -292,6 +292,7 @@ export default function ChatForm() {
 
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
+      close();
       dispatch(clearSelectedConversation());
       api.unsubscribeFromUserActivity({});
       navigate("/main");
