@@ -15,20 +15,19 @@ const ChatForm = React.lazy(() => import("./screens/chat/ChatForm"));
 
 export default function Main() {
   const sendLogout = async () => {
-    try {
-      navigator.serviceWorker.ready
-        .then((reg) =>
-          reg.pushManager.getSubscription().then((sub) =>
-            sub.unsubscribe().then(async () => {
-              await api.pushSubscriptionDelete();
-              await api.userLogout();
-            })
-          )
+    navigator.serviceWorker.ready
+      .then((reg) =>
+        reg.pushManager.getSubscription().then((sub) =>
+          sub.unsubscribe().then(async () => {
+            await api.pushSubscriptionDelete();
+            await api.userLogout();
+          })
         )
-        .catch((err) => console.log(err));
-    } catch (error) {
-      alert(error.message);
-    }
+      )
+      .catch(async (err) => {
+        console.error(err);
+        await api.userLogout();
+      });
     localStorage.removeItem("sessionId");
   };
 
