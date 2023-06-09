@@ -45,7 +45,10 @@ import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatF
 import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
 
-export default function ChatForm({ asideRef, chatFormBgRef }) {
+export default function ChatForm({
+  setAsideDisplayStyle,
+  setChatFormBgDisplayStyle,
+}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const url = useLocation();
@@ -334,8 +337,8 @@ export default function ChatForm({ asideRef, chatFormBgRef }) {
   };
 
   const openChatList = () => {
-    asideRef.current.style.display = "block";
-    chatFormBgRef.current.style.display = "flex";
+    setAsideDisplayStyle("block");
+    setChatFormBgDisplayStyle("flex");
   };
 
   return (

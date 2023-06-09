@@ -1,6 +1,6 @@
 import ChatList from "./screens/chat/ChatList";
 import MiniLogo from "./static/MiniLogo.js";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import api from "../api/api";
 import { Link } from "react-router-dom";
 import { changeOpacity } from "../styles/animations/animationBlocks";
@@ -14,7 +14,8 @@ import { ReactComponent as IconMoon } from "./../assets/icons/ThemeMoon.svg";
 const ChatForm = React.lazy(() => import("./screens/chat/ChatForm"));
 
 export default function Main() {
-  const [asideRef, chatFormBgRef] = [useRef(null), useRef(null)];
+  const [asideDisplayStyle, setAsideDisplayStyle] = useState("none");
+  const [chatFormBgDisplayStyle, setChatFormBgDisplayStyle] = useState("none");
 
   const sendLogout = async () => {
     navigator.serviceWorker.ready
@@ -60,13 +61,17 @@ export default function Main() {
   }, [currentTheme]);
 
   const closeChatList = () => {
-    asideRef.current.style.display = "none";
-    chatFormBgRef.current.style.display = "none";
+    setAsideDisplayStyle("none");
+    setChatFormBgDisplayStyle("none");
   };
 
   return (
     <div>
-      <div ref={chatFormBgRef} className="chat-menu-bg" onClick={closeChatList}>
+      <div
+        style={{ display: chatFormBgDisplayStyle }}
+        className="chat-menu-bg"
+        onClick={closeChatList}
+      >
         <CloseChatList />
       </div>
       <nav>
@@ -92,8 +97,15 @@ export default function Main() {
         </m.div>
       </nav>
       <main>
-        <ChatList asideRef={asideRef} chatFormBgRef={chatFormBgRef} />
-        <ChatForm asideRef={asideRef} chatFormBgRef={chatFormBgRef} />
+        <ChatList
+          asideDisplayStyle={asideDisplayStyle}
+          setAsideDisplayStyle={setAsideDisplayStyle}
+          setChatFormBgDisplayStyle={setChatFormBgDisplayStyle}
+        />
+        <ChatForm
+          setAsideDisplayStyle={setAsideDisplayStyle}
+          setChatFormBgDisplayStyle={setChatFormBgDisplayStyle}
+        />
       </main>
     </div>
   );

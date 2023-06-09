@@ -31,7 +31,11 @@ import "../../../styles/chat/ChatList.css";
 import { ReactComponent as UserIcon } from "./../../../assets/icons/chatList/UserIcon.svg";
 import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
 
-export default function ChatList({ asideRef, chatFormBgRef }) {
+export default function ChatList({
+  asideDisplayStyle,
+  setAsideDisplayStyle,
+  setChatFormBgDisplayStyle,
+}) {
   const dispatch = useDispatch();
   const [isSearchForm, setIsSearchForm] = useState(false);
 
@@ -90,8 +94,8 @@ export default function ChatList({ asideRef, chatFormBgRef }) {
               api.markConversationAsRead({ cid: obj._id });
             }
 
-            asideRef.current.style.display = "none";
-            chatFormBgRef.current.style.display = "none";
+            setAsideDisplayStyle("none");
+            setChatFormBgDisplayStyle("none");
           }}
         >
           <ChatBox
@@ -109,7 +113,7 @@ export default function ChatList({ asideRef, chatFormBgRef }) {
   }, [conversations, participants, activeConv]);
 
   return (
-    <aside ref={asideRef}>
+    <aside style={{ display: asideDisplayStyle }}>
       <m.div
         variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
         initial="hidden"
