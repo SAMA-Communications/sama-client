@@ -1,9 +1,13 @@
 import React, { Suspense, useEffect } from "react";
 import api from "./api/api";
+import jwtDecode from "jwt-decode";
 import subscribeForNotifications from "./services/notifications.js";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { default as EventEmitter } from "./event/eventEmitter";
+import { getConverastionById } from "./store/Conversations";
+import { selectParticipantsEntities } from "./store/Participants";
+import { useSelector } from "react-redux";
 
 import PageLoader from "./components/PageLoader";
 import SignUp from "./components/screens/SignUp";
@@ -16,11 +20,17 @@ const Main = React.lazy(() => import("./components/Main"));
 const Login = React.lazy(() => import("./components/screens/Login"));
 const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
-function App() {
+export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const keyLocation =
-    location.pathname.split("/")[1] === "main" ? "/main" : location.pathname;
+
+  const participants = useSelector(selectParticipantsEntities);
+  const userInfo = localStorage.getItem("sessionId")
+    ? jwtDecode(localStorage.getItem("sessionId"))
+    : null;
+
+  const selectedConversation = useSelector(getConverastionById);
+  let keyLocation = location.pathname;
 
   useEffect(() => {
     if (window.matchMedia("(prefers-color-scheme: dark)").matches === true) {
@@ -64,6 +74,30 @@ function App() {
     }
   };
 
+  const chatHashPath =
+    selectedConversation?.owner_id === userInfo._id
+      ? participants[selectedConversation?.opponent_id]?.login
+      : participants[selectedConversation?.owner_id]?.login;
+  if (selectedConversation) {
+    if (
+      selectedConversation.type === "u" &&
+      `#${chatHashPath}` !== location.hash
+    ) {
+      console.log(`[navigator] Navigate to 1-1 chat`, chatHashPath);
+      keyLocation = "/main/";
+      navigate(`/main/#${chatHashPath}`);
+    } else if (
+      selectedConversation.type === "g" &&
+      `#${selectedConversation._id}` !== location.hash
+    ) {
+      console.log(
+        `[navigator] Navigate to group chat ${selectedConversation._id}`
+      );
+      keyLocation = "/main/";
+      navigate(`/main/#${selectedConversation._id}`);
+    }
+  }
+
   return (
     <Suspense fallback={<PageLoader />}>
       <AnimatePresence initial={false} mode="wait">
@@ -78,5 +112,3 @@ function App() {
     </Suspense>
   );
 }
-
-export default App;
