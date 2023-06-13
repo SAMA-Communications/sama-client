@@ -1,12 +1,8 @@
 import React, { Suspense, useEffect } from "react";
 import api from "./api/api";
-import jwtDecode from "jwt-decode";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { default as EventEmitter } from "./event/eventEmitter";
-import { getConverastionById } from "./store/Conversations";
-import { selectParticipantsEntities } from "./store/Participants";
-import { useSelector } from "react-redux";
 
 import PageLoader from "./components/PageLoader";
 import SignUp from "./components/screens/SignUp";
@@ -22,13 +18,6 @@ const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const selectedConversation = useSelector(getConverastionById);
-  const participants = useSelector(selectParticipantsEntities);
-  const userInfo = localStorage.getItem("sessionId")
-    ? jwtDecode(localStorage.getItem("sessionId"))
-    : null;
-  let keyLocation = location.pathname;
 
   useEffect(() => {
     if (window.matchMedia("(prefers-color-scheme: dark)").matches === true) {
@@ -56,12 +45,10 @@ export default function App() {
   }, []);
 
   const userLoginByToken = async (token) => {
-    navigate("/loading");
     try {
       const userToken = await api.userLogin({ token });
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
-        navigate("/main");
       } else {
         localStorage.removeItem("sessionId");
         navigate("/login");
@@ -71,34 +58,10 @@ export default function App() {
     }
   };
 
-  const chatHashPath =
-    selectedConversation?.owner_id === userInfo._id
-      ? participants[selectedConversation?.opponent_id]?.login
-      : participants[selectedConversation?.owner_id]?.login;
-  if (selectedConversation) {
-    if (
-      selectedConversation.type === "u" &&
-      `#${chatHashPath}` !== location.hash
-    ) {
-      console.log(`[navigator] Navigate to 1-1 chat`, chatHashPath);
-      keyLocation = "/main/";
-      navigate(`/main/#${chatHashPath}`);
-    } else if (
-      selectedConversation.type === "g" &&
-      `#${selectedConversation._id}` !== location.hash
-    ) {
-      console.log(
-        `[navigator] Navigate to group chat ${selectedConversation._id}`
-      );
-      keyLocation = "/main/";
-      navigate(`/main/#${selectedConversation._id}`);
-    }
-  }
-
   return (
     <Suspense fallback={<PageLoader />}>
       <AnimatePresence initial={false} mode="wait">
-        <Routes location={location} key={keyLocation}>
+        <Routes location={location}>
           <Route path="/loading" element={<PageLoader />} />
           <Route path="/login" element={<Login />} />
           <Route path="/main/*" element={<Main />} />
