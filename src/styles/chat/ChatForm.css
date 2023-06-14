@@ -379,7 +379,10 @@
     gap: 10px;
   }
   .chat-recipient-info {
-    gap: 10px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0;
   }
   .chat-recipient-info > p {
     font-size: calc(var(--font-size) * 1.3);
