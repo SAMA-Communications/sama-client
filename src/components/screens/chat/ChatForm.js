@@ -421,6 +421,7 @@ export default function ChatForm({
             <div className="form-send-text">
               <input
                 id="inputMessage"
+                autoFocus
                 ref={messageInputEl}
                 autoComplete="off"
                 placeholder="> Write your message..."
