@@ -229,10 +229,34 @@ aside {
 }
 
 @media (max-width: 1023px) {
+  .user-box {
+    height: 80px;
+    padding: 10px;
+  }
+  .user-photo {
+    width: 60px;
+    height: 60px;
+
+    font-size: calc(var(--font-size) * 1.7);
+  }
+  .chat-list {
+    height: calc(91vh - 120px);
+    border-width: 10px;
+  }
   aside {
+    width: 96vw !important;
+    margin: 2vw;
+
     display: none;
     position: absolute;
-    width: min(400px, calc(100vw - 40px));
+    align-self: center;
+
     z-index: 111;
+  }
+  .chat-menu-bg {
+    padding-top: 10px !important;
+  }
+  .chat-menu-bg > svg {
+    width: 30px !important;
   }
 }

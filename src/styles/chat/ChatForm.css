@@ -45,8 +45,8 @@
   line-height: calc(var(--font-size) * 2.5);
 }
 .chat-menu-btn {
-  height: 80px;
-  width: 55px;
+  width: 70px;
+  height: 70px;
 
   display: none;
 
@@ -319,22 +319,80 @@
 
 @media (max-width: 1023px) {
   .chat-form {
-    width: 98vw !important;
-    margin-left: 20px !important;
-  }
+    width: 96vw;
+    margin: 2vw;
 
+    padding: 10px;
+  }
   .chat-menu-btn {
     position: absolute;
+    top: 25px;
 
     width: 55px;
+    height: 55px;
+
     display: flex;
     justify-content: left;
     align-items: center;
   }
   .chat-menu-btn svg {
-    width: 80%;
+    width: 50px;
   }
   .chat-messaging-info {
     padding-left: 55px;
+  }
+  .chat-form-loading > p {
+    font-size: 1.5em;
+  }
+  .chat-form-loading > svg {
+    width: 40px;
+  }
+}
+
+@media (max-width: 800px) {
+  .chat-menu-btn {
+    top: 22px;
+
+    width: 35px;
+    height: 35px;
+  }
+  .chat-menu-btn svg {
+    width: 30px;
+  }
+  .chat-messaging-info {
+    padding-left: 35px;
+  }
+  .chat-recipient-photo {
+    width: 50px;
+    height: 50px;
+  }
+  .chat-recipient-photo > svg {
+    width: 35px;
+  }
+  .chat-delete-btn {
+    margin-left: auto;
+  }
+  .chat-delete-btn > svg {
+    width: 28px;
+  }
+  .chat-info-block {
+    gap: 10px;
+  }
+  .chat-recipient-info {
+    gap: 10px;
+  }
+  .chat-recipient-info > p {
+    font-size: calc(var(--font-size) * 1.3);
+  }
+  .chat-recipient-status {
+    font-size: calc(var(--font-size) * 1);
+  }
+  #chat-form-send {
+    padding-top: 10px;
+
+    gap: 5px;
+  }
+  #send-message {
+    padding: 0 8px;
   }
 }

@@ -286,11 +286,10 @@ input[type="submit"]:hover {
   right: 4%;
   top: -10%;
 }
-/* @media (min-width: 767px) and (max-width: 1023px)  */
+
 @media (max-width: 1023px) {
   .login-box {
-    width: max-content !important;
-    padding: 0 40px;
+    padding: 0 auto;
     grid-template-columns: 1fr;
   }
   .login-box-left {

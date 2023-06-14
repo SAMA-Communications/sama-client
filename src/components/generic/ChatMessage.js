@@ -34,7 +34,7 @@ export default function ChatMessage({
     status += isPrevMesssageYours ? " br-tl" : " mt-10";
 
     if (!attachments?.length) {
-      status += text?.length < 50 ? " m-pr" : " m-pb";
+      status += text?.length < 25 ? " m-pr" : " m-pb";
     } else if (text?.length > 16) {
       status += " m-pb";
     }

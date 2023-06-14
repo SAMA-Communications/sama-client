@@ -176,3 +176,12 @@
     border-top-right-radius: 0;
   }
 }
+@media (max-width: 800px) {
+  .message {
+    gap: 5px;
+  }
+  .message-user-photo,
+  .message-user-photo-none {
+    display: none;
+  }
+}
