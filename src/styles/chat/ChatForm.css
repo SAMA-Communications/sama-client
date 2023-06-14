@@ -398,4 +398,13 @@
   #send-message {
     padding: 0 8px;
   }
+  .chat-files-preview {
+    max-height: 90px;
+  }
+  .chat-empty > svg {
+    width: 40px;
+  }
+  .chat-empty > p {
+    font-size: calc(var(--font-size) * 1.7);
+  }
 }

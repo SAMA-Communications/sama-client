@@ -183,3 +183,9 @@
 .search-close-chat:hover {
   background-size: 100%;
 }
+
+@media (max-width: 800px) {
+  #search-form {
+    width: 96vw;
+  }
+}
