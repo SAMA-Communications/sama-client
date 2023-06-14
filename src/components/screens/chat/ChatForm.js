@@ -30,11 +30,12 @@ import {
   removeMessage,
   upsertMessages,
 } from "../../../store/Messages";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { scaleAndRound } from "../../../styles/animations/animationBlocks.js";
 import { animateSVG } from "../../../styles/animations/animationSVG.js";
 import { motion as m } from "framer-motion";
+import { scaleAndRound } from "../../../styles/animations/animationBlocks.js";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { default as EventEmitter } from "../../../event/eventEmitter.js";
 
 import "../../../styles/chat/ChatForm.css";
 
@@ -111,7 +112,7 @@ export default function ChatForm() {
       return;
     }
 
-    if (!conversations[selectedCID].activated) {
+    function getMessageListAndFileLinks() {
       api.messageList({ cid: selectedCID, limit: 20 }).then(async (arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
         dispatch(addMessages(arr));
@@ -145,7 +146,7 @@ export default function ChatForm() {
       });
     }
 
-    if (conversations[selectedCID].type === "u") {
+    function getAndSetOpponentLastActivity() {
       const obj = conversations[selectedCID];
       const uId =
         obj.owner_id === userInfo._id
@@ -162,7 +163,17 @@ export default function ChatForm() {
       });
     }
 
+    if (!conversations[selectedCID].activated) {
+      getMessageListAndFileLinks();
+    }
+
+    if (conversations[selectedCID].type === "u") {
+      getAndSetOpponentLastActivity();
+    }
+
     setFiles([]);
+    EventEmitter.subscribe("onConnect", getMessageListAndFileLinks);
+    EventEmitter.subscribe("onConnect", getAndSetOpponentLastActivity);
   }, [selectedCID]);
 
   const sendMessage = async (event) => {
