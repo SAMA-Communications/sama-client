@@ -260,3 +260,12 @@ aside {
     width: 30px !important;
   }
 }
+@media (max-width: 800px) {
+  .chat-box-info > p {
+    width: calc(100% - 65px);
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
