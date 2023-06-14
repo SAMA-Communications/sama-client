@@ -247,6 +247,12 @@ export default function ChatForm({
   const open = (options) => setModalOpen(options);
 
   const modalWindow = () => {
+    window.onkeydown = function (event) {
+      if (event.keyCode === 27) {
+        close();
+      }
+    };
+
     return (
       <div exit="exit" className="modal-window" onClick={() => close()}>
         <img src={modalOpen?.url} alt={modalOpen?.name} />
@@ -295,7 +301,6 @@ export default function ChatForm({
 
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
-      close();
       dispatch(clearSelectedConversation());
       api.unsubscribeFromUserActivity({});
       navigate("/main");
