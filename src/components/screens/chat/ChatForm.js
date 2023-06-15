@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import api from "../../../api/api";
 import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import jwtDecode from "jwt-decode";
+import { getConnectState } from "../../../store/ConnectState.js";
 import {
   getDownloadFileLinks,
   getFileObjects,
@@ -18,6 +19,7 @@ import {
   markConversationAsRead,
   removeChat,
   selectConversationsEntities,
+  setLastMessageField,
   updateLastMessageField,
   upsertChat,
 } from "../../../store/Conversations";
@@ -49,6 +51,8 @@ export default function ChatForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const url = useLocation();
+
+  const connectState = useSelector(getConnectState);
 
   const [opponentLastActivity, setOpponentLastActivity] = useState(null);
   const userInfo = localStorage.getItem("sessionId")
@@ -179,6 +183,11 @@ export default function ChatForm() {
   const sendMessage = async (event) => {
     event.preventDefault();
 
+    if (!connectState) {
+      alert("No internet connection");
+      return;
+    }
+
     const text = messageInputEl.current.value.trim();
     if (text.length === 0 && !files) {
       return;
@@ -210,7 +219,20 @@ export default function ChatForm() {
       });
     }
 
-    const response = await api.messageCreate(reqData);
+    let response;
+    try {
+      response = await api.messageCreate(reqData);
+    } catch (err) {
+      alert("There is no server connection");
+      dispatch(
+        setLastMessageField({
+          cid: selectedCID,
+          msg: messages[messages.length - 1],
+        })
+      );
+      return;
+    }
+
     if (response.mid) {
       msg = {
         _id: response.server_mid,
