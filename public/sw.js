@@ -3,6 +3,7 @@ self.addEventListener("push", (e) => {
   const data = e.data.json();
 
   const options = {
+    title: data.title,
     body: data.body,
     icon: "logo.webp",
     // data: {
