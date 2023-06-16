@@ -3,6 +3,7 @@ import api from "./api/api";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { default as EventEmitter } from "./event/eventEmitter";
+import { updateNetworkState } from "./store/NetworkState";
 import { useDispatch } from "react-redux";
 
 import PageLoader from "./components/PageLoader";
@@ -11,7 +12,6 @@ import SignUp from "./components/screens/SignUp";
 import "./styles/GlobalParam.css";
 import "./styles/themes/DarkTheme.css";
 import "./styles/themes/DefaultTheme.css";
-import { updateState } from "./store/ConnectState";
 
 const Main = React.lazy(() => import("./components/Main"));
 const Login = React.lazy(() => import("./components/screens/Login"));
@@ -23,8 +23,10 @@ export default function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    window.addEventListener("offline", () => dispatch(updateState(false)));
-    window.addEventListener("online", () => dispatch(updateState(true)));
+    window.addEventListener("offline", () =>
+      dispatch(updateNetworkState(false))
+    );
+    window.addEventListener("online", () => dispatch(updateNetworkState(true)));
 
     if (window.matchMedia("(prefers-color-scheme: dark)").matches === true) {
       if (localStorage.getItem("theme") !== "light") {

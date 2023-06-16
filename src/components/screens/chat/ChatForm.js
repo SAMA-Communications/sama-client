@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import api from "../../../api/api";
 import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import jwtDecode from "jwt-decode";
-import { getConnectState } from "../../../store/ConnectState.js";
+import { getNetworkState } from "../../../store/NetworkState.js";
 import {
   getDownloadFileLinks,
   getFileObjects,
@@ -52,7 +52,7 @@ export default function ChatForm() {
   const navigate = useNavigate();
   const url = useLocation();
 
-  const connectState = useSelector(getConnectState);
+  const connectState = useSelector(getNetworkState);
 
   const [opponentLastActivity, setOpponentLastActivity] = useState(null);
   const userInfo = localStorage.getItem("sessionId")
