@@ -4,7 +4,7 @@ self.addEventListener("push", (e) => {
 
   const options = {
     body: data.body,
-    icon: "logo.webp",
+    icon: "logo.png",
     // data: {
     //   url: data.url,
     // },
