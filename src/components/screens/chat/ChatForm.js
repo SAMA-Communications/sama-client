@@ -225,6 +225,7 @@ export default function ChatForm({
       dispatch(removeMessage(mid));
     }
     setFiles(null);
+    messageInputEl.current.blur();
   };
 
   const deleteChat = async () => {
@@ -304,6 +305,14 @@ export default function ChatForm({
       dispatch(clearSelectedConversation());
       api.unsubscribeFromUserActivity({});
       navigate("/main");
+    }
+  };
+  window.onresize = function (event) {
+    if (messageInputEl.current) {
+      messageInputEl.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
     }
   };
 
@@ -421,8 +430,11 @@ export default function ChatForm({
             <div className="form-send-text">
               <input
                 id="inputMessage"
-                autoFocus
+                autoFocus={
+                  !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+                }
                 ref={messageInputEl}
+                onTouchStart={(e) => e.target.blur()}
                 autoComplete="off"
                 placeholder="> Write your message..."
               />
