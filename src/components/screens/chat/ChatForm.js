@@ -111,71 +111,73 @@ export default function ChatForm() {
     );
   };
 
+  const getMessageListAndFileLinks = function () {
+    api.messageList({ cid: selectedCID, limit: 20 }).then(async (arr) => {
+      const messagesIds = arr.map((el) => el._id).reverse();
+      dispatch(addMessages(arr));
+      dispatch(
+        upsertChat({
+          _id: selectedCID,
+          messagesIds,
+          activated: true,
+        })
+      );
+      const mAttachments = {};
+      for (let i = 0; i < arr.length; i++) {
+        const attachments = arr[i].attachments;
+        if (!attachments) {
+          continue;
+        }
+        attachments.forEach(
+          (obj) =>
+            (mAttachments[obj.file_id] = {
+              _id: arr[i]._id,
+              ...obj,
+            })
+        );
+      }
+
+      if (Object.keys(mAttachments).length > 0) {
+        getDownloadFileLinks(mAttachments).then((msgs) =>
+          dispatch(upsertMessages(msgs))
+        );
+      }
+    });
+  };
+
+  const getAndSetOpponentLastActivity = function () {
+    const obj = conversations[selectedCID];
+    const uId =
+      obj.owner_id === userInfo._id
+        ? participants[obj.opponent_id]?._id
+        : participants[obj.owner_id]?._id;
+    api.subscribeToUserActivity(uId).then((activity) => {
+      dispatch(
+        upsertUser({
+          _id: uId,
+          recent_activity: activity[uId],
+        })
+      );
+      setOpponentLastActivity(activity[uId]);
+    });
+  };
+
   useEffect(() => {
     if (!selectedCID) {
       return;
     }
 
-    function getMessageListAndFileLinks() {
-      api.messageList({ cid: selectedCID, limit: 20 }).then(async (arr) => {
-        const messagesIds = arr.map((el) => el._id).reverse();
-        dispatch(addMessages(arr));
-        dispatch(
-          upsertChat({
-            _id: selectedCID,
-            messagesIds,
-            activated: true,
-          })
-        );
-        const mAttachments = {};
-        for (let i = 0; i < arr.length; i++) {
-          const attachments = arr[i].attachments;
-          if (!attachments) {
-            continue;
-          }
-          attachments.forEach(
-            (obj) =>
-              (mAttachments[obj.file_id] = {
-                _id: arr[i]._id,
-                ...obj,
-              })
-          );
-        }
-
-        if (Object.keys(mAttachments).length > 0) {
-          getDownloadFileLinks(mAttachments).then((msgs) =>
-            dispatch(upsertMessages(msgs))
-          );
-        }
-      });
-    }
-
-    function getAndSetOpponentLastActivity() {
-      const obj = conversations[selectedCID];
-      const uId =
-        obj.owner_id === userInfo._id
-          ? participants[obj.opponent_id]?._id
-          : participants[obj.owner_id]?._id;
-      api.subscribeToUserActivity(uId).then((activity) => {
-        dispatch(
-          upsertUser({
-            _id: uId,
-            recent_activity: activity[uId],
-          })
-        );
-        setOpponentLastActivity(activity[uId]);
-      });
-    }
+    EventEmitter.unsubscribe("onConnect", getMessageListAndFileLinks);
+    EventEmitter.unsubscribe("onConnect", getAndSetOpponentLastActivity);
 
     if (!conversations[selectedCID].activated) {
       getMessageListAndFileLinks();
     }
-
     if (conversations[selectedCID].type === "u") {
       getAndSetOpponentLastActivity();
     }
-
     setFiles([]);
+
     EventEmitter.subscribe("onConnect", getMessageListAndFileLinks);
     EventEmitter.subscribe("onConnect", getAndSetOpponentLastActivity);
   }, [selectedCID]);
@@ -326,6 +328,8 @@ export default function ChatForm() {
     if (event.keyCode === 27) {
       dispatch(clearSelectedConversation());
       api.unsubscribeFromUserActivity({});
+      EventEmitter.unsubscribe("onConnect", getMessageListAndFileLinks);
+      EventEmitter.unsubscribe("onConnect", getAndSetOpponentLastActivity);
       navigate("/main");
     }
   };
