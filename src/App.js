@@ -1,5 +1,6 @@
 import React, { Suspense, useEffect } from "react";
 import api from "./api/api";
+import subscribeForNotifications from "./services/notifications.js";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { default as EventEmitter } from "./event/eventEmitter";
@@ -52,6 +53,7 @@ function App() {
       const userToken = await api.userLogin({ token });
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
+        subscribeForNotifications();
         navigate("/main");
       } else {
         localStorage.removeItem("sessionId");

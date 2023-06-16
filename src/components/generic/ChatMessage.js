@@ -31,18 +31,12 @@ export default function ChatMessage({
 
   const messageStyle = useMemo(() => {
     let status = "message-content";
-    if (isPrevMesssageYours) {
-      status += " br-tl";
-    } else {
-      status += " mt-10";
-    }
+    status += isPrevMesssageYours ? " br-tl" : " mt-10";
 
     if (!attachments?.length) {
-      if (text.length < 50) {
-        status += " m-pr";
-      } else {
-        status += " m-pb";
-      }
+      status += text?.length < 25 ? " m-pr" : " m-pb";
+    } else if (text?.length > 16) {
+      status += " m-pb";
     }
 
     return status;

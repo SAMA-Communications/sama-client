@@ -107,3 +107,39 @@ nav {
 .change-themes:hover {
   background-size: 100%;
 }
+
+@media (max-width: 800px) {
+  aside {
+    display: none;
+    position: absolute;
+    width: calc(100vw - 40px);
+    z-index: 111;
+  }
+  nav {
+    height: 7svh;
+  }
+  main {
+    height: 93svh;
+  }
+  .nav-logo > p {
+    font-size: calc(var(--font-size) * 1.3);
+  }
+  .nav-logo > svg {
+    width: 35px;
+    height: 35px;
+  }
+  .change-themes {
+    padding: 0;
+  }
+  .change-themes > svg {
+    width: 30px;
+    height: 30px;
+  }
+  .nav-logout-btn {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .nav-logout-btn > a {
+    font-size: calc(var(--font-size) * 1.3);
+  }
+}

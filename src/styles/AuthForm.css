@@ -11,7 +11,7 @@
 .login-box {
   position: relative;
 
-  height: min(98vw, 500px);
+  height: min(98vh, 500px);
 
   display: grid;
   grid-template-columns: 3fr 2fr;
@@ -285,4 +285,14 @@ input[type="submit"]:hover {
   position: absolute;
   right: 4%;
   top: -10%;
+}
+
+@media (max-width: 1023px) {
+  .login-box {
+    padding: 0 auto;
+    grid-template-columns: 1fr;
+  }
+  .login-box-left {
+    display: none;
+  }
 }

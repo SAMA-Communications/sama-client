@@ -9,25 +9,28 @@ import { motion as m } from "framer-motion";
 import "../styles/Main.css";
 
 import { ReactComponent as IconSun } from "./../assets/icons/ThemeSun.svg";
+import { ReactComponent as CloseChatList } from "./../assets/icons/CloseChatList.svg";
 import { ReactComponent as IconMoon } from "./../assets/icons/ThemeMoon.svg";
 const ChatForm = React.lazy(() => import("./screens/chat/ChatForm"));
 
 export default function Main() {
+  const [asideDisplayStyle, setAsideDisplayStyle] = useState("none");
+  const [chatFormBgDisplayStyle, setChatFormBgDisplayStyle] = useState("none");
+
   const sendLogout = async () => {
-    try {
-      navigator.serviceWorker.ready
-        .then((reg) =>
-          reg.pushManager.getSubscription().then((sub) =>
-            sub.unsubscribe().then(async () => {
-              await api.pushSubscriptionDelete();
-              await api.userLogout();
-            })
-          )
+    navigator.serviceWorker.ready
+      .then((reg) =>
+        reg.pushManager.getSubscription().then((sub) =>
+          sub.unsubscribe().then(async () => {
+            await api.pushSubscriptionDelete();
+            await api.userLogout();
+          })
         )
-        .catch((err) => console.log(err));
-    } catch (error) {
-      alert(error.message);
-    }
+      )
+      .catch(async (err) => {
+        console.error(err);
+        await api.userLogout();
+      });
     localStorage.removeItem("sessionId");
   };
 
@@ -57,8 +60,20 @@ export default function Main() {
     );
   }, [currentTheme]);
 
+  const closeChatList = () => {
+    setAsideDisplayStyle("none");
+    setChatFormBgDisplayStyle("none");
+  };
+
   return (
     <div>
+      <div
+        style={{ display: chatFormBgDisplayStyle }}
+        className="chat-menu-bg"
+        onClick={closeChatList}
+      >
+        <CloseChatList />
+      </div>
       <nav>
         <div className="nav-logo">
           <MiniLogo />
@@ -82,8 +97,15 @@ export default function Main() {
         </m.div>
       </nav>
       <main>
-        <ChatList />
-        <ChatForm />
+        <ChatList
+          asideDisplayStyle={asideDisplayStyle}
+          setAsideDisplayStyle={setAsideDisplayStyle}
+          setChatFormBgDisplayStyle={setChatFormBgDisplayStyle}
+        />
+        <ChatForm
+          setAsideDisplayStyle={setAsideDisplayStyle}
+          setChatFormBgDisplayStyle={setChatFormBgDisplayStyle}
+        />
       </main>
     </div>
   );

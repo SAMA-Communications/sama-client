@@ -39,12 +39,16 @@ import { motion as m } from "framer-motion";
 import "../../../styles/chat/ChatForm.css";
 
 import { ReactComponent as EmptyChat } from "./../../../assets/icons/chatForm/EmptyChat.svg";
+import { ReactComponent as BurgerMenu } from "./../../../assets/icons/chatForm/BurgerMenu.svg";
 import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatForm/RecipientPhoto.svg";
 import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
 
-export default function ChatForm() {
+export default function ChatForm({
+  setAsideDisplayStyle,
+  setChatFormBgDisplayStyle,
+}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const url = useLocation();
@@ -221,6 +225,7 @@ export default function ChatForm() {
       dispatch(removeMessage(mid));
     }
     setFiles(null);
+    messageInputEl.current.blur();
   };
 
   const deleteChat = async () => {
@@ -243,6 +248,12 @@ export default function ChatForm() {
   const open = (options) => setModalOpen(options);
 
   const modalWindow = () => {
+    window.onkeydown = function (event) {
+      if (event.keyCode === 27) {
+        close();
+      }
+    };
+
     return (
       <div exit="exit" className="modal-window" onClick={() => close()}>
         <img src={modalOpen?.url} alt={modalOpen?.name} />
@@ -296,6 +307,14 @@ export default function ChatForm() {
       navigate("/main");
     }
   };
+  window.onresize = function (event) {
+    if (messageInputEl.current) {
+      messageInputEl.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  };
 
   const [reloadActivity, setReloadActivity] = useState(false);
   useEffect(() => {
@@ -331,6 +350,11 @@ export default function ChatForm() {
     );
   };
 
+  const openChatList = () => {
+    setAsideDisplayStyle("block");
+    setChatFormBgDisplayStyle("flex");
+  };
+
   return (
     <m.section
       variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
@@ -339,6 +363,19 @@ export default function ChatForm() {
       exit="exit"
       className="chat-form"
     >
+      <m.div
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 0.7,
+            transition: { delay: 0.5, duration: 1.5 },
+          },
+        }}
+        className="chat-menu-btn"
+        onClick={openChatList}
+      >
+        <BurgerMenu />
+      </m.div>
       {!selectedCID ? (
         <NoChatSelected />
       ) : (
@@ -393,7 +430,11 @@ export default function ChatForm() {
             <div className="form-send-text">
               <input
                 id="inputMessage"
+                autoFocus={
+                  !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+                }
                 ref={messageInputEl}
+                onTouchStart={(e) => e.target.blur()}
                 autoComplete="off"
                 placeholder="> Write your message..."
               />
