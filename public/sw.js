@@ -5,6 +5,7 @@ self.addEventListener("push", (e) => {
   const options = {
     body: data.body,
     icon: "logo.png",
+    image: data.imgUrl,
     // data: {
     //   url: data.url,
     // },
