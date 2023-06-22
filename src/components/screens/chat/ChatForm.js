@@ -4,6 +4,7 @@ import NoChatSelected from "../../static/NoChatSelected.js";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import api from "../../../api/api";
 import getLastVisitTime from "../../../utils/get_last_visit_time.js";
+import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import {
   getDownloadFileLinks,
@@ -52,7 +53,6 @@ export default function ChatForm({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const url = useLocation();
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   const [opponentLastActivity, setOpponentLastActivity] = useState(null);
   const userInfo = localStorage.getItem("sessionId")
