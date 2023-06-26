@@ -48,13 +48,14 @@ function App() {
   }, []);
 
   const userLoginByToken = async (token) => {
+    const prevPath = location.hash;
     navigate("/loading");
     try {
       const userToken = await api.userLogin({ token });
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
         subscribeForNotifications();
-        navigate("/main");
+        navigate(prevPath ? `/main/${prevPath}` : "/main");
       } else {
         localStorage.removeItem("sessionId");
         navigate("/login");

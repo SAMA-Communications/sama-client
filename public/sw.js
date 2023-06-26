@@ -10,9 +10,12 @@ self.addEventListener("push", (e) => {
     body: data.body,
     icon: "logo.png",
     image: data.imgUrl,
-    // data: {
-    //   url: data.url,
-    // },
+    data: {
+      convId:
+        data.data.conversationType === "u"
+          ? `/#${data.data.userLogin}`
+          : `/#${data.data.conversationId}`,
+    },
   };
 
   e.waitUntil(
@@ -22,8 +25,11 @@ self.addEventListener("push", (e) => {
   );
 });
 
-// self.addEventListener("notificationclick", (e) => {
-//   clients.openWindow("http://localhost:3000/main" + e.notification.data?.url);
-// });
+self.addEventListener("notificationclick", (e) => {
+  //TODO: get host from env
+  clients.openWindow(
+    "http://localhost:3000/main" + e.notification.data?.convId
+  );
+});
 
 //CLIENT TODO: add reconect to chat after update tocken
