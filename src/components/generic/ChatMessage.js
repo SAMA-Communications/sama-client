@@ -35,7 +35,7 @@ export default function ChatMessage({
 
     if (!attachments?.length) {
       status += text?.length < 25 ? " m-pr" : " m-pb";
-    } else if (text?.length > 16) {
+    } else if (text?.length > 16 && window.innerWidth < 800) {
       status += " m-pb";
     }
 

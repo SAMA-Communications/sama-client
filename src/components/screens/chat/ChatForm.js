@@ -4,6 +4,7 @@ import NoChatSelected from "../../static/NoChatSelected.js";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import api from "../../../api/api";
 import getLastVisitTime from "../../../utils/get_last_visit_time.js";
+import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import {
   getDownloadFileLinks,
@@ -67,6 +68,7 @@ export default function ChatForm({
   const messageInputEl = useRef(null);
   const filePicker = useRef(null);
   const [files, setFiles] = useState([]);
+  const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
@@ -94,9 +96,9 @@ export default function ChatForm({
         return { ...obj, file_url: urls[obj.file_id] };
       });
     }
-    message.from === userInfo._id
-      ? dispatch(addMessage({ ...message, status: "sent" }))
-      : dispatch(addMessage(message));
+    message.from === userInfo._id && (message["status"] = "sent");
+    dispatch(addMessage(message));
+
     let countOfNewMessages = 0;
     message.cid === selectedCID
       ? api.markConversationAsRead({ cid: selectedCID })
@@ -173,10 +175,10 @@ export default function ChatForm({
     event.preventDefault();
 
     const text = messageInputEl.current.value.trim();
-    if (text.length === 0 && !files) {
+    if ((text.length === 0 && !files?.length) || isSendMessageDisable) {
       return;
     }
-
+    setIsSendMessageDisable(true);
     messageInputEl.current.value = "";
     const mid = userInfo._id + Date.now();
     let msg = {
@@ -224,8 +226,11 @@ export default function ChatForm({
       );
       dispatch(removeMessage(mid));
     }
-    setFiles(null);
-    messageInputEl.current.blur();
+    setFiles([]);
+    filePicker.current.value = "";
+    isMobile && messageInputEl.current.blur();
+
+    setIsSendMessageDisable(false);
   };
 
   const deleteChat = async () => {
@@ -348,6 +353,7 @@ export default function ChatForm({
         ? [...files, ...event.target.files]
         : [...event.target.files]
     );
+    messageInputEl.current.focus();
   };
 
   const openChatList = () => {
@@ -430,9 +436,7 @@ export default function ChatForm({
             <div className="form-send-text">
               <input
                 id="inputMessage"
-                autoFocus={
-                  !/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-                }
+                autoFocus={!isMobile}
                 ref={messageInputEl}
                 onTouchStart={(e) => e.target.blur()}
                 autoComplete="off"
