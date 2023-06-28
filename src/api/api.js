@@ -54,6 +54,17 @@ class Api {
       }
 
       if (message.message) {
+        const m = message.message;
+        if (!document.hasFocus()) {
+          new Notification(m.title, {
+            body: m.body,
+            icon: "./../../public/logo.png",
+            image: m.titleImgUrl,
+            data: {
+              convId: `/#${m.conversation_id}`,
+            },
+          });
+        }
         if (this.onMessageListener) {
           this.onMessageListener(message.message);
         }

@@ -4,6 +4,8 @@ import subscribeForNotifications from "./services/notifications.js";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { default as EventEmitter } from "./event/eventEmitter";
+import { setSelectedConversation } from "./store/SelectedConversation";
+import { useDispatch } from "react-redux";
 
 import PageLoader from "./components/PageLoader";
 import SignUp from "./components/screens/SignUp";
@@ -17,6 +19,7 @@ const Login = React.lazy(() => import("./components/screens/Login"));
 const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
 function App() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const keyLocation =
@@ -55,7 +58,12 @@ function App() {
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
         subscribeForNotifications();
-        navigate(prevPath ? `/main/${prevPath}` : "/main");
+        if (!prevPath) {
+          navigate("/main");
+        } else {
+          dispatch(setSelectedConversation({ id: prevPath.slice(1) }));
+          navigate(`/main/${prevPath}`);
+        }
       } else {
         localStorage.removeItem("sessionId");
         navigate("/login");

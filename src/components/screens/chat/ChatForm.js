@@ -15,6 +15,7 @@ import {
   upsertUser,
 } from "../../../store/Participants.js";
 import {
+  clearCountOfUnreadMessages,
   getConverastionById,
   markConversationAsRead,
   removeChat,
@@ -31,7 +32,7 @@ import {
   removeMessage,
   upsertMessages,
 } from "../../../store/Messages";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { scaleAndRound } from "../../../styles/animations/animationBlocks.js";
 import { animateSVG } from "../../../styles/animations/animationSVG.js";
@@ -52,7 +53,6 @@ export default function ChatForm({
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const url = useLocation();
 
   const [opponentLastActivity, setOpponentLastActivity] = useState(null);
   const userInfo = localStorage.getItem("sessionId")
@@ -117,7 +117,8 @@ export default function ChatForm({
       return;
     }
 
-    if (!conversations[selectedCID].activated) {
+    const selectedConversation = conversations[selectedCID];
+    if (!selectedConversation.activated) {
       api.messageList({ cid: selectedCID, limit: 20 }).then(async (arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
         dispatch(addMessages(arr));
@@ -151,12 +152,19 @@ export default function ChatForm({
       });
     }
 
-    if (conversations[selectedCID].type === "u") {
-      const obj = conversations[selectedCID];
+    if (selectedConversation.unread_messages_count > 0) {
+      dispatch(clearCountOfUnreadMessages(selectedConversation._id));
+      api.markConversationAsRead({ cid: selectedConversation._id });
+    }
+
+    if (selectedConversation.type === "u") {
+      const obj = selectedConversation;
       const uId =
         obj.owner_id === userInfo._id
           ? participants[obj.opponent_id]?._id
           : participants[obj.owner_id]?._id;
+
+      //TODO: this req send before we get participants
       api.subscribeToUserActivity(uId).then((activity) => {
         dispatch(
           upsertUser({
@@ -396,7 +404,13 @@ export default function ChatForm({
                 <RecipientPhoto />
               </div>
               <div className="chat-recipient-info">
-                <p>{selectedConversation.name || url.hash?.slice(1)}</p>
+                <p>
+                  {selectedConversation.name
+                    ? selectedConversation.name
+                    : selectedConversation.owner_id === userInfo._id
+                    ? participants[selectedConversation.opponent_id]?.login
+                    : participants[selectedConversation.owner_id]?.login}
+                </p>
                 <div className="chat-recipient-status">
                   {recentActivityView}
                 </div>
