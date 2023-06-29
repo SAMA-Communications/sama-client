@@ -1,4 +1,4 @@
-import connectStateReducer from "./ConnectState";
+import networkStateReducer from "./NetworkState";
 import conversationsReducer from "./Conversations";
 import messageReducer from "./Messages";
 import participantsReducer from "./Participants";
@@ -7,7 +7,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 export default configureStore({
   reducer: {
-    connectState: connectStateReducer,
+    networkState: networkStateReducer,
     conversations: conversationsReducer,
     messages: messageReducer,
     participants: participantsReducer,

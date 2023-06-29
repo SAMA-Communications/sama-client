@@ -4,6 +4,8 @@ import subscribeForNotifications from "./services/notifications.js";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { default as EventEmitter } from "./event/eventEmitter";
+import { updateNetworkState } from "./store/NetworkState";
+import { useDispatch } from "react-redux";
 
 import PageLoader from "./components/PageLoader";
 import SignUp from "./components/screens/SignUp";
@@ -16,13 +18,17 @@ const Main = React.lazy(() => import("./components/Main"));
 const Login = React.lazy(() => import("./components/screens/Login"));
 const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
-function App() {
+export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const keyLocation =
-    location.pathname.split("/")[1] === "main" ? "/main" : location.pathname;
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    window.addEventListener("offline", () =>
+      dispatch(updateNetworkState(false))
+    );
+    window.addEventListener("online", () => dispatch(updateNetworkState(true)));
+
     if (window.matchMedia("(prefers-color-scheme: dark)").matches === true) {
       if (localStorage.getItem("theme") !== "light") {
         localStorage.setItem("theme", "dark");
@@ -48,7 +54,6 @@ function App() {
   }, []);
 
   const userLoginByToken = async (token) => {
-    navigate("/loading");
     try {
       const userToken = await api.userLogin({ token });
       if (userToken && userToken !== "undefined") {
@@ -67,7 +72,7 @@ function App() {
   return (
     <Suspense fallback={<PageLoader />}>
       <AnimatePresence initial={false} mode="wait">
-        <Routes location={location} key={keyLocation}>
+        <Routes location={location}>
           <Route path="/loading" element={<PageLoader />} />
           <Route path="/login" element={<Login />} />
           <Route path="/main/*" element={<Main />} />
@@ -78,5 +83,3 @@ function App() {
     </Suspense>
   );
 }
-
-export default App;
