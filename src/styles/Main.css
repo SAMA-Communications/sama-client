@@ -116,10 +116,10 @@ nav {
     z-index: 111;
   }
   nav {
-    height: 7svh;
+    height: max(7svh, 55px);
   }
   main {
-    height: 93svh;
+    height: min(93svh, 100svh - 55px);
   }
   .nav-logo > p {
     font-size: calc(var(--font-size) * 1.3);
