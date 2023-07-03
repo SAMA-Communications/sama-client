@@ -267,6 +267,8 @@ class Api {
       },
     };
     if (data.limit) requestData.request.message_list["limit"] = data.limit;
+    if (data.updated_at)
+      requestData.request.message_list["updated_at"] = data.updated_at;
 
     const resObjKey = "messages";
     return this.sendPromise(requestData, resObjKey);

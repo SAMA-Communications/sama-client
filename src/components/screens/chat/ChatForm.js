@@ -75,16 +75,69 @@ export default function ChatForm({
   const filePicker = useRef(null);
   const [files, setFiles] = useState([]);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
+
+  const [isMoreMessages, setIsMoreMessages] = useState(true);
   const lastMessageObserver = useRef();
-  const lastMessageRef = useCallback((node) => {
-    if (lastMessageObserver.current) lastMessageObserver.current.disconnect();
-    lastMessageObserver.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        console.log("Visible");
-      }
-    });
-    if (node) lastMessageObserver.current.observe(node);
-  }, []);
+  const lastMessageRef = useCallback(
+    (node) => {
+      if (lastMessageObserver.current) lastMessageObserver.current.disconnect();
+      lastMessageObserver.current = new IntersectionObserver((entries) => {
+        if (
+          entries[0].isIntersecting &&
+          selectedCID &&
+          messages.length &&
+          isMoreMessages
+        ) {
+          console.log(messages);
+          api
+            .messageList({
+              cid: selectedCID,
+              limit: 20,
+              updated_at: { lt: messages[0].created_at },
+            })
+            .then(async (arr) => {
+              const messagesIds = arr.map((el) => el._id).reverse();
+              dispatch(addMessages(arr));
+              dispatch(
+                upsertChat({
+                  _id: selectedCID,
+                  messagesIds: [
+                    ...messagesIds,
+                    ...messages.map((el) => el._id),
+                  ],
+                  activated: true,
+                })
+              );
+              const mAttachments = {};
+              for (let i = 0; i < arr.length; i++) {
+                const attachments = arr[i].attachments;
+                if (!attachments) {
+                  continue;
+                }
+                attachments.forEach(
+                  (obj) =>
+                    (mAttachments[obj.file_id] = {
+                      _id: arr[i]._id,
+                      ...obj,
+                    })
+                );
+              }
+
+              if (Object.keys(mAttachments).length > 0) {
+                getDownloadFileLinks(mAttachments).then((msgs) =>
+                  dispatch(upsertMessages(msgs))
+                );
+              }
+              if (messagesIds.length < 20) {
+                setIsMoreMessages(false);
+              }
+            });
+        }
+      });
+      if (node) lastMessageObserver.current.observe(node);
+    },
+    [selectedCID, messages]
+  );
 
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
