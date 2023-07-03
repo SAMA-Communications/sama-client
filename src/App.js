@@ -18,14 +18,17 @@ const Main = React.lazy(() => import("./components/Main"));
 const Login = React.lazy(() => import("./components/screens/Login"));
 const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
-function App() {
-  const dispatch = useDispatch();
+export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const keyLocation =
-    location.pathname.split("/")[1] === "main" ? "/main" : location.pathname;
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    window.addEventListener("offline", () =>
+      dispatch(updateNetworkState(false))
+    );
+    window.addEventListener("online", () => dispatch(updateNetworkState(true)));
+
     if (window.matchMedia("(prefers-color-scheme: dark)").matches === true) {
       if (localStorage.getItem("theme") !== "light") {
         localStorage.setItem("theme", "dark");
@@ -76,7 +79,7 @@ function App() {
   return (
     <Suspense fallback={<PageLoader />}>
       <AnimatePresence initial={false} mode="wait">
-        <Routes location={location} key={keyLocation}>
+        <Routes location={location}>
           <Route path="/loading" element={<PageLoader />} />
           <Route path="/login" element={<Login />} />
           <Route path="/main/*" element={<Main />} />
@@ -87,5 +90,3 @@ function App() {
     </Suspense>
   );
 }
-
-export default App;
