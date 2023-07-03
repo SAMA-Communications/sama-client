@@ -88,15 +88,18 @@ export default function ChatForm({
           messages.length &&
           isMoreMessages
         ) {
-          console.log(messages);
           api
             .messageList({
               cid: selectedCID,
-              limit: 20,
+              limit: 20, //move to env
               updated_at: { lt: messages[0].created_at },
             })
             .then(async (arr) => {
               const messagesIds = arr.map((el) => el._id).reverse();
+              if (arr.length < 20) {
+                //move to env
+                setIsMoreMessages(false);
+              }
               dispatch(addMessages(arr));
               dispatch(
                 upsertChat({
@@ -128,15 +131,12 @@ export default function ChatForm({
                   dispatch(upsertMessages(msgs))
                 );
               }
-              if (messagesIds.length < 20) {
-                setIsMoreMessages(false);
-              }
             });
         }
       });
       if (node) lastMessageObserver.current.observe(node);
     },
-    [selectedCID, messages]
+    [selectedCID, messages, isMoreMessages]
   );
 
   api.onMessageStatusListener = (message) => {
