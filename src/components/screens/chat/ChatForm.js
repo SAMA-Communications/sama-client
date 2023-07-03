@@ -1,7 +1,13 @@
 import AttachmentsList from "../../generic/AttachmentsList.js";
 import ChatMessage from "../../generic/ChatMessage.js";
 import NoChatSelected from "../../static/NoChatSelected.js";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import api from "../../../api/api";
 import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import isMobile from "../../../utils/get_device_type.js";
@@ -69,6 +75,16 @@ export default function ChatForm({
   const filePicker = useRef(null);
   const [files, setFiles] = useState([]);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
+  const lastMessageObserver = useRef();
+  const lastMessageRef = useCallback((node) => {
+    if (lastMessageObserver.current) lastMessageObserver.current.disconnect();
+    lastMessageObserver.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        console.log("Visible");
+      }
+    });
+    if (node) lastMessageObserver.current.observe(node);
+  }, []);
 
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
@@ -275,6 +291,7 @@ export default function ChatForm({
       const msg = messages[i];
       msgsArray.push(
         <ChatMessage
+          refLastEl={!i ? lastMessageRef : null}
           key={msg._id}
           fromId={msg.from}
           userId={userInfo._id}
