@@ -91,13 +91,14 @@ export default function ChatForm({
           api
             .messageList({
               cid: selectedCID,
-              limit: 20, //move to env
+              limit: process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
               updated_at: { lt: messages[0].created_at },
             })
-            .then(async (arr) => {
+            .then((arr) => {
               const messagesIds = arr.map((el) => el._id).reverse();
-              if (arr.length < 20) {
-                //move to env
+              if (
+                arr.length < process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD
+              ) {
                 setIsMoreMessages(false);
               }
               dispatch(addMessages(arr));
@@ -187,37 +188,42 @@ export default function ChatForm({
     }
 
     if (!conversations[selectedCID].activated) {
-      api.messageList({ cid: selectedCID, limit: 20 }).then(async (arr) => {
-        const messagesIds = arr.map((el) => el._id).reverse();
-        dispatch(addMessages(arr));
-        dispatch(
-          upsertChat({
-            _id: selectedCID,
-            messagesIds,
-            activated: true,
-          })
-        );
-        const mAttachments = {};
-        for (let i = 0; i < arr.length; i++) {
-          const attachments = arr[i].attachments;
-          if (!attachments) {
-            continue;
+      api
+        .messageList({
+          cid: selectedCID,
+          limit: process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
+        })
+        .then((arr) => {
+          const messagesIds = arr.map((el) => el._id).reverse();
+          dispatch(addMessages(arr));
+          dispatch(
+            upsertChat({
+              _id: selectedCID,
+              messagesIds,
+              activated: true,
+            })
+          );
+          const mAttachments = {};
+          for (let i = 0; i < arr.length; i++) {
+            const attachments = arr[i].attachments;
+            if (!attachments) {
+              continue;
+            }
+            attachments.forEach(
+              (obj) =>
+                (mAttachments[obj.file_id] = {
+                  _id: arr[i]._id,
+                  ...obj,
+                })
+            );
           }
-          attachments.forEach(
-            (obj) =>
-              (mAttachments[obj.file_id] = {
-                _id: arr[i]._id,
-                ...obj,
-              })
-          );
-        }
 
-        if (Object.keys(mAttachments).length > 0) {
-          getDownloadFileLinks(mAttachments).then((msgs) =>
-            dispatch(upsertMessages(msgs))
-          );
-        }
-      });
+          if (Object.keys(mAttachments).length > 0) {
+            getDownloadFileLinks(mAttachments).then((msgs) =>
+              dispatch(upsertMessages(msgs))
+            );
+          }
+        });
     }
 
     if (conversations[selectedCID].type === "u") {
@@ -344,7 +350,7 @@ export default function ChatForm({
       const msg = messages[i];
       msgsArray.push(
         <ChatMessage
-          refLastEl={!i ? lastMessageRef : null}
+          refLastEl={i === 4 ? lastMessageRef : null}
           key={msg._id}
           fromId={msg.from}
           userId={userInfo._id}
