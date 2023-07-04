@@ -84,7 +84,7 @@ export default function ChatList({
 
       list.push(
         <NavLink
-          to={`/main/#${obj.name ? obj._id : chatName}`}
+          to={`/main/#${obj._id}`}
           key={obj._id}
           className={activeConv === obj._id ? "selected" : ""}
           onClick={async () => {

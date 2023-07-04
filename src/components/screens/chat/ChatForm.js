@@ -16,6 +16,7 @@ import {
   upsertUser,
 } from "../../../store/Participants.js";
 import {
+  clearCountOfUnreadMessages,
   getConverastionById,
   markConversationAsRead,
   removeChat,
@@ -55,7 +56,6 @@ export default function ChatForm({
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const url = useLocation();
 
   const connectState = useSelector(getNetworkState);
 
@@ -176,10 +176,15 @@ export default function ChatForm({
     EventEmitter.unsubscribe("onConnect", getMessageListAndFileLinks);
     EventEmitter.unsubscribe("onConnect", getAndSetOpponentLastActivity);
 
-    if (!conversations[selectedCID].activated) {
+    const selectedConversation = conversations[selectedCID];
+    if (!selectedConversation.activated) {
       getMessageListAndFileLinks();
     }
-    if (conversations[selectedCID].type === "u") {
+    if (selectedConversation.unread_messages_count > 0) {
+      dispatch(clearCountOfUnreadMessages(selectedConversation._id));
+      api.markConversationAsRead({ cid: selectedConversation._id });
+    }
+    if (selectedConversation.type === "u") {
       getAndSetOpponentLastActivity();
     }
     setFiles([]);
@@ -433,7 +438,13 @@ export default function ChatForm({
                 <RecipientPhoto />
               </div>
               <div className="chat-recipient-info">
-                <p>{selectedConversation.name || url.hash?.slice(1)}</p>
+                <p>
+                  {selectedConversation.name
+                    ? selectedConversation.name
+                    : selectedConversation.owner_id === userInfo._id
+                    ? participants[selectedConversation.opponent_id]?.login
+                    : participants[selectedConversation.owner_id]?.login}
+                </p>
                 <div className="chat-recipient-status">
                   {recentActivityView}
                 </div>

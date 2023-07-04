@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { default as EventEmitter } from "./event/eventEmitter";
 import { updateNetworkState } from "./store/NetworkState";
+import { setSelectedConversation } from "./store/SelectedConversation";
 import { useDispatch } from "react-redux";
 
 import PageLoader from "./components/PageLoader";
@@ -61,7 +62,12 @@ export default function App() {
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
         subscribeForNotifications();
-        navigate(prevPath ? `/main/${prevPath}` : "/main");
+        if (!prevPath) {
+          navigate("/main");
+        } else {
+          dispatch(setSelectedConversation({ id: prevPath.slice(1) }));
+          navigate(`/main/${prevPath}`);
+        }
       } else {
         localStorage.removeItem("sessionId");
         navigate("/login");
