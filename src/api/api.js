@@ -54,19 +54,11 @@ class Api {
       }
 
       if (message.message) {
-        const m = message.message;
         if (!document.hasFocus()) {
-          new Notification(m.title, {
-            body: m.body,
-            icon: "./../../public/logo.png",
-            image: m.firstAttachmentUrl,
-            data: {
-              convId: `/#${m.cid}`,
-            },
-          });
+          EventEmitter.emit("onPushMessage", message.message);
         }
         if (this.onMessageListener) {
-          this.onMessageListener(m);
+          this.onMessageListener(message.message);
         }
         return;
       }

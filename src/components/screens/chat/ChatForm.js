@@ -416,7 +416,7 @@ export default function ChatForm({
     const ownerLogin = participants[owner_id]?.login;
     const opponentLogin = participants[opponent_id]?.login;
 
-    return owner_id === userInfo._id ? opponentLogin : ownerLogin;
+    return <p>{owner_id === userInfo._id ? opponentLogin : ownerLogin}</p>;
   }, [selectedConversation, participants]);
 
   return (

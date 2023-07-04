@@ -1,5 +1,18 @@
 import api from "../api/api";
 import urlBase64ToUint8Array from "../api/base64_to_uint8Array.js";
+import { default as EventEmitter } from "../event/eventEmitter";
+
+function sendPushNotification(pushMessage) {
+  new Notification(pushMessage.title, {
+    body: pushMessage.body,
+    icon: "./../../public/logo.png",
+    image: pushMessage.firstAttachmentUrl,
+    data: {
+      convId: `/#${pushMessage.cid}`,
+    },
+  });
+}
+EventEmitter.subscribe("onPushMessage", sendPushNotification);
 
 export default function subscribeForNotifications() {
   if ("serviceWorker" in navigator) {
