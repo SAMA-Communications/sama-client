@@ -11,7 +11,7 @@ self.addEventListener("push", (e) => {
     icon: "logo.png",
     image: data.firstAttachmentUrl,
     data: {
-      convId: `/#${data.data.cid}`,
+      convId: `/#${data.cid}`,
     },
   };
 
@@ -23,9 +23,8 @@ self.addEventListener("push", (e) => {
 });
 
 self.addEventListener("notificationclick", (e) => {
-  //TODO: get host from env
   clients.openWindow(
-    "http://localhost:3000/main" + e.notification.data?.convId
+    `${self.location.origin}/main` + e.notification.data?.convId
   );
 });
 

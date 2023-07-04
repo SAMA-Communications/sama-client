@@ -57,19 +57,24 @@ export default function ChatList({
       .then((users) => dispatch(addUsers(users)));
   };
 
+  function getChatsAndParticipants() {
+    api.conversationList({}).then((chats) => {
+      if (!chats) {
+        return;
+      }
+      dispatch(insertChats(chats));
+      api
+        .getParticipantsByCids(chats.map((obj) => obj._id))
+        .then((users) => dispatch(setUsers(users)));
+    });
+  }
+
   useEffect(() => {
-    function getChatsAndParticipants() {
-      api.conversationList({}).then((chats) => {
-        if (!chats) {
-          return;
-        }
-        dispatch(insertChats(chats));
-        api
-          .getParticipantsByCids(chats.map((obj) => obj._id))
-          .then((users) => dispatch(setUsers(users)));
-      });
-    }
+    //Need more test that double request
+    EventEmitter.unsubscribe("onConnect", getChatsAndParticipants);
+
     getChatsAndParticipants();
+
     EventEmitter.subscribe("onConnect", getChatsAndParticipants);
   }, []);
 

@@ -403,6 +403,22 @@ export default function ChatForm({
     setChatFormBgDisplayStyle("flex");
   };
 
+  const chatNameView = useMemo(() => {
+    if (!selectedConversation || !participants) {
+      return <p></p>;
+    }
+
+    const { owner_id, opponent_id, name } = selectedConversation;
+    if (name) {
+      return <p>{name}</p>;
+    }
+
+    const ownerLogin = participants[owner_id]?.login;
+    const opponentLogin = participants[opponent_id]?.login;
+
+    return owner_id === userInfo._id ? opponentLogin : ownerLogin;
+  }, [selectedConversation, participants]);
+
   return (
     <m.section
       variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
@@ -438,13 +454,7 @@ export default function ChatForm({
                 <RecipientPhoto />
               </div>
               <div className="chat-recipient-info">
-                <p>
-                  {selectedConversation.name
-                    ? selectedConversation.name
-                    : selectedConversation.owner_id === userInfo._id
-                    ? participants[selectedConversation.opponent_id]?.login
-                    : participants[selectedConversation.owner_id]?.login}
-                </p>
+                {chatNameView}
                 <div className="chat-recipient-status">
                   {recentActivityView}
                 </div>
