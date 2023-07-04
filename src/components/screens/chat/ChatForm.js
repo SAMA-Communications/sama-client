@@ -34,15 +34,12 @@ import {
   removeMessage,
   upsertMessages,
 } from "../../../store/Messages";
-import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { scaleAndRound } from "../../../styles/animations/animationBlocks.js";
 import { animateSVG } from "../../../styles/animations/animationSVG.js";
+import { default as EventEmitter } from "../../../event/eventEmitter.js";
 import { motion as m } from "framer-motion";
 import { scaleAndRound } from "../../../styles/animations/animationBlocks.js";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { default as EventEmitter } from "../../../event/eventEmitter.js";
 
 import "../../../styles/chat/ChatForm.css";
 
@@ -202,11 +199,13 @@ export default function ChatForm({
               })
           );
         }
+      });
+    }
 
     if (!conversations[selectedCID].activated) {
       getMessageListAndFileLinks();
     }
-        
+
     if (selectedConversation.unread_messages_count > 0) {
       dispatch(clearCountOfUnreadMessages(selectedConversation._id));
       api.markConversationAsRead({ cid: selectedConversation._id });
@@ -231,9 +230,6 @@ export default function ChatForm({
       });
     }
     setFiles([]);
-
-    EventEmitter.subscribe("onConnect", getMessageListAndFileLinks);
-    EventEmitter.subscribe("onConnect", getAndSetOpponentLastActivity);
   }, [selectedCID]);
 
   const sendMessage = async (event) => {

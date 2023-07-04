@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { default as EventEmitter } from "./event/eventEmitter";
 import { setSelectedConversation } from "./store/SelectedConversation";
+import { updateNetworkState } from "./store/NetworkState";
 import { useDispatch } from "react-redux";
 
 import PageLoader from "./components/PageLoader";
