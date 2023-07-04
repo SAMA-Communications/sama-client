@@ -88,6 +88,20 @@ export const conversations = createSlice({
 
       conversationsAdapter.upsertOne(state, updateParams);
     },
+    setLastMessageField: (state, { payload }) => {
+      const { cid, msg } = payload;
+      const conv = state.entities[cid];
+
+      if (!conv) {
+        return;
+      }
+      const updateParams = {
+        _id: cid,
+        last_message: msg,
+        update_at: new Date(msg.t * 1000).toISOString(),
+      };
+      conversationsAdapter.upsertOne(state, updateParams);
+    },
     clearCountOfUnreadMessages: (state, action) => {
       const cid = action.payload;
       conversationsAdapter.upsertOne(state, {
@@ -113,6 +127,7 @@ export const {
   markConversationAsRead,
   removeChat,
   setChats,
+  setLastMessageField,
   updateChatIndicator,
   updateLastMessageField,
   upsertChat,
