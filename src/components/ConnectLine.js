@@ -1,4 +1,4 @@
-import { getConnectState } from "../store/ConnectState";
+import { getNetworkState } from "../store/NetworkState";
 import { motion as m } from "framer-motion";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import "./../styles/ConnectLine.css";
 
 export default function ConnectLine() {
-  const isSocketConnected = useSelector(getConnectState);
+  const isSocketConnected = useSelector(getNetworkState);
 
   const visibleLine = useMemo(() => {
     return isSocketConnected ? (

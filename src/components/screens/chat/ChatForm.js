@@ -6,6 +6,7 @@ import api from "../../../api/api";
 import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
+import { getNetworkState } from "../../../store/NetworkState.js";
 import {
   getDownloadFileLinks,
   getFileObjects,
@@ -20,6 +21,7 @@ import {
   markConversationAsRead,
   removeChat,
   selectConversationsEntities,
+  setLastMessageField,
   updateLastMessageField,
   upsertChat,
 } from "../../../store/Conversations";
@@ -37,6 +39,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { scaleAndRound } from "../../../styles/animations/animationBlocks.js";
 import { animateSVG } from "../../../styles/animations/animationSVG.js";
 import { motion as m } from "framer-motion";
+import { scaleAndRound } from "../../../styles/animations/animationBlocks.js";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { default as EventEmitter } from "../../../event/eventEmitter.js";
 
 import "../../../styles/chat/ChatForm.css";
 
@@ -53,6 +59,8 @@ export default function ChatForm({
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const connectState = useSelector(getNetworkState);
 
   const [opponentLastActivity, setOpponentLastActivity] = useState(null);
   const userInfo = localStorage.getItem("sessionId")
@@ -112,6 +120,57 @@ export default function ChatForm({
     );
   };
 
+  const getMessageListAndFileLinks = function () {
+    api.messageList({ cid: selectedCID, limit: 20 }).then(async (arr) => {
+      const messagesIds = arr.map((el) => el._id).reverse();
+      dispatch(addMessages(arr));
+      dispatch(
+        upsertChat({
+          _id: selectedCID,
+          messagesIds,
+          activated: true,
+        })
+      );
+      const mAttachments = {};
+      for (let i = 0; i < arr.length; i++) {
+        const attachments = arr[i].attachments;
+        if (!attachments) {
+          continue;
+        }
+        attachments.forEach(
+          (obj) =>
+            (mAttachments[obj.file_id] = {
+              _id: arr[i]._id,
+              ...obj,
+            })
+        );
+      }
+
+      if (Object.keys(mAttachments).length > 0) {
+        getDownloadFileLinks(mAttachments).then((msgs) =>
+          dispatch(upsertMessages(msgs))
+        );
+      }
+    });
+  };
+
+  const getAndSetOpponentLastActivity = function () {
+    const obj = conversations[selectedCID];
+    const uId =
+      obj.owner_id === userInfo._id
+        ? participants[obj.opponent_id]?._id
+        : participants[obj.owner_id]?._id;
+    api.subscribeToUserActivity(uId).then((activity) => {
+      dispatch(
+        upsertUser({
+          _id: uId,
+          recent_activity: activity[uId],
+        })
+      );
+      setOpponentLastActivity(activity[uId]);
+    });
+  };
+
   useEffect(() => {
     if (!selectedCID) {
       return;
@@ -144,14 +203,10 @@ export default function ChatForm({
           );
         }
 
-        if (Object.keys(mAttachments).length > 0) {
-          getDownloadFileLinks(mAttachments).then((msgs) =>
-            dispatch(upsertMessages(msgs))
-          );
-        }
-      });
+    if (!conversations[selectedCID].activated) {
+      getMessageListAndFileLinks();
     }
-
+        
     if (selectedConversation.unread_messages_count > 0) {
       dispatch(clearCountOfUnreadMessages(selectedConversation._id));
       api.markConversationAsRead({ cid: selectedConversation._id });
@@ -175,12 +230,19 @@ export default function ChatForm({
         setOpponentLastActivity(activity[uId]);
       });
     }
-
     setFiles([]);
+
+    EventEmitter.subscribe("onConnect", getMessageListAndFileLinks);
+    EventEmitter.subscribe("onConnect", getAndSetOpponentLastActivity);
   }, [selectedCID]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
+
+    if (!connectState) {
+      alert("No internet connection");
+      return;
+    }
 
     const text = messageInputEl.current.value.trim();
     if ((text.length === 0 && !files?.length) || isSendMessageDisable) {
@@ -213,7 +275,20 @@ export default function ChatForm({
       });
     }
 
-    const response = await api.messageCreate(reqData);
+    let response;
+    try {
+      response = await api.messageCreate(reqData);
+    } catch (err) {
+      alert("There is no server connection");
+      dispatch(
+        setLastMessageField({
+          cid: selectedCID,
+          msg: messages[messages.length - 1],
+        })
+      );
+      return;
+    }
+
     if (response.mid) {
       msg = {
         _id: response.server_mid,
@@ -317,6 +392,8 @@ export default function ChatForm({
     if (event.keyCode === 27) {
       dispatch(clearSelectedConversation());
       api.unsubscribeFromUserActivity({});
+      EventEmitter.unsubscribe("onConnect", getMessageListAndFileLinks);
+      EventEmitter.unsubscribe("onConnect", getAndSetOpponentLastActivity);
       navigate("/main");
     }
   };
