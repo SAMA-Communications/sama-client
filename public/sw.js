@@ -14,12 +14,16 @@ self.addEventListener("push", (e) => {
       convId: `/#${data.cid}`,
     },
   };
-  console.log(options);
+
   e.waitUntil(
     self.registration
       .showNotification(data.title, options)
       .catch((err) => console.error("Notification error:", err))
   );
+});
+
+self.addEventListener("message", (event) => {
+  console.log(event.data);
 });
 
 self.addEventListener("notificationclick", (e) => {
