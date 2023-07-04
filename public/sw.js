@@ -2,16 +2,16 @@ console.log("[push.customer] SW.js init success!");
 self.addEventListener("push", (e) => {
   const data = e.data.json();
 
-  if (!("image" in Notification.prototype) && data.titleImgUrl) {
+  if (!("image" in Notification.prototype) && data.firstAttachmentUrl) {
     data.body += "\nPhoto";
   }
 
   const options = {
     body: data.body,
     icon: "logo.png",
-    image: data.titleImgUrl,
+    image: data.firstAttachmentUrl,
     data: {
-      convId: `/#${data.data.conversationId}`,
+      convId: `/#${data.cid}`,
     },
   };
 

@@ -59,9 +59,9 @@ class Api {
           new Notification(m.title, {
             body: m.body,
             icon: "./../../public/logo.png",
-            image: m.titleImgUrl,
+            image: m.firstAttachmentUrl,
             data: {
-              convId: `/#${m.conversation_id}`,
+              convId: `/#${m.cid}`,
             },
           });
         }
