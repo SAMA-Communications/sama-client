@@ -14,7 +14,7 @@ self.addEventListener("push", (e) => {
       convId: `/#${data.cid}`,
     },
   };
-
+  console.log(options);
   e.waitUntil(
     self.registration
       .showNotification(data.title, options)

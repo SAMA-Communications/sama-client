@@ -63,19 +63,17 @@ export default function ChatList({
         return;
       }
       dispatch(insertChats(chats));
-      api
-        .getParticipantsByCids(chats.map((obj) => obj._id))
-        .then((users) => dispatch(setUsers(users)));
+      chats.length &&
+        api
+          .getParticipantsByCids(chats.map((obj) => obj._id))
+          .then((users) => dispatch(setUsers(users)));
     });
   }
 
   useEffect(() => {
-    //Need more test that double request
-    EventEmitter.unsubscribe("onConnect", getChatsAndParticipants);
-
-    getChatsAndParticipants();
-
-    EventEmitter.subscribe("onConnect", getChatsAndParticipants);
+    !EventEmitter.isEventReady("onConnect", getChatsAndParticipants) &&
+      getChatsAndParticipants();
+    EventEmitter.resubscribe("onConnect", getChatsAndParticipants);
   }, []);
 
   const chatsList = useMemo(() => {

@@ -152,11 +152,14 @@ export default function ChatForm({
   };
 
   const getAndSetOpponentLastActivity = function () {
-    const obj = conversations[selectedCID];
+    const conv = conversations[selectedCID];
+    if (conv.type === "g") {
+      return;
+    }
     const uId =
-      obj.owner_id === userInfo._id
-        ? participants[obj.opponent_id]?._id
-        : participants[obj.owner_id]?._id;
+      conv.owner_id === userInfo._id
+        ? participants[conv.opponent_id]?._id
+        : participants[conv.owner_id]?._id;
     api.subscribeToUserActivity(uId).then((activity) => {
       dispatch(
         upsertUser({
@@ -173,9 +176,6 @@ export default function ChatForm({
       return;
     }
 
-    EventEmitter.unsubscribe("onConnect", getMessageListAndFileLinks);
-    EventEmitter.unsubscribe("onConnect", getAndSetOpponentLastActivity);
-
     const selectedConversation = conversations[selectedCID];
     if (!selectedConversation.activated) {
       getMessageListAndFileLinks();
@@ -189,8 +189,8 @@ export default function ChatForm({
     }
     setFiles([]);
 
-    EventEmitter.subscribe("onConnect", getMessageListAndFileLinks);
-    EventEmitter.subscribe("onConnect", getAndSetOpponentLastActivity);
+    EventEmitter.resubscribe("onConnect", getMessageListAndFileLinks);
+    EventEmitter.resubscribe("onConnect", getAndSetOpponentLastActivity);
   }, [selectedCID]);
 
   const sendMessage = async (event) => {
