@@ -2,8 +2,10 @@ import api from "../api/api";
 import urlBase64ToUint8Array from "../api/base64_to_uint8Array.js";
 import { default as EventEmitter } from "../event/eventEmitter";
 
+let sw = null;
+
 function sendPushNotification(pushMessage) {
-  navigator.serviceWorker.controller.postMessage({ message: pushMessage });
+  sw.postMessage({ message: pushMessage });
 }
 EventEmitter.subscribe("onPushMessage", sendPushNotification);
 
@@ -11,7 +13,8 @@ export default function subscribeForNotifications() {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker
       .register("/sw.js")
-      .then((reg) =>
+      .then((reg) => {
+        sw = reg.installing || reg.waiting || reg.active;
         reg.pushManager
           .subscribe({
             userVisibleOnly: true,
@@ -30,8 +33,8 @@ export default function subscribeForNotifications() {
                 String.fromCharCode(...new Uint8Array(sub.getKey("p256dh")))
               ),
             })
-          )
-      )
+          );
+      })
       .catch((err) => console.log(err));
   }
 }

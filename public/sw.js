@@ -1,7 +1,6 @@
 console.log("[push.customer] SW.js init success!");
-self.addEventListener("push", (e) => {
-  const data = e.data.json();
 
+function showNotification(e, data) {
   if (!("image" in Notification.prototype) && data.firstAttachmentUrl) {
     data.body += "\nPhoto";
   }
@@ -20,16 +19,16 @@ self.addEventListener("push", (e) => {
       .showNotification(data.title, options)
       .catch((err) => console.error("Notification error:", err))
   );
-});
+}
 
-self.addEventListener("message", (event) => {
-  console.log(event.data);
-});
+self.addEventListener("push", (e) => showNotification(e, e.data.json()));
 
-self.addEventListener("notificationclick", (e) => {
+self.addEventListener("message", (e) => showNotification(e, e.data.message));
+
+self.addEventListener("notificationclick", (e) =>
   clients.openWindow(
     `${self.location.origin}/main` + e.notification.data?.convId
-  );
-});
+  )
+);
 
 //CLIENT TODO: add reconect to chat after update tocken
