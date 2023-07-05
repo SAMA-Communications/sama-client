@@ -13,6 +13,7 @@ import {
 } from "../../../api/download_manager.js";
 import {
   selectParticipantsEntities,
+  selectTotalParticipantsIds,
   upsertUser,
 } from "../../../store/Participants.js";
 import {
@@ -66,6 +67,7 @@ export default function ChatForm({
 
   const conversations = useSelector(selectConversationsEntities);
   const participants = useSelector(selectParticipantsEntities);
+  const participantsCount = useSelector(selectTotalParticipantsIds);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
@@ -172,7 +174,7 @@ export default function ChatForm({
   };
 
   useEffect(() => {
-    if (!selectedCID) {
+    if (!selectedCID || !participantsCount) {
       return;
     }
 
@@ -191,7 +193,7 @@ export default function ChatForm({
 
     EventEmitter.resubscribe("onConnect", getMessageListAndFileLinks);
     EventEmitter.resubscribe("onConnect", getAndSetOpponentLastActivity);
-  }, [selectedCID]);
+  }, [selectedCID, participantsCount]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
