@@ -5,7 +5,7 @@ import { default as EventEmitter } from "../event/eventEmitter";
 let sw = null;
 
 function sendPushNotification(pushMessage) {
-  sw.postMessage({ message: pushMessage });
+  !document.hasFocus() && sw.postMessage({ message: pushMessage });
 }
 EventEmitter.subscribe("onPushMessage", sendPushNotification);
 

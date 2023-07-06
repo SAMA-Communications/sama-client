@@ -55,18 +55,18 @@ export default function App() {
   }, []);
 
   const userLoginByToken = async (token) => {
-    const prevPath = location.hash;
+    const currentPath = location.hash;
     navigate("/loading");
     try {
       const userToken = await api.userLogin({ token });
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
         subscribeForNotifications();
-        if (!prevPath) {
+        if (!currentPath) {
           navigate("/main");
         } else {
-          dispatch(setSelectedConversation({ id: prevPath.slice(1) }));
-          navigate(`/main/${prevPath}`);
+          dispatch(setSelectedConversation({ id: currentPath.slice(1) }));
+          navigate(`/main/${currentPath}`);
         }
       } else {
         localStorage.removeItem("sessionId");

@@ -54,9 +54,7 @@ class Api {
       }
 
       if (message.message) {
-        if (!document.hasFocus()) {
-          EventEmitter.emit("onPushMessage", message.message);
-        }
+        EventEmitter.emit("onPushMessage", message.message);
         if (this.onMessageListener) {
           this.onMessageListener(message.message);
         }
