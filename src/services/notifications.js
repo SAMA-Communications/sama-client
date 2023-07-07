@@ -5,7 +5,7 @@ import { default as store } from "../store/store.js";
 
 let sw = null;
 
-function sendPushNotification(pushMessage) {
+async function sendPushNotification(pushMessage) {
   if (document.hasFocus()) {
     return;
   }
@@ -17,7 +17,9 @@ function sendPushNotification(pushMessage) {
     return;
   }
   const userLogin = storeState.participants.entities[pushMessage.from]?.login;
-
+  if (pushMessage.attachments?.length) {
+    pushMessage["body"] += `\nPhoto`;
+  }
   pushMessage["title"] =
     conversation.type === "u"
       ? userLogin
