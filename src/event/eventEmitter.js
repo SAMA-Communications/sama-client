@@ -10,9 +10,13 @@ class EventEmitter {
 
   resubscribe(eventName, callback) {
     !this.events[eventName] && (this.events[eventName] = []);
-    !!!this.events[eventName].find(
-      (eventCallback) => callback.toString() === eventCallback.toString()
-    ) && this.events[eventName].push(callback);
+    if (
+      !!!this.events[eventName].find(
+        (eventCallback) => callback.toString() === eventCallback.toString()
+      )
+    ) {
+      this.events[eventName].push(callback);
+    }
   }
 
   async emit(eventName, args) {
@@ -24,10 +28,10 @@ class EventEmitter {
     }
   }
 
-  isEventReady(eventName, callback) {
-    return !!this.events[eventName].find(
-      (eventCallback) => callback.toString() === eventCallback.toString()
-    );
+  hasSubscription(eventName, callback) {
+    return !!this.events[eventName].find((eventCallback) => {
+      return callback.toString() === eventCallback.toString();
+    });
   }
 
   unsubscribe(eventName, callback) {

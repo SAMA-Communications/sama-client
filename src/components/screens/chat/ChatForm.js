@@ -1,7 +1,13 @@
 import AttachmentsList from "../../generic/AttachmentsList.js";
 import ChatMessage from "../../generic/ChatMessage.js";
 import NoChatSelected from "../../static/NoChatSelected.js";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import api from "../../../api/api";
 import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import isMobile from "../../../utils/get_device_type.js";
@@ -119,7 +125,10 @@ export default function ChatForm({
     );
   };
 
-  const getMessageListAndFileLinks = function () {
+  const getMessageListAndFileLinks = useCallback(() => {
+    if (!selectedCID) {
+      return;
+    }
     api.messageList({ cid: selectedCID, limit: 20 }).then(async (arr) => {
       const messagesIds = arr.map((el) => el._id).reverse();
       dispatch(addMessages(arr));
@@ -151,9 +160,13 @@ export default function ChatForm({
         );
       }
     });
-  };
+  }, [selectedCID]);
 
-  const getAndSetOpponentLastActivity = function () {
+  const getAndSetOpponentLastActivity = useCallback(() => {
+    if (!selectedCID || !participantsCount) {
+      return;
+    }
+
     const conv = conversations[selectedCID];
     if (conv.type === "g") {
       return;
@@ -171,7 +184,7 @@ export default function ChatForm({
       );
       setOpponentLastActivity(activity[uId]);
     });
-  };
+  }, [selectedCID, participantsCount]);
 
   useEffect(() => {
     if (!selectedCID || !participantsCount) {

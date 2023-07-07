@@ -1,11 +1,29 @@
 import api from "../api/api";
 import urlBase64ToUint8Array from "../api/base64_to_uint8Array.js";
 import { default as EventEmitter } from "../event/eventEmitter";
+import { default as store } from "../store/store.js";
 
 let sw = null;
 
 function sendPushNotification(pushMessage) {
-  !document.hasFocus() && sw.postMessage({ message: pushMessage });
+  if (document.hasFocus()) {
+    return;
+  }
+  //if conversation not found (new message from new user) - check this case
+  const storeState = store.getState();
+  const conversation = storeState.conversations.entities[pushMessage.cid];
+  if (!conversation) {
+    //need to sync with server | conversation_lsit
+    return;
+  }
+  const userLogin = storeState.participants.entities[pushMessage.from]?.login;
+
+  pushMessage["title"] =
+    conversation.type === "u"
+      ? userLogin
+      : `${userLogin} | ${conversation.name}`;
+
+  sw.postMessage({ message: pushMessage });
 }
 EventEmitter.subscribe("onPushMessage", sendPushNotification);
 

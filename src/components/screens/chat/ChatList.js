@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
 import ChatBox from "../../generic/ChatBox.js";
@@ -57,7 +57,7 @@ export default function ChatList({
       .then((users) => dispatch(addUsers(users)));
   };
 
-  function getChatsAndParticipants() {
+  const getChatsAndParticipants = useCallback(() => {
     api.conversationList({}).then((chats) => {
       if (!chats) {
         return;
@@ -68,10 +68,10 @@ export default function ChatList({
           .getParticipantsByCids(chats.map((obj) => obj._id))
           .then((users) => dispatch(setUsers(users)));
     });
-  }
+  }, []);
 
   useEffect(() => {
-    !EventEmitter.isEventReady("onConnect", getChatsAndParticipants) &&
+    !EventEmitter.hasSubscription("onConnect", getChatsAndParticipants) &&
       getChatsAndParticipants();
     EventEmitter.resubscribe("onConnect", getChatsAndParticipants);
   }, []);
