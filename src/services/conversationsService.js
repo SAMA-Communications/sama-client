@@ -4,12 +4,9 @@ import { insertChats } from "../store/Conversations";
 
 class ConversationsService {
   async syncData() {
-    api.conversationList({}).then((chats) => {
-      if (!chats) {
-        return;
-      }
-      store.dispatch(insertChats(chats));
-    });
+    api
+      .conversationList({})
+      .then((chats) => store.dispatch(insertChats(chats)));
   }
 }
 
