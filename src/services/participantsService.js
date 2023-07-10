@@ -38,11 +38,11 @@ function handleChange() {
   let previousValue = currentValue;
   currentValue = select(store.getState());
 
-  if (
-    currentValue &&
-    previousValue &&
-    !isDeepEqual(currentValue, previousValue)
-  ) {
+  if (currentValue || previousValue) {
+    return;
+  }
+
+  if (!isDeepEqual(currentValue, previousValue)) {
     Object.keys(currentValue).length &&
       participantsService.syncDataFromChats(Object.keys(currentValue));
   }
