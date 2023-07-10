@@ -5,6 +5,8 @@ import api from "../api/api";
 import { Link } from "react-router-dom";
 import { changeOpacity } from "../styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
+import { setUserAuth } from "../store/UserAuth";
+import { useDispatch } from "react-redux";
 
 import "../styles/Main.css";
 
@@ -14,6 +16,8 @@ import { ReactComponent as IconMoon } from "./../assets/icons/ThemeMoon.svg";
 const ChatForm = React.lazy(() => import("./screens/chat/ChatForm"));
 
 export default function Main() {
+  const dispatch = useDispatch();
+
   const [asideDisplayStyle, setAsideDisplayStyle] = useState("none");
   const [chatFormBgDisplayStyle, setChatFormBgDisplayStyle] = useState("none");
 
@@ -24,12 +28,14 @@ export default function Main() {
           sub.unsubscribe().then(async () => {
             await api.pushSubscriptionDelete();
             await api.userLogout();
+            dispatch(setUserAuth(false));
           })
         )
       )
       .catch(async (err) => {
         console.error(err);
         await api.userLogout();
+        dispatch(setUserAuth(false));
       });
     localStorage.removeItem("sessionId");
   };

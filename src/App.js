@@ -7,6 +7,9 @@ import { default as EventEmitter } from "./event/eventEmitter";
 import { updateNetworkState } from "./store/NetworkState";
 import { setSelectedConversation } from "./store/SelectedConversation";
 import { useDispatch } from "react-redux";
+import { setUserAuth } from "./store/UserAuth";
+import conversationService from "./services/conversationsService";
+import participantsService from "./services/participantsService";
 
 import PageLoader from "./components/PageLoader";
 import SignUp from "./components/screens/SignUp";
@@ -68,12 +71,16 @@ export default function App() {
           dispatch(setSelectedConversation({ id: currentPath.slice(1) }));
           navigate(`/main/${currentPath}`);
         }
+        dispatch(setUserAuth(true));
       } else {
         localStorage.removeItem("sessionId");
         navigate("/login");
+        dispatch(setUserAuth(false));
       }
     } catch (error) {
+      localStorage.removeItem("sessionId");
       navigate("/login");
+      dispatch(setUserAuth(false));
     }
   };
 

@@ -9,9 +9,10 @@ async function sendPushNotification(pushMessage) {
   if (document.hasFocus()) {
     return;
   }
-  //if conversation not found (new message from new user) - check this case
+
   const storeState = store.getState();
   const conversation = storeState.conversations.entities[pushMessage.cid];
+  //if conversation not found (new message from new user) - check this case
   if (!conversation) {
     //need to sync with server | conversation_lsit
     return;

@@ -2,6 +2,7 @@ import getBrowserFingerprint from "get-browser-fingerprint";
 import getUniqueId from "./uuid.js";
 import { default as EventEmitter } from "../event/eventEmitter.js";
 import { default as reduxStore } from "../store/store.js";
+import { setUserAuth } from "../store/UserAuth.js";
 import { updateNetworkState } from "../store/NetworkState.js";
 
 class Api {
@@ -85,6 +86,7 @@ class Api {
     this.socket.onclose = () => {
       console.log("[socket.close]");
       reduxStore.dispatch(updateNetworkState(false));
+      reduxStore.dispatch(setUserAuth(false));
 
       const reConnect = () => {
         if (navigator.onLine && document.visibilityState === "visible") {

@@ -8,7 +8,7 @@ import {
   changeOpacity,
   loginBox,
 } from "../../styles/animations/animationBlocks";
-import { setChats } from "../../store/Conversations";
+import { setUserAuth } from "../../store/UserAuth";
 import { setSelectedConversation } from "../../store/SelectedConversation";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -38,7 +38,7 @@ export default function Login() {
       navigate("/main");
       subscribeForNotifications();
       dispatch(setSelectedConversation({}));
-      dispatch(setChats([]));
+      dispatch(setUserAuth(true));
     } catch (error) {
       localStorage.clear();
       alert(error.message);
