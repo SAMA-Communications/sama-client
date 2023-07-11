@@ -8,7 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { default as EventEmitter } from "./event/eventEmitter";
 import { setSelectedConversation } from "./store/SelectedConversation";
-import { setUserAuth } from "./store/UserIsLoggedIn ";
+import { setUserIsLoggedIn } from "./store/UserIsLoggedIn ";
 import { updateNetworkState } from "./store/NetworkState";
 import { useDispatch } from "react-redux";
 
@@ -66,7 +66,7 @@ export default function App() {
       localStorage.removeItem("sessionId");
       navigate("/login");
       dispatch(updateNetworkState(true));
-      dispatch(setUserAuth(false));
+      dispatch(setUserIsLoggedIn(false));
     };
 
     try {
@@ -84,7 +84,7 @@ export default function App() {
         }
 
         dispatch(updateNetworkState(true));
-        dispatch(setUserAuth(true));
+        dispatch(setUserIsLoggedIn(true));
       } else {
         handleLoginFailure();
       }

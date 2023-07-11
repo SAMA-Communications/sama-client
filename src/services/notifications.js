@@ -5,7 +5,7 @@ import { default as store } from "../store/store.js";
 
 let sw = null;
 
-async function sendPushNotification(pushMessage) {
+async function showLocalNotification(pushMessage) {
   if (document.hasFocus()) {
     return;
   }
@@ -28,7 +28,7 @@ async function sendPushNotification(pushMessage) {
 
   sw.postMessage({ message: pushMessage });
 }
-EventEmitter.subscribe("onPushMessage", sendPushNotification);
+EventEmitter.subscribe("onMessage", showLocalNotification);
 
 export default function subscribeForNotifications() {
   if ("serviceWorker" in navigator) {
