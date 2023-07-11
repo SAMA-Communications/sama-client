@@ -1,15 +1,17 @@
 import React, { Suspense, useEffect } from "react";
 import api from "./api/api";
+import activityService from "./services/activityService";
+import conversationService from "./services/conversationsService";
+import messagesService from "./services/messagesService";
+import participantsService from "./services/participantsService";
 import subscribeForNotifications from "./services/notifications.js";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { default as EventEmitter } from "./event/eventEmitter";
-import { updateNetworkState } from "./store/NetworkState";
 import { setSelectedConversation } from "./store/SelectedConversation";
-import { useDispatch } from "react-redux";
 import { setUserAuth } from "./store/UserAuth";
-import conversationService from "./services/conversationsService";
-import participantsService from "./services/participantsService";
+import { updateNetworkState } from "./store/NetworkState";
+import { useDispatch } from "react-redux";
 
 import PageLoader from "./components/PageLoader";
 import SignUp from "./components/screens/SignUp";
@@ -59,7 +61,7 @@ export default function App() {
 
   const userLoginByToken = async (token) => {
     const currentPath = location.hash;
-    navigate("/loading");
+    dispatch(updateNetworkState(false));
     try {
       const userToken = await api.userLogin({ token });
       if (userToken && userToken !== "undefined") {
@@ -71,15 +73,18 @@ export default function App() {
           dispatch(setSelectedConversation({ id: currentPath.slice(1) }));
           navigate(`/main/${currentPath}`);
         }
+        dispatch(updateNetworkState(true));
         dispatch(setUserAuth(true));
       } else {
         localStorage.removeItem("sessionId");
         navigate("/login");
+        dispatch(updateNetworkState(true));
         dispatch(setUserAuth(false));
       }
     } catch (error) {
       localStorage.removeItem("sessionId");
       navigate("/login");
+      dispatch(updateNetworkState(true));
       dispatch(setUserAuth(false));
     }
   };
