@@ -10,7 +10,7 @@ export const selectedConversation = createSlice({
       state.value.id = action.payload.id;
     },
     clearSelectedConversation: (state) => {
-      state.value.id = {};
+      state.value.id = null;
     },
   },
 });

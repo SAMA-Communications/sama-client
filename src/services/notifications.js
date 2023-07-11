@@ -12,7 +12,7 @@ async function sendPushNotification(pushMessage) {
 
   const storeState = store.getState();
   const conversation = storeState.conversations.entities[pushMessage.cid];
-  //if conversation not found (new message from new user) - check this case
+  //if conversation not found (new message from new user) - case failed
   if (!conversation) {
     //need to sync with server | conversation_lsit
     return;

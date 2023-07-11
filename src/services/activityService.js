@@ -50,7 +50,7 @@ function handleChange() {
   }
 
   const chat = selectConversationById(storeObj, currentValue);
-  if (chat.type === "g") {
+  if (chat?.type !== "u") {
     return;
   }
 
