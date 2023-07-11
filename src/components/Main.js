@@ -5,7 +5,7 @@ import api from "../api/api";
 import { Link } from "react-router-dom";
 import { changeOpacity } from "../styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
-import { setUserAuth } from "../store/UserIsLoggedIn ";
+import { setUserIsLoggedIn } from "../store/UserIsLoggedIn ";
 import { useDispatch } from "react-redux";
 
 import "../styles/Main.css";
@@ -28,14 +28,14 @@ export default function Main() {
           sub.unsubscribe().then(async () => {
             await api.pushSubscriptionDelete();
             await api.userLogout();
-            dispatch(setUserAuth(false));
+            dispatch(setUserIsLoggedIn(false));
           })
         )
       )
       .catch(async (err) => {
         console.error(err);
         await api.userLogout();
-        dispatch(setUserAuth(false));
+        dispatch(setUserIsLoggedIn(false));
       });
     localStorage.removeItem("sessionId");
   };
