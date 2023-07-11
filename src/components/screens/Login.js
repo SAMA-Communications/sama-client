@@ -8,7 +8,7 @@ import {
   changeOpacity,
   loginBox,
 } from "../../styles/animations/animationBlocks";
-import { setUserAuth } from "../../store/UserAuth";
+import { setUserAuth } from "../../store/UserIsLoggedIn ";
 import { setSelectedConversation } from "../../store/SelectedConversation";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";

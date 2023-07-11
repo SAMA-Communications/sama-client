@@ -3,13 +3,12 @@ import api from "./api/api";
 import activityService from "./services/activityService";
 import conversationService from "./services/conversationsService";
 import messagesService from "./services/messagesService";
-import participantsService from "./services/participantsService";
 import subscribeForNotifications from "./services/notifications.js";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { default as EventEmitter } from "./event/eventEmitter";
 import { setSelectedConversation } from "./store/SelectedConversation";
-import { setUserAuth } from "./store/UserAuth";
+import { setUserAuth } from "./store/UserIsLoggedIn ";
 import { updateNetworkState } from "./store/NetworkState";
 import { useDispatch } from "react-redux";
 

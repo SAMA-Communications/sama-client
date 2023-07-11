@@ -11,7 +11,7 @@ class EventEmitter {
   resubscribe(eventName, callback) {
     !this.events[eventName] && (this.events[eventName] = []);
     if (
-      !!!this.events[eventName].find(
+      !this.events[eventName].find(
         (eventCallback) => callback.toString() === eventCallback.toString()
       )
     ) {

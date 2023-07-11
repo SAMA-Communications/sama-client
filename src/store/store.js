@@ -3,7 +3,7 @@ import messageReducer from "./Messages";
 import networkStateReducer from "./NetworkState";
 import participantsReducer from "./Participants";
 import selectedConversationReducer from "./SelectedConversation";
-import userAuthReducer from "./UserAuth";
+import userIsLoggedInReducer from "./UserIsLoggedIn ";
 import { configureStore } from "@reduxjs/toolkit";
 
 export default configureStore({
@@ -13,6 +13,6 @@ export default configureStore({
     networkState: networkStateReducer,
     participants: participantsReducer,
     selectedConversation: selectedConversationReducer,
-    userAuth: userAuthReducer,
+    userIsLoggedIn: userIsLoggedInReducer,
   },
 });

@@ -5,7 +5,7 @@ import api from "../api/api";
 import { Link } from "react-router-dom";
 import { changeOpacity } from "../styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
-import { setUserAuth } from "../store/UserAuth";
+import { setUserAuth } from "../store/UserIsLoggedIn ";
 import { useDispatch } from "react-redux";
 
 import "../styles/Main.css";

@@ -3,8 +3,32 @@ import jwtDecode from "jwt-decode";
 import store from "../store/store";
 import { upsertUser } from "../store/Participants";
 
-class MessagesService {
-  async syncData(chat, users) {
+class ActivityService {
+  currentChatId;
+  activeChat;
+  allUsers;
+
+  constructor() {
+    store.subscribe(() => {
+      let previousValue = this.currentChatId;
+      const storeObj = store.getState();
+      this.currentChatId = storeObj.selectedConversation.value.id;
+
+      if (!this.currentChatId || previousValue === this.currentChatId) {
+        return;
+      }
+
+      this.activeChat = storeObj.conversations.entities[this.currentChatId];
+      if (this.activeChat?.type !== "u") {
+        return;
+      }
+
+      this.allUsers = storeObj.participants.entities;
+      this.syncData();
+    });
+  }
+
+  async syncData() {
     const userInfo = localStorage.getItem("sessionId")
       ? jwtDecode(localStorage.getItem("sessionId"))
       : null;
@@ -14,9 +38,9 @@ class MessagesService {
     }
 
     const uId =
-      chat.owner_id === userInfo._id
-        ? users[chat.opponent_id]?._id
-        : users[chat.owner_id]?._id;
+      this.activeChat.owner_id === userInfo._id
+        ? this.allUsers[this.activeChat.opponent_id]?._id
+        : this.allUsers[this.activeChat.owner_id]?._id;
 
     if (!uId) {
       return null;
@@ -33,30 +57,6 @@ class MessagesService {
   }
 }
 
-const messagesService = new MessagesService();
+const activityService = new ActivityService();
 
-const selectCurrentChatId = (state) => state.selectedConversation.value.id;
-const selectConversationById = (state, id) => state.conversations.entities[id];
-const selectAllUsers = (state) => state.participants.entities;
-
-let currentValue;
-function handleChange() {
-  let previousValue = currentValue;
-  const storeObj = store.getState();
-  currentValue = selectCurrentChatId(storeObj);
-
-  if (!currentValue || previousValue === currentValue) {
-    return;
-  }
-
-  const chat = selectConversationById(storeObj, currentValue);
-  if (chat?.type !== "u") {
-    return;
-  }
-
-  const users = selectAllUsers(storeObj);
-  messagesService.syncData(chat, users);
-}
-store.subscribe(handleChange);
-
-export default messagesService;
+export default activityService;
