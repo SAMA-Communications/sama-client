@@ -12,7 +12,7 @@ class ParticipantsService {
 
 const participantsService = new ParticipantsService();
 
-const select = (state) => state.conversations.entities;
+const selectAllConersations = (state) => state.conversations.entities;
 const isDeepEqual = (object1, object2) => {
   const [objKeys1, objKeys2] = [Object.keys(object1), Object.keys(object2)];
 
@@ -36,9 +36,9 @@ const isObject = (object) => {
 let currentValue;
 function handleChange() {
   let previousValue = currentValue;
-  currentValue = select(store.getState());
+  currentValue = selectAllConersations(store.getState());
 
-  if (currentValue || previousValue) {
+  if (!currentValue || !previousValue) {
     return;
   }
 

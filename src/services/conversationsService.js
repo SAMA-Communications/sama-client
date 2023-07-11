@@ -12,12 +12,12 @@ class ConversationsService {
 
 const conversationService = new ConversationsService();
 
-const select = (state) => state.userAuth.value;
+const selectUserAuth = (state) => state.userAuth.value;
 
 let currentValue;
 function handleChange() {
   let previousValue = currentValue;
-  currentValue = select(store.getState());
+  currentValue = selectUserAuth(store.getState());
 
   if (currentValue && !previousValue) {
     conversationService.syncData();
