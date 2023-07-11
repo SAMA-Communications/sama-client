@@ -62,30 +62,35 @@ export default function App() {
   const userLoginByToken = async (token) => {
     const currentPath = location.hash;
     dispatch(updateNetworkState(false));
+
+    const handleLoginFailure = () => {
+      localStorage.removeItem("sessionId");
+      navigate("/login");
+      dispatch(updateNetworkState(true));
+      dispatch(setUserAuth(false));
+    };
+
     try {
       const userToken = await api.userLogin({ token });
+
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
         subscribeForNotifications();
+
         if (!currentPath) {
           navigate("/main");
         } else {
           dispatch(setSelectedConversation({ id: currentPath.slice(1) }));
           navigate(`/main/${currentPath}`);
         }
+
         dispatch(updateNetworkState(true));
         dispatch(setUserAuth(true));
       } else {
-        localStorage.removeItem("sessionId");
-        navigate("/login");
-        dispatch(updateNetworkState(true));
-        dispatch(setUserAuth(false));
+        handleLoginFailure();
       }
     } catch (error) {
-      localStorage.removeItem("sessionId");
-      navigate("/login");
-      dispatch(updateNetworkState(true));
-      dispatch(setUserAuth(false));
+      handleLoginFailure();
     }
   };
 
