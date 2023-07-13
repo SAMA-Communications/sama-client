@@ -25,10 +25,27 @@ self.addEventListener("push", (e) => showNotification(e, e.data.json()));
 
 self.addEventListener("message", (e) => showNotification(e, e.data.message));
 
-self.addEventListener("notificationclick", (e) =>
-  clients.openWindow(
-    `${self.location.origin}/main` + e.notification.data?.convId
-  )
-);
+self.addEventListener("notificationclick", (e) => {
+  e.notification.close();
+  e.waitUntil(
+    self.clients
+      .matchAll({
+        type: "window",
+      })
+      .then((clientList) => {
+        const chatUrl =
+          `${self.location.origin}/main` + e.notification.data?.convId;
 
-//CLIENT TODO: add reconect to chat after update tocken
+        for (const client of clientList) {
+          if (client.url.includes(self.location.origin) && "focus" in client) {
+            client.navigate(chatUrl);
+            return client.focus();
+          }
+        }
+
+        if (clients.openWindow) {
+          return clients.openWindow(chatUrl);
+        }
+      })
+  );
+});
