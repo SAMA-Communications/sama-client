@@ -38,7 +38,7 @@ self.addEventListener("notificationclick", (e) => {
 
         for (const client of clientList) {
           if (client.url.includes(self.location.origin) && "focus" in client) {
-            client.navigate(chatUrl);
+            chatUrl !== client.url && client.navigate(chatUrl);
             return client.focus();
           }
         }
