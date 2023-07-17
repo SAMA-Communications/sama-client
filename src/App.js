@@ -59,6 +59,10 @@ export default function App() {
   }, []);
 
   const userLoginByToken = async (token) => {
+    if (!token) {
+      return;
+    }
+
     const currentPath = location.hash;
     dispatch(updateNetworkState(false));
 
