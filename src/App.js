@@ -47,9 +47,12 @@ export default function App() {
     }
 
     const token = localStorage.getItem("sessionId");
-    EventEmitter.subscribe("onConnect", () =>
-      userLoginByToken(localStorage.getItem("sessionId"))
-    );
+    EventEmitter.subscribe("onConnect", () => {
+      if (token && token !== "undefined") {
+        return;
+      }
+      userLoginByToken(localStorage.getItem("sessionId"));
+    });
     if (token && token !== "undefined") {
       userLoginByToken(token);
     } else {
@@ -59,10 +62,6 @@ export default function App() {
   }, []);
 
   const userLoginByToken = async (token) => {
-    if (!token) {
-      return;
-    }
-
     const currentPath = location.hash;
     dispatch(updateNetworkState(false));
 
