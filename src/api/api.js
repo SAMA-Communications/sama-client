@@ -16,6 +16,10 @@ class Api {
   }
 
   async connect() {
+    if (this.socket) {
+      return;
+    }
+
     this.socket = new WebSocket(this.baseUrl);
 
     this.socket.onopen = () => {
@@ -107,6 +111,7 @@ class Api {
 
   async sendPromise(req, key) {
     return new Promise((resolve, reject) => {
+      console.log(req);
       this.socket.send(JSON.stringify(req));
       console.log("[socket.send]", req);
       this.responsesPromises[req.request.id] = {

@@ -33,12 +33,14 @@ export default function Login() {
   const onSubmit = async (data) => {
     setLoader(true);
     try {
-      const userToken = await api.userLogin(data);
-      localStorage.setItem("sessionId", userToken);
-      navigate("/main");
-      subscribeForNotifications();
-      dispatch(setSelectedConversation({}));
-      dispatch(setUserIsLoggedIn(true));
+      api.connect().then(async () => {
+        const userToken = await api.userLogin(data);
+        localStorage.setItem("sessionId", userToken);
+        navigate("/main");
+        subscribeForNotifications();
+        dispatch(setSelectedConversation({}));
+        dispatch(setUserIsLoggedIn(true));
+      });
     } catch (error) {
       localStorage.clear();
       alert(error.message);
