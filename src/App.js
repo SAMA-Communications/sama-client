@@ -52,12 +52,10 @@ export default function App() {
       if (!token || token === "undefined") {
         return;
       }
-      console.log("FROM onConnect ", token);
       userLoginByToken(token);
     });
     if (token && token !== "undefined") {
-      console.log("FROM useEffect ", token);
-      api.connect().then(async () => await userLoginByToken(token));
+      userLoginByToken(token);
     } else {
       localStorage.removeItem("sessionId");
       navigate("/login");
@@ -69,20 +67,20 @@ export default function App() {
     dispatch(updateNetworkState(false));
 
     const handleLoginFailure = () => {
-      console.log("TOKEN in remove", token);
       localStorage.removeItem("sessionId");
       navigate("/login");
       dispatch(updateNetworkState(true));
       dispatch(setUserIsLoggedIn(false));
     };
 
-    await api.connect();
     try {
+      await api.connect();
       const userToken = await api.userLogin({ token });
 
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
         subscribeForNotifications();
+
         if (!currentPath) {
           navigate("/main");
         } else {
@@ -93,12 +91,9 @@ export default function App() {
         dispatch(updateNetworkState(true));
         dispatch(setUserIsLoggedIn(true));
       } else {
-        console.log("CLEAN after fail login", token);
         handleLoginFailure();
       }
     } catch (error) {
-      console.error(error);
-      console.log("CLEAN after fail 'try'", token);
       handleLoginFailure();
     }
   };
