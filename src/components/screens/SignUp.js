@@ -28,11 +28,9 @@ export default function SignUp() {
   const onSubmit = async (data) => {
     setLoader(true);
     try {
-      api.connect().then(async () => {
-        await api.userCreate(data);
-        alert("You have successfully create a new user. Now you can login.");
-        navigate("/login");
-      });
+      await api.userCreate(data);
+      alert("You have successfully create a new user. Now you can login.");
+      navigate("/login");
     } catch (error) {
       alert(error.message);
     }

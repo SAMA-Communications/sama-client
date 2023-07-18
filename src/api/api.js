@@ -16,102 +16,105 @@ class Api {
   }
 
   async connect() {
-    if (this.socket) {
-      return;
-    }
+    return new Promise((resolve, reject) => {
+      this.socket = new WebSocket(this.baseUrl);
 
-    this.socket = new WebSocket(this.baseUrl);
+      this.socket.onopen = () => {
+        console.log("[socket.open]");
+        EventEmitter.emit("onConnect");
+        reduxStore.dispatch(updateNetworkState(true));
+        resolve();
+      };
 
-    this.socket.onopen = () => {
-      console.log("[socket.open]");
-      EventEmitter.emit("onConnect");
-      reduxStore.dispatch(updateNetworkState(true));
-    };
+      this.socket.onmessage = (e) => {
+        const message = JSON.parse(e.data);
+        console.log("[socket.message]", message);
 
-    this.socket.onmessage = (e) => {
-      const message = JSON.parse(e.data);
-      console.log("[socket.message]", message);
-
-      if (message.event) {
-        if (message.event.conversation_created) {
-          if (this.onConversationCreateListener) {
-            this.onConversationCreateListener(
-              message.event.conversation_created
-            );
+        if (message.event) {
+          if (message.event.conversation_created) {
+            if (this.onConversationCreateListener) {
+              this.onConversationCreateListener(
+                message.event.conversation_created
+              );
+            }
+            return;
           }
           return;
         }
-        return;
-      }
 
-      if (message.last_activity) {
-        if (this.onUserActivityListener) {
-          this.onUserActivityListener(message.last_activity);
+        if (message.last_activity) {
+          if (this.onUserActivityListener) {
+            this.onUserActivityListener(message.last_activity);
+          }
+          return;
         }
-        return;
-      }
 
-      if (message.message_read) {
-        if (this.onMessageStatusListener) {
-          this.onMessageStatusListener(message.message_read);
+        if (message.message_read) {
+          if (this.onMessageStatusListener) {
+            this.onMessageStatusListener(message.message_read);
+          }
+          return;
         }
-        return;
-      }
 
-      if (message.message) {
-        EventEmitter.emit("onMessage", message.message);
-        if (this.onMessageListener) {
-          this.onMessageListener(message.message);
+        if (message.message) {
+          EventEmitter.emit("onMessage", message.message);
+          if (this.onMessageListener) {
+            this.onMessageListener(message.message);
+          }
+          return;
         }
-        return;
-      }
 
-      if (message.ask) {
-        const mid = message.ask.mid;
-        this.responsesPromises[mid](message.ask);
-        delete this.responsesPromises[mid];
-        return;
-      }
-
-      const response = message.response;
-      if (response) {
-        const responseId = response.id;
-        const { resolve, reject, resObjKey } =
-          this.responsesPromises[responseId];
-        if (response.error) {
-          reject(response.error);
-        } else {
-          resolve(response[resObjKey]);
+        if (message.ask) {
+          const mid = message.ask.mid;
+          this.responsesPromises[mid](message.ask);
+          delete this.responsesPromises[mid];
+          return;
         }
-        delete this.responsesPromises[responseId];
-      }
-    };
 
-    this.socket.onclose = () => {
-      console.log("[socket.close]");
-      reduxStore.dispatch(updateNetworkState(false));
-      reduxStore.dispatch(setUserIsLoggedIn(false));
-
-      const reConnect = () => {
-        if (navigator.onLine && document.visibilityState === "visible") {
-          this.connect();
-          window.removeEventListener("online", reConnect);
-          document.removeEventListener("visibilitychange", reConnect);
+        const response = message.response;
+        if (response) {
+          const responseId = response.id;
+          const { resolve, reject, resObjKey } =
+            this.responsesPromises[responseId];
+          if (response.error) {
+            reject(response.error);
+          } else {
+            resolve(response[resObjKey]);
+          }
+          delete this.responsesPromises[responseId];
         }
       };
 
-      if (navigator.onLine && document.visibilityState === "visible") {
-        this.connect();
-      } else {
-        window.addEventListener("online", reConnect);
-        document.addEventListener("visibilitychange", reConnect);
-      }
-    };
+      this.socket.onerror = (error) => {
+        console.log("[socket.error]", error);
+        reject(error);
+      };
+
+      this.socket.onclose = () => {
+        console.log("[socket.close]");
+        reduxStore.dispatch(updateNetworkState(false));
+        reduxStore.dispatch(setUserIsLoggedIn(false));
+
+        const reConnect = () => {
+          if (navigator.onLine && document.visibilityState === "visible") {
+            this.connect();
+            window.removeEventListener("online", reConnect);
+            document.removeEventListener("visibilitychange", reConnect);
+          }
+        };
+
+        if (navigator.onLine && document.visibilityState === "visible") {
+          this.connect();
+        } else {
+          window.addEventListener("online", reConnect);
+          document.addEventListener("visibilitychange", reConnect);
+        }
+      };
+    });
   }
 
   async sendPromise(req, key) {
     return new Promise((resolve, reject) => {
-      console.log(req);
       this.socket.send(JSON.stringify(req));
       console.log("[socket.send]", req);
       this.responsesPromises[req.request.id] = {
