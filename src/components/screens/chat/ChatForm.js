@@ -45,6 +45,7 @@ import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatFo
 import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
+import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 
 export default function ChatForm({
   setAsideDisplayStyle,
@@ -55,6 +56,7 @@ export default function ChatForm({
   const location = useLocation();
 
   const connectState = useSelector(getNetworkState);
+  const isUserLogin = useSelector(getUserIsLoggedIn);
 
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
@@ -89,12 +91,12 @@ export default function ChatForm({
 
   useEffect(() => {
     const { hash } = location;
-    if (!hash || hash.slice(1) === selectedCID) {
+    if (!hash || hash.slice(1) === selectedCID || !isUserLogin) {
       return;
     }
 
     dispatch(setSelectedConversation({ id: hash.slice(1) }));
-  }, [location.hash]);
+  }, [location.hash, isUserLogin]);
 
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));

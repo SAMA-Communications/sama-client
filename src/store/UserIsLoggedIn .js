@@ -12,6 +12,10 @@ export const userIsLoggedIn = createSlice({
   },
 });
 
+export const getUserIsLoggedIn = (state) => {
+  return state.userIsLoggedIn.value;
+};
+
 export const { setUserIsLoggedIn } = userIsLoggedIn.actions;
 
 export default userIsLoggedIn.reducer;
