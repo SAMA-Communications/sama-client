@@ -19,7 +19,6 @@ class AutoLoginService {
   async userLogin(token) {
     // eslint-disable-next-line no-restricted-globals
     const currentPath = location.hash;
-    console.log("userLogin");
 
     const handleLoginFailure = () => {
       localStorage.removeItem("sessionId");
