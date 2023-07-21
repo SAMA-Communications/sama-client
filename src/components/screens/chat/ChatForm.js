@@ -91,16 +91,15 @@ export default function ChatForm({
           api
             .messageList({
               cid: selectedCID,
-              limit: process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
+              limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
               updated_at: { lt: messages[0].created_at },
             })
             .then((arr) => {
               const messagesIds = arr.map((el) => el._id).reverse();
-              if (
-                arr.length < process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD
-              ) {
+
+              arr.length < +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD &&
                 setIsMoreMessages(false);
-              }
+
               dispatch(addMessages(arr));
               dispatch(
                 upsertChat({
@@ -191,7 +190,7 @@ export default function ChatForm({
       api
         .messageList({
           cid: selectedCID,
-          limit: process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
+          limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
         })
         .then((arr) => {
           const messagesIds = arr.map((el) => el._id).reverse();
@@ -350,7 +349,7 @@ export default function ChatForm({
       const msg = messages[i];
       msgsArray.push(
         <ChatMessage
-          refLastEl={i === 4 ? lastMessageRef : null}
+          refLastEl={i === 1 ? lastMessageRef : null}
           key={msg._id}
           fromId={msg.from}
           userId={userInfo._id}
