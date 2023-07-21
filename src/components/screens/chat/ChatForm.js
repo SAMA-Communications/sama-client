@@ -21,7 +21,10 @@ import {
   setLastMessageField,
   updateLastMessageField,
 } from "../../../store/Conversations";
-import { clearSelectedConversation } from "../../../store/SelectedConversation";
+import {
+  clearSelectedConversation,
+  setSelectedConversation,
+} from "../../../store/SelectedConversation";
 import {
   addMessage,
   getActiveConversationMessages,
@@ -31,7 +34,7 @@ import {
 import { animateSVG } from "../../../styles/animations/animationSVG.js";
 import { motion as m } from "framer-motion";
 import { scaleAndRound } from "../../../styles/animations/animationBlocks.js";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatForm.css";
@@ -49,6 +52,7 @@ export default function ChatForm({
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const connectState = useSelector(getNetworkState);
 
@@ -82,6 +86,15 @@ export default function ChatForm({
     () => participants[opponentId]?.recent_activity,
     [opponentId, participants]
   );
+
+  useEffect(() => {
+    const { hash } = location;
+    if (!hash || hash.slice(1) === selectedCID) {
+      return;
+    }
+
+    dispatch(setSelectedConversation({ id: hash.slice(1) }));
+  }, [location.hash]);
 
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
