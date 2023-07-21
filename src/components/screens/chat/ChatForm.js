@@ -7,38 +7,35 @@ import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import { getNetworkState } from "../../../store/NetworkState.js";
-import {
-  getDownloadFileLinks,
-  getFileObjects,
-} from "../../../api/download_manager.js";
+import { getFileObjects } from "../../../api/download_manager.js";
 import {
   selectParticipantsEntities,
   upsertUser,
 } from "../../../store/Participants.js";
 import {
+  clearCountOfUnreadMessages,
   getConverastionById,
   markConversationAsRead,
   removeChat,
   selectConversationsEntities,
   setLastMessageField,
   updateLastMessageField,
-  upsertChat,
 } from "../../../store/Conversations";
-import { clearSelectedConversation } from "../../../store/SelectedConversation";
+import {
+  clearSelectedConversation,
+  setSelectedConversation,
+} from "../../../store/SelectedConversation";
 import {
   addMessage,
-  addMessages,
   getActiveConversationMessages,
   markMessagesAsRead,
   removeMessage,
-  upsertMessages,
 } from "../../../store/Messages";
 import { animateSVG } from "../../../styles/animations/animationSVG.js";
 import { motion as m } from "framer-motion";
 import { scaleAndRound } from "../../../styles/animations/animationBlocks.js";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { default as EventEmitter } from "../../../event/eventEmitter.js";
 
 import "../../../styles/chat/ChatForm.css";
 
@@ -48,6 +45,7 @@ import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatFo
 import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
+import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 
 export default function ChatForm({
   setAsideDisplayStyle,
@@ -55,11 +53,11 @@ export default function ChatForm({
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const url = useLocation();
+  const location = useLocation();
 
   const connectState = useSelector(getNetworkState);
+  const isUserLogin = useSelector(getUserIsLoggedIn);
 
-  const [opponentLastActivity, setOpponentLastActivity] = useState(null);
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
@@ -75,6 +73,31 @@ export default function ChatForm({
   const [files, setFiles] = useState([]);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
+  const opponentId = useMemo(() => {
+    const conv = conversations[selectedCID];
+    if (!conv) {
+      return null;
+    }
+
+    return conv.owner_id === userInfo._id
+      ? participants[conv.opponent_id]?._id
+      : participants[conv.owner_id]?._id;
+  }, [selectedCID]);
+
+  const opponentLastActivity = useMemo(
+    () => participants[opponentId]?.recent_activity,
+    [opponentId, participants]
+  );
+
+  useEffect(() => {
+    const { hash } = location;
+    if (!hash || hash.slice(1) === selectedCID || !isUserLogin) {
+      return;
+    }
+
+    dispatch(setSelectedConversation({ id: hash.slice(1) }));
+  }, [location.hash, isUserLogin]);
+
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
     dispatch(
@@ -88,7 +111,6 @@ export default function ChatForm({
   api.onUserActivityListener = (user) => {
     const uId = Object.keys(user)[0];
     dispatch(upsertUser({ _id: uId, recent_activity: user[uId] }));
-    setOpponentLastActivity(user[uId]);
   };
 
   api.onMessageListener = async (message) => {
@@ -117,75 +139,16 @@ export default function ChatForm({
     );
   };
 
-  const getMessageListAndFileLinks = function () {
-    api.messageList({ cid: selectedCID, limit: 20 }).then(async (arr) => {
-      const messagesIds = arr.map((el) => el._id).reverse();
-      dispatch(addMessages(arr));
-      dispatch(
-        upsertChat({
-          _id: selectedCID,
-          messagesIds,
-          activated: true,
-        })
-      );
-      const mAttachments = {};
-      for (let i = 0; i < arr.length; i++) {
-        const attachments = arr[i].attachments;
-        if (!attachments) {
-          continue;
-        }
-        attachments.forEach(
-          (obj) =>
-            (mAttachments[obj.file_id] = {
-              _id: arr[i]._id,
-              ...obj,
-            })
-        );
-      }
-
-      if (Object.keys(mAttachments).length > 0) {
-        getDownloadFileLinks(mAttachments).then((msgs) =>
-          dispatch(upsertMessages(msgs))
-        );
-      }
-    });
-  };
-
-  const getAndSetOpponentLastActivity = function () {
-    const obj = conversations[selectedCID];
-    const uId =
-      obj.owner_id === userInfo._id
-        ? participants[obj.opponent_id]?._id
-        : participants[obj.owner_id]?._id;
-    api.subscribeToUserActivity(uId).then((activity) => {
-      dispatch(
-        upsertUser({
-          _id: uId,
-          recent_activity: activity[uId],
-        })
-      );
-      setOpponentLastActivity(activity[uId]);
-    });
-  };
-
   useEffect(() => {
     if (!selectedCID) {
       return;
     }
 
-    EventEmitter.unsubscribe("onConnect", getMessageListAndFileLinks);
-    EventEmitter.unsubscribe("onConnect", getAndSetOpponentLastActivity);
-
-    if (!conversations[selectedCID].activated) {
-      getMessageListAndFileLinks();
-    }
-    if (conversations[selectedCID].type === "u") {
-      getAndSetOpponentLastActivity();
+    if (conversations[selectedCID].unread_messages_count > 0) {
+      dispatch(clearCountOfUnreadMessages(selectedCID));
+      api.markConversationAsRead({ cid: selectedCID });
     }
     setFiles([]);
-
-    EventEmitter.subscribe("onConnect", getMessageListAndFileLinks);
-    EventEmitter.subscribe("onConnect", getAndSetOpponentLastActivity);
   }, [selectedCID]);
 
   const sendMessage = async (event) => {
@@ -344,8 +307,6 @@ export default function ChatForm({
     if (event.keyCode === 27) {
       dispatch(clearSelectedConversation());
       api.unsubscribeFromUserActivity({});
-      EventEmitter.unsubscribe("onConnect", getMessageListAndFileLinks);
-      EventEmitter.unsubscribe("onConnect", getAndSetOpponentLastActivity);
       navigate("/main");
     }
   };
@@ -398,6 +359,22 @@ export default function ChatForm({
     setChatFormBgDisplayStyle("flex");
   };
 
+  const chatNameView = useMemo(() => {
+    if (!selectedConversation || !participants) {
+      return <p></p>;
+    }
+
+    const { owner_id, opponent_id, name } = selectedConversation;
+    if (name) {
+      return <p>{name}</p>;
+    }
+
+    const ownerLogin = participants[owner_id]?.login;
+    const opponentLogin = participants[opponent_id]?.login;
+
+    return <p>{owner_id === userInfo._id ? opponentLogin : ownerLogin}</p>;
+  }, [selectedConversation, participants]);
+
   return (
     <m.section
       variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
@@ -433,7 +410,7 @@ export default function ChatForm({
                 <RecipientPhoto />
               </div>
               <div className="chat-recipient-info">
-                <p>{selectedConversation.name || url.hash?.slice(1)}</p>
+                {chatNameView}
                 <div className="chat-recipient-status">
                   {recentActivityView}
                 </div>

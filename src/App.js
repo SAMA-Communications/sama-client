@@ -1,9 +1,10 @@
 import React, { Suspense, useEffect } from "react";
-import api from "./api/api";
-import subscribeForNotifications from "./services/notifications.js";
+import activityService from "./services/activityService";
+import conversationService from "./services/conversationsService";
+import messagesService from "./services/messagesService";
+import autoLoginService from "./services/autoLoginService.js";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { default as EventEmitter } from "./event/eventEmitter";
 import { updateNetworkState } from "./store/NetworkState";
 import { useDispatch } from "react-redux";
 
@@ -19,9 +20,9 @@ const Login = React.lazy(() => import("./components/screens/Login"));
 const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
 export default function App() {
-  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.addEventListener("offline", () =>
@@ -42,32 +43,14 @@ export default function App() {
     }
 
     const token = localStorage.getItem("sessionId");
-    EventEmitter.subscribe("onConnect", () =>
-      userLoginByToken(localStorage.getItem("sessionId"))
-    );
     if (token && token !== "undefined") {
-      userLoginByToken(token);
+      const currentPath = location.hash;
+      navigate(!currentPath ? "/main" : `/main/${currentPath}`);
     } else {
       localStorage.removeItem("sessionId");
       navigate("/login");
     }
   }, []);
-
-  const userLoginByToken = async (token) => {
-    try {
-      const userToken = await api.userLogin({ token });
-      if (userToken && userToken !== "undefined") {
-        localStorage.setItem("sessionId", userToken);
-        subscribeForNotifications();
-        navigate("/main");
-      } else {
-        localStorage.removeItem("sessionId");
-        navigate("/login");
-      }
-    } catch (error) {
-      navigate("/login");
-    }
-  };
 
   return (
     <Suspense fallback={<PageLoader />}>

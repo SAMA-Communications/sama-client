@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
 import ChatBox from "../../generic/ChatBox.js";
@@ -7,12 +7,10 @@ import { NavLink } from "react-router-dom";
 import {
   addUsers,
   selectParticipantsEntities,
-  setUsers,
 } from "../../../store/Participants.js";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
-  insertChats,
   selectAllConversations,
   upsertChat,
 } from "../../../store/Conversations.js";
@@ -24,7 +22,6 @@ import {
   scaleAndRound,
 } from "../../../styles/animations/animationBlocks.js";
 import { motion as m } from "framer-motion";
-import { default as EventEmitter } from "../../../event/eventEmitter.js";
 
 import "../../../styles/chat/ChatList.css";
 
@@ -57,22 +54,6 @@ export default function ChatList({
       .then((users) => dispatch(addUsers(users)));
   };
 
-  useEffect(() => {
-    function getChatsAndParticipants() {
-      api.conversationList({}).then((chats) => {
-        if (!chats) {
-          return;
-        }
-        dispatch(insertChats(chats));
-        api
-          .getParticipantsByCids(chats.map((obj) => obj._id))
-          .then((users) => dispatch(setUsers(users)));
-      });
-    }
-    getChatsAndParticipants();
-    EventEmitter.subscribe("onConnect", getChatsAndParticipants);
-  }, []);
-
   const chatsList = useMemo(() => {
     let list = [];
     for (const obj of conversations) {
@@ -84,7 +65,7 @@ export default function ChatList({
 
       list.push(
         <NavLink
-          to={`/main/#${obj.name ? obj._id : chatName}`}
+          to={`/main/#${obj._id}`}
           key={obj._id}
           className={activeConv === obj._id ? "selected" : ""}
           onClick={async () => {
