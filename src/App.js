@@ -1,9 +1,12 @@
 import React, { Suspense, useEffect } from "react";
-import api from "./api/api";
-import subscribeForNotifications from "./services/notifications.js";
+import activityService from "./services/activityService";
+import conversationService from "./services/conversationsService";
+import messagesService from "./services/messagesService";
+import autoLoginService from "./services/autoLoginService.js";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { default as EventEmitter } from "./event/eventEmitter";
+import { updateNetworkState } from "./store/NetworkState";
+import { useDispatch } from "react-redux";
 
 import PageLoader from "./components/PageLoader";
 import SignUp from "./components/screens/SignUp";
@@ -16,13 +19,17 @@ const Main = React.lazy(() => import("./components/Main"));
 const Login = React.lazy(() => import("./components/screens/Login"));
 const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
-function App() {
-  const navigate = useNavigate();
+export default function App() {
   const location = useLocation();
-  const keyLocation =
-    location.pathname.split("/")[1] === "main" ? "/main" : location.pathname;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    window.addEventListener("offline", () =>
+      dispatch(updateNetworkState(false))
+    );
+    window.addEventListener("online", () => dispatch(updateNetworkState(true)));
+
     if (window.matchMedia("(prefers-color-scheme: dark)").matches === true) {
       if (localStorage.getItem("theme") !== "light") {
         localStorage.setItem("theme", "dark");
@@ -36,38 +43,19 @@ function App() {
     }
 
     const token = localStorage.getItem("sessionId");
-    EventEmitter.subscribe("onConnect", () =>
-      userLoginByToken(localStorage.getItem("sessionId"))
-    );
     if (token && token !== "undefined") {
-      userLoginByToken(token);
+      const currentPath = location.hash;
+      navigate(!currentPath ? "/main" : `/main/${currentPath}`);
     } else {
       localStorage.removeItem("sessionId");
       navigate("/login");
     }
   }, []);
 
-  const userLoginByToken = async (token) => {
-    navigate("/loading");
-    try {
-      const userToken = await api.userLogin({ token });
-      if (userToken && userToken !== "undefined") {
-        localStorage.setItem("sessionId", userToken);
-        subscribeForNotifications();
-        navigate("/main");
-      } else {
-        localStorage.removeItem("sessionId");
-        navigate("/login");
-      }
-    } catch (error) {
-      navigate("/login");
-    }
-  };
-
   return (
     <Suspense fallback={<PageLoader />}>
       <AnimatePresence initial={false} mode="wait">
-        <Routes location={location} key={keyLocation}>
+        <Routes location={location}>
           <Route path="/loading" element={<PageLoader />} />
           <Route path="/login" element={<Login />} />
           <Route path="/main/*" element={<Main />} />
@@ -78,5 +66,3 @@ function App() {
     </Suspense>
   );
 }
-
-export default App;
