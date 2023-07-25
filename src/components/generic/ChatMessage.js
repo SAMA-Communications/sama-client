@@ -19,7 +19,6 @@ export default function ChatMessage({
   attachments,
   tSend,
   openModalParam,
-  refLastEl,
 }) {
   const timeSend = useMemo(() => {
     const t = new Date(tSend * 1000);
@@ -45,7 +44,6 @@ export default function ChatMessage({
 
   return (
     <m.div
-      ref={refLastEl}
       variants={changeOpacity(0, 0.25, 0, 0)}
       initial="hidden"
       animate="visible"

@@ -1,22 +1,14 @@
 import AttachmentsList from "../../generic/AttachmentsList.js";
 import ChatMessage from "../../generic/ChatMessage.js";
 import NoChatSelected from "../../static/NoChatSelected.js";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import api from "../../../api/api";
 import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import { getNetworkState } from "../../../store/NetworkState.js";
-import {
-  getDownloadFileLinks,
-  getFileObjects,
-} from "../../../api/download_manager.js";
+import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
+import { getFileObjects } from "../../../api/download_manager.js";
 import {
   selectParticipantsEntities,
   upsertUser,
@@ -29,7 +21,6 @@ import {
   selectConversationsEntities,
   setLastMessageField,
   updateLastMessageField,
-  upsertChat,
 } from "../../../store/Conversations";
 import {
   clearSelectedConversation,
@@ -37,11 +28,9 @@ import {
 } from "../../../store/SelectedConversation";
 import {
   addMessage,
-  addMessages,
   getActiveConversationMessages,
   markMessagesAsRead,
   removeMessage,
-  upsertMessages,
 } from "../../../store/Messages";
 import { animateSVG } from "../../../styles/animations/animationSVG.js";
 import { motion as m } from "framer-motion";
@@ -57,7 +46,6 @@ import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatFo
 import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
-import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 
 export default function ChatForm({
   setAsideDisplayStyle,
@@ -84,69 +72,6 @@ export default function ChatForm({
   const filePicker = useRef(null);
   const [files, setFiles] = useState([]);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
-
-  const [isMoreMessages, setIsMoreMessages] = useState(true);
-  const lastMessageObserver = useRef();
-  const lastMessageRef = useCallback(
-    (node) => {
-      if (lastMessageObserver.current) lastMessageObserver.current.disconnect();
-      lastMessageObserver.current = new IntersectionObserver((entries) => {
-        if (
-          entries[0].isIntersecting &&
-          selectedCID &&
-          messages.length &&
-          isMoreMessages
-        ) {
-          api
-            .messageList({
-              cid: selectedCID,
-              limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
-              updated_at: { lt: messages[0].created_at },
-            })
-            .then((arr) => {
-              const messagesIds = arr.map((el) => el._id).reverse();
-
-              arr.length < +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD &&
-                setIsMoreMessages(false);
-
-              dispatch(addMessages(arr));
-              dispatch(
-                upsertChat({
-                  _id: selectedCID,
-                  messagesIds: [
-                    ...messagesIds,
-                    ...messages.map((el) => el._id),
-                  ],
-                  activated: true,
-                })
-              );
-              const mAttachments = {};
-              for (let i = 0; i < arr.length; i++) {
-                const attachments = arr[i].attachments;
-                if (!attachments) {
-                  continue;
-                }
-                attachments.forEach(
-                  (obj) =>
-                    (mAttachments[obj.file_id] = {
-                      _id: arr[i]._id,
-                      ...obj,
-                    })
-                );
-              }
-
-              if (Object.keys(mAttachments).length > 0) {
-                getDownloadFileLinks(mAttachments).then((msgs) =>
-                  dispatch(upsertMessages(msgs))
-                );
-              }
-            });
-        }
-      });
-      if (node) lastMessageObserver.current.observe(node);
-    },
-    [selectedCID, messages, isMoreMessages]
-  );
 
   const opponentId = useMemo(() => {
     const conv = conversations[selectedCID];
@@ -348,7 +273,6 @@ export default function ChatForm({
       const msg = messages[i];
       msgsArray.push(
         <ChatMessage
-          refLastEl={i === 1 ? lastMessageRef : null}
           key={msg._id}
           fromId={msg.from}
           userId={userInfo._id}
