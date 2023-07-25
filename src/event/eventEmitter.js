@@ -8,6 +8,17 @@ class EventEmitter {
     this.events[eventName].push(callback);
   }
 
+  resubscribe(eventName, callback) {
+    !this.events[eventName] && (this.events[eventName] = []);
+    if (
+      !this.events[eventName].find(
+        (eventCallback) => callback.toString() === eventCallback.toString()
+      )
+    ) {
+      this.events[eventName].push(callback);
+    }
+  }
+
   async emit(eventName, args) {
     const event = this.events[eventName];
     if (event) {
@@ -17,9 +28,15 @@ class EventEmitter {
     }
   }
 
+  hasSubscription(eventName, callback) {
+    return !!this.events[eventName].find((eventCallback) => {
+      return callback.toString() === eventCallback.toString();
+    });
+  }
+
   unsubscribe(eventName, callback) {
     this.events[eventName] = this.events[eventName].filter(
-      (eventCallback) => callback !== eventCallback
+      (eventCallback) => callback.toString() !== eventCallback.toString()
     );
   }
 

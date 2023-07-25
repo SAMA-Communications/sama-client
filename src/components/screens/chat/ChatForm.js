@@ -12,36 +12,36 @@ import api from "../../../api/api";
 import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
-import {
-  getDownloadFileLinks,
-  getFileObjects,
-} from "../../../api/download_manager.js";
+import { getNetworkState } from "../../../store/NetworkState.js";
+import { getFileObjects } from "../../../api/download_manager.js";
 import {
   selectParticipantsEntities,
   upsertUser,
 } from "../../../store/Participants.js";
 import {
+  clearCountOfUnreadMessages,
   getConverastionById,
   markConversationAsRead,
   removeChat,
   selectConversationsEntities,
+  setLastMessageField,
   updateLastMessageField,
-  upsertChat,
 } from "../../../store/Conversations";
-import { clearSelectedConversation } from "../../../store/SelectedConversation";
+import {
+  clearSelectedConversation,
+  setSelectedConversation,
+} from "../../../store/SelectedConversation";
 import {
   addMessage,
-  addMessages,
   getActiveConversationMessages,
   markMessagesAsRead,
   removeMessage,
-  upsertMessages,
 } from "../../../store/Messages";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { scaleAndRound } from "../../../styles/animations/animationBlocks.js";
 import { animateSVG } from "../../../styles/animations/animationSVG.js";
 import { motion as m } from "framer-motion";
+import { scaleAndRound } from "../../../styles/animations/animationBlocks.js";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatForm.css";
 
@@ -51,6 +51,7 @@ import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatFo
 import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
+import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 
 export default function ChatForm({
   setAsideDisplayStyle,
@@ -58,9 +59,11 @@ export default function ChatForm({
 }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const url = useLocation();
+  const location = useLocation();
 
-  const [opponentLastActivity, setOpponentLastActivity] = useState(null);
+  const connectState = useSelector(getNetworkState);
+  const isUserLogin = useSelector(getUserIsLoggedIn);
+
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
@@ -139,6 +142,7 @@ export default function ChatForm({
     [selectedCID, messages, isMoreMessages]
   );
 
+
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
     dispatch(
@@ -152,7 +156,6 @@ export default function ChatForm({
   api.onUserActivityListener = (user) => {
     const uId = Object.keys(user)[0];
     dispatch(upsertUser({ _id: uId, recent_activity: user[uId] }));
-    setOpponentLastActivity(user[uId]);
   };
 
   api.onMessageListener = async (message) => {
@@ -241,12 +244,16 @@ export default function ChatForm({
         setOpponentLastActivity(activity[uId]);
       });
     }
-
     setFiles([]);
   }, [selectedCID]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
+
+    if (!connectState) {
+      alert("No internet connection");
+      return;
+    }
 
     const text = messageInputEl.current.value.trim();
     if ((text.length === 0 && !files?.length) || isSendMessageDisable) {
@@ -279,7 +286,20 @@ export default function ChatForm({
       });
     }
 
-    const response = await api.messageCreate(reqData);
+    let response;
+    try {
+      response = await api.messageCreate(reqData);
+    } catch (err) {
+      alert("There is no server connection");
+      dispatch(
+        setLastMessageField({
+          cid: selectedCID,
+          msg: messages[messages.length - 1],
+        })
+      );
+      return;
+    }
+
     if (response.mid) {
       msg = {
         _id: response.server_mid,
@@ -436,6 +456,22 @@ export default function ChatForm({
     setChatFormBgDisplayStyle("flex");
   };
 
+  const chatNameView = useMemo(() => {
+    if (!selectedConversation || !participants) {
+      return <p></p>;
+    }
+
+    const { owner_id, opponent_id, name } = selectedConversation;
+    if (name) {
+      return <p>{name}</p>;
+    }
+
+    const ownerLogin = participants[owner_id]?.login;
+    const opponentLogin = participants[opponent_id]?.login;
+
+    return <p>{owner_id === userInfo._id ? opponentLogin : ownerLogin}</p>;
+  }, [selectedConversation, participants]);
+
   return (
     <m.section
       variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
@@ -471,7 +507,7 @@ export default function ChatForm({
                 <RecipientPhoto />
               </div>
               <div className="chat-recipient-info">
-                <p>{selectedConversation.name || url.hash?.slice(1)}</p>
+                {chatNameView}
                 <div className="chat-recipient-status">
                   {recentActivityView}
                 </div>
