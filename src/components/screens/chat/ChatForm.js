@@ -150,7 +150,13 @@ export default function ChatForm({
 
   const chatMessagesBlock = useRef();
   const scrollChatToBottom = () =>
-    chatMessagesBlock.current.scrollIntoView({ block: "end" });
+    chatMessagesBlock.current?.scrollIntoView({ block: "end" });
+
+  useEffect(() => {
+    if (chatMessagesBlock.current) {
+      scrollChatToBottom();
+    }
+  }, [chatMessagesBlock]);
 
   const opponentId = useMemo(() => {
     const conv = conversations[selectedCID];
@@ -227,6 +233,7 @@ export default function ChatForm({
       dispatch(clearCountOfUnreadMessages(selectedCID));
       api.markConversationAsRead({ cid: selectedCID });
     }
+
     setFiles([]);
   }, [selectedCID]);
 
@@ -376,8 +383,6 @@ export default function ChatForm({
     }
     return msgsArray;
   }, [messages]);
-
-  // useEffect(() => scrollChatToBottom(), [messagesList]);
 
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
