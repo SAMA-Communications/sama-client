@@ -148,6 +148,10 @@ export default function ChatForm({
     [selectedCID, messages, needToGetMoreMessage]
   );
 
+  const chatMessagesBlock = useRef();
+  const scrollChatToBottom = () =>
+    chatMessagesBlock.current.scrollIntoView({ block: "end" });
+
   const opponentId = useMemo(() => {
     const conv = conversations[selectedCID];
     if (!conv) {
@@ -304,6 +308,7 @@ export default function ChatForm({
     isMobile && messageInputEl.current.blur();
 
     setIsSendMessageDisable(false);
+    scrollChatToBottom();
   };
 
   const deleteChat = async () => {
@@ -372,12 +377,7 @@ export default function ChatForm({
     return msgsArray;
   }, [messages]);
 
-  const scrollChatToBottom = () => {
-    document.getElementById("chat-messages")?.scrollIntoView({
-      block: "end",
-    });
-  };
-  useEffect(() => scrollChatToBottom(), [messagesList]);
+  // useEffect(() => scrollChatToBottom(), [messagesList]);
 
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
@@ -503,7 +503,7 @@ export default function ChatForm({
                 <p>Write your message...</p>
               </div>
             ) : (
-              <div className="chat-messages" id="chat-messages">
+              <div ref={chatMessagesBlock} className="chat-messages">
                 {messagesList}
               </div>
             )}
