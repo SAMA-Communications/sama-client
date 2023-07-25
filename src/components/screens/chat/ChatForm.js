@@ -13,7 +13,10 @@ import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import { getNetworkState } from "../../../store/NetworkState.js";
-import { getFileObjects } from "../../../api/download_manager.js";
+import {
+  getDownloadFileLinks,
+  getFileObjects,
+} from "../../../api/download_manager.js";
 import {
   selectParticipantsEntities,
   upsertUser,
@@ -26,6 +29,7 @@ import {
   selectConversationsEntities,
   setLastMessageField,
   updateLastMessageField,
+  upsertChat,
 } from "../../../store/Conversations";
 import {
   clearSelectedConversation,
@@ -33,9 +37,11 @@ import {
 } from "../../../store/SelectedConversation";
 import {
   addMessage,
+  addMessages,
   getActiveConversationMessages,
   markMessagesAsRead,
   removeMessage,
+  upsertMessages,
 } from "../../../store/Messages";
 import { animateSVG } from "../../../styles/animations/animationSVG.js";
 import { motion as m } from "framer-motion";
@@ -212,7 +218,7 @@ export default function ChatForm({
     if (!selectedCID) {
       return;
     }
-    
+
     if (conversations[selectedCID].unread_messages_count > 0) {
       dispatch(clearCountOfUnreadMessages(selectedCID));
       api.markConversationAsRead({ cid: selectedCID });
