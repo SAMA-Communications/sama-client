@@ -13,7 +13,10 @@ import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import { getNetworkState } from "../../../store/NetworkState.js";
-import { getFileObjects } from "../../../api/download_manager.js";
+import {
+  getDownloadFileLinks,
+  getFileObjects,
+} from "../../../api/download_manager.js";
 import {
   selectParticipantsEntities,
   upsertUser,
@@ -26,6 +29,7 @@ import {
   selectConversationsEntities,
   setLastMessageField,
   updateLastMessageField,
+  upsertChat,
 } from "../../../store/Conversations";
 import {
   clearSelectedConversation,
@@ -33,9 +37,11 @@ import {
 } from "../../../store/SelectedConversation";
 import {
   addMessage,
+  addMessages,
   getActiveConversationMessages,
   markMessagesAsRead,
   removeMessage,
+  upsertMessages,
 } from "../../../store/Messages";
 import { animateSVG } from "../../../styles/animations/animationSVG.js";
 import { motion as m } from "framer-motion";
@@ -142,6 +148,30 @@ export default function ChatForm({
     [selectedCID, messages, isMoreMessages]
   );
 
+  const opponentId = useMemo(() => {
+    const conv = conversations[selectedCID];
+    if (!conv) {
+      return null;
+    }
+
+    return conv.owner_id === userInfo._id
+      ? participants[conv.opponent_id]?._id
+      : participants[conv.owner_id]?._id;
+  }, [selectedCID]);
+
+  const opponentLastActivity = useMemo(
+    () => participants[opponentId]?.recent_activity,
+    [opponentId, participants]
+  );
+
+  useEffect(() => {
+    const { hash } = location;
+    if (!hash || hash.slice(1) === selectedCID || !isUserLogin) {
+      return;
+    }
+
+    dispatch(setSelectedConversation({ id: hash.slice(1) }));
+  }, [location.hash, isUserLogin]);
 
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
@@ -189,60 +219,9 @@ export default function ChatForm({
       return;
     }
 
-    if (!conversations[selectedCID].activated) {
-      api
-        .messageList({
-          cid: selectedCID,
-          limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
-        })
-        .then((arr) => {
-          const messagesIds = arr.map((el) => el._id).reverse();
-          dispatch(addMessages(arr));
-          dispatch(
-            upsertChat({
-              _id: selectedCID,
-              messagesIds,
-              activated: true,
-            })
-          );
-          const mAttachments = {};
-          for (let i = 0; i < arr.length; i++) {
-            const attachments = arr[i].attachments;
-            if (!attachments) {
-              continue;
-            }
-            attachments.forEach(
-              (obj) =>
-                (mAttachments[obj.file_id] = {
-                  _id: arr[i]._id,
-                  ...obj,
-                })
-            );
-          }
-
-          if (Object.keys(mAttachments).length > 0) {
-            getDownloadFileLinks(mAttachments).then((msgs) =>
-              dispatch(upsertMessages(msgs))
-            );
-          }
-        });
-    }
-
-    if (conversations[selectedCID].type === "u") {
-      const obj = conversations[selectedCID];
-      const uId =
-        obj.owner_id === userInfo._id
-          ? participants[obj.opponent_id]?._id
-          : participants[obj.owner_id]?._id;
-      api.subscribeToUserActivity(uId).then((activity) => {
-        dispatch(
-          upsertUser({
-            _id: uId,
-            recent_activity: activity[uId],
-          })
-        );
-        setOpponentLastActivity(activity[uId]);
-      });
+    if (conversations[selectedCID].unread_messages_count > 0) {
+      dispatch(clearCountOfUnreadMessages(selectedCID));
+      api.markConversationAsRead({ cid: selectedCID });
     }
     setFiles([]);
   }, [selectedCID]);
