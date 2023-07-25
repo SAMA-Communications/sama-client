@@ -116,7 +116,7 @@ nav {
     z-index: 111;
   }
   nav {
-    height: max(7svh, 55px);
+    height: max(9svh, 55px);
   }
   main {
     height: min(93svh, 100svh - 55px);
