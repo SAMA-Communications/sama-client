@@ -146,7 +146,6 @@ aside {
 }
 .chat-name {
   font-weight: 300;
-  font-size: calc(var(--font-size) * 1.125);
   line-height: calc(var(--font-size) * 1.3);
 }
 .chat-message {
