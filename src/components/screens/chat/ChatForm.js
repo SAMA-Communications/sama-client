@@ -85,67 +85,67 @@ export default function ChatForm({
   const [files, setFiles] = useState([]);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
-  const [isMoreMessages, setIsMoreMessages] = useState(true);
+  const needToGetMoreMessage = useRef(true);
   const lastMessageObserver = useRef();
   const lastMessageRef = useCallback(
     (node) => {
+      if (!node) return;
       if (lastMessageObserver.current) lastMessageObserver.current.disconnect();
       lastMessageObserver.current = new IntersectionObserver((entries) => {
         if (
-          entries[0].isIntersecting &&
-          selectedCID &&
-          messages.length &&
-          isMoreMessages
+          !entries[0].isIntersecting ||
+          !selectedCID ||
+          messages.length === 0 ||
+          !needToGetMoreMessage.current
         ) {
-          api
-            .messageList({
-              cid: selectedCID,
-              limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
-              updated_at: { lt: messages[0].created_at },
-            })
-            .then((arr) => {
-              const messagesIds = arr.map((el) => el._id).reverse();
+          return;
+        }
 
-              arr.length < +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD &&
-                setIsMoreMessages(false);
+        api
+          .messageList({
+            cid: selectedCID,
+            limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
+            updated_at: { lt: messages[0].created_at },
+          })
+          .then((arr) => {
+            if (!arr.length) {
+              needToGetMoreMessage.current = false;
+              return;
+            }
 
-              dispatch(addMessages(arr));
-              dispatch(
-                upsertChat({
-                  _id: selectedCID,
-                  messagesIds: [
-                    ...messagesIds,
-                    ...messages.map((el) => el._id),
-                  ],
-                  activated: true,
-                })
-              );
-              const mAttachments = {};
-              for (let i = 0; i < arr.length; i++) {
-                const attachments = arr[i].attachments;
-                if (!attachments) {
-                  continue;
-                }
-                attachments.forEach(
-                  (obj) =>
-                    (mAttachments[obj.file_id] = {
-                      _id: arr[i]._id,
-                      ...obj,
-                    })
-                );
-              }
+            const messagesIds = arr.map((el) => el._id).reverse();
+            needToGetMoreMessage.current =
+              messagesIds.length ===
+              +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD;
 
-              if (Object.keys(mAttachments).length > 0) {
-                getDownloadFileLinks(mAttachments).then((msgs) =>
-                  dispatch(upsertMessages(msgs))
-                );
+            dispatch(addMessages(arr));
+            dispatch(
+              upsertChat({
+                _id: selectedCID,
+                messagesIds: [...messagesIds, ...messages.map((el) => el._id)],
+                activated: true,
+              })
+            );
+            const mAttachments = {};
+            arr.forEach((message) => {
+              const attachments = message.attachments;
+              if (attachments) {
+                attachments.forEach((obj) => {
+                  mAttachments[obj.file_id] = { _id: message._id, ...obj };
+                });
               }
             });
-        }
+
+            if (Object.keys(mAttachments).length > 0) {
+              getDownloadFileLinks(mAttachments).then((msgs) =>
+                dispatch(upsertMessages(msgs))
+              );
+            }
+          });
       });
       if (node) lastMessageObserver.current.observe(node);
     },
-    [selectedCID, messages, isMoreMessages]
+    [selectedCID, messages, needToGetMoreMessage]
   );
 
   const opponentId = useMemo(() => {
