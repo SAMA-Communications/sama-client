@@ -152,12 +152,6 @@ export default function ChatForm({
   const scrollChatToBottom = () =>
     chatMessagesBlock.current?.scrollIntoView({ block: "end" });
 
-  useEffect(() => {
-    if (chatMessagesBlock.current) {
-      scrollChatToBottom();
-    }
-  }, [chatMessagesBlock]);
-
   const opponentId = useMemo(() => {
     const conv = conversations[selectedCID];
     if (!conv) {
@@ -383,6 +377,17 @@ export default function ChatForm({
     }
     return msgsArray;
   }, [messages]);
+
+  useEffect(() => {
+    if (
+      !chatMessagesBlock.current ||
+      messagesList.length > +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD
+    ) {
+      return;
+    }
+
+    scrollChatToBottom();
+  }, [messagesList]);
 
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
