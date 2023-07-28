@@ -82,6 +82,7 @@ export default function ChatForm({
   const filePicker = useRef(null);
   const [files, setFiles] = useState([]);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
+  const [firstMessageIndex, setFirstMessageIndex] = useState(0);
 
   const lastMessageRef = useCallback(
     () =>
@@ -95,7 +96,7 @@ export default function ChatForm({
           if (!arr.length) {
             return;
           }
-
+          setFirstMessageIndex(0);
           const messagesIds = arr.map((el) => el._id).reverse();
 
           dispatch(addMessages(arr));
@@ -426,6 +427,7 @@ export default function ChatForm({
                 style={{ height: "100%" }}
                 data={messages}
                 startReached={lastMessageRef}
+                firstItemIndex={firstMessageIndex}
                 initialTopMostItemIndex={messages.length - 1}
                 itemContent={(i, msg) => (
                   <ChatMessage
