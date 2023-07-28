@@ -7,6 +7,7 @@ import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import { getNetworkState } from "../../../store/NetworkState.js";
+import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 import { getFileObjects } from "../../../api/download_manager.js";
 import {
   selectParticipantsEntities,
@@ -45,7 +46,6 @@ import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatFo
 import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
-import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 
 export default function ChatForm({
   setAsideDisplayStyle,

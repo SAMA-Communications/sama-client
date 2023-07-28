@@ -16,7 +16,7 @@
 }
 #search-form {
   width: 500px;
-  height: 75%;
+  height: 75vh;
 
   padding: 28px 15px;
 
@@ -61,12 +61,17 @@
 }
 
 .list-users {
+  max-height: 55%;
   padding: 10px 0;
+  margin-top: 10px;
 
   display: flex;
   flex-direction: column;
   gap: 10px;
 
+  overflow: auto;
+
+  border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
 }
 .list-user-message {
@@ -79,7 +84,8 @@
 }
 .list-user-box,
 .list-user-selected-box {
-  padding: 10px;
+  max-width: calc(100%);
+  padding: 7px 10px;
 
   flex: 1 1 max-content;
 
@@ -104,8 +110,18 @@
   border-color: var(--border-dark-color);
   background-color: var(--block-hover);
 }
+.list-user-box > p,
+.list-user-selected-box > p {
+  line-height: calc(var(--font-size) * 1.5);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
 
 .chat-selected-users {
+  max-height: 15vh;
+  overflow: auto;
+
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
