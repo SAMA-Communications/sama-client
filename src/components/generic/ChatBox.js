@@ -1,7 +1,5 @@
 import React, { useMemo } from "react";
 import MessageStatus from "./MessageStatus";
-import { changeOpacity } from "../../styles/animations/animationBlocks";
-import { motion as m } from "framer-motion";
 
 import { ReactComponent as ChatIcon } from "./../../assets/icons/chatList/ChatIcon.svg";
 import { ReactComponent as ImagePreviewIcon } from "./../../assets/icons/chatList/ImagePreviewIcon.svg";
@@ -71,13 +69,7 @@ export default function ChatBox({
   }, [lastMessage]);
 
   return (
-    <m.div
-      variants={changeOpacity(0.9, 1, 0, 0.15)}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      className="chat-box"
-    >
+    <div className="chat-box">
       <div className="chat-box-icon">
         <ChatIcon />
       </div>
@@ -103,6 +95,6 @@ export default function ChatBox({
         </div>
       )}
       <div className="chat-last-update">{tView}</div>
-    </m.div>
+    </div>
   );
 }

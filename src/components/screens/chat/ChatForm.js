@@ -44,9 +44,6 @@ import {
   removeMessage,
   upsertMessages,
 } from "../../../store/Messages";
-import { animateSVG } from "../../../styles/animations/animationSVG.js";
-import { motion as m } from "framer-motion";
-import { scaleAndRound } from "../../../styles/animations/animationBlocks.js";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -398,34 +395,14 @@ export default function ChatForm({
   }, [selectedConversation, participants]);
 
   return (
-    <m.section
-      variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      className="chat-form"
-    >
-      <m.div
-        variants={{
-          hidden: { opacity: 0 },
-          visible: {
-            opacity: 0.7,
-            transition: { delay: 0.5, duration: 1.5 },
-          },
-        }}
-        className="chat-menu-btn"
-        onClick={openChatList}
-      >
+    <section className="chat-form">
+      <div className="chat-menu-btn" onClick={openChatList}>
         <BurgerMenu />
-      </m.div>
+      </div>
       {!selectedCID ? (
         <NoChatSelected />
       ) : (
-        <m.div
-          variants={animateSVG(0, 0, 0, 0, 0.15)}
-          exit="exit"
-          className="chat-form-messaging"
-        >
+        <div className="chat-form-messaging">
           <div className="chat-messaging-info">
             <div className="chat-info-block">
               <div className="chat-recipient-photo">
@@ -513,8 +490,8 @@ export default function ChatForm({
             </div>
           </form>
           {modalOpen && modalWindow()}
-        </m.div>
+        </div>
       )}
-    </m.section>
+    </section>
   );
 }
