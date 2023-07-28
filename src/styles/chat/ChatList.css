@@ -61,7 +61,7 @@ aside {
 }
 
 .chat-list {
-  height: calc(91vh - 140px);
+  height: calc(91svh - 140px);
   margin-top: 20px;
 
   display: flex;
@@ -241,7 +241,6 @@ aside {
     font-size: calc(var(--font-size) * 1.7);
   }
   .chat-list {
-    height: calc(91vh - 120px);
     border-width: 10px;
   }
   aside {
@@ -250,7 +249,7 @@ aside {
 
     display: none;
     position: absolute;
-    align-self: center;
+    align-items: flex-start;
 
     z-index: 111;
   }
