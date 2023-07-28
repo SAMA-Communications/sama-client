@@ -85,7 +85,7 @@
 .list-user-box,
 .list-user-selected-box {
   max-width: calc(100%);
-  padding: 10px;
+  padding: 7px 10px;
 
   flex: 1 1 max-content;
 
@@ -112,6 +112,7 @@
 }
 .list-user-box > p,
 .list-user-selected-box > p {
+  line-height: calc(var(--font-size) * 1.5);
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
