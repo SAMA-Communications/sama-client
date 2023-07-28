@@ -14,6 +14,7 @@ import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import { Virtuoso } from "react-virtuoso";
 import { getNetworkState } from "../../../store/NetworkState.js";
+import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 import {
   getDownloadFileLinks,
   getFileObjects,
@@ -55,7 +56,6 @@ import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatFo
 import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
-import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 
 export default function ChatForm({
   setAsideDisplayStyle,
@@ -124,10 +124,6 @@ export default function ChatForm({
         }),
     [selectedCID, messages]
   );
-
-  // const chatMessagesBlock = useRef();
-  // const scrollChatToBottom = () =>
-  //   chatMessagesBlock.current?.scrollIntoView({ block: "end" });
 
   const opponentId = useMemo(() => {
     const conv = conversations[selectedCID];
@@ -431,32 +427,27 @@ export default function ChatForm({
                 data={messages}
                 startReached={lastMessageRef}
                 initialTopMostItemIndex={messages.length - 1}
-                itemContent={(i, msg) => {
-                  console.log("msg:", msg);
-                  return (
-                    <ChatMessage
-                      key={msg._id}
-                      fromId={msg.from}
-                      userId={userInfo._id}
-                      text={msg.body}
-                      uName={participants[msg.from]?.login}
-                      isPrevMesssageYours={
-                        i > 0
-                          ? messages[i - 1].from === messages[i].from
-                          : false
-                      }
-                      isNextMessageYours={
-                        i < messages.length - 1
-                          ? messages[i].from === messages[i + 1].from
-                          : false
-                      }
-                      attachments={msg.attachments}
-                      openModalParam={open}
-                      status={msg.status}
-                      tSend={msg.t}
-                    />
-                  );
-                }}
+                itemContent={(i, msg) => (
+                  <ChatMessage
+                    key={msg._id}
+                    fromId={msg.from}
+                    userId={userInfo._id}
+                    text={msg.body}
+                    uName={participants[msg.from]?.login}
+                    isPrevMesssageYours={
+                      i > 0 ? messages[i - 1].from === messages[i].from : false
+                    }
+                    isNextMessageYours={
+                      i < messages.length - 1
+                        ? messages[i].from === messages[i + 1].from
+                        : false
+                    }
+                    attachments={msg.attachments}
+                    openModalParam={open}
+                    status={msg.status}
+                    tSend={msg.t}
+                  />
+                )}
               />
             )}
           </div>
