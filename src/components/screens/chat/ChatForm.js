@@ -12,6 +12,7 @@ import api from "../../../api/api";
 import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
+import { Virtuoso } from "react-virtuoso";
 import { getNetworkState } from "../../../store/NetworkState.js";
 import {
   getDownloadFileLinks,
@@ -85,72 +86,51 @@ export default function ChatForm({
   const [files, setFiles] = useState([]);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
-  const needToGetMoreMessage = useRef(true);
-  const lastMessageObserver = useRef();
   const lastMessageRef = useCallback(
-    (node) => {
-      if (!node) return;
-      if (lastMessageObserver.current) lastMessageObserver.current.disconnect();
-      lastMessageObserver.current = new IntersectionObserver((entries) => {
-        if (
-          !entries[0].isIntersecting ||
-          !selectedCID ||
-          messages.length === 0 ||
-          !needToGetMoreMessage.current
-        ) {
-          return;
-        }
+    () =>
+      api
+        .messageList({
+          cid: selectedCID,
+          limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
+          updated_at: { lt: messages[0].created_at },
+        })
+        .then((arr) => {
+          if (!arr.length) {
+            return;
+          }
 
-        api
-          .messageList({
-            cid: selectedCID,
-            limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
-            updated_at: { lt: messages[0].created_at },
-          })
-          .then((arr) => {
-            if (!arr.length) {
-              needToGetMoreMessage.current = false;
-              return;
-            }
+          const messagesIds = arr.map((el) => el._id).reverse();
 
-            const messagesIds = arr.map((el) => el._id).reverse();
-            needToGetMoreMessage.current =
-              messagesIds.length ===
-              +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD;
-
-            dispatch(addMessages(arr));
-            dispatch(
-              upsertChat({
-                _id: selectedCID,
-                messagesIds: [...messagesIds, ...messages.map((el) => el._id)],
-                activated: true,
-              })
-            );
-            const mAttachments = {};
-            arr.forEach((message) => {
-              const attachments = message.attachments;
-              if (attachments) {
-                attachments.forEach((obj) => {
-                  mAttachments[obj.file_id] = { _id: message._id, ...obj };
-                });
-              }
-            });
-
-            if (Object.keys(mAttachments).length > 0) {
-              getDownloadFileLinks(mAttachments).then((msgs) =>
-                dispatch(upsertMessages(msgs))
-              );
+          dispatch(addMessages(arr));
+          dispatch(
+            upsertChat({
+              _id: selectedCID,
+              messagesIds: [...messagesIds, ...messages.map((el) => el._id)],
+              activated: true,
+            })
+          );
+          const mAttachments = {};
+          arr.forEach((message) => {
+            const attachments = message.attachments;
+            if (attachments) {
+              attachments.forEach((obj) => {
+                mAttachments[obj.file_id] = { _id: message._id, ...obj };
+              });
             }
           });
-      });
-      if (node) lastMessageObserver.current.observe(node);
-    },
-    [selectedCID, messages, needToGetMoreMessage]
+
+          if (Object.keys(mAttachments).length > 0) {
+            getDownloadFileLinks(mAttachments).then((msgs) =>
+              dispatch(upsertMessages(msgs))
+            );
+          }
+        }),
+    [selectedCID, messages]
   );
 
-  const chatMessagesBlock = useRef();
-  const scrollChatToBottom = () =>
-    chatMessagesBlock.current?.scrollIntoView({ block: "end" });
+  // const chatMessagesBlock = useRef();
+  // const scrollChatToBottom = () =>
+  //   chatMessagesBlock.current?.scrollIntoView({ block: "end" });
 
   const opponentId = useMemo(() => {
     const conv = conversations[selectedCID];
@@ -309,7 +289,7 @@ export default function ChatForm({
     isMobile && messageInputEl.current.blur();
 
     setIsSendMessageDisable(false);
-    scrollChatToBottom();
+    // scrollChatToBottom();
   };
 
   const deleteChat = async () => {
@@ -344,50 +324,6 @@ export default function ChatForm({
       </div>
     );
   };
-
-  const messagesList = useMemo(() => {
-    if (!messages) {
-      return [];
-    }
-    const msgsArray = [];
-    for (let i = 0; i < messages.length; i++) {
-      const msg = messages[i];
-      msgsArray.push(
-        <ChatMessage
-          refLastEl={i === 1 ? lastMessageRef : null}
-          key={msg._id}
-          fromId={msg.from}
-          userId={userInfo._id}
-          text={msg.body}
-          uName={participants[msg.from]?.login}
-          isPrevMesssageYours={
-            i > 0 ? messages[i - 1].from === messages[i].from : false
-          }
-          isNextMessageYours={
-            i < messages.length - 1
-              ? messages[i].from === messages[i + 1].from
-              : false
-          }
-          attachments={msg.attachments}
-          openModalParam={open}
-          status={msg.status}
-          tSend={msg.t}
-        />
-      );
-    }
-    return msgsArray;
-  }, [messages]);
-
-  useEffect(() => {
-    if (
-      !chatMessagesBlock.current ||
-      messagesList.length > +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD
-    ) {
-      return;
-    }
-
-    scrollChatToBottom();
-  }, [messagesList]);
 
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
@@ -513,9 +449,33 @@ export default function ChatForm({
                 <p>Write your message...</p>
               </div>
             ) : (
-              <div ref={chatMessagesBlock} className="chat-messages">
-                {messagesList}
-              </div>
+              <Virtuoso
+                className="chat-messages"
+                data={messages}
+                endReached={lastMessageRef}
+                initialTopMostItemIndex={messages.length - 1}
+                itemContent={(i, msg) => (
+                  <ChatMessage
+                    key={msg._id}
+                    fromId={msg.from}
+                    userId={userInfo._id}
+                    text={msg.body}
+                    uName={participants[msg.from]?.login}
+                    isPrevMesssageYours={
+                      i > 0 ? messages[i - 1].from === messages[i].from : false
+                    }
+                    isNextMessageYours={
+                      i < messages.length - 1
+                        ? messages[i].from === messages[i + 1].from
+                        : false
+                    }
+                    attachments={msg.attachments}
+                    openModalParam={open}
+                    status={msg.status}
+                    tSend={msg.t}
+                  />
+                )}
+              />
             )}
           </div>
           {files?.length ? (
