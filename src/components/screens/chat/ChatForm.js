@@ -450,31 +450,36 @@ export default function ChatForm({
               </div>
             ) : (
               <Virtuoso
-                className="chat-messages"
+                style={{ height: "100%" }}
                 data={messages}
-                endReached={lastMessageRef}
+                startReached={lastMessageRef}
                 initialTopMostItemIndex={messages.length - 1}
-                itemContent={(i, msg) => (
-                  <ChatMessage
-                    key={msg._id}
-                    fromId={msg.from}
-                    userId={userInfo._id}
-                    text={msg.body}
-                    uName={participants[msg.from]?.login}
-                    isPrevMesssageYours={
-                      i > 0 ? messages[i - 1].from === messages[i].from : false
-                    }
-                    isNextMessageYours={
-                      i < messages.length - 1
-                        ? messages[i].from === messages[i + 1].from
-                        : false
-                    }
-                    attachments={msg.attachments}
-                    openModalParam={open}
-                    status={msg.status}
-                    tSend={msg.t}
-                  />
-                )}
+                itemContent={(i, msg) => {
+                  console.log("msg:", msg);
+                  return (
+                    <ChatMessage
+                      key={msg._id}
+                      fromId={msg.from}
+                      userId={userInfo._id}
+                      text={msg.body}
+                      uName={participants[msg.from]?.login}
+                      isPrevMesssageYours={
+                        i > 0
+                          ? messages[i - 1].from === messages[i].from
+                          : false
+                      }
+                      isNextMessageYours={
+                        i < messages.length - 1
+                          ? messages[i].from === messages[i + 1].from
+                          : false
+                      }
+                      attachments={msg.attachments}
+                      openModalParam={open}
+                      status={msg.status}
+                      tSend={msg.t}
+                    />
+                  );
+                }}
               />
             )}
           </div>
