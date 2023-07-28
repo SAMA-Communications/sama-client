@@ -6,7 +6,7 @@ main {
 }
 nav {
   width: 100%;
-  height: 9vh;
+  height: 7vh;
 
   padding-left: 20px;
   padding-right: 20px;
@@ -113,6 +113,7 @@ nav {
     display: none;
     position: absolute;
     width: calc(100vw - 40px);
+    height: 86svh;
     z-index: 111;
   }
   nav {
