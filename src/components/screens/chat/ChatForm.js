@@ -437,7 +437,8 @@ export default function ChatForm({
                 initialTopMostItemIndex={messages.length - 1}
                 itemContent={(i, msg) => {
                   const correctedIdx = START_INDEX - i + +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD - 1; 
-                  // console.log(msg, messages.reverse()[correctedIdx])
+                  // console.log(i, correctedIdx)
+                  // console.log(msg, messages.toReversed()[correctedIdx])
                   return(
                     <ChatMessage
                       key={msg._id}
