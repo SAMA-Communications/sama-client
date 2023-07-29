@@ -82,7 +82,11 @@ export default function ChatForm({
   const filePicker = useRef(null);
   const [files, setFiles] = useState([]);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
-  const [firstMessageIndex, setFirstMessageIndex] = useState(0);
+
+  const START_INDEX = 10000 // some very big value
+  const [firstMessageIndex, setFirstMessageIndex] = useState(START_INDEX);
+
+  const indexDelta = useRef(0);
 
   const lastMessageRef = useCallback(
     () =>
@@ -96,7 +100,9 @@ export default function ChatForm({
           if (!arr.length) {
             return;
           }
-          setFirstMessageIndex(0);
+          indexDelta.current = (arr.length * (messages.length / +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD))
+          setFirstMessageIndex(START_INDEX - indexDelta.current);
+
           const messagesIds = arr.map((el) => el._id).reverse();
 
           dispatch(addMessages(arr));
@@ -429,27 +435,31 @@ export default function ChatForm({
                 startReached={lastMessageRef}
                 firstItemIndex={firstMessageIndex}
                 initialTopMostItemIndex={messages.length - 1}
-                itemContent={(i, msg) => (
-                  <ChatMessage
-                    key={msg._id}
-                    fromId={msg.from}
-                    userId={userInfo._id}
-                    text={msg.body}
-                    uName={participants[msg.from]?.login}
-                    isPrevMesssageYours={
-                      i > 0 ? messages[i - 1].from === messages[i].from : false
-                    }
-                    isNextMessageYours={
-                      i < messages.length - 1
-                        ? messages[i].from === messages[i + 1].from
-                        : false
-                    }
-                    attachments={msg.attachments}
-                    openModalParam={open}
-                    status={msg.status}
-                    tSend={msg.t}
-                  />
-                )}
+                itemContent={(i, msg) => {
+                  const correctedIdx = START_INDEX - i + +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD - 1; 
+                  // console.log(msg, messages.reverse()[correctedIdx])
+                  return(
+                    <ChatMessage
+                      key={msg._id}
+                      fromId={msg.from}
+                      userId={userInfo._id}
+                      text={msg.body}
+                      uName={participants[msg.from]?.login}
+                      isPrevMesssageYours={
+                        correctedIdx > 0 ? messages[correctedIdx - 1].from === messages[correctedIdx].from : false
+                      }
+                      isNextMessageYours={
+                        correctedIdx < messages.length - 1
+                          ? messages[correctedIdx].from === messages[correctedIdx + 1].from
+                          : false
+                      }
+                      attachments={msg.attachments}
+                      openModalParam={open}
+                      status={msg.status}
+                      tSend={msg.t}
+                    />
+                  )
+                }}
               />
             )}
           </div>
