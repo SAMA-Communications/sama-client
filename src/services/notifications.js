@@ -6,15 +6,17 @@ import { default as store } from "../store/store.js";
 let sw = null;
 
 async function showLocalNotification(pushMessage) {
-  if (document.hasFocus()) {
+  const storeState = store.getState();
+  const selectedConversation = storeState.selectedConversation.value.id;
+
+  if (document.hasFocus() && selectedConversation === pushMessage.cid) {
     return;
   }
 
-  const storeState = store.getState();
   const conversation = storeState.conversations.entities[pushMessage.cid];
-  //if conversation not found (new message from new user) - case failed
+  //ERROR: if conversation not found (new message from new user) - case failed
   if (!conversation) {
-    //need to sync with server | conversation_lsit
+    //TODO: need to sync with server | conversation_lsit
     return;
   }
   const userLogin = storeState.participants.entities[pushMessage.from]?.login;
