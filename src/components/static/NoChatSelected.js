@@ -1,16 +1,9 @@
 import { animateSVG } from "../../styles/animations/animationSVG.js";
-import { changeOpacity } from "../../styles/animations/animationBlocks.js";
 import { motion as m } from "framer-motion";
 
 export default function NoChatSelected() {
   return (
-    <m.div
-      variants={changeOpacity(1.2, 1, 0, 0.15)}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      className="chat-form-loading"
-    >
+    <div className="chat-form-loading">
       <svg
         id="chat-form-loading-icon"
         width="64"
@@ -38,6 +31,6 @@ export default function NoChatSelected() {
         />
       </svg>
       <p>Select your chat ...</p>
-    </m.div>
+    </div>
   );
 }

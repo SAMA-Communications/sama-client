@@ -17,7 +17,6 @@ import {
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  changeOpacity,
   createChatButton,
   scaleAndRound,
 } from "../../../styles/animations/animationBlocks.js";
@@ -102,25 +101,13 @@ export default function ChatList({
         exit="exit"
         className="user-box"
       >
-        <m.div
-          variants={changeOpacity(0.9, 1, 0, 0.15)}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          className="user-photo"
-        >
+        <div className="user-photo">
           {!userInfo ? <UserIcon /> : userInfo?.login.slice(0, 2).toUpperCase()}
-        </m.div>
-        <m.div
-          variants={changeOpacity(0.9, 1, 0, 0.15)}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          className="user-info"
-        >
+        </div>
+        <div className="user-info">
           <p className="user-info-name">{userInfo?.login}</p>
           {/* <p className="user-info-status"></p> */}
-        </m.div>
+        </div>
       </m.div>
       <m.div
         variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
@@ -130,15 +117,7 @@ export default function ChatList({
         className="chat-list"
       >
         {!Object.keys(conversations).length ? (
-          <m.p
-            variants={changeOpacity(0.9, 1, 0, 0.15)}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="empty-list"
-          >
-            No one chat find...
-          </m.p>
+          <p className="empty-list">No one chat find...</p>
         ) : (
           chatsList
         )}
