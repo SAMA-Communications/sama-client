@@ -30,14 +30,11 @@ class Api {
         const message = JSON.parse(e.data);
         console.log("[socket.message]", message);
 
-        if (message.event) {
-          if (message.event.conversation_created) {
-            if (this.onConversationCreateListener) {
-              this.onConversationCreateListener(
-                message.event.conversation_created
-              );
-            }
-            return;
+        if (message.event_conversation_create) {
+          if (this.onConversationCreateListener) {
+            this.onConversationCreateListener(
+              message.event_conversation_create
+            );
           }
           return;
         }
