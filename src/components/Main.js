@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { changeOpacity } from "../styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
 import { setUserIsLoggedIn } from "../store/UserIsLoggedIn ";
+import { updateNetworkState } from "../store/NetworkState";
 import { useDispatch } from "react-redux";
 
 import "../styles/Main.css";
@@ -28,7 +29,8 @@ export default function Main() {
           sub.unsubscribe().then(async () => {
             await api.pushSubscriptionDelete();
             await api.userLogout();
-            dispatch(setUserIsLoggedIn(false));
+            dispatch({ type: "RESET_STORE" });
+            dispatch(updateNetworkState(true));
           })
         )
       )
