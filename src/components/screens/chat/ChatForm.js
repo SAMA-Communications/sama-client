@@ -144,9 +144,7 @@ export default function ChatForm({
       return;
     }
 
-    console.log(selectedCID, conversations[selectedCID]);
     if (conversations[selectedCID].unread_messages_count > 0) {
-      console.log("clear");
       dispatch(clearCountOfUnreadMessages(selectedCID));
       api.markConversationAsRead({ cid: selectedCID });
     }
