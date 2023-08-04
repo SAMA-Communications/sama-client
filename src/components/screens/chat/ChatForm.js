@@ -149,7 +149,7 @@ export default function ChatForm({
       api.markConversationAsRead({ cid: selectedCID });
     }
     setFiles([]);
-  }, [selectedCID]);
+  }, [selectedCID, conversations[selectedCID]]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
