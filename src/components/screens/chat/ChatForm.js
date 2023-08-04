@@ -1,24 +1,14 @@
 import AttachmentsList from "../../generic/AttachmentsList.js";
-import ChatMessage from "../../generic/ChatMessage.js";
+import MessagesList from "./MessagesList.js";
 import NoChatSelected from "../../static/NoChatSelected.js";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import api from "../../../api/api";
 import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
-import { Virtuoso } from "react-virtuoso";
 import { getNetworkState } from "../../../store/NetworkState.js";
 import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
-import {
-  getDownloadFileLinks,
-  getFileObjects,
-} from "../../../api/download_manager.js";
+import { getFileObjects } from "../../../api/download_manager.js";
 import {
   selectParticipantsEntities,
   upsertUser,
@@ -31,7 +21,6 @@ import {
   selectConversationsEntities,
   setLastMessageField,
   updateLastMessageField,
-  upsertChat,
 } from "../../../store/Conversations";
 import {
   clearSelectedConversation,
@@ -39,11 +28,9 @@ import {
 } from "../../../store/SelectedConversation";
 import {
   addMessage,
-  addMessages,
   getActiveConversationMessages,
   markMessagesAsRead,
   removeMessage,
-  upsertMessages,
 } from "../../../store/Messages";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -83,54 +70,9 @@ export default function ChatForm({
   const [files, setFiles] = useState([]);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
-  const START_INDEX = 10000 // some very big value
-  const [firstMessageIndex, setFirstMessageIndex] = useState(START_INDEX);
-
-  const indexDelta = useRef(0);
-
-  const lastMessageRef = useCallback(
-    () =>
-      api
-        .messageList({
-          cid: selectedCID,
-          limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
-          updated_at: { lt: messages[0].created_at },
-        })
-        .then((arr) => {
-          if (!arr.length) {
-            return;
-          }
-          indexDelta.current = (arr.length * (messages.length / +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD))
-          setFirstMessageIndex(START_INDEX - indexDelta.current);
-
-          const messagesIds = arr.map((el) => el._id).reverse();
-
-          dispatch(addMessages(arr));
-          dispatch(
-            upsertChat({
-              _id: selectedCID,
-              messagesIds: [...messagesIds, ...messages.map((el) => el._id)],
-              activated: true,
-            })
-          );
-          const mAttachments = {};
-          arr.forEach((message) => {
-            const attachments = message.attachments;
-            if (attachments) {
-              attachments.forEach((obj) => {
-                mAttachments[obj.file_id] = { _id: message._id, ...obj };
-              });
-            }
-          });
-
-          if (Object.keys(mAttachments).length > 0) {
-            getDownloadFileLinks(mAttachments).then((msgs) =>
-              dispatch(upsertMessages(msgs))
-            );
-          }
-        }),
-    [selectedCID, messages]
-  );
+  const chatMessagesBlock = useRef();
+  // const scrollChatToBottom = () =>
+  //   chatMessagesBlock.current?.scrollIntoView({ block: "end" });
 
   const opponentId = useMemo(() => {
     const conv = conversations[selectedCID];
@@ -325,6 +267,17 @@ export default function ChatForm({
     );
   };
 
+  // useEffect(() => {
+  //   if (
+  //     !chatMessagesBlock.current ||
+  //     messagesList.length > +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD
+  //   ) {
+  //     return;
+  //   }
+
+  //   scrollChatToBottom();
+  // }, [messagesList]);
+
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
       dispatch(clearSelectedConversation());
@@ -429,39 +382,9 @@ export default function ChatForm({
                 <p>Write your message...</p>
               </div>
             ) : (
-              <Virtuoso
-                style={{ height: "100%" }}
-                data={messages}
-                startReached={lastMessageRef}
-                firstItemIndex={firstMessageIndex}
-                initialTopMostItemIndex={messages.length - 1}
-                itemContent={(i, msg) => {
-                  const correctedIdx = START_INDEX - i + +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD - 1; 
-                  // console.log(i, correctedIdx)
-                  // console.log(msg, messages.toReversed()[correctedIdx])
-                  return(
-                    <ChatMessage
-                      key={msg._id}
-                      fromId={msg.from}
-                      userId={userInfo._id}
-                      text={msg.body}
-                      uName={participants[msg.from]?.login}
-                      isPrevMesssageYours={
-                        correctedIdx > 0 ? messages[correctedIdx - 1].from === messages[correctedIdx].from : false
-                      }
-                      isNextMessageYours={
-                        correctedIdx < messages.length - 1
-                          ? messages[correctedIdx].from === messages[correctedIdx + 1].from
-                          : false
-                      }
-                      attachments={msg.attachments}
-                      openModalParam={open}
-                      status={msg.status}
-                      tSend={msg.t}
-                    />
-                  )
-                }}
-              />
+              <div ref={chatMessagesBlock} className="chat-messages">
+                <MessagesList openFunc={open} />
+              </div>
             )}
           </div>
           {files?.length ? (
