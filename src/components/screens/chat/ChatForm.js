@@ -383,7 +383,7 @@ export default function ChatForm({
               </div>
             ) : (
               <div ref={chatMessagesBlock} className="chat-messages">
-                <MessagesList openFunc={open} />
+                <MessagesList openModalFunc={open} />
               </div>
             )}
           </div>

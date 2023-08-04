@@ -12,7 +12,7 @@ import { selectParticipantsEntities } from "../../../store/Participants";
 import { useCallback, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function MessagesList({ openFunc }) {
+export default function MessagesList({ openModalFunc }) {
   const dispatch = useDispatch();
 
   const userInfo = localStorage.getItem("sessionId")
@@ -26,7 +26,6 @@ export default function MessagesList({ openFunc }) {
 
   const needToGetMoreMessage = useRef(true);
   const lastMessageObserver = useRef();
-
   const lastMessageRef = useCallback(
     (node) => {
       if (!node) return;
@@ -112,7 +111,7 @@ export default function MessagesList({ openFunc }) {
               : false
           }
           attachments={msg.attachments}
-          openModalParam={openFunc}
+          openModalParam={openModalFunc}
           status={msg.status}
           tSend={msg.t}
         />
