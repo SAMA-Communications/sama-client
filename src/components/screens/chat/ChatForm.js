@@ -70,7 +70,7 @@ export default function ChatForm({
   const [files, setFiles] = useState([]);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
-  const chatMessagesBlock = useRef();
+  // const chatMessagesBlock = useRef();
   // const scrollChatToBottom = () =>
   //   chatMessagesBlock.current?.scrollIntoView({ block: "end" });
 
@@ -267,17 +267,6 @@ export default function ChatForm({
     );
   };
 
-  // useEffect(() => {
-  //   if (
-  //     !chatMessagesBlock.current ||
-  //     messagesList.length > +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD
-  //   ) {
-  //     return;
-  //   }
-
-  //   scrollChatToBottom();
-  // }, [messagesList]);
-
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
       dispatch(clearSelectedConversation());
@@ -382,7 +371,7 @@ export default function ChatForm({
                 <p>Write your message...</p>
               </div>
             ) : (
-              <div ref={chatMessagesBlock} className="chat-messages">
+              <div id="chatMessagesScrollable">
                 <MessagesList openModalFunc={open} />
               </div>
             )}

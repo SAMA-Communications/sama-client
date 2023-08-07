@@ -1,6 +1,7 @@
 import ChatMessage from "../../generic/ChatMessage";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
+import InfiniteScroll from "react-infinite-scroll-component";
 import {
   addMessages,
   getActiveConversationMessages,
@@ -9,7 +10,7 @@ import {
 import { getConverastionById, upsertChat } from "../../../store/Conversations";
 import { getDownloadFileLinks } from "../../../api/download_manager";
 import { selectParticipantsEntities } from "../../../store/Participants";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function MessagesList({ openModalFunc }) {
@@ -25,78 +26,66 @@ export default function MessagesList({ openModalFunc }) {
   const selectedCID = selectedConversation?._id;
 
   const needToGetMoreMessage = useRef(true);
-  const lastMessageObserver = useRef();
-  const lastMessageRef = useCallback(
-    (node) => {
-      if (!node) return;
-      if (lastMessageObserver.current) lastMessageObserver.current.disconnect();
-      lastMessageObserver.current = new IntersectionObserver((entries) => {
-        if (
-          !entries[0].isIntersecting ||
-          !selectedCID ||
-          messages.length === 0 ||
-          !needToGetMoreMessage.current
-        ) {
+  const lastMessageRef = useCallback(() => {
+    if (!selectedCID || messages.length === 0) {
+      return;
+    }
+
+    api
+      .messageList({
+        cid: selectedCID,
+        limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
+        updated_at: { lt: messages[0].created_at },
+      })
+      .then((arr) => {
+        if (!arr.length) {
+          needToGetMoreMessage.current = false;
           return;
         }
 
-        api
-          .messageList({
-            cid: selectedCID,
-            limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
-            updated_at: { lt: messages[0].created_at },
+        const messagesIds = arr.map((el) => el._id).reverse();
+        needToGetMoreMessage.current =
+          messagesIds.length ===
+          +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD;
+
+        dispatch(addMessages(arr));
+        dispatch(
+          upsertChat({
+            _id: selectedCID,
+            messagesIds: [...messagesIds, ...messages.map((el) => el._id)],
+            activated: true,
           })
-          .then((arr) => {
-            if (!arr.length) {
-              needToGetMoreMessage.current = false;
-              return;
-            }
-
-            const messagesIds = arr.map((el) => el._id).reverse();
-            needToGetMoreMessage.current =
-              messagesIds.length ===
-              +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD;
-
-            dispatch(addMessages(arr));
-            dispatch(
-              upsertChat({
-                _id: selectedCID,
-                messagesIds: [...messagesIds, ...messages.map((el) => el._id)],
-                activated: true,
-              })
-            );
-            const mAttachments = {};
-            arr.forEach((message) => {
-              const attachments = message.attachments;
-              if (attachments) {
-                attachments.forEach((obj) => {
-                  mAttachments[obj.file_id] = { _id: message._id, ...obj };
-                });
-              }
+        );
+        const mAttachments = {};
+        arr.forEach((message) => {
+          const attachments = message.attachments;
+          if (attachments) {
+            attachments.forEach((obj) => {
+              mAttachments[obj.file_id] = { _id: message._id, ...obj };
             });
+          }
+        });
 
-            if (Object.keys(mAttachments).length > 0) {
-              getDownloadFileLinks(mAttachments).then((msgs) =>
-                dispatch(upsertMessages(msgs))
-              );
-            }
-          });
+        if (Object.keys(mAttachments).length > 0) {
+          getDownloadFileLinks(mAttachments).then((msgs) =>
+            dispatch(upsertMessages(msgs))
+          );
+        }
       });
-      if (node) lastMessageObserver.current.observe(node);
-    },
-    [selectedCID, messages, needToGetMoreMessage]
-  );
+  }, [selectedCID, messages, needToGetMoreMessage]);
 
-  const messagesList = useMemo(() => {
-    if (!messages) {
-      return [];
-    }
-    const msgsArray = [];
-    for (let i = 0; i < messages.length; i++) {
-      const msg = messages[i];
-      msgsArray.push(
+  return (
+    <InfiniteScroll
+      dataLength={messages.length}
+      next={lastMessageRef}
+      style={{ display: "flex", flexDirection: "column" }}
+      inverse={true}
+      hasMore={true && needToGetMoreMessage.current}
+      loader={<h4>Loading...</h4>}
+      scrollableTarget="chatMessagesScrollable"
+    >
+      {messages.map((msg, i) => (
         <ChatMessage
-          refLastEl={i === 1 ? lastMessageRef : null}
           key={msg._id}
           fromId={msg.from}
           userId={userInfo._id}
@@ -115,10 +104,7 @@ export default function MessagesList({ openModalFunc }) {
           status={msg.status}
           tSend={msg.t}
         />
-      );
-    }
-    return msgsArray;
-  }, [messages]);
-
-  return <>{messagesList}</>;
+      ))}
+    </InfiniteScroll>
+  );
 }
