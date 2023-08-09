@@ -2,6 +2,7 @@ aside {
   box-sizing: border-box;
   position: relative;
   width: min(400px, 100vw);
+  height: calc(93svh - 20px);
   margin: 0 20px 20px 20px;
   padding-top: 0;
 
