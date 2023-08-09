@@ -62,7 +62,7 @@ aside {
 }
 
 .chat-list {
-  height: calc(91svh - 140px);
+  height: calc(91svh - 120px);
   margin-top: 20px;
 
   display: flex;
