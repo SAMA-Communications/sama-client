@@ -45,7 +45,7 @@ export default function MessagesList({ openModalFunc }) {
 
         const messagesIds = arr.map((el) => el._id).reverse();
         needToGetMoreMessage.current =
-          messagesIds.length ===
+          messagesIds.length <=
           +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD;
 
         dispatch(addMessages(arr));
@@ -81,7 +81,7 @@ export default function MessagesList({ openModalFunc }) {
       style={{ display: "flex", flexDirection: "column" }}
       inverse={true}
       hasMore={true && needToGetMoreMessage.current}
-      loader={<h4>Loading...</h4>}
+      // loader={<h4>Loading...</h4>}
       scrollableTarget="chatMessagesScrollable"
     >
       {messages.map((msg, i) => (
