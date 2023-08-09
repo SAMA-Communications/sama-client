@@ -7,15 +7,7 @@ import { getSelectedConversationId } from "./SelectedConversation";
 
 export const conversationsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
-  sortComparer: (a, b) => {
-    if (!a.last_message) {
-      return 1;
-    }
-    if (!b.last_message) {
-      return -1;
-    }
-    return b.last_message?.t - a.last_message?.t;
-  },
+  sortComparer: (a, b) => a.update_at - b.update_at, // b.last_message?.t - a.last_message?.t
 });
 
 export const {
@@ -55,6 +47,14 @@ export const conversations = createSlice({
         return;
       }
       conversationsAdapter.upsertMany(state, conversationsToUpdate);
+    },
+
+    insertChat: (state, action) => {
+      const conversation = action.payload;
+      conversationsAdapter.setAll(state, [
+        conversation,
+        ...Object.values(state.entities),
+      ]);
     },
 
     upsertChat: conversationsAdapter.upsertOne,
@@ -121,6 +121,7 @@ export const conversations = createSlice({
 export const {
   clearCountOfUnreadMessages,
   insertChats,
+  insertChat,
   markConversationAsRead,
   removeChat,
   setChats,
