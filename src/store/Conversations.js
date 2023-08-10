@@ -7,7 +7,7 @@ import { getSelectedConversationId } from "./SelectedConversation";
 
 export const conversationsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
-  sortComparer: (a, b) => a.update_at - b.update_at, // b.last_message?.t - a.last_message?.t
+  sortComparer: (a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at),
 });
 
 export const {
@@ -72,11 +72,12 @@ export const conversations = createSlice({
       if (resaveLastMessage) {
         mids.pop();
       }
+      console.log(msg.t);
       const updateParams = {
         _id: cid,
         messagesIds: [...mids, msg._id],
         last_message: msg,
-        update_at: new Date(msg.t * 1000).toISOString(),
+        updated_at: new Date(msg.t * 1000).toISOString(),
       };
       if (countOfNewMessages) {
         updateParams.unread_messages_count =
@@ -95,7 +96,7 @@ export const conversations = createSlice({
       const updateParams = {
         _id: cid,
         last_message: msg,
-        update_at: new Date(msg.t * 1000).toISOString(),
+        updated_at: new Date(msg.t * 1000).toISOString(),
       };
       conversationsAdapter.upsertOne(state, updateParams);
     },
