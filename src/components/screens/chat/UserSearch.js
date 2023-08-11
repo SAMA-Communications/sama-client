@@ -23,9 +23,9 @@ export default function UserSearch({ close }) {
   const [isUserSearched, setIsUserSearched] = useState("Search results");
 
   useEffect(() => {
-    const debounce = setTimeout(() => sendSearchRequest(searchTerm), 700);
+    const debounce = setTimeout(() => sendSearchRequest(searchTerm), 300);
     return () => clearTimeout(debounce);
-  }, [searchTerm]);
+  }, [searchTerm, ignoreIds]);
 
   const createChat = async (event) => {
     event.preventDefault();
