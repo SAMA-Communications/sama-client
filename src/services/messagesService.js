@@ -24,7 +24,10 @@ class MessagesService {
 
   async syncData() {
     api
-      .messageList({ cid: this.currentChatId, limit: 20 })
+      .messageList({
+        cid: this.currentChatId,
+        limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
+      })
       .then(async (arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
         store.dispatch(addMessages(arr));

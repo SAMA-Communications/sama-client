@@ -119,6 +119,9 @@ nav {
   nav {
     height: max(7svh, 55px);
   }
+  main {
+    height: min(93svh, 100svh - 55px);
+  }
   .nav-logo > p {
     font-size: calc(var(--font-size) * 1.3);
   }

@@ -1,5 +1,5 @@
 import AttachmentsList from "../../generic/AttachmentsList.js";
-import ChatMessage from "../../generic/ChatMessage.js";
+import MessagesList from "./MessagesList.js";
 import NoChatSelected from "../../static/NoChatSelected.js";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import api from "../../../api/api";
@@ -32,9 +32,6 @@ import {
   markMessagesAsRead,
   removeMessage,
 } from "../../../store/Messages";
-import { animateSVG } from "../../../styles/animations/animationSVG.js";
-import { motion as m } from "framer-motion";
-import { scaleAndRound } from "../../../styles/animations/animationBlocks.js";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -72,6 +69,10 @@ export default function ChatForm({
   const filePicker = useRef(null);
   const [files, setFiles] = useState([]);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
+
+  // const chatMessagesBlock = useRef();
+  // const scrollChatToBottom = () =>
+  //   chatMessagesBlock.current?.scrollIntoView({ block: "end" });
 
   const opponentId = useMemo(() => {
     const conv = conversations[selectedCID];
@@ -148,6 +149,7 @@ export default function ChatForm({
       dispatch(clearCountOfUnreadMessages(selectedCID));
       api.markConversationAsRead({ cid: selectedCID });
     }
+
     setFiles([]);
   }, [selectedCID, conversations[selectedCID]]);
 
@@ -229,6 +231,7 @@ export default function ChatForm({
     isMobile && messageInputEl.current.blur();
 
     setIsSendMessageDisable(false);
+    // scrollChatToBottom();
   };
 
   const deleteChat = async () => {
@@ -263,45 +266,6 @@ export default function ChatForm({
       </div>
     );
   };
-
-  const messagesList = useMemo(() => {
-    if (!messages) {
-      return [];
-    }
-    const msgsArray = [];
-    for (let i = 0; i < messages.length; i++) {
-      const msg = messages[i];
-      msgsArray.push(
-        <ChatMessage
-          key={msg._id}
-          fromId={msg.from}
-          userId={userInfo._id}
-          text={msg.body}
-          uName={participants[msg.from]?.login}
-          isPrevMesssageYours={
-            i > 0 ? messages[i - 1].from === messages[i].from : false
-          }
-          isNextMessageYours={
-            i < messages.length - 1
-              ? messages[i].from === messages[i + 1].from
-              : false
-          }
-          attachments={msg.attachments}
-          openModalParam={open}
-          status={msg.status}
-          tSend={msg.t}
-        />
-      );
-    }
-    return msgsArray;
-  }, [messages]);
-
-  const scrollChatToBottom = () => {
-    document.getElementById("chat-messages")?.scrollIntoView({
-      block: "end",
-    });
-  };
-  useEffect(() => scrollChatToBottom(), [messagesList]);
 
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
@@ -376,34 +340,14 @@ export default function ChatForm({
   }, [selectedConversation, participants]);
 
   return (
-    <m.section
-      variants={scaleAndRound(50, 0.1, 1.7, 0, 0.3)}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      className="chat-form"
-    >
-      <m.div
-        variants={{
-          hidden: { opacity: 0 },
-          visible: {
-            opacity: 0.7,
-            transition: { delay: 0.5, duration: 1.5 },
-          },
-        }}
-        className="chat-menu-btn"
-        onClick={openChatList}
-      >
+    <section className="chat-form">
+      <div className="chat-menu-btn" onClick={openChatList}>
         <BurgerMenu />
-      </m.div>
+      </div>
       {!selectedCID ? (
         <NoChatSelected />
       ) : (
-        <m.div
-          variants={animateSVG(0, 0, 0, 0, 0.15)}
-          exit="exit"
-          className="chat-form-messaging"
-        >
+        <div className="chat-form-messaging">
           <div className="chat-messaging-info">
             <div className="chat-info-block">
               <div className="chat-recipient-photo">
@@ -427,8 +371,8 @@ export default function ChatForm({
                 <p>Write your message...</p>
               </div>
             ) : (
-              <div className="chat-messages" id="chat-messages">
-                {messagesList}
+              <div id="chatMessagesScrollable">
+                <MessagesList openModalFunc={open} />
               </div>
             )}
           </div>
@@ -462,8 +406,8 @@ export default function ChatForm({
             </div>
           </form>
           {modalOpen && modalWindow()}
-        </m.div>
+        </div>
       )}
-    </m.section>
+    </section>
   );
 }

@@ -1,8 +1,6 @@
 import React, { useMemo } from "react";
 import MessageAttachments from "../screens/chat/MessageAttachments";
 import MessageStatus from "./MessageStatus";
-import { changeOpacity } from "../../styles/animations/animationBlocks";
-import { motion as m } from "framer-motion";
 
 import "../../styles/chat/ChatMessage.css";
 
@@ -19,6 +17,7 @@ export default function ChatMessage({
   attachments,
   tSend,
   openModalParam,
+  refLastEl,
 }) {
   const timeSend = useMemo(() => {
     const t = new Date(tSend * 1000);
@@ -43,10 +42,7 @@ export default function ChatMessage({
   }, [isPrevMesssageYours, attachments]);
 
   return (
-    <m.div
-      variants={changeOpacity(0, 0.25, 0, 0)}
-      initial="hidden"
-      animate="visible"
+    <div
       className={
         fromId === userId.toString() ? "message my-message" : "message"
       }
@@ -92,6 +88,6 @@ export default function ChatMessage({
           </div>
         </div>
       </div>
-    </m.div>
+    </div>
   );
 }
