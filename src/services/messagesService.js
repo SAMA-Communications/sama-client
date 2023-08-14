@@ -2,6 +2,7 @@ import api from "../api/api";
 import store from "../store/store";
 import { addMessages, upsertMessages } from "../store/Messages";
 import { getDownloadFileLinks } from "../api/download_manager";
+import { setSelectedConversation } from "../store/SelectedConversation";
 import { upsertChat } from "../store/Conversations";
 
 class MessagesService {
@@ -57,6 +58,11 @@ class MessagesService {
             store.dispatch(upsertMessages(msgs))
           );
         }
+      })
+      .catch(() => {
+        store.dispatch(setSelectedConversation({}));
+        // eslint-disable-next-line no-restricted-globals
+        history.pushState({}, null, location.origin + "/main");
       });
   }
 }

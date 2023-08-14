@@ -47,7 +47,7 @@ export default function UserSearch({ close }) {
       dispatch(addUsers(users));
       dispatch(upsertChat({ ...chat, messagesIds: [] }));
 
-      navigate(`/main/#${chat.name ? chat._id : selectedUsers[0].login}`);
+      navigate(`/main/#${chat._id}`);
       dispatch(setSelectedConversation({ id: chat._id }));
 
       close(false);

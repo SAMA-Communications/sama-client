@@ -151,7 +151,7 @@ export default function ChatForm({
     }
 
     setFiles([]);
-  }, [selectedCID]);
+  }, [selectedCID, conversations[selectedCID]]);
 
   const sendMessage = async (event) => {
     event.preventDefault();
