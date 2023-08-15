@@ -2,7 +2,7 @@ import React, { useEffect, useState, useTransition } from "react";
 import SearchedUser from "../../generic/SearchedUser.js";
 import SelectedUser from "../../generic/SelectedUser.js";
 import api from "../../../api/api";
-import { upsertChat } from "../../../store/Conversations.js";
+import { insertChat } from "../../../store/Conversations.js";
 import { useDispatch } from "react-redux";
 import { addUsers } from "../../../store/Participants.js";
 import { useNavigate } from "react-router-dom";
@@ -23,9 +23,9 @@ export default function UserSearch({ close }) {
   const [isUserSearched, setIsUserSearched] = useState("Search results");
 
   useEffect(() => {
-    const debounce = setTimeout(() => sendSearchRequest(searchTerm), 700);
+    const debounce = setTimeout(() => sendSearchRequest(searchTerm), 300);
     return () => clearTimeout(debounce);
-  }, [searchTerm]);
+  }, [searchTerm, ignoreIds]);
 
   const createChat = async (event) => {
     event.preventDefault();
@@ -45,7 +45,7 @@ export default function UserSearch({ close }) {
       const chat = await api.conversationCreate(requestData);
       const users = await api.getParticipantsByCids([chat._id]);
       dispatch(addUsers(users));
-      dispatch(upsertChat({ ...chat, messagesIds: [] }));
+      dispatch(insertChat({ ...chat, messagesIds: [] }));
 
       navigate(`/main/#${chat._id}`);
       dispatch(setSelectedConversation({ id: chat._id }));

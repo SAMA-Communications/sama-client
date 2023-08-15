@@ -2,6 +2,7 @@
   position: relative;
 
   width: calc(100% - 460px);
+  height: calc(93svh - 20px);
   margin: 0 20px 20px auto;
   padding: 15px;
 

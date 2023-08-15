@@ -2,6 +2,7 @@ aside {
   box-sizing: border-box;
   position: relative;
   width: min(400px, 100vw);
+  height: calc(93svh - 20px);
   margin: 0 20px 20px 20px;
   padding-top: 0;
 
@@ -61,7 +62,7 @@ aside {
 }
 
 .chat-list {
-  height: calc(91svh - 140px);
+  height: calc(91svh - 120px);
   margin-top: 20px;
 
   display: flex;
