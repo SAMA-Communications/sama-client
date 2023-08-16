@@ -1,8 +1,10 @@
 import "./../styles/Alert.css";
 
+let timer = null;
+
 export default function showCustomAlert(message) {
-  let existingAlert = document.querySelector(".alert");
-  let timeBar = document.querySelector(".time-bar");
+  const existingAlert = document.querySelector(".alert");
+  const timeBar = document.querySelector(".time-bar");
 
   if (existingAlert) {
     existingAlert.style.opacity = "0";
@@ -10,14 +12,14 @@ export default function showCustomAlert(message) {
 
     setTimeout(() => {
       document.body.removeChild(existingAlert);
-      createAlert(message);
+      createAndShowAlert(message);
     }, 300);
   } else {
-    createAlert(message);
+    createAndShowAlert(message);
   }
 }
 
-function createAlert(message) {
+function createAndShowAlert(message) {
   const customAlert = document.createElement("div");
   customAlert.className = "alert";
   customAlert.textContent = message;
@@ -28,40 +30,22 @@ function createAlert(message) {
   customAlert.appendChild(timeBar);
   document.body.appendChild(customAlert);
 
-  setTimeout(() => {
-    customAlert.style.opacity = "1";
-    timeBar.style.opacity = "1";
-    timeBar.style.width = "0";
-    timeBar.style.borderBottomRightRadius = "0";
-    timeBar.style.borderTopRightRadius = "10px";
-  }, 10);
+  clearTimeout(timer);
 
   setTimeout(() => {
+    customAlert.style.opacity = "1";
+    timeBar.style.cssText = `
+      opacity: 1;
+      width: 0;
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 10px;
+    `;
+  }, 10);
+
+  timer = setTimeout(() => {
     customAlert.style.opacity = "0";
     setTimeout(() => {
       document.body.removeChild(customAlert);
     }, 300);
-  }, 5000);
-}
-
-export function showAlert(message) {
-  const customAlert = document.createElement("div");
-  customAlert.className = "alert";
-  customAlert.textContent = message;
-
-  const hideAlertFunc = () => {
-    customAlert.style.opacity = "0";
-    setTimeout(() => {
-      document.body.removeChild(customAlert);
-    }, 300);
-  };
-
-  document.body.appendChild(customAlert);
-
-  setTimeout(() => {
-    customAlert.style.opacity = "1";
-  }, 10);
-
-  customAlert.onclick = hideAlertFunc;
-  setTimeout(hideAlertFunc, 4000);
+  }, 3000);
 }

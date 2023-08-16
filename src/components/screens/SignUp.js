@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import api from "../../api/api";
 import MainLogo from "../static/MainLogo";
+import showCustomAlert from "../../utils/show_alert";
 import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import { useForm } from "react-hook-form";
@@ -30,10 +31,12 @@ export default function SignUp() {
     try {
       [data.ulogin, data.pass] = [data.ulogin.trim(), data.pass.trim()];
       await api.userCreate(data);
-      alert("You have successfully create a new user. Now you can login.");
+      showCustomAlert(
+        "You have successfully create a new user. Now you can login."
+      );
       navigate("/login");
     } catch (error) {
-      alert(error.message);
+      showCustomAlert(error.message);
     }
     setLoader(false);
   };
