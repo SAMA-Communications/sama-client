@@ -2,6 +2,7 @@ import MainLogo from "../static/MainLogo";
 import React, { useState } from "react";
 import api from "../../api/api";
 import subscribeForNotifications from "../../services/notifications";
+import showCustomAlert from "../../utils/show_alert";
 import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import {
@@ -33,6 +34,7 @@ export default function Login() {
   const onSubmit = async (data) => {
     setLoader(true);
     try {
+      [data.ulogin, data.pass] = [data.ulogin.trim(), data.pass.trim()];
       const userToken = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
       navigate("/main");
@@ -41,7 +43,7 @@ export default function Login() {
       dispatch(setUserIsLoggedIn(true));
     } catch (error) {
       localStorage.clear();
-      alert(error.message);
+      showCustomAlert(error.message);
     }
     setLoader(false);
   };
@@ -54,8 +56,9 @@ export default function Login() {
           <input
             {...register("ulogin", {
               required: "* Username is required field",
-              // pattern: /^[a-z0-9._%+-]$/,
+              // pattern: /[A-Za-z0-9_\-.+@]{6,20}/,
             })}
+            onKeyDown={(e) => e.key === " " && e.preventDefault()}
             placeholder=" "
             type={"text"}
             autoComplete="off"
@@ -71,6 +74,7 @@ export default function Login() {
               required: "* Password is required field",
               // minLength: 8,
             })}
+            onKeyDown={(e) => e.key === " " && e.preventDefault()}
             placeholder=" "
             type={passwordType}
             autoComplete="off"

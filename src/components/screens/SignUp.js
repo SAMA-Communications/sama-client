@@ -28,6 +28,7 @@ export default function SignUp() {
   const onSubmit = async (data) => {
     setLoader(true);
     try {
+      [data.ulogin, data.pass] = [data.ulogin.trim(), data.pass.trim()];
       await api.userCreate(data);
       alert("You have successfully create a new user. Now you can login.");
       navigate("/login");
@@ -45,8 +46,9 @@ export default function SignUp() {
           <input
             {...register("ulogin", {
               required: "* Username is required field",
-              // pattern: /^[a-z0-9._%+-]$/,
+              // minLength: 5,
             })}
+            onKeyDown={(e) => e.key === " " && e.preventDefault()}
             placeholder=" "
             type={"text"}
             autoComplete="off"
@@ -62,6 +64,7 @@ export default function SignUp() {
               required: "* Password is required field",
               // minLength: 8,
             })}
+            onKeyDown={(e) => e.key === " " && e.preventDefault()}
             placeholder=" "
             type={passwordType}
             autoComplete="off"
