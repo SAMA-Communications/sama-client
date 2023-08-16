@@ -3,9 +3,13 @@
   top: 2svh;
   left: 50%;
 
-  width: 300px;
+  min-width: 300px;
+  max-width: max-content;
+  width: 100%;
   height: 40px;
   padding: 10px 10px 15px 10px;
+
+  color: #fff;
 
   transform: translateX(-50%);
   opacity: 0;
@@ -13,7 +17,6 @@
 
   border-radius: 5px;
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);
-  background-color: #b31312;
 
   cursor: pointer;
   z-index: 1000;
@@ -30,5 +33,4 @@
   transition: border-radius 2.5s ease, width 3s ease;
 
   border-radius: 0 0 5px 5px;
-  background-color: #ff6969;
 }

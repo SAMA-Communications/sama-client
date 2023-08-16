@@ -43,7 +43,7 @@ export default function Login() {
       dispatch(setUserIsLoggedIn(true));
     } catch (error) {
       localStorage.clear();
-      showCustomAlert(error.message);
+      showCustomAlert(error.message, "danger");
     }
     setLoader(false);
   };

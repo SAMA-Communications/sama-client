@@ -32,11 +32,12 @@ export default function SignUp() {
       [data.ulogin, data.pass] = [data.ulogin.trim(), data.pass.trim()];
       await api.userCreate(data);
       showCustomAlert(
-        "You have successfully create a new user. Now you can login."
+        "You have successfully create a new user. Now you can login.",
+        "success"
       );
       navigate("/login");
     } catch (error) {
-      showCustomAlert(error.message);
+      showCustomAlert(error.message, "danger");
     }
     setLoader(false);
   };
