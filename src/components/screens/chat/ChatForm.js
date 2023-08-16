@@ -70,9 +70,9 @@ export default function ChatForm({
   const [files, setFiles] = useState([]);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
-  // const chatMessagesBlock = useRef();
-  // const scrollChatToBottom = () =>
-  //   chatMessagesBlock.current?.scrollIntoView({ block: "end" });
+  const chatMessagesBlock = useRef();
+  const scrollChatToBottom = () =>
+    chatMessagesBlock.current?._infScroll?.scrollIntoView({ block: "end" });
 
   const opponentId = useMemo(() => {
     const conv = conversations[selectedCID];
@@ -231,7 +231,7 @@ export default function ChatForm({
     isMobile && messageInputEl.current.blur();
 
     setIsSendMessageDisable(false);
-    // scrollChatToBottom();
+    scrollChatToBottom();
   };
 
   const deleteChat = async () => {
@@ -372,7 +372,10 @@ export default function ChatForm({
               </div>
             ) : (
               <div id="chatMessagesScrollable">
-                <MessagesList openModalFunc={open} />
+                <MessagesList
+                  scrollRef={chatMessagesBlock}
+                  openModalFunc={open}
+                />
               </div>
             )}
           </div>
