@@ -71,15 +71,14 @@ export default function ChatBox({
 
   return (
     <div className="chat-box">
-      {chatType === "g" ? (
-        <div className="chat-box-icon chat-box-icon-g-bg">
-          <ChatIconGroup />
-        </div>
-      ) : (
-        <div className="chat-box-icon chat-box-icon-u-bg">
-          <ChatIconPrivate />
-        </div>
-      )}
+      <div
+        className={`chat-box-icon ${
+          chatType === "g" ? "chat-box-icon-g-bg" : "chat-box-icon-u-bg"
+        }`}
+      >
+        {chatType === "g" ? <ChatIconGroup /> : <ChatIconPrivate />}
+      </div>
+
       <div className="chat-box-info">
         <p className="chat-name">{chatName}</p>
         {lastMessage &&
