@@ -2,11 +2,11 @@ import React, { useEffect, useState, useTransition } from "react";
 import SearchedUser from "../../generic/SearchedUser.js";
 import SelectedUser from "../../generic/SelectedUser.js";
 import api from "../../../api/api";
-import { insertChat } from "../../../store/Conversations.js";
-import { useDispatch } from "react-redux";
 import { addUsers } from "../../../store/Participants.js";
-import { useNavigate } from "react-router-dom";
+import { history } from "../../../_helpers/history.js";
+import { insertChat } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
+import { useDispatch } from "react-redux";
 
 import "../../../styles/chat/UserSearch.css";
 
@@ -14,7 +14,6 @@ import { ReactComponent as SearchIndicator } from "./../../../assets/icons/Searc
 
 export default function UserSearch({ close }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
   const [ignoreIds, setIgnoreIds] = useState([]);
@@ -47,7 +46,7 @@ export default function UserSearch({ close }) {
       dispatch(addUsers(users));
       dispatch(insertChat({ ...chat, messagesIds: [] }));
 
-      navigate(`/main/#${chat._id}`);
+      history.navigate(`/main/#${chat._id}`);
       dispatch(setSelectedConversation({ id: chat._id }));
 
       close(false);

@@ -3,9 +3,9 @@ import showCustomAlert from "../utils/show_alert";
 import store from "../store/store";
 import subscribeForNotifications from "./notifications";
 import { default as EventEmitter } from "../event/eventEmitter";
+import { history } from "../_helpers/history";
 import { setSelectedConversation } from "../store/SelectedConversation";
 import { setUserIsLoggedIn } from "../store/UserIsLoggedIn ";
-import { history } from "../_helpers/history";
 
 class AutoLoginService {
   constructor() {
@@ -19,8 +19,7 @@ class AutoLoginService {
   }
 
   async userLogin(token) {
-    // eslint-disable-next-line no-restricted-globals
-    const currentPath = location.hash;
+    const currentPath = history.location.hash;
 
     const handleLoginFailure = () => {
       localStorage.removeItem("sessionId");

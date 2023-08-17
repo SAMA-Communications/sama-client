@@ -9,6 +9,7 @@ import jwtDecode from "jwt-decode";
 import { getNetworkState } from "../../../store/NetworkState.js";
 import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 import { getFileObjects } from "../../../api/download_manager.js";
+import { history } from "../../../_helpers/history.js";
 import {
   selectParticipantsEntities,
   upsertUser,
@@ -32,7 +33,6 @@ import {
   markMessagesAsRead,
   removeMessage,
 } from "../../../store/Messages";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/chat/ChatForm.css";
@@ -49,8 +49,6 @@ export default function ChatForm({
   setChatFormBgDisplayStyle,
 }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const connectState = useSelector(getNetworkState);
   const isUserLogin = useSelector(getUserIsLoggedIn);
@@ -91,13 +89,13 @@ export default function ChatForm({
   );
 
   useEffect(() => {
-    const { hash } = location;
+    const { hash } = history.location;
     if (!hash || hash.slice(1) === selectedCID || !isUserLogin) {
       return;
     }
 
     dispatch(setSelectedConversation({ id: hash.slice(1) }));
-  }, [location.hash, isUserLogin]);
+  }, [history.location.hash, isUserLogin]);
 
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
@@ -241,7 +239,7 @@ export default function ChatForm({
         await api.conversationDelete({ cid: selectedCID });
         dispatch(clearSelectedConversation());
         dispatch(removeChat(selectedCID));
-        navigate("/main");
+        history.navigate("/main");
       } catch (error) {
         alert(error.message);
       }
@@ -271,7 +269,7 @@ export default function ChatForm({
     if (event.keyCode === 27) {
       dispatch(clearSelectedConversation());
       api.unsubscribeFromUserActivity({});
-      navigate("/main");
+      history.navigate("/main");
     }
   };
   window.onresize = function (event) {

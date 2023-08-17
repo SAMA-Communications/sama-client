@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import api from "../../api/api";
 import MainLogo from "../static/MainLogo";
 import showCustomAlert from "../../utils/show_alert";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
+import { history } from "../../_helpers/history";
 import { useForm } from "react-hook-form";
 import {
   changeOpacity,
@@ -17,7 +18,6 @@ import { ReactComponent as HidePassword } from "./../../assets/icons/authForm/Hi
 import { ReactComponent as ShowPassword } from "./../../assets/icons/authForm/ShowPassword.svg";
 
 export default function SignUp() {
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -35,7 +35,7 @@ export default function SignUp() {
         "You have successfully create a new user. Now you can login.",
         "success"
       );
-      navigate("/login");
+      history.navigate("/login");
     } catch (error) {
       showCustomAlert(error.message, "danger");
     }

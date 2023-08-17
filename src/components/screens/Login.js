@@ -3,17 +3,18 @@ import React, { useState } from "react";
 import api from "../../api/api";
 import subscribeForNotifications from "../../services/notifications";
 import showCustomAlert from "../../utils/show_alert";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import {
   changeOpacity,
   loginBox,
 } from "../../styles/animations/animationBlocks";
-import { setUserIsLoggedIn } from "../../store/UserIsLoggedIn ";
+import { history } from "../../_helpers/history";
+import { motion as m } from "framer-motion";
 import { setSelectedConversation } from "../../store/SelectedConversation";
+import { setUserIsLoggedIn } from "../../store/UserIsLoggedIn ";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { motion as m } from "framer-motion";
 
 import "../../styles/AuthForm.css";
 
@@ -21,7 +22,6 @@ import { ReactComponent as HidePassword } from "./../../assets/icons/authForm/Hi
 import { ReactComponent as ShowPassword } from "./../../assets/icons/authForm/ShowPassword.svg";
 
 export default function Login() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
     register,
@@ -37,7 +37,7 @@ export default function Login() {
       [data.ulogin, data.pass] = [data.ulogin.trim(), data.pass.trim()];
       const userToken = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
-      navigate("/main");
+      history.navigate("/main");
       subscribeForNotifications();
       dispatch(setSelectedConversation({}));
       dispatch(setUserIsLoggedIn(true));
