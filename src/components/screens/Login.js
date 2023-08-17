@@ -42,7 +42,7 @@ export default function Login() {
       dispatch(setSelectedConversation({}));
       dispatch(setUserIsLoggedIn(true));
     } catch (error) {
-      localStorage.clear();
+      localStorage.removeItem("sessionId");
       showCustomAlert(error.message, "danger");
     }
     setLoader(false);
