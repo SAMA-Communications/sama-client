@@ -4,16 +4,24 @@ let timer = null;
 
 const themes = {
   default: {
+    textColor: "#fff",
     timeBarColor: "#adb5bd",
     bgColor: "#6c757d",
   },
   success: {
+    textColor: "#fff",
     timeBarColor: "#9bffd0",
     bgColor: "#198754",
   },
   danger: {
+    textColor: "#fff",
     timeBarColor: "#fd9ca6",
     bgColor: "#dc3545",
+  },
+  warning: {
+    textColor: "#000",
+    timeBarColor: "#ffe69a",
+    bgColor: "#ffc107",
   },
 };
 
@@ -41,6 +49,7 @@ function createAndShowAlert(message, themeStyle) {
   customAlert.className = "alert";
   customAlert.textContent = message;
   customAlert.style.backgroundColor = theme.bgColor;
+  customAlert.style.color = theme.textColor;
 
   const timeBar = document.createElement("div");
   timeBar.className = "time-bar";
@@ -70,5 +79,5 @@ function createAndShowAlert(message, themeStyle) {
     hideAlert();
   };
 
-  timer = setTimeout(hideAlert, 3000);
+  timer = setTimeout(hideAlert, 5000);
 }

@@ -1,9 +1,11 @@
 import api from "../api/api";
+import showCustomAlert from "../utils/show_alert";
 import store from "../store/store";
 import subscribeForNotifications from "./notifications";
 import { default as EventEmitter } from "../event/eventEmitter";
 import { setSelectedConversation } from "../store/SelectedConversation";
 import { setUserIsLoggedIn } from "../store/UserIsLoggedIn ";
+import { history } from "../_helpers/history";
 
 class AutoLoginService {
   constructor() {
@@ -22,7 +24,7 @@ class AutoLoginService {
 
     const handleLoginFailure = () => {
       localStorage.removeItem("sessionId");
-      //   location.replace("/login");
+      history.navigate("/login");
       store.dispatch(setUserIsLoggedIn(false));
     };
 
@@ -38,9 +40,11 @@ class AutoLoginService {
         store.dispatch(setUserIsLoggedIn(true));
       } else {
         handleLoginFailure();
+        showCustomAlert("Invalid session token", "warning");
       }
     } catch (error) {
       handleLoginFailure();
+      showCustomAlert(error.message, "warning");
     }
   }
 }
