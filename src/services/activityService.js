@@ -16,12 +16,9 @@ class ActivityService {
 
       if (
         !conversations.entities[selectedConversationId]?.created_at ||
-        !participants.ids.length
+        !participants.ids.length ||
+        this.currentChatId === selectedConversationId
       ) {
-        return;
-      }
-
-      if (this.currentChatId === selectedConversationId) {
         return;
       }
 
