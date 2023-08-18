@@ -111,6 +111,7 @@ export default function ChatForm({
 
   api.onUserActivityListener = (user) => {
     const uId = Object.keys(user)[0];
+    console.log(uId);
     dispatch(upsertUser({ _id: uId, recent_activity: user[uId] }));
   };
 
