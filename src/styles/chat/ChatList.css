@@ -110,8 +110,12 @@ aside {
   height: 52px;
 
   font-size: calc(var(--font-size) * 1.5);
-
-  background-color: var(--bg-chatPhoto-color);
+}
+.chat-box-icon-g-bg {
+  background-color: var(--bg-chatPhoto-g-color);
+}
+.chat-box-icon-u-bg {
+  background-color: var(--bg-chatPhoto-u-color);
 }
 .chat-box-info {
   max-width: 250px;
@@ -164,8 +168,7 @@ aside {
   position: absolute;
   right: 10px;
 }
-.chat-indicator,
-.chat-indicator-group {
+.chat-indicator {
   padding: 5px 8px;
 
   position: absolute;
@@ -177,9 +180,6 @@ aside {
 
   border-radius: var(--border-indicator);
   background-color: var(--bg-chat-indicator);
-}
-.chat-indicator-group {
-  background-color: var(--bg-chat-indicator-group);
 }
 .chat-last-update {
   position: absolute;

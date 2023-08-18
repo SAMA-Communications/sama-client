@@ -13,7 +13,7 @@ import { selectParticipantsEntities } from "../../../store/Participants";
 import { useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function MessagesList({ openModalFunc }) {
+export default function MessagesList({ scrollRef, openModalFunc }) {
   const dispatch = useDispatch();
 
   const userInfo = localStorage.getItem("sessionId")
@@ -76,12 +76,12 @@ export default function MessagesList({ openModalFunc }) {
 
   return (
     <InfiniteScroll
+      ref={scrollRef}
       dataLength={messages.length}
       next={lastMessageRef}
       style={{ display: "flex", flexDirection: "column" }}
       inverse={true}
       hasMore={true && needToGetMoreMessage.current}
-      // loader={<h4>Loading...</h4>}
       scrollableTarget="chatMessagesScrollable"
     >
       {messages.map((msg, i) => (

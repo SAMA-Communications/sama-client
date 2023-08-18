@@ -1,7 +1,8 @@
 import React, { useMemo } from "react";
 import MessageStatus from "./MessageStatus";
 
-import { ReactComponent as ChatIcon } from "./../../assets/icons/chatList/ChatIcon.svg";
+import { ReactComponent as ChatIconPrivate } from "./../../assets/icons/chatList/ChatIconPrivate.svg";
+import { ReactComponent as ChatIconGroup } from "./../../assets/icons/chatList/ChatIconGroup.svg";
 import { ReactComponent as ImagePreviewIcon } from "./../../assets/icons/chatList/ImagePreviewIcon.svg";
 
 export default function ChatBox({
@@ -70,9 +71,14 @@ export default function ChatBox({
 
   return (
     <div className="chat-box">
-      <div className="chat-box-icon">
-        <ChatIcon />
+      <div
+        className={`chat-box-icon ${
+          chatType === "g" ? "chat-box-icon-g-bg" : "chat-box-icon-u-bg"
+        }`}
+      >
+        {chatType === "g" ? <ChatIconGroup /> : <ChatIconPrivate />}
       </div>
+
       <div className="chat-box-info">
         <p className="chat-name">{chatName}</p>
         {lastMessage &&
@@ -86,13 +92,7 @@ export default function ChatBox({
           ))}
       </div>
       {countOfNewMessages > 0 && (
-        <div
-          className={
-            chatType === "g" ? "chat-indicator-group" : "chat-indicator"
-          }
-        >
-          {countOfNewMessages}
-        </div>
+        <div className="chat-indicator">{countOfNewMessages}</div>
       )}
       <div className="chat-last-update">{tView}</div>
     </div>

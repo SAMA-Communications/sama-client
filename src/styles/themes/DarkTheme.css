@@ -2,6 +2,8 @@
   --bg-default-color: #1b1b1d;
   --bg-main-color: #26262c;
   --bg-chatPhoto-color: #1d70a2;
+  --bg-chatPhoto-g-color: rgba(140, 140, 140, 0.6);
+  --bg-chatPhoto-u-color: #1d70a2;
   --bg-userPhoto-color: #3b3b43;
   --bg-block-hover: #415a77;
   --bg-dark-block: rgba(0, 0, 0, 0.6);
@@ -40,7 +42,6 @@
   --bg-message-all: #3b3b43;
   --bg-message-my: #2b5378;
   --bg-chat-indicator: #1d70a2;
-  --bg-chat-indicator-group: #4e4e4e;
 
   --scrollbar-track-color: #444;
   --scrollbar-thumb-color: #686868;

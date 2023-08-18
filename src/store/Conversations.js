@@ -74,7 +74,6 @@ export const conversations = createSlice({
       if (resaveLastMessage) {
         mids.pop();
       }
-      console.log(msg.t);
       const updateParams = {
         _id: cid,
         messagesIds: [...mids, msg._id],
