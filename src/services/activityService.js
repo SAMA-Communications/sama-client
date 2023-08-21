@@ -10,20 +10,25 @@ class ActivityService {
 
   constructor() {
     store.subscribe(() => {
-      let previousValue = this.currentChatId;
-      const storeObj = store.getState();
-      this.currentChatId = storeObj.selectedConversation.value.id;
+      const { conversations, participants, selectedConversation } =
+        store.getState();
+      const selectedConversationId = selectedConversation.value.id;
 
-      if (!this.currentChatId || previousValue === this.currentChatId) {
+      if (
+        !conversations.entities[selectedConversationId]?.created_at ||
+        !participants.ids.length ||
+        this.currentChatId === selectedConversationId
+      ) {
         return;
       }
 
-      this.activeChat = storeObj.conversations.entities[this.currentChatId];
-      if (this.activeChat?.type !== "u") {
+      this.currentChatId = selectedConversationId;
+      this.activeChat = conversations.entities[this.currentChatId];
+      if (this.activeChat.type !== "u") {
         return;
       }
 
-      this.allUsers = storeObj.participants.entities;
+      this.allUsers = participants.entities;
       this.syncData();
     });
   }
@@ -34,16 +39,16 @@ class ActivityService {
       : null;
 
     if (!userInfo) {
-      return null;
+      return;
     }
 
     const uId =
       this.activeChat.owner_id === userInfo._id
-        ? this.allUsers[this.activeChat.opponent_id]?._id
-        : this.allUsers[this.activeChat.owner_id]?._id;
+        ? this.activeChat.opponent_id
+        : this.activeChat.owner_id;
 
     if (!uId) {
-      return null;
+      return;
     }
 
     api.subscribeToUserActivity(uId).then((activity) => {
