@@ -3,12 +3,12 @@
   top: 2svh;
   left: 50%;
 
-  min-width: 300px;
-  max-width: max-content;
-  width: 100%;
-  height: 40px;
-  padding: 10px 10px 15px 10px;
+  max-width: 98vw;
+  width: max-content;
+  height: auto;
+  padding: 10px 25px;
 
+  text-align: center;
   font-weight: 400;
 
   transform: translateX(-50%);
@@ -21,18 +21,4 @@
   overflow: hidden;
   cursor: pointer;
   z-index: 1000;
-}
-.time-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-
-  height: 5px;
-  width: 100%;
-
-  opacity: 0;
-  transition: border-radius 4s ease, width 5s ease;
-
-  border-radius: 0 0 5px 5px;
-  z-index: 1001;
 }

@@ -29,10 +29,13 @@ export default function SignUp() {
   const onSubmit = async (data) => {
     setLoader(true);
     try {
-      [data.ulogin, data.pass] = [data.ulogin.trim(), data.pass.trim()];
+      [data.ulogin, data.pass] = [
+        data.ulogin.trim().toLowerCase(),
+        data.pass.trim().toLowerCase(),
+      ];
       await api.userCreate(data);
       showCustomAlert(
-        "You have successfully create a new user. Now you can login.",
+        "You’ve successfully created a new user. You can log in now.",
         "success"
       );
       history.navigate("/login");
@@ -50,8 +53,7 @@ export default function SignUp() {
           <input
             {...register("ulogin", {
               required: "* Username is required field",
-              pattern: /[A-Za-z0-9_\-.@]{6,20}/,
-              // minLength: 5,
+              pattern: /[A-Za-z0-9_\-.@]{3,20}/,
             })}
             onKeyDown={(e) => e.key === " " && e.preventDefault()}
             placeholder=" "

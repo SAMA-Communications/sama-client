@@ -34,7 +34,10 @@ export default function Login() {
   const onSubmit = async (data) => {
     setLoader(true);
     try {
-      [data.ulogin, data.pass] = [data.ulogin.trim(), data.pass.trim()];
+      [data.ulogin, data.pass] = [
+        data.ulogin.trim().toLowerCase(),
+        data.pass.trim().toLowerCase(),
+      ];
       const userToken = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
       history.navigate("/main");
