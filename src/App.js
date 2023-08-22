@@ -5,6 +5,7 @@ import messagesService from "./services/messagesService";
 import autoLoginService from "./services/autoLoginService.js";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { history } from "./_helpers/history";
 import { updateNetworkState } from "./store/NetworkState";
 import { useDispatch } from "react-redux";
 
@@ -20,9 +21,9 @@ const Login = React.lazy(() => import("./components/screens/Login"));
 const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
 
 export default function App() {
-  const location = useLocation();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  history.location = useLocation();
+  history.navigate = useNavigate();
 
   useEffect(() => {
     window.addEventListener("offline", () =>
@@ -44,18 +45,18 @@ export default function App() {
 
     const token = localStorage.getItem("sessionId");
     if (token && token !== "undefined") {
-      const currentPath = location.hash;
-      navigate(!currentPath ? "/main" : `/main/${currentPath}`);
+      const currentPath = history.location.hash;
+      history.navigate(!currentPath ? "/main" : `/main/${currentPath}`);
     } else {
       localStorage.removeItem("sessionId");
-      navigate("/login");
+      history.navigate("/login");
     }
   }, []);
 
   return (
     <Suspense fallback={<PageLoader />}>
       <AnimatePresence initial={false} mode="wait">
-        <Routes location={location}>
+        <Routes location={history.location}>
           <Route path="/loading" element={<PageLoader />} />
           <Route path="/login" element={<Login />} />
           <Route path="/main/*" element={<Main />} />

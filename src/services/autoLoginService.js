@@ -1,7 +1,9 @@
 import api from "../api/api";
+import showCustomAlert from "../utils/show_alert";
 import store from "../store/store";
 import subscribeForNotifications from "./notifications";
 import { default as EventEmitter } from "../event/eventEmitter";
+import { history } from "../_helpers/history";
 import { setSelectedConversation } from "../store/SelectedConversation";
 import { setUserIsLoggedIn } from "../store/UserIsLoggedIn ";
 
@@ -17,12 +19,11 @@ class AutoLoginService {
   }
 
   async userLogin(token) {
-    // eslint-disable-next-line no-restricted-globals
-    const currentPath = location.hash;
+    const currentPath = history.location.hash;
 
     const handleLoginFailure = () => {
       localStorage.removeItem("sessionId");
-      //   location.replace("/login");
+      history.navigate("/login");
       store.dispatch(setUserIsLoggedIn(false));
     };
 
@@ -38,9 +39,11 @@ class AutoLoginService {
         store.dispatch(setUserIsLoggedIn(true));
       } else {
         handleLoginFailure();
+        showCustomAlert("Invalid session token", "warning");
       }
     } catch (error) {
       handleLoginFailure();
+      showCustomAlert(error.message, "warning");
     }
   }
 }

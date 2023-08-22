@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import api from "../../api/api";
 import MainLogo from "../static/MainLogo";
-import { Link, useNavigate } from "react-router-dom";
+import showCustomAlert from "../../utils/show_alert";
+import { Link } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
+import { history } from "../../_helpers/history";
 import { useForm } from "react-hook-form";
 import {
   changeOpacity,
@@ -16,7 +18,6 @@ import { ReactComponent as HidePassword } from "./../../assets/icons/authForm/Hi
 import { ReactComponent as ShowPassword } from "./../../assets/icons/authForm/ShowPassword.svg";
 
 export default function SignUp() {
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -28,11 +29,15 @@ export default function SignUp() {
   const onSubmit = async (data) => {
     setLoader(true);
     try {
+      [data.ulogin, data.pass] = [data.ulogin.trim(), data.pass.trim()];
       await api.userCreate(data);
-      alert("You have successfully create a new user. Now you can login.");
-      navigate("/login");
+      showCustomAlert(
+        "You have successfully create a new user. Now you can login.",
+        "success"
+      );
+      history.navigate("/login");
     } catch (error) {
-      alert(error.message);
+      showCustomAlert(error.message, "danger");
     }
     setLoader(false);
   };
@@ -45,8 +50,10 @@ export default function SignUp() {
           <input
             {...register("ulogin", {
               required: "* Username is required field",
-              // pattern: /^[a-z0-9._%+-]$/,
+              pattern: /[A-Za-z0-9_\-.@]{6,20}/,
+              // minLength: 5,
             })}
+            onKeyDown={(e) => e.key === " " && e.preventDefault()}
             placeholder=" "
             type={"text"}
             autoComplete="off"
@@ -62,6 +69,7 @@ export default function SignUp() {
               required: "* Password is required field",
               // minLength: 8,
             })}
+            onKeyDown={(e) => e.key === " " && e.preventDefault()}
             placeholder=" "
             type={passwordType}
             autoComplete="off"
