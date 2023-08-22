@@ -54,7 +54,6 @@ export default function SignUp() {
             {...register("ulogin", {
               required: "* Username is required field",
               pattern: /[A-Za-z0-9_\-.@]{3,20}/,
-              // minLength: 5,
             })}
             onKeyDown={(e) => e.key === " " && e.preventDefault()}
             placeholder=" "
