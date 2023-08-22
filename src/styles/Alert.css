@@ -3,9 +3,9 @@
   top: 2svh;
   left: 50%;
 
-  max-width: max-content;
-  width: 100%;
-  height: 40px;
+  max-width: 98vw;
+  width: max-content;
+  height: auto;
   padding: 10px 25px;
 
   text-align: center;
