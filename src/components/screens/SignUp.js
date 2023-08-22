@@ -29,7 +29,10 @@ export default function SignUp() {
   const onSubmit = async (data) => {
     setLoader(true);
     try {
-      [data.ulogin, data.pass] = [data.ulogin.trim(), data.pass.trim()];
+      [data.ulogin, data.pass] = [
+        data.ulogin.trim().toLowerCase(),
+        data.pass.trim().toLowerCase(),
+      ];
       await api.userCreate(data);
       showCustomAlert(
         "You’ve successfully created a new user. You can log in now.",
