@@ -21,7 +21,7 @@ export default function NoChatSelected() {
           strokeLinejoin="round"
         />
       </svg>
-      <p>Select your chat ...</p>
+      <p>Select your chat…</p>
     </div>
   );
 }

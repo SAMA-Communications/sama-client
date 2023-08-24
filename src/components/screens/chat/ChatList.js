@@ -100,7 +100,7 @@ export default function ChatList({
       </div>
       <div className="chat-list">
         {!Object.keys(conversations).length ? (
-          <p className="empty-list">No one chat find...</p>
+          <p className="empty-list">You haven't started any chats yet.</p>
         ) : (
           chatsList
         )}

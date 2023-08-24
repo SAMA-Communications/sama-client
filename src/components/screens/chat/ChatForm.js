@@ -155,7 +155,7 @@ export default function ChatForm({
     event.preventDefault();
 
     if (!connectState) {
-      alert("No internet connection");
+      alert("No internet connection…");
       return;
     }
 
@@ -194,7 +194,7 @@ export default function ChatForm({
     try {
       response = await api.messageCreate(reqData);
     } catch (err) {
-      alert("There is no server connection");
+      alert("The server connection is unavailable.");
       dispatch(
         setLastMessageField({
           cid: selectedCID,
@@ -304,7 +304,7 @@ export default function ChatForm({
     }
 
     if (files?.length + event.target.files.length >= 10) {
-      alert("Max limit to upload files 10");
+      alert("The maximum limit for file uploads is 10.");
       return;
     }
 
@@ -366,7 +366,7 @@ export default function ChatForm({
             {!messages.length ? (
               <div className="chat-empty">
                 <EmptyChat />
-                <p>Write your message...</p>
+                <p>Please type your message...</p>
               </div>
             ) : (
               <div id="chatMessagesScrollable">
@@ -399,7 +399,7 @@ export default function ChatForm({
                 ref={messageInputEl}
                 onTouchStart={(e) => e.target.blur()}
                 autoComplete="off"
-                placeholder="> Write your message..."
+                placeholder="> Please type your message..."
               />
               <button id="send-message" onClick={sendMessage}>
                 <SendMessageButton />
