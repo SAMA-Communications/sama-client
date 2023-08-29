@@ -92,7 +92,7 @@ export default function UserSearch({ close }) {
             id="inputSearchLogin"
             autoComplete="off"
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Input user login.. (2+ charactes)"
+            placeholder="Input user email (must be at least 2 characters)"
             autoFocus
           />
           {isPending && (
