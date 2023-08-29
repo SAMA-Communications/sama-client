@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import "../../../styles/chat/UserSearch.css";
 
 import { ReactComponent as SearchIndicator } from "./../../../assets/icons/SearchIndicator.svg";
+import showCustomAlert from "../../../utils/show_alert.js";
 
 export default function UserSearch({ close }) {
   const dispatch = useDispatch();
@@ -50,6 +51,14 @@ export default function UserSearch({ close }) {
   };
 
   const addUserToIgnore = async (data) => {
+    if (selectedUsers.length >= 50) {
+      showCustomAlert(
+        "There are too many users in the group conversation.",
+        "warning"
+      );
+      return;
+    }
+
     setSelectedUsers([...selectedUsers, data]);
     setIgnoreIds([...ignoreIds, data._id]);
     setSearchedUsers(searchedUsers.filter((el) => el._id !== data._id));
