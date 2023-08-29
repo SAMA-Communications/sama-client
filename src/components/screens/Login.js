@@ -36,7 +36,7 @@ export default function Login() {
     try {
       [data.ulogin, data.pass] = [
         data.ulogin.trim().toLowerCase(),
-        data.pass.trim().toLowerCase(),
+        data.pass.trim(),
       ];
       const userToken = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);

@@ -31,7 +31,7 @@ export default function SignUp() {
     try {
       [data.ulogin, data.pass] = [
         data.ulogin.trim().toLowerCase(),
-        data.pass.trim().toLowerCase(),
+        data.pass.trim(),
       ];
       await api.userCreate(data);
       showCustomAlert(
