@@ -6,6 +6,7 @@ import api from "../../../api/api";
 import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
+import showCustomAlert from "../../../utils/show_alert.js";
 import { getNetworkState } from "../../../store/NetworkState.js";
 import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 import { getFileObjects } from "../../../api/download_manager.js";
@@ -155,7 +156,7 @@ export default function ChatForm({
     event.preventDefault();
 
     if (!connectState) {
-      alert("No internet connection");
+      showCustomAlert("No internet connection…", "warning");
       return;
     }
 
@@ -194,7 +195,7 @@ export default function ChatForm({
     try {
       response = await api.messageCreate(reqData);
     } catch (err) {
-      alert("There is no server connection");
+      showCustomAlert("The server connection is unavailable.", "warning");
       dispatch(
         setLastMessageField({
           cid: selectedCID,
@@ -241,7 +242,7 @@ export default function ChatForm({
         dispatch(removeChat(selectedCID));
         history.navigate("/main");
       } catch (error) {
-        alert(error.message);
+        showCustomAlert(error.message, "warning");
       }
     }
   };
@@ -304,7 +305,7 @@ export default function ChatForm({
     }
 
     if (files?.length + event.target.files.length >= 10) {
-      alert("Max limit to upload files 10");
+      showCustomAlert("The maximum limit for file uploads is 10.", "warning");
       return;
     }
 
@@ -366,7 +367,7 @@ export default function ChatForm({
             {!messages.length ? (
               <div className="chat-empty">
                 <EmptyChat />
-                <p>Write your message...</p>
+                <p>Please type your message...</p>
               </div>
             ) : (
               <div id="chatMessagesScrollable">
@@ -399,7 +400,7 @@ export default function ChatForm({
                 ref={messageInputEl}
                 onTouchStart={(e) => e.target.blur()}
                 autoComplete="off"
-                placeholder="> Write your message..."
+                placeholder="> Please type your message..."
               />
               <button id="send-message" onClick={sendMessage}>
                 <SendMessageButton />

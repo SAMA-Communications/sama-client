@@ -7,7 +7,7 @@ import { ReactComponent as PageNotFound } from "./../assets/icons/PageNotFound.s
 export default function ErrorPage() {
   return (
     <div className="text-error">
-      <p>Page not found</p>
+      <p>Page not found.</p>
       <PageNotFound />
     </div>
   );

@@ -31,16 +31,12 @@ export default function UserSearch({ close }) {
 
     if (selectedUsers.length) {
       const requestData = {
-        name:
-          selectedUsers.length === 1
-            ? undefined
-            : window.prompt("Enter chat name:"),
-        desciprion: "chat",
         type: selectedUsers.length > 1 ? "g" : "u", //fix it in future
-        opponent_id:
-          selectedUsers.length === 1 ? selectedUsers[0]._id : undefined,
         participants: selectedUsers.map((el) => el._id),
       };
+      selectedUsers.length > 1 &&
+        (requestData["name"] = window.prompt("Please enter a chat name."));
+
       const chat = await api.conversationCreate(requestData);
       const users = await api.getParticipantsByCids([chat._id]);
       dispatch(addUsers(users));
@@ -77,7 +73,7 @@ export default function UserSearch({ close }) {
         setSearchedUsers(users);
 
         if (isUserSearched === "Search results") {
-          setIsUserSearched("User not found");
+          setIsUserSearched("We couldn't find the specified user.");
         }
       }
     });
@@ -96,7 +92,7 @@ export default function UserSearch({ close }) {
             id="inputSearchLogin"
             autoComplete="off"
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Input user login.. (2+ charactes)"
+            placeholder="Input user email (must be at least 2 characters)"
             autoFocus
           />
           {isPending && (
@@ -131,7 +127,7 @@ export default function UserSearch({ close }) {
         </div>
         <div className="search-buttons">
           <div className="search-create-chat" onClick={createChat}>
-            <p>Create chat</p>
+            <p>Create a chat</p>
           </div>
           <div className="search-close-chat" onClick={() => close(false)}>
             <p>X</p>

@@ -39,7 +39,7 @@ class AutoLoginService {
         store.dispatch(setUserIsLoggedIn(true));
       } else {
         handleLoginFailure();
-        showCustomAlert("Invalid session token", "warning");
+        showCustomAlert("Invalid session token.", "warning");
       }
     } catch (error) {
       handleLoginFailure();
