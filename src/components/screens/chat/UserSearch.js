@@ -31,14 +31,12 @@ export default function UserSearch({ close }) {
 
     if (selectedUsers.length) {
       const requestData = {
-        name:
-          selectedUsers.length === 1
-            ? undefined
-            : window.prompt("Please enter a chat name."),
-        desciprion: "chat",
         type: selectedUsers.length > 1 ? "g" : "u", //fix it in future
         participants: selectedUsers.map((el) => el._id),
       };
+      selectedUsers.length > 1 &&
+        (requestData["name"] = window.prompt("Please enter a chat name."));
+
       const chat = await api.conversationCreate(requestData);
       const users = await api.getParticipantsByCids([chat._id]);
       dispatch(addUsers(users));
