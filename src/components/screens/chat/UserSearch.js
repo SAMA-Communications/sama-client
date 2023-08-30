@@ -51,7 +51,7 @@ export default function UserSearch({ close }) {
   };
 
   const addUserToIgnore = async (data) => {
-    if (selectedUsers.length >= 50) {
+    if (selectedUsers.length >= 49) {
       showCustomAlert(
         "There are too many users in the group conversation.",
         "warning"
