@@ -1,3 +1,5 @@
+import globalConstants from "../_helpers/constants";
+
 export default function getLastVisitTime(timestamp, userLocale) {
   if (!timestamp) {
     return null;
@@ -5,8 +7,8 @@ export default function getLastVisitTime(timestamp, userLocale) {
   timestamp *= 1000;
   const now = Math.round(Date.now() / 1000) * 1000;
   const todayStart = new Date().setHours(0, 0, 0, 0);
-  const yesterdayStart = todayStart - 86400000;
-  const yearToStart = todayStart - 31556926000;
+  const yesterdayStart = todayStart - globalConstants.dayInMs;
+  const yearToStart = todayStart - globalConstants.yearInMs;
   const visitDate = new Date(timestamp);
 
   let baseMessage = "Last visited ";
