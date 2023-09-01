@@ -9,7 +9,7 @@ export default function getLastVisitTime(timestamp, userLocale) {
   const yearToStart = todayStart - 31556926000;
   const visitDate = new Date(timestamp);
 
-  let baseMessage = "last visited ";
+  let baseMessage = "Last visited ";
   const options = {
     hour: "2-digit",
     minute: "2-digit",
