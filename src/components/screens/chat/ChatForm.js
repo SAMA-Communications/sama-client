@@ -304,16 +304,24 @@ export default function ChatForm({
       return;
     }
 
+    const selectedFiles = [];
+    for (const file of event.target.files) {
+      if (file.name.length > 40) {
+        showCustomAlert(
+          "The file name should not exceed 40 characters.",
+          "warning"
+        );
+        return;
+      }
+      selectedFiles.push(file);
+    }
+
     if (files?.length + event.target.files.length >= 10) {
       showCustomAlert("The maximum limit for file uploads is 10.", "warning");
       return;
     }
 
-    setFiles(
-      files?.length
-        ? [...files, ...event.target.files]
-        : [...event.target.files]
-    );
+    setFiles(files?.length ? [...files, ...selectedFiles] : [...selectedFiles]);
     messageInputEl.current.focus();
   };
 
