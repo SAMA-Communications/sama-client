@@ -140,6 +140,8 @@
 .chat-form-main {
   height: 100%;
 
+  padding: 5px 0;
+
   display: flex;
   flex-grow: 1;
   flex-direction: column;
