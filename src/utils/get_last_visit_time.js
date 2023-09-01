@@ -1,4 +1,4 @@
-export default function getLastVisitTime(timestamp) {
+export default function getLastVisitTime(timestamp, userLocale) {
   if (!timestamp) {
     return null;
   }
@@ -15,13 +15,14 @@ export default function getLastVisitTime(timestamp) {
     minute: "2-digit",
   };
   if (timestamp >= todayStart && timestamp <= now) {
-    baseMessage += "at " + visitDate.toLocaleTimeString([], options);
+    baseMessage += "at " + visitDate.toLocaleTimeString(userLocale, options);
   } else if (timestamp >= yesterdayStart && timestamp < todayStart) {
-    baseMessage += "yesterday at " + visitDate.toLocaleTimeString([], options);
+    baseMessage +=
+      "yesterday at " + visitDate.toLocaleTimeString(userLocale, options);
   } else if (timestamp >= yearToStart && timestamp < yesterdayStart) {
     baseMessage +=
       "on " +
-      visitDate.toLocaleDateString([], {
+      visitDate.toLocaleDateString(userLocale, {
         year: "numeric",
         month: "long",
         day: "numeric",
