@@ -27,9 +27,12 @@ export const messages = createSlice({
     upsertMessage: messagesAdapter.upsertOne,
     upsertMessages: messagesAdapter.upsertMany,
     markMessagesAsRead: (state, action) => {
-      const mids = action.payload.map((id) => {
-        return { _id: id, status: "read" };
-      });
+      const mids = action.payload
+        .filter((id) => !!state.entities[id])
+        .map((id) => {
+          return { _id: id, status: "read" };
+        });
+      console.log("mids: ", mids);
       messagesAdapter.upsertMany(state, mids);
     },
     removeMessage: messagesAdapter.removeOne,
