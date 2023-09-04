@@ -231,6 +231,7 @@ export default function ChatForm({
 
     setIsSendMessageDisable(false);
     scrollChatToBottom();
+    messageInputEl.current.focus();
   };
 
   const deleteChat = async () => {
