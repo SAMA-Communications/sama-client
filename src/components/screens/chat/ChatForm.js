@@ -306,9 +306,9 @@ export default function ChatForm({
 
     const selectedFiles = [];
     for (const file of event.target.files) {
-      if (file.name.length > 40) {
+      if (file.name.length > 255) {
         showCustomAlert(
-          "The file name should not exceed 40 characters.",
+          "The file name should not exceed 255 characters.",
           "warning"
         );
         return;
