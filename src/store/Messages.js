@@ -32,7 +32,6 @@ export const messages = createSlice({
         .map((id) => {
           return { _id: id, status: "read" };
         });
-      console.log("mids: ", mids);
       messagesAdapter.upsertMany(state, mids);
     },
     removeMessage: messagesAdapter.removeOne,
