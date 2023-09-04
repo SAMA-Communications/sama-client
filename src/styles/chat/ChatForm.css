@@ -95,9 +95,9 @@
 }
 .chat-recipient-info {
   display: flex;
-  gap: 15px;
-  align-items: center;
-  justify-content: left;
+  flex-direction: column;
+  gap: 0.3em;
+  justify-content: center;
 }
 .chat-recipient-info p {
   font-weight: 300;
@@ -139,6 +139,8 @@
 }
 .chat-form-main {
   height: 100%;
+
+  padding: 5px 0;
 
   display: flex;
   flex-grow: 1;
@@ -385,10 +387,10 @@
   .chat-recipient-info {
     width: calc(100vw - 170px);
 
+    display: flex;
+
     align-items: flex-start;
     justify-content: center;
-    flex-direction: column;
-    gap: 0;
   }
   .chat-recipient-info > p {
     width: 100%;

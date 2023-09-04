@@ -150,6 +150,7 @@ export default function ChatForm({
     }
 
     setFiles([]);
+    messageInputEl.current.value = "";
   }, [selectedCID, conversations[selectedCID]]);
 
   const sendMessage = async (event) => {
