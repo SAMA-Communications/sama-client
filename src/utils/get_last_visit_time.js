@@ -1,30 +1,36 @@
-export default function getLastVisitTime(timestamp) {
+import globalConstants from "../_helpers/constants";
+
+export default function getLastVisitTime(timestamp, userLocale) {
   if (!timestamp) {
     return null;
   }
   timestamp *= 1000;
   const now = Math.round(Date.now() / 1000) * 1000;
   const todayStart = new Date().setHours(0, 0, 0, 0);
-  const yesterdayStart = todayStart - 24 * 60 * 60 * 1000;
+  const yesterdayStart = todayStart - globalConstants.dayInMs;
+  const yearToStart = todayStart - globalConstants.yearInMs;
   const visitDate = new Date(timestamp);
 
-  let baseMessage = "last visited ";
+  let baseMessage = "Last visited ";
   const options = {
     hour: "2-digit",
     minute: "2-digit",
   };
   if (timestamp >= todayStart && timestamp <= now) {
-    baseMessage += "at " + visitDate.toLocaleTimeString([], options);
+    baseMessage += "at " + visitDate.toLocaleTimeString(userLocale, options);
   } else if (timestamp >= yesterdayStart && timestamp < todayStart) {
-    baseMessage += "yesterday at " + visitDate.toLocaleTimeString([], options);
-  } else {
+    baseMessage +=
+      "yesterday at " + visitDate.toLocaleTimeString(userLocale, options);
+  } else if (timestamp >= yearToStart && timestamp < yesterdayStart) {
     baseMessage +=
       "on " +
-      visitDate.toLocaleDateString([], {
+      visitDate.toLocaleDateString(userLocale, {
         year: "numeric",
         month: "long",
         day: "numeric",
       });
+  } else {
+    baseMessage += "a long time ago";
   }
 
   return baseMessage;
