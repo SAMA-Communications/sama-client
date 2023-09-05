@@ -44,15 +44,17 @@ export default function MessagesList({ scrollRef, openModalFunc }) {
         }
 
         const messagesIds = arr.map((el) => el._id).reverse();
-        needToGetMoreMessage.current =
-          messagesIds.length <=
-          +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD;
+        needToGetMoreMessage.current = !(
+          messagesIds.length < +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD
+        );
 
         dispatch(addMessages(arr));
         dispatch(
           upsertChat({
             _id: selectedCID,
-            messagesIds: [...messagesIds, ...messages.map((el) => el._id)],
+            messagesIds: [
+              ...new Set([...messagesIds, ...messages.map((el) => el._id)]),
+            ],
             activated: true,
           })
         );
