@@ -29,8 +29,6 @@ export default function Main() {
           sub.unsubscribe().then(async () => {
             await api.pushSubscriptionDelete();
             await api.userLogout();
-            dispatch({ type: "RESET_STORE" });
-            dispatch(updateNetworkState(true));
           })
         )
       )
@@ -39,6 +37,8 @@ export default function Main() {
         await api.userLogout();
         dispatch(setUserIsLoggedIn(false));
       });
+    dispatch({ type: "RESET_STORE" });
+    dispatch(updateNetworkState(true));
     localStorage.removeItem("sessionId");
   };
 
