@@ -57,10 +57,10 @@ class Api {
         }
 
         if (message.message) {
-          EventEmitter.emit("onMessage", message.message);
           if (this.onMessageListener) {
             this.onMessageListener(message.message);
           }
+          EventEmitter.emit("onMessage", message.message);
           return;
         }
 

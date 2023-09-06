@@ -19,16 +19,28 @@ async function showLocalNotification(pushMessage) {
     //TODO: need to sync with server | conversation_lsit
     return;
   }
-  const userLogin = storeState.participants.entities[pushMessage.from]?.login;
-  if (pushMessage.attachments?.length) {
-    pushMessage["body"] += `\nPhoto`;
-  }
-  pushMessage["title"] =
+
+  const { attachments, from, body } = pushMessage;
+  const userLogin = storeState.participants.entities[from]?.login;
+
+  const attachmentText =
+    attachments?.length > 0
+      ? attachments.length > 1
+        ? "\nPhotos"
+        : "\nPhoto"
+      : "";
+
+  const title =
     conversation.type === "u"
       ? userLogin
       : `${userLogin} | ${conversation.name}`;
 
-  sw.postMessage({ message: pushMessage });
+  const notificationMessage = {
+    ...pushMessage,
+    body: `${body}${attachmentText}`,
+    title,
+  };
+  sw.postMessage({ message: notificationMessage });
 }
 EventEmitter.subscribe("onMessage", showLocalNotification);
 
