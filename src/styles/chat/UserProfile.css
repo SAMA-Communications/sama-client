@@ -90,13 +90,41 @@
   stroke: var(--text-danger);
 }
 
-.formTitle {
+.user-profile-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  padding: 10px 20px;
+
+  z-index: 110;
+}
+.user-profile-close svg {
+  width: 30px;
+}
+.user-profile-close svg:hover {
+  cursor: pointer;
+}
+.user-profile-close svg path {
+  stroke: var(--btn-text-hover);
+}
+
+.form-title {
   text-align: center;
   font-size: calc(var(--font-size) * 1.5);
   padding-bottom: 10px;
 }
+.forms-block {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  overflow-y: scroll;
+}
 #userEditForm,
 #passwordEditForm {
+  padding: 2px 2px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -134,4 +162,14 @@
 input[type="submit"] {
   margin-top: 5px;
   align-self: center;
+}
+
+@media (max-width: 800px) {
+  .user-o-photo {
+    display: none;
+  }
+  #userEditForm > div > input:not([type="submit"]),
+  #passwordEditForm > div > input:not([type="submit"]) {
+    width: 100%;
+  }
 }

@@ -1,19 +1,20 @@
 import api from "../../api/api";
 import jwtDecode from "jwt-decode";
+import showCustomAlert from "../../utils/show_alert";
 import {
   selectParticipantsEntities,
   upsertUser,
 } from "../../store/Participants";
+import { updateNetworkState } from "../../store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 import "./../../styles/chat/UserProfile.css";
 
 import { ReactComponent as TrashCan } from "./../../assets/icons/chatForm/TrashCan.svg";
-import { useNavigate } from "react-router-dom";
-import { updateNetworkState } from "../../store/NetworkState";
-import showCustomAlert from "../../utils/show_alert";
+import { ReactComponent as CloseChatList } from "./../../assets/icons/CloseChatList.svg";
 
 export default function UserProfile({ close }) {
   const dispatch = useDispatch();
@@ -27,12 +28,12 @@ export default function UserProfile({ close }) {
   const { register, handleSubmit, reset } = useForm();
   const onSubmit = async (data) => {
     try {
-      Object.keys(data).forEach((key) => {
-        if (!data[key].length) {
-          delete data[key];
-        }
-      });
+      Object.keys(data).forEach((key) => !data[key].length && delete data[key]);
+      if (!Object.keys(data).length) {
+        return;
+      }
       const userNewData = await api.userEdit(data);
+
       dispatch(upsertUser(userNewData));
       reset();
       showCustomAlert("User data has been successfully updated.", "success");
@@ -41,10 +42,20 @@ export default function UserProfile({ close }) {
     }
   };
 
-  const { register: registerPass, handleSubmit: handleSubmitPass } = useForm();
+  const {
+    register: registerPass,
+    handleSubmit: handleSubmitPass,
+    reset: resetPass,
+  } = useForm();
   const onSubmitPass = async (data) => {
     try {
-      //   await api.userEdit(data);
+      if (!data.new_password || !data.current_password) {
+        showCustomAlert("Please fill in both fields below.", "warning");
+        return;
+      }
+
+      await api.userEdit(data);
+      resetPass();
       showCustomAlert(
         "Your password has been successfully updated.",
         "success"
@@ -70,6 +81,7 @@ export default function UserProfile({ close }) {
 
   window.onkeydown = function (event) {
     event.keyCode === 27 && close(false);
+    event.keyCode === 13 && event.preventDefault();
   };
 
   return (
@@ -103,95 +115,102 @@ export default function UserProfile({ close }) {
           </div>
         </div>
         <hr />
-        <form id="userEditForm" onSubmit={handleSubmit(onSubmit)}>
-          <p className="formTitle">Edit user information</p>
-          <div>
-            <p>First name:</p>
-            <input
-              {...register("first_name", { maxLength: 20 })}
-              onKeyDown={(e) => e.key === " " && e.preventDefault()}
-              placeholder="Type a new first name..."
-              type={"text"}
-              autoComplete="off"
-            />
-          </div>
-          <div>
-            <p>Last name:</p>
-            <input
-              {...register("last_name", { maxLength: 20 })}
-              onKeyDown={(e) => e.key === " " && e.preventDefault()}
-              placeholder="Type a new last name..."
-              type={"text"}
-              autoComplete="off"
-            />
-          </div>
-          <div>
-            <p>Login:</p>
-            <input
-              {...register("login", {
-                maxLength: 40,
-                pattern: /[A-Za-z0-9_\-.@]{3,20}/,
-              })}
-              onKeyDown={(e) => e.key === " " && e.preventDefault()}
-              placeholder="Type a new login..."
-              type={"text"}
-              autoComplete="off"
-            />
-          </div>
-          <div>
-            <p>Email:</p>
-            <input
-              {...register("email", {
-                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-              })}
-              onKeyDown={(e) => e.key === " " && e.preventDefault()}
-              placeholder="Type a new email..."
-              type={"text"}
-              autoComplete="off"
-            />
-          </div>
-          <div>
-            <p>Phone:</p>
-            <input
-              {...register("phone", { minLength: 3, maxLength: 15 })}
-              onKeyDown={(e) => e.key === " " && e.preventDefault()}
-              placeholder="Type a new phone..."
-              type={"text"}
-              autoComplete="off"
-            />
-          </div>
-          <input type="submit" value="Update" />
-        </form>
-        <hr />
-        <form id="passwordEditForm" onSubmit={handleSubmitPass(onSubmitPass)}>
-          <p className="formTitle">Change password</p>
-          <div>
-            <p>New password:</p>
-            <input
-              {...registerPass("new_password", {
-                pattern: /[A-Za-z0-9_\-.@]{3,40}/,
-              })}
-              onKeyDown={(e) => e.key === " " && e.preventDefault()}
-              placeholder="Type a new password..."
-              type={"text"}
-              autoComplete="off"
-            />
-          </div>
-          <div>
-            <p>Current password:</p>
-            <input
-              {...registerPass("current_password", {
-                required: "The current password is required.",
-                pattern: /[A-Za-z0-9_\-.@]{3,40}/,
-              })}
-              onKeyDown={(e) => e.key === " " && e.preventDefault()}
-              placeholder="Confirm your current password..."
-              type={"text"}
-              autoComplete="off"
-            />
-          </div>
-          <input type="submit" value="Change" />
-        </form>
+        <div className="forms-block">
+          <form id="userEditForm" onSubmit={handleSubmit(onSubmit)}>
+            <p className="form-title">Edit user information</p>
+            <div>
+              <p>First name:</p>
+              <input
+                {...register("first_name", { maxLength: 20 })}
+                onKeyDown={(e) => e.key === " " && e.preventDefault()}
+                placeholder="Type a new first name..."
+                type={"text"}
+                autoComplete="off"
+              />
+            </div>
+            <div>
+              <p>Last name:</p>
+              <input
+                {...register("last_name", { maxLength: 20 })}
+                onKeyDown={(e) => e.key === " " && e.preventDefault()}
+                placeholder="Type a new last name..."
+                type={"text"}
+                autoComplete="off"
+              />
+            </div>
+            <div>
+              <p>Login:</p>
+              <input
+                {...register("login", {
+                  maxLength: 40,
+                  pattern: /[A-Za-z0-9_\-.@]{3,20}/,
+                })}
+                onKeyDown={(e) => e.key === " " && e.preventDefault()}
+                placeholder="Type a new login..."
+                type={"text"}
+                autoComplete="off"
+              />
+            </div>
+            <div>
+              <p>Email:</p>
+              <input
+                {...register("email", {
+                  pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                })}
+                onKeyDown={(e) => e.key === " " && e.preventDefault()}
+                placeholder="Type a new email..."
+                type={"text"}
+                autoComplete="off"
+              />
+            </div>
+            <div>
+              <p>Phone:</p>
+              <input
+                {...register("phone", { minLength: 3, maxLength: 15 })}
+                onKeyDown={(e) => e.key === " " && e.preventDefault()}
+                placeholder="Type a new phone..."
+                type={"text"}
+                autoComplete="off"
+              />
+            </div>
+            <input type="submit" value="Update" />
+          </form>
+          <hr />
+          <form id="passwordEditForm" onSubmit={handleSubmitPass(onSubmitPass)}>
+            <p className="form-title">Change password</p>
+            <div>
+              <p>New password:</p>
+              <input
+                {...registerPass("new_password", {
+                  pattern: /[A-Za-z0-9_\-.@]{3,40}/,
+                })}
+                onKeyDown={(e) => e.key === " " && e.preventDefault()}
+                placeholder="Type a new password..."
+                type={"text"}
+                autoComplete="off"
+              />
+            </div>
+            <div>
+              <p>Current password:</p>
+              <input
+                {...registerPass("current_password", {
+                  required: "The current password is required.",
+                  pattern: /[A-Za-z0-9_\-.@]{3,40}/,
+                })}
+                onKeyDown={(e) => e.key === " " && e.preventDefault()}
+                placeholder="Confirm your current password..."
+                type={"text"}
+                autoComplete="off"
+              />
+            </div>
+            <input type="submit" value="Change" />
+          </form>
+        </div>
+        <div className="user-profile-close" onClick={() => close(false)}>
+          <p>
+            <CloseChatList />
+          </p>
+        </div>
       </div>
     </div>
   );
