@@ -1,6 +1,6 @@
 .search-bg {
-  width: 100vw;
-  height: 100vh;
+  width: 100svw;
+  height: 100svh;
 
   position: fixed;
   top: 0;

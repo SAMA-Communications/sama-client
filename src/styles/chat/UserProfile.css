@@ -1,0 +1,72 @@
+.user-options-bg {
+  width: 100svw;
+  height: 100svh;
+
+  padding: 7svh 0;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  background-color: var(--bg-dark-block);
+
+  z-index: 12;
+}
+.user-options-block {
+  width: min(700px, 98svw);
+  height: 75vh;
+
+  padding: 28px 15px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  border: none;
+  border-radius: var(--border-main-radius);
+  background-color: var(--bg-main-color);
+}
+.user-o-box {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+.user-o-photo {
+  width: 140px;
+  height: 140px;
+
+  font-size: calc(var(--font-size) * 2.125);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-main);
+
+  border-radius: var(--border-second-radius);
+  background-color: var(--bg-chatPhoto-color);
+  box-shadow: inset 0px 0px 10px var(--shadow-block);
+}
+.user-o-info {
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.user-o-info-name {
+  width: 100%;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  font-size: calc(var(--font-size) * 1.5);
+  font-weight: 300;
+  line-height: 50px;
+}
+
+#userEditForm {
+}

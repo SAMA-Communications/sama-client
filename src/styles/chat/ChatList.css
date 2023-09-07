@@ -37,7 +37,7 @@ aside {
   box-shadow: inset 0px 0px 10px var(--shadow-block);
 }
 .user-info {
-  max-width: 260px;
+  max-width: calc(100% - 140px);
   margin-left: 15px;
 
   display: flex;
@@ -59,6 +59,16 @@ aside {
 .user-info-status {
   font-size: var(--font-size);
   color: var(--text-smoke);
+}
+.user-options {
+  padding: 2px;
+  margin-left: auto;
+
+  border-radius: var(--border-second-radius);
+}
+.user-options:hover {
+  cursor: pointer;
+  background-color: var(--border-color);
 }
 
 .chat-list {
