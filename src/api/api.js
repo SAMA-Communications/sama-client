@@ -162,7 +162,7 @@ class Api {
   async userEdit(data) {
     const requestData = {
       request: {
-        user_edit: {},
+        user_edit: data,
         id: getUniqueId("userEdit"),
       },
     };

@@ -1,6 +1,9 @@
 import api from "../../api/api";
 import jwtDecode from "jwt-decode";
-import { selectParticipantsEntities } from "../../store/Participants";
+import {
+  selectParticipantsEntities,
+  upsertUser,
+} from "../../store/Participants";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useMemo } from "react";
@@ -21,10 +24,17 @@ export default function UserProfile({ close }) {
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const onSubmit = async (data) => {
     try {
-      await api.userEdit(data);
+      Object.keys(data).forEach((key) => {
+        if (!data[key].length) {
+          delete data[key];
+        }
+      });
+      const userNewData = await api.userEdit(data);
+      dispatch(upsertUser(userNewData));
+      reset();
       showCustomAlert("User data has been successfully updated.", "success");
     } catch (error) {
       showCustomAlert(error.message, "danger");
@@ -34,7 +44,7 @@ export default function UserProfile({ close }) {
   const { register: registerPass, handleSubmit: handleSubmitPass } = useForm();
   const onSubmitPass = async (data) => {
     try {
-      await api.userEdit(data);
+      //   await api.userEdit(data);
       showCustomAlert(
         "Your password has been successfully updated.",
         "success"
@@ -98,7 +108,7 @@ export default function UserProfile({ close }) {
           <div>
             <p>First name:</p>
             <input
-              {...register("first_name", {})}
+              {...register("first_name", { maxLength: 20 })}
               onKeyDown={(e) => e.key === " " && e.preventDefault()}
               placeholder="Type a new first name..."
               type={"text"}
@@ -108,7 +118,7 @@ export default function UserProfile({ close }) {
           <div>
             <p>Last name:</p>
             <input
-              {...register("last_name", {})}
+              {...register("last_name", { maxLength: 20 })}
               onKeyDown={(e) => e.key === " " && e.preventDefault()}
               placeholder="Type a new last name..."
               type={"text"}
@@ -119,6 +129,7 @@ export default function UserProfile({ close }) {
             <p>Login:</p>
             <input
               {...register("login", {
+                maxLength: 40,
                 pattern: /[A-Za-z0-9_\-.@]{3,20}/,
               })}
               onKeyDown={(e) => e.key === " " && e.preventDefault()}
@@ -131,7 +142,7 @@ export default function UserProfile({ close }) {
             <p>Email:</p>
             <input
               {...register("email", {
-                pattern: /[A-Za-z0-9_\-.@]{3,20}/,
+                pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
               })}
               onKeyDown={(e) => e.key === " " && e.preventDefault()}
               placeholder="Type a new email..."
@@ -142,7 +153,7 @@ export default function UserProfile({ close }) {
           <div>
             <p>Phone:</p>
             <input
-              {...register("phone", {})}
+              {...register("phone", { minLength: 3, maxLength: 15 })}
               onKeyDown={(e) => e.key === " " && e.preventDefault()}
               placeholder="Type a new phone..."
               type={"text"}
@@ -157,7 +168,9 @@ export default function UserProfile({ close }) {
           <div>
             <p>New password:</p>
             <input
-              {...registerPass("new_password", {})}
+              {...registerPass("new_password", {
+                pattern: /[A-Za-z0-9_\-.@]{3,40}/,
+              })}
               onKeyDown={(e) => e.key === " " && e.preventDefault()}
               placeholder="Type a new password..."
               type={"text"}
@@ -169,7 +182,7 @@ export default function UserProfile({ close }) {
             <input
               {...registerPass("current_password", {
                 required: "The current password is required.",
-                pattern: /[A-Za-z0-9_\-.@]{3,20}/,
+                pattern: /[A-Za-z0-9_\-.@]{3,40}/,
               })}
               onKeyDown={(e) => e.key === " " && e.preventDefault()}
               placeholder="Confirm your current password..."
@@ -177,7 +190,7 @@ export default function UserProfile({ close }) {
               autoComplete="off"
             />
           </div>
-          <input type="submit" value="Update" />
+          <input type="submit" value="Change" />
         </form>
       </div>
     </div>

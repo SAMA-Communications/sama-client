@@ -41,6 +41,10 @@ export default function ChatList({
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
+  const currentUserData = useMemo(
+    () => (userInfo ? participants[userInfo._id] : {}),
+    [userInfo, participants]
+  );
 
   api.onConversationCreateListener = (chat) => {
     dispatch(
@@ -96,10 +100,10 @@ export default function ChatList({
     <aside style={{ display: asideDisplayStyle }}>
       <div className="user-box">
         <div className="user-photo">
-          {!userInfo ? <UserIcon /> : userInfo?.login.slice(0, 2).toUpperCase()}
+          {currentUserData?.login.slice(0, 2).toUpperCase()}
         </div>
         <div className="user-info">
-          <p className="user-info-name">{userInfo?.login}</p>
+          <p className="user-info-name">{currentUserData?.login}</p>
           {/* <p className="user-info-status"></p> */}
         </div>
         <div className="user-options" onClick={openModal}>
