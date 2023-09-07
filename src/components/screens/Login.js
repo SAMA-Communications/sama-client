@@ -13,6 +13,7 @@ import { history } from "../../_helpers/history";
 import { motion as m } from "framer-motion";
 import { setSelectedConversation } from "../../store/SelectedConversation";
 import { setUserIsLoggedIn } from "../../store/UserIsLoggedIn ";
+import { upsertUser } from "../../store/Participants";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 
@@ -38,12 +39,13 @@ export default function Login() {
         data.ulogin.trim().toLowerCase(),
         data.pass.trim(),
       ];
-      const userToken = await api.userLogin(data);
+      const { token: userToken, user: userData } = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
       history.navigate("/main");
       subscribeForNotifications();
       dispatch(setSelectedConversation({}));
       dispatch(setUserIsLoggedIn(true));
+      dispatch(upsertUser(userData));
     } catch (error) {
       localStorage.removeItem("sessionId");
       showCustomAlert(error.message, "danger");

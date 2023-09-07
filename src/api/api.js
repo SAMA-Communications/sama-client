@@ -79,7 +79,7 @@ class Api {
           if (response.error) {
             reject(response.error);
           } else {
-            resolve(response[resObjKey]);
+            resolve(resObjKey ? response[resObjKey] : response);
           }
           delete this.responsesPromises[responseId];
         }
@@ -141,7 +141,7 @@ class Api {
         id: getUniqueId("userLogin"),
       },
     };
-    const resObjKey = "token";
+    const resObjKey = null;
     return this.sendPromise(requestData, resObjKey);
   }
 
@@ -171,7 +171,6 @@ class Api {
   }
 
   async userDelete() {
-    //only use in app
     const requestData = {
       request: {
         user_delete: {},

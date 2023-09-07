@@ -29,6 +29,8 @@
   border: none;
   border-radius: var(--border-main-radius);
   background-color: var(--bg-main-color);
+
+  z-index: 13;
 }
 .user-o-box {
   display: flex;
@@ -51,6 +53,8 @@
   box-shadow: inset 0px 0px 10px var(--shadow-block);
 }
 .user-o-info {
+  flex-grow: 1;
+
   display: flex;
   gap: 12px;
   flex-direction: column;
@@ -65,7 +69,25 @@
 
   font-size: calc(var(--font-size) * 1.5);
   font-weight: 300;
-  line-height: 50px;
+  line-height: 100%;
+}
+.user-o-info-login {
+  line-height: 150%;
+}
+.user-o-delete {
+  align-self: flex-start;
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+.user-o-delete:hover {
+  transform: scale(1.25);
+}
+.user-o-delete > svg > path {
+  transition: 0.3s;
+}
+.user-o-delete:hover > svg > path {
+  stroke: var(--text-danger);
 }
 
 #userEditForm {
