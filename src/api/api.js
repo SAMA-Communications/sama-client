@@ -159,6 +159,17 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
+  async userEdit(data) {
+    const requestData = {
+      request: {
+        user_edit: {},
+        id: getUniqueId("userEdit"),
+      },
+    };
+    const resObjKey = "user";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
   async userLogout() {
     const requestData = {
       request: {
