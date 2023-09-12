@@ -1,24 +1,19 @@
 aside {
-  box-sizing: border-box;
   position: relative;
-  width: min(400px, 100vw);
-  height: calc(93svh - 20px);
-  margin: 0 20px 20px 20px;
-  padding-top: 0;
+  box-sizing: border-box;
 
-  background-color: inherit;
+  width: min(400px, 100vw);
+  height: 100svh;
+
+  background-color: var(--bg-main-color);
 }
 
 .user-box {
   height: 100px;
   padding: 10px 15px;
 
-  border-radius: var(--border-main-radius);
-  background-color: var(--bg-main-color);
-
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 8px 0 var(--shadow-block), 0 6px 20px 0 var(--shadow-block);
 }
 .user-photo,
 .chat-box-icon {
@@ -62,21 +57,13 @@ aside {
 }
 
 .chat-list {
-  height: calc(91svh - 120px);
-  margin-top: 20px;
+  height: 100%;
 
   display: flex;
   flex-direction: column;
   gap: 15px;
 
   overflow-y: auto;
-  overflow-x: hidden;
-
-  border: 15px solid transparent;
-
-  border-radius: var(--border-main-radius);
-  background-color: var(--bg-main-color);
-  box-shadow: 0 4px 8px 0 var(--shadow-block), 0 6px 20px 0 var(--shadow-block);
 }
 .chat-list > a {
   text-decoration: none;

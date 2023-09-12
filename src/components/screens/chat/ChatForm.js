@@ -36,10 +36,10 @@ import {
 } from "../../../store/Messages";
 import { useSelector, useDispatch } from "react-redux";
 
-import "../../../styles/chat/ChatForm.css";
+import "../../../styles/pages/ChatForm.css";
 
-import { ReactComponent as EmptyChat } from "./../../../assets/icons/chatForm/EmptyChat.svg";
 import { ReactComponent as BurgerMenu } from "./../../../assets/icons/chatForm/BurgerMenu.svg";
+import { ReactComponent as EmptyChat } from "./../../../assets/icons/chatForm/EmptyChat.svg";
 import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatForm/RecipientPhoto.svg";
 import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";

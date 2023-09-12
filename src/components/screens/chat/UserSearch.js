@@ -2,16 +2,16 @@ import React, { useEffect, useState, useTransition } from "react";
 import SearchedUser from "../../generic/SearchedUser.js";
 import SelectedUser from "../../generic/SelectedUser.js";
 import api from "../../../api/api";
+import showCustomAlert from "../../../utils/show_alert.js";
 import { addUsers } from "../../../store/Participants.js";
 import { history } from "../../../_helpers/history.js";
 import { insertChat } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useDispatch } from "react-redux";
 
-import "../../../styles/chat/UserSearch.css";
+import "../../../styles/pages/UserSearch.css";
 
 import { ReactComponent as SearchIndicator } from "./../../../assets/icons/SearchIndicator.svg";
-import showCustomAlert from "../../../utils/show_alert.js";
 
 export default function UserSearch({ close }) {
   const dispatch = useDispatch();

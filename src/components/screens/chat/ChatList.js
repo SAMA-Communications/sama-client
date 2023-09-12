@@ -2,8 +2,9 @@ import React, { useMemo, useState } from "react";
 import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
 import ChatBox from "../../generic/ChatBox.js";
+import MiniLogo from "./../../static/MiniLogo.js";
 import UserSearch from "./UserSearch.js";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
   addUsers,
   selectParticipantsEntities,
@@ -15,18 +16,25 @@ import {
   upsertChat,
 } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
+import { setUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
+import { updateNetworkState } from "../../../store/NetworkState.js";
 import { useSelector, useDispatch } from "react-redux";
 
-import "../../../styles/chat/ChatList.css";
+import "../../../styles/pages/ChatList.css";
 
 import { ReactComponent as UserIcon } from "./../../../assets/icons/chatList/UserIcon.svg";
+import { ReactComponent as IconSun } from "./../../../assets/icons/ThemeSun.svg";
+import { ReactComponent as IconMoon } from "./../../../assets/icons/ThemeMoon.svg";
 import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
+import { ReactComponent as LogoutBtn } from "./../../../assets/icons/chatList/LogoutBtn.svg";
 
-export default function ChatList({
-  asideDisplayStyle,
-  setAsideDisplayStyle,
-  setChatFormBgDisplayStyle,
-}) {
+export default function ChatList(
+  {
+    // asideDisplayStyle,
+    // setAsideDisplayStyle,
+    // setChatFormBgDisplayStyle,
+  }
+) {
   const dispatch = useDispatch();
   const [isSearchForm, setIsSearchForm] = useState(false);
 
@@ -47,6 +55,52 @@ export default function ChatList({
       .getParticipantsByCids([chat._id])
       .then((users) => dispatch(addUsers(users)));
   };
+
+  const sendLogout = async () => {
+    navigator.serviceWorker.ready
+      .then((reg) =>
+        reg.pushManager.getSubscription().then((sub) =>
+          sub.unsubscribe().then(async () => {
+            await api.pushSubscriptionDelete();
+            await api.userLogout();
+            dispatch({ type: "RESET_STORE" });
+            dispatch(updateNetworkState(true));
+          })
+        )
+      )
+      .catch(async (err) => {
+        console.error(err);
+        await api.userLogout();
+        dispatch(setUserIsLoggedIn(false));
+      });
+    localStorage.removeItem("sessionId");
+  };
+
+  const [currentTheme, setCurrentTheme] = useState(
+    localStorage.getItem("theme")
+  );
+  const changeToDarkTheme = () => {
+    localStorage.setItem("theme", "dark");
+    document.body.classList.add("dark-theme");
+    setCurrentTheme("dark");
+  };
+  const changeToLightTheme = () => {
+    localStorage.setItem("theme", "light");
+    document.body.classList.remove("dark-theme");
+    setCurrentTheme("light");
+  };
+
+  const changeThemeBtn = useMemo(() => {
+    return currentTheme === "dark" ? (
+      <div className="change-themes" onClick={changeToLightTheme}>
+        <IconSun />
+      </div>
+    ) : (
+      <div className="change-themes" onClick={changeToDarkTheme}>
+        <IconMoon />
+      </div>
+    );
+  }, [currentTheme]);
 
   const chatsList = useMemo(() => {
     let list = [];
@@ -69,8 +123,8 @@ export default function ChatList({
               api.markConversationAsRead({ cid: obj._id });
             }
 
-            setAsideDisplayStyle("none");
-            setChatFormBgDisplayStyle("none");
+            // setAsideDisplayStyle("none");
+            // setChatFormBgDisplayStyle("none");
           }}
         >
           <ChatBox
@@ -88,14 +142,30 @@ export default function ChatList({
   }, [conversations, participants, activeConv]);
 
   return (
-    <aside style={{ display: asideDisplayStyle }}>
+    <aside>
+      {/* <aside style={{ display: asideDisplayStyle }}> */}
+      <div className="nav-navigate-bar">
+        <div className="nav-logo">
+          <MiniLogo />
+        </div>
+        <div className="nav-btns">
+          {changeThemeBtn}
+          <div className="nav-navigate-slice">
+            <span>|</span>
+          </div>
+          <div className="nav-logout-btn">
+            <Link to={"/login"} onClick={sendLogout} className="logout-btn">
+              <LogoutBtn />
+            </Link>
+          </div>
+        </div>
+      </div>
       <div className="user-box">
         <div className="user-photo">
           {!userInfo ? <UserIcon /> : userInfo?.login.slice(0, 2).toUpperCase()}
         </div>
         <div className="user-info">
           <p className="user-info-name">{userInfo?.login}</p>
-          {/* <p className="user-info-status"></p> */}
         </div>
       </div>
       <div className="chat-list">
