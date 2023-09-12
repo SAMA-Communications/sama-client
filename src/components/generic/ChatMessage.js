@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import MessageAttachments from "../screens/chat/MessageAttachments";
 import MessageStatus from "./MessageStatus";
 
-import "../../styles/pages/chats/ChatMessage.css";
+import "../../styles/pages/chat/ChatMessage.css";
 
 import { ReactComponent as UserPhoto } from "./../../assets/icons/chatForm/UserPhotoIconChat.svg";
 

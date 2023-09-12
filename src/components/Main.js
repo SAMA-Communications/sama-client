@@ -16,25 +16,16 @@ export default function Main() {
   // };
 
   return (
-    <div>
-      {/* <div
-        style={{ display: chatFormBgDisplayStyle }}
-        className="chat-menu-bg"
-        onClick={closeChatList}
-      >
-        <CloseChatList />
-      </div> */}
-      <main>
-        <ChatList
-        // asideDisplayStyle={asideDisplayStyle}
-        // setAsideDisplayStyle={setAsideDisplayStyle}
-        // setChatFormBgDisplayStyle={setChatFormBgDisplayStyle}
-        />
-        {/* <ChatForm
-        // setAsideDisplayStyle={setAsideDisplayStyle}
-        // setChatFormBgDisplayStyle={setChatFormBgDisplayStyle}
-        /> */}
-      </main>
-    </div>
+    <main>
+      <ChatList
+      // asideDisplayStyle={asideDisplayStyle}
+      // setAsideDisplayStyle={setAsideDisplayStyle}
+      // setChatFormBgDisplayStyle={setChatFormBgDisplayStyle}
+      />
+      <ChatForm
+      // setAsideDisplayStyle={setAsideDisplayStyle}
+      // setChatFormBgDisplayStyle={setChatFormBgDisplayStyle}
+      />
+    </main>
   );
 }

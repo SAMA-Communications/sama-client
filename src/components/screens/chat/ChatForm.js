@@ -7,9 +7,9 @@ import getLastVisitTime from "../../../utils/get_last_visit_time.js";
 import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import showCustomAlert from "../../../utils/show_alert.js";
+import { getFileObjects } from "../../../api/download_manager.js";
 import { getNetworkState } from "../../../store/NetworkState.js";
 import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
-import { getFileObjects } from "../../../api/download_manager.js";
 import { history } from "../../../_helpers/history.js";
 import {
   selectParticipantsEntities,
@@ -38,7 +38,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/pages/ChatForm.css";
 
-import { ReactComponent as BurgerMenu } from "./../../../assets/icons/chatForm/BurgerMenu.svg";
+import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as EmptyChat } from "./../../../assets/icons/chatForm/EmptyChat.svg";
 import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatForm/RecipientPhoto.svg";
 import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
@@ -350,14 +350,15 @@ export default function ChatForm({
 
   return (
     <section className="chat-form">
-      <div className="chat-menu-btn" onClick={openChatList}>
-        <BurgerMenu />
-      </div>
       {!selectedCID ? (
         <NoChatSelected />
       ) : (
-        <div className="chat-form-messaging">
-          <div className="chat-messaging-info">
+        <>
+          <div className="chat-form-info">
+            <div className="chat-return-btn fcc" onClick={openChatList}>
+              {/* add swipe tracker */}
+              <BackBtn />
+            </div>
             <div className="chat-info-block">
               <div className="chat-recipient-photo">
                 <RecipientPhoto />
@@ -418,7 +419,7 @@ export default function ChatForm({
             </div>
           </form>
           {modalOpen && modalWindow()}
-        </div>
+        </>
       )}
     </section>
   );

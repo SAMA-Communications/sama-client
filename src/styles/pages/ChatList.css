@@ -1,12 +1,13 @@
 aside {
-  position: relative;
   box-sizing: border-box;
 
   width: min(400px, 100vw);
   height: 100svh;
 
-  border-right: 1px solid var(--border-dark-color);
+  display: flex;
+  flex-direction: column;
 
+  border-right: 1px solid var(--border-dark-color);
   background-color: var(--bg-main-color);
 }
 
@@ -20,7 +21,7 @@ aside {
   border-right: 5px solid transparent;
   border-left: 5px solid transparent;
 
-  background-color: #303037;
+  background-color: var(--scrollbar-track-color);
 }
 .user-photo,
 .chat-box-icon {
@@ -54,13 +55,12 @@ aside {
 }
 
 .chat-list {
-  height: 100%;
+  margin: 5px 0;
 
   display: flex;
   flex-direction: column;
 
-  /* border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent; */
+  border-right: 5px solid transparent;
 
   overflow-y: auto;
 }
@@ -177,13 +177,20 @@ aside {
   line-height: var(--font-size);
 }
 
-@media (min-width: 1023px) {
+/* @media (min-width: 1023px) {
   aside {
     display: block !important;
   }
-}
+} */
 
 @media (max-width: 1023px) {
+  aside {
+    width: 100svw;
+
+    z-index: 111;
+    display: none;
+  }
+
   .user-box {
     height: 80px;
     padding: 10px;
@@ -194,21 +201,10 @@ aside {
 
     font-size: calc(var(--font-size) * 1.7);
   }
+
   .chat-list {
     border-width: 10px;
   }
-  aside {
-    width: 96vw !important;
-    margin: 2vw;
-
-    /* display: none; */
-    position: absolute;
-    align-items: flex-start;
-
-    z-index: 111;
-  }
-}
-@media (max-width: 800px) {
   .chat-box-info > p {
     width: calc(100% - 35px);
 
