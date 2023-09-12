@@ -36,6 +36,7 @@ export default function ChatList(
   }
 ) {
   const dispatch = useDispatch();
+
   const [isSearchForm, setIsSearchForm] = useState(false);
 
   const conversations = useSelector(selectAllConversations);
@@ -148,13 +149,17 @@ export default function ChatList(
         <div className="nav-logo">
           <MiniLogo />
         </div>
-        <div className="nav-btns">
+        <div className="nav-btns fcc">
           {changeThemeBtn}
+          <div className="nav-create-btn" onClick={() => setIsSearchForm(true)}>
+            <CreateChatButton />
+          </div>
           <div className="nav-navigate-slice">
             <span>|</span>
           </div>
+
           <div className="nav-logout-btn">
-            <Link to={"/login"} onClick={sendLogout} className="logout-btn">
+            <Link to={"/login"} onClick={sendLogout} className="logout-btn fcc">
               <LogoutBtn />
             </Link>
           </div>
@@ -174,9 +179,6 @@ export default function ChatList(
         ) : (
           chatsList
         )}
-        <div className="chat-create-btn" onClick={() => setIsSearchForm(true)}>
-          <CreateChatButton />
-        </div>
         {isSearchForm && <UserSearch close={setIsSearchForm} />}
       </div>
     </aside>

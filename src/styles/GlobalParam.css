@@ -32,8 +32,14 @@ body {
 
   background-color: var(--bg-default-color);
 }
+
 .hide {
   display: none !important;
+}
+.fcc {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 ::-webkit-scrollbar {

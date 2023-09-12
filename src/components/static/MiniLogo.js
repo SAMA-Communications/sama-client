@@ -6,9 +6,9 @@ export default function MiniLogo() {
   return (
     <>
       <svg
-        width="49"
-        height="48"
-        viewBox="0 0 49 48"
+        width="45"
+        height="44"
+        viewBox="0 0 45 44"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
