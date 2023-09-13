@@ -44,7 +44,10 @@
 
 .chat-return-btn {
   width: 55px;
+
   display: none;
+
+  cursor: pointer;
 }
 
 .chat-form-info {
@@ -316,6 +319,11 @@
   }
   #chatMessagesScrollable {
     padding: 5px 5px 5px 0;
+  }
+
+  .chat-form-loading > P {
+    font-size: calc(var(--font-size) * 2);
+    line-height: calc(var(--font-size) * 2);
   }
 }
 

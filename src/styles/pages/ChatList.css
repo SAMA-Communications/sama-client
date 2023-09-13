@@ -177,18 +177,11 @@ aside {
   line-height: var(--font-size);
 }
 
-/* @media (min-width: 1023px) {
-  aside {
-    display: block !important;
-  }
-} */
-
 @media (max-width: 1023px) {
   aside {
     width: 100svw;
 
     z-index: 111;
-    display: none;
   }
 
   .user-box {

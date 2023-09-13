@@ -97,12 +97,4 @@ main {
   .nav-navigate-bar {
     padding: 5px;
   }
-
-  .change-themes {
-    padding: 0;
-  }
-  .change-themes > svg {
-    width: 30px;
-    height: 30px;
-  }
 }

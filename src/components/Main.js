@@ -1,31 +1,32 @@
 import ChatForm from "./screens/chat/ChatForm";
 import ChatList from "./screens/chat/ChatList";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
+import globalConstants from "../_helpers/constants";
+import { history } from "../_helpers/history";
 
 import "../styles/Main.css";
 
-// import { ReactComponent as CloseChatList } from "./../assets/icons/CloseChatList.svg";
-
 export default function Main() {
-  // const [asideDisplayStyle, setAsideDisplayStyle] = useState("none");
-  // const [chatFormBgDisplayStyle, setChatFormBgDisplayStyle] = useState("none");
-
-  // const closeChatList = () => {
-  //   setAsideDisplayStyle("none");
-  //   setChatFormBgDisplayStyle("none");
-  // };
-
-  return (
-    <main>
-      <ChatList
-      // asideDisplayStyle={asideDisplayStyle}
-      // setAsideDisplayStyle={setAsideDisplayStyle}
-      // setChatFormBgDisplayStyle={setChatFormBgDisplayStyle}
-      />
-      <ChatForm
-      // setAsideDisplayStyle={setAsideDisplayStyle}
-      // setChatFormBgDisplayStyle={setChatFormBgDisplayStyle}
-      />
-    </main>
+  const [isMobileView, setIsMobileView] = useState(
+    window.innerWidth <= globalConstants.windowChangeWitdh
   );
+
+  window.addEventListener("resize", () =>
+    setIsMobileView(window.innerWidth <= globalConstants.windowChangeWitdh)
+  );
+
+  const mainContent = useMemo(() => {
+    if (!isMobileView) {
+      return (
+        <>
+          <ChatList />
+          <ChatForm />
+        </>
+      );
+    }
+
+    return !!history.location.hash ? <ChatForm /> : <ChatList />;
+  }, [history.location, isMobileView]);
+
+  return <main>{mainContent}</main>;
 }

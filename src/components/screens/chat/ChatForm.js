@@ -45,10 +45,7 @@ import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatF
 import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
 
-export default function ChatForm({
-  setAsideDisplayStyle,
-  setChatFormBgDisplayStyle,
-}) {
+export default function ChatForm() {
   const dispatch = useDispatch();
 
   const connectState = useSelector(getNetworkState);
@@ -268,19 +265,18 @@ export default function ChatForm({
     );
   };
 
+  const closeForm = () => {
+    dispatch(clearSelectedConversation());
+    api.unsubscribeFromUserActivity({});
+    history.navigate("/main");
+  };
+
+  document.addEventListener("swiped-left", closeForm);
+  document.addEventListener("swiped-right", closeForm);
+
   window.onkeydown = function (event) {
     if (event.keyCode === 27) {
-      dispatch(clearSelectedConversation());
-      api.unsubscribeFromUserActivity({});
-      history.navigate("/main");
-    }
-  };
-  window.onresize = function (event) {
-    if (messageInputEl.current) {
-      messageInputEl.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
+      closeForm();
     }
   };
 
@@ -327,11 +323,6 @@ export default function ChatForm({
     messageInputEl.current.focus();
   };
 
-  const openChatList = () => {
-    setAsideDisplayStyle("block");
-    setChatFormBgDisplayStyle("flex");
-  };
-
   const chatNameView = useMemo(() => {
     if (!selectedConversation || !participants) {
       return <p></p>;
@@ -355,8 +346,7 @@ export default function ChatForm({
       ) : (
         <>
           <div className="chat-form-info">
-            <div className="chat-return-btn fcc" onClick={openChatList}>
-              {/* add swipe tracker */}
+            <div className="chat-return-btn fcc" onClick={closeForm}>
               <BackBtn />
             </div>
             <div className="chat-info-block">

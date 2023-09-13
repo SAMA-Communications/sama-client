@@ -28,13 +28,7 @@ import { ReactComponent as IconMoon } from "./../../../assets/icons/ThemeMoon.sv
 import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
 import { ReactComponent as LogoutBtn } from "./../../../assets/icons/chatList/LogoutBtn.svg";
 
-export default function ChatList(
-  {
-    // asideDisplayStyle,
-    // setAsideDisplayStyle,
-    // setChatFormBgDisplayStyle,
-  }
-) {
+export default function ChatList() {
   const dispatch = useDispatch();
 
   const [isSearchForm, setIsSearchForm] = useState(false);
@@ -123,9 +117,6 @@ export default function ChatList(
               dispatch(clearCountOfUnreadMessages(obj._id));
               api.markConversationAsRead({ cid: obj._id });
             }
-
-            // setAsideDisplayStyle("none");
-            // setChatFormBgDisplayStyle("none");
           }}
         >
           <ChatBox
@@ -144,7 +135,6 @@ export default function ChatList(
 
   return (
     <aside>
-      {/* <aside style={{ display: asideDisplayStyle }}> */}
       <div className="nav-navigate-bar">
         <div className="nav-logo">
           <MiniLogo />
