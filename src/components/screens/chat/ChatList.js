@@ -42,6 +42,7 @@ export default function ChatList() {
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
 
+  // vv  API Listeners  vv //
   api.onConversationCreateListener = (chat) => {
     dispatch(
       upsertChat({ ...chat, unread_messages_count: 0, messagesIds: [] })
@@ -50,7 +51,9 @@ export default function ChatList() {
       .getParticipantsByCids([chat._id])
       .then((users) => dispatch(addUsers(users)));
   };
+  // ʌʌ  API Listeners  ʌʌ //
 
+  // vv  Send logout block  vv //
   const sendLogout = async () => {
     navigator.serviceWorker.ready
       .then((reg) =>
@@ -70,7 +73,9 @@ export default function ChatList() {
       });
     localStorage.removeItem("sessionId");
   };
+  // ʌʌ  Send logout block  ʌʌ //
 
+  // vv  Change theme block  vv //
   const [currentTheme, setCurrentTheme] = useState(
     localStorage.getItem("theme")
   );
@@ -96,7 +101,9 @@ export default function ChatList() {
       </div>
     );
   }, [currentTheme]);
+  // ʌʌ  Change theme block  ʌʌ //
 
+  // vv  Chat list block  vv //
   const chatsList = useMemo(() => {
     let list = [];
     for (const obj of conversations) {
@@ -132,6 +139,7 @@ export default function ChatList() {
     }
     return list;
   }, [conversations, participants, activeConv]);
+  // ʌʌ  Chat list block  ʌʌ //
 
   return (
     <aside>

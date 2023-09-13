@@ -70,22 +70,6 @@ export default function ChatForm() {
   const scrollChatToBottom = () =>
     chatMessagesBlock.current?._infScroll?.scrollIntoView({ block: "end" });
 
-  const opponentId = useMemo(() => {
-    const conv = conversations[selectedCID];
-    if (!conv) {
-      return null;
-    }
-
-    return conv.owner_id === userInfo._id
-      ? participants[conv.opponent_id]?._id
-      : participants[conv.owner_id]?._id;
-  }, [selectedCID]);
-
-  const opponentLastActivity = useMemo(
-    () => participants[opponentId]?.recent_activity,
-    [opponentId, participants]
-  );
-
   useEffect(() => {
     const { hash } = history.location;
     if (!hash || hash.slice(1) === selectedCID || !isUserLogin) {
@@ -95,6 +79,21 @@ export default function ChatForm() {
     dispatch(setSelectedConversation({ id: hash.slice(1) }));
   }, [history.location.hash, isUserLogin]);
 
+  useEffect(() => {
+    if (!selectedCID) {
+      return;
+    }
+
+    if (conversations[selectedCID].unread_messages_count > 0) {
+      dispatch(clearCountOfUnreadMessages(selectedCID));
+      api.markConversationAsRead({ cid: selectedCID });
+    }
+
+    setFiles([]);
+    messageInputEl.current.value = "";
+  }, [selectedCID, conversations[selectedCID]]);
+
+  // vv  API Listeners  vv //
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
     dispatch(
@@ -135,21 +134,9 @@ export default function ChatForm() {
       })
     );
   };
+  // ʌʌ  API Listeners  ʌʌ //
 
-  useEffect(() => {
-    if (!selectedCID) {
-      return;
-    }
-
-    if (conversations[selectedCID].unread_messages_count > 0) {
-      dispatch(clearCountOfUnreadMessages(selectedCID));
-      api.markConversationAsRead({ cid: selectedCID });
-    }
-
-    setFiles([]);
-    messageInputEl.current.value = "";
-  }, [selectedCID, conversations[selectedCID]]);
-
+  // vv  Send message block  vv //
   const sendMessage = async (event) => {
     event.preventDefault();
 
@@ -231,7 +218,9 @@ export default function ChatForm() {
     scrollChatToBottom();
     messageInputEl.current.focus();
   };
+  // ʌʌ  Send message block  ʌʌ //
 
+  // vv  Delete chat block  vv //
   const deleteChat = async () => {
     const isConfirm = window.confirm(`Do you want to delete this chat?`);
     if (isConfirm) {
@@ -245,26 +234,9 @@ export default function ChatForm() {
       }
     }
   };
+  // ʌʌ  Delete chat block  ʌʌ //
 
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const close = () => setModalOpen(false);
-  const open = (options) => setModalOpen(options);
-
-  const modalWindow = () => {
-    window.onkeydown = function (event) {
-      if (event.keyCode === 27) {
-        close();
-      }
-    };
-
-    return (
-      <div exit="exit" className="modal-window" onClick={() => close()}>
-        <img src={modalOpen?.url} alt={modalOpen?.name} />
-      </div>
-    );
-  };
-
+  // vv  Close form block  vv //
   const closeForm = () => {
     dispatch(clearSelectedConversation());
     api.unsubscribeFromUserActivity({});
@@ -273,12 +245,25 @@ export default function ChatForm() {
 
   document.addEventListener("swiped-left", closeForm);
   document.addEventListener("swiped-right", closeForm);
+  window.onkeydown = (event) => event.keyCode === 27 && closeForm();
+  // ʌʌ  Close form block   ʌʌ //
 
-  window.onkeydown = function (event) {
-    if (event.keyCode === 27) {
-      closeForm();
+  // vv  Activity block  vv //
+  const opponentId = useMemo(() => {
+    const conv = conversations[selectedCID];
+    if (!conv) {
+      return null;
     }
-  };
+
+    return conv.owner_id === userInfo._id
+      ? participants[conv.opponent_id]?._id
+      : participants[conv.owner_id]?._id;
+  }, [selectedCID]);
+
+  const opponentLastActivity = useMemo(
+    () => participants[opponentId]?.recent_activity,
+    [opponentId, participants]
+  );
 
   const [reloadActivity, setReloadActivity] = useState(false);
   useEffect(() => {
@@ -295,7 +280,9 @@ export default function ChatForm() {
       ? opponentLastActivity
       : getLastVisitTime(opponentLastActivity);
   }, [reloadActivity]);
+  // ʌʌ  Activity block  ʌʌ //
 
+  // vv  Attachments pick  vv //
   const pickUserFiles = () => filePicker.current.click();
   const handlerChange = (event) => {
     if (!event.target.files.length) {
@@ -322,7 +309,25 @@ export default function ChatForm() {
     setFiles(files?.length ? [...files, ...selectedFiles] : [...selectedFiles]);
     messageInputEl.current.focus();
   };
+  // ʌʌ  Attachments pick  ʌʌ //
 
+  // vv  Attachments view  vv //
+  const [modalOpen, setModalOpen] = useState(false);
+  const close = () => setModalOpen(false);
+  const open = (options) => setModalOpen(options);
+
+  const modalWindow = () => {
+    window.onkeydown = (event) => event.keyCode === 27 && close();
+
+    return (
+      <div exit="exit" className="modal-window" onClick={() => close()}>
+        <img src={modalOpen?.url} alt={modalOpen?.name} />
+      </div>
+    );
+  };
+  // ʌʌ  Attachments view  ʌʌ //
+
+  // vv  Chat name view  vv //
   const chatNameView = useMemo(() => {
     if (!selectedConversation || !participants) {
       return <p></p>;
@@ -338,6 +343,7 @@ export default function ChatForm() {
 
     return <p>{owner_id === userInfo._id ? opponentLogin : ownerLogin}</p>;
   }, [selectedConversation, participants]);
+  // ʌʌ  Chat name view  ʌʌ //
 
   return (
     <section className="chat-form">
