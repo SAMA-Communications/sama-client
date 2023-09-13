@@ -248,6 +248,14 @@ export default function ChatForm() {
   window.onkeydown = function (event) {
     event.keyCode === 27 && closeForm();
   };
+  window.onresize = function (event) {
+    if (messageInputEl.current) {
+      messageInputEl.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  };
   // ʌʌ  Close form block   ʌʌ //
 
   // vv  Activity block  vv //

@@ -27,6 +27,7 @@ import { ReactComponent as IconSun } from "./../../../assets/icons/ThemeSun.svg"
 import { ReactComponent as IconMoon } from "./../../../assets/icons/ThemeMoon.svg";
 import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
 import { ReactComponent as LogoutBtn } from "./../../../assets/icons/chatList/LogoutBtn.svg";
+import { history } from "../../../_helpers/history.js";
 
 export default function ChatList() {
   const dispatch = useDispatch();
@@ -149,7 +150,10 @@ export default function ChatList() {
         </div>
         <div className="nav-btns fcc">
           {changeThemeBtn}
-          <div className="nav-create-btn" onClick={() => setIsSearchForm(true)}>
+          <div
+            className="nav-create-btn"
+            onClick={() => history.navigate("/main/search")}
+          >
             <CreateChatButton />
           </div>
           <div className="nav-navigate-slice">
@@ -177,7 +181,6 @@ export default function ChatList() {
         ) : (
           chatsList
         )}
-        {isSearchForm && <UserSearch close={setIsSearchForm} />}
       </div>
     </aside>
   );

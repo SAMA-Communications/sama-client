@@ -1,6 +1,7 @@
 import ChatForm from "./screens/chat/ChatForm";
 import ChatList from "./screens/chat/ChatList";
 import React, { useMemo, useState } from "react";
+import UserSearch from "./screens/chat/UserSearch";
 import globalConstants from "../_helpers/constants";
 import { history } from "../_helpers/history";
 
@@ -10,23 +11,40 @@ export default function Main() {
   const [isMobileView, setIsMobileView] = useState(
     window.innerWidth <= globalConstants.windowChangeWitdh
   );
+  //move to redux
 
   window.addEventListener("resize", () =>
     setIsMobileView(window.innerWidth <= globalConstants.windowChangeWitdh)
   );
 
-  const mainContent = useMemo(() => {
-    if (!isMobileView) {
-      return (
+  const mainContent = useMemo(
+    () =>
+      !isMobileView ? (
         <>
           <ChatList />
           <ChatForm />
         </>
-      );
-    }
+      ) : !!history.location.hash ? (
+        <ChatForm />
+      ) : (
+        <ChatList />
+      ),
+    [history.location.hash, isMobileView]
+  );
 
-    return !!history.location.hash ? <ChatForm /> : <ChatList />;
-  }, [history.location, isMobileView]);
+  const additionalContent = useMemo(() => {
+    const allBlocks = [];
 
-  return <main>{mainContent}</main>;
+    history.location.pathname.includes("/search") &&
+      allBlocks.push(<UserSearch key={"/search"} />);
+
+    return allBlocks;
+  }, [history.location.pathname]);
+
+  return (
+    <main>
+      {mainContent}
+      {additionalContent}
+    </main>
+  );
 }

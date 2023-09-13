@@ -11,9 +11,10 @@ import { useDispatch } from "react-redux";
 
 import "../../../styles/pages/UserSearch.css";
 
+import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as SearchIndicator } from "./../../../assets/icons/SearchIndicator.svg";
 
-export default function UserSearch({ close }) {
+export default function UserSearch() {
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -45,8 +46,6 @@ export default function UserSearch({ close }) {
 
       history.navigate(`/main/#${chat._id}`);
       dispatch(setSelectedConversation({ id: chat._id }));
-
-      close(false);
     }
   };
 
@@ -88,61 +87,60 @@ export default function UserSearch({ close }) {
     });
   };
 
-  window.onkeydown = (event) => {
-    event.keyCode === 27 && close(false);
+  window.onkeydown = function (event) {
+    event.keyCode === 27 && history.navigate(`/main`);
     event.keyCode === 13 && event.preventDefault();
   };
 
   return (
-    <div className="search-bg">
-      <form id="search-form">
-        <div className="search-options">
-          <input
-            id="inputSearchLogin"
-            autoComplete="off"
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Input user email (must be at least 2 characters)"
-            autoFocus
-          />
-          {isPending && (
-            <span className="search-indicator">
-              <SearchIndicator />
-            </span>
-          )}
+    <form id="search-form">
+      <div className="search-options fcc">
+        <div
+          className="search-close-chat"
+          onClick={() => history.navigate(`/main`)}
+        >
+          <BackBtn />
         </div>
-        <div className="chat-selected-users">
-          {selectedUsers.length
-            ? selectedUsers.map((d) => (
-                <SelectedUser
-                  key={d._id + "-selected"}
-                  onClick={() => removeUserToIgnore(d)}
-                  uLogin={d.login}
-                />
-              ))
-            : null}
-        </div>
-        <div className="list-users">
-          {searchedUsers.length ? (
-            searchedUsers.map((d) => (
-              <SearchedUser
-                key={d._id}
-                onClick={() => addUserToIgnore(d)}
+        <input
+          id="inputSearchLogin"
+          autoComplete="off"
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Input user email (at least 2 characters)"
+          autoFocus
+        />
+        {isPending && (
+          <span className="search-indicator">
+            <SearchIndicator />
+          </span>
+        )}
+      </div>
+      <div className="chat-selected-users">
+        {selectedUsers.length
+          ? selectedUsers.map((d) => (
+              <SelectedUser
+                key={d._id + "-selected"}
+                onClick={() => removeUserToIgnore(d)}
                 uLogin={d.login}
               />
             ))
-          ) : (
-            <div className="list-user-message">{isUserSearched}</div>
-          )}
-        </div>
-        <div className="search-buttons">
-          <div className="search-create-chat" onClick={createChat}>
-            <p>Create a chat</p>
-          </div>
-          <div className="search-close-chat" onClick={() => close(false)}>
-            <p>X</p>
-          </div>
-        </div>
-      </form>
-    </div>
+          : null}
+      </div>
+      <div className="list-users">
+        {searchedUsers.length ? (
+          searchedUsers.map((d) => (
+            <SearchedUser
+              key={d._id}
+              onClick={() => addUserToIgnore(d)}
+              uLogin={d.login}
+            />
+          ))
+        ) : (
+          <div className="list-user-message">{isUserSearched}</div>
+        )}
+      </div>
+      <div className="search-create-chat" onClick={createChat}>
+        <p>Create a chat</p>
+      </div>
+    </form>
   );
 }
