@@ -245,7 +245,9 @@ export default function ChatForm() {
 
   document.addEventListener("swiped-left", closeForm);
   document.addEventListener("swiped-right", closeForm);
-  window.onkeydown = (event) => event.keyCode === 27 && closeForm();
+  window.onkeydown = function (event) {
+    event.keyCode === 27 && closeForm();
+  };
   // ʌʌ  Close form block   ʌʌ //
 
   // vv  Activity block  vv //
@@ -317,7 +319,9 @@ export default function ChatForm() {
   const open = (options) => setModalOpen(options);
 
   const modalWindow = () => {
-    window.onkeydown = (event) => event.keyCode === 27 && close();
+    window.onkeydown = function (event) {
+      event.keyCode === 27 && close();
+    };
 
     return (
       <div exit="exit" className="modal-window" onClick={() => close()}>
