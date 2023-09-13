@@ -1,21 +1,15 @@
 import ChatForm from "./screens/chat/ChatForm";
 import ChatList from "./screens/chat/ChatList";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import UserSearch from "./screens/chat/UserSearch";
-import globalConstants from "../_helpers/constants";
+import { getIsMobileView } from "../store/IsMobileView";
 import { history } from "../_helpers/history";
+import { useSelector } from "react-redux";
 
 import "../styles/Main.css";
 
 export default function Main() {
-  const [isMobileView, setIsMobileView] = useState(
-    window.innerWidth <= globalConstants.windowChangeWitdh
-  );
-  //move to redux
-
-  window.addEventListener("resize", () =>
-    setIsMobileView(window.innerWidth <= globalConstants.windowChangeWitdh)
-  );
+  const isMobileView = useSelector(getIsMobileView);
 
   const mainContent = useMemo(
     () =>

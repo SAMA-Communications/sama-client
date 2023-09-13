@@ -1,11 +1,13 @@
 import React, { Suspense, useEffect } from "react";
 import activityService from "./services/activityService";
-import conversationService from "./services/conversationsService";
-import messagesService from "./services/messagesService";
 import autoLoginService from "./services/autoLoginService.js";
+import conversationService from "./services/conversationsService";
+import globalConstants from "./_helpers/constants";
+import messagesService from "./services/messagesService";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { history } from "./_helpers/history";
+import { setIsMobileView } from "./store/IsMobileView";
 import { updateNetworkState } from "./store/NetworkState";
 import { useDispatch } from "react-redux";
 
@@ -30,6 +32,15 @@ export default function App() {
       dispatch(updateNetworkState(false))
     );
     window.addEventListener("online", () => dispatch(updateNetworkState(true)));
+    window.addEventListener("resize", () =>
+      dispatch(
+        setIsMobileView(window.innerWidth <= globalConstants.windowChangeWitdh)
+      )
+    );
+
+    dispatch(
+      setIsMobileView(window.innerWidth <= globalConstants.windowChangeWitdh)
+    );
 
     if (window.matchMedia("(prefers-color-scheme: dark)").matches === true) {
       if (localStorage.getItem("theme") !== "light") {
