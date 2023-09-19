@@ -328,6 +328,9 @@
 }
 
 @media (max-width: 800px) {
+  .chat-info-block {
+    /* max-width: calc(100svw - 45px); */
+  }
   .chat-recipient-photo {
     width: 50px;
     height: 50px;
@@ -336,7 +339,7 @@
     width: 35px;
   }
   .chat-recipient-info {
-    width: calc(100vw - 170px);
+    width: calc(100svw - 170px);
 
     display: flex;
 
@@ -344,6 +347,8 @@
     justify-content: center;
   }
   .chat-recipient-info > p {
+    width: 100%;
+
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
