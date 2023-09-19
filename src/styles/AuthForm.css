@@ -312,6 +312,9 @@ input[type="submit"]:hover {
   .bg-login {
     background-position: center center;
   }
+  .bg-create {
+    background-position: center center;
+  }
 }
 
 @media (max-width: 800px) {
