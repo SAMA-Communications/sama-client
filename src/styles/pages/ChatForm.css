@@ -71,18 +71,11 @@
   display: flex;
   align-items: center;
 
-  padding: 4px;
+  margin: 0 4px;
   cursor: pointer;
-
-  border-radius: var(--border-second-radius);
-
-  background-size: 0;
-  background-repeat: no-repeat;
-  background-position: bottom;
-  background-image: linear-gradient(0, var(--text-danger), var(--text-danger));
 }
-.chat-delete-btn:hover {
-  background-size: 100%;
+.chat-delete-btn:hover > svg > path {
+  stroke: var(--text-danger);
 }
 
 .chat-recipient-photo {

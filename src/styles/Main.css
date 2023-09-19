@@ -30,7 +30,6 @@ main {
 .nav-btns {
   gap: calc(var(--font-size) * 0.2);
 }
-.nav-logout-btn,
 .nav-create-btn,
 .change-themes {
   padding: 2px 4px;
@@ -47,14 +46,20 @@ main {
     var(--btn-hover-color)
   );
 }
+.nav-logout-btn {
+  cursor: pointer;
+}
 .nav-logout-btn > a {
   text-decoration: none;
   font-size: calc(var(--font-size) * 2);
   line-height: calc(var(--font-size) * 2);
-
-  transition: 0.3s;
 }
-.nav-logout-btn:hover,
+.nav-logout-btn:hover > a > svg {
+  stroke: var(--text-danger);
+
+  transition: 0.1s;
+}
+
 .nav-create-btn:hover {
   background-size: 100%;
 }
