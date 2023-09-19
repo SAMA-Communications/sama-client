@@ -92,10 +92,12 @@ export default function UserProfile({ close }) {
             {currentUser.login?.slice(0, 2).toUpperCase()}
           </div>
           <div className="user-o-info">
-            {currentUser.first_name ? (
+            {currentUser.first_name || currentUser.last_name ? (
               <>
                 <p className="user-o-info-name">
-                  {currentUser.first_name + " " + currentUser.last_name}
+                  {(currentUser.first_name
+                    ? currentUser.first_name + " "
+                    : "") + (currentUser.last_name || "")}
                 </p>
                 <i className="user-o-info-login">{currentUser.login}</i>
               </>
