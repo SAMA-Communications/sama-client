@@ -383,7 +383,7 @@ export default function ChatForm() {
             </div>
           </div>
           <div className="chat-form-main">
-            {messages.length ? (
+            {!messages.length ? (
               <div className="chat-empty">
                 <EmptyChat />
                 <p>Please type your message...</p>
