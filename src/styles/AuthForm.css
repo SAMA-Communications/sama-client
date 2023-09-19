@@ -309,6 +309,9 @@ input[type="submit"]:hover {
     flex-grow: 1;
     justify-content: flex-start;
   }
+  .bg-login {
+    background-position: center center;
+  }
 }
 
 @media (max-width: 800px) {
