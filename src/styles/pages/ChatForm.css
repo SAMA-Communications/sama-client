@@ -303,6 +303,8 @@
 @media (max-width: 1023px) {
   .chat-form {
     width: 100svw;
+
+    z-index: 100;
   }
   .chat-return-btn {
     display: block;

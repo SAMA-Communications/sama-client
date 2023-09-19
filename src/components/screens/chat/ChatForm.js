@@ -248,14 +248,14 @@ export default function ChatForm() {
   window.onkeydown = function (event) {
     event.keyCode === 27 && closeForm();
   };
-  window.onresize = function (event) {
-    if (messageInputEl.current) {
-      messageInputEl.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    }
-  };
+  // window.onresize = function (event) {
+  //   if (messageInputEl.current) {
+  //     messageInputEl.current.scrollIntoView({
+  //       behavior: "smooth",
+  //       block: "end",
+  //     });
+  //   }
+  // };
   // ʌʌ  Close form block   ʌʌ //
 
   // vv  Activity block  vv //
@@ -383,7 +383,7 @@ export default function ChatForm() {
             </div>
           </div>
           <div className="chat-form-main">
-            {!messages.length ? (
+            {messages.length ? (
               <div className="chat-empty">
                 <EmptyChat />
                 <p>Please type your message...</p>
