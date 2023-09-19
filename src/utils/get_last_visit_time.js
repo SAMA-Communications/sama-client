@@ -26,7 +26,7 @@ export default function getLastVisitTime(timestamp, userLocale) {
       "on " +
       visitDate.toLocaleDateString(userLocale, {
         year: "numeric",
-        month: "long",
+        month: "numeric",
         day: "numeric",
       });
   } else {
