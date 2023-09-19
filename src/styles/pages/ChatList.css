@@ -12,10 +12,13 @@ aside {
 }
 
 .user-box {
+  position: relative;
+
   height: 100px;
   padding: 10px 5px;
 
   display: flex;
+  gap: 15px;
   align-items: center;
 
   border-right: 5px solid transparent;
@@ -40,9 +43,9 @@ aside {
   box-shadow: inset 0px 0px 10px var(--shadow-block);
 }
 .user-info {
-  margin-left: 15px;
+  width: calc(100% - 95px);
 }
-.user-info-name {
+.user-info > p {
   width: 100%;
 
   text-overflow: ellipsis;
@@ -181,12 +184,18 @@ aside {
   aside {
     width: 100svw;
 
+    border: 0;
+
     z-index: 111;
   }
 
   .user-box {
+    width: 100svw;
     height: 80px;
     padding: 10px;
+  }
+  .user-info {
+    width: calc(100% - 85px);
   }
   .user-photo {
     width: 60px;
