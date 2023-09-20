@@ -281,15 +281,15 @@ export default function ChatForm() {
     return () => clearTimeout(debounce);
   }, [opponentLastActivity, selectedConversation]);
 
-  // const recentActivityView = useMemo(() => {
-  //   if (selectedConversation?.name) {
-  //     return null;
-  //   }
+  const recentActivityView = useMemo(() => {
+    if (selectedConversation?.name) {
+      return null;
+    }
 
-  //   return opponentLastActivity === "online"
-  //     ? opponentLastActivity
-  //     : getLastVisitTime(opponentLastActivity);
-  // }, [reloadActivity]);
+    return opponentLastActivity === "online"
+      ? opponentLastActivity
+      : getLastVisitTime(opponentLastActivity);
+  }, [reloadActivity]);
   // ʌʌ  Activity block  ʌʌ //
 
   // vv  Attachments pick  vv //
@@ -374,7 +374,7 @@ export default function ChatForm() {
               <div className="chat-recipient-info">
                 {chatNameView}
                 <div className="chat-recipient-status">
-                  {/* {recentActivityView} */}
+                  {recentActivityView}
                 </div>
               </div>
             </div>
