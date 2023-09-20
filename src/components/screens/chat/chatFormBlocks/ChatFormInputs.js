@@ -4,7 +4,7 @@ import isMobile from "./../../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import { getFileObjects } from "../../../../api/download_manager";
 import { getNetworkState } from "../../../../store/NetworkState";
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addMessage,
@@ -25,6 +25,7 @@ export default function ChatFormInputs({
   chatMessagesBlockRef,
   messageInputEl,
   files,
+  setFiles,
 }) {
   const dispatch = useDispatch();
 
@@ -53,10 +54,7 @@ export default function ChatFormInputs({
     }
 
     const text = messageInputEl.current.value.trim();
-    if (
-      (text.length === 0 && !files.current.value?.length) ||
-      isSendMessageDisable
-    ) {
+    if ((text.length === 0 && !files?.length) || isSendMessageDisable) {
       return;
     }
     setIsSendMessageDisable(true);
@@ -79,8 +77,8 @@ export default function ChatFormInputs({
       chatId: selectedCID,
     };
 
-    if (files.current.value?.length) {
-      attachments = await getFileObjects(files.current.value);
+    if (files?.length) {
+      attachments = await getFileObjects(files);
       reqData["attachments"] = attachments.map((obj) => {
         return { file_id: obj.file_id, file_name: obj.file_name };
       });
@@ -120,8 +118,7 @@ export default function ChatFormInputs({
       );
       dispatch(removeMessage(mid));
     }
-
-    files.current.value = [];
+    setFiles([]);
     filePicker.current.value = "";
     isMobile && messageInputEl.current.blur();
 
@@ -150,32 +147,23 @@ export default function ChatFormInputs({
       selectedFiles.push(file);
     }
 
-    if (files.current.value?.length + event.target.files.length >= 10) {
+    if (files?.length + event.target.files.length >= 10) {
       showCustomAlert("The maximum limit for file uploads is 10.", "warning");
       return;
     }
 
-    files.current.value = files.current.value?.length
-      ? [...files.current.value, ...selectedFiles]
-      : [...selectedFiles];
+    setFiles(files?.length ? [...files, ...selectedFiles] : [...selectedFiles]);
     messageInputEl.current.focus();
   };
   // ʌʌ  Attachments pick  ʌʌ //
 
-  // vv  Files block pick  vv //
-  const filesBlock = useMemo(() => {
-    console.log(files.current.value);
-    return files.current.value?.length ? (
-      <AttachmentsList files={files} />
-    ) : null;
-  }, [files]);
-  // ʌʌ  Files block pick  ʌʌ //
-
-  console.log("---| Input");
+  console.log("render --- Input");
 
   return (
     <>
-      {filesBlock}
+      {files?.length ? (
+        <AttachmentsList files={files} funcUpdateFile={setFiles} />
+      ) : null}
       <form id="chat-form-send" action="">
         <div className="form-send-file">
           <SendFilesButton onClick={pickUserFiles} />
