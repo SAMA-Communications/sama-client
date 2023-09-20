@@ -369,7 +369,8 @@ export default function ChatForm() {
 
     return (
       <div id="chatMessagesScrollable">
-        <MessagesList scrollRef={chatMessagesBlock} openModalFunc={open} />
+        {/* <MessagesList scrollRef={chatMessagesBlock} openModalFunc={open} /> */}
+        messages
       </div>
     );
   }, [messages]);
