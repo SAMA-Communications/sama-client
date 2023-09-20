@@ -40,13 +40,14 @@ export default function ChatForm() {
 
   const chatMessagesBlock = useRef();
   const messageInputEl = useRef(null);
-  const [files, setFiles] = useState([]);
+  const files = useRef([]);
 
   useEffect(() => {
     const { hash } = history.location;
     if (!hash || hash.slice(1) === selectedCID || !isUserLogin) {
       return;
     }
+    console.log("useEffect - 1 ");
 
     dispatch(setSelectedConversation({ id: hash.slice(1) }));
   }, [history.location.hash, isUserLogin]);
@@ -55,13 +56,14 @@ export default function ChatForm() {
     if (!selectedCID) {
       return;
     }
+    console.log("useEffect - 2 ");
 
     if (conversations[selectedCID].unread_messages_count > 0) {
       dispatch(clearCountOfUnreadMessages(selectedCID));
       api.markConversationAsRead({ cid: selectedCID });
     }
 
-    setFiles([]);
+    files.current.value = [];
     messageInputEl.current.value = "";
   }, [selectedCID, conversations[selectedCID]]);
 
@@ -149,6 +151,8 @@ export default function ChatForm() {
   // ʌʌ  Attachments view  ʌʌ //
 
   if (!selectedCID) {
+    console.log("--| EmptyChat", selectedCID);
+
     return (
       <section className="chat-form">
         <NoChatSelected />
@@ -156,7 +160,7 @@ export default function ChatForm() {
     );
   }
 
-  console.log("render - ChatForm", selectedCID);
+  console.log("--| ChatForm", selectedCID);
 
   return (
     <section className="chat-form">
@@ -166,7 +170,6 @@ export default function ChatForm() {
         chatMessagesBlockRef={chatMessagesBlock}
         messageInputEl={messageInputEl}
         files={files}
-        setFiles={setFiles}
       />
       {modalOpen && modalWindow()}
     </section>

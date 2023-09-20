@@ -97,7 +97,7 @@ export default function ChatFormInfo({ closeForm }) {
   };
   // ʌʌ  Delete chat block  ʌʌ //
 
-  console.log("render --- Info");
+  console.log("---| Info");
 
   return (
     <div className="chat-form-info">

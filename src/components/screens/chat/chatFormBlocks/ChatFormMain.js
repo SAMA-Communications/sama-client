@@ -7,7 +7,7 @@ import { ReactComponent as EmptyChat } from "./../../../../assets/icons/chatForm
 export default function ChatFormMain({ scrollRef, open }) {
   const messages = useSelector(getActiveConversationMessages);
 
-  console.log("render --- Main");
+  console.log("---| Main");
 
   return (
     <div className="chat-form-main">
