@@ -281,15 +281,15 @@ export default function ChatForm() {
     return () => clearTimeout(debounce);
   }, [opponentLastActivity, selectedConversation]);
 
-  const recentActivityView = useMemo(() => {
-    if (selectedConversation?.name) {
-      return null;
-    }
+  // const recentActivityView = useMemo(() => {
+  //   if (selectedConversation?.name) {
+  //     return null;
+  //   }
 
-    return opponentLastActivity === "online"
-      ? opponentLastActivity
-      : getLastVisitTime(opponentLastActivity);
-  }, [reloadActivity]);
+  //   return opponentLastActivity === "online"
+  //     ? opponentLastActivity
+  //     : getLastVisitTime(opponentLastActivity);
+  // }, [reloadActivity]);
   // ʌʌ  Activity block  ʌʌ //
 
   // vv  Attachments pick  vv //
@@ -357,24 +357,6 @@ export default function ChatForm() {
   }, [selectedConversation, participants]);
   // ʌʌ  Chat name view  ʌʌ //
 
-  const messageBlok = useMemo(() => {
-    if (!messages.length) {
-      return (
-        <div className="chat-empty">
-          <EmptyChat />
-          <p>Please type your message...</p>
-        </div>
-      );
-    }
-
-    return (
-      <div id="chatMessagesScrollable">
-        {/* <MessagesList scrollRef={chatMessagesBlock} openModalFunc={open} /> */}
-        messages
-      </div>
-    );
-  }, [messages]);
-
   return (
     <section className="chat-form">
       {!selectedCID ? (
@@ -392,7 +374,7 @@ export default function ChatForm() {
               <div className="chat-recipient-info">
                 {chatNameView}
                 <div className="chat-recipient-status">
-                  {recentActivityView}
+                  {/* {recentActivityView} */}
                 </div>
               </div>
             </div>
@@ -400,7 +382,21 @@ export default function ChatForm() {
               <TrashCan />
             </div>
           </div>
-          <div className="chat-form-main">{messageBlok}</div>
+          <div className="chat-form-main">
+            {!messages.length ? (
+              <div className="chat-empty">
+                <EmptyChat />
+                <p>Please type your message...</p>
+              </div>
+            ) : (
+              <div id="chatMessagesScrollable">
+                <MessagesList
+                  scrollRef={chatMessagesBlock}
+                  openModalFunc={open}
+                />
+              </div>
+            )}
+          </div>
           {files?.length ? (
             <AttachmentsList files={files} funcUpdateFile={setFiles} />
           ) : null}
