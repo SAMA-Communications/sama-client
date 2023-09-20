@@ -1,54 +1,33 @@
-import AttachmentsList from "../../generic/AttachmentsList.js";
-import MessagesList from "./MessagesList.js";
+import ChatFormMain from "./chatFormBlocks/ChatFormMain.js";
+import ChatFormInfo from "./chatFormBlocks/ChatFormInfo.js";
 import NoChatSelected from "../../static/NoChatSelected.js";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import api from "../../../api/api";
-import getLastVisitTime from "../../../utils/get_last_visit_time.js";
-import isMobile from "../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
-import showCustomAlert from "../../../utils/show_alert.js";
-import { getFileObjects } from "../../../api/download_manager.js";
-import { getNetworkState } from "../../../store/NetworkState.js";
 import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 import { history } from "../../../_helpers/history.js";
-import {
-  selectParticipantsEntities,
-  upsertUser,
-} from "../../../store/Participants.js";
+import { upsertUser } from "../../../store/Participants.js";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
   markConversationAsRead,
-  removeChat,
   selectConversationsEntities,
-  setLastMessageField,
   updateLastMessageField,
 } from "../../../store/Conversations";
 import {
   clearSelectedConversation,
   setSelectedConversation,
 } from "../../../store/SelectedConversation";
-import {
-  addMessage,
-  getActiveConversationMessages,
-  markMessagesAsRead,
-  removeMessage,
-} from "../../../store/Messages";
+import { addMessage, markMessagesAsRead } from "../../../store/Messages";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/pages/ChatForm.css";
 
-import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
-import { ReactComponent as EmptyChat } from "./../../../assets/icons/chatForm/EmptyChat.svg";
-import { ReactComponent as RecipientPhoto } from "./../../../assets/icons/chatForm/RecipientPhoto.svg";
-import { ReactComponent as SendFilesButton } from "./../../../assets/icons/chatForm/SendFilesButton.svg";
-import { ReactComponent as SendMessageButton } from "./../../../assets/icons/chatForm/SendMessageButton.svg";
-import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
+import ChatFormInputs from "./chatFormBlocks/ChatFormInputs.js";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
 
-  const connectState = useSelector(getNetworkState);
   const isUserLogin = useSelector(getUserIsLoggedIn);
 
   const userInfo = localStorage.getItem("sessionId")
@@ -56,19 +35,12 @@ export default function ChatForm() {
     : null;
 
   const conversations = useSelector(selectConversationsEntities);
-  const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
-  const messages = useSelector(getActiveConversationMessages);
-  const messageInputEl = useRef(null);
-  const filePicker = useRef(null);
-  const [files, setFiles] = useState([]);
-  const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
-
   const chatMessagesBlock = useRef();
-  const scrollChatToBottom = () =>
-    chatMessagesBlock.current?._infScroll?.scrollIntoView({ block: "end" });
+  const messageInputEl = useRef(null);
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     const { hash } = history.location;
@@ -136,106 +108,6 @@ export default function ChatForm() {
   };
   // ʌʌ  API Listeners  ʌʌ //
 
-  // vv  Send message block  vv //
-  const sendMessage = async (event) => {
-    event.preventDefault();
-
-    if (!connectState) {
-      showCustomAlert("No internet connection…", "warning");
-      return;
-    }
-
-    const text = messageInputEl.current.value.trim();
-    if ((text.length === 0 && !files?.length) || isSendMessageDisable) {
-      return;
-    }
-    setIsSendMessageDisable(true);
-    messageInputEl.current.value = "";
-    const mid = userInfo._id + Date.now();
-    let msg = {
-      _id: mid,
-      body: text,
-      from: userInfo._id,
-      t: Date.now(),
-    };
-
-    dispatch(addMessage(msg));
-    dispatch(updateLastMessageField({ cid: selectedCID, msg }));
-
-    let attachments = [];
-    const reqData = {
-      mid,
-      text: text,
-      chatId: selectedCID,
-    };
-
-    if (files?.length) {
-      attachments = await getFileObjects(files);
-      reqData["attachments"] = attachments.map((obj) => {
-        return { file_id: obj.file_id, file_name: obj.file_name };
-      });
-    }
-
-    let response;
-    try {
-      response = await api.messageCreate(reqData);
-    } catch (err) {
-      showCustomAlert("The server connection is unavailable.", "warning");
-      dispatch(
-        setLastMessageField({
-          cid: selectedCID,
-          msg: messages[messages.length - 1],
-        })
-      );
-      return;
-    }
-
-    if (response.mid) {
-      msg = {
-        _id: response.server_mid,
-        body: text,
-        from: userInfo._id,
-        status: "sent",
-        t: response.t,
-        attachments,
-      };
-
-      dispatch(addMessage(msg));
-      dispatch(
-        updateLastMessageField({
-          cid: selectedCID,
-          resaveLastMessage: 1,
-          msg,
-        })
-      );
-      dispatch(removeMessage(mid));
-    }
-    setFiles([]);
-    filePicker.current.value = "";
-    isMobile && messageInputEl.current.blur();
-
-    setIsSendMessageDisable(false);
-    scrollChatToBottom();
-    messageInputEl.current.focus();
-  };
-  // ʌʌ  Send message block  ʌʌ //
-
-  // vv  Delete chat block  vv //
-  const deleteChat = async () => {
-    const isConfirm = window.confirm(`Do you want to delete this chat?`);
-    if (isConfirm) {
-      try {
-        await api.conversationDelete({ cid: selectedCID });
-        dispatch(clearSelectedConversation());
-        dispatch(removeChat(selectedCID));
-        history.navigate("/main");
-      } catch (error) {
-        showCustomAlert(error.message, "warning");
-      }
-    }
-  };
-  // ʌʌ  Delete chat block  ʌʌ //
-
   // vv  Close form block  vv //
   const closeForm = () => {
     dispatch(clearSelectedConversation());
@@ -258,69 +130,6 @@ export default function ChatForm() {
   };
   // ʌʌ  Close form block   ʌʌ //
 
-  // vv  Activity block  vv //
-  const opponentId = useMemo(() => {
-    const conv = conversations[selectedCID];
-    if (!conv) {
-      return null;
-    }
-
-    return conv.owner_id === userInfo._id
-      ? participants[conv.opponent_id]?._id
-      : participants[conv.owner_id]?._id;
-  }, [selectedCID]);
-
-  const opponentLastActivity = useMemo(
-    () => participants[opponentId]?.recent_activity,
-    [opponentId, participants]
-  );
-
-  const [reloadActivity, setReloadActivity] = useState(false);
-  useEffect(() => {
-    const debounce = setTimeout(() => setReloadActivity((prev) => !prev), 250);
-    return () => clearTimeout(debounce);
-  }, [opponentLastActivity, selectedConversation]);
-
-  const recentActivityView = useMemo(() => {
-    if (selectedConversation?.name) {
-      return null;
-    }
-
-    return opponentLastActivity === "online"
-      ? opponentLastActivity
-      : getLastVisitTime(opponentLastActivity);
-  }, [reloadActivity]);
-  // ʌʌ  Activity block  ʌʌ //
-
-  // vv  Attachments pick  vv //
-  const pickUserFiles = () => filePicker.current.click();
-  const handlerChange = (event) => {
-    if (!event.target.files.length) {
-      return;
-    }
-
-    const selectedFiles = [];
-    for (const file of event.target.files) {
-      if (file.name.length > 255) {
-        showCustomAlert(
-          "The file name should not exceed 255 characters.",
-          "warning"
-        );
-        return;
-      }
-      selectedFiles.push(file);
-    }
-
-    if (files?.length + event.target.files.length >= 10) {
-      showCustomAlert("The maximum limit for file uploads is 10.", "warning");
-      return;
-    }
-
-    setFiles(files?.length ? [...files, ...selectedFiles] : [...selectedFiles]);
-    messageInputEl.current.focus();
-  };
-  // ʌʌ  Attachments pick  ʌʌ //
-
   // vv  Attachments view  vv //
   const [modalOpen, setModalOpen] = useState(false);
   const close = () => setModalOpen(false);
@@ -339,96 +148,27 @@ export default function ChatForm() {
   };
   // ʌʌ  Attachments view  ʌʌ //
 
-  // vv  Chat name view  vv //
-  const chatNameView = useMemo(() => {
-    if (!selectedConversation || !participants) {
-      return <p></p>;
-    }
+  if (!selectedCID) {
+    return (
+      <section className="chat-form">
+        <NoChatSelected />
+      </section>
+    );
+  }
 
-    const { owner_id, opponent_id, name } = selectedConversation;
-    if (name) {
-      return <p>{name}</p>;
-    }
-
-    const ownerLogin = participants[owner_id]?.login;
-    const opponentLogin = participants[opponent_id]?.login;
-
-    return <p>{owner_id === userInfo._id ? opponentLogin : ownerLogin}</p>;
-  }, [selectedConversation, participants]);
-  // ʌʌ  Chat name view  ʌʌ //
+  console.log("render - ChatForm", selectedCID);
 
   return (
     <section className="chat-form">
-      {!selectedCID ? (
-        <NoChatSelected />
-      ) : (
-        <>
-          <div className="chat-form-info">
-            <div className="chat-return-btn fcc" onClick={closeForm}>
-              <BackBtn />
-            </div>
-            <div className="chat-info-block">
-              <div className="chat-recipient-photo">
-                <RecipientPhoto />
-              </div>
-              <div className="chat-recipient-info">
-                {chatNameView}
-                <div className="chat-recipient-status">
-                  {recentActivityView}
-                </div>
-              </div>
-            </div>
-            <div className="chat-delete-btn" onClick={deleteChat}>
-              <TrashCan />
-            </div>
-          </div>
-          <div className="chat-form-main">
-            {!messages.length ? (
-              <div className="chat-empty">
-                <EmptyChat />
-                <p>Please type your message...</p>
-              </div>
-            ) : (
-              <div id="chatMessagesScrollable">
-                <MessagesList
-                  scrollRef={chatMessagesBlock}
-                  openModalFunc={open}
-                />
-              </div>
-            )}
-          </div>
-          {files?.length ? (
-            <AttachmentsList files={files} funcUpdateFile={setFiles} />
-          ) : null}
-          <form id="chat-form-send" action="">
-            <div className="form-send-file">
-              <SendFilesButton onClick={pickUserFiles} />
-              <input
-                id="inputFile"
-                ref={filePicker}
-                onChange={handlerChange}
-                type="file"
-                accept="image/*"
-                multiple
-              />
-            </div>
-            <div className="form-send-text">
-              <input
-                id="inputMessage"
-                autoFocus={!isMobile}
-                ref={messageInputEl}
-                onTouchStart={(e) => e.target.blur()}
-                autoComplete="off"
-                placeholder="> Please type your message..."
-              />
-              <button id="send-message" onClick={sendMessage}>
-                <SendMessageButton />
-              </button>
-            </div>
-          </form>
-          {modalOpen && modalWindow()}
-        </>
-      )}
+      <ChatFormInfo closeForm={closeForm} />
+      <ChatFormMain scrollRef={chatMessagesBlock} open={open} />
+      <ChatFormInputs
+        chatMessagesBlockRef={chatMessagesBlock}
+        messageInputEl={messageInputEl}
+        files={files}
+        setFiles={setFiles}
+      />
+      {modalOpen && modalWindow()}
     </section>
   );
 }
