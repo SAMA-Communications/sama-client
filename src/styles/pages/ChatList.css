@@ -58,6 +58,7 @@ aside {
 }
 
 .chat-list {
+  flex-grow: 1;
   margin: 5px 0;
 
   display: flex;

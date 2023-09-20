@@ -248,14 +248,14 @@ export default function ChatForm() {
   window.onkeydown = function (event) {
     event.keyCode === 27 && closeForm();
   };
-  // window.onresize = function (event) {
-  //   if (messageInputEl.current) {
-  //     messageInputEl.current.scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "end",
-  //     });
-  //   }
-  // };
+  window.onresize = function (event) {
+    if (messageInputEl.current) {
+      messageInputEl.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  };
   // ʌʌ  Close form block   ʌʌ //
 
   // vv  Activity block  vv //
@@ -357,6 +357,23 @@ export default function ChatForm() {
   }, [selectedConversation, participants]);
   // ʌʌ  Chat name view  ʌʌ //
 
+  const messageBlok = useMemo(() => {
+    if (!messages.length) {
+      return (
+        <div className="chat-empty">
+          <EmptyChat />
+          <p>Please type your message...</p>
+        </div>
+      );
+    }
+
+    return (
+      <div id="chatMessagesScrollable">
+        <MessagesList scrollRef={chatMessagesBlock} openModalFunc={open} />
+      </div>
+    );
+  }, [messages]);
+
   return (
     <section className="chat-form">
       {!selectedCID ? (
@@ -382,21 +399,7 @@ export default function ChatForm() {
               <TrashCan />
             </div>
           </div>
-          <div className="chat-form-main">
-            {!messages.length ? (
-              <div className="chat-empty">
-                <EmptyChat />
-                <p>Please type your message...</p>
-              </div>
-            ) : (
-              <div id="chatMessagesScrollable">
-                <MessagesList
-                  scrollRef={chatMessagesBlock}
-                  openModalFunc={open}
-                />
-              </div>
-            )}
-          </div>
+          <div className="chat-form-main">{messageBlok}</div>
           {files?.length ? (
             <AttachmentsList files={files} funcUpdateFile={setFiles} />
           ) : null}
