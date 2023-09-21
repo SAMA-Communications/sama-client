@@ -7,18 +7,14 @@ import { ReactComponent as EmptyChat } from "./../../../../assets/icons/chatForm
 export default function ChatFormMain({ scrollRef, open }) {
   const messages = useSelector(getActiveConversationMessages);
 
-  return (
-    <div className="chat-form-main">
-      {!messages.length ? (
-        <div className="chat-empty">
-          <EmptyChat />
-          <p>Please type your message...</p>
-        </div>
-      ) : (
-        <div id="chatMessagesScrollable">
-          <MessagesList scrollRef={scrollRef} openModalFunc={open} />
-        </div>
-      )}
+  return !messages.length ? (
+    <div className="chat-empty">
+      <EmptyChat />
+      <p>Please type your message...</p>
+    </div>
+  ) : (
+    <div id="chatMessagesScrollable">
+      <MessagesList scrollRef={scrollRef} openModalFunc={open} />
     </div>
   );
 }

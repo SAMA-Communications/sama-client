@@ -36,6 +36,9 @@
   width: calc(100svw - 400px);
   height: 100svh;
 
+  display: flex;
+  flex-direction: column;
+
   background-color: var(--bg-main-color);
 }
 
@@ -106,13 +109,10 @@
   line-height: calc(var(--font-size) * 1.125);
 }
 
-.chat-form-main {
-}
 #chatMessagesScrollable {
-  height: calc(100svh - 162px);
-
   display: flex;
   overflow: auto;
+  flex-grow: 1;
 
   border-right: 5px solid transparent;
   border-left: 5px solid transparent;
@@ -320,9 +320,6 @@
 }
 
 @media (max-width: 800px) {
-  .chat-form-main {
-    height: calc(100svh - 132px);
-  }
   .chat-recipient-photo {
     width: 50px;
     height: 50px;

@@ -61,7 +61,7 @@ export default function ChatForm() {
       api.markConversationAsRead({ cid: selectedCID });
     }
 
-    !files.length && setFiles([]);
+    files.length && setFiles([]);
     messageInputEl.current.value = "";
   }, [selectedCID, conversations[selectedCID]]);
 
