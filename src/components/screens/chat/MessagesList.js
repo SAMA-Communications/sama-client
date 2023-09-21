@@ -83,7 +83,7 @@ export default function MessagesList({ scrollRef, openModalFunc }) {
       next={lastMessageRef}
       style={{ display: "flex", flexDirection: "column" }}
       inverse={true}
-      hasMore={false}
+      hasMore={false && needToGetMoreMessage.current}
       scrollableTarget="chatMessagesScrollable"
     >
       {messages.map((msg, i) => (
