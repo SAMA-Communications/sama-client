@@ -110,7 +110,6 @@
   height: calc(100svh - 162px);
 
   display: flex;
-  flex-grow: 1;
   overflow: auto;
 
   border-right: 5px solid transparent;
@@ -122,6 +121,7 @@
 
   overflow: auto;
   display: flex;
+  flex-grow: 1;
   flex-direction: column-reverse;
 }
 
