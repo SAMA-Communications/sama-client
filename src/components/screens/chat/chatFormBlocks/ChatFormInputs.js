@@ -157,8 +157,6 @@ export default function ChatFormInputs({
   };
   // ʌʌ  Attachments pick  ʌʌ //
 
-  console.log("render --- Input");
-
   return (
     <>
       {files?.length ? (

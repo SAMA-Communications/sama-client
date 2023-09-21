@@ -51,19 +51,19 @@ export default function ChatForm() {
     dispatch(setSelectedConversation({ id: hash.slice(1) }));
   }, [history.location.hash, isUserLogin]);
 
-  useEffect(() => {
-    if (!selectedCID) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!selectedCID) {
+  //     return;
+  //   }
 
-    if (conversations[selectedCID].unread_messages_count > 0) {
-      dispatch(clearCountOfUnreadMessages(selectedCID));
-      api.markConversationAsRead({ cid: selectedCID });
-    }
+  //   if (conversations[selectedCID].unread_messages_count > 0) {
+  //     dispatch(clearCountOfUnreadMessages(selectedCID));
+  //     api.markConversationAsRead({ cid: selectedCID });
+  //   }
 
-    setFiles([]);
-    messageInputEl.current.value = "";
-  }, [selectedCID, conversations[selectedCID]]);
+  //   setFiles([]);
+  //   messageInputEl.current.value = "";
+  // }, [selectedCID, conversations[selectedCID]]);
 
   // vv  API Listeners  vv //
   api.onMessageStatusListener = (message) => {
@@ -155,8 +155,6 @@ export default function ChatForm() {
       </section>
     );
   }
-
-  console.log("render - ChatForm", selectedCID);
 
   return (
     <section className="chat-form">

@@ -1,11 +1,12 @@
 import jwtDecode from "jwt-decode";
+import getLastVisitTime from "../../../../utils/get_last_visit_time";
+import api from "../../../../api/api";
+import showCustomAlert from "../../../../utils/show_alert";
 import {
   getConverastionById,
   removeChat,
   selectConversationsEntities,
 } from "../../../../store/Conversations";
-import api from "../../../../api/api";
-import showCustomAlert from "../../../../utils/show_alert";
 import { clearSelectedConversation } from "../../../../store/SelectedConversation";
 import { history } from "../../../../_helpers/history";
 import { selectParticipantsEntities } from "../../../../store/Participants";
@@ -15,7 +16,6 @@ import { useEffect, useMemo, useState } from "react";
 import { ReactComponent as BackBtn } from "./../../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as RecipientPhoto } from "./../../../../assets/icons/chatForm/RecipientPhoto.svg";
 import { ReactComponent as TrashCan } from "./../../../../assets/icons/chatForm/TrashCan.svg";
-import getLastVisitTime from "../../../../utils/get_last_visit_time";
 
 export default function ChatFormInfo({ closeForm }) {
   const dispatch = useDispatch();
@@ -96,8 +96,6 @@ export default function ChatFormInfo({ closeForm }) {
     }
   };
   // ʌʌ  Delete chat block  ʌʌ //
-
-  console.log("render --- Info");
 
   return (
     <div className="chat-form-info">
