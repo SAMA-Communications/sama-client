@@ -109,7 +109,7 @@
 .chat-form-main {
   height: calc(100svh - 162px);
 
-  display: flex;
+  /* display: flex; */
   overflow: auto;
 
   border-right: 5px solid transparent;
