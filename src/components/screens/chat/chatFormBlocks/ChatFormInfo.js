@@ -11,7 +11,7 @@ import { clearSelectedConversation } from "../../../../store/SelectedConversatio
 import { history } from "../../../../_helpers/history";
 import { selectParticipantsEntities } from "../../../../store/Participants";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useState } from "react";
 
 import { ReactComponent as BackBtn } from "./../../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as RecipientPhoto } from "./../../../../assets/icons/chatForm/RecipientPhoto.svg";
@@ -65,7 +65,7 @@ export default function ChatFormInfo({ closeForm }) {
   );
 
   const [reloadActivity, setReloadActivity] = useState(false);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const debounce = setTimeout(() => setReloadActivity((prev) => !prev), 250);
     return () => clearTimeout(debounce);
   }, [opponentLastActivity, selectedConversation]);

@@ -1,7 +1,7 @@
 import ChatFormMain from "./chatFormBlocks/ChatFormMain.js";
 import ChatFormInfo from "./chatFormBlocks/ChatFormInfo.js";
 import NoChatSelected from "../../static/NoChatSelected.js";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
 import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
@@ -51,7 +51,7 @@ export default function ChatForm() {
     dispatch(setSelectedConversation({ id: hash.slice(1) }));
   }, [history.location.hash, isUserLogin]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!selectedCID) {
       return;
     }

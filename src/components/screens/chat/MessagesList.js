@@ -10,7 +10,7 @@ import {
 import { getConverastionById, upsertChat } from "../../../store/Conversations";
 import { getDownloadFileLinks } from "../../../api/download_manager";
 import { selectParticipantsEntities } from "../../../store/Participants";
-import { useCallback, useRef } from "react";
+import { useCallback, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function MessagesList({ scrollRef, openModalFunc }) {
@@ -75,6 +75,23 @@ export default function MessagesList({ scrollRef, openModalFunc }) {
         }
       });
   }, [selectedCID, messages, needToGetMoreMessage]);
+
+  useLayoutEffect(() => {
+    const scrollComponent = document.querySelector(
+      ".infinite-scroll-component"
+    );
+
+    scrollComponent.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+    setTimeout(() => {
+      scrollComponent.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }, 300);
+  }, []);
 
   return (
     <InfiniteScroll
