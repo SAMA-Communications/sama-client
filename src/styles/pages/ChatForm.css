@@ -111,8 +111,7 @@
 
 .chat-form-main {
   display: flex;
-  flex-grow: 1;
-  flex-direction: column;
+  height: 500px;
   overflow: auto;
 
   border-right: 5px solid transparent;
