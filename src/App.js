@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useRef } from "react";
 import activityService from "./services/activityService";
 import autoLoginService from "./services/autoLoginService.js";
 import conversationService from "./services/conversationsService";
@@ -7,9 +7,9 @@ import messagesService from "./services/messagesService";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { history } from "./_helpers/history";
-import { setIsMobileView } from "./store/IsMobileView";
+import { getIsMobileView, setIsMobileView } from "./store/IsMobileView";
 import { updateNetworkState } from "./store/NetworkState";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import PageLoader from "./components/PageLoader";
 import SignUp from "./components/screens/SignUp";
@@ -27,16 +27,24 @@ export default function App() {
   history.location = useLocation();
   history.navigate = useNavigate();
 
+  const isMobileView = useSelector(getIsMobileView);
+  const isMobileViewRef = useRef(isMobileView);
+  useEffect(() => {
+    isMobileViewRef.current = isMobileView;
+  }, [isMobileView]);
+
   useEffect(() => {
     window.addEventListener("offline", () =>
       dispatch(updateNetworkState(false))
     );
     window.addEventListener("online", () => dispatch(updateNetworkState(true)));
-    window.addEventListener("resize", () =>
-      dispatch(
-        setIsMobileView(window.innerWidth <= globalConstants.windowChangeWitdh)
-      )
-    );
+    window.addEventListener("resize", () => {
+      const isMobileView =
+        window.innerWidth <= globalConstants.windowChangeWitdh;
+      if (isMobileView !== isMobileViewRef.current) {
+        dispatch(setIsMobileView(isMobileView));
+      }
+    });
 
     dispatch(
       setIsMobileView(window.innerWidth <= globalConstants.windowChangeWitdh)
