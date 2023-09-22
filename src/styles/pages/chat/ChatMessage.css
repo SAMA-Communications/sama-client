@@ -45,6 +45,7 @@
 .message-body {
   padding: 0 10px 10px 10px;
 
+  overflow-wrap: break-word;
   font-size: var(--font-size);
   line-height: calc(var(--font-size) * 1.2);
 }
