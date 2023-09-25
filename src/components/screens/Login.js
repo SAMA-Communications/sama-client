@@ -39,9 +39,9 @@ export default function Login() {
         data.pass.trim(),
       ];
       const userToken = await api.userLogin(data);
-      dispatch({ type: "RESET_STORE" });
       localStorage.setItem("sessionId", userToken);
       history.navigate("/main");
+      dispatch({ type: "RESET_STORE" });
       subscribeForNotifications();
       dispatch(setSelectedConversation({}));
       dispatch(setUserIsLoggedIn(true));
