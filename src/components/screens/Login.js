@@ -39,6 +39,7 @@ export default function Login() {
         data.pass.trim(),
       ];
       const userToken = await api.userLogin(data);
+      dispatch({ type: "RESET_STORE" });
       localStorage.setItem("sessionId", userToken);
       history.navigate("/main");
       subscribeForNotifications();
