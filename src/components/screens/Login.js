@@ -13,6 +13,7 @@ import { history } from "../../_helpers/history";
 import { motion as m } from "framer-motion";
 import { setSelectedConversation } from "../../store/SelectedConversation";
 import { setUserIsLoggedIn } from "../../store/UserIsLoggedIn ";
+import { updateNetworkState } from "../../store/NetworkState";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 
@@ -42,6 +43,7 @@ export default function Login() {
       localStorage.setItem("sessionId", userToken);
       history.navigate("/main");
       dispatch({ type: "RESET_STORE" });
+      dispatch(updateNetworkState(true));
       subscribeForNotifications();
       dispatch(setSelectedConversation({}));
       dispatch(setUserIsLoggedIn(true));
