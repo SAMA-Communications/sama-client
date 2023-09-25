@@ -3,7 +3,6 @@ import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
 import ChatBox from "../../generic/ChatBox.js";
 import MiniLogo from "./../../static/MiniLogo.js";
-import UserSearch from "./UserSearch.js";
 import { Link, NavLink } from "react-router-dom";
 import {
   addUsers,
@@ -31,8 +30,6 @@ import { history } from "../../../_helpers/history.js";
 
 export default function ChatList() {
   const dispatch = useDispatch();
-
-  const [isSearchForm, setIsSearchForm] = useState(false);
 
   const conversations = useSelector(selectAllConversations);
   const participants = useSelector(selectParticipantsEntities);
