@@ -25,6 +25,8 @@
   justify-content: center;
 
   text-align: center;
+
+  background-color: var(--bg-default-color);
 }
 .chat-empty p {
   color: var(--text-smoke);
