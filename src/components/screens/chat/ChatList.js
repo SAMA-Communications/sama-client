@@ -71,7 +71,6 @@ export default function ChatList() {
         dispatch(updateNetworkState(true));
         dispatch(setUserIsLoggedIn(false));
       });
-    // dispatch({ type: "RESET_STORE" });
     localStorage.removeItem("sessionId");
   };
   // ʌʌ  Send logout block  ʌʌ //
