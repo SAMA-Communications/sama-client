@@ -14,6 +14,7 @@ import {
   selectAllConversations,
   upsertChat,
 } from "../../../store/Conversations.js";
+import { history } from "../../../_helpers/history.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { setUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 import { updateNetworkState } from "../../../store/NetworkState.js";
@@ -26,7 +27,6 @@ import { ReactComponent as IconSun } from "./../../../assets/icons/ThemeSun.svg"
 import { ReactComponent as IconMoon } from "./../../../assets/icons/ThemeMoon.svg";
 import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
 import { ReactComponent as LogoutBtn } from "./../../../assets/icons/chatList/LogoutBtn.svg";
-import { history } from "../../../_helpers/history.js";
 
 export default function ChatList() {
   const dispatch = useDispatch();
@@ -106,7 +106,7 @@ export default function ChatList() {
     let list = [];
     for (const obj of conversations) {
       const chatName = !obj.name
-        ? obj.owner_id === userInfo._id
+        ? obj.owner_id === userInfo?._id
           ? participants[obj.opponent_id]?.login
           : participants[obj.owner_id]?.login
         : obj.name;
@@ -130,7 +130,7 @@ export default function ChatList() {
             countOfNewMessages={obj.unread_messages_count}
             chatType={obj.type}
             lastMessage={obj.last_message}
-            uId={userInfo._id}
+            uId={userInfo?._id}
           />
         </NavLink>
       );

@@ -4,6 +4,7 @@ import { addMessages, upsertMessages } from "../store/Messages";
 import { getDownloadFileLinks } from "../api/download_manager";
 import { setSelectedConversation } from "../store/SelectedConversation";
 import { upsertChat } from "../store/Conversations";
+import { history } from "../_helpers/history";
 
 class MessagesService {
   currentChatId;
@@ -61,8 +62,7 @@ class MessagesService {
       })
       .catch(() => {
         store.dispatch(setSelectedConversation({}));
-        // eslint-disable-next-line no-restricted-globals
-        history.pushState({}, null, location.origin + "/main");
+        history.navigate("/main");
       });
   }
 }
