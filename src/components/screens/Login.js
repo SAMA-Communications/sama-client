@@ -42,8 +42,8 @@ export default function Login() {
       const userToken = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
       history.navigate("/main");
-      dispatch({ type: "RESET_STORE" });
-      dispatch(updateNetworkState(true));
+      // dispatch({ type: "RESET_STORE" });
+      // dispatch(updateNetworkState(true));
       subscribeForNotifications();
       dispatch(setSelectedConversation({}));
       dispatch(setUserIsLoggedIn(true));
