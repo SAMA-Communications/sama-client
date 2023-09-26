@@ -11,19 +11,20 @@ import "../styles/Main.css";
 export default function Main() {
   const isMobileView = useSelector(getIsMobileView);
 
-  const mainContent = useMemo(() => {
-    console.log(history.location.hash, isMobileView);
-    return !isMobileView ? (
-      <>
-        <ChatList />
+  const mainContent = useMemo(
+    () =>
+      !isMobileView ? (
+        <>
+          <ChatList />
+          <ChatForm />
+        </>
+      ) : !!history.location.hash ? (
         <ChatForm />
-      </>
-    ) : !!history.location.hash ? (
-      <ChatForm />
-    ) : (
-      <ChatList />
-    );
-  }, [history.location.hash, isMobileView]);
+      ) : (
+        <ChatList />
+      ),
+    [history.location.hash, isMobileView]
+  );
 
   const additionalContent = useMemo(() => {
     const allBlocks = [];
