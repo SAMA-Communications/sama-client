@@ -67,6 +67,8 @@ export default function ChatList() {
       .catch(async (err) => {
         console.error(err);
         await api.userLogout();
+        dispatch({ type: "RESET_STORE" });
+        dispatch(updateNetworkState(true));
         dispatch(setUserIsLoggedIn(false));
       });
     localStorage.removeItem("sessionId");
