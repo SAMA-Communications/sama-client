@@ -19,8 +19,8 @@ const appReducer = combineReducers({
 
 const rootReducer = (state, action) => {
   if (action.type === "RESET_STORE") {
-    const { isMobileView, networkState, userIsLoggedIn } = state;
-    state = { isMobileView, networkState, userIsLoggedIn };
+    const { isMobileView, networkState } = state;
+    state = { isMobileView, networkState };
   }
 
   return appReducer(state, action);
