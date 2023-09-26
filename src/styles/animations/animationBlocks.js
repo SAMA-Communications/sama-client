@@ -19,16 +19,6 @@ const loginBox = {
   },
 };
 
-const createChatButton = {
-  hidden: { opacity: 0, marginBottom: "-10px" },
-  visible: {
-    opacity: 1,
-    marginBottom: 0,
-    transition: { delay: 1, duration: 0.5 },
-  },
-  exit: { opacity: 0, transition: { delay: 0, duration: 0 } },
-};
-
 const changeOpacity = (inDelay, inDuration, outDelay, outDuration) => {
   return {
     hidden: { opacity: 0 },
@@ -64,4 +54,4 @@ const scaleAndRound = (
   };
 };
 
-export { loginBox, createChatButton, changeOpacity, scaleAndRound };
+export { loginBox, changeOpacity, scaleAndRound };

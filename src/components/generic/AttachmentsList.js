@@ -1,5 +1,6 @@
 import AttachmentsListItem from "./AttachmentsListItem";
 import getUniqueId from "../../api/uuid";
+
 import { ReactComponent as ClearFilesButton } from "./../../assets/icons/chatForm/ClearFilesButton.svg";
 
 export default function AttachmentsList({ files, funcUpdateFile }) {

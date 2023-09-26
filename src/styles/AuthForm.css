@@ -1,6 +1,6 @@
 .login-container {
-  width: 100vw;
-  height: 100vh;
+  width: 100svw;
+  height: 100svh;
 
   display: flex;
   align-items: center;
@@ -22,7 +22,7 @@
   overflow: hidden;
 }
 .login-box-create {
-  width: min(98vw, 1000px);
+  width: 1000px;
   box-shadow: 0px 0px 60px 30px var(--shadow-block);
 }
 .login-box-left {
@@ -289,10 +289,39 @@ input[type="submit"]:hover {
 
 @media (max-width: 1023px) {
   .login-box {
-    padding: 0 auto;
-    grid-template-columns: 1fr;
+    width: 100svw !important;
+    height: 100svh;
+
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 0;
   }
+
   .login-box-left {
-    display: none;
+    height: min(250px, 33svh);
+  }
+  .login-box-right {
+    padding-top: 40px;
+
+    flex-grow: 1;
+    justify-content: flex-start;
+  }
+  .bg-login {
+    background-position: center center;
+  }
+  .bg-create {
+    background-position: center center;
+  }
+}
+
+@media (max-width: 800px) {
+  .logo-icon > svg {
+    width: 70px;
+  }
+  .login-box-left > svg {
+    width: 220px;
   }
 }

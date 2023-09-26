@@ -11,7 +11,7 @@ export default function getLastVisitTime(timestamp, userLocale) {
   const yearToStart = todayStart - globalConstants.yearInMs;
   const visitDate = new Date(timestamp);
 
-  let baseMessage = "Last visited ";
+  let baseMessage = "Last seen ";
   const options = {
     hour: "2-digit",
     minute: "2-digit",
@@ -26,7 +26,7 @@ export default function getLastVisitTime(timestamp, userLocale) {
       "on " +
       visitDate.toLocaleDateString(userLocale, {
         year: "numeric",
-        month: "long",
+        month: "numeric",
         day: "numeric",
       });
   } else {

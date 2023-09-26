@@ -1,6 +1,6 @@
 import React from "react";
 
-import "../styles/ErrorPage.css";
+import "../styles/helpers/ErrorPage.css";
 
 import { ReactComponent as PageNotFound } from "./../assets/icons/PageNotFound.svg";
 
