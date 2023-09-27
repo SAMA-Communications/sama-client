@@ -185,10 +185,13 @@ input[name="pass"] {
   border: 1px solid var(--border-color);
   border-radius: var(--border-second-radius);
   background-color: var(--input-bg-color);
+
+  transition: 0.3s border-color;
 }
 input[name="ulogin"]:focus,
 input[name="pass"]:focus {
   outline: none;
+  border-color: (var(--border-color));
 }
 input[name="ulogin"]:not(:placeholder-shown) ~ .input-placeholder,
 input[name="ulogin"]:focus ~ .input-placeholder,
@@ -200,17 +203,6 @@ input[name="pass"]:focus ~ .input-placeholder {
 
   font-size: calc(var(--font-size) * 0.875);
   line-height: calc(var(--font-size) * 0.875);
-}
-input[name="ulogin"]:focus ~ .input-border-focus:before,
-input[name="ulogin"]:focus ~ .input-border-focus:after,
-input[name="pass"]:focus ~ .input-border-focus:before,
-input[name="pass"]:focus ~ .input-border-focus:after {
-  width: 100%;
-  height: 100%;
-
-  opacity: 1;
-
-  transition: 0.3s;
 }
 input[type="submit"] {
   position: relative;
