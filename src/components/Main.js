@@ -28,13 +28,16 @@ export default function Main() {
   );
 
   const additionalContent = useMemo(() => {
+    const { pathname } = history.location;
     const allBlocks = [];
 
-    history.location.pathname.includes("/search") &&
-      allBlocks.push(<UserSearch key={"/search"} />);
-    history.location.pathname.includes("/user") &&
-      allBlocks.push(<UserProfile key={"/user"} />);
+    if (pathname.includes("/search")) {
+      allBlocks.push(<UserSearch key="/search" />);
+    }
 
+    if (pathname.includes("/user")) {
+      allBlocks.push(<UserProfile key="/user" />);
+    }
     return allBlocks;
   }, [history.location.pathname]);
 

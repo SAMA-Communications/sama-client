@@ -14,7 +14,7 @@
 
   background-color: var(--bg-dark-block);
 
-  z-index: 12;
+  z-index: 112;
 }
 .user-options-block {
   width: min(700px, 98svw);
