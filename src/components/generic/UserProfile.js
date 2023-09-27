@@ -31,46 +31,7 @@ export default function UserProfile() {
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
 
-  const { register, handleSubmit, reset } = useForm();
-  const onSubmit = async (data) => {
-    try {
-      Object.keys(data).forEach((key) => !data[key].length && delete data[key]);
-      if (!Object.keys(data).length) {
-        return;
-      }
-      const userNewData = await api.userEdit(data);
-
-      dispatch(upsertUser(userNewData));
-      reset();
-      showCustomAlert("User data has been successfully updated.", "success");
-    } catch (error) {
-      showCustomAlert(error.message, "danger");
-    }
-  };
-
-  const {
-    register: registerPass,
-    handleSubmit: handleSubmitPass,
-    reset: resetPass,
-  } = useForm();
-  const onSubmitPass = async (data) => {
-    try {
-      if (!data.new_password || !data.current_password) {
-        showCustomAlert("Please fill in both fields below.", "warning");
-        return;
-      }
-
-      await api.userEdit(data);
-      resetPass();
-      showCustomAlert(
-        "Your password has been successfully updated.",
-        "success"
-      );
-    } catch (error) {
-      showCustomAlert(error.message, "danger");
-    }
-  };
-
+  // vv  User setting block  vv //
   const currentUser = useMemo(
     () => (userInfo ? participants[userInfo._id] : {}),
     [participants, userInfo]
@@ -89,6 +50,47 @@ export default function UserProfile() {
     event.keyCode === 27 && history.navigate("/main");
     event.keyCode === 13 && event.preventDefault();
   };
+  // ʌʌ  User setting block  ʌʌ //
+
+  // const { register, handleSubmit, reset } = useForm();
+  // const onSubmit = async (data) => {
+  //   try {
+  //     Object.keys(data).forEach((key) => !data[key].length && delete data[key]);
+  //     if (!Object.keys(data).length) {
+  //       return;
+  //     }
+  //     const userNewData = await api.userEdit(data);
+
+  //     dispatch(upsertUser(userNewData));
+  //     reset();
+  //     showCustomAlert("User data has been successfully updated.", "success");
+  //   } catch (error) {
+  //     showCustomAlert(error.message, "danger");
+  //   }
+  // };
+
+  // const {
+  //   register: registerPass,
+  //   handleSubmit: handleSubmitPass,
+  //   reset: resetPass,
+  // } = useForm();
+  // const onSubmitPass = async (data) => {
+  //   try {
+  //     if (!data.new_password || !data.current_password) {
+  //       showCustomAlert("Please fill in both fields below.", "warning");
+  //       return;
+  //     }
+
+  //     await api.userEdit(data);
+  //     resetPass();
+  //     showCustomAlert(
+  //       "Your password has been successfully updated.",
+  //       "success"
+  //     );
+  //   } catch (error) {
+  //     showCustomAlert(error.message, "danger");
+  //   }
+  // };
 
   return (
     <div className="user-options-bg">
@@ -119,7 +121,8 @@ export default function UserProfile() {
           <div>
             <UserLoginIcon />
             <p className="uo-login">
-              Username: <span>{currentUser.login}</span>
+              Username:
+              <span>{currentUser.login}</span>
             </p>
           </div>
           <div>
