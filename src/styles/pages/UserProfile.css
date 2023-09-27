@@ -2,7 +2,7 @@
   width: 100svw;
   height: 100svh;
 
-  padding: 7svh 0;
+  padding: 7svh 1svw;
 
   position: fixed;
   top: 0;
@@ -16,32 +16,32 @@
 
   z-index: 112;
 }
-.user-options-block {
-  width: min(700px, 98svw);
-  max-height: 90svh;
+.user-options-container {
+  width: 450px;
 
-  padding: 28px 15px;
+  padding: 15px 20px 30px 20px;
 
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  gap: 15px;
 
   border: none;
   border-radius: var(--border-main-radius);
   background-color: var(--bg-main-color);
-
-  z-index: 13;
 }
-.user-o-box {
+
+.uo-photo-name {
   display: flex;
-  gap: 15px;
+  flex-direction: column;
   align-items: center;
+  gap: 10px;
 }
-.user-o-photo {
-  width: 140px;
-  height: 140px;
+.uo-photo {
+  width: 100px;
+  height: 100px;
 
-  font-size: calc(var(--font-size) * 2.125);
+  font-size: calc(var(--font-size) * 2.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,124 +52,96 @@
   background-color: var(--bg-chatPhoto-color);
   box-shadow: inset 0px 0px 10px var(--shadow-block);
 }
-.user-o-info {
-  flex-grow: 1;
-
-  display: flex;
-  gap: 12px;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.user-o-info-name {
+.uo-name {
   width: 100%;
 
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 
-  font-size: calc(var(--font-size) * 1.5);
+  font-size: calc(var(--font-size) * 1.75);
   font-weight: 300;
-  line-height: calc(var(--font-size) * 2);
+  line-height: calc(var(--font-size) * 2.25);
 }
-.user-o-info-login {
+
+.uo-info {
+  width: 100%;
+  margin-top: 15px;
+
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.uo-info > div {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.uo-login {
   line-height: 150%;
 }
-.user-o-delete {
-  align-self: flex-start;
-  cursor: pointer;
+.uo-email,
+.uo-login,
+.uo-phone,
+.uo-password {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
+  font-size: calc(var(--font-size) * 1.125);
+}
+.uo-info > div > p > span {
+  font-size: calc(var(--font-size) * 1.125);
+  color: var(--text-hover);
+}
+.uo-info > div:nth-last-child(1) {
+  margin-top: 20px;
+}
+.uo-password > span {
+  cursor: pointer;
+  text-decoration: underline;
+
+  transition: 0.15s color;
+}
+.uo-password > span:hover {
+  color: var(--text-hover-light);
+}
+
+.uo-navigation {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.uo-navigation > div {
+  display: flex;
+  gap: 15px;
+}
+
+.uo-delete {
+  cursor: pointer;
+}
+.uo-delete > svg > path {
   transition: 0.3s;
 }
-.user-o-delete:hover {
-  transform: scale(1.25);
-}
-.user-o-delete > svg > path {
-  transition: 0.3s;
-}
-.user-o-delete:hover > svg > path {
+.uo-delete:hover > svg > path {
   stroke: var(--text-danger);
 }
 
-.user-profile-close {
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  padding: 10px 20px;
-
-  z-index: 110;
-}
-.user-profile-close svg {
-  width: 30px;
-}
-.user-profile-close svg:hover {
+.uo-edit {
   cursor: pointer;
 }
-.user-profile-close svg path {
-  stroke: var(--btn-text-hover);
+.uo-edit > svg > path {
+  transition: 0.3s;
+}
+.uo-edit:hover > svg > path {
+  stroke: var(--text-hover);
 }
 
-.form-title {
-  text-align: center;
-  font-size: calc(var(--font-size) * 1.5);
-  padding-bottom: 10px;
-}
-.forms-block {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-
-  overflow-y: scroll;
-}
-#userEditForm,
-#passwordEditForm {
-  padding: 2px 2px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-#userEditForm > div,
-#passwordEditForm > div {
-  width: min(100%, 480px);
-
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 10px;
-  align-items: center;
-
-  text-align: right;
-}
-
-#userEditForm > div > input:not([type="submit"]),
-#passwordEditForm > div > input:not([type="submit"]) {
-  flex-grow: 1;
-  padding: 6px 12px;
-
-  color: var(--input-text);
-  font-size: var(--font-size);
-  font-weight: 300;
-
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-second-radius);
-  background-color: var(--input-bg-color);
-}
-#userEditForm > div > input:not([type="submit"]):focus,
-#passwordEditForm > div > input:not([type="submit"]):focus {
-  outline: none;
-}
-input[type="submit"] {
-  margin-top: 5px;
-  align-self: center;
-}
-
-@media (max-width: 800px) {
-  .user-o-photo {
-    display: none;
-  }
-  #userEditForm > div > input:not([type="submit"]),
-  #passwordEditForm > div > input:not([type="submit"]) {
-    width: 100%;
-  }
+.uo-close {
+  cursor: pointer;
 }

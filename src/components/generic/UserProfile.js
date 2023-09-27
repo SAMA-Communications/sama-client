@@ -1,6 +1,7 @@
 import api from "../../api/api";
 import jwtDecode from "jwt-decode";
 import showCustomAlert from "../../utils/show_alert";
+import { history } from "../../_helpers/history";
 import {
   selectParticipantsEntities,
   upsertUser,
@@ -13,9 +14,13 @@ import { useNavigate } from "react-router-dom";
 
 import "./../../styles/pages/UserProfile.css";
 
+import { ReactComponent as BackBtn } from "./../../assets/icons/chatForm/BackBtn.svg";
+import { ReactComponent as EmailIcon } from "./../../assets/icons/userProfile/EmailIcon.svg";
+import { ReactComponent as PasswordIcon } from "./../../assets/icons/userProfile/PasswordIcon.svg";
+import { ReactComponent as PenEditIcon } from "./../../assets/icons/userProfile/PenEditIcon.svg";
+import { ReactComponent as PhoneIcon } from "./../../assets/icons/userProfile/PhoneIcon.svg";
 import { ReactComponent as TrashCan } from "./../../assets/icons/chatForm/TrashCan.svg";
-import { ReactComponent as CloseChatList } from "./../../assets/icons/CloseChatList.svg";
-import { history } from "../../_helpers/history";
+import { ReactComponent as UserLoginIcon } from "./../../assets/icons/userProfile/UserLoginIcon.svg";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
@@ -87,38 +92,56 @@ export default function UserProfile() {
 
   return (
     <div className="user-options-bg">
-      <div className="user-options-block">
-        <div className="user-o-box">
-          <div className="user-o-photo">
-            {currentUser.login?.slice(0, 2).toUpperCase()}
+      <div className="user-options-container">
+        <div className="uo-navigation">
+          <div className="uo-close" onClick={() => history.navigate("/main")}>
+            <BackBtn />
           </div>
-          <div className="user-o-info">
-            {currentUser.first_name || currentUser.last_name ? (
-              <>
-                <p className="user-o-info-name">
-                  {(currentUser.first_name
-                    ? currentUser.first_name + " "
-                    : "") + (currentUser.last_name || "")}
-                </p>
-                <i className="user-o-info-login">{currentUser.login}</i>
-              </>
-            ) : (
-              <p className="user-o-info-name">{currentUser.login}</p>
-            )}
-            <p className="user-o-info-email">
-              Email: {currentUser.email || "..."}
-            </p>
-            <p className="user-o-info-phone">
-              Phone: {currentUser.phone || "..."}
-            </p>
-            {/* <p className="user-info-status"></p> */}
-          </div>
-          <div className="user-o-delete" onClick={deleteCurrentUser}>
-            <TrashCan />
+          <div>
+            <div className="uo-edit" onClick={() => {}}>
+              <PenEditIcon />
+            </div>
+            <div className="uo-delete" onClick={deleteCurrentUser}>
+              <TrashCan />
+            </div>
           </div>
         </div>
-        <hr />
-        <div className="forms-block">
+        <div className="uo-photo-name">
+          <div className="uo-photo">
+            {currentUser.login?.slice(0, 2).toUpperCase()}
+          </div>
+          <p className="uo-name">
+            {(currentUser.first_name ? currentUser.first_name + " " : "") +
+              (currentUser.last_name || "")}
+          </p>
+        </div>
+        <div className="uo-info">
+          <div>
+            <UserLoginIcon />
+            <p className="uo-login">
+              Username: <span>{currentUser.login}</span>
+            </p>
+          </div>
+          <div>
+            <EmailIcon />
+            <p className="uo-email">
+              Email address: <span>{currentUser.email || "..."}</span>
+            </p>
+          </div>
+          <div>
+            <PhoneIcon />
+            <p className="uo-phone">
+              Phone number: <span>{currentUser.phone || "..."}</span>
+            </p>
+          </div>
+          <div>
+            <PasswordIcon />
+            <p className="uo-password">
+              Password :<span onClick={() => {}}>change password...</span>
+            </p>
+          </div>
+        </div>
+        {/* <div className="forms-block">
           <form id="userEditForm" onSubmit={handleSubmit(onSubmit)}>
             <p className="form-title">Edit user information</p>
             <div>
@@ -208,15 +231,7 @@ export default function UserProfile() {
             </div>
             <input type="submit" value="Change" />
           </form>
-        </div>
-        <div
-          className="user-profile-close"
-          onClick={() => history.navigate("/main")}
-        >
-          <p>
-            <CloseChatList />
-          </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
