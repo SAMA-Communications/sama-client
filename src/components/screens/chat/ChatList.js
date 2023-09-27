@@ -1,9 +1,7 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
 import ChatBox from "../../generic/ChatBox.js";
-import UserSearch from "./UserSearch.js";
-import UserProfile from "../../generic/UserProfile.js";
 import MiniLogo from "./../../static/MiniLogo.js";
 import { Link, NavLink } from "react-router-dom";
 import {
@@ -24,16 +22,14 @@ import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/pages/ChatList.css";
 
-import { ReactComponent as MoreOptions } from "./../../../assets/icons/chatList/MoreOptions.svg";
-import { ReactComponent as IconSun } from "./../../../assets/icons/ThemeSun.svg";
-import { ReactComponent as IconMoon } from "./../../../assets/icons/ThemeMoon.svg";
 import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
+import { ReactComponent as IconMoon } from "./../../../assets/icons/ThemeMoon.svg";
+import { ReactComponent as IconSun } from "./../../../assets/icons/ThemeSun.svg";
 import { ReactComponent as LogoutBtn } from "./../../../assets/icons/chatList/LogoutBtn.svg";
+import { ReactComponent as MoreOptions } from "./../../../assets/icons/chatList/MoreOptions.svg";
 
 export default function ChatList() {
   const dispatch = useDispatch();
-  const [isSearchForm, setIsSearchForm] = useState(false);
-  const [isUserProfile, setIsUserProfile] = useState(false);
 
   const conversations = useSelector(selectAllConversations);
   const participants = useSelector(selectParticipantsEntities);
@@ -149,8 +145,6 @@ export default function ChatList() {
   }, [conversations, participants, activeConv]);
   // ʌʌ  Chat list block  ʌʌ //
 
-  const openModal = () => setIsUserProfile(true);
-
   return (
     <aside>
       <div className="nav-navigate-bar">
@@ -182,9 +176,11 @@ export default function ChatList() {
         </div>
         <div className="user-info">
           <p className="user-info-name">{currentUserData?.login}</p>
-          {/* <p className="user-info-name">{userInfo?.login}</p> */}
         </div>
-        <div className="user-options" onClick={openModal}>
+        <div
+          className="user-options"
+          onClick={() => history.navigate("/main/user")}
+        >
           <MoreOptions />
         </div>
       </div>
@@ -194,11 +190,6 @@ export default function ChatList() {
         ) : (
           chatsList
         )}
-        <div className="chat-create-btn" onClick={() => setIsSearchForm(true)}>
-          <CreateChatButton />
-        </div>
-        {isSearchForm && <UserSearch close={setIsSearchForm} />}
-        {isUserProfile && <UserProfile close={setIsUserProfile} />}
       </div>
     </aside>
   );

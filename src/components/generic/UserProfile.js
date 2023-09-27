@@ -15,8 +15,9 @@ import "./../../styles/pages/UserProfile.css";
 
 import { ReactComponent as TrashCan } from "./../../assets/icons/chatForm/TrashCan.svg";
 import { ReactComponent as CloseChatList } from "./../../assets/icons/CloseChatList.svg";
+import { history } from "../../_helpers/history";
 
-export default function UserProfile({ close }) {
+export default function UserProfile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -80,7 +81,7 @@ export default function UserProfile({ close }) {
   };
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && close(false);
+    event.keyCode === 27 && history.navigate("/main");
     event.keyCode === 13 && event.preventDefault();
   };
 
@@ -208,7 +209,10 @@ export default function UserProfile({ close }) {
             <input type="submit" value="Change" />
           </form>
         </div>
-        <div className="user-profile-close" onClick={() => close(false)}>
+        <div
+          className="user-profile-close"
+          onClick={() => history.navigate("/main")}
+        >
           <p>
             <CloseChatList />
           </p>
