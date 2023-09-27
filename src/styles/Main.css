@@ -1,51 +1,41 @@
 main {
-  width: 100vw;
-  height: 91vh;
+  width: 100svw;
+  height: 100svh;
 
   display: flex;
 }
-nav {
-  width: 100%;
-  height: 7vh;
 
-  padding-left: 20px;
-  padding-right: 20px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  overflow: hidden;
-}
 .nav-logo {
   display: flex;
   align-items: center;
+
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
 }
 .nav-logo > p {
   margin-left: 10px;
 
-  font-size: calc(var(--font-size) * 2.625);
-  line-height: calc(var(--font-size) * 2.625);
+  font-size: calc(var(--font-size) * 2.225);
+  line-height: calc(var(--font-size) * 2.225);
 }
 
 .nav-navigate-bar {
+  padding: 10px 5px;
+
   display: flex;
-  justify-content: right;
+  justify-content: space-between;
   align-items: center;
 }
 
-.nav-logout-btn {
-  padding: calc(var(--font-size) * 0.5) calc(var(--font-size) * 1.5);
-
+.nav-btns {
+  gap: calc(var(--font-size) * 0.2);
+}
+.nav-create-btn,
+.change-themes {
+  padding: 2px 4px;
   cursor: pointer;
 
-  font-size: var(--font-size);
-  color: var(--btn-text-hover);
-
-  border: none;
   border-radius: var(--border-second-radius);
-
-  transition: 0.3s;
 
   background-size: 0;
   background-repeat: no-repeat;
@@ -56,21 +46,24 @@ nav {
     var(--btn-hover-color)
   );
 }
+.nav-logout-btn {
+  cursor: pointer;
+}
 .nav-logout-btn > a {
   text-decoration: none;
   font-size: calc(var(--font-size) * 2);
   line-height: calc(var(--font-size) * 2);
-
-  transition: 0.3s;
 }
-.nav-logout-btn:hover {
+.nav-logout-btn:hover > a > svg {
+  stroke: var(--text-danger);
+
+  transition: 0.1s;
+}
+
+.nav-create-btn:hover {
   background-size: 100%;
 }
 
-.nav-navigate-slice {
-  margin-left: calc(var(--font-size) * 0.8125);
-  margin-right: calc(var(--font-size) * 0.8125);
-}
 .nav-navigate-slice span {
   color: var(--text-accent);
   font-size: calc(var(--font-size) * 2);
@@ -78,26 +71,9 @@ nav {
 }
 
 .change-themes {
-  padding: calc(var(--font-size) * 0.5) calc(var(--font-size) * 0.5);
-
   display: flex;
   justify-content: center;
   align-items: center;
-
-  border-radius: var(--border-second-radius);
-
-  cursor: pointer;
-
-  transition: 0.3s;
-
-  background-size: 0;
-  background-repeat: no-repeat;
-  background-position: bottom;
-  background-image: linear-gradient(
-    0,
-    var(--btn-hover-color),
-    var(--btn-hover-color)
-  );
 }
 .change-themes > svg > path {
   fill: var(--text-main);
@@ -109,19 +85,6 @@ nav {
 }
 
 @media (max-width: 800px) {
-  aside {
-    display: none;
-    position: absolute;
-    width: calc(100vw - 40px);
-    height: 86svh;
-    z-index: 111;
-  }
-  nav {
-    height: max(7svh, 55px);
-  }
-  main {
-    height: min(93svh, 100svh - 55px);
-  }
   .nav-logo > p {
     font-size: calc(var(--font-size) * 1.3);
   }
@@ -129,18 +92,14 @@ nav {
     width: 35px;
     height: 35px;
   }
-  .change-themes {
-    padding: 0;
-  }
-  .change-themes > svg {
-    width: 30px;
-    height: 30px;
-  }
   .nav-logout-btn {
     padding-left: 0;
     padding-right: 0;
   }
   .nav-logout-btn > a {
     font-size: calc(var(--font-size) * 1.3);
+  }
+  .nav-navigate-bar {
+    padding: 5px;
   }
 }

@@ -1,4 +1,5 @@
 import conversationsReducer from "./Conversations";
+import isMobileViewReducer from "./IsMobileView";
 import messageReducer from "./Messages";
 import networkStateReducer from "./NetworkState";
 import participantsReducer from "./Participants";
@@ -8,6 +9,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 
 const appReducer = combineReducers({
   conversations: conversationsReducer,
+  isMobileView: isMobileViewReducer,
   messages: messageReducer,
   networkState: networkStateReducer,
   participants: participantsReducer,
@@ -17,7 +19,8 @@ const appReducer = combineReducers({
 
 const rootReducer = (state, action) => {
   if (action.type === "RESET_STORE") {
-    state = undefined;
+    const { isMobileView, networkState } = state;
+    state = { isMobileView, networkState };
   }
 
   return appReducer(state, action);
