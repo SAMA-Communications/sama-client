@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-import "./../../styles/chat/UserProfile.css";
+import "./../../styles/pages/UserProfile.css";
 
 import { ReactComponent as TrashCan } from "./../../assets/icons/chatForm/TrashCan.svg";
 import { ReactComponent as CloseChatList } from "./../../assets/icons/CloseChatList.svg";

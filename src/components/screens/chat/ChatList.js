@@ -4,7 +4,6 @@ import jwtDecode from "jwt-decode";
 import ChatBox from "../../generic/ChatBox.js";
 import UserSearch from "./UserSearch.js";
 import UserProfile from "../../generic/UserProfile.js";
-import { NavLink } from "react-router-dom";
 import MiniLogo from "./../../static/MiniLogo.js";
 import { Link, NavLink } from "react-router-dom";
 import {
@@ -25,7 +24,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/pages/ChatList.css";
 
-import { ReactComponent as UserIcon } from "./../../../assets/icons/chatList/UserIcon.svg";
 import { ReactComponent as MoreOptions } from "./../../../assets/icons/chatList/MoreOptions.svg";
 import { ReactComponent as IconSun } from "./../../../assets/icons/ThemeSun.svg";
 import { ReactComponent as IconMoon } from "./../../../assets/icons/ThemeMoon.svg";
