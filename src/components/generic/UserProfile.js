@@ -77,13 +77,45 @@ export default function UserProfile() {
     const updatedParams = {};
 
     if (newLogin && newLogin !== login) {
-      updatedParams["login"] = newLogin;
+      if (3 <= newLogin.length && newLogin.length <= 40) {
+        updatedParams["login"] = newLogin;
+      } else {
+        showCustomAlert(
+          "The login field must be in the range from 3 to 40.",
+          "warning"
+        );
+        return;
+      }
+    } else if (newLogin !== null) {
+      showCustomAlert("The login field must not be empty.", "warning");
+      return;
     }
+
     if (newEmail && newEmail !== email) {
-      updatedParams["email"] = newEmail;
+      if (/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(newEmail)) {
+        updatedParams["email"] = newEmail;
+      } else {
+        showCustomAlert("Incorrect email address format.", "warning");
+        return;
+      }
+    } else if (newEmail !== null) {
+      showCustomAlert("The email address field must not be empty.", "warning");
+      return;
     }
+
     if (newPhone && newPhone !== phone) {
-      updatedParams["phone"] = newPhone;
+      if (newPhone.length >= 3 && newPhone.length <= 15) {
+        updatedParams["phone"] = newPhone;
+      } else {
+        showCustomAlert(
+          "The phone number must be between 3 and 15 characters long.",
+          "warning"
+        );
+        return;
+      }
+    } else if (newPhone !== null) {
+      showCustomAlert("The phone number field must not be empty.", "warning");
+      return;
     }
 
     let currentFullName;
@@ -94,15 +126,31 @@ export default function UserProfile() {
     } else {
       currentFullName = null;
     }
-    console.log(newFullName === null);
     if (newFullName && currentFullName !== newFullName) {
       const [new_first_name, new_last_name] = newFullName.split(" ");
       if (new_first_name !== first_name) {
+        if (new_first_name.length > 20) {
+          showCustomAlert(
+            "The first name must be in the range from 1 to 10.",
+            "warning"
+          );
+          return;
+        }
         updatedParams["first_name"] = new_first_name;
       }
       if (new_last_name && new_last_name !== last_name) {
+        if (new_last_name.length > 20) {
+          showCustomAlert(
+            "The last name must be in the range from 1 to 10.",
+            "warning"
+          );
+          return;
+        }
         updatedParams["last_name"] = new_last_name;
       }
+    } else if (newFullName !== null) {
+      showCustomAlert("The name field must not be empty.", "warning");
+      return;
     }
 
     if (!Object.keys(updatedParams).length) {
@@ -113,11 +161,11 @@ export default function UserProfile() {
       return;
     }
 
-    console.log(updatedParams);
     try {
-      // const userNewData = await api.userEdit(updatedParams);
-      // dispatch(upsertUser(userNewData));
+      const userNewData = await api.userEdit(updatedParams);
+      dispatch(upsertUser(userNewData));
       showCustomAlert("User data has been successfully updated.", "success");
+      resetInputs();
     } catch (error) {
       showCustomAlert(error.message, "danger");
     }
@@ -170,12 +218,11 @@ export default function UserProfile() {
                 onChange={(e) => setNewFullName(e.target.value?.trim())}
                 onReset={(e) => console.log(e)}
                 defaultValue={
-                  (currentUser.first_name ? currentUser.first_name + " " : "") +
-                  (currentUser.last_name || "")
+                  currentUser.last_name
+                    ? currentUser.first_name + " " + currentUser.last_name
+                    : currentUser.last_name
                 }
                 placeholder="Full name"
-                min={1}
-                max={120}
                 disabled={isDisableForm}
               />
             </p>
@@ -186,6 +233,7 @@ export default function UserProfile() {
               <p className="uo-login">
                 Username:
                 <input
+                  onKeyDown={(e) => e.key === " " && e.preventDefault()}
                   onChange={(e) => setNewLogin(e.target.value?.trim())}
                   defaultValue={currentUser.login}
                   placeholder="username"
@@ -198,6 +246,7 @@ export default function UserProfile() {
               <p className="uo-email">
                 Email address:
                 <input
+                  onKeyDown={(e) => e.key === " " && e.preventDefault()}
                   onChange={(e) => setNewEmail(e.target.value?.trim())}
                   defaultValue={currentUser.email}
                   placeholder="email address"
@@ -210,6 +259,7 @@ export default function UserProfile() {
               <p className="uo-phone">
                 Phone number:
                 <input
+                  onKeyDown={(e) => e.key === " " && e.preventDefault()}
                   onChange={(e) => setNewPhone(e.target.value?.trim())}
                   defaultValue={currentUser.phone}
                   placeholder="phone number"
