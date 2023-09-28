@@ -54,6 +54,7 @@
 }
 .uo-name {
   width: 100%;
+
   display: flex;
   justify-content: center;
 }
@@ -193,4 +194,50 @@
 
 #updateForm {
   width: 100%;
+}
+
+@media (max-width: 800px) {
+  #updateForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .user-options-bg {
+    padding: 0;
+  }
+  .user-options-container {
+    width: 100svw;
+    height: 100svh;
+
+    border-radius: 0;
+  }
+
+  .uo-info {
+    width: min(100%, 410px);
+  }
+  .uo-info > div {
+    flex: 1;
+  }
+  .uo-info > div > p {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .uo-info > div > p > input {
+    width: 100%;
+    text-align: left;
+  }
+  .uo-password > span {
+    height: 26px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .uo-photo-name {
+    width: 100%;
+  }
 }
