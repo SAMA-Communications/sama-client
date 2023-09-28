@@ -44,7 +44,6 @@ aside {
 }
 .user-info {
   max-width: calc(100% - 140px);
-  margin-left: 15px;
 
   display: flex;
   gap: 12px;

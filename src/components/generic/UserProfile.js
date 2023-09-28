@@ -8,8 +8,7 @@ import {
 } from "../../store/Participants";
 import { updateNetworkState } from "../../store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
-import { useForm } from "react-hook-form";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./../../styles/pages/UserProfile.css";
@@ -22,6 +21,7 @@ import { ReactComponent as PenEditIcon } from "./../../assets/icons/userProfile/
 import { ReactComponent as PhoneIcon } from "./../../assets/icons/userProfile/PhoneIcon.svg";
 import { ReactComponent as TrashCan } from "./../../assets/icons/chatForm/TrashCan.svg";
 import { ReactComponent as UserLoginIcon } from "./../../assets/icons/userProfile/UserLoginIcon.svg";
+import { ReactComponent as UndoChangeIcon } from "./../../assets/icons/userProfile/UndoEditIcon.svg";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
@@ -51,49 +51,87 @@ export default function UserProfile() {
     event.keyCode === 27 && history.navigate("/main");
     event.keyCode === 13 && event.preventDefault();
   };
+
+  const userLetters = useMemo(() => {
+    const { first_name, last_name, login } = currentUser;
+    if (first_name) {
+      return last_name
+        ? first_name.slice(0, 1) + last_name.slice(0, 1)
+        : first_name.slice(0, 1);
+    }
+
+    return login.slice(0, 2).toUpperCase();
+  }, [currentUser]);
   // ʌʌ  User setting block  ʌʌ //
 
-  // const { register, handleSubmit, reset } = useForm();
-  // const onSubmit = async (data) => {
-  //   try {
-  //     Object.keys(data).forEach((key) => !data[key].length && delete data[key]);
-  //     if (!Object.keys(data).length) {
-  //       return;
-  //     }
-  //     const userNewData = await api.userEdit(data);
-
-  //     dispatch(upsertUser(userNewData));
-  //     reset();
-  //     showCustomAlert("User data has been successfully updated.", "success");
-  //   } catch (error) {
-  //     showCustomAlert(error.message, "danger");
-  //   }
-  // };
-
-  // const {
-  //   register: registerPass,
-  //   handleSubmit: handleSubmitPass,
-  //   reset: resetPass,
-  // } = useForm();
-  // const onSubmitPass = async (data) => {
-  //   try {
-  //     if (!data.new_password || !data.current_password) {
-  //       showCustomAlert("Please fill in both fields below.", "warning");
-  //       return;
-  //     }
-
-  //     await api.userEdit(data);
-  //     resetPass();
-  //     showCustomAlert(
-  //       "Your password has been successfully updated.",
-  //       "success"
-  //     );
-  //   } catch (error) {
-  //     showCustomAlert(error.message, "danger");
-  //   }
-  // };
-
+  // vv  Edit form block  vv //
   const [isDisableForm, setIsDisableForm] = useState(true);
+  const formRef = useRef(null);
+  const [newFullName, setNewFullName] = useState(null);
+  const [newLogin, setNewLogin] = useState(null);
+  const [newEmail, setNewEmail] = useState(null);
+  const [newPhone, setNewPhone] = useState(null);
+
+  const sendRequest = async () => {
+    const { first_name, last_name, email, phone, login } = currentUser;
+    const updatedParams = {};
+
+    if (newLogin && newLogin !== login) {
+      updatedParams["login"] = newLogin;
+    }
+    if (newEmail && newEmail !== email) {
+      updatedParams["email"] = newEmail;
+    }
+    if (newPhone && newPhone !== phone) {
+      updatedParams["phone"] = newPhone;
+    }
+
+    let currentFullName;
+    if (first_name && last_name) {
+      currentFullName = first_name + " " + last_name;
+    } else if (first_name || last_name) {
+      currentFullName = first_name ? first_name : last_name;
+    } else {
+      currentFullName = null;
+    }
+    console.log(newFullName === null);
+    if (newFullName && currentFullName !== newFullName) {
+      const [new_first_name, new_last_name] = newFullName.split(" ");
+      if (new_first_name !== first_name) {
+        updatedParams["first_name"] = new_first_name;
+      }
+      if (new_last_name && new_last_name !== last_name) {
+        updatedParams["last_name"] = new_last_name;
+      }
+    }
+
+    if (!Object.keys(updatedParams).length) {
+      setIsDisableForm(true);
+      return;
+    }
+    if (!window.confirm("Will you confirm the data update?")) {
+      return;
+    }
+
+    console.log(updatedParams);
+    try {
+      // const userNewData = await api.userEdit(updatedParams);
+      // dispatch(upsertUser(userNewData));
+      showCustomAlert("User data has been successfully updated.", "success");
+    } catch (error) {
+      showCustomAlert(error.message, "danger");
+    }
+  };
+
+  const resetInputs = () => {
+    formRef.current.reset();
+    setIsDisableForm(true);
+    setNewFullName(null);
+    setNewLogin(null);
+    setNewEmail(null);
+    setNewPhone(null);
+  };
+  // ʌʌ  Edit form block  ʌʌ //
 
   return (
     <div className="user-options-bg">
@@ -103,160 +141,90 @@ export default function UserProfile() {
             <BackBtn />
           </div>
           <div>
-            <div
-              className="uo-edit"
-              onClick={() => setIsDisableForm((prev) => !prev)}
-            >
-              {isDisableForm ? <PenEditIcon /> : <ConfirmIcon />}
+            <div className="uo-edit">
+              {isDisableForm ? (
+                <PenEditIcon onClick={() => setIsDisableForm(false)} />
+              ) : (
+                <>
+                  <UndoChangeIcon className="uo-reset" onClick={resetInputs} />
+                  <ConfirmIcon onClick={sendRequest} />
+                </>
+              )}
             </div>
             <div className="uo-delete" onClick={deleteCurrentUser}>
               <TrashCan />
             </div>
           </div>
         </div>
-        <div className="uo-photo-name">
-          <div className="uo-photo">
-            {currentUser.login?.slice(0, 2).toUpperCase()}
-          </div>
-          <p className="uo-name">
-            <input
-              defaultValue={
-                (currentUser.first_name ? currentUser.first_name + " " : "") +
-                (currentUser.last_name || "")
-              }
-              disabled={isDisableForm}
-            />
-          </p>
-        </div>
-        <div className="uo-info">
-          <div>
-            <UserLoginIcon />
-            <p className="uo-login">
-              Username:
+        <form id="updateForm" onSubmit={sendRequest} ref={formRef}>
+          <div className="uo-photo-name">
+            <div className="uo-photo">{userLetters}</div>
+            <p className="uo-name">
               <input
-                defaultValue={currentUser.login}
+                onKeyDown={(e) => {
+                  const { target, key } = e;
+                  if (target.value?.includes(" ") && key === " ") {
+                    return e.preventDefault();
+                  }
+                }}
+                onChange={(e) => setNewFullName(e.target.value?.trim())}
+                onReset={(e) => console.log(e)}
+                defaultValue={
+                  (currentUser.first_name ? currentUser.first_name + " " : "") +
+                  (currentUser.last_name || "")
+                }
+                placeholder="Full name"
+                min={1}
+                max={120}
                 disabled={isDisableForm}
               />
             </p>
           </div>
-          <div>
-            <EmailIcon />
-            <p className="uo-email">
-              Email address:
-              <input
-                defaultValue={currentUser.email}
-                disabled={isDisableForm}
-              />
-            </p>
+          <div className="uo-info">
+            <div>
+              <UserLoginIcon />
+              <p className="uo-login">
+                Username:
+                <input
+                  onChange={(e) => setNewLogin(e.target.value?.trim())}
+                  defaultValue={currentUser.login}
+                  placeholder="username"
+                  disabled={isDisableForm}
+                />
+              </p>
+            </div>
+            <div>
+              <EmailIcon />
+              <p className="uo-email">
+                Email address:
+                <input
+                  onChange={(e) => setNewEmail(e.target.value?.trim())}
+                  defaultValue={currentUser.email}
+                  placeholder="email address"
+                  disabled={isDisableForm}
+                />
+              </p>
+            </div>
+            <div>
+              <PhoneIcon />
+              <p className="uo-phone">
+                Phone number:
+                <input
+                  onChange={(e) => setNewPhone(e.target.value?.trim())}
+                  defaultValue={currentUser.phone}
+                  placeholder="phone number"
+                  disabled={isDisableForm}
+                />
+              </p>
+            </div>
+            <div>
+              <PasswordIcon />
+              <p className="uo-password">
+                Password :<span onClick={() => {}}>change password...</span>
+              </p>
+            </div>
           </div>
-          <div>
-            <PhoneIcon />
-            <p className="uo-phone">
-              Phone number:
-              <input
-                defaultValue={currentUser.phone}
-                disabled={isDisableForm}
-              />
-            </p>
-          </div>
-          <div>
-            <PasswordIcon />
-            <p className="uo-password">
-              Password :<span onClick={() => {}}>change password...</span>
-            </p>
-          </div>
-        </div>
-        {/* <div className="forms-block">
-          <form id="userEditForm" onSubmit={handleSubmit(onSubmit)}>
-            <p className="form-title">Edit user information</p>
-            <div>
-              <p>First name:</p>
-              <input
-                {...register("first_name", { maxLength: 20 })}
-                onKeyDown={(e) => e.key === " " && e.preventDefault()}
-                placeholder="Type a new first name..."
-                type={"text"}
-                autoComplete="off"
-              />
-            </div>
-            <div>
-              <p>Last name:</p>
-              <input
-                {...register("last_name", { maxLength: 20 })}
-                onKeyDown={(e) => e.key === " " && e.preventDefault()}
-                placeholder="Type a new last name..."
-                type={"text"}
-                autoComplete="off"
-              />
-            </div>
-            <div>
-              <p>Login:</p>
-              <input
-                {...register("login", {
-                  maxLength: 40,
-                  pattern: /[A-Za-z0-9_\-.@]{3,20}/,
-                })}
-                onKeyDown={(e) => e.key === " " && e.preventDefault()}
-                placeholder="Type a new login..."
-                type={"text"}
-                autoComplete="off"
-              />
-            </div>
-            <div>
-              <p>Email:</p>
-              <input
-                {...register("email", {
-                  pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-                })}
-                onKeyDown={(e) => e.key === " " && e.preventDefault()}
-                placeholder="Type a new email..."
-                type={"text"}
-                autoComplete="off"
-              />
-            </div>
-            <div>
-              <p>Phone:</p>
-              <input
-                {...register("phone", { minLength: 3, maxLength: 15 })}
-                onKeyDown={(e) => e.key === " " && e.preventDefault()}
-                placeholder="Type a new phone..."
-                type={"text"}
-                autoComplete="off"
-              />
-            </div>
-            <input type="submit" value="Update" />
-          </form>
-          <hr />
-          <form id="passwordEditForm" onSubmit={handleSubmitPass(onSubmitPass)}>
-            <p className="form-title">Change password</p>
-            <div>
-              <p>New password:</p>
-              <input
-                {...registerPass("new_password", {
-                  pattern: /[A-Za-z0-9_\-.@]{3,40}/,
-                })}
-                onKeyDown={(e) => e.key === " " && e.preventDefault()}
-                placeholder="Type a new password..."
-                type={"text"}
-                autoComplete="off"
-              />
-            </div>
-            <div>
-              <p>Current password:</p>
-              <input
-                {...registerPass("current_password", {
-                  required: "The current password is required.",
-                  pattern: /[A-Za-z0-9_\-.@]{3,40}/,
-                })}
-                onKeyDown={(e) => e.key === " " && e.preventDefault()}
-                placeholder="Confirm your current password..."
-                type={"text"}
-                autoComplete="off"
-              />
-            </div>
-            <input type="submit" value="Change" />
-          </form>
-        </div> */}
+        </form>
       </div>
     </div>
   );

@@ -54,6 +54,8 @@
 }
 .uo-name {
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 .uo-name > input {
   text-align: center;
@@ -67,7 +69,7 @@
 
   background-color: transparent;
   border: 0;
-  border-bottom: 1px solid var(--text-hover);
+  border-bottom: 1px solid var(--border-color);
 
   transition: 0.3s border-bottom;
 }
@@ -133,7 +135,7 @@
 
   background-color: transparent;
   border: 0;
-  border-bottom: 1px solid var(--text-hover);
+  border-bottom: 1px solid var(--border-color);
 
   transition: 0.3s border-bottom;
 }
@@ -168,15 +170,27 @@
 }
 
 .uo-edit {
+  display: flex;
+  gap: 5px;
   cursor: pointer;
+}
+.uo-edit > svg {
+  width: 36px;
+  height: 36px;
 }
 .uo-edit > svg > path {
   transition: 0.3s;
 }
-.uo-edit:hover > svg > path {
+.uo-edit > svg:hover > path {
   stroke: var(--text-hover);
 }
-
+.uo-edit > .uo-reset:hover > path {
+  stroke: var(--text-danger);
+}
 .uo-close {
   cursor: pointer;
+}
+
+#updateForm {
+  width: 100%;
 }

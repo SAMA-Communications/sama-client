@@ -39,7 +39,7 @@ export default function ChatList() {
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
-  const currentUserData = useMemo(
+  const currentUser = useMemo(
     () => (userInfo ? participants[userInfo._id] : {}),
     [userInfo, participants]
   );
@@ -145,6 +145,28 @@ export default function ChatList() {
   }, [conversations, participants, activeConv]);
   // ʌʌ  Chat list block  ʌʌ //
 
+  // vv  User block  vv //
+  const userLetters = useMemo(() => {
+    const { first_name, last_name, login } = currentUser;
+    if (first_name) {
+      return last_name
+        ? first_name.slice(0, 1) + last_name.slice(0, 1)
+        : first_name.slice(0, 1);
+    }
+
+    return login.slice(0, 2).toUpperCase();
+  }, [currentUser]);
+
+  const userName = useMemo(() => {
+    const { first_name, last_name, login } = currentUser;
+    if (first_name) {
+      return last_name ? first_name + " " + last_name : first_name;
+    }
+
+    return login;
+  }, [currentUser]);
+  // ʌʌ  User block  ʌʌ //
+
   return (
     <aside>
       <div className="nav-navigate-bar">
@@ -171,11 +193,9 @@ export default function ChatList() {
         </div>
       </div>
       <div className="user-box">
-        <div className="user-photo">
-          {currentUserData?.login.slice(0, 2).toUpperCase()}
-        </div>
+        <div className="user-photo">{userLetters.toUpperCase()}</div>
         <div className="user-info">
-          <p className="user-info-name">{currentUserData?.login}</p>
+          <p className="user-info-name">{userName}</p>
         </div>
         <div
           className="user-options"
