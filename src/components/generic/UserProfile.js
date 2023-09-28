@@ -9,12 +9,13 @@ import {
 import { updateNetworkState } from "../../store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "./../../styles/pages/UserProfile.css";
 
 import { ReactComponent as BackBtn } from "./../../assets/icons/chatForm/BackBtn.svg";
+import { ReactComponent as ConfirmIcon } from "./../../assets/icons/userProfile/ConfirmIcon.svg";
 import { ReactComponent as EmailIcon } from "./../../assets/icons/userProfile/EmailIcon.svg";
 import { ReactComponent as PasswordIcon } from "./../../assets/icons/userProfile/PasswordIcon.svg";
 import { ReactComponent as PenEditIcon } from "./../../assets/icons/userProfile/PenEditIcon.svg";
@@ -92,6 +93,8 @@ export default function UserProfile() {
   //   }
   // };
 
+  const [isDisableForm, setIsDisableForm] = useState(true);
+
   return (
     <div className="user-options-bg">
       <div className="user-options-container">
@@ -100,8 +103,11 @@ export default function UserProfile() {
             <BackBtn />
           </div>
           <div>
-            <div className="uo-edit" onClick={() => {}}>
-              <PenEditIcon />
+            <div
+              className="uo-edit"
+              onClick={() => setIsDisableForm((prev) => !prev)}
+            >
+              {isDisableForm ? <PenEditIcon /> : <ConfirmIcon />}
             </div>
             <div className="uo-delete" onClick={deleteCurrentUser}>
               <TrashCan />
@@ -113,8 +119,13 @@ export default function UserProfile() {
             {currentUser.login?.slice(0, 2).toUpperCase()}
           </div>
           <p className="uo-name">
-            {(currentUser.first_name ? currentUser.first_name + " " : "") +
-              (currentUser.last_name || "")}
+            <input
+              defaultValue={
+                (currentUser.first_name ? currentUser.first_name + " " : "") +
+                (currentUser.last_name || "")
+              }
+              disabled={isDisableForm}
+            />
           </p>
         </div>
         <div className="uo-info">
@@ -122,19 +133,30 @@ export default function UserProfile() {
             <UserLoginIcon />
             <p className="uo-login">
               Username:
-              <span>{currentUser.login}</span>
+              <input
+                defaultValue={currentUser.login}
+                disabled={isDisableForm}
+              />
             </p>
           </div>
           <div>
             <EmailIcon />
             <p className="uo-email">
-              Email address: <span>{currentUser.email || "..."}</span>
+              Email address:
+              <input
+                defaultValue={currentUser.email}
+                disabled={isDisableForm}
+              />
             </p>
           </div>
           <div>
             <PhoneIcon />
             <p className="uo-phone">
-              Phone number: <span>{currentUser.phone || "..."}</span>
+              Phone number:
+              <input
+                defaultValue={currentUser.phone}
+                disabled={isDisableForm}
+              />
             </p>
           </div>
           <div>

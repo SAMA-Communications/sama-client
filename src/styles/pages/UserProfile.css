@@ -54,7 +54,9 @@
 }
 .uo-name {
   width: 100%;
-
+}
+.uo-name > input {
+  text-align: center;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -62,6 +64,12 @@
   font-size: calc(var(--font-size) * 1.75);
   font-weight: 300;
   line-height: calc(var(--font-size) * 2.25);
+
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--text-hover);
+
+  transition: 0.3s border-bottom;
 }
 
 .uo-info {
@@ -94,10 +102,6 @@
 
   font-size: calc(var(--font-size) * 1.125);
 }
-.uo-info > div > p > span {
-  font-size: calc(var(--font-size) * 1.125);
-  color: var(--text-hover);
-}
 .uo-info > div:nth-last-child(1) {
   margin-top: 20px;
 }
@@ -107,8 +111,39 @@
 
   transition: 0.15s color;
 }
+.uo-password > span {
+  font-size: calc(var(--font-size) * 1.125);
+  color: var(--text-hover);
+}
 .uo-password > span:hover {
   color: var(--text-hover-light);
+}
+
+.uo-info > div > p > input {
+  width: 200px;
+  padding: 2px;
+
+  font-size: calc(var(--font-size) * 1.125);
+  color: var(--text-hover);
+  text-align: right;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--text-hover);
+
+  transition: 0.3s border-bottom;
+}
+.uo-info > div > p > input:focus,
+.uo-name > input:focus {
+  outline: none;
+}
+.uo-info > div > p > input:disabled,
+.uo-name > input:disabled {
+  border-bottom: 1px solid transparent;
 }
 
 .uo-navigation {
