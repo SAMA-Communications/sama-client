@@ -125,6 +125,7 @@ export default function ChatFormInputs({
     setIsSendMessageDisable(false);
     scrollChatToBottom();
     messageInputEl.current.focus();
+    messageInputEl.current.style.height = `40px`;
   };
   // ʌʌ  Send message block  ʌʌ //
 
@@ -157,6 +158,24 @@ export default function ChatFormInputs({
   };
   // ʌʌ  Attachments pick  ʌʌ //
 
+  const handleInput = (e) => {
+    const { scrollHeight } = e.target;
+
+    if (messageInputEl.current) {
+      messageInputEl.current.style.height = "auto";
+      messageInputEl.current.style.height =
+        scrollHeight <= 230
+          ? `${scrollHeight < 40 ? 40 : scrollHeight}px`
+          : `230px`;
+    }
+  };
+
+  const handeOnKeyDown = (e) => {
+    if (e.keyCode === 13 && !e.shiftKey) {
+      sendMessage(e);
+    }
+  };
+
   return (
     <>
       {files?.length ? (
@@ -175,12 +194,14 @@ export default function ChatFormInputs({
           />
         </div>
         <div className="form-send-text">
-          <input
+          <textarea
             id="inputMessage"
-            autoFocus={!isMobile}
             ref={messageInputEl}
             onTouchStart={(e) => e.target.blur()}
+            onInput={handleInput}
+            onKeyDown={handeOnKeyDown}
             autoComplete="off"
+            autoFocus={!isMobile}
             placeholder="> Please type your message..."
           />
           <button id="send-message" onClick={sendMessage}>
