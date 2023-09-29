@@ -81,7 +81,7 @@ export default function UserProfile() {
         updatedParams["login"] = newLogin;
       } else {
         showCustomAlert(
-          "The login field must be in the range from 3 to 40.",
+          "The login field length must be in the range from 3 to 40.",
           "warning"
         );
         return;
@@ -131,7 +131,7 @@ export default function UserProfile() {
       if (new_first_name !== first_name) {
         if (new_first_name.length > 20) {
           showCustomAlert(
-            "The first name must be in the range from 1 to 10.",
+            "The first name length must be in the range from 1 to 20.",
             "warning"
           );
           return;
@@ -141,7 +141,7 @@ export default function UserProfile() {
       if (new_last_name && new_last_name !== last_name) {
         if (new_last_name.length > 20) {
           showCustomAlert(
-            "The last name must be in the range from 1 to 10.",
+            "The last name length must be in the range from 1 to 20.",
             "warning"
           );
           return;
@@ -178,6 +178,30 @@ export default function UserProfile() {
     setNewLogin(null);
     setNewEmail(null);
     setNewPhone(null);
+  };
+
+  const changePasswordRequest = async () => {
+    const currentPassword = window.prompt("Enter your current password:");
+    let newPassword = window.prompt("Enter a new password:");
+
+    while (newPassword?.length < 3 || newPassword?.length > 40) {
+      alert("Password length must be in the range of 3 to 40.");
+      newPassword = window.prompt("Enter a new password:");
+    }
+
+    if (!newPassword || !currentPassword) {
+      return;
+    }
+
+    try {
+      await api.userEdit({
+        current_password: currentPassword,
+        new_password: newPassword,
+      });
+      showCustomAlert("Password has been successfully updated.", "success");
+    } catch (error) {
+      showCustomAlert(error.message, "danger");
+    }
   };
   // ʌʌ  Edit form block  ʌʌ //
 
@@ -270,7 +294,8 @@ export default function UserProfile() {
             <div>
               <PasswordIcon />
               <p className="uo-password">
-                Password :<span onClick={() => {}}>change password...</span>
+                Password :
+                <span onClick={changePasswordRequest}>change password...</span>
               </p>
             </div>
           </div>

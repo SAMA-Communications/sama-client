@@ -79,7 +79,12 @@ class Api {
           if (response.error) {
             reject(response.error);
           } else {
-            resolve(resObjKey ? response[resObjKey] : response);
+            // console.log(response, resObjKey);
+            resObjKey
+              ? response[resObjKey]
+                ? resolve(response[resObjKey])
+                : reject({ message: "Server error." })
+              : resolve(response);
           }
           delete this.responsesPromises[responseId];
         }
@@ -469,7 +474,7 @@ class Api {
       },
     };
 
-    const resObjKey = "user";
+    const resObjKey = "subscription";
     return this.sendPromise(requestData, resObjKey);
   }
 
@@ -483,7 +488,7 @@ class Api {
       },
     };
 
-    const resObjKey = "user";
+    const resObjKey = "";
     return this.sendPromise(requestData, resObjKey);
   }
 }
