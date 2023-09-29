@@ -92,6 +92,10 @@
   background-color: var(--bg-chatPhoto-color);
   box-shadow: inset 0px 0px 10px var(--shadow-block);
 }
+.chat-recipient-photo > svg {
+  width: 56px;
+  height: 56px;
+}
 .chat-recipient-info {
   display: flex;
   flex-direction: column;
