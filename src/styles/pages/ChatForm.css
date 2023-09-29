@@ -371,6 +371,6 @@
     font-size: calc(var(--font-size) * 1.4);
   }
   #inputMessage {
-    padding: 0 55px 0 10px;
+    padding: 10px 55px 10px 10px;
   }
 }
