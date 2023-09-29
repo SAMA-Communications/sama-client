@@ -159,14 +159,12 @@ export default function ChatFormInputs({
   // ʌʌ  Attachments pick  ʌʌ //
 
   const handleInput = (e) => {
-    const { scrollHeight } = e.target;
-
     if (messageInputEl.current) {
-      messageInputEl.current.style.height = "auto";
-      messageInputEl.current.style.height =
-        scrollHeight <= 230
-          ? `${scrollHeight < 40 ? 40 : scrollHeight}px`
-          : `230px`;
+      const countOfEnter = e.target.value.split("\n").length - 1;
+      messageInputEl.current.style.height = `${
+        40 + countOfEnter * 16 < 230 ? 40 + countOfEnter * 16 : 230
+      }px `;
+      messageInputEl.current.scrollTop = messageInputEl.current.scrollHeight;
     }
   };
 

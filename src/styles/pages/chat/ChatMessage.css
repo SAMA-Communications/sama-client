@@ -36,6 +36,7 @@
   padding-right: 60px;
 }
 .m-pb {
+  min-width: 70px;
   padding-bottom: 17px;
 }
 .br-tl {
