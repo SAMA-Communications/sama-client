@@ -77,7 +77,11 @@ export default function UserProfile() {
     const updatedParams = {};
 
     if (newLogin && newLogin !== login) {
-      if (3 <= newLogin.length && newLogin.length <= 40) {
+      if (
+        3 <= newLogin.length &&
+        newLogin.length <= 40 &&
+        !newLogin.includes(" ")
+      ) {
         updatedParams["login"] = newLogin;
       } else {
         showCustomAlert(
@@ -92,7 +96,10 @@ export default function UserProfile() {
     }
 
     if (newEmail && newEmail !== email) {
-      if (/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(newEmail)) {
+      if (
+        /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(newEmail) &&
+        !newEmail.includes(" ")
+      ) {
         updatedParams["email"] = newEmail;
       } else {
         showCustomAlert("Incorrect email address format.", "warning");
@@ -104,7 +111,11 @@ export default function UserProfile() {
     }
 
     if (newPhone && newPhone !== phone) {
-      if (newPhone.length >= 3 && newPhone.length <= 15) {
+      if (
+        newPhone.length >= 3 &&
+        newPhone.length <= 15 &&
+        !newPhone.includes(" ")
+      ) {
         updatedParams["phone"] = newPhone;
       } else {
         showCustomAlert(

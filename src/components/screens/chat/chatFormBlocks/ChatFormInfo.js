@@ -9,7 +9,10 @@ import {
 } from "../../../../store/Conversations";
 import { clearSelectedConversation } from "../../../../store/SelectedConversation";
 import { history } from "../../../../_helpers/history";
-import { selectParticipantsEntities } from "../../../../store/Participants";
+import {
+  addUser,
+  selectParticipantsEntities,
+} from "../../../../store/Participants";
 import { useDispatch, useSelector } from "react-redux";
 import { useLayoutEffect, useMemo, useState } from "react";
 
