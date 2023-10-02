@@ -5,7 +5,7 @@ async function getDownloadFileLinks(attachments) {
   const mUpdate = {};
 
   for (let i = 0; i < attIds.length; i += 10) {
-    const ids = attIds.slice(i, 10);
+    const ids = attIds.slice(i, i + 10);
     const urls = await api.getDownloadUrlForFiles({ file_ids: ids });
 
     for (const fileId in urls) {
@@ -20,9 +20,9 @@ async function getDownloadFileLinks(attachments) {
         file_url: urls[fileId],
       });
     }
-
-    return Object.values(mUpdate);
   }
+
+  return Object.values(mUpdate);
 }
 
 async function getFileObjects(files) {
