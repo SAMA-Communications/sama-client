@@ -57,7 +57,7 @@ export default function ChatFormInfo({ closeForm }) {
     return conv.owner_id === userInfo._id
       ? participants[conv.opponent_id]?._id
       : participants[conv.owner_id]?._id;
-  }, [selectedCID]);
+  }, [selectedCID, participants]);
 
   const opponentLastActivity = participants[opponentId]?.recent_activity;
   const recentActivityView = useMemo(() => {
@@ -67,7 +67,7 @@ export default function ChatFormInfo({ closeForm }) {
         : getLastVisitTime(opponentLastActivity);
     }
     return null;
-  }, [opponentLastActivity, selectedConversation?.name]);
+  }, [opponentId, opponentLastActivity, selectedConversation?.name]);
   // ʌʌ  Activity block  ʌʌ //
 
   // vv  Delete chat block  vv //
