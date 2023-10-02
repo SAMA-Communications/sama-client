@@ -62,7 +62,6 @@ export default function ChatForm() {
     }
 
     files.length && setFiles([]);
-    messageInputEl.current.value = "";
   }, [selectedCID, conversations[selectedCID]]);
 
   // vv  API Listeners  vv //

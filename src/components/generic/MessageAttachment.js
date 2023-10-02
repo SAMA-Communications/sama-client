@@ -7,6 +7,7 @@ export default function MessageAttachment({ url, name, openModalParam }) {
       onClick={() => openModalParam({ url, name })}
     >
       <m.img
+        loading="lazy"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.9 }}
         src={url}

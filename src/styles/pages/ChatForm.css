@@ -359,7 +359,7 @@
     gap: 5px;
   }
   #send-message {
-    padding: 0 8px;
+    padding: 0 8px 2px 8px;
   }
   .chat-files-preview {
     max-height: 90px;
