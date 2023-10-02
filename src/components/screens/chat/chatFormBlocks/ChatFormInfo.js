@@ -14,7 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLayoutEffect, useMemo, useState } from "react";
 
 import { ReactComponent as BackBtn } from "./../../../../assets/icons/chatForm/BackBtn.svg";
-import { ReactComponent as RecipientPhoto } from "./../../../../assets/icons/chatForm/RecipientPhoto.svg";
+import { ReactComponent as GroupChatPhoto } from "./../../../../assets/icons/chatList/ChatIconGroup.svg";
+import { ReactComponent as PrivateChatPhoto } from "./../../../../assets/icons/chatList/ChatIconPrivate.svg";
 import { ReactComponent as TrashCan } from "./../../../../assets/icons/chatForm/TrashCan.svg";
 
 export default function ChatFormInfo({ closeForm }) {
@@ -104,7 +105,11 @@ export default function ChatFormInfo({ closeForm }) {
       </div>
       <div className="chat-info-block">
         <div className="chat-recipient-photo">
-          <RecipientPhoto />
+          {selectedConversation.type === "u" ? (
+            <PrivateChatPhoto />
+          ) : (
+            <GroupChatPhoto />
+          )}
         </div>
         <div className="chat-recipient-info">
           {chatNameView}

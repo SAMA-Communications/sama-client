@@ -4,7 +4,7 @@ import isMobile from "./../../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import { getFileObjects } from "../../../../api/download_manager";
 import { getNetworkState } from "../../../../store/NetworkState";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addMessage,
@@ -125,6 +125,7 @@ export default function ChatFormInputs({
     setIsSendMessageDisable(false);
     scrollChatToBottom();
     messageInputEl.current.focus();
+    messageInputEl.current.style.height = `40px`;
   };
   // ʌʌ  Send message block  ʌʌ //
 
@@ -157,6 +158,29 @@ export default function ChatFormInputs({
   };
   // ʌʌ  Attachments pick  ʌʌ //
 
+  // vv  Input functions block  vv //
+  useEffect(() => {
+    messageInputEl.current.value = "";
+    messageInputEl.current.style.height = `40px`;
+  }, [selectedCID]);
+
+  const handleInput = (e) => {
+    if (messageInputEl.current) {
+      const countOfEnter = e.target.value.split("\n").length - 1;
+      messageInputEl.current.style.height = `${
+        40 + countOfEnter * 16 < 230 ? 40 + countOfEnter * 16 : 230
+      }px `;
+      messageInputEl.current.scrollTop = messageInputEl.current.scrollHeight;
+    }
+  };
+
+  const handeOnKeyDown = (e) => {
+    if (!isMobile && e.keyCode === 13 && !e.shiftKey) {
+      sendMessage(e);
+    }
+  };
+  // ʌʌ  Input functions pick  ʌʌ //
+
   return (
     <>
       {files?.length ? (
@@ -175,12 +199,15 @@ export default function ChatFormInputs({
           />
         </div>
         <div className="form-send-text">
-          <input
+          <textarea
             id="inputMessage"
-            autoFocus={!isMobile}
             ref={messageInputEl}
-            onTouchStart={(e) => e.target.blur()}
+            onTouchStart={(e) => !e.target.value.length && e.target.blur()}
+            onInput={handleInput}
+            onKeyDown={handeOnKeyDown}
+            onBlur={handleInput}
             autoComplete="off"
+            autoFocus={!isMobile}
             placeholder="> Please type your message..."
           />
           <button id="send-message" onClick={sendMessage}>
