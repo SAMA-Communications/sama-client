@@ -39,6 +39,7 @@ export default function Login() {
         data.ulogin.trim().toLowerCase(),
         data.pass.trim(),
       ];
+
       const { token: userToken, user: userData } = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
       history.navigate("/main");
