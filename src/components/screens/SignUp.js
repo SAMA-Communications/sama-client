@@ -98,7 +98,7 @@ export default function SignUp() {
             type={passwordType}
             autoComplete="off"
           />
-          <input type="checkbox" id="isLogin" />
+
           <span className="password-visibility">
             {passwordType === "password" ? (
               <HidePassword onClick={() => setPasswordType("text")} />
@@ -111,6 +111,15 @@ export default function SignUp() {
           {errors.pass?.message && renderErrorMessage(errors.pass.message)}
         </div>
         <input type="submit" value="Create account" />
+        <div className="input-checkbox">
+          <input
+            type="checkbox"
+            id="isLogin"
+            checked={isLogin}
+            onChange={() => setIsLogin((prev) => !prev)}
+          />
+          <label htmlFor="isLogin">* also log in as a new user</label>
+        </div>
         <div className="button-container">
           Already have an account?&nbsp;
           <Link to={`/login`} className="btn-signup">

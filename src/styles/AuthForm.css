@@ -257,6 +257,25 @@ input[type="submit"]:hover {
   stroke: var(--text-hover);
 }
 
+.input-checkbox {
+  margin-top: 10px;
+  margin-bottom: -5px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.input-checkbox > label {
+  color: var(--text-smoke);
+  font-size: calc(var(--font-size) * 0.8);
+  line-height: calc(var(--font-size) * 0.8);
+}
+.input-checkbox > * {
+  cursor: pointer;
+}
+
 .aria-loading {
   margin-top: 40vh;
 
