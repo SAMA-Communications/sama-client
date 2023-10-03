@@ -58,28 +58,17 @@ export default function ChatFormInfo({ closeForm }) {
     return conv.owner_id === userInfo._id
       ? participants[conv.opponent_id]?._id
       : participants[conv.owner_id]?._id;
-  }, [selectedCID]);
+  }, [selectedCID, participants]);
 
-  const opponentLastActivity = useMemo(
-    () => participants[opponentId]?.recent_activity,
-    [opponentId, participants]
-  );
-
-  const [reloadActivity, setReloadActivity] = useState(false);
-  useLayoutEffect(() => {
-    const debounce = setTimeout(() => setReloadActivity((prev) => !prev), 250);
-    return () => clearTimeout(debounce);
-  }, [opponentLastActivity, selectedConversation]);
-
+  const opponentLastActivity = participants[opponentId]?.recent_activity;
   const recentActivityView = useMemo(() => {
-    if (selectedConversation?.name) {
-      return null;
+    if (!selectedConversation?.name) {
+      return opponentLastActivity === "online"
+        ? opponentLastActivity
+        : getLastVisitTime(opponentLastActivity);
     }
-
-    return opponentLastActivity === "online"
-      ? opponentLastActivity
-      : getLastVisitTime(opponentLastActivity);
-  }, [reloadActivity]);
+    return null;
+  }, [opponentId, opponentLastActivity, selectedConversation?.name]);
   // ʌʌ  Activity block  ʌʌ //
 
   // vv  Delete chat block  vv //
