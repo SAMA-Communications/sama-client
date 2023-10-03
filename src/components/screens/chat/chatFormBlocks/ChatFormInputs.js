@@ -145,6 +145,11 @@ export default function ChatFormInputs({
         );
         return;
       }
+      if (!file.type.startsWith("image/")) {
+        showCustomAlert("Please select an image file.", "warning");
+        return;
+      }
+
       selectedFiles.push(file);
     }
 
