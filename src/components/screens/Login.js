@@ -39,8 +39,10 @@ export default function Login() {
         data.ulogin.trim().toLowerCase(),
         data.pass.trim(),
       ];
+
       const userToken = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
+
       history.navigate("/main");
       subscribeForNotifications();
       dispatch(setSelectedConversation({}));
