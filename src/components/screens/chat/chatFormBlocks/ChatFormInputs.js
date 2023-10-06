@@ -2,6 +2,7 @@ import api from "../../../../api/api";
 import AttachmentsList from "./../../../generic/AttachmentsList.js";
 import isMobile from "./../../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
+import heic2any from "heic2any";
 import { getFileObjects } from "../../../../api/download_manager";
 import { getNetworkState } from "../../../../store/NetworkState";
 import { useEffect, useRef, useState } from "react";
@@ -131,7 +132,7 @@ export default function ChatFormInputs({
 
   // vv  Attachments pick  vv //
   const pickUserFiles = () => filePicker.current.click();
-  const handlerChange = (event) => {
+  const handlerChange = async (event) => {
     if (!event.target.files.length) {
       return;
     }
@@ -145,9 +146,36 @@ export default function ChatFormInputs({
         );
         return;
       }
-      if (!file.type.startsWith("image/")) {
+
+      if (!file.type.startsWith("image/") && !file.name.includes(".HEIC")) {
         showCustomAlert("Please select an image file.", "warning");
         return;
+      } else if (file.name.includes(".HEIC")) {
+        async function convertHEICtoPNG(file) {
+          try {
+            const blob = new Blob([file], { type: "image/heic" });
+
+            const pngBuffer = await heic2any({
+              blob,
+              toType: "image/png",
+            });
+
+            const pngBlob = new Blob([pngBuffer], { type: "image/png" });
+
+            const pngFile = new File([pngBlob], "converted.png", {
+              type: "image/png",
+            });
+
+            return pngFile;
+          } catch (error) {
+            console.error("Error converting HEIC to PNG:", error);
+            return null;
+          }
+        }
+
+        const pngFile = await convertHEICtoPNG(file);
+        pngFile && selectedFiles.push(pngFile);
+        continue;
       }
 
       selectedFiles.push(file);
