@@ -164,7 +164,7 @@ export default function ChatFormInputs({
           });
 
           const pngBlob = new Blob([pngBuffer], { type: "image/png" });
-          const pngFile = new File([pngBlob], "converted.png", {
+          const pngFile = new File([pngBlob], file.name, {
             type: "image/png",
           });
 
