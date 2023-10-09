@@ -5,7 +5,7 @@ import { ReactComponent as ClearFilesButton } from "./../../assets/icons/chatFor
 
 export default function AttachmentsList({ files, funcUpdateFile }) {
   return (
-    <div className="chat-files-preview">
+    <>
       <div className="chat-files-block">
         {Object.values(files).map((el) => (
           <AttachmentsListItem
@@ -19,6 +19,6 @@ export default function AttachmentsList({ files, funcUpdateFile }) {
       <div className="btn-clear-files" onClick={() => funcUpdateFile([])}>
         <ClearFilesButton />
       </div>
-    </div>
+    </>
   );
 }

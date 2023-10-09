@@ -5,7 +5,7 @@ import jwtDecode from "jwt-decode";
 import heic2any from "heic2any";
 import { getFileObjects } from "../../../../api/download_manager";
 import { getNetworkState } from "../../../../store/NetworkState";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addMessage,
@@ -20,6 +20,7 @@ import {
 } from "../../../../store/Conversations";
 
 import { ReactComponent as SendFilesButton } from "./../../../../assets/icons/chatForm/SendFilesButton.svg";
+import { ReactComponent as Loading } from "./../../../../assets/icons/chatForm/Loading.svg";
 import { ReactComponent as SendMessageButton } from "./../../../../assets/icons/chatForm/SendMessageButton.svg";
 
 export default function ChatFormInputs({
@@ -41,6 +42,7 @@ export default function ChatFormInputs({
   const messages = useSelector(getActiveConversationMessages);
   const filePicker = useRef(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
+  const [isLoadingFile, setIsLoadingFile] = useState(false);
 
   const scrollChatToBottom = () =>
     chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
@@ -136,58 +138,57 @@ export default function ChatFormInputs({
     if (!event.target.files.length) {
       return;
     }
+    setIsLoadingFile(true);
 
     const selectedFiles = [];
-    for (const file of event.target.files) {
-      if (file.name.length > 255) {
-        showCustomAlert(
-          "The file name should not exceed 255 characters.",
-          "warning"
-        );
-        return;
-      }
-
-      if (!file.type.startsWith("image/") && !file.name.includes(".HEIC")) {
-        showCustomAlert("Please select an image file.", "warning");
-        return;
-      } else if (file.name.includes(".HEIC")) {
-        async function convertHEICtoPNG(file) {
-          try {
-            const blob = new Blob([file], { type: "image/heic" });
-
-            const pngBuffer = await heic2any({
-              blob,
-              toType: "image/png",
-            });
-
-            const pngBlob = new Blob([pngBuffer], { type: "image/png" });
-
-            const pngFile = new File([pngBlob], "converted.png", {
-              type: "image/png",
-            });
-
-            return pngFile;
-          } catch (error) {
-            console.error("Error converting HEIC to PNG:", error);
-            return null;
-          }
+    try {
+      for (const file of event.target.files) {
+        if (file.name.length > 255) {
+          throw new Error("The file name should not exceed 255 characters.", {
+            cause: {
+              message: "The file name should not exceed 255 characters.",
+            },
+          });
         }
 
-        const pngFile = await convertHEICtoPNG(file);
-        pngFile && selectedFiles.push(pngFile);
-        continue;
+        if (!file.type.startsWith("image/") && !file.name.includes(".HEIC")) {
+          throw new Error("Please select an image file.", {
+            cause: { message: "Please select an image file." },
+          });
+        } else if (file.name.includes(".HEIC")) {
+          const blob = new Blob([file], { type: "image/heic" });
+
+          const pngBuffer = await heic2any({
+            blob,
+            toType: "image/png",
+          });
+
+          const pngBlob = new Blob([pngBuffer], { type: "image/png" });
+          const pngFile = new File([pngBlob], "converted.png", {
+            type: "image/png",
+          });
+
+          selectedFiles.push(pngFile);
+          continue;
+        }
+
+        selectedFiles.push(file);
       }
 
-      selectedFiles.push(file);
-    }
-
-    if (files?.length + event.target.files.length >= 10) {
-      showCustomAlert("The maximum limit for file uploads is 10.", "warning");
+      if (files?.length + event.target.files.length >= 10) {
+        throw new Error("The maximum limit for file uploads is 10.", {
+          cause: { message: "The maximum limit for file uploads is 10." },
+        });
+      }
+    } catch (err) {
+      showCustomAlert(err.cause.message, "warning");
+      setIsLoadingFile(false);
       return;
     }
 
     setFiles(files?.length ? [...files, ...selectedFiles] : [...selectedFiles]);
     messageInputEl.current.focus();
+    setIsLoadingFile(false);
   };
   // ʌʌ  Attachments pick  ʌʌ //
 
@@ -214,11 +215,25 @@ export default function ChatFormInputs({
   };
   // ʌʌ  Input functions pick  ʌʌ //
 
+  const fileView = useMemo(() => {
+    if (isLoadingFile) {
+      return (
+        <div className="chat-files-preview">
+          <Loading />
+        </div>
+      );
+    }
+
+    return files?.length ? (
+      <div className="chat-files-preview">
+        <AttachmentsList files={files} funcUpdateFile={setFiles} />
+      </div>
+    ) : null;
+  }, [files, isLoadingFile]);
+
   return (
     <>
-      {files?.length ? (
-        <AttachmentsList files={files} funcUpdateFile={setFiles} />
-      ) : null}
+      {fileView}
       <form id="chat-form-send" action="">
         <div className="form-send-file">
           <SendFilesButton onClick={pickUserFiles} />

@@ -11,7 +11,7 @@ import { clearSelectedConversation } from "../../../../store/SelectedConversatio
 import { history } from "../../../../_helpers/history";
 import { selectParticipantsEntities } from "../../../../store/Participants";
 import { useDispatch, useSelector } from "react-redux";
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { ReactComponent as BackBtn } from "./../../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as GroupChatPhoto } from "./../../../../assets/icons/chatList/ChatIconGroup.svg";
