@@ -147,6 +147,10 @@ export default function ChatList() {
 
   // vv  User block  vv //
   const userLetters = useMemo(() => {
+    if (!currentUser) {
+      return null;
+    }
+
     const { first_name, last_name, login } = currentUser;
     if (first_name) {
       return last_name
@@ -193,7 +197,7 @@ export default function ChatList() {
         </div>
       </div>
       <div className="user-box">
-        <div className="user-photo">{userLetters.toUpperCase()}</div>
+        <div className="user-photo">{userLetters?.toUpperCase()}</div>
         <div className="user-info">
           <p className="user-info-name">{userName}</p>
         </div>
