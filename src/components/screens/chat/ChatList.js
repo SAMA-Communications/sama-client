@@ -147,7 +147,7 @@ export default function ChatList() {
 
   // vv  User block  vv //
   const userLetters = useMemo(() => {
-    if (!currentUser) {
+    if (!Object.keys(currentUser).length) {
       return null;
     }
 
