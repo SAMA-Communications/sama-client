@@ -39,7 +39,7 @@ export default function UserProfile() {
   );
 
   const deleteCurrentUser = async () => {
-    if (window.confirm("Do you confirm the user's deletion?")) {
+    if (window.confirm("Are you sure you want to delete this user?")) {
       await api.userDelete();
       navigate("/login");
       dispatch({ type: "RESET_STORE" });
@@ -102,11 +102,14 @@ export default function UserProfile() {
       ) {
         updatedParams["email"] = newEmail;
       } else {
-        showCustomAlert("Incorrect email address format.", "warning");
+        showCustomAlert(
+          "The format of the email address is incorrect.",
+          "warning"
+        );
         return;
       }
     } else if (newEmail !== null) {
-      showCustomAlert("The email address field must not be empty.", "warning");
+      showCustomAlert("The email address field cannot be empty.", "warning");
       return;
     }
 
