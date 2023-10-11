@@ -147,7 +147,6 @@ export default function ChatList() {
 
   // vv  User block  vv //
   const userLetters = useMemo(() => {
-    console.log(currentUser);
     if (!currentUser || !Object.keys(currentUser).length) {
       return null;
     }
@@ -163,6 +162,10 @@ export default function ChatList() {
   }, [currentUser]);
 
   const userName = useMemo(() => {
+    if (!currentUser || !Object.keys(currentUser).length) {
+      return null;
+    }
+
     const { first_name, last_name, login } = currentUser;
     if (first_name) {
       return last_name ? first_name + " " + last_name : first_name;
