@@ -119,7 +119,7 @@ export default function UserProfile() {
         updatedParams["phone"] = newPhone;
       } else {
         showCustomAlert(
-          "The phone number must be between 3 and 15 characters long.",
+          "The phone number should be 3 to 15 digits in length.",
           "warning"
         );
         return;
@@ -250,8 +250,15 @@ export default function UserProfile() {
                     return e.preventDefault();
                   }
                 }}
-                onChange={(e) => setNewFullName(e.target.value?.trim())}
-                onReset={(e) => console.log(e)}
+                onChange={(e) => {
+                  const newFullName = e.target.value?.trim();
+                  setNewLogin(
+                    newFullName ===
+                      currentUser.first_name + " " + currentUser.last_name
+                      ? null
+                      : newFullName
+                  );
+                }}
                 defaultValue={
                   currentUser.last_name
                     ? currentUser.first_name + " " + currentUser.last_name
@@ -269,7 +276,12 @@ export default function UserProfile() {
                 Username:
                 <input
                   onKeyDown={(e) => e.key === " " && e.preventDefault()}
-                  onChange={(e) => setNewLogin(e.target.value?.trim())}
+                  onChange={(e) => {
+                    const newLogin = e.target.value?.trim();
+                    setNewLogin(
+                      newLogin === currentUser.login ? null : newLogin
+                    );
+                  }}
                   defaultValue={currentUser.login}
                   placeholder="username"
                   disabled={isDisableForm}
@@ -282,7 +294,12 @@ export default function UserProfile() {
                 Email address:
                 <input
                   onKeyDown={(e) => e.key === " " && e.preventDefault()}
-                  onChange={(e) => setNewEmail(e.target.value?.trim())}
+                  onChange={(e) => {
+                    const newEmail = e.target.value?.trim();
+                    setNewEmail(
+                      newEmail === currentUser.email ? null : newEmail
+                    );
+                  }}
                   defaultValue={currentUser.email}
                   placeholder="email address"
                   disabled={isDisableForm}
@@ -295,7 +312,12 @@ export default function UserProfile() {
                 Phone number:
                 <input
                   onKeyDown={(e) => e.key === " " && e.preventDefault()}
-                  onChange={(e) => setNewPhone(e.target.value?.trim())}
+                  onChange={(e) => {
+                    const newPhone = e.target.value?.trim();
+                    setNewLogin(
+                      newPhone === currentUser.phone ? null : newPhone
+                    );
+                  }}
                   defaultValue={currentUser.phone}
                   placeholder="phone number"
                   disabled={isDisableForm}
