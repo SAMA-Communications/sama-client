@@ -252,7 +252,7 @@ export default function UserProfile() {
                 }}
                 onChange={(e) => {
                   const newFullName = e.target.value?.trim();
-                  setNewLogin(
+                  setNewFullName(
                     newFullName ===
                       currentUser.first_name + " " + currentUser.last_name
                       ? null
@@ -314,7 +314,7 @@ export default function UserProfile() {
                   onKeyDown={(e) => e.key === " " && e.preventDefault()}
                   onChange={(e) => {
                     const newPhone = e.target.value?.trim();
-                    setNewLogin(
+                    setNewPhone(
                       newPhone === currentUser.phone ? null : newPhone
                     );
                   }}
