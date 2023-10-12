@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.0.1
+## 0.0.1
 
 ### Features
 
@@ -17,7 +17,7 @@
 
 - Consolidated the names of all controller requests to one view
 
-## v0.0.1 (Example)
+## 0.0.1 (Example)
 
 ### Important Notes
 
