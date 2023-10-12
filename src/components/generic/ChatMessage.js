@@ -17,7 +17,6 @@ export default function ChatMessage({
   attachments,
   tSend,
   openModalParam,
-  refLastEl,
 }) {
   const timeSend = useMemo(() => {
     const t = new Date(tSend * 1000);

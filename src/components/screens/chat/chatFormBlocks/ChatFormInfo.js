@@ -17,7 +17,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLayoutEffect, useMemo, useState } from "react";
 
 import { ReactComponent as BackBtn } from "./../../../../assets/icons/chatForm/BackBtn.svg";
-import { ReactComponent as RecipientPhoto } from "./../../../../assets/icons/chatForm/RecipientPhoto.svg";
+import { ReactComponent as GroupChatPhoto } from "./../../../../assets/icons/chatList/ChatIconGroup.svg";
+import { ReactComponent as PrivateChatPhoto } from "./../../../../assets/icons/chatList/ChatIconPrivate.svg";
 import { ReactComponent as TrashCan } from "./../../../../assets/icons/chatForm/TrashCan.svg";
 
 export default function ChatFormInfo({ closeForm }) {
@@ -60,28 +61,17 @@ export default function ChatFormInfo({ closeForm }) {
     return conv.owner_id === userInfo._id
       ? participants[conv.opponent_id]?._id
       : participants[conv.owner_id]?._id;
-  }, [selectedCID]);
+  }, [selectedCID, participants]);
 
-  const opponentLastActivity = useMemo(
-    () => participants[opponentId]?.recent_activity,
-    [opponentId, participants]
-  );
-
-  const [reloadActivity, setReloadActivity] = useState(false);
-  useLayoutEffect(() => {
-    const debounce = setTimeout(() => setReloadActivity((prev) => !prev), 250);
-    return () => clearTimeout(debounce);
-  }, [opponentLastActivity, selectedConversation]);
-
+  const opponentLastActivity = participants[opponentId]?.recent_activity;
   const recentActivityView = useMemo(() => {
-    if (selectedConversation?.name) {
-      return null;
+    if (!selectedConversation?.name) {
+      return opponentLastActivity === "online"
+        ? opponentLastActivity
+        : getLastVisitTime(opponentLastActivity);
     }
-
-    return opponentLastActivity === "online"
-      ? opponentLastActivity
-      : getLastVisitTime(opponentLastActivity);
-  }, [reloadActivity]);
+    return null;
+  }, [opponentId, opponentLastActivity, selectedConversation?.name]);
   // ʌʌ  Activity block  ʌʌ //
 
   // vv  Delete chat block  vv //
@@ -107,7 +97,11 @@ export default function ChatFormInfo({ closeForm }) {
       </div>
       <div className="chat-info-block">
         <div className="chat-recipient-photo">
-          <RecipientPhoto />
+          {selectedConversation.type === "u" ? (
+            <PrivateChatPhoto />
+          ) : (
+            <GroupChatPhoto />
+          )}
         </div>
         <div className="chat-recipient-info">
           {chatNameView}

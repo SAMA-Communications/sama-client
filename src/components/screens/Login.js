@@ -42,6 +42,7 @@ export default function Login() {
 
       const { token: userToken, user: userData } = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
+
       history.navigate("/main");
       subscribeForNotifications();
       dispatch(setSelectedConversation({}));

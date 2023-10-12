@@ -12,9 +12,12 @@ Read a complete medium post **Introducing SAMA** about what is SAMA and what pro
 
 - Make sure you followed SAMA server Development guide first https://github.com/SAMA-Communications/sama-server/blob/main/README.md#development
 - Copy `.env.example` to `.env`.
+- generate VAPID keys via `npx web-push generate-vapid-keys` and set Public Key to `REACT_APP_PUBLIC_VAPID_KEY` in `.env` file
 - `npm install` to install dependencies 
 - `npm run start` to run server
-- access http://localhost:3000 in your browser 
+- access http://localhost:3000 in your browser
+
+There are also other components. Make sure to check [Deploying SAMA chat server stack: a comprehensive guide](https://medium.com/sama-communications/deploying-sama-chat-server-stack-a-comprehensive-guide-294ddb9a2d78)
 
 ## License 
 
@@ -22,4 +25,7 @@ Read a complete medium post **Introducing SAMA** about what is SAMA and what pro
 
 ## Help us!
 
-Any thought, feedback is welcome!
+Any thoughts, feedback is welcome! Please create a GitHub issue for any feedback you have.
+
+Want to support us with [some coffee?](https://www.buymeacoffee.com/khomenkoigor). Will be much appreciated! 
+
