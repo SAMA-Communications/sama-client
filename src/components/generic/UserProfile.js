@@ -144,7 +144,6 @@ export default function UserProfile() {
       if (
         newFirstName.length >= 1 &&
         newFirstName.length <= 20 &&
-        !newFirstName.includes(" ")
       ) {
         updatedParams["first_name"] = newFirstName;
       } else {
@@ -163,7 +162,6 @@ export default function UserProfile() {
       if (
         newLastName.length >= 1 &&
         newLastName.length <= 20 &&
-        !newLastName.includes(" ")
       ) {
         updatedParams["last_name"] = newLastName;
       } else {
