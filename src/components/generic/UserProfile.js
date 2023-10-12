@@ -141,10 +141,7 @@ export default function UserProfile() {
     }
 
     if (newFirstName && newFirstName !== first_name) {
-      if (
-        newFirstName.length >= 1 &&
-        newFirstName.length <= 20 &&
-      ) {
+      if (newFirstName.length >= 1 && newFirstName.length <= 20) {
         updatedParams["first_name"] = newFirstName;
       } else {
         showCustomAlert(
@@ -159,10 +156,7 @@ export default function UserProfile() {
     }
 
     if (newLastName && newLastName !== last_name) {
-      if (
-        newLastName.length >= 1 &&
-        newLastName.length <= 20 &&
-      ) {
+      if (newLastName.length >= 1 && newLastName.length <= 20) {
         updatedParams["last_name"] = newLastName;
       } else {
         showCustomAlert(
