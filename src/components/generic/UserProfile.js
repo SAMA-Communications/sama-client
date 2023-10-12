@@ -261,7 +261,6 @@ export default function UserProfile() {
             <p className="uo-name">
               <input
                 id="uoNameFirstName"
-                onKeyDown={(e) => e.key === " " && e.preventDefault()}
                 onChange={(e) => {
                   const newFirstName = e.target.value?.trim();
                   setNewFirstName(!newFirstName.length ? null : newFirstName);
@@ -272,7 +271,6 @@ export default function UserProfile() {
               />
               <input
                 id="uoNameLastName"
-                onKeyDown={(e) => e.key === " " && e.preventDefault()}
                 onChange={(e) => {
                   const newLastName = e.target.value?.trim();
                   setNewLastName(!newLastName.length ? null : newLastName);
