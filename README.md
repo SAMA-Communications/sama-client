@@ -25,4 +25,7 @@ There are also other components. Make sure to check [Deploying SAMA chat server 
 
 ## Help us!
 
-Any thought, feedback is welcome!
+Any thoughts, feedback is welcome! Please create a GitHub issue for any feedback you have.
+
+Want to support us with [some coffee?](https://www.buymeacoffee.com/khomenkoigor). Will be much appreciated! 
+
