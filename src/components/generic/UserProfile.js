@@ -247,27 +247,45 @@ export default function UserProfile() {
             <div className="uo-photo">{userLetters}</div>
             <p className="uo-name">
               <input
-                onKeyDown={(e) => {
-                  const { target, key } = e;
-                  if (target.value?.includes(" ") && key === " ") {
-                    return e.preventDefault();
-                  }
-                }}
-                onChange={(e) => {
-                  const newFullName = e.target.value?.trim();
-                  setNewFullName(
-                    newFullName ===
-                      currentUser.first_name + " " + currentUser.last_name
-                      ? null
-                      : newFullName
-                  );
-                }}
-                defaultValue={
-                  currentUser.last_name
-                    ? currentUser.first_name + " " + currentUser.last_name
-                    : currentUser.last_name
-                }
-                placeholder="Full name"
+                id="uoNameFirstName"
+                // onKeyDown={(e) => {
+                //   const { target, key } = e;
+                //   if (target.value?.includes(" ") && key === " ") {
+                //     return e.preventDefault();
+                //   }
+                // }}
+                // onChange={(e) => {
+                //   const newFullName = e.target.value?.trim();
+                //   setNewFullName(
+                //     newFullName ===
+                //       currentUser.first_name + " " + currentUser.last_name
+                //       ? null
+                //       : newFullName
+                //   );
+                // }}
+                defaultValue={currentUser.first_name}
+                placeholder="First name"
+                disabled={isDisableForm}
+              />
+              <input
+                id="uoNameLastName"
+                // onKeyDown={(e) => {
+                //   const { target, key } = e;
+                //   if (target.value?.includes(" ") && key === " ") {
+                //     return e.preventDefault();
+                //   }
+                // }}
+                // onChange={(e) => {
+                //   const newFullName = e.target.value?.trim();
+                //   setNewFullName(
+                //     newFullName ===
+                //       currentUser.first_name + " " + currentUser.last_name
+                //       ? null
+                //       : newFullName
+                //   );
+                // }}
+                defaultValue={currentUser.last_name}
+                placeholder="Last name"
                 disabled={isDisableForm}
               />
             </p>
