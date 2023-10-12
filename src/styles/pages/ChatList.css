@@ -43,7 +43,12 @@ aside {
   box-shadow: inset 0px 0px 10px var(--shadow-block);
 }
 .user-info {
-  width: calc(100% - 95px);
+  max-width: calc(100% - 140px);
+
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
 }
 .user-info > p {
   width: 100%;
@@ -55,6 +60,20 @@ aside {
   font-size: calc(var(--font-size) * 1.5);
   font-weight: 300;
   line-height: 50px;
+}
+.user-info-status {
+  font-size: var(--font-size);
+  color: var(--text-smoke);
+}
+.user-options {
+  padding: 2px;
+  margin-left: auto;
+
+  border-radius: var(--border-second-radius);
+}
+.user-options:hover {
+  cursor: pointer;
+  background-color: var(--border-color);
 }
 
 .chat-list {

@@ -1,3 +1,11 @@
+.search-bg {
+  width: 100svw;
+  height: 100svh;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+}
 #search-form {
   position: absolute;
   width: 400px;

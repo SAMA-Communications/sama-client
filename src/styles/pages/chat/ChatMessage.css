@@ -9,6 +9,9 @@
   flex-direction: row;
   align-items: flex-end;
 }
+.message:nth-last-child(1) {
+  margin-bottom: 5px;
+}
 .message-content {
   position: relative;
   max-width: min(500px, 80%);

@@ -79,7 +79,12 @@ class Api {
           if (response.error) {
             reject(response.error);
           } else {
-            resolve(response[resObjKey]);
+            // console.log(response, resObjKey);
+            resObjKey
+              ? response[resObjKey]
+                ? resolve(response[resObjKey])
+                : reject({ message: "Server error." })
+              : resolve(response);
           }
           delete this.responsesPromises[responseId];
         }
@@ -141,7 +146,7 @@ class Api {
         id: getUniqueId("userLogin"),
       },
     };
-    const resObjKey = "token";
+    const resObjKey = null;
     return this.sendPromise(requestData, resObjKey);
   }
 
@@ -153,6 +158,17 @@ class Api {
           password: data.pass,
         },
         id: getUniqueId("userCreate"),
+      },
+    };
+    const resObjKey = "user";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
+  async userEdit(data) {
+    const requestData = {
+      request: {
+        user_edit: data,
+        id: getUniqueId("userEdit"),
       },
     };
     const resObjKey = "user";
@@ -171,7 +187,6 @@ class Api {
   }
 
   async userDelete() {
-    //only use in app
     const requestData = {
       request: {
         user_delete: {},
@@ -459,7 +474,7 @@ class Api {
       },
     };
 
-    const resObjKey = "user";
+    const resObjKey = "subscription";
     return this.sendPromise(requestData, resObjKey);
   }
 
@@ -473,7 +488,7 @@ class Api {
       },
     };
 
-    const resObjKey = "user";
+    const resObjKey = "";
     return this.sendPromise(requestData, resObjKey);
   }
 }

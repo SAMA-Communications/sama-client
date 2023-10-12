@@ -6,6 +6,7 @@ import { default as EventEmitter } from "../event/eventEmitter";
 import { history } from "../_helpers/history";
 import { setSelectedConversation } from "../store/SelectedConversation";
 import { setUserIsLoggedIn } from "../store/UserIsLoggedIn ";
+import { upsertUser } from "../store/Participants";
 
 class AutoLoginService {
   constructor() {
@@ -28,11 +29,14 @@ class AutoLoginService {
     };
 
     try {
-      const userToken = await api.userLogin({ token });
+      const { token: userToken, user: userData } = await api.userLogin({
+        token,
+      });
 
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
         subscribeForNotifications();
+        store.dispatch(upsertUser(userData));
 
         currentPath &&
           store.dispatch(setSelectedConversation({ id: currentPath.slice(1) }));

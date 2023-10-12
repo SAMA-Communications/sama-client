@@ -1,10 +1,15 @@
+import MainLogo from "../static/MainLogo";
 import React, { useState } from "react";
 import api from "../../api/api";
-import MainLogo from "../static/MainLogo";
 import showCustomAlert from "../../utils/show_alert";
+import subscribeForNotifications from "../../services/notifications";
 import { Link } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import { history } from "../../_helpers/history";
+import { setSelectedConversation } from "../../store/SelectedConversation";
+import { setUserIsLoggedIn } from "../../store/UserIsLoggedIn ";
+import { upsertUser } from "../../store/Participants";
+import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import {
   changeOpacity,
@@ -18,6 +23,10 @@ import { ReactComponent as HidePassword } from "./../../assets/icons/authForm/Hi
 import { ReactComponent as ShowPassword } from "./../../assets/icons/authForm/ShowPassword.svg";
 
 export default function SignUp() {
+  const dispatch = useDispatch();
+
+  const [isLogin, setIsLogin] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -34,12 +43,25 @@ export default function SignUp() {
         data.pass.trim(),
       ];
       await api.userCreate(data);
+
+      if (isLogin) {
+        const { token: userToken, user: userData } = await api.userLogin(data);
+        localStorage.setItem("sessionId", userToken);
+        subscribeForNotifications();
+        dispatch(setSelectedConversation({}));
+        dispatch(setUserIsLoggedIn(true));
+        dispatch(upsertUser(userData));
+      }
+
       showCustomAlert(
-        "You’ve successfully created a new user. You can log in now.",
+        `You’ve successfully created a new user${
+          isLogin ? " and logged in" : ". You can log in now"
+        }.`,
         "success"
       );
-      history.navigate("/login");
+      history.navigate(isLogin ? "/main" : "/login");
     } catch (error) {
+      isLogin && localStorage.removeItem("sessionId");
       showCustomAlert(error.message, "danger");
     }
     setLoader(false);
@@ -76,6 +98,7 @@ export default function SignUp() {
             type={passwordType}
             autoComplete="off"
           />
+
           <span className="password-visibility">
             {passwordType === "password" ? (
               <HidePassword onClick={() => setPasswordType("text")} />
@@ -88,6 +111,15 @@ export default function SignUp() {
           {errors.pass?.message && renderErrorMessage(errors.pass.message)}
         </div>
         <input type="submit" value="Create account" />
+        <div className="input-checkbox">
+          <input
+            type="checkbox"
+            id="isLogin"
+            checked={isLogin}
+            onChange={() => setIsLogin((prev) => !prev)}
+          />
+          <label htmlFor="isLogin">* also log in as a new user</label>
+        </div>
         <div className="button-container">
           Already have an account?&nbsp;
           <Link to={`/login`} className="btn-signup">

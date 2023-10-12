@@ -1,6 +1,7 @@
 import ChatForm from "./screens/chat/ChatForm";
 import ChatList from "./screens/chat/ChatList";
 import React, { useMemo } from "react";
+import UserProfile from "./generic/UserProfile";
 import UserSearch from "./screens/chat/UserSearch";
 import { getIsMobileView } from "../store/IsMobileView";
 import { history } from "../_helpers/history";
@@ -27,11 +28,16 @@ export default function Main() {
   );
 
   const additionalContent = useMemo(() => {
+    const { pathname } = history.location;
     const allBlocks = [];
 
-    history.location.pathname.includes("/search") &&
-      allBlocks.push(<UserSearch key={"/search"} />);
+    if (pathname.includes("/search")) {
+      allBlocks.push(<UserSearch key="/search" />);
+    }
 
+    if (pathname.includes("/user")) {
+      allBlocks.push(<UserProfile key="/user" />);
+    }
     return allBlocks;
   }, [history.location.pathname]);
 

@@ -1,0 +1,245 @@
+.user-options-bg {
+  width: 100svw;
+  height: 100svh;
+
+  padding: 7svh 1svw;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  background-color: var(--bg-dark-block);
+
+  z-index: 112;
+}
+.user-options-container {
+  width: 450px;
+
+  padding: 15px 20px 30px 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+
+  border: none;
+  border-radius: var(--border-main-radius);
+  background-color: var(--bg-main-color);
+}
+
+.uo-photo-name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+.uo-photo {
+  width: 90px;
+  height: 90px;
+
+  font-size: calc(var(--font-size) * 2.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-main);
+
+  border-radius: var(--border-second-radius);
+  background-color: var(--bg-chatPhoto-color);
+  box-shadow: inset 0px 0px 10px var(--shadow-block);
+}
+.uo-name {
+  width: calc(100% - 110px);
+
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  justify-content: center;
+}
+.uo-name > input {
+  text-align: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  font-size: calc(var(--font-size) * 1.5);
+  font-weight: 300;
+  line-height: calc(var(--font-size) * 2);
+
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border-color);
+
+  transition: 0.3s border-bottom;
+}
+
+.uo-info {
+  width: 100%;
+  margin-top: 25px;
+
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.uo-info > div {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.uo-login {
+  line-height: 150%;
+}
+.uo-email,
+.uo-login,
+.uo-phone,
+.uo-password {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: calc(var(--font-size) * 1.125);
+}
+.uo-info > div:nth-last-child(1) {
+  margin-top: 20px;
+}
+.uo-password > span {
+  cursor: pointer;
+  text-decoration: underline;
+
+  transition: 0.15s color;
+}
+.uo-password > span {
+  font-size: calc(var(--font-size) * 1.125);
+  color: var(--text-hover);
+}
+.uo-password > span:hover {
+  color: var(--text-hover-light);
+}
+
+.uo-info > div > p > input {
+  width: 200px;
+  padding: 2px;
+
+  font-size: calc(var(--font-size) * 1.125);
+  color: var(--text-hover);
+  text-align: right;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border-color);
+
+  transition: 0.3s border-bottom;
+}
+.uo-info > div > p > input:focus,
+.uo-name > input:focus {
+  outline: none;
+}
+.uo-info > div > p > input:disabled,
+.uo-name > input:disabled {
+  border-bottom: 1px solid transparent;
+}
+
+.uo-navigation {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.uo-navigation > div {
+  display: flex;
+  gap: 15px;
+}
+
+.uo-delete {
+  cursor: pointer;
+}
+.uo-delete > svg > path {
+  transition: 0.3s;
+}
+.uo-delete:hover > svg > path {
+  stroke: var(--text-danger);
+}
+
+.uo-edit {
+  display: flex;
+  gap: 5px;
+  cursor: pointer;
+}
+.uo-edit > svg {
+  width: 36px;
+  height: 36px;
+}
+.uo-edit > svg > path {
+  transition: 0.3s;
+}
+.uo-edit > svg:hover > path {
+  stroke: var(--text-hover);
+}
+.uo-edit > .uo-reset:hover > path {
+  stroke: var(--text-danger);
+}
+.uo-close {
+  cursor: pointer;
+}
+
+#updateForm {
+  width: 100%;
+}
+
+@media (max-width: 800px) {
+  #updateForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .user-options-bg {
+    padding: 0;
+  }
+  .user-options-container {
+    width: 100svw;
+    height: 100svh;
+
+    border-radius: 0;
+  }
+
+  .uo-info {
+    width: min(100%, 410px);
+  }
+  .uo-info > div {
+    flex: 1;
+  }
+  .uo-info > div > p {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .uo-info > div > p > input {
+    width: 100%;
+    text-align: left;
+  }
+  .uo-password > span {
+    height: 26px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .uo-photo-name {
+    width: min(410px, 100%);
+  }
+}
