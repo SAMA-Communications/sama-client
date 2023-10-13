@@ -127,16 +127,7 @@ class Api {
 
   async sendPromise(req, key) {
     return new Promise((resolve, reject) => {
-      const req = {
-        request: {
-          user_login: { login: "123", password: "123" },
-          id: "421cda83-7f49-45a9-81e8-5f83cfa0533c",
-        },
-      };
-      this.socket.send(
-        '{"request":{"user_create":{login:"user","password":"user_paswword"},"id":"421cda83-7f49-45a9-81e8-5f83cfa0533c"}}'
-      );
-      // this.socket.send(JSON.stringify(req));
+      this.socket.send(JSON.stringify(req));
       console.log("[socket.send]", req);
       this.responsesPromises[req.request.id] = {
         resolve,
