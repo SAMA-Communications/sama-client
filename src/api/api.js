@@ -74,8 +74,15 @@ class Api {
         const response = message.response;
         if (response) {
           const responseId = response.id;
+
+          if (!responseId) {
+            console.error(response.error);
+            return;
+          }
+
           const { resolve, reject, resObjKey } =
             this.responsesPromises[responseId];
+
           if (response.error) {
             reject(response.error);
           } else {
@@ -120,7 +127,16 @@ class Api {
 
   async sendPromise(req, key) {
     return new Promise((resolve, reject) => {
-      this.socket.send(JSON.stringify(req));
+      const req = {
+        request: {
+          user_login: { login: "123", password: "123" },
+          id: "421cda83-7f49-45a9-81e8-5f83cfa0533c",
+        },
+      };
+      this.socket.send(
+        '{"request":{"user_create":{login:"user","password":"user_paswword"},"id":"421cda83-7f49-45a9-81e8-5f83cfa0533c"}}'
+      );
+      // this.socket.send(JSON.stringify(req));
       console.log("[socket.send]", req);
       this.responsesPromises[req.request.id] = {
         resolve,
