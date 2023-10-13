@@ -74,8 +74,15 @@ class Api {
         const response = message.response;
         if (response) {
           const responseId = response.id;
+
+          if (!responseId) {
+            console.error(response.error);
+            return;
+          }
+
           const { resolve, reject, resObjKey } =
             this.responsesPromises[responseId];
+
           if (response.error) {
             reject(response.error);
           } else {
