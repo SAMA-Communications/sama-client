@@ -180,7 +180,10 @@ export default function ChatFormInputs({
   };
 
   const handeOnKeyDown = (e) => {
-    if (!isMobile && e.keyCode === 13 && !e.shiftKey) {
+    if (
+      e.keyCode === 13 &&
+      ((!isMobile && !e.shiftKey) || (isMobile && e.shiftKey))
+    ) {
       sendMessage(e);
     }
   };
