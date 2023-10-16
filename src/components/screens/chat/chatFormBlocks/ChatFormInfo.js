@@ -44,10 +44,21 @@ export default function ChatFormInfo({ closeForm }) {
       return <p>{name}</p>;
     }
 
-    const ownerLogin = participants[owner_id]?.login;
-    const opponentLogin = participants[opponent_id]?.login;
+    function getParticipantName(uId) {
+      const u = participants[uId];
 
-    return <p>{owner_id === userInfo._id ? opponentLogin : ownerLogin}</p>;
+      if (u && (u.first_name || u.last_name)) {
+        return `${u.first_name || ""} ${u.last_name || ""}`.trim();
+      }
+
+      return u?.login;
+    }
+
+    return (
+      <p>
+        {getParticipantName(owner_id === userInfo._id ? opponent_id : owner_id)}
+      </p>
+    );
   }, [selectedConversation, participants]);
   // ʌʌ  Chat name view  ʌʌ //
 
