@@ -63,7 +63,7 @@ export const conversations = createSlice({
     removeChat: conversationsAdapter.removeOne,
 
     updateLastMessageField: (state, { payload }) => {
-      const { cid, msg, resaveLastMessage, countOfNewMessages } = payload;
+      const { cid, msg, resaveLastMessageId, countOfNewMessages } = payload;
       const conv = state.entities[cid];
 
       if (!conv) {
@@ -71,8 +71,11 @@ export const conversations = createSlice({
       }
       let mids = [...conv.messagesIds];
 
-      if (resaveLastMessage) {
-        mids.pop();
+      if (resaveLastMessageId) {
+        const msgIndes = mids.indexOf(resaveLastMessageId);
+        if (msgIndes !== -1) {
+          mids.splice(msgIndes, 1);
+        }
       }
       const updateParams = {
         _id: cid,

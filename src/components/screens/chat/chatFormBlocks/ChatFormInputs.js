@@ -112,7 +112,7 @@ export default function ChatFormInputs({
       dispatch(
         updateLastMessageField({
           cid: selectedCID,
-          resaveLastMessage: 1,
+          resaveLastMessageId: mid,
           msg,
         })
       );

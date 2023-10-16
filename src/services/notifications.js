@@ -40,7 +40,7 @@ async function showLocalNotification(pushMessage) {
     body: `${body}${attachmentText}`,
     title,
   };
-  sw.postMessage({ message: notificationMessage });
+  sw.postMessage({ message: notificationMessage }); /// possible error notificationMessage
 }
 EventEmitter.subscribe("onMessage", showLocalNotification);
 
