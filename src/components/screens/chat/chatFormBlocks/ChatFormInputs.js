@@ -2,7 +2,7 @@ import api from "../../../../api/api";
 import AttachmentsList from "./../../../generic/AttachmentsList.js";
 import isMobile from "./../../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
-import heic2any from "heic2any";
+import heicToPng from "../../../../utils/heic_to_png";
 import { getFileObjects } from "../../../../api/download_manager";
 import { getNetworkState } from "../../../../store/NetworkState";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -134,15 +134,17 @@ export default function ChatFormInputs({
 
   // vv  Attachments pick  vv //
   const pickUserFiles = () => filePicker.current.click();
-  const handlerChange = async (event) => {
-    if (!event.target.files.length) {
+  const handlerChange = async ({ target: { files: pickedFiles } }) => {
+    if (!pickedFiles.length) {
       return;
     }
     setIsLoadingFile(true);
 
     const selectedFiles = [];
     try {
-      for (const file of event.target.files) {
+      for (let i = 0; i < pickedFiles.length; i++) {
+        const file = pickedFiles[i];
+        console.log(file);
         if (file.name.length > 255) {
           throw new Error("The file name should not exceed 255 characters.", {
             cause: {
@@ -151,23 +153,12 @@ export default function ChatFormInputs({
           });
         }
 
-        if (!file.type.startsWith("image/") && !file.name.includes(".HEIC")) {
+        if (!file.type.startsWith("image/") && !/^\w+.HEIC$/.test(file.name)) {
           throw new Error("Please select an image file.", {
             cause: { message: "Please select an image file." },
           });
-        } else if (file.name.includes(".HEIC")) {
-          const blob = new Blob([file], { type: "image/heic" });
-
-          const pngBuffer = await heic2any({
-            blob,
-            toType: "image/png",
-          });
-
-          const pngBlob = new Blob([pngBuffer], { type: "image/png" });
-          const pngFile = new File([pngBlob], file.name, {
-            type: "image/png",
-          });
-
+        } else if (/^\w+.HEIC$/.test(file.name)) {
+          const pngFile = await heicToPng(file);
           selectedFiles.push(pngFile);
           continue;
         }
@@ -175,13 +166,15 @@ export default function ChatFormInputs({
         selectedFiles.push(file);
       }
 
-      if (files?.length + event.target.files.length >= 10) {
+      if (pickedFiles?.length + pickedFiles.length >= 10) {
         throw new Error("The maximum limit for file uploads is 10.", {
           cause: { message: "The maximum limit for file uploads is 10." },
         });
       }
     } catch (err) {
-      showCustomAlert(err.cause.message, "warning");
+      err.cause
+        ? showCustomAlert(err.cause.message, "warning")
+        : console.error(err);
       setIsLoadingFile(false);
       return;
     }
