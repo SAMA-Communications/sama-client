@@ -9,12 +9,9 @@ import {
 } from "../../../../store/Conversations";
 import { clearSelectedConversation } from "../../../../store/SelectedConversation";
 import { history } from "../../../../_helpers/history";
-import {
-  addUser,
-  selectParticipantsEntities,
-} from "../../../../store/Participants";
+import { selectParticipantsEntities } from "../../../../store/Participants";
 import { useDispatch, useSelector } from "react-redux";
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { ReactComponent as BackBtn } from "./../../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as GroupChatPhoto } from "./../../../../assets/icons/chatList/ChatIconGroup.svg";
@@ -76,13 +73,14 @@ export default function ChatFormInfo({ closeForm }) {
 
   const opponentLastActivity = participants[opponentId]?.recent_activity;
   const recentActivityView = useMemo(() => {
-    if (!selectedConversation?.name) {
+    if (selectedConversation.type === "u") {
       return opponentLastActivity === "online"
         ? opponentLastActivity
         : getLastVisitTime(opponentLastActivity);
     }
+
     return null;
-  }, [opponentId, opponentLastActivity, selectedConversation?.name]);
+  }, [opponentId, opponentLastActivity, selectedConversation]);
   // ʌʌ  Activity block  ʌʌ //
 
   // vv  Delete chat block  vv //
@@ -107,11 +105,15 @@ export default function ChatFormInfo({ closeForm }) {
         <BackBtn />
       </div>
       <div className="chat-info-block">
-        <div className="chat-recipient-photo">
-          {selectedConversation.type === "u" ? (
-            <PrivateChatPhoto />
-          ) : (
+        <div
+          className={`chat-recipient-photo ${
+            selectedConversation.type === "g" ? "chat-box-icon-g-bg" : null
+          }`}
+        >
+          {selectedConversation.type === "g" ? (
             <GroupChatPhoto />
+          ) : (
+            <PrivateChatPhoto />
           )}
         </div>
         <div className="chat-recipient-info">

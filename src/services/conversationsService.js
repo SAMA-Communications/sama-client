@@ -1,7 +1,7 @@
 import api from "../api/api";
 import store from "../store/store";
 import { insertChats } from "../store/Conversations";
-import { setUsers } from "../store/Participants";
+import { upsertUsers } from "../store/Participants";
 
 class ConversationsService {
   userIsLoggedIn = false;
@@ -23,7 +23,7 @@ class ConversationsService {
       chats.length &&
         api
           .getParticipantsByCids(chats.map((el) => el._id))
-          .then((users) => store.dispatch(setUsers(users)));
+          .then((users) => store.dispatch(upsertUsers(users)));
     });
   }
 }
