@@ -153,11 +153,11 @@ export default function ChatFormInputs({
           });
         }
 
-        if (!file.type.startsWith("image/") && !/^\w+.HEIC$/.test(file.name)) {
+        if (!file.type.startsWith("image/") && !/^\w+\.HEIC$/.test(file.name)) {
           throw new Error("Please select an image file.", {
             cause: { message: "Please select an image file." },
           });
-        } else if (/^\w+.HEIC$/.test(file.name)) {
+        } else if (/^\w+\.HEIC$/.test(file.name)) {
           const pngFile = await heicToPng(file);
           selectedFiles.push(pngFile);
           continue;
