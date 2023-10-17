@@ -222,12 +222,14 @@
 
 .chat-files-preview {
   position: relative;
-  padding: 10px 45px 10px 0;
+  padding: 10px 45px 10px 10px;
 
   max-height: 70px;
   min-height: 60px;
 
   overflow: hidden;
+  display: flex;
+  align-items: center;
 
   border-top: 1px solid var(--border-color);
 }

@@ -2,9 +2,10 @@ import api from "../../../../api/api";
 import AttachmentsList from "./../../../generic/AttachmentsList.js";
 import isMobile from "./../../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
+import heicToPng from "../../../../utils/heic_to_png";
 import { getFileObjects } from "../../../../api/download_manager";
 import { getNetworkState } from "../../../../store/NetworkState";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addMessage,
@@ -19,6 +20,7 @@ import {
 } from "../../../../store/Conversations";
 
 import { ReactComponent as SendFilesButton } from "./../../../../assets/icons/chatForm/SendFilesButton.svg";
+import { ReactComponent as Loading } from "./../../../../assets/icons/chatForm/Loading.svg";
 import { ReactComponent as SendMessageButton } from "./../../../../assets/icons/chatForm/SendMessageButton.svg";
 
 export default function ChatFormInputs({
@@ -40,6 +42,7 @@ export default function ChatFormInputs({
   const messages = useSelector(getActiveConversationMessages);
   const filePicker = useRef(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
+  const [isLoadingFile, setIsLoadingFile] = useState(false);
 
   const scrollChatToBottom = () =>
     chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
@@ -131,35 +134,53 @@ export default function ChatFormInputs({
 
   // vv  Attachments pick  vv //
   const pickUserFiles = () => filePicker.current.click();
-  const handlerChange = (event) => {
-    if (!event.target.files.length) {
+  const handlerChange = async ({ target: { files: pickedFiles } }) => {
+    if (!pickedFiles.length) {
       return;
     }
+    setIsLoadingFile(true);
 
     const selectedFiles = [];
-    for (const file of event.target.files) {
-      if (file.name.length > 255) {
-        showCustomAlert(
-          "The file name should not exceed 255 characters.",
-          "warning"
-        );
-        return;
-      }
-      if (!file.type.startsWith("image/")) {
-        showCustomAlert("Please select an image file.", "warning");
-        return;
+    try {
+      for (let i = 0; i < pickedFiles.length; i++) {
+        const file = pickedFiles[i];
+        if (file.name.length > 255) {
+          throw new Error("The file name should not exceed 255 characters.", {
+            cause: {
+              message: "The file name should not exceed 255 characters.",
+            },
+          });
+        }
+
+        if (!file.type.startsWith("image/") && !/^\w+\.HEIC$/.test(file.name)) {
+          throw new Error("Please select an image file.", {
+            cause: { message: "Please select an image file." },
+          });
+        } else if (/^\w+\.HEIC$/.test(file.name)) {
+          const pngFile = await heicToPng(file);
+          selectedFiles.push(pngFile);
+          continue;
+        }
+
+        selectedFiles.push(file);
       }
 
-      selectedFiles.push(file);
-    }
-
-    if (files?.length + event.target.files.length >= 10) {
-      showCustomAlert("The maximum limit for file uploads is 10.", "warning");
+      if (pickedFiles?.length + pickedFiles.length >= 10) {
+        throw new Error("The maximum limit for file uploads is 10.", {
+          cause: { message: "The maximum limit for file uploads is 10." },
+        });
+      }
+    } catch (err) {
+      err.cause
+        ? showCustomAlert(err.cause.message, "warning")
+        : console.error(err);
+      setIsLoadingFile(false);
       return;
     }
 
     setFiles(files?.length ? [...files, ...selectedFiles] : [...selectedFiles]);
     messageInputEl.current.focus();
+    setIsLoadingFile(false);
   };
   // ʌʌ  Attachments pick  ʌʌ //
 
@@ -189,11 +210,25 @@ export default function ChatFormInputs({
   };
   // ʌʌ  Input functions pick  ʌʌ //
 
+  const fileView = useMemo(() => {
+    if (isLoadingFile) {
+      return (
+        <div className="chat-files-preview">
+          <Loading />
+        </div>
+      );
+    }
+
+    return files?.length ? (
+      <div className="chat-files-preview">
+        <AttachmentsList files={files} funcUpdateFile={setFiles} />
+      </div>
+    ) : null;
+  }, [files, isLoadingFile]);
+
   return (
     <>
-      {files?.length ? (
-        <AttachmentsList files={files} funcUpdateFile={setFiles} />
-      ) : null}
+      {fileView}
       <form id="chat-form-send" action="">
         <div className="form-send-file">
           <SendFilesButton onClick={pickUserFiles} />
