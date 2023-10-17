@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.0.2
+
+### Features
+
+- Added a page with information about the user
+- The ability to edit user information has been implemented
+- Implemented uploading HEIC files
+
+### Important fixes
+
+- The page title could be displayed incorrectly for users with a light system theme by default
+- Fixed an issue with the ability to upload any files
+
+### Improvement
+
+- The user's last activity is now updated without delay
+- Added handling of responses without a unique identifier
+
 ## 0.0.1
 
 ### Features
