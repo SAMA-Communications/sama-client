@@ -6,6 +6,7 @@
 
 - Added a page with information about the user
 - The ability to edit user information has been implemented
+- Implemented uploading HEIC files
 
 ### Important fixes
 
