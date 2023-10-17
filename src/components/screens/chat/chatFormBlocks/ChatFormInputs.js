@@ -135,6 +135,7 @@ export default function ChatFormInputs({
   // vv  Attachments pick  vv //
   const pickUserFiles = () => filePicker.current.click();
   const handlerChange = async ({ target: { files: pickedFiles } }) => {
+    console.log(pickedFiles);
     if (!pickedFiles.length) {
       return;
     }
@@ -165,7 +166,7 @@ export default function ChatFormInputs({
         selectedFiles.push(file);
       }
 
-      if (pickedFiles?.length + pickedFiles.length >= 10) {
+      if (files?.length + pickedFiles.length >= 10) {
         throw new Error("The maximum limit for file uploads is 10.", {
           cause: { message: "The maximum limit for file uploads is 10." },
         });
