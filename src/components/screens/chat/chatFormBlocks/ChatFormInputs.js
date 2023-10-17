@@ -166,7 +166,7 @@ export default function ChatFormInputs({
         selectedFiles.push(file);
       }
 
-      if (files?.length + pickedFiles.length >= 10) {
+      if (files?.length + pickedFiles.length > 10) {
         throw new Error("The maximum limit for file uploads is 10.", {
           cause: { message: "The maximum limit for file uploads is 10." },
         });
