@@ -7,7 +7,7 @@ export default async function heicToPng(file) {
     blob,
     // toType: "image/png",
     toType: "image/jpeg",
-    quality: 0.7,
+    quality: 0.5,
   });
 
   const pngBlob = new Blob([pngBuffer], { type: "image/jpeg" });
