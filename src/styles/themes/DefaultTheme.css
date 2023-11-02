@@ -25,6 +25,8 @@
   --text-hover: #8ecae6;
   --text-hover-light: #c4ecff;
   --text-danger: #ff0000;
+  --text-link: #2478ff;
+  --text-link-hover: #0052d6;
 
   --icon-stroke-color: #000;
   --icon-indicator-color: #63b3ef;
@@ -40,7 +42,7 @@
   --btn-text-default: #000;
   --btn-text-hover: #fff;
 
-  --bg-message-all: rgba(0, 0, 0, 0.12);
+  --bg-message-all: rgba(0, 0, 0, 0.08);
   --bg-message-my: #bce0f0;
   --bg-chat-indicator: #bce0f0;
 

@@ -9,7 +9,12 @@ export function urlify(inputText) {
 
     if (i < matches.length) {
       result.push(
-        <a href={matches[i]} target="_blank" key={i}>
+        <a
+          className="message-body-link"
+          href={matches[i]}
+          target="_blank"
+          key={i}
+        >
           {matches[i]}
         </a>
       );
