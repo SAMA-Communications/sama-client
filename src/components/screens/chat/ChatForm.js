@@ -44,7 +44,8 @@ export default function ChatForm() {
 
   useEffect(() => {
     const { hash } = history.location;
-    if (!hash || hash.slice(1) === selectedCID || !isUserLogin) {
+
+    if (!hash || hash.split("/")[0].slice(1) === selectedCID || !isUserLogin) {
       return;
     }
 

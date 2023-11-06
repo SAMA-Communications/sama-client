@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useTransition } from "react";
-import SearchedUser from "../../generic/SearchedUser.js";
-import SelectedUser from "../../generic/SelectedUser.js";
+import SearchedUser from "../../generic/searchComponents/SearchedUser.js";
+import SelectedUser from "../../generic/searchComponents/SelectedUser.js";
 import api from "../../../api/api";
 import showCustomAlert from "../../../utils/show_alert.js";
 import { addUsers } from "../../../store/Participants.js";

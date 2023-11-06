@@ -1,6 +1,6 @@
-import getUniqueId from "../../api/uuid";
+import getUniqueId from "../../../api/uuid";
 
-import { ReactComponent as CloseButtonMini } from "./../../assets/icons/chatForm/CloseButtonMini.svg";
+import { ReactComponent as CloseButtonMini } from "./../../../assets/icons/chatForm/CloseButtonMini.svg";
 
 export default function AttachmentsListItem({ name, files, funcUpdateFile }) {
   return (

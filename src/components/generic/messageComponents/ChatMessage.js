@@ -1,11 +1,11 @@
-import MessageAttachments from "../screens/chat/MessageAttachments";
+import MessageAttachments from "../../screens/chat/MessageAttachments";
 import MessageStatus from "./MessageStatus";
 import React, { useMemo } from "react";
-import { urlify } from "../../utils/urlify";
+import { urlify } from "../../../utils/urlify";
 
-import "../../styles/pages/chat/ChatMessage.css";
+import "../../../styles/pages/chat/ChatMessage.css";
 
-import { ReactComponent as UserPhoto } from "./../../assets/icons/chatForm/UserPhotoIconChat.svg";
+import { ReactComponent as UserPhoto } from "./../../../assets/icons/chatForm/UserPhotoIconChat.svg";
 
 export default function ChatMessage({
   fromId,

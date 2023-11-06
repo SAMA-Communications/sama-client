@@ -1,5 +1,5 @@
 import api from "../../../../api/api";
-import AttachmentsList from "./../../../generic/AttachmentsList.js";
+import AttachmentsList from "../../../generic/messageComponents/AttachmentsList.js";
 import isMobile from "./../../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import heicToPng from "../../../../utils/heic_to_png";

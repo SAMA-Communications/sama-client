@@ -100,7 +100,10 @@ export default function ChatFormInfo({ closeForm }) {
   // ʌʌ  Delete chat block  ʌʌ //
 
   return (
-    <div className="chat-form-info">
+    <div
+      className="chat-form-info"
+      onClick={() => history.navigate(`/main/#${selectedCID}/info`)}
+    >
       <div className="chat-return-btn fcc" onClick={closeForm}>
         <BackBtn />
       </div>

@@ -152,10 +152,15 @@
 }
 
 .uo-navigation {
+  padding-right: 8px;
+
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  border-radius: 16px;
+  background-color: var(--scrollbar-track-color);
 }
 .uo-navigation > div {
   display: flex;

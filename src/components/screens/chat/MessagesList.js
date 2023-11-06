@@ -1,4 +1,4 @@
-import ChatMessage from "../../generic/ChatMessage";
+import ChatMessage from "../../generic/messageComponents/ChatMessage";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
 import InfiniteScroll from "react-infinite-scroll-component";
