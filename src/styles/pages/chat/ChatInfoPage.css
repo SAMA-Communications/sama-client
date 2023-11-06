@@ -1,0 +1,95 @@
+.chat-options-bg {
+  width: 100svw;
+  height: 100svh;
+
+  padding: 7svh 1svw;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  background-color: var(--bg-dark-block);
+
+  z-index: 112;
+}
+
+.chat-options-container {
+  width: 450px;
+
+  padding: 15px 20px 30px 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+
+  border: none;
+  border-radius: var(--border-main-radius);
+  background-color: var(--bg-main-color);
+}
+
+.co-navigation {
+  padding-right: 8px;
+
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border-radius: 16px;
+  background-color: var(--scrollbar-track-color);
+}
+.co-navigation > div {
+  display: flex;
+  gap: 15px;
+}
+
+.co-edit {
+  display: flex;
+  gap: 5px;
+  cursor: pointer;
+}
+.co-edit > svg {
+  width: 36px;
+  height: 36px;
+}
+.co-edit > svg > path {
+  transition: 0.3s;
+}
+.co-edit > svg:hover > path {
+  stroke: var(--text-hover);
+}
+.co-edit > .uo-reset:hover > path {
+  stroke: var(--text-danger);
+}
+
+.co-close {
+  cursor: pointer;
+}
+
+.co-delete {
+  cursor: pointer;
+}
+.co-delete > svg > path {
+  transition: 0.3s;
+}
+.co-delete:hover > svg > path {
+  stroke: var(--text-danger);
+}
+
+@media (max-width: 800px) {
+  .chat-options-bg {
+    padding: 0;
+  }
+
+  .chat-options-container {
+    width: 100svw;
+    height: 100svh;
+
+    border-radius: 0;
+  }
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useTransition } from "react";
 import SearchedUser from "../../generic/searchComponents/SearchedUser.js";
 import SelectedUser from "../../generic/searchComponents/SelectedUser.js";
-import api from "../../../api/api";
+import api from "../../../api/api.js";
 import showCustomAlert from "../../../utils/show_alert.js";
 import { addUsers } from "../../../store/Participants.js";
 import { history } from "../../../_helpers/history.js";

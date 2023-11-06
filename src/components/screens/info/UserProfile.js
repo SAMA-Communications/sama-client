@@ -1,31 +1,30 @@
-import api from "../../api/api";
+import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
-import showCustomAlert from "../../utils/show_alert";
-import { history } from "../../_helpers/history";
+import showCustomAlert from "../../../utils/show_alert";
+import { history } from "../../../_helpers/history";
 import {
   selectParticipantsEntities,
   upsertUser,
-} from "../../store/Participants";
-import { updateNetworkState } from "../../store/NetworkState";
+} from "../../../store/Participants";
+import { updateNetworkState } from "../../../store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import "./../../styles/pages/UserProfile.css";
+import "./../../../styles/pages/UserProfile.css";
 
-import { ReactComponent as BackBtn } from "./../../assets/icons/chatForm/BackBtn.svg";
-import { ReactComponent as ConfirmIcon } from "./../../assets/icons/userProfile/ConfirmIcon.svg";
-import { ReactComponent as EmailIcon } from "./../../assets/icons/userProfile/EmailIcon.svg";
-import { ReactComponent as PasswordIcon } from "./../../assets/icons/userProfile/PasswordIcon.svg";
-import { ReactComponent as PenEditIcon } from "./../../assets/icons/userProfile/PenEditIcon.svg";
-import { ReactComponent as PhoneIcon } from "./../../assets/icons/userProfile/PhoneIcon.svg";
-import { ReactComponent as TrashCan } from "./../../assets/icons/chatForm/TrashCan.svg";
-import { ReactComponent as UserLoginIcon } from "./../../assets/icons/userProfile/UserLoginIcon.svg";
-import { ReactComponent as UndoChangeIcon } from "./../../assets/icons/userProfile/UndoEditIcon.svg";
+import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
+import { ReactComponent as ConfirmIcon } from "./../../../assets/icons/userProfile/ConfirmIcon.svg";
+import { ReactComponent as EmailIcon } from "./../../../assets/icons/userProfile/EmailIcon.svg";
+import { ReactComponent as PasswordIcon } from "./../../../assets/icons/userProfile/PasswordIcon.svg";
+import { ReactComponent as PenEditIcon } from "./../../../assets/icons/userProfile/PenEditIcon.svg";
+import { ReactComponent as PhoneIcon } from "./../../../assets/icons/userProfile/PhoneIcon.svg";
+import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
+import { ReactComponent as UserLoginIcon } from "./../../../assets/icons/userProfile/UserLoginIcon.svg";
+import { ReactComponent as UndoChangeIcon } from "./../../../assets/icons/userProfile/UndoEditIcon.svg";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const participants = useSelector(selectParticipantsEntities);
   const userInfo = localStorage.getItem("sessionId")
@@ -41,7 +40,7 @@ export default function UserProfile() {
   const deleteCurrentUser = async () => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       await api.userDelete();
-      navigate("/login");
+      history.navigate("/login");
       dispatch({ type: "RESET_STORE" });
       dispatch(updateNetworkState(true));
     }

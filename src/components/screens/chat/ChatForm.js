@@ -21,7 +21,7 @@ import {
 import { addMessage, markMessagesAsRead } from "../../../store/Messages";
 import { useSelector, useDispatch } from "react-redux";
 
-import "../../../styles/pages/ChatForm.css";
+import "../../../styles/pages/chat/ChatForm.css";
 
 import ChatFormInputs from "./chatFormBlocks/ChatFormInputs.js";
 

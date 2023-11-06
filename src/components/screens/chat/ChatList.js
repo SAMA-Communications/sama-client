@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
-import ChatBox from "../../generic/ChatBox.js";
+import ChatBox from "../../generic/chatComponents/ChatBox.js";
 import MiniLogo from "./../../static/MiniLogo.js";
 import { Link, NavLink } from "react-router-dom";
 import {
@@ -20,7 +20,7 @@ import { setUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 import { updateNetworkState } from "../../../store/NetworkState.js";
 import { useSelector, useDispatch } from "react-redux";
 
-import "../../../styles/pages/ChatList.css";
+import "../../../styles/pages/chat/ChatList.css";
 
 import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
 import { ReactComponent as IconMoon } from "./../../../assets/icons/ThemeMoon.svg";

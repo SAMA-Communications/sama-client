@@ -1,26 +1,19 @@
 import jwtDecode from "jwt-decode";
 import getLastVisitTime from "../../../../utils/get_last_visit_time";
-import api from "../../../../api/api";
-import showCustomAlert from "../../../../utils/show_alert";
 import {
   getConverastionById,
-  removeChat,
   selectConversationsEntities,
 } from "../../../../store/Conversations";
-import { clearSelectedConversation } from "../../../../store/SelectedConversation";
 import { history } from "../../../../_helpers/history";
 import { selectParticipantsEntities } from "../../../../store/Participants";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useMemo } from "react";
 
 import { ReactComponent as BackBtn } from "./../../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as GroupChatPhoto } from "./../../../../assets/icons/chatList/ChatIconGroup.svg";
 import { ReactComponent as PrivateChatPhoto } from "./../../../../assets/icons/chatList/ChatIconPrivate.svg";
-import { ReactComponent as TrashCan } from "./../../../../assets/icons/chatForm/TrashCan.svg";
 
 export default function ChatFormInfo({ closeForm }) {
-  const dispatch = useDispatch();
-
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
@@ -83,26 +76,18 @@ export default function ChatFormInfo({ closeForm }) {
   }, [opponentId, opponentLastActivity, selectedConversation]);
   // ʌʌ  Activity block  ʌʌ //
 
-  // vv  Delete chat block  vv //
-  const deleteChat = async () => {
-    const isConfirm = window.confirm(`Do you want to delete this chat?`);
-    if (isConfirm) {
-      try {
-        await api.conversationDelete({ cid: selectedCID });
-        dispatch(clearSelectedConversation());
-        dispatch(removeChat(selectedCID));
-        history.navigate("/main");
-      } catch (error) {
-        showCustomAlert(error.message, "warning");
-      }
-    }
-  };
-  // ʌʌ  Delete chat block  ʌʌ //
-
   return (
     <div
       className="chat-form-info"
-      onClick={() => history.navigate(`/main/#${selectedCID}/info`)}
+      onClick={() =>
+        history.navigate(
+          `/main/#${selectedCID}${
+            selectedConversation.type === "g"
+              ? "/chatinfo"
+              : "/opponentinfo?uid=" + participants[opponentId]._id
+          }`
+        )
+      }
     >
       <div className="chat-return-btn fcc" onClick={closeForm}>
         <BackBtn />
@@ -124,9 +109,7 @@ export default function ChatFormInfo({ closeForm }) {
           <div className="chat-recipient-status">{recentActivityView}</div>
         </div>
       </div>
-      <div className="chat-delete-btn" onClick={deleteChat}>
-        <TrashCan />
-      </div>
+      <div className="chat-delete-btn"></div>
     </div>
   );
 }

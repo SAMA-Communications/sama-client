@@ -1,11 +1,15 @@
-import ChatForm from "./screens/chat/ChatForm";
-import ChatList from "./screens/chat/ChatList";
 import React, { useMemo } from "react";
-import UserProfile from "./generic/UserProfile";
-import UserSearch from "./screens/chat/UserSearch";
 import { getIsMobileView } from "../store/IsMobileView";
 import { history } from "../_helpers/history";
 import { useSelector } from "react-redux";
+
+import ChatForm from "./screens/chat/ChatForm";
+import ChatInfoPage from "./screens/info/ChatInfoPage";
+import ChatList from "./screens/chat/ChatList";
+
+import UserGuestProfile from "./screens/info/UserGuestProfile";
+import UserProfile from "./screens/info/UserProfile";
+import UserSearch from "./screens/info/UserSearch";
 
 import "../styles/Main.css";
 
@@ -39,8 +43,12 @@ export default function Main() {
       allBlocks.push(<UserProfile key="/user" />);
     }
 
-    if (hash.includes("/info")) {
-      allBlocks.push(<UserProfile key="/user" />);
+    if (hash.includes("/chatinfo")) {
+      allBlocks.push(<ChatInfoPage key="/chatinfo" />);
+    }
+
+    if (hash.includes("/opponentinfo")) {
+      allBlocks.push(<UserGuestProfile key="/opponentinfo" />);
     }
 
     return allBlocks;
