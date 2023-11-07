@@ -230,6 +230,7 @@ export default function UserProfile() {
           <div className="uo-close" onClick={() => history.navigate("/main")}>
             <BackBtn />
           </div>
+          <div className="uo-header">Edit Profile</div>
           <div>
             <div className="uo-edit">
               {isDisableForm ? (

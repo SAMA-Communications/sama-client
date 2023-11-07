@@ -110,7 +110,7 @@ export default function ChatForm() {
 
   // vv  Close form block  vv //
   const closeForm = (event) => {
-    if (event.stopPropagation) {
+    if (event && event.stopPropagation) {
       event.stopPropagation();
     }
 

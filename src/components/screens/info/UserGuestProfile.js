@@ -42,19 +42,8 @@ export default function UserGuestProfile() {
   }, [userInfo]);
   // ʌʌ  User setting block  ʌʌ //
 
-  const isBgTransparent = useMemo(
-    () => history.location.hash.includes("/chatinfo"),
-    [history.location]
-  );
-
   return (
-    <div
-      className="guest-options-bg"
-      style={{
-        backgroundColor: isBgTransparent ? "transparent" : "none",
-        color: "red",
-      }}
-    >
+    <div className="guest-options-bg">
       <div className="guest-options-container">
         <div className="go-navigation">
           <div
@@ -63,6 +52,7 @@ export default function UserGuestProfile() {
           >
             <BackBtn />
           </div>
+          <div className="go-header">User Profile</div>
           <div></div>
         </div>
         <div className="go-info">

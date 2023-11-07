@@ -56,6 +56,12 @@
   width: 60px;
   height: 60px;
 }
+.go-header {
+  padding-right: 51px;
+
+  font-size: calc(var(--font-size) * 1.5);
+  font-weight: 300;
+}
 .go-name {
   width: calc(100% - 110px);
 

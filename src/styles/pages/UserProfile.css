@@ -53,6 +53,10 @@
   background-color: var(--bg-chatPhoto-color);
   box-shadow: inset 0px 0px 10px var(--shadow-block);
 }
+.uo-header {
+  font-size: calc(var(--font-size) * 1.5);
+  font-weight: 300;
+}
 .uo-name {
   width: calc(100% - 110px);
 

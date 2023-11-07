@@ -139,6 +139,7 @@ export default function ChatInfoPage() {
           >
             <BackBtn />
           </div>
+          <div className="co-header">Group info</div>
           <div>
             <div className="co-edit">{/* <AddParticipants /> */}</div>
             <div className="co-delete" onClick={deleteChat}>
@@ -160,7 +161,7 @@ export default function ChatInfoPage() {
           </div>
         </div>
         <div className="co-list">
-          <p className="co-list-title">List of participants</p>
+          <p className="co-list-title">Members</p>
           <div className="co-list-items">{participantsView}</div>
         </div>
       </div>

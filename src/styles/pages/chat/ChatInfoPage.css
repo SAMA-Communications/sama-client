@@ -45,6 +45,10 @@
   display: flex;
   gap: 15px;
 }
+.co-header {
+  font-size: calc(var(--font-size) * 1.5);
+  font-weight: 300;
+}
 
 .co-photo-name {
   display: flex;

@@ -43,7 +43,7 @@ export default function Main() {
       allBlocks.push(<UserProfile key="/user" />);
     }
 
-    if (hash.includes("/chatinfo")) {
+    if (hash.includes("/chatinfo") && !hash.includes("/opponentinfo")) {
       allBlocks.push(<ChatInfoPage key="/chatinfo" />);
     }
 
