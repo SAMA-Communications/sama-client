@@ -227,11 +227,15 @@ class Api {
       request: {
         get_participants_by_cids: {
           cids: data.cids,
-          includes: data.includes,
         },
         id: getUniqueId("getParticipantsByCids"),
       },
     };
+
+    if (data.includes) {
+      requestData.request.get_participants_by_cids.includes = data.includes;
+    }
+
     const resObjKey = "users";
     return this.sendPromise(requestData, resObjKey);
   }

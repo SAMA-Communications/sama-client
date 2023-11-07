@@ -68,8 +68,10 @@ export default function App() {
     // vv  Token update  vv //
     const token = localStorage.getItem("sessionId");
     if (token && token !== "undefined") {
-      const currentPath = history.location.hash;
-      history.navigate(!currentPath ? "/main" : `/main/${currentPath}`);
+      const { pathname, hash } = history.location;
+      setTimeout(() => {
+        history.navigate(pathname + hash);
+      }, 50);
     } else {
       localStorage.removeItem("sessionId");
       history.navigate("/login");

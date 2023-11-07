@@ -3,14 +3,10 @@ import getPrevPage from "../../../utils/get_prev_page";
 import showCustomAlert from "../../../utils/show_alert";
 import jwtDecode from "jwt-decode";
 import { clearSelectedConversation } from "../../../store/SelectedConversation";
-import {
-  getConverastionById,
-  removeChat,
-  upsertParticipants,
-} from "../../../store/Conversations";
+import { getConverastionById, removeChat } from "../../../store/Conversations";
 import { history } from "../../../_helpers/history";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { selectParticipantsEntities } from "../../../store/Participants";
 
 import "../../../styles/pages/chat/ChatInfoPage.css";
@@ -31,26 +27,6 @@ export default function ChatInfoPage() {
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
-
-  useEffect(() => {
-    if (!selectedCID) {
-      return;
-    }
-
-    api
-      .getParticipantsByCids({
-        cids: [selectedCID],
-        includes: ["id"],
-      })
-      .then((arr) =>
-        dispatch(
-          upsertParticipants({
-            cid: selectedCID,
-            participants: arr.map((obj) => obj._id),
-          })
-        )
-      );
-  }, []);
 
   const prevPageLink = useMemo(() => {
     const { hash, pathname } = history.location;
@@ -79,19 +55,19 @@ export default function ChatInfoPage() {
   // ʌʌ  Delete chat block  ʌʌ //
 
   // vv  Remove user block  vv //
-  const deleteUser = async (uId) => {
-    const isConfirm = window.confirm(`Do you want to delete this user?`);
-    if (isConfirm) {
-      try {
-        await api.conversationDelete({ cid: selectedCID });
-        dispatch(clearSelectedConversation());
-        dispatch(removeChat(selectedCID));
-        history.navigate("/main");
-      } catch (error) {
-        showCustomAlert(error.message, "warning");
-      }
-    }
-  };
+  // const deleteUser = async (uId) => {
+  //   const isConfirm = window.confirm(`Do you want to delete this user?`);
+  //   if (isConfirm) {
+  //     try {
+  //       await api.conversationDelete({ cid: selectedCID });
+  //       dispatch(clearSelectedConversation());
+  //       dispatch(removeChat(selectedCID));
+  //       history.navigate("/main");
+  //     } catch (error) {
+  //       showCustomAlert(error.message, "warning");
+  //     }
+  //   }
+  // };
   // ʌʌ  Remove user block  ʌʌ //
 
   const participantsView = useMemo(() => {
