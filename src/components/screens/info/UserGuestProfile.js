@@ -4,7 +4,7 @@ import { selectParticipantsEntities } from "../../../store/Participants.js";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
-import "./../../../styles/pages/UserGuestProfile.css";
+import "./../../../styles/pages/UserProfile.css";
 
 import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as EmailIcon } from "./../../../assets/icons/userProfile/EmailIcon.svg";
@@ -43,42 +43,43 @@ export default function UserGuestProfile() {
   // ʌʌ  User setting block  ʌʌ //
 
   return (
-    <div className="guest-options-bg">
-      <div className="guest-options-container">
-        <div className="go-navigation">
+    <div className="user-options-bg">
+      <div className="user-options-container">
+        <div className="uo-navigation">
           <div
-            className="go-close"
+            className="uo-close"
             onClick={() => history.navigate(prevPageLink)}
           >
             <BackBtn />
           </div>
-          <div className="go-header">User Profile</div>
+          <div className="uo-header uo-header-pr-51">User profile</div>
           <div></div>
         </div>
-        <div className="go-info">
-          <div className="go-photo-name">
-            <div className="go-photo">{userLetters}</div>
-            <div className="go-name">
+        <div className="uo-info">
+          <div className="uo-photo-name">
+            <div className="uo-photo uo-photo-u-bg">{userLetters}</div>
+            <div className="uo-name">
               <p>{userInfo.first_name}</p>
               <p>{userInfo.last_name}</p>
             </div>
           </div>
-          <div className="go-info">
+          <div className="uo-info">
             <div>
               <UserLoginIcon />
-              <p className="go-login">Username:</p>
+              <p className="uo-login">Username:</p>
               <p>{userInfo.login || "-"}</p>
             </div>
             <div>
               <EmailIcon />
-              <p className="go-email">Email address:</p>
+              <p className="uo-email">Email address:</p>
               <p>{userInfo.email || "-"}</p>
             </div>
             <div>
               <PhoneIcon />
-              <p className="go-phone">Phone number:</p>
+              <p className="uo-phone">Phone number:</p>
               <p>{userInfo.phone || "-"}</p>
             </div>
+            <div></div>
           </div>
         </div>
       </div>

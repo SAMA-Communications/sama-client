@@ -19,7 +19,6 @@
 
 .chat-options-container {
   width: 450px;
-  height: 80svh;
 
   padding: 15px 20px 30px 20px;
 
@@ -142,7 +141,8 @@
 }
 .co-list-items {
   width: 100%;
-  height: min(53svh);
+  max-height: calc(80svh - 220px);
+
   padding: 0 4px;
   overflow: auto;
 
@@ -207,6 +207,6 @@
     border-radius: 0;
   }
   .co-list-items {
-    height: min(70svh);
+    max-height: calc(100svh - 250px);
   }
 }
