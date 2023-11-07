@@ -49,7 +49,7 @@ export default function ChatForm() {
       return;
     }
 
-    dispatch(setSelectedConversation({ id: hash.slice(1) }));
+    dispatch(setSelectedConversation({ id: hash.slice(1).split("/")[0] }));
   }, [history.location.hash, isUserLogin]);
 
   useLayoutEffect(() => {
@@ -109,7 +109,11 @@ export default function ChatForm() {
   // ʌʌ  API Listeners  ʌʌ //
 
   // vv  Close form block  vv //
-  const closeForm = () => {
+  const closeForm = (event) => {
+    if (event.stopPropagation) {
+      event.stopPropagation();
+    }
+
     dispatch(clearSelectedConversation());
     api.unsubscribeFromUserActivity({});
     history.navigate("/main");

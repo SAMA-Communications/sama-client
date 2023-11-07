@@ -1,8 +1,8 @@
+import getPrevPage from "../../../utils/get_prev_page.js";
 import { history } from "../../../_helpers/history.js";
 import { selectParticipantsEntities } from "../../../store/Participants.js";
-import { useSelector } from "react-redux";
 import { useMemo } from "react";
-import getPrevPage from "../../../utils/get_prev_page.js";
+import { useSelector } from "react-redux";
 
 import "./../../../styles/pages/UserGuestProfile.css";
 
@@ -21,7 +21,7 @@ export default function UserGuestProfile() {
 
   // vv  User setting block  vv //
   const userInfo = useMemo(
-    () => participants[history.location.hash.split("=")[1]],
+    () => participants[history.location.hash.split("=")[1]] || {},
     [participants, history.location]
   );
 
@@ -38,12 +38,23 @@ export default function UserGuestProfile() {
         : first_name.slice(0, 1);
     }
 
-    return login.slice(0, 2).toUpperCase();
+    return login?.slice(0, 2).toUpperCase();
   }, [userInfo]);
   // ʌʌ  User setting block  ʌʌ //
 
+  const isBgTransparent = useMemo(
+    () => history.location.hash.includes("/chatinfo"),
+    [history.location]
+  );
+
   return (
-    <div className="guest-options-bg">
+    <div
+      className="guest-options-bg"
+      style={{
+        backgroundColor: isBgTransparent ? "transparent" : "none",
+        color: "red",
+      }}
+    >
       <div className="guest-options-container">
         <div className="go-navigation">
           <div
@@ -66,7 +77,7 @@ export default function UserGuestProfile() {
             <div>
               <UserLoginIcon />
               <p className="go-login">Username:</p>
-              <p>{userInfo.login}</p>
+              <p>{userInfo.login || "-"}</p>
             </div>
             <div>
               <EmailIcon />

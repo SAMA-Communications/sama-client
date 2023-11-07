@@ -226,7 +226,8 @@ class Api {
     const requestData = {
       request: {
         get_participants_by_cids: {
-          cids: data,
+          cids: data.cids,
+          includes: data.includes,
         },
         id: getUniqueId("getParticipantsByCids"),
       },

@@ -22,7 +22,7 @@ class ConversationsService {
       store.dispatch(insertChats(chats));
       chats.length &&
         api
-          .getParticipantsByCids(chats.map((el) => el._id))
+          .getParticipantsByCids({ cids: chats.map((el) => el._id) })
           .then((users) => store.dispatch(upsertUsers(users)));
     });
   }

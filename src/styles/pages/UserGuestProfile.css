@@ -18,13 +18,14 @@
 }
 .guest-options-container {
   width: 450px;
+  height: 80svh;
 
   padding: 15px 20px 30px 20px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 
   border: none;
   border-radius: var(--border-main-radius);
@@ -49,8 +50,11 @@
   color: var(--text-main);
 
   border-radius: var(--border-second-radius);
-  background-color: var(--bg-chatPhoto-color);
-  box-shadow: inset 0px 0px 10px var(--shadow-block);
+  background-color: var(--bg-chatPhoto-u-color);
+}
+.go-photo > svg {
+  width: 60px;
+  height: 60px;
 }
 .go-name {
   width: calc(100% - 110px);
@@ -70,13 +74,11 @@
   font-weight: 300;
   line-height: calc(var(--font-size) * 2);
 }
-
 .go-info {
   width: 100%;
-  margin-top: 25px;
 
   display: flex;
-  gap: 12px;
+  gap: 20px;
   flex-direction: column;
   align-items: flex-start;
 }
@@ -121,9 +123,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  border-radius: 16px;
-  background-color: var(--scrollbar-track-color);
 }
 .go-navigation > div {
   display: flex;
