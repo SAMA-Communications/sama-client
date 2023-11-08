@@ -41,7 +41,7 @@ export default function UserSearch() {
         (requestData["name"] = window.prompt("Please enter a chat name."));
 
       const chat = await api.conversationCreate(requestData);
-      const users = await api.getParticipantsByCids([chat._id]);
+      const users = await api.getParticipantsByCids({ cids: [chat._id] });
       dispatch(addUsers(users));
       dispatch(insertChat({ ...chat, messagesIds: [] }));
 
