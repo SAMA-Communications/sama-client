@@ -9,7 +9,6 @@ import {
 import { updateNetworkState } from "../../../store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import "./../../../styles/pages/UserProfile.css";
 
