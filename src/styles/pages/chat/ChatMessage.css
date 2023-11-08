@@ -54,6 +54,14 @@
   font-size: var(--font-size);
   line-height: calc(var(--font-size) * 1.2);
 }
+.message-body-link {
+  text-decoration: none;
+  color: var(--text-link);
+}
+.message-body-link:hover {
+  text-decoration: underline;
+  color: var(--text-link-hover);
+}
 .message-user-name {
   padding: 10px 10px 5px 10px;
 

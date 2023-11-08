@@ -1,6 +1,7 @@
-import React, { useMemo } from "react";
 import MessageAttachments from "../screens/chat/MessageAttachments";
 import MessageStatus from "./MessageStatus";
+import React, { useMemo } from "react";
+import { urlify } from "../../utils/urlify";
 
 import "../../styles/pages/chat/ChatMessage.css";
 
@@ -70,7 +71,7 @@ export default function ChatMessage({
                   : "message-body"
               }
             >
-              {text}
+              {urlify(text)}
             </p>
           )}
         </div>
