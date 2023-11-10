@@ -22,7 +22,6 @@ class MessagesService {
       }
     });
   }
-
   async syncData() {
     api
       .messageList({
@@ -62,7 +61,7 @@ class MessagesService {
 
         const conv =
           store.getState().conversations.entities[this.currentChatId];
-        if (conv.type === "g") {
+        if (conv.type !== "u") {
           api
             .getParticipantsByCids({
               cids: [this.currentChatId],

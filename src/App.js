@@ -64,6 +64,18 @@ export default function App() {
       localStorage.setItem("theme", "light");
       document.body.classList.remove("dark-theme");
     }
+
+    const token = localStorage.getItem("sessionId");
+    if (token && token !== "undefined") {
+      const { pathname, hash } = history.location;
+      const path = hash ? pathname + hash : "/main";
+      setTimeout(() => {
+        history.navigate(path);
+      }, 50);
+    } else {
+      localStorage.removeItem("sessionId");
+      history.navigate("/login");
+    }
   }, []);
 
   return (
