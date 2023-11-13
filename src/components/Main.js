@@ -7,7 +7,7 @@ import ChatForm from "./screens/chat/ChatForm";
 import ChatInfoPage from "./screens/info/ChatInfoPage";
 import ChatList from "./screens/chat/ChatList";
 
-import { default as UserGuestProfile } from "./screens/info/UserGuestProfile";
+import ParticipantProfile from "./screens/info/ParticipantProfile";
 import UserProfile from "./screens/info/UserProfile";
 import UserSearch from "./screens/info/UserSearch";
 
@@ -48,7 +48,7 @@ export default function Main() {
     }
 
     if (hash.includes("/opponentinfo")) {
-      allBlocks.push(<UserGuestProfile key="/opponentinfo" />);
+      allBlocks.push(<ParticipantProfile key="/opponentinfo" />);
     }
 
     return allBlocks;

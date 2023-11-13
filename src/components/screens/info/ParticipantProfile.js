@@ -11,7 +11,7 @@ import { ReactComponent as EmailIcon } from "./../../../assets/icons/userProfile
 import { ReactComponent as PhoneIcon } from "./../../../assets/icons/userProfile/PhoneIcon.svg";
 import { ReactComponent as UserLoginIcon } from "./../../../assets/icons/userProfile/UserLoginIcon.svg";
 
-export default function UserProfile() {
+export default function ParticipantProfile() {
   const participants = useSelector(selectParticipantsEntities);
 
   const userInfo = useMemo(
