@@ -7,7 +7,7 @@ import ChatForm from "./screens/chat/ChatForm";
 import ChatInfoPage from "./screens/info/ChatInfoPage";
 import ChatList from "./screens/chat/ChatList";
 
-import UserGuestProfile from "./screens/info/UserGuestProfile";
+import { default as UserGuestProfile } from "./screens/info/UserGuestProfile";
 import UserProfile from "./screens/info/UserProfile";
 import UserSearch from "./screens/info/UserSearch";
 
