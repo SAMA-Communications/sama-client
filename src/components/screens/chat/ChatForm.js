@@ -21,13 +21,14 @@ import {
 } from "../../../store/SelectedConversation";
 import { addMessage, markMessagesAsRead } from "../../../store/Messages";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import "../../../styles/pages/chat/ChatForm.css";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isUserLogin = useSelector(getUserIsLoggedIn);
 
@@ -114,7 +115,7 @@ export default function ChatForm() {
 
     dispatch(clearSelectedConversation());
     api.unsubscribeFromUserActivity({});
-    history.navigate("/main");
+    navigate("/main");
   };
 
   document.addEventListener("swiped-left", closeForm);

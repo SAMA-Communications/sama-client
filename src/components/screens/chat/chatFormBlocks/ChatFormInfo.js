@@ -8,12 +8,15 @@ import { history } from "../../../../_helpers/history";
 import { selectParticipantsEntities } from "../../../../store/Participants";
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { ReactComponent as BackBtn } from "./../../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as GroupChatPhoto } from "./../../../../assets/icons/chatList/ChatIconGroup.svg";
 import { ReactComponent as PrivateChatPhoto } from "./../../../../assets/icons/chatList/ChatIconPrivate.svg";
 
 export default function ChatFormInfo({ closeForm }) {
+  const navigate = useNavigate();
+
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
@@ -76,7 +79,7 @@ export default function ChatFormInfo({ closeForm }) {
     <div
       className="chat-form-info"
       onClick={() =>
-        history.navigate(
+        navigate(
           `/main/#${selectedCID}${
             selectedConversation.type === "g"
               ? "/chatinfo"

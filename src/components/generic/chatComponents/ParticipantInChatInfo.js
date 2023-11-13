@@ -1,7 +1,7 @@
-import { history } from "../../../_helpers/history";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function ParticipantInChatInfo({ user, isCurrentUser }) {
+  const navigate = useNavigate();
   const { pathname, hash } = useLocation();
 
   return (
@@ -13,7 +13,7 @@ export default function ParticipantInChatInfo({ user, isCurrentUser }) {
         if (isCurrentUser) {
           return;
         }
-        history.navigate(pathname + hash + `/opponentinfo?uid=${user._id}`);
+        navigate(pathname + hash + `/opponentinfo?uid=${user._id}`);
       }}
     >
       {user.login}

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import api from "../../api/api";
 import showCustomAlert from "../../utils/show_alert";
 import subscribeForNotifications from "../../services/notifications";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import { history } from "../../_helpers/history";
 import { setSelectedConversation } from "../../store/SelectedConversation";
@@ -24,6 +24,7 @@ import { ReactComponent as ShowPassword } from "./../../assets/icons/authForm/Sh
 
 export default function SignUp() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useState(true);
 
@@ -59,7 +60,7 @@ export default function SignUp() {
         }.`,
         "success"
       );
-      history.navigate(isLogin ? "/main" : "/login");
+      navigate(isLogin ? "/main" : "/login");
     } catch (error) {
       isLogin && localStorage.removeItem("sessionId");
       showCustomAlert(error.message, "danger");

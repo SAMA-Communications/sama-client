@@ -8,7 +8,7 @@ import { getConverastionById, removeChat } from "../../../store/Conversations";
 import { history } from "../../../_helpers/history";
 import { selectParticipantsEntities } from "../../../store/Participants";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 
 import "../../../styles/pages/chat/ChatInfoPage.css";
@@ -19,6 +19,7 @@ import { ReactComponent as GroupChatPhoto } from "./../../../assets/icons/chatLi
 
 export default function ChatInfoPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { pathname, hash } = useLocation();
 
   const participants = useSelector(selectParticipantsEntities);
@@ -30,7 +31,7 @@ export default function ChatInfoPage() {
     : null;
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && history.navigate(getPrevPage(pathname + hash));
+    event.keyCode === 27 && navigate(getPrevPage(pathname + hash));
     event.keyCode === 13 && event.preventDefault();
   };
 
@@ -41,7 +42,7 @@ export default function ChatInfoPage() {
         await api.conversationDelete({ cid: selectedCID });
         dispatch(clearSelectedConversation());
         dispatch(removeChat(selectedCID));
-        history.navigate("/main");
+        navigate("/main");
       } catch (error) {
         showCustomAlert(error.message, "warning");
       }
@@ -72,7 +73,7 @@ export default function ChatInfoPage() {
         <div className="co-navigation">
           <div
             className="co-close"
-            onClick={() => history.navigate(getPrevPage(pathname + hash))}
+            onClick={() => navigate(getPrevPage(pathname + hash))}
           >
             <BackBtn />
           </div>

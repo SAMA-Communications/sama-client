@@ -3,7 +3,7 @@ import { history } from "../../../_helpers/history.js";
 import { selectParticipantsEntities } from "../../../store/Participants.js";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import "./../../../styles/pages/UserProfile.css";
 
@@ -14,6 +14,7 @@ import { ReactComponent as UserLoginIcon } from "./../../../assets/icons/userPro
 
 export default function ParticipantProfile() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const participants = useSelector(selectParticipantsEntities);
 
@@ -24,7 +25,7 @@ export default function ParticipantProfile() {
 
   window.onkeydown = function (event) {
     event.keyCode === 27 &&
-      history.navigate(getPrevPage(location.pathname + location.hash));
+      navigate(getPrevPage(location.pathname + location.hash));
     event.keyCode === 13 && event.preventDefault();
   };
 
@@ -46,7 +47,7 @@ export default function ParticipantProfile() {
           <div
             className="uo-close"
             onClick={() =>
-              history.navigate(getPrevPage(location.pathname + location.hash))
+              navigate(getPrevPage(location.pathname + location.hash))
             }
           >
             <BackBtn />

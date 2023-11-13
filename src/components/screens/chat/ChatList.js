@@ -3,7 +3,7 @@ import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
 import ChatBox from "../../generic/chatComponents/ChatBox.js";
 import MiniLogo from "./../../static/MiniLogo.js";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   addUsers,
   selectParticipantsEntities,
@@ -30,6 +30,7 @@ import { ReactComponent as MoreOptions } from "./../../../assets/icons/chatList/
 
 export default function ChatList() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const conversations = useSelector(selectAllConversations);
   const participants = useSelector(selectParticipantsEntities);
@@ -175,7 +176,7 @@ export default function ChatList() {
           {changeThemeBtn}
           <div
             className="nav-create-btn"
-            onClick={() => history.navigate("/main/search")}
+            onClick={() => navigate("/main/search")}
           >
             <CreateChatButton />
           </div>
@@ -195,10 +196,7 @@ export default function ChatList() {
         <div className="user-info">
           <p className="user-info-name">{userName}</p>
         </div>
-        <div
-          className="user-options"
-          onClick={() => history.navigate("/main/user")}
-        >
+        <div className="user-options" onClick={() => navigate("/main/user")}>
           <MoreOptions />
         </div>
       </div>

@@ -8,6 +8,7 @@ import { history } from "../../../_helpers/history.js";
 import { insertChat } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import "../../../styles/pages/UserSearch.css";
 
@@ -16,6 +17,8 @@ import { ReactComponent as SearchIndicator } from "./../../../assets/icons/Searc
 
 export default function UserSearch() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
   const [ignoreIds, setIgnoreIds] = useState([]);
@@ -44,7 +47,7 @@ export default function UserSearch() {
       dispatch(addUsers(users));
       dispatch(insertChat({ ...chat, messagesIds: [] }));
 
-      history.navigate(`/main/#${chat._id}`);
+      navigate(`/main/#${chat._id}`);
       dispatch(setSelectedConversation({ id: chat._id }));
     }
   };
@@ -88,17 +91,14 @@ export default function UserSearch() {
   };
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && history.navigate(`/main`);
+    event.keyCode === 27 && navigate(`/main`);
     event.keyCode === 13 && event.preventDefault();
   };
 
   return (
     <form id="search-form">
       <div className="search-options fcc">
-        <div
-          className="search-close-chat"
-          onClick={() => history.navigate(`/main`)}
-        >
+        <div className="search-close-chat" onClick={() => navigate(`/main`)}>
           <BackBtn />
         </div>
         <input

@@ -9,6 +9,7 @@ import {
 import { updateNetworkState } from "../../../store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import "./../../../styles/pages/UserProfile.css";
 
@@ -24,6 +25,7 @@ import { ReactComponent as UndoChangeIcon } from "./../../../assets/icons/userPr
 
 export default function UserProfile() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const participants = useSelector(selectParticipantsEntities);
   const userInfo = localStorage.getItem("sessionId")
@@ -38,14 +40,14 @@ export default function UserProfile() {
   const deleteCurrentUser = async () => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       await api.userDelete();
-      history.navigate("/login");
+      navigate("/login");
       dispatch({ type: "RESET_STORE" });
       dispatch(updateNetworkState(true));
     }
   };
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && history.navigate("/main");
+    event.keyCode === 27 && navigate("/main");
     event.keyCode === 13 && event.preventDefault();
   };
 
@@ -222,7 +224,7 @@ export default function UserProfile() {
     <div className="user-options-bg">
       <div className="user-options-container">
         <div className="uo-navigation">
-          <div className="uo-close" onClick={() => history.navigate("/main")}>
+          <div className="uo-close" onClick={() => navigate("/main")}>
             <BackBtn />
           </div>
           <div className="uo-header">Edit profile</div>
