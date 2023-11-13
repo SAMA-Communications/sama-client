@@ -1,13 +1,15 @@
+import ParticipantInChatInfo from "../../generic/chatComponents/ParticipantInChatInfo";
 import api from "../../../api/api";
 import getPrevPage from "../../../utils/get_prev_page";
-import showCustomAlert from "../../../utils/show_alert";
 import jwtDecode from "jwt-decode";
+import showCustomAlert from "../../../utils/show_alert";
 import { clearSelectedConversation } from "../../../store/SelectedConversation";
 import { getConverastionById, removeChat } from "../../../store/Conversations";
 import { history } from "../../../_helpers/history";
-import { useDispatch, useSelector } from "react-redux";
-import { useMemo } from "react";
 import { selectParticipantsEntities } from "../../../store/Participants";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
 
 import "../../../styles/pages/chat/ChatInfoPage.css";
 
@@ -17,6 +19,7 @@ import { ReactComponent as GroupChatPhoto } from "./../../../assets/icons/chatLi
 
 export default function ChatInfoPage() {
   const dispatch = useDispatch();
+  const { pathname, hash } = useLocation();
 
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
@@ -27,10 +30,7 @@ export default function ChatInfoPage() {
     : null;
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 &&
-      history.navigate(
-        getPrevPage(history.location.pathname + history.location.hash)
-      );
+    event.keyCode === 27 && history.navigate(getPrevPage(pathname + hash));
     event.keyCode === 13 && event.preventDefault();
   };
 
@@ -61,25 +61,8 @@ export default function ChatInfoPage() {
 
       const isCurrentUser = u._id === userInfo._id;
       // const isOwner = userInfo._id === selectedConversation.owner_id.toString();
-      return (
-        <div
-          className="co-list-item"
-          key={u._id}
-          data-css={isCurrentUser ? "owner" : "opponent"}
-          onClick={() => {
-            if (isCurrentUser) {
-              return;
-            }
-            const { pathname, hash } = history.location;
-            history.navigate(pathname + hash + `/opponentinfo?uid=${u._id}`);
-          }}
-        >
-          {u.login}
-          {/* {isCurrentUser || !isOwner ? null : (
-            <CloseButtonMini onClick={() => deleteUser(u._id)} />
-          )} */}
-        </div>
-      );
+
+      return <ParticipantInChatInfo user={u} isCurrentUser={isCurrentUser} />;
     });
   }, [selectedConversation, participants, userInfo]);
 
@@ -89,11 +72,7 @@ export default function ChatInfoPage() {
         <div className="co-navigation">
           <div
             className="co-close"
-            onClick={() =>
-              history.navigate(
-                getPrevPage(history.location.pathname + history.location.hash)
-              )
-            }
+            onClick={() => history.navigate(getPrevPage(pathname + hash))}
           >
             <BackBtn />
           </div>

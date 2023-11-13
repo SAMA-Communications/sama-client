@@ -1,5 +1,6 @@
 import ChatFormMain from "./chatFormBlocks/ChatFormMain.js";
 import ChatFormInfo from "./chatFormBlocks/ChatFormInfo.js";
+import ChatFormInputs from "./chatFormBlocks/ChatFormInputs.js";
 import NoChatSelected from "../../static/NoChatSelected.js";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import api from "../../../api/api";
@@ -20,13 +21,13 @@ import {
 } from "../../../store/SelectedConversation";
 import { addMessage, markMessagesAsRead } from "../../../store/Messages";
 import { useSelector, useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 import "../../../styles/pages/chat/ChatForm.css";
 
-import ChatFormInputs from "./chatFormBlocks/ChatFormInputs.js";
-
 export default function ChatForm() {
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const isUserLogin = useSelector(getUserIsLoggedIn);
 
@@ -43,14 +44,14 @@ export default function ChatForm() {
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
-    const { hash } = history.location;
+    const { hash } = location;
 
     if (!hash || hash.split("/")[0].slice(1) === selectedCID || !isUserLogin) {
       return;
     }
 
     dispatch(setSelectedConversation({ id: hash.slice(1).split("/")[0] }));
-  }, [history.location.hash, isUserLogin]);
+  }, [location, isUserLogin]);
 
   useLayoutEffect(() => {
     if (!selectedCID) {

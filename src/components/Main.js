@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { getIsMobileView } from "../store/IsMobileView";
-import { history } from "../_helpers/history";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 import ChatForm from "./screens/chat/ChatForm";
 import ChatInfoPage from "./screens/info/ChatInfoPage";
@@ -15,6 +15,7 @@ import "../styles/Main.css";
 
 export default function Main() {
   const isMobileView = useSelector(getIsMobileView);
+  const location = useLocation();
 
   const mainContent = useMemo(
     () =>
@@ -23,16 +24,16 @@ export default function Main() {
           <ChatList />
           <ChatForm />
         </>
-      ) : !!history.location.hash ? (
+      ) : !!location.hash ? (
         <ChatForm />
       ) : (
         <ChatList />
       ),
-    [history.location.hash, isMobileView]
+    [location, isMobileView]
   );
 
   const additionalContent = useMemo(() => {
-    const { pathname, hash } = history.location;
+    const { pathname, hash } = location;
     const allBlocks = [];
 
     if (pathname.includes("/search")) {
@@ -52,7 +53,7 @@ export default function Main() {
     }
 
     return allBlocks;
-  }, [history.location]);
+  }, [location]);
 
   return (
     <main>
