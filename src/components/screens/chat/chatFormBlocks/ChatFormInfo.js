@@ -23,7 +23,6 @@ export default function ChatFormInfo({ closeForm }) {
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
-  // vv  Chat name view  vv //
   const chatNameView = useMemo(() => {
     if (!selectedConversation || !participants) {
       return <p></p>;
@@ -50,9 +49,7 @@ export default function ChatFormInfo({ closeForm }) {
       </p>
     );
   }, [selectedConversation, participants]);
-  // ʌʌ  Chat name view  ʌʌ //
 
-  // vv  Activity block  vv //
   const opponentId = useMemo(() => {
     const conv = conversations[selectedCID];
     if (!conv) {
@@ -74,7 +71,6 @@ export default function ChatFormInfo({ closeForm }) {
 
     return null;
   }, [opponentId, opponentLastActivity, selectedConversation]);
-  // ʌʌ  Activity block  ʌʌ //
 
   return (
     <div

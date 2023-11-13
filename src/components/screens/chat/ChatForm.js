@@ -65,7 +65,6 @@ export default function ChatForm() {
     files.length && setFiles([]);
   }, [selectedCID, conversations[selectedCID]]);
 
-  // vv  API Listeners  vv //
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
     dispatch(
@@ -106,9 +105,7 @@ export default function ChatForm() {
       })
     );
   };
-  // ʌʌ  API Listeners  ʌʌ //
 
-  // vv  Close form block  vv //
   const closeForm = (event) => {
     if (event && event.stopPropagation) {
       event.stopPropagation();
@@ -132,9 +129,7 @@ export default function ChatForm() {
       });
     }
   };
-  // ʌʌ  Close form block   ʌʌ //
 
-  // vv  Attachments view  vv //
   const [modalOpen, setModalOpen] = useState(false);
   const close = () => setModalOpen(false);
   const open = (options) => setModalOpen(options);
@@ -150,7 +145,6 @@ export default function ChatForm() {
       </div>
     );
   };
-  // ʌʌ  Attachments view  ʌʌ //
 
   if (!selectedCID) {
     return (

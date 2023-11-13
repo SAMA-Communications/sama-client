@@ -28,7 +28,6 @@ export default function UserSearch() {
     return () => clearTimeout(debounce);
   }, [searchTerm, ignoreIds]);
 
-  // vv  Create chat block  vv //
   const createChat = async (event) => {
     event.preventDefault();
 
@@ -49,9 +48,7 @@ export default function UserSearch() {
       dispatch(setSelectedConversation({ id: chat._id }));
     }
   };
-  // ʌʌ  Create chat block  ʌʌ //
 
-  // vv  User navigation block  vv //
   const addUserToIgnore = async (data) => {
     if (selectedUsers.length >= 49) {
       showCustomAlert(
@@ -70,9 +67,7 @@ export default function UserSearch() {
     setIgnoreIds(ignoreIds.filter((id) => id !== data._id));
     setSearchedUsers([...searchedUsers, data]);
   };
-  // ʌʌ  User navigation block  ʌʌ //
 
-  // vv  Search request block  vv //
   const sendSearchRequest = async (login) => {
     startTransition(async () => {
       if (login.length > 1) {
@@ -91,14 +86,11 @@ export default function UserSearch() {
       }
     });
   };
-  // ʌʌ  Search request block  ʌʌ //
 
-  // vv  Close form block  vv //
   window.onkeydown = function (event) {
     event.keyCode === 27 && history.navigate(`/main`);
     event.keyCode === 13 && event.preventDefault();
   };
-  // ʌʌ  Close form block  ʌʌ //
 
   return (
     <form id="search-form">

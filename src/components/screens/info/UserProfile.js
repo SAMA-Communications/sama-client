@@ -30,7 +30,6 @@ export default function UserProfile() {
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
 
-  // vv  User setting block  vv //
   const currentUser = useMemo(
     () => (userInfo ? participants[userInfo._id] : {}),
     [participants, userInfo]
@@ -60,9 +59,7 @@ export default function UserProfile() {
 
     return login.slice(0, 2).toUpperCase();
   }, [currentUser]);
-  // ʌʌ  User setting block  ʌʌ //
 
-  // vv  Edit form block  vv //
   const [isDisableForm, setIsDisableForm] = useState(true);
   const formRef = useRef(null);
   const [newFirstName, setNewFirstName] = useState(null);
@@ -220,7 +217,6 @@ export default function UserProfile() {
       showCustomAlert(error.message, "danger");
     }
   };
-  // ʌʌ  Edit form block  ʌʌ //
 
   return (
     <div className="user-options-bg">

@@ -14,8 +14,6 @@ import "../../../styles/pages/chat/ChatInfoPage.css";
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
 import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as GroupChatPhoto } from "./../../../assets/icons/chatList/ChatIconGroup.svg";
-// import { ReactComponent as CloseButtonMini } from "./../../../assets/icons/chatForm/CloseButtonMini.svg";
-// import { ReactComponent as AddParticipants } from "./../../../assets/icons/chatList/CreateChatButton.svg";
 
 export default function ChatInfoPage() {
   const dispatch = useDispatch();
@@ -28,17 +26,14 @@ export default function ChatInfoPage() {
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
 
-  const prevPageLink = useMemo(() => {
-    const { hash, pathname } = history.location;
-    return getPrevPage(pathname + hash);
-  }, [history.location]);
-
   window.onkeydown = function (event) {
-    event.keyCode === 27 && history.navigate(prevPageLink);
+    event.keyCode === 27 &&
+      history.navigate(
+        getPrevPage(history.location.pathname + history.location.hash)
+      );
     event.keyCode === 13 && event.preventDefault();
   };
 
-  // vv  Delete chat block  vv //
   const deleteChat = async () => {
     const isConfirm = window.confirm(`Do you want to delete this chat?`);
     if (isConfirm) {
@@ -52,23 +47,6 @@ export default function ChatInfoPage() {
       }
     }
   };
-  // ʌʌ  Delete chat block  ʌʌ //
-
-  // vv  Remove user block  vv //
-  // const deleteUser = async (uId) => {
-  //   const isConfirm = window.confirm(`Do you want to delete this user?`);
-  //   if (isConfirm) {
-  //     try {
-  //       await api.conversationDelete({ cid: selectedCID });
-  //       dispatch(clearSelectedConversation());
-  //       dispatch(removeChat(selectedCID));
-  //       history.navigate("/main");
-  //     } catch (error) {
-  //       showCustomAlert(error.message, "warning");
-  //     }
-  //   }
-  // };
-  // ʌʌ  Remove user block  ʌʌ //
 
   const participantsView = useMemo(() => {
     if (!selectedConversation?.participants || !userInfo) {
@@ -111,7 +89,11 @@ export default function ChatInfoPage() {
         <div className="co-navigation">
           <div
             className="co-close"
-            onClick={() => history.navigate(prevPageLink)}
+            onClick={() =>
+              history.navigate(
+                getPrevPage(history.location.pathname + history.location.hash)
+              )
+            }
           >
             <BackBtn />
           </div>

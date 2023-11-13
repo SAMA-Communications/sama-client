@@ -34,7 +34,6 @@ export default function App() {
   }, [isMobileView]);
 
   useEffect(() => {
-    // vv  Event listeners  vv //
     window.addEventListener("offline", () =>
       dispatch(updateNetworkState(false))
     );
@@ -51,7 +50,6 @@ export default function App() {
       setIsMobileView(window.innerWidth <= globalConstants.windowChangeWitdh)
     );
 
-    // vv  Pick theme  vv //
     const userTheme = localStorage.getItem("theme");
     const prefersDarkMode = window.matchMedia(
       "(prefers-color-scheme: dark)"

@@ -14,19 +14,16 @@ import { ReactComponent as UserLoginIcon } from "./../../../assets/icons/userPro
 export default function UserGuestProfile() {
   const participants = useSelector(selectParticipantsEntities);
 
-  const prevPageLink = useMemo(() => {
-    const { hash, pathname } = history.location;
-    return getPrevPage(pathname + hash);
-  }, [history.location]);
-
-  // vv  User setting block  vv //
   const userInfo = useMemo(
     () => participants[history.location.hash.split("=")[1]] || {},
     [participants, history.location]
   );
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && history.navigate(prevPageLink);
+    event.keyCode === 27 &&
+      history.navigate(
+        getPrevPage(history.location.pathname + history.location.hash)
+      );
     event.keyCode === 13 && event.preventDefault();
   };
 
@@ -40,7 +37,6 @@ export default function UserGuestProfile() {
 
     return login?.slice(0, 2).toUpperCase();
   }, [userInfo]);
-  // ʌʌ  User setting block  ʌʌ //
 
   return (
     <div className="user-options-bg">
@@ -48,7 +44,11 @@ export default function UserGuestProfile() {
         <div className="uo-navigation">
           <div
             className="uo-close"
-            onClick={() => history.navigate(prevPageLink)}
+            onClick={() =>
+              history.navigate(
+                getPrevPage(history.location.pathname + history.location.hash)
+              )
+            }
           >
             <BackBtn />
           </div>
