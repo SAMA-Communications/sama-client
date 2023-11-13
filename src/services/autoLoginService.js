@@ -44,17 +44,11 @@ class AutoLoginService {
           );
         store.dispatch(setUserIsLoggedIn(true));
 
-        const token = localStorage.getItem("sessionId");
-        if (token && token !== "undefined") {
-          const { pathname, hash } = history.location;
-          const path = hash ? pathname + hash : "/main";
-          setTimeout(() => {
-            history.navigate(path);
-          }, 50);
-        } else {
-          localStorage.removeItem("sessionId");
-          history.navigate("/login");
-        }
+        const { pathname, hash } = history.location;
+        const path = hash ? pathname + hash : "/main";
+        setTimeout(() => {
+          history.navigate(path);
+        }, 50);
       } else {
         handleLoginFailure();
         showCustomAlert("Invalid session token.", "warning");
