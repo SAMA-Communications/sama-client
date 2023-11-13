@@ -7,7 +7,6 @@ export default function ParticipantInChatInfo({ user, isCurrentUser }) {
   return (
     <div
       className="co-list-item"
-      key={user._id}
       data-css={isCurrentUser ? "owner" : "opponent"}
       onClick={() => {
         if (isCurrentUser) {

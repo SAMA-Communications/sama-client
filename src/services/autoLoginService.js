@@ -46,9 +46,7 @@ class AutoLoginService {
 
         const { pathname, hash } = history.location;
         const path = hash ? pathname + hash : "/main";
-        setTimeout(() => {
-          history.navigate(path);
-        }, 50);
+        setTimeout(() => history.navigate(path), 20);
       } else {
         handleLoginFailure();
         showCustomAlert("Invalid session token.", "warning");

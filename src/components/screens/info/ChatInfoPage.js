@@ -63,7 +63,13 @@ export default function ChatInfoPage() {
       const isCurrentUser = u._id === userInfo._id;
       // const isOwner = userInfo._id === selectedConversation.owner_id.toString();
 
-      return <ParticipantInChatInfo user={u} isCurrentUser={isCurrentUser} />;
+      return (
+        <ParticipantInChatInfo
+          key={u._id}
+          user={u}
+          isCurrentUser={isCurrentUser}
+        />
+      );
     });
   }, [selectedConversation, participants, userInfo]);
 
