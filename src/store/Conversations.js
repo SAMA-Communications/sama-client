@@ -90,6 +90,18 @@ export const conversations = createSlice({
 
       conversationsAdapter.upsertOne(state, updateParams);
     },
+
+    upsertParticipants: (state, { payload }) => {
+      const { cid, participants } = payload;
+      const conv = state.entities[cid];
+
+      if (!conv) {
+        return;
+      }
+      const updateParams = { _id: cid, participants };
+
+      conversationsAdapter.upsertOne(state, updateParams);
+    },
     setLastMessageField: (state, { payload }) => {
       const { cid, msg } = payload;
       const conv = state.entities[cid];
@@ -134,6 +146,7 @@ export const {
   updateChatIndicator,
   updateLastMessageField,
   upsertChat,
+  upsertParticipants,
 } = conversations.actions;
 
 export default conversations.reducer;

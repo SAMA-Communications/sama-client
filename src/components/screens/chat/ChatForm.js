@@ -1,5 +1,6 @@
 import ChatFormMain from "./chatFormBlocks/ChatFormMain.js";
 import ChatFormInfo from "./chatFormBlocks/ChatFormInfo.js";
+import ChatFormInputs from "./chatFormBlocks/ChatFormInputs.js";
 import NoChatSelected from "../../static/NoChatSelected.js";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import api from "../../../api/api";
@@ -20,13 +21,14 @@ import {
 } from "../../../store/SelectedConversation";
 import { addMessage, markMessagesAsRead } from "../../../store/Messages";
 import { useSelector, useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import "../../../styles/pages/ChatForm.css";
-
-import ChatFormInputs from "./chatFormBlocks/ChatFormInputs.js";
+import "../../../styles/pages/chat/ChatForm.css";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const isUserLogin = useSelector(getUserIsLoggedIn);
 
@@ -43,13 +45,14 @@ export default function ChatForm() {
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
-    const { hash } = history.location;
-    if (!hash || hash.slice(1) === selectedCID || !isUserLogin) {
+    const { hash } = location;
+
+    if (!hash || hash.split("/")[0].slice(1) === selectedCID || !isUserLogin) {
       return;
     }
 
-    dispatch(setSelectedConversation({ id: hash.slice(1) }));
-  }, [history.location.hash, isUserLogin]);
+    dispatch(setSelectedConversation({ id: hash.slice(1).split("/")[0] }));
+  }, [location, isUserLogin]);
 
   useLayoutEffect(() => {
     if (!selectedCID) {
@@ -64,7 +67,6 @@ export default function ChatForm() {
     files.length && setFiles([]);
   }, [selectedCID, conversations[selectedCID]]);
 
-  // vv  API Listeners  vv //
   api.onMessageStatusListener = (message) => {
     dispatch(markMessagesAsRead(message.ids));
     dispatch(
@@ -105,13 +107,15 @@ export default function ChatForm() {
       })
     );
   };
-  // ʌʌ  API Listeners  ʌʌ //
 
-  // vv  Close form block  vv //
-  const closeForm = () => {
+  const closeForm = (event) => {
+    if (event && event.stopPropagation) {
+      event.stopPropagation();
+    }
+
     dispatch(clearSelectedConversation());
     api.unsubscribeFromUserActivity({});
-    history.navigate("/main");
+    navigate("/main");
   };
 
   document.addEventListener("swiped-left", closeForm);
@@ -127,9 +131,7 @@ export default function ChatForm() {
       });
     }
   };
-  // ʌʌ  Close form block   ʌʌ //
 
-  // vv  Attachments view  vv //
   const [modalOpen, setModalOpen] = useState(false);
   const close = () => setModalOpen(false);
   const open = (options) => setModalOpen(options);
@@ -145,7 +147,6 @@ export default function ChatForm() {
       </div>
     );
   };
-  // ʌʌ  Attachments view  ʌʌ //
 
   if (!selectedCID) {
     return (

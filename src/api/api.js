@@ -226,11 +226,16 @@ class Api {
     const requestData = {
       request: {
         get_participants_by_cids: {
-          cids: data,
+          cids: data.cids,
         },
         id: getUniqueId("getParticipantsByCids"),
       },
     };
+
+    if (data.includes) {
+      requestData.request.get_participants_by_cids.includes = data.includes;
+    }
+
     const resObjKey = "users";
     return this.sendPromise(requestData, resObjKey);
   }

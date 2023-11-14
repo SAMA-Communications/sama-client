@@ -1,4 +1,4 @@
-import MessageAttachment from "../../generic/MessageAttachment";
+import MessageAttachment from "../../generic/messageComponents/MessageAttachment";
 
 export default function MessageAttachments({ attachments, openModalParam }) {
   const attachmentPreloader = (key) => (

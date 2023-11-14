@@ -1,0 +1,212 @@
+.chat-options-bg {
+  width: 100svw;
+  height: 100svh;
+
+  padding: 7svh 1svw;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  background-color: var(--bg-dark-block);
+
+  z-index: 112;
+}
+
+.chat-options-container {
+  width: 450px;
+
+  padding: 15px 20px 30px 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  border: none;
+  border-radius: var(--border-main-radius);
+  background-color: var(--bg-main-color);
+}
+
+.co-navigation {
+  padding-right: 8px;
+
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.co-navigation > div {
+  display: flex;
+  gap: 15px;
+}
+.co-header {
+  font-size: calc(var(--font-size) * 1.5);
+  font-weight: 300;
+}
+
+.co-photo-name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+.co-photo {
+  width: 90px;
+  height: 90px;
+
+  font-size: calc(var(--font-size) * 2.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-main);
+
+  border-radius: var(--border-second-radius);
+  background-color: var(--bg-chatPhoto-g-color);
+  box-shadow: inset 0px 0px 10px var(--shadow-block);
+}
+.co-photo > svg {
+  width: 60px;
+  height: 60px;
+}
+.co-name {
+  width: calc(100% - 110px);
+
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  justify-content: center;
+}
+.co-p-name {
+  text-align: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  font-size: calc(var(--font-size) * 1.5);
+  font-weight: 300;
+  line-height: calc(var(--font-size) * 2);
+}
+.co-p-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.co-info {
+  width: 100%;
+
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.co-info > div {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.co-close {
+  cursor: pointer;
+}
+
+.co-delete {
+  cursor: pointer;
+}
+.co-delete > svg > path {
+  transition: 0.3s;
+}
+.co-delete:hover > svg > path {
+  stroke: var(--text-danger);
+}
+
+.co-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.co-list-title {
+  padding-bottom: 10px;
+
+  font-size: calc(var(--font-size) * 1.2);
+  line-height: calc(var(--font-size) * 1.5);
+}
+.co-list-items {
+  width: 100%;
+  max-height: calc(80svh - 220px);
+
+  padding: 0 4px;
+  overflow: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.co-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 8px 19px;
+
+  border-radius: var(--border-second-radius);
+  background-color: var(--scrollbar-track-color);
+
+  border: 1px solid transparent;
+}
+.co-list-item[data-css="opponent"]:hover {
+  cursor: pointer;
+  border: 1px solid var(--border-light-color);
+}
+
+.co-list-item > svg {
+  cursor: pointer;
+  width: 12px;
+  height: 12px;
+}
+.co-list-item > svg > line {
+  transition: 0.3s;
+}
+.co-list-item > svg:hover > line {
+  stroke: var(--text-danger);
+}
+
+.co-edit {
+  display: flex;
+  gap: 5px;
+  cursor: pointer;
+}
+.co-edit > svg {
+  width: 36px;
+  height: 36px;
+}
+.co-edit > svg > path {
+  transition: 0.3s;
+}
+.co-edit > svg:hover > path {
+  stroke: var(--text-hover);
+}
+
+@media (max-width: 800px) {
+  .chat-options-bg {
+    padding: 0;
+  }
+
+  .chat-options-container {
+    width: 100svw;
+    height: 100svh;
+
+    border-radius: 0;
+  }
+  .co-list-items {
+    max-height: calc(100svh - 250px);
+  }
+}

@@ -1,27 +1,27 @@
-import api from "../../api/api";
+import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
-import showCustomAlert from "../../utils/show_alert";
-import { history } from "../../_helpers/history";
+import showCustomAlert from "../../../utils/show_alert";
+import { history } from "../../../_helpers/history";
 import {
   selectParticipantsEntities,
   upsertUser,
-} from "../../store/Participants";
-import { updateNetworkState } from "../../store/NetworkState";
+} from "../../../store/Participants";
+import { updateNetworkState } from "../../../store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import "./../../styles/pages/UserProfile.css";
+import "./../../../styles/pages/UserProfile.css";
 
-import { ReactComponent as BackBtn } from "./../../assets/icons/chatForm/BackBtn.svg";
-import { ReactComponent as ConfirmIcon } from "./../../assets/icons/userProfile/ConfirmIcon.svg";
-import { ReactComponent as EmailIcon } from "./../../assets/icons/userProfile/EmailIcon.svg";
-import { ReactComponent as PasswordIcon } from "./../../assets/icons/userProfile/PasswordIcon.svg";
-import { ReactComponent as PenEditIcon } from "./../../assets/icons/userProfile/PenEditIcon.svg";
-import { ReactComponent as PhoneIcon } from "./../../assets/icons/userProfile/PhoneIcon.svg";
-import { ReactComponent as TrashCan } from "./../../assets/icons/chatForm/TrashCan.svg";
-import { ReactComponent as UserLoginIcon } from "./../../assets/icons/userProfile/UserLoginIcon.svg";
-import { ReactComponent as UndoChangeIcon } from "./../../assets/icons/userProfile/UndoEditIcon.svg";
+import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
+import { ReactComponent as ConfirmIcon } from "./../../../assets/icons/userProfile/ConfirmIcon.svg";
+import { ReactComponent as EmailIcon } from "./../../../assets/icons/userProfile/EmailIcon.svg";
+import { ReactComponent as PasswordIcon } from "./../../../assets/icons/userProfile/PasswordIcon.svg";
+import { ReactComponent as PenEditIcon } from "./../../../assets/icons/userProfile/PenEditIcon.svg";
+import { ReactComponent as PhoneIcon } from "./../../../assets/icons/userProfile/PhoneIcon.svg";
+import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
+import { ReactComponent as UserLoginIcon } from "./../../../assets/icons/userProfile/UserLoginIcon.svg";
+import { ReactComponent as UndoChangeIcon } from "./../../../assets/icons/userProfile/UndoEditIcon.svg";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
@@ -32,7 +32,6 @@ export default function UserProfile() {
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
 
-  // vv  User setting block  vv //
   const currentUser = useMemo(
     () => (userInfo ? participants[userInfo._id] : {}),
     [participants, userInfo]
@@ -48,7 +47,7 @@ export default function UserProfile() {
   };
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && history.navigate("/main");
+    event.keyCode === 27 && navigate("/main");
     event.keyCode === 13 && event.preventDefault();
   };
 
@@ -62,9 +61,7 @@ export default function UserProfile() {
 
     return login.slice(0, 2).toUpperCase();
   }, [currentUser]);
-  // ʌʌ  User setting block  ʌʌ //
 
-  // vv  Edit form block  vv //
   const [isDisableForm, setIsDisableForm] = useState(true);
   const formRef = useRef(null);
   const [newFirstName, setNewFirstName] = useState(null);
@@ -222,15 +219,15 @@ export default function UserProfile() {
       showCustomAlert(error.message, "danger");
     }
   };
-  // ʌʌ  Edit form block  ʌʌ //
 
   return (
     <div className="user-options-bg">
       <div className="user-options-container">
         <div className="uo-navigation">
-          <div className="uo-close" onClick={() => history.navigate("/main")}>
+          <div className="uo-close" onClick={() => navigate("/main")}>
             <BackBtn />
           </div>
+          <div className="uo-header">Edit profile</div>
           <div>
             <div className="uo-edit">
               {isDisableForm ? (

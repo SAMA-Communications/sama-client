@@ -1,16 +1,21 @@
-import ChatForm from "./screens/chat/ChatForm";
-import ChatList from "./screens/chat/ChatList";
 import React, { useMemo } from "react";
-import UserProfile from "./generic/UserProfile";
-import UserSearch from "./screens/chat/UserSearch";
 import { getIsMobileView } from "../store/IsMobileView";
-import { history } from "../_helpers/history";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+
+import ChatForm from "./screens/chat/ChatForm";
+import ChatInfoPage from "./screens/info/ChatInfoPage";
+import ChatList from "./screens/chat/ChatList";
+
+import ParticipantProfile from "./screens/info/ParticipantProfile";
+import UserProfile from "./screens/info/UserProfile";
+import UserSearch from "./screens/info/UserSearch";
 
 import "../styles/Main.css";
 
 export default function Main() {
   const isMobileView = useSelector(getIsMobileView);
+  const location = useLocation();
 
   const mainContent = useMemo(
     () =>
@@ -19,16 +24,16 @@ export default function Main() {
           <ChatList />
           <ChatForm />
         </>
-      ) : !!history.location.hash ? (
+      ) : !!location.hash ? (
         <ChatForm />
       ) : (
         <ChatList />
       ),
-    [history.location.hash, isMobileView]
+    [location, isMobileView]
   );
 
   const additionalContent = useMemo(() => {
-    const { pathname } = history.location;
+    const { pathname, hash } = location;
     const allBlocks = [];
 
     if (pathname.includes("/search")) {
@@ -38,8 +43,17 @@ export default function Main() {
     if (pathname.includes("/user")) {
       allBlocks.push(<UserProfile key="/user" />);
     }
+
+    if (hash.includes("/chatinfo") && !hash.includes("/opponentinfo")) {
+      allBlocks.push(<ChatInfoPage key="/chatinfo" />);
+    }
+
+    if (hash.includes("/opponentinfo")) {
+      allBlocks.push(<ParticipantProfile key="/opponentinfo" />);
+    }
+
     return allBlocks;
-  }, [history.location.pathname]);
+  }, [location]);
 
   return (
     <main>

@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from "react";
 import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
-import ChatBox from "../../generic/ChatBox.js";
+import ChatBox from "../../generic/chatComponents/ChatBox.js";
 import MiniLogo from "./../../static/MiniLogo.js";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   addUsers,
   selectParticipantsEntities,
@@ -20,7 +20,7 @@ import { setUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 import { updateNetworkState } from "../../../store/NetworkState.js";
 import { useSelector, useDispatch } from "react-redux";
 
-import "../../../styles/pages/ChatList.css";
+import "../../../styles/pages/chat/ChatList.css";
 
 import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
 import { ReactComponent as IconMoon } from "./../../../assets/icons/ThemeMoon.svg";
@@ -30,6 +30,7 @@ import { ReactComponent as MoreOptions } from "./../../../assets/icons/chatList/
 
 export default function ChatList() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const conversations = useSelector(selectAllConversations);
   const participants = useSelector(selectParticipantsEntities);
@@ -44,7 +45,6 @@ export default function ChatList() {
     [userInfo, participants]
   );
 
-  // vv  API Listeners  vv //
   api.onConversationCreateListener = (chat) => {
     dispatch(
       upsertChat({ ...chat, unread_messages_count: 0, messagesIds: [] })
@@ -53,9 +53,7 @@ export default function ChatList() {
       .getParticipantsByCids([chat._id])
       .then((users) => dispatch(addUsers(users)));
   };
-  // ʌʌ  API Listeners  ʌʌ //
 
-  // vv  Send logout block  vv //
   const sendLogout = async () => {
     navigator.serviceWorker.ready
       .then((reg) =>
@@ -77,9 +75,7 @@ export default function ChatList() {
       });
     localStorage.removeItem("sessionId");
   };
-  // ʌʌ  Send logout block  ʌʌ //
 
-  // vv  Change theme block  vv //
   const [currentTheme, setCurrentTheme] = useState(
     localStorage.getItem("theme")
   );
@@ -105,9 +101,7 @@ export default function ChatList() {
       </div>
     );
   }, [currentTheme]);
-  // ʌʌ  Change theme block  ʌʌ //
 
-  // vv  Chat list block  vv //
   const chatsList = useMemo(() => {
     let list = [];
     for (const obj of conversations) {
@@ -143,9 +137,7 @@ export default function ChatList() {
     }
     return list;
   }, [conversations, participants, activeConv]);
-  // ʌʌ  Chat list block  ʌʌ //
 
-  // vv  User block  vv //
   const userLetters = useMemo(() => {
     if (!currentUser || !Object.keys(currentUser).length) {
       return null;
@@ -173,7 +165,6 @@ export default function ChatList() {
 
     return login;
   }, [currentUser]);
-  // ʌʌ  User block  ʌʌ //
 
   return (
     <aside>
@@ -185,7 +176,7 @@ export default function ChatList() {
           {changeThemeBtn}
           <div
             className="nav-create-btn"
-            onClick={() => history.navigate("/main/search")}
+            onClick={() => navigate("/main/search")}
           >
             <CreateChatButton />
           </div>
@@ -205,10 +196,7 @@ export default function ChatList() {
         <div className="user-info">
           <p className="user-info-name">{userName}</p>
         </div>
-        <div
-          className="user-options"
-          onClick={() => history.navigate("/main/user")}
-        >
+        <div className="user-options" onClick={() => navigate("/main/user")}>
           <MoreOptions />
         </div>
       </div>

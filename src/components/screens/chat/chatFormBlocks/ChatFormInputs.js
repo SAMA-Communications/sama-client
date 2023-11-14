@@ -1,5 +1,5 @@
 import api from "../../../../api/api";
-import AttachmentsList from "./../../../generic/AttachmentsList.js";
+import AttachmentsList from "../../../generic/messageComponents/AttachmentsList.js";
 import isMobile from "./../../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import heicToPng from "../../../../utils/heic_to_png";
@@ -47,7 +47,6 @@ export default function ChatFormInputs({
   const scrollChatToBottom = () =>
     chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
 
-  // vv  Send message block  vv //
   const sendMessage = async (event) => {
     event.preventDefault();
 
@@ -130,12 +129,9 @@ export default function ChatFormInputs({
     messageInputEl.current.focus();
     messageInputEl.current.style.height = `40px`;
   };
-  // ʌʌ  Send message block  ʌʌ //
 
-  // vv  Attachments pick  vv //
   const pickUserFiles = () => filePicker.current.click();
   const handlerChange = async ({ target: { files: pickedFiles } }) => {
-    console.log(pickedFiles);
     if (!pickedFiles.length) {
       return;
     }
@@ -183,9 +179,7 @@ export default function ChatFormInputs({
     messageInputEl.current.focus();
     setIsLoadingFile(false);
   };
-  // ʌʌ  Attachments pick  ʌʌ //
 
-  // vv  Input functions block  vv //
   useEffect(() => {
     messageInputEl.current.value = "";
     messageInputEl.current.style.height = `40px`;
@@ -209,7 +203,6 @@ export default function ChatFormInputs({
       sendMessage(e);
     }
   };
-  // ʌʌ  Input functions pick  ʌʌ //
 
   const fileView = useMemo(() => {
     if (isLoadingFile) {

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import api from "../../api/api";
 import subscribeForNotifications from "../../services/notifications";
 import showCustomAlert from "../../utils/show_alert";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import {
   changeOpacity,
@@ -24,6 +24,7 @@ import { ReactComponent as ShowPassword } from "./../../assets/icons/authForm/Sh
 
 export default function Login() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -43,7 +44,7 @@ export default function Login() {
       const { token: userToken, user: userData } = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
 
-      history.navigate("/main");
+      navigate("/main");
       subscribeForNotifications();
       dispatch(setSelectedConversation({}));
       dispatch(setUserIsLoggedIn(true));

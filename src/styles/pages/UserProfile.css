@@ -24,7 +24,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 
   border: none;
   border-radius: var(--border-main-radius);
@@ -52,6 +52,21 @@
   background-color: var(--bg-chatPhoto-color);
   box-shadow: inset 0px 0px 10px var(--shadow-block);
 }
+.uo-photo > svg {
+  width: 60px;
+  height: 60px;
+}
+.uo-photo-u-bg {
+  background-color: var(--bg-chatPhoto-u-color);
+}
+
+.uo-header {
+  font-size: calc(var(--font-size) * 1.5);
+  font-weight: 300;
+}
+.uo-header-pr-51 {
+  padding-right: 51px;
+}
 .uo-name {
   width: calc(100% - 110px);
 
@@ -76,10 +91,19 @@
 
   transition: 0.3s border-bottom;
 }
+.uo-name > p {
+  text-align: left;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  font-size: calc(var(--font-size) * 1.5);
+  font-weight: 300;
+  line-height: calc(var(--font-size) * 2);
+}
 
 .uo-info {
   width: 100%;
-  margin-top: 25px;
 
   display: flex;
   gap: 12px;
@@ -93,6 +117,23 @@
   align-items: center;
   gap: 15px;
 }
+
+.uo-info > div:nth-last-child(1) {
+  margin-top: 20px;
+}
+.uo-info > div > p:nth-child(3) {
+  width: 200px;
+  padding: 2px;
+
+  font-size: calc(var(--font-size) * 1.125);
+  color: var(--text-hover);
+  text-align: right;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .uo-login {
   line-height: 150%;
 }
@@ -106,9 +147,6 @@
   align-items: center;
 
   font-size: calc(var(--font-size) * 1.125);
-}
-.uo-info > div:nth-last-child(1) {
-  margin-top: 20px;
 }
 .uo-password > span {
   cursor: pointer;
@@ -152,6 +190,8 @@
 }
 
 .uo-navigation {
+  padding-right: 8px;
+
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -196,6 +236,10 @@
 
 #updateForm {
   width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 @media (max-width: 800px) {

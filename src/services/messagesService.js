@@ -3,7 +3,7 @@ import store from "../store/store";
 import { addMessages, upsertMessages } from "../store/Messages";
 import { getDownloadFileLinks } from "../api/download_manager";
 import { setSelectedConversation } from "../store/SelectedConversation";
-import { upsertChat } from "../store/Conversations";
+import { upsertChat, upsertParticipants } from "../store/Conversations";
 import { history } from "../_helpers/history";
 
 class MessagesService {
@@ -22,7 +22,6 @@ class MessagesService {
       }
     });
   }
-
   async syncData() {
     api
       .messageList({
@@ -58,6 +57,24 @@ class MessagesService {
           getDownloadFileLinks(mAttachments).then((msgs) =>
             store.dispatch(upsertMessages(msgs))
           );
+        }
+
+        const conv =
+          store.getState().conversations.entities[this.currentChatId];
+        if (conv.type !== "u") {
+          api
+            .getParticipantsByCids({
+              cids: [this.currentChatId],
+              includes: ["id"],
+            })
+            .then((arr) =>
+              store.dispatch(
+                upsertParticipants({
+                  cid: this.currentChatId,
+                  participants: arr.map((obj) => obj._id),
+                })
+              )
+            );
         }
       })
       .catch(() => {

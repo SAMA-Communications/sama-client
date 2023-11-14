@@ -34,7 +34,6 @@ export default function App() {
   }, [isMobileView]);
 
   useEffect(() => {
-    // vv  Event listeners  vv //
     window.addEventListener("offline", () =>
       dispatch(updateNetworkState(false))
     );
@@ -51,7 +50,6 @@ export default function App() {
       setIsMobileView(window.innerWidth <= globalConstants.windowChangeWitdh)
     );
 
-    // vv  Pick theme  vv //
     const userTheme = localStorage.getItem("theme");
     const prefersDarkMode = window.matchMedia(
       "(prefers-color-scheme: dark)"
@@ -65,11 +63,11 @@ export default function App() {
       document.body.classList.remove("dark-theme");
     }
 
-    // vv  Token update  vv //
     const token = localStorage.getItem("sessionId");
     if (token && token !== "undefined") {
-      const currentPath = history.location.hash;
-      history.navigate(!currentPath ? "/main" : `/main/${currentPath}`);
+      const { pathname, hash } = history.location;
+      const path = hash ? pathname + hash : "/main";
+      setTimeout(() => history.navigate(path), 20);
     } else {
       localStorage.removeItem("sessionId");
       history.navigate("/login");

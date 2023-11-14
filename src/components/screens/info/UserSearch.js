@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useTransition } from "react";
-import SearchedUser from "../../generic/SearchedUser.js";
-import SelectedUser from "../../generic/SelectedUser.js";
-import api from "../../../api/api";
+import SearchedUser from "../../generic/searchComponents/SearchedUser.js";
+import SelectedUser from "../../generic/searchComponents/SelectedUser.js";
+import api from "../../../api/api.js";
 import showCustomAlert from "../../../utils/show_alert.js";
 import { addUsers } from "../../../store/Participants.js";
 import { history } from "../../../_helpers/history.js";
 import { insertChat } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import "../../../styles/pages/UserSearch.css";
 
@@ -16,6 +17,8 @@ import { ReactComponent as SearchIndicator } from "./../../../assets/icons/Searc
 
 export default function UserSearch() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
   const [ignoreIds, setIgnoreIds] = useState([]);
@@ -28,7 +31,6 @@ export default function UserSearch() {
     return () => clearTimeout(debounce);
   }, [searchTerm, ignoreIds]);
 
-  // vv  Create chat block  vv //
   const createChat = async (event) => {
     event.preventDefault();
 
@@ -41,17 +43,15 @@ export default function UserSearch() {
         (requestData["name"] = window.prompt("Please enter a chat name."));
 
       const chat = await api.conversationCreate(requestData);
-      const users = await api.getParticipantsByCids([chat._id]);
+      const users = await api.getParticipantsByCids({ cids: [chat._id] });
       dispatch(addUsers(users));
       dispatch(insertChat({ ...chat, messagesIds: [] }));
 
-      history.navigate(`/main/#${chat._id}`);
+      navigate(`/main/#${chat._id}`);
       dispatch(setSelectedConversation({ id: chat._id }));
     }
   };
-  // ʌʌ  Create chat block  ʌʌ //
 
-  // vv  User navigation block  vv //
   const addUserToIgnore = async (data) => {
     if (selectedUsers.length >= 49) {
       showCustomAlert(
@@ -70,9 +70,7 @@ export default function UserSearch() {
     setIgnoreIds(ignoreIds.filter((id) => id !== data._id));
     setSearchedUsers([...searchedUsers, data]);
   };
-  // ʌʌ  User navigation block  ʌʌ //
 
-  // vv  Search request block  vv //
   const sendSearchRequest = async (login) => {
     startTransition(async () => {
       if (login.length > 1) {
@@ -91,22 +89,16 @@ export default function UserSearch() {
       }
     });
   };
-  // ʌʌ  Search request block  ʌʌ //
 
-  // vv  Close form block  vv //
   window.onkeydown = function (event) {
-    event.keyCode === 27 && history.navigate(`/main`);
+    event.keyCode === 27 && navigate(`/main`);
     event.keyCode === 13 && event.preventDefault();
   };
-  // ʌʌ  Close form block  ʌʌ //
 
   return (
     <form id="search-form">
       <div className="search-options fcc">
-        <div
-          className="search-close-chat"
-          onClick={() => history.navigate(`/main`)}
-        >
+        <div className="search-close-chat" onClick={() => navigate(`/main`)}>
           <BackBtn />
         </div>
         <input
