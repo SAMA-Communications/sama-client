@@ -63,17 +63,9 @@ class MessagesService {
 
         if (Object.keys(mAttachments).length > 0) {
           getDownloadFileLinks(mAttachments).then((msgs) => {
-            const messagesToUpdate = [];
-            msgs.forEach((msg) => {
-              const mids = msg._id;
-              if (!Array.isArray(mids)) {
-                messagesToUpdate.push(msg);
-                return;
-              }
-
-              mids.forEach((mid) => {
-                messagesToUpdate.push({ ...msg, _id: mid });
-              });
+            const messagesToUpdate = msgs.flatMap((msg) => {
+              const mids = Array.isArray(msg._id) ? msg._id : [msg._id];
+              return mids.map((mid) => ({ ...msg, _id: mid }));
             });
 
             store.dispatch(upsertMessages(messagesToUpdate));
