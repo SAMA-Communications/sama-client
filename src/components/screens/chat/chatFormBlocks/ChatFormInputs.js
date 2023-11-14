@@ -132,7 +132,6 @@ export default function ChatFormInputs({
 
   const pickUserFiles = () => filePicker.current.click();
   const handlerChange = async ({ target: { files: pickedFiles } }) => {
-    console.log(pickedFiles);
     if (!pickedFiles.length) {
       return;
     }
