@@ -5,7 +5,6 @@ import jwtDecode from "jwt-decode";
 import showCustomAlert from "../../../utils/show_alert";
 import { clearSelectedConversation } from "../../../store/SelectedConversation";
 import { getConverastionById, removeChat } from "../../../store/Conversations";
-import { history } from "../../../_helpers/history";
 import { selectParticipantsEntities } from "../../../store/Participants";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
