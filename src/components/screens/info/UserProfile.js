@@ -1,7 +1,7 @@
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
 import showCustomAlert from "../../../utils/show_alert";
-import { history } from "../../../_helpers/history";
+import getPrevPage from "../../../utils/get_prev_page";
 import {
   selectParticipantsEntities,
   upsertUser,
@@ -9,7 +9,7 @@ import {
 import { updateNetworkState } from "../../../store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import "./../../../styles/pages/UserProfile.css";
 
@@ -22,10 +22,10 @@ import { ReactComponent as PhoneIcon } from "./../../../assets/icons/userProfile
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
 import { ReactComponent as UserLoginIcon } from "./../../../assets/icons/userProfile/UserLoginIcon.svg";
 import { ReactComponent as UndoChangeIcon } from "./../../../assets/icons/userProfile/UndoEditIcon.svg";
-
 export default function UserProfile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { pathname, hash } = useLocation();
 
   const participants = useSelector(selectParticipantsEntities);
   const userInfo = localStorage.getItem("sessionId")
@@ -47,7 +47,7 @@ export default function UserProfile() {
   };
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && navigate("/main");
+    event.keyCode === 27 && navigate(getPrevPage(pathname + hash));
     event.keyCode === 13 && event.preventDefault();
   };
 
@@ -224,7 +224,10 @@ export default function UserProfile() {
     <div className="user-options-bg">
       <div className="user-options-container">
         <div className="uo-navigation">
-          <div className="uo-close" onClick={() => navigate("/main")}>
+          <div
+            className="uo-close"
+            onClick={() => navigate(getPrevPage(pathname + hash))}
+          >
             <BackBtn />
           </div>
           <div className="uo-header">Edit profile</div>

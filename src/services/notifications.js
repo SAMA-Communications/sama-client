@@ -16,11 +16,21 @@ async function showLocalNotification(pushMessage) {
   const conversation = storeState.conversations.entities[pushMessage.cid];
   //ERROR: if conversation not found (new message from new user) - case failed
   if (!conversation) {
-    //TODO: need to sync with server | conversation_lsit
+    //TODO: need to sync with server | conversation_list
     return;
   }
 
-  const { attachments, from, body } = pushMessage;
+  const { attachments, from, body, x } = pushMessage;
+  if (x?.type === "added_participant") {
+    const notificationMessage = {
+      ...pushMessage,
+      title: conversation.name,
+      body: "New user has been added to the group",
+    };
+    sw.postMessage({ message: notificationMessage });
+    return;
+  }
+
   const userLogin = storeState.participants.entities[from]?.login;
 
   const attachmentText =
