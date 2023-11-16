@@ -86,7 +86,9 @@ export default function ChatInfoPage() {
           <div className="co-header">Group info</div>
           <div>
             <div className="co-edit">
-              <AddParticipants />
+              <AddParticipants
+                onClick={() => navigate(pathname + hash + "/addparticipants")}
+              />
             </div>
             <div className="co-delete" onClick={deleteChat}>
               <TrashCan />

@@ -19,7 +19,7 @@
   border-right: 1px solid var(--border-dark-color);
   background-color: var(--bg-main-color);
 
-  z-index: 112;
+  z-index: 113;
 }
 .search-options {
   position: relative;

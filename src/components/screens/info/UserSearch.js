@@ -2,13 +2,13 @@ import React, { useEffect, useState, useTransition } from "react";
 import SearchedUser from "../../generic/searchComponents/SearchedUser.js";
 import SelectedUser from "../../generic/searchComponents/SelectedUser.js";
 import api from "../../../api/api.js";
+import getPrevPage from "../../../utils/get_prev_page.js";
 import showCustomAlert from "../../../utils/show_alert.js";
+import { useLocation, useNavigate } from "react-router-dom";
 import { addUsers } from "../../../store/Participants.js";
-import { history } from "../../../_helpers/history.js";
 import { insertChat } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 import "../../../styles/pages/UserSearch.css";
 
@@ -18,6 +18,7 @@ import { ReactComponent as SearchIndicator } from "./../../../assets/icons/Searc
 export default function UserSearch() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { pathname, hash } = useLocation();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -91,14 +92,17 @@ export default function UserSearch() {
   };
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && navigate(`/main`);
+    event.keyCode === 27 && navigate(getPrevPage(pathname + hash));
     event.keyCode === 13 && event.preventDefault();
   };
 
   return (
     <form id="search-form">
       <div className="search-options fcc">
-        <div className="search-close-chat" onClick={() => navigate(`/main`)}>
+        <div
+          className="search-close-chat"
+          onClick={() => navigate(getPrevPage(pathname + hash))}
+        >
           <BackBtn />
         </div>
         <input

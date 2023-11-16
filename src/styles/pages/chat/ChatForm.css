@@ -36,6 +36,8 @@
 
 .chat-form {
   flex: 1;
+
+  max-width: calc(100svw - 400px);
   height: 100svh;
 
   display: flex;
@@ -314,6 +316,7 @@
 
 @media (max-width: 1023px) {
   .chat-form {
+    max-width: 100svw;
     width: 100svw;
   }
   .chat-return-btn {

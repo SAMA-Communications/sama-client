@@ -3,7 +3,7 @@ import api from "../../../api/api.js";
 import jwtDecode from "jwt-decode";
 import ChatBox from "../../generic/chatComponents/ChatBox.js";
 import MiniLogo from "./../../static/MiniLogo.js";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   addUsers,
   selectParticipantsEntities,
@@ -14,7 +14,6 @@ import {
   selectAllConversations,
   upsertChat,
 } from "../../../store/Conversations.js";
-import { history } from "../../../_helpers/history.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { setUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
 import { updateNetworkState } from "../../../store/NetworkState.js";
@@ -31,6 +30,7 @@ import { ReactComponent as MoreOptions } from "./../../../assets/icons/chatList/
 export default function ChatList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { pathname, hash } = useLocation();
 
   const conversations = useSelector(selectAllConversations);
   const participants = useSelector(selectParticipantsEntities);
@@ -176,7 +176,7 @@ export default function ChatList() {
           {changeThemeBtn}
           <div
             className="nav-create-btn"
-            onClick={() => navigate("/main/search")}
+            onClick={() => navigate(pathname + hash + "/search")}
           >
             <CreateChatButton />
           </div>
@@ -196,7 +196,10 @@ export default function ChatList() {
         <div className="user-info">
           <p className="user-info-name">{userName}</p>
         </div>
-        <div className="user-options" onClick={() => navigate("/main/user")}>
+        <div
+          className="user-options"
+          onClick={() => navigate(pathname + hash + "/user")}
+        >
           <MoreOptions />
         </div>
       </div>

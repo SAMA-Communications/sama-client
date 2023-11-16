@@ -36,11 +36,14 @@ export default function Main() {
     const { pathname, hash } = location;
     const allBlocks = [];
 
-    if (pathname.includes("/search")) {
+    if (pathname.includes("/search") || hash.includes("/search")) {
       allBlocks.push(<UserSearch key="/search" />);
     }
+    if (hash.includes("/addparticipants")) {
+      allBlocks.push(<UserSearch key="/addparticipants" />);
+    }
 
-    if (pathname.includes("/user")) {
+    if (pathname.includes("/user") || hash.includes("/user")) {
       allBlocks.push(<UserProfile key="/user" />);
     }
 

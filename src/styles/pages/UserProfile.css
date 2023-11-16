@@ -19,7 +19,7 @@
 .user-options-container {
   width: 450px;
 
-  padding: 10px;
+  padding: 15px 20px 30px 20px;
 
   display: flex;
   flex-direction: column;
@@ -256,6 +256,8 @@
   .user-options-container {
     width: 100svw;
     height: 100svh;
+
+    padding: 10px;
 
     border-radius: 0;
   }
