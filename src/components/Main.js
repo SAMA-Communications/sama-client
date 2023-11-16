@@ -44,11 +44,11 @@ export default function Main() {
       allBlocks.push(<UserProfile key="/user" />);
     }
 
-    if (hash.includes("/chatinfo") && !hash.includes("/opponentinfo")) {
-      allBlocks.push(<ChatInfoPage key="/chatinfo" />);
+    if (hash.includes("/info") && !hash.includes("/opponentinfo")) {
+      allBlocks.push(<ChatInfoPage key="/info" />);
     }
 
-    if (hash.includes("/opponentinfo")) {
+    if (hash.includes("/opponentinfo") || hash.includes("/participant")) {
       allBlocks.push(<ParticipantProfile key="/opponentinfo" />);
     }
 

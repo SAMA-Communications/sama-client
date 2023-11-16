@@ -12,7 +12,7 @@ export default function ParticipantInChatInfo({ user, isCurrentUser }) {
         if (isCurrentUser) {
           return;
         }
-        navigate(pathname + hash + `/opponentinfo?uid=${user._id}`);
+        navigate(pathname + hash + `/participant?uid=${user._id}`);
       }}
     >
       {user.login}

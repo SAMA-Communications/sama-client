@@ -19,7 +19,7 @@
 .user-options-container {
   width: 450px;
 
-  padding: 15px 20px 30px 20px;
+  padding: 10px;
 
   display: flex;
   flex-direction: column;
@@ -190,6 +190,7 @@
 }
 
 .uo-navigation {
+  height: 42px;
   padding-right: 8px;
 
   width: 100%;

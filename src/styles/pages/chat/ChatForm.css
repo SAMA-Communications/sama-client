@@ -35,7 +35,7 @@
 }
 
 .chat-form {
-  width: calc(100svw - 400px);
+  flex: 1;
   height: 100svh;
 
   display: flex;
