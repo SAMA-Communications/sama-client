@@ -50,7 +50,7 @@ export default function ChatList() {
       upsertChat({ ...chat, unread_messages_count: 0, messagesIds: [] })
     );
     api
-      .getParticipantsByCids([chat._id])
+      .getParticipantsByCids({ cids: [chat._id] })
       .then((users) => dispatch(addUsers(users)));
   };
 
