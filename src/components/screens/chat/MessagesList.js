@@ -2,6 +2,7 @@ import ChatMessage from "../../generic/messageComponents/ChatMessage";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
 import InfiniteScroll from "react-infinite-scroll-component";
+import InformativeMessage from "../../generic/messageComponents/InformativeMessage";
 import {
   addMessages,
   getActiveConversationMessages,
@@ -102,27 +103,40 @@ export default function MessagesList({ scrollRef, openModalFunc }) {
       hasMore={true && needToGetMoreMessage.current}
       scrollableTarget="chatMessagesScrollable"
     >
-      {messages.map((msg, i) => (
-        <ChatMessage
-          key={msg._id}
-          fromId={msg.from}
-          userId={userInfo._id}
-          text={msg.body}
-          uName={participants[msg.from]?.login}
-          isPrevMesssageYours={
-            i > 0 ? messages[i - 1].from === messages[i].from : false
-          }
-          isNextMessageYours={
-            i < messages.length - 1
-              ? messages[i].from === messages[i + 1].from
-              : false
-          }
-          attachments={msg.attachments}
-          openModalParam={openModalFunc}
-          status={msg.status}
-          tSend={msg.t}
-        />
-      ))}
+      {messages.map((msg, i) =>
+        !msg.x?.type ? (
+          <ChatMessage
+            key={msg._id}
+            fromId={msg.from}
+            userId={userInfo._id}
+            text={msg.body}
+            uName={participants[msg.from]?.login}
+            isPrevMesssageYours={
+              i > 0
+                ? messages[i - 1].from === messages[i].from &&
+                  !messages[i - 1].x?.type
+                : false
+            }
+            isNextMessageYours={
+              i < messages.length - 1
+                ? messages[i].from === messages[i + 1].from &&
+                  !messages[i + 1].x?.type
+                : false
+            }
+            attachments={msg.attachments}
+            openModalParam={openModalFunc}
+            status={msg.status}
+            tSend={msg.t}
+          />
+        ) : (
+          <InformativeMessage
+            key={msg._id}
+            isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
+            text={msg.body}
+            type={msg.x.type}
+          />
+        )
+      )}
     </InfiniteScroll>
   );
 }

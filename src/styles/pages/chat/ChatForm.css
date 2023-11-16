@@ -35,7 +35,7 @@
 }
 
 .chat-form {
-  flex: 1;
+  flex-grow: 1;
 
   max-width: calc(100svw - 400px);
   height: 100svh;

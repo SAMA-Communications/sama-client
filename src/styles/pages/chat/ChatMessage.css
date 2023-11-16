@@ -9,7 +9,7 @@
   flex-direction: row;
   align-items: flex-end;
 }
-.message:nth-last-child(1) {
+.infinite-scroll-component > div:nth-last-child(1) {
   margin-bottom: 5px;
 }
 .message-content {
@@ -25,25 +25,9 @@
 .my-message > .message-content {
   background-color: var(--bg-message-my);
 }
-.mt-10 {
-  margin-top: 10px;
-}
 .bg-status-att {
   border-radius: var(--border-second-radius);
   background-color: var(--shadow-block);
-}
-.m-pr {
-  padding-right: 40px;
-}
-.my-message .m-pr {
-  padding-right: 60px;
-}
-.m-pb {
-  min-width: 70px;
-  padding-bottom: 17px;
-}
-.br-tl {
-  border-top-left-radius: 0;
 }
 
 .message-body {
@@ -177,6 +161,20 @@
   width: auto;
   height: auto;
 }
+
+.informative-message {
+  width: max-content;
+
+  padding: 4px 8px;
+  margin-top: 4px;
+  margin-left: auto;
+  margin-right: auto;
+
+  border-radius: var(--border-second-radius);
+
+  background-color: var(--bg-message-all);
+}
+
 @media (max-width: 1023px) {
   .my-message {
     justify-content: flex-start;
@@ -194,4 +192,21 @@
   .message {
     gap: 5px;
   }
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+.m-pr {
+  padding-right: 40px;
+}
+.my-message .m-pr {
+  padding-right: 60px;
+}
+.m-pb {
+  min-width: 70px;
+  padding-bottom: 17px;
+}
+.br-tl {
+  border-top-left-radius: 0;
 }
