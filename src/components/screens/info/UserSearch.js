@@ -4,21 +4,28 @@ import SelectedUser from "../../generic/searchComponents/SelectedUser.js";
 import api from "../../../api/api.js";
 import getPrevPage from "../../../utils/get_prev_page.js";
 import showCustomAlert from "../../../utils/show_alert.js";
-import { useLocation, useNavigate } from "react-router-dom";
 import { addUsers } from "../../../store/Participants.js";
-import { insertChat } from "../../../store/Conversations.js";
+import {
+  getConverastionById,
+  insertChat,
+  upsertChat,
+} from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import "../../../styles/pages/UserSearch.css";
 
 import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as SearchIndicator } from "./../../../assets/icons/SearchIndicator.svg";
 
-export default function UserSearch() {
+export default function UserSearch({ type }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname, hash } = useLocation();
+
+  const selectedConversation = useSelector(getConverastionById);
+  const selectedCID = selectedConversation?._id;
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -26,6 +33,19 @@ export default function UserSearch() {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [searchedUsers, setSearchedUsers] = useState([]);
   const [isUserSearched, setIsUserSearched] = useState("Search results");
+
+  useEffect(() => {
+    if (type === "create_group_chat") {
+      setIgnoreIds([]);
+      return;
+    }
+
+    if (!selectedConversation?.participants) {
+      return;
+    }
+
+    setIgnoreIds(selectedConversation.participants);
+  }, [selectedConversation]);
 
   useEffect(() => {
     const debounce = setTimeout(() => sendSearchRequest(searchTerm), 300);
@@ -53,8 +73,40 @@ export default function UserSearch() {
     }
   };
 
+  const addParticipants = async (event) => {
+    event.preventDefault();
+
+    if (selectedUsers.length) {
+      const addUsersArr = selectedUsers.map((el) => el._id);
+      const requestData = {
+        cid: selectedCID,
+        participants: { add: addUsersArr },
+      };
+
+      if (!window.confirm("Add selected users to the chat?")) {
+        return;
+      }
+
+      await api.conversationUpdate(requestData);
+      const users = await api.getParticipantsByCids({ cids: [selectedCID] });
+      dispatch(addUsers(users));
+      dispatch(
+        upsertChat({
+          _id: selectedCID,
+          participants: [...selectedConversation.participants, ...addUsersArr],
+        })
+      );
+
+      navigate(`/main/#${selectedCID}/info`);
+    }
+  };
+
   const addUserToIgnore = async (data) => {
-    if (selectedUsers.length >= 49) {
+    if (
+      (type === "create_group_chat" ? 0 : ignoreIds.length) +
+        selectedUsers.length >=
+      49
+    ) {
       showCustomAlert(
         "There are too many users in the group conversation.",
         "warning"
@@ -142,9 +194,15 @@ export default function UserSearch() {
           <div className="list-user-message">{isUserSearched}</div>
         )}
       </div>
-      <div className="search-create-chat" onClick={createChat}>
-        <p>Create a chat</p>
-      </div>
+      {type === "create_group_chat" ? (
+        <div className="search-create-chat" onClick={createChat}>
+          <p>Create a chat</p>
+        </div>
+      ) : (
+        <div className="search-create-chat" onClick={addParticipants}>
+          <p>Add participants</p>
+        </div>
+      )}
     </form>
   );
 }

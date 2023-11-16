@@ -37,10 +37,12 @@ export default function Main() {
     const allBlocks = [];
 
     if (pathname.includes("/search") || hash.includes("/search")) {
-      allBlocks.push(<UserSearch key="/search" />);
+      allBlocks.push(<UserSearch key="/search" type={"create_group_chat"} />);
     }
     if (hash.includes("/addparticipants")) {
-      allBlocks.push(<UserSearch key="/addparticipants" />);
+      allBlocks.push(
+        <UserSearch key="/addparticipants" type={"add_participants"} />
+      );
     }
 
     if (pathname.includes("/user") || hash.includes("/user")) {

@@ -426,18 +426,18 @@ class Api {
   }
 
   async conversationUpdate(data) {
-    //===============to do
     const requestData = {
       request: {
         conversation_update: {
-          id: "currentConversationId",
-          description: "test213",
+          id: data.cid,
+          name: data.name,
+          description: data.description,
           participants: {
-            add: ["userId[2]"],
-            remove: ["userId[2]"],
+            add: data.participants?.add,
+            remove: data.participants?.remove,
           },
         },
-        id: Math.floor(Math.random() * 101),
+        id: getUniqueId("conversationUpdate"),
       },
     };
     const resObjKey = "conversation";
