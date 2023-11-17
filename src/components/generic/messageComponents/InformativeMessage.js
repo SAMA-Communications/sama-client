@@ -1,29 +1,12 @@
-import { selectParticipantsEntities } from "../../../store/Participants";
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function InformativeMessage({
   text,
-  type,
+  params,
   isPrevMesssageUsers,
 }) {
-  const participants = useSelector(selectParticipantsEntities);
-
-  const [uId, comment] = [
-    text.split(" ")[0],
-    text.split(" ").slice(1).join(" "),
-  ];
-
-  const participantsInfoView = useMemo(() => {
-    if (!uId || !participants[uId]) {
-      return null;
-    }
-
-    const { first_name, last_name, login } = participants[uId];
-    const viewName = [first_name, last_name].filter(Boolean);
-
-    return viewName.length ? viewName.join(" ") : login;
-  }, [participants, uId]);
+  const navigate = useNavigate();
+  const { pathname, hash } = useLocation();
 
   return (
     <div
@@ -32,8 +15,11 @@ export default function InformativeMessage({
           ? "informative-message mt-10"
           : "informative-message"
       }
+      onClick={() =>
+        navigate(pathname + hash + `/participant?uid=${params?.user?._id}`)
+      }
     >
-      {participantsInfoView + " " + comment}
+      {text}
     </div>
   );
 }

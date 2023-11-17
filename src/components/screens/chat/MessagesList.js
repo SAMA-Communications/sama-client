@@ -133,7 +133,7 @@ export default function MessagesList({ scrollRef, openModalFunc }) {
             key={msg._id}
             isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
             text={msg.body}
-            type={msg.x.type}
+            params={msg.x}
           />
         )
       )}

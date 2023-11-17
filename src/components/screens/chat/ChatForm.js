@@ -6,14 +6,14 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import api from "../../../api/api";
 import jwtDecode from "jwt-decode";
 import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
-import { history } from "../../../_helpers/history.js";
-import { upsertUser } from "../../../store/Participants.js";
+import { addUser, upsertUser } from "../../../store/Participants.js";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
   markConversationAsRead,
   selectConversationsEntities,
   updateLastMessageField,
+  upsertChat,
 } from "../../../store/Conversations";
 import {
   clearSelectedConversation,
@@ -106,6 +106,17 @@ export default function ChatForm() {
         countOfNewMessages,
       })
     );
+
+    if (message.x?.type === "added_participant") {
+      const user = message.x.user;
+      dispatch(addUser(user));
+      dispatch(
+        upsertChat({
+          _id: selectedCID,
+          participants: [...selectedConversation.participants, user._id],
+        })
+      );
+    }
   };
 
   const closeForm = (event) => {

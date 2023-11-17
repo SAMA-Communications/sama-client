@@ -88,15 +88,6 @@ export default function UserSearch({ type }) {
       }
 
       await api.conversationUpdate(requestData);
-      const users = await api.getParticipantsByCids({ cids: [selectedCID] });
-      dispatch(addUsers(users));
-      dispatch(
-        upsertChat({
-          _id: selectedCID,
-          participants: [...selectedConversation.participants, ...addUsersArr],
-        })
-      );
-
       navigate(`/main/#${selectedCID}/info`);
     }
   };

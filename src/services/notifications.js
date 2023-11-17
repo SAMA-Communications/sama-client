@@ -20,17 +20,7 @@ async function showLocalNotification(pushMessage) {
     return;
   }
 
-  const { attachments, from, body, x } = pushMessage;
-  if (x?.type === "added_participant") {
-    const notificationMessage = {
-      ...pushMessage,
-      title: conversation.name,
-      body: "New user has been added to the group",
-    };
-    sw.postMessage({ message: notificationMessage });
-    return;
-  }
-
+  const { attachments, from, body } = pushMessage;
   const userLogin = storeState.participants.entities[from]?.login;
 
   const attachmentText =

@@ -173,6 +173,8 @@
   border-radius: var(--border-second-radius);
 
   background-color: var(--bg-message-all);
+
+  cursor: pointer;
 }
 
 @media (max-width: 1023px) {
