@@ -47,7 +47,11 @@ export default function ChatList() {
 
   api.onConversationCreateListener = (chat) => {
     dispatch(
-      upsertChat({ ...chat, unread_messages_count: 0, messagesIds: [] })
+      upsertChat({
+        ...chat,
+        unread_messages_count: chat.unread_messages_count || 0,
+        messagesIds: [],
+      })
     );
     api
       .getParticipantsByCids({ cids: [chat._id] })

@@ -107,13 +107,14 @@ export default function ChatForm() {
       })
     );
 
-    if (message.x?.type === "added_participant") {
+    const conv = conversations[selectedCID];
+    if (message.x?.type === "added_participant" && conv) {
       const user = message.x.user;
       dispatch(addUser(user));
       dispatch(
         upsertChat({
           _id: selectedCID,
-          participants: [...selectedConversation.participants, user._id],
+          participants: [...conv.participants, user._id],
         })
       );
     }
