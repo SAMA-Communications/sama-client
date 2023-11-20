@@ -104,7 +104,14 @@ export default function MessagesList({ scrollRef, openModalFunc }) {
       scrollableTarget="chatMessagesScrollable"
     >
       {messages.map((msg, i) =>
-        !msg.x?.type ? (
+        msg.x?.type ? (
+          <InformativeMessage
+            key={msg._id}
+            isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
+            text={msg.body}
+            params={msg.x}
+          />
+        ) : (
           <ChatMessage
             key={msg._id}
             fromId={msg.from}
@@ -127,13 +134,6 @@ export default function MessagesList({ scrollRef, openModalFunc }) {
             openModalParam={openModalFunc}
             status={msg.status}
             tSend={msg.t}
-          />
-        ) : (
-          <InformativeMessage
-            key={msg._id}
-            isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
-            text={msg.body}
-            params={msg.x}
           />
         )
       )}
