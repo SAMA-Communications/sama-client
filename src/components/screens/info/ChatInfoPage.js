@@ -30,6 +30,13 @@ export default function ChatInfoPage() {
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
 
+  const isCurrentUserOwner = useMemo(() => {
+    if (!userInfo || !selectedConversation) {
+      return false;
+    }
+    return userInfo._id === selectedConversation.owner_id.toString();
+  }, [userInfo, selectedConversation]);
+
   window.onkeydown = function (event) {
     event.keyCode === 27 && navigate(getPrevPage(pathname + hash));
     event.keyCode === 13 && event.preventDefault();
@@ -61,7 +68,6 @@ export default function ChatInfoPage() {
       }
 
       const isCurrentUser = u._id === userInfo._id;
-      // const isOwner = userInfo._id === selectedConversation.owner_id.toString();
 
       return (
         <ParticipantInChatInfo
@@ -86,9 +92,11 @@ export default function ChatInfoPage() {
           <div className="co-header">Group info</div>
           <div>
             <div className="co-edit">
-              <AddParticipants
-                onClick={() => navigate(pathname + hash + "/addparticipants")}
-              />
+              {isCurrentUserOwner ? (
+                <AddParticipants
+                  onClick={() => navigate(pathname + hash + "/addparticipants")}
+                />
+              ) : null}
             </div>
             <div className="co-delete" onClick={deleteChat}>
               <TrashCan />
