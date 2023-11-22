@@ -123,7 +123,7 @@ export default function ChatForm() {
       dispatch(
         upsertChat({
           _id: selectedCID,
-          participants: conv.participant.filter((uId) => uId !== user._id),
+          participants: conv.participants.filter((uId) => uId !== user._id),
         })
       );
     }
