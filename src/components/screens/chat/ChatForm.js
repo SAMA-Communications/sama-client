@@ -118,6 +118,15 @@ export default function ChatForm() {
         })
       );
     }
+    if (message.x?.type === "removed_participant" && conv) {
+      const user = message.x.user;
+      dispatch(
+        upsertChat({
+          _id: selectedCID,
+          participants: conv.participant.filter((uId) => uId !== user._id),
+        })
+      );
+    }
   };
 
   const closeForm = (event) => {

@@ -80,7 +80,6 @@ export default function ChatInfoPage() {
           return;
         }
 
-        //send request
         const requestData = {
           cid: selectedCID,
           participants: { remove: [u._id] },
