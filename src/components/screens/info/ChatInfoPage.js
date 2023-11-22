@@ -34,7 +34,7 @@ export default function ChatInfoPage() {
     if (!userInfo || !selectedConversation) {
       return false;
     }
-    return userInfo._id === selectedConversation.owner_id.toString();
+    return userInfo._id === selectedConversation.owner_id?.toString();
   }, [userInfo, selectedConversation]);
 
   window.onkeydown = function (event) {

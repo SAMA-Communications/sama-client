@@ -8,7 +8,6 @@ import { addUsers } from "../../../store/Participants.js";
 import {
   getConverastionById,
   insertChat,
-  upsertChat,
 } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,7 +44,7 @@ export default function UserSearch({ type }) {
     }
 
     setIgnoreIds(selectedConversation.participants);
-  }, [selectedConversation]);
+  }, [selectedConversation, type]);
 
   useEffect(() => {
     const debounce = setTimeout(() => sendSearchRequest(searchTerm), 300);
@@ -83,7 +82,11 @@ export default function UserSearch({ type }) {
         participants: { add: addUsersArr },
       };
 
-      if (!window.confirm("Add selected users to the chat?")) {
+      if (
+        !window.confirm(
+          `Add selected user${selectedUsers.length > 1 ? "s" : ""} to the chat?`
+        )
+      ) {
         return;
       }
 
@@ -140,7 +143,10 @@ export default function UserSearch({ type }) {
   };
 
   return (
-    <form id="search-form">
+    <form
+      id="search-form"
+      data-css={type === "create_group_chat" ? "left-side" : "right-side"}
+    >
       <div className="search-options fcc">
         <div
           className="search-close-chat"
