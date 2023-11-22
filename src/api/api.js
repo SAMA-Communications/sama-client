@@ -13,6 +13,7 @@ class Api {
     this.onMessageStatusListener = null;
     this.onUserActivityListener = null;
     this.onConversationCreateListener = null;
+    this.onConversationDeleteListener = null;
   }
 
   async connect() {
@@ -32,11 +33,17 @@ class Api {
 
         if (message.event) {
           if (message.event.conversation_created) {
-            if (this.onConversationCreateListener) {
+            this.onConversationCreateListener &&
               this.onConversationCreateListener(
                 message.event.conversation_created
               );
-            }
+            return;
+          }
+          if (message.event.conversation_kicked) {
+            this.onConversationDeleteListener &&
+              this.onConversationDeleteListener(
+                message.event.conversation_kicked
+              );
             return;
           }
           return;

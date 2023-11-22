@@ -11,6 +11,7 @@ import {
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
+  removeChat,
   selectAllConversations,
   upsertChat,
 } from "../../../store/Conversations.js";
@@ -56,6 +57,14 @@ export default function ChatList() {
     api
       .getParticipantsByCids({ cids: [chat._id] })
       .then((users) => dispatch(addUsers(users)));
+  };
+
+  api.onConversationDeleteListener = (chat) => {
+    dispatch(removeChat(chat._id));
+    if (hash.includes(chat._id.toString())) {
+      dispatch(setSelectedConversation({}));
+      navigate("/main");
+    }
   };
 
   const sendLogout = async () => {
