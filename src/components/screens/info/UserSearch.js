@@ -97,7 +97,9 @@ export default function UserSearch({ type }) {
 
   const addUserToIgnore = async (data) => {
     if (
-      (type === "create_group_chat" ? 0 : ignoreIds.length) +
+      (type === "create_group_chat"
+        ? 0
+        : selectedConversation?.participants.length) +
         selectedUsers.length >=
       49
     ) {
