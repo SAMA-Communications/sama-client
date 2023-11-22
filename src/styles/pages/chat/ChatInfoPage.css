@@ -131,10 +131,23 @@
   align-items: center;
 }
 .co-list-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
   padding-bottom: 10px;
 
   font-size: calc(var(--font-size) * 1.2);
   line-height: calc(var(--font-size) * 1.5);
+}
+.co-list-title > svg {
+  width: 28px;
+  height: 28px;
+
+  margin-right: -33px;
+
+  cursor: pointer;
 }
 .co-list-items {
   width: 100%;

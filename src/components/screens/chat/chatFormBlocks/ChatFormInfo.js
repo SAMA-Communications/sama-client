@@ -4,7 +4,6 @@ import {
   getConverastionById,
   selectConversationsEntities,
 } from "../../../../store/Conversations";
-import { history } from "../../../../_helpers/history";
 import { selectParticipantsEntities } from "../../../../store/Participants";
 import { useSelector } from "react-redux";
 import { useMemo } from "react";

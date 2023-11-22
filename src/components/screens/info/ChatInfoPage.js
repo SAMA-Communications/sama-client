@@ -8,7 +8,7 @@ import { getConverastionById, removeChat } from "../../../store/Conversations";
 import { selectParticipantsEntities } from "../../../store/Participants";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import "../../../styles/pages/chat/ChatInfoPage.css";
 
@@ -16,11 +16,15 @@ import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/Tra
 import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as GroupChatPhoto } from "./../../../assets/icons/chatList/ChatIconGroup.svg";
 import { ReactComponent as AddParticipants } from "./../../../assets/icons/chatList/CreateChatButton.svg";
+import { ReactComponent as PenEditIcon } from "./../../../assets/icons/userProfile/PenEditIcon.svg";
+import { ReactComponent as ConfirmIcon } from "./../../../assets/icons/userProfile/ConfirmIcon.svg";
 
 export default function ChatInfoPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname, hash } = useLocation();
+
+  const [isLockedDelete, setIsLockedDelete] = useState(true);
 
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
@@ -69,11 +73,30 @@ export default function ChatInfoPage() {
 
       const isCurrentUser = u._id === userInfo._id;
 
+      const deleteUser = async (event) => {
+        event.stopPropagation();
+
+        if (!window.confirm(`Do you want to delete this user?`)) {
+          return;
+        }
+
+        //send request
+        const requestData = {
+          cid: selectedCID,
+          participants: { remove: [u._id] },
+        };
+        await api.conversationUpdate(requestData);
+        //remove user form participants field - redux
+      };
+
       return (
         <ParticipantInChatInfo
           key={u._id}
           user={u}
+          deleteUserFunc={deleteUser}
           isCurrentUser={isCurrentUser}
+          isCurrentUserOwner={isCurrentUserOwner}
+          isLockedDelete={isLockedDelete}
         />
       );
     });
@@ -117,7 +140,16 @@ export default function ChatInfoPage() {
           </div>
         </div>
         <div className="co-list">
-          <p className="co-list-title">Members</p>
+          <p className="co-list-title">
+            Members
+            {isCurrentUserOwner ? (
+              isLockedDelete ? (
+                <PenEditIcon onClick={() => setIsLockedDelete(false)} />
+              ) : (
+                <ConfirmIcon onClick={() => setIsLockedDelete(true)} />
+              )
+            ) : null}
+          </p>
           <div className="co-list-items">{participantsView}</div>
         </div>
       </div>
