@@ -190,6 +190,7 @@
 }
 
 .uo-navigation {
+  height: 42px;
   padding-right: 8px;
 
   width: 100%;
@@ -255,6 +256,8 @@
   .user-options-container {
     width: 100svw;
     height: 100svh;
+
+    padding: 10px;
 
     border-radius: 0;
   }

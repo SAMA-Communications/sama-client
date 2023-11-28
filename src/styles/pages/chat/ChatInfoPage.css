@@ -1,26 +1,21 @@
 .chat-options-bg {
-  width: 100svw;
+  width: min(400px, 100vw);
   height: 100svh;
-
-  padding: 7svh 1svw;
-
-  position: fixed;
-  top: 0;
-  left: 0;
 
   display: flex;
   justify-content: center;
   align-items: flex-start;
 
-  background-color: var(--bg-dark-block);
+  border-left: 1px solid var(--border-dark-color);
+  background-color: var(--bg-main-color);
 
-  z-index: 112;
+  z-index: 110;
 }
 
 .chat-options-container {
-  width: 450px;
+  width: 100%;
 
-  padding: 15px 20px 30px 20px;
+  padding: 10px;
 
   display: flex;
   flex-direction: column;
@@ -33,6 +28,7 @@
 }
 
 .co-navigation {
+  height: 42px;
   padding-right: 8px;
 
   width: 100%;
@@ -94,6 +90,7 @@
 }
 .co-p-description {
   overflow: hidden;
+  line-height: 110%;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -193,6 +190,34 @@
 }
 .co-edit > svg:hover > path {
   stroke: var(--text-hover);
+}
+
+@media (max-width: 1500px) {
+  .chat-options-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    border-left: 0;
+    border-right: 1px solid var(--border-dark-color);
+  }
+}
+
+@media (max-width: 1023px) {
+  .chat-options-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100svw;
+    height: 100svh;
+
+    border: 0;
+  }
+  .co-info,
+  .co-list {
+    width: min(100%, 400px);
+  }
 }
 
 @media (max-width: 800px) {

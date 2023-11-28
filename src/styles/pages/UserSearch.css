@@ -1,11 +1,3 @@
-.search-bg {
-  width: 100svw;
-  height: 100svh;
-
-  position: fixed;
-  top: 0;
-  left: 0;
-}
 #search-form {
   position: absolute;
   width: 400px;
@@ -16,10 +8,9 @@
   justify-content: flex-start;
   align-items: center;
 
-  border-right: 1px solid var(--border-dark-color);
   background-color: var(--bg-main-color);
 
-  z-index: 112;
+  z-index: 113;
 }
 .search-options {
   position: relative;
@@ -27,6 +18,14 @@
   padding: 10px 45px 10px 0;
 
   border-bottom: 1px solid var(--border-color);
+}
+#search-form[data-css="left-side"] {
+  left: 0;
+  border-right: 1px solid var(--border-dark-color);
+}
+#search-form[data-css="right-side"] {
+  right: 0;
+  border-left: 1px solid var(--border-dark-color);
 }
 .search-indicator {
   position: absolute;

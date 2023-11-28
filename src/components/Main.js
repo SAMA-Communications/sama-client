@@ -36,19 +36,24 @@ export default function Main() {
     const { pathname, hash } = location;
     const allBlocks = [];
 
-    if (pathname.includes("/search")) {
-      allBlocks.push(<UserSearch key="/search" />);
+    if (pathname.includes("/search") || hash.includes("/search")) {
+      allBlocks.push(<UserSearch key="/search" type={"create_group_chat"} />);
+    }
+    if (hash.includes("/addparticipants")) {
+      allBlocks.push(
+        <UserSearch key="/addparticipants" type={"add_participants"} />
+      );
     }
 
-    if (pathname.includes("/user")) {
+    if (pathname.includes("/user") || hash.includes("/user")) {
       allBlocks.push(<UserProfile key="/user" />);
     }
 
-    if (hash.includes("/chatinfo") && !hash.includes("/opponentinfo")) {
-      allBlocks.push(<ChatInfoPage key="/chatinfo" />);
+    if (hash.includes("/info") && !hash.includes("/opponentinfo")) {
+      allBlocks.push(<ChatInfoPage key="/info" />);
     }
 
-    if (hash.includes("/opponentinfo")) {
+    if (hash.includes("/opponentinfo") || hash.includes("/participant")) {
       allBlocks.push(<ParticipantProfile key="/opponentinfo" />);
     }
 

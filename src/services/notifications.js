@@ -16,7 +16,7 @@ async function showLocalNotification(pushMessage) {
   const conversation = storeState.conversations.entities[pushMessage.cid];
   //ERROR: if conversation not found (new message from new user) - case failed
   if (!conversation) {
-    //TODO: need to sync with server | conversation_lsit
+    //TODO: need to sync with server | conversation_list
     return;
   }
 

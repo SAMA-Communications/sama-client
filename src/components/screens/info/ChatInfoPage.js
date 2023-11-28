@@ -5,7 +5,6 @@ import jwtDecode from "jwt-decode";
 import showCustomAlert from "../../../utils/show_alert";
 import { clearSelectedConversation } from "../../../store/SelectedConversation";
 import { getConverastionById, removeChat } from "../../../store/Conversations";
-import { history } from "../../../_helpers/history";
 import { selectParticipantsEntities } from "../../../store/Participants";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -16,6 +15,7 @@ import "../../../styles/pages/chat/ChatInfoPage.css";
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
 import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as GroupChatPhoto } from "./../../../assets/icons/chatList/ChatIconGroup.svg";
+import { ReactComponent as AddParticipants } from "./../../../assets/icons/chatList/CreateChatButton.svg";
 
 export default function ChatInfoPage() {
   const dispatch = useDispatch();
@@ -29,6 +29,13 @@ export default function ChatInfoPage() {
   const userInfo = localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
+
+  const isCurrentUserOwner = useMemo(() => {
+    if (!userInfo || !selectedConversation) {
+      return false;
+    }
+    return userInfo._id === selectedConversation.owner_id?.toString();
+  }, [userInfo, selectedConversation]);
 
   window.onkeydown = function (event) {
     event.keyCode === 27 && navigate(getPrevPage(pathname + hash));
@@ -61,7 +68,6 @@ export default function ChatInfoPage() {
       }
 
       const isCurrentUser = u._id === userInfo._id;
-      // const isOwner = userInfo._id === selectedConversation.owner_id.toString();
 
       return (
         <ParticipantInChatInfo
@@ -85,7 +91,13 @@ export default function ChatInfoPage() {
           </div>
           <div className="co-header">Group info</div>
           <div>
-            <div className="co-edit">{/* <AddParticipants /> */}</div>
+            <div className="co-edit">
+              {isCurrentUserOwner ? (
+                <AddParticipants
+                  onClick={() => navigate(pathname + hash + "/addparticipants")}
+                />
+              ) : null}
+            </div>
             <div className="co-delete" onClick={deleteChat}>
               <TrashCan />
             </div>

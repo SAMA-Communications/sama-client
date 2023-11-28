@@ -102,7 +102,7 @@ export default function ChatFormInfo({ closeForm }) {
         navigate(
           `/main/#${selectedCID}${
             selectedConversation.type === "g"
-              ? "/chatinfo"
+              ? "/info"
               : "/opponentinfo?uid=" + participants[opponentId]._id
           }`
         )

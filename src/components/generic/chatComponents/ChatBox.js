@@ -1,5 +1,7 @@
-import React, { useMemo } from "react";
 import MessageStatus from "../messageComponents/MessageStatus";
+import React, { useMemo } from "react";
+import { getActiveConversationMessages } from "../../../store/Messages";
+import { useSelector } from "react-redux";
 
 import { ReactComponent as ChatIconPrivate } from "./../../../assets/icons/chatList/ChatIconPrivate.svg";
 import { ReactComponent as ChatIconGroup } from "./../../../assets/icons/chatList/ChatIconGroup.svg";
@@ -22,6 +24,10 @@ export default function ChatBox({
     5: "Fr",
     6: "Sa",
   };
+
+  // const messages = useSelector(getActiveConversationMessages);
+
+  // console.log(messages, messages && messages[lastMessage?._id]);
 
   const tView = useMemo(() => {
     const t = new Date(
