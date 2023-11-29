@@ -9,8 +9,10 @@ async function showLocalNotification(pushMessage) {
   const storeState = store.getState();
   const selectedConversation = storeState.selectedConversation.value.id;
   console.log(selectedConversation, pushMessage.cid, document.hasFocus());
+  console.log(selectedConversation === pushMessage.cid);
 
   if (document.hasFocus() && selectedConversation === pushMessage.cid) {
+    console.log("[notification] drop");
     return;
   }
 
@@ -41,7 +43,6 @@ async function showLocalNotification(pushMessage) {
     body: `${body}${attachmentText}`,
     title,
   };
-  console.log("notification:", { message: notificationMessage });
   sw.postMessage({ message: notificationMessage }); /// possible error notificationMessage
 }
 EventEmitter.subscribe("onMessage", showLocalNotification);
