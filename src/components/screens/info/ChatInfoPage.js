@@ -19,6 +19,7 @@ import { ReactComponent as AddParticipants } from "./../../../assets/icons/chatL
 import { ReactComponent as PenEditIcon } from "./../../../assets/icons/userProfile/PenEditIcon.svg";
 import { ReactComponent as ConfirmIcon } from "./../../../assets/icons/userProfile/ConfirmIcon.svg";
 
+
 export default function ChatInfoPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -87,6 +88,7 @@ export default function ChatInfoPage() {
         await api.conversationUpdate(requestData);
         //remove user form participants field - redux
       };
+
 
       return (
         <ParticipantInChatInfo

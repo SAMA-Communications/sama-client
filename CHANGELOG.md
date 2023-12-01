@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0
+
+### Features
+
+- Added support and highlighting of links in chat
+- Implement a screen with detailed information about the chat
+
 ## 0.0.2
 
 ### Features

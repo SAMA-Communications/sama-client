@@ -28,6 +28,7 @@ export default function UserSearch({ type }) {
   const selectedCID = selectedConversation?._id;
   const isMobileView = useSelector(getIsMobileView);
 
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
   const [ignoreIds, setIgnoreIds] = useState([]);
