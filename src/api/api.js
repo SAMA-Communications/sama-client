@@ -34,17 +34,15 @@ class Api {
 
         if (message.event) {
           if (message.event.conversation_created) {
-            this.onConversationCreateListener &&
-              this.onConversationCreateListener(
-                message.event.conversation_created
-              );
+            this.onConversationCreateListener?.(
+              message.event.conversation_created
+            );
             return;
           }
           if (message.event.conversation_kicked) {
-            this.onConversationDeleteListener &&
-              this.onConversationDeleteListener(
-                message.event.conversation_kicked
-              );
+            this.onConversationDeleteListener?.(
+              message.event.conversation_kicked
+            );
             return;
           }
           return;

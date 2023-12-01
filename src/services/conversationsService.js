@@ -1,5 +1,6 @@
 import api from "../api/api";
 import eventEmitter from "../event/eventEmitter";
+import showCustomAlert from "../utils/show_alert";
 import store from "../store/store";
 import { addUsers, upsertUsers } from "../store/Participants";
 import { history } from "../_helpers/history";
@@ -20,10 +21,9 @@ class ConversationsService {
         })
       );
 
-      notificationQueueByCid[chat._id] &&
-        notificationQueueByCid[chat._id].map((pushMessage) =>
-          eventEmitter.emit("onMessage", pushMessage)
-        );
+      notificationQueueByCid[chat._id]?.map((pushMessage) =>
+        eventEmitter.emit("onMessage", pushMessage)
+      );
 
       api
         .getParticipantsByCids({ cids: [chat._id] })
@@ -34,6 +34,10 @@ class ConversationsService {
       store.dispatch(removeChat(chat._id));
       if (history.location.hash.includes(chat._id.toString())) {
         store.dispatch(setSelectedConversation({}));
+        showCustomAlert(
+          `You were removed from the ${chat.name} conversation`,
+          "warning"
+        );
         history.navigate("/main");
       }
     };
