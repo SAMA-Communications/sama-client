@@ -60,7 +60,7 @@ class MessagesService {
       );
 
       const conv = store.getState().conversations.entities[message.cid];
-      if (message.x?.type === "added_participant" && conv) {
+      if (conv && message.x?.type === "added_participant") {
         const user = message.x.user;
         store.dispatch(addUser(user));
         store.dispatch(
@@ -70,7 +70,7 @@ class MessagesService {
           })
         );
       }
-      if (message.x?.type === "removed_participant" && conv) {
+      if (conv && message.x?.type === "removed_participant") {
         const user = message.x.user;
         store.dispatch(
           upsertChat({

@@ -4,7 +4,6 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import { getSelectedConversationId } from "./SelectedConversation";
-import showCustomAlert from "../utils/show_alert";
 
 export const conversationsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
