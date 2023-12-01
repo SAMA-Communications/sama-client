@@ -10,6 +10,7 @@ class Api {
     this.baseUrl = baseUrl;
     this.socket = null;
     this.responsesPromises = {};
+    this.onMessageListener = null;
     this.onMessageStatusListener = null;
     this.onUserActivityListener = null;
     this.onConversationCreateListener = null;

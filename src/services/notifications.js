@@ -8,11 +8,8 @@ let sw = null;
 async function showLocalNotification(pushMessage) {
   const storeState = store.getState();
   const selectedConversation = storeState.selectedConversation.value.id;
-  console.log(selectedConversation, pushMessage.cid, document.hasFocus());
-  console.log(selectedConversation === pushMessage.cid);
 
   if (document.hasFocus() && selectedConversation === pushMessage.cid) {
-    console.log("[notification] drop");
     return;
   }
 

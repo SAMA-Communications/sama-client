@@ -4,22 +4,16 @@ import ChatFormInputs from "./chatFormBlocks/ChatFormInputs.js";
 import NoChatSelected from "../../static/NoChatSelected.js";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import api from "../../../api/api";
-import jwtDecode from "jwt-decode";
 import { getUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
-import { addUser, upsertUser } from "../../../store/Participants.js";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
-  markConversationAsRead,
   selectConversationsEntities,
-  updateLastMessageField,
-  upsertChat,
 } from "../../../store/Conversations";
 import {
   clearSelectedConversation,
   setSelectedConversation,
 } from "../../../store/SelectedConversation";
-import { addMessage, markMessagesAsRead } from "../../../store/Messages";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -31,10 +25,6 @@ export default function ChatForm() {
   const navigate = useNavigate();
 
   const isUserLogin = useSelector(getUserIsLoggedIn);
-
-  const userInfo = localStorage.getItem("sessionId")
-    ? jwtDecode(localStorage.getItem("sessionId"))
-    : null;
 
   const conversations = useSelector(selectConversationsEntities);
   const selectedConversation = useSelector(getConverastionById);
@@ -66,68 +56,6 @@ export default function ChatForm() {
 
     files.length && setFiles([]);
   }, [selectedCID, conversations[selectedCID]]);
-
-  api.onMessageStatusListener = (message) => {
-    dispatch(markMessagesAsRead(message.ids));
-    dispatch(
-      markConversationAsRead({
-        cid: message.cid,
-        mid: Array.isArray(message.ids) ? message.ids[0] : message.ids,
-      })
-    );
-  };
-
-  api.onUserActivityListener = (user) => {
-    const uId = Object.keys(user)[0];
-    dispatch(upsertUser({ _id: uId, recent_activity: user[uId] }));
-  };
-
-  api.onMessageListener = async (message) => {
-    const attachments = message.attachments;
-    if (attachments) {
-      const urls = await api.getDownloadUrlForFiles({
-        file_ids: attachments.map((obj) => obj.file_id),
-      });
-      message.attachments = attachments.map((obj) => {
-        return { ...obj, file_url: urls[obj.file_id] };
-      });
-    }
-    message.from === userInfo._id && (message["status"] = "sent");
-    dispatch(addMessage(message));
-
-    let countOfNewMessages = 0;
-    message.cid === selectedCID
-      ? api.markConversationAsRead({ cid: selectedCID })
-      : (countOfNewMessages = message.from === userInfo._id ? 0 : 1);
-    dispatch(
-      updateLastMessageField({
-        cid: message.cid,
-        msg: message,
-        countOfNewMessages,
-      })
-    );
-
-    const conv = conversations[selectedCID];
-    if (message.x?.type === "added_participant" && conv) {
-      const user = message.x.user;
-      dispatch(addUser(user));
-      dispatch(
-        upsertChat({
-          _id: selectedCID,
-          participants: [...conv.participants, user._id],
-        })
-      );
-    }
-    if (message.x?.type === "removed_participant" && conv) {
-      const user = message.x.user;
-      dispatch(
-        upsertChat({
-          _id: selectedCID,
-          participants: conv.participants.filter((uId) => uId !== user._id),
-        })
-      );
-    }
-  };
 
   const closeForm = (event) => {
     if (event && event.stopPropagation) {
