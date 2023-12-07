@@ -28,7 +28,6 @@ export default function UserSearch({ type }) {
   const selectedCID = selectedConversation?._id;
   const isMobileView = useSelector(getIsMobileView);
 
-
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
   const [ignoreIds, setIgnoreIds] = useState([]);
@@ -85,13 +84,13 @@ export default function UserSearch({ type }) {
         participants: { add: addUsersArr },
       };
 
-      if (
-        !window.confirm(
-          `Add selected user${selectedUsers.length > 1 ? "s" : ""} to the chat?`
-        )
-      ) {
-        return;
-      }
+      // if (
+      //   !window.confirm(
+      //     `Add selected user${selectedUsers.length > 1 ? "s" : ""} to the chat?`
+      //   )
+      // ) {
+      //   return;
+      // }
 
       await api.conversationUpdate(requestData);
       navigate(`/main/#${isMobileView ? selectedCID : selectedCID + "/info"}`);
