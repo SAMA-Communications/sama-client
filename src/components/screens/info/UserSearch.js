@@ -84,13 +84,14 @@ export default function UserSearch({ type }) {
         participants: { add: addUsersArr },
       };
 
-      // if (
-      //   !window.confirm(
-      //     `Add selected user${selectedUsers.length > 1 ? "s" : ""} to the chat?`
-      //   )
-      // ) {
-      //   return;
-      // }
+      if (
+        !window.confirm(
+          `Add selected user${selectedUsers.length > 1 ? "s" : ""} to the chat?`
+        )
+      ) {
+        return;
+      }
+      window.focus();
 
       await api.conversationUpdate(requestData);
       navigate(`/main/#${isMobileView ? selectedCID : selectedCID + "/info"}`);
