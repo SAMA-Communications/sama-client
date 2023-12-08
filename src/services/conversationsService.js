@@ -4,7 +4,12 @@ import showCustomAlert from "../utils/show_alert";
 import store from "../store/store";
 import { addUsers, upsertUsers } from "../store/Participants";
 import { history } from "../_helpers/history";
-import { insertChats, removeChat, upsertChat } from "../store/Conversations";
+import {
+  insertChats,
+  removeChat,
+  upsertChat,
+  upsertParticipants,
+} from "../store/Conversations";
 import { notificationQueueByCid } from "./notifications";
 import { setSelectedConversation } from "../store/SelectedConversation";
 
@@ -13,21 +18,21 @@ class ConversationsService {
 
   constructor() {
     api.onConversationCreateListener = (chat) => {
-      store.dispatch(
-        upsertChat({
-          ...chat,
-          unread_messages_count: chat.unread_messages_count || 0,
-          messagesIds: [],
-        })
-      );
+      api.getParticipantsByCids({ cids: [chat._id] }).then((users) => {
+        store.dispatch(
+          upsertChat({
+            ...chat,
+            unread_messages_count: chat.unread_messages_count || 0,
+            messagesIds: [],
+            participants: users.map((u) => u._id),
+          })
+        );
+        store.dispatch(addUsers(users));
+      });
 
       notificationQueueByCid[chat._id]?.map((pushMessage) =>
         eventEmitter.emit("onMessage", pushMessage)
       );
-
-      api
-        .getParticipantsByCids({ cids: [chat._id] })
-        .then((users) => store.dispatch(addUsers(users)));
     };
 
     api.onConversationDeleteListener = (chat) => {
