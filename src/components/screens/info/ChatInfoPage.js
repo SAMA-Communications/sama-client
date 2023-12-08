@@ -79,7 +79,6 @@ export default function ChatInfoPage() {
         if (!window.confirm(`Do you want to delete this user?`)) {
           return;
         }
-        window.focus();
 
         const requestData = {
           cid: selectedCID,

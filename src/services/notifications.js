@@ -11,15 +11,7 @@ async function showLocalNotification(pushMessage) {
   const storeState = store.getState();
   const selectedConversation = storeState.selectedConversation.value.id;
 
-  console.log(
-    "[push]",
-    document.hasFocus(),
-    selectedConversation === pushMessage.cid,
-    selectedConversation,
-    pushMessage.cid
-  );
   if (document.hasFocus() && selectedConversation === pushMessage.cid) {
-    console.log("[push] return");
     return;
   }
 
@@ -54,7 +46,7 @@ async function showLocalNotification(pushMessage) {
     body: `${body}${attachmentText}`,
     title,
   };
-  console.log("[push] send push");
+
   sw.postMessage({ message: notificationMessage }); /// possible error notificationMessage
 }
 EventEmitter.subscribe("onMessage", showLocalNotification);

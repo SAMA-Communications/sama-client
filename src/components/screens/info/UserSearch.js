@@ -91,7 +91,6 @@ export default function UserSearch({ type }) {
       ) {
         return;
       }
-      window.focus();
 
       await api.conversationUpdate(requestData);
       navigate(`/main/#${isMobileView ? selectedCID : selectedCID + "/info"}`);

@@ -9,6 +9,7 @@ class Api {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
     this.socket = null;
+    this.curerntUserId = null;
     this.responsesPromises = {};
     this.onMessageListener = null;
     this.onMessageStatusListener = null;
@@ -66,7 +67,9 @@ class Api {
           if (this.onMessageListener) {
             this.onMessageListener(message.message);
           }
-          EventEmitter.emit("onMessage", message.message);
+          if (message.message.from.toString() !== this.curerntUserId) {
+            EventEmitter.emit("onMessage", message.message);
+          }
           return;
         }
 
