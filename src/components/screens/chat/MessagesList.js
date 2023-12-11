@@ -60,19 +60,43 @@ export default function MessagesList({ scrollRef, openModalFunc }) {
           })
         );
         const mAttachments = {};
-        arr.forEach((message) => {
-          const attachments = message.attachments;
-          if (attachments) {
-            attachments.forEach((obj) => {
-              mAttachments[obj.file_id] = { _id: message._id, ...obj };
-            });
+        for (let i = 0; i < arr.length; i++) {
+          const attachments = arr[i].attachments;
+          if (!attachments) {
+            continue;
           }
-        });
+          attachments.forEach((obj) => {
+            const mAttachmentsObject = mAttachments[obj.file_id];
+            if (!mAttachmentsObject) {
+              mAttachments[obj.file_id] = {
+                _id: arr[i]._id,
+                ...obj,
+              };
+              return;
+            }
+
+            const mids = mAttachmentsObject._id;
+            mAttachments[obj.file_id]._id = Array.isArray(mids)
+              ? [arr[i]._id, ...mids]
+              : [arr[i]._id, mids];
+          });
+        }
 
         if (Object.keys(mAttachments).length > 0) {
           getDownloadFileLinks(mAttachments).then((msgs) =>
             dispatch(upsertMessages(msgs))
           );
+        }
+
+        if (Object.keys(mAttachments).length > 0) {
+          getDownloadFileLinks(mAttachments).then((msgs) => {
+            const messagesToUpdate = msgs.flatMap((msg) => {
+              const mids = Array.isArray(msg._id) ? msg._id : [msg._id];
+              return mids.map((mid) => ({ ...msg, _id: mid }));
+            });
+
+            dispatch(upsertMessages(messagesToUpdate));
+          });
         }
       });
   }, [selectedCID, messages, needToGetMoreMessage]);

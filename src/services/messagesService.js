@@ -115,19 +115,32 @@ class MessagesService {
           if (!attachments) {
             continue;
           }
-          attachments.forEach(
-            (obj) =>
-              (mAttachments[obj.file_id] = {
+          attachments.forEach((obj) => {
+            const mAttachmentsObject = mAttachments[obj.file_id];
+            if (!mAttachmentsObject) {
+              mAttachments[obj.file_id] = {
                 _id: arr[i]._id,
                 ...obj,
-              })
-          );
+              };
+              return;
+            }
+
+            const mids = mAttachmentsObject._id;
+            mAttachments[obj.file_id]._id = Array.isArray(mids)
+              ? [arr[i]._id, ...mids]
+              : [arr[i]._id, mids];
+          });
         }
 
         if (Object.keys(mAttachments).length > 0) {
-          getDownloadFileLinks(mAttachments).then((msgs) =>
-            store.dispatch(upsertMessages(msgs))
-          );
+          getDownloadFileLinks(mAttachments).then((msgs) => {
+            const messagesToUpdate = msgs.flatMap((msg) => {
+              const mids = Array.isArray(msg._id) ? msg._id : [msg._id];
+              return mids.map((mid) => ({ ...msg, _id: mid }));
+            });
+
+            store.dispatch(upsertMessages(messagesToUpdate));
+          });
         }
 
         const conv =
