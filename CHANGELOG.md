@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0
+
+### Features
+
+- Implemented echo Chat bot
+- Links within chat are clickable and highlighted
+- Implemented the functionality to add users to the created group
+- Implemented the functionality to remove users from the group
+
 ## 0.3.0
 
 ### Features
