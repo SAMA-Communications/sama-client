@@ -1,8 +1,25 @@
+import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export default function ParticipantInChatInfo({ user, isCurrentUser }) {
+import { ReactComponent as CloseButtonMini } from "./../../../assets/icons/chatForm/CloseButtonMini.svg";
+
+export default function ParticipantInChatInfo({
+  user,
+  isCurrentUser,
+  isCurrentUserOwner,
+  isLockedDelete,
+  deleteUserFunc,
+}) {
   const navigate = useNavigate();
   const { pathname, hash } = useLocation();
+
+  const deleteButton = useMemo(() => {
+    if (isCurrentUser || !isCurrentUserOwner || isLockedDelete) {
+      return null;
+    }
+
+    return <CloseButtonMini onClick={deleteUserFunc} />;
+  }, [isCurrentUser, isLockedDelete, isCurrentUserOwner]);
 
   return (
     <div
@@ -16,9 +33,7 @@ export default function ParticipantInChatInfo({ user, isCurrentUser }) {
       }}
     >
       {user.login}
-      {/* {isCurrentUser || !isOwner ? null : (
-      <CloseButtonMini onClick={() => deleteUser(u._id)} />
-    )} */}
+      {deleteButton}
     </div>
   );
 }

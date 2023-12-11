@@ -4,15 +4,11 @@ import jwtDecode from "jwt-decode";
 import ChatBox from "../../generic/chatComponents/ChatBox.js";
 import MiniLogo from "./../../static/MiniLogo.js";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import {
-  addUsers,
-  selectParticipantsEntities,
-} from "../../../store/Participants.js";
+import { selectParticipantsEntities } from "../../../store/Participants.js";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
   selectAllConversations,
-  upsertChat,
 } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
 import { setUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
@@ -44,19 +40,6 @@ export default function ChatList() {
     () => (userInfo ? participants[userInfo._id] : {}),
     [userInfo, participants]
   );
-
-  api.onConversationCreateListener = (chat) => {
-    dispatch(
-      upsertChat({
-        ...chat,
-        unread_messages_count: chat.unread_messages_count || 0,
-        messagesIds: [],
-      })
-    );
-    api
-      .getParticipantsByCids({ cids: [chat._id] })
-      .then((users) => dispatch(addUsers(users)));
-  };
 
   const sendLogout = async () => {
     navigator.serviceWorker.ready

@@ -164,6 +164,9 @@
 
 .informative-message {
   width: max-content;
+  max-width: 100%;
+
+  text-align: center;
 
   padding: 4px 8px;
   margin-top: 4px;

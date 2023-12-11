@@ -10,6 +10,7 @@ import {
   insertChat,
 } from "../../../store/Conversations.js";
 import { setSelectedConversation } from "../../../store/SelectedConversation.js";
+import { getIsMobileView } from "../../../store/IsMobileView.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -25,6 +26,7 @@ export default function UserSearch({ type }) {
 
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
+  const isMobileView = useSelector(getIsMobileView);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -91,7 +93,7 @@ export default function UserSearch({ type }) {
       }
 
       await api.conversationUpdate(requestData);
-      navigate(`/main/#${selectedCID}/info`);
+      navigate(`/main/#${isMobileView ? selectedCID : selectedCID + "/info"}`);
     }
   };
 

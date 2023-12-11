@@ -9,6 +9,11 @@ class ActivityService {
   allUsers;
 
   constructor() {
+    api.onUserActivityListener = (user) => {
+      const uId = Object.keys(user)[0];
+      store.dispatch(upsertUser({ _id: uId, recent_activity: user[uId] }));
+    };
+
     store.subscribe(() => {
       const { conversations, participants, selectedConversation } =
         store.getState();

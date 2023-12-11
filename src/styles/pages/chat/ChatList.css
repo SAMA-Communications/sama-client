@@ -176,6 +176,7 @@ aside {
 .chat-message span {
   position: absolute;
   right: 10px;
+  bottom: 16px;
 }
 .chat-indicator {
   padding: 5px 8px;

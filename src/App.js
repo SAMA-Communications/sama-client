@@ -67,7 +67,7 @@ export default function App() {
     if (token && token !== "undefined") {
       const { pathname, hash } = history.location;
       const path = hash ? pathname + hash : "/main";
-      setTimeout(() => history.navigate(path), 20);
+      history.navigate(path);
     } else {
       localStorage.removeItem("sessionId");
       history.navigate("/login");

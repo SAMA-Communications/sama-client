@@ -5,6 +5,8 @@ import { default as store } from "../store/store.js";
 
 let sw = null;
 
+export const notificationQueueByCid = {};
+
 async function showLocalNotification(pushMessage) {
   const storeState = store.getState();
   const selectedConversation = storeState.selectedConversation.value.id;
@@ -12,11 +14,14 @@ async function showLocalNotification(pushMessage) {
   if (document.hasFocus() && selectedConversation === pushMessage.cid) {
     return;
   }
-
   const conversation = storeState.conversations.entities[pushMessage.cid];
   //ERROR: if conversation not found (new message from new user) - case failed
   if (!conversation) {
-    //TODO: need to sync with server | conversation_list
+    if (notificationQueueByCid[pushMessage.cid]) {
+      notificationQueueByCid[pushMessage.cid].push(pushMessage);
+    } else {
+      notificationQueueByCid[pushMessage.cid] = [pushMessage];
+    }
     return;
   }
 
@@ -31,15 +36,16 @@ async function showLocalNotification(pushMessage) {
       : "";
 
   const title =
-    conversation.type === "u"
+    conversation?.type === "u"
       ? userLogin
-      : `${userLogin} | ${conversation.name}`;
+      : `${userLogin} | ${conversation?.name}`;
 
   const notificationMessage = {
     ...pushMessage,
     body: `${body}${attachmentText}`,
     title,
   };
+
   sw.postMessage({ message: notificationMessage }); /// possible error notificationMessage
 }
 EventEmitter.subscribe("onMessage", showLocalNotification);

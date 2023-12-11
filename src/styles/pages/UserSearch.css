@@ -177,6 +177,14 @@
 .search-close-chat > svg {
   width: 40px;
 }
+@media (max-width: 1500px) {
+  #search-form[data-css="right-side"] {
+    left: 0;
+
+    border-left: 0;
+    border-right: 1px solid var(--border-dark-color);
+  }
+}
 
 @media (max-width: 1023px) {
   #search-form {

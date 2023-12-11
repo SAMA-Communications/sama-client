@@ -9,7 +9,6 @@ import {
   changeOpacity,
   loginBox,
 } from "../../styles/animations/animationBlocks";
-import { history } from "../../_helpers/history";
 import { motion as m } from "framer-motion";
 import { setSelectedConversation } from "../../store/SelectedConversation";
 import { setUserIsLoggedIn } from "../../store/UserIsLoggedIn ";
@@ -43,6 +42,7 @@ export default function Login() {
 
       const { token: userToken, user: userData } = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
+      api.curerntUserId = userData._id;
 
       navigate("/main");
       subscribeForNotifications();
