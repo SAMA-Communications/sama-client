@@ -28,11 +28,11 @@ class ConversationsService {
           })
         );
         store.dispatch(addUsers(users));
-      });
 
-      notificationQueueByCid[chat._id]?.map((pushMessage) =>
-        eventEmitter.emit("onMessage", pushMessage)
-      );
+        notificationQueueByCid[chat._id]?.map((pushMessage) =>
+          eventEmitter.emit("onMessage", pushMessage)
+        );
+      });
     };
 
     api.onConversationDeleteListener = (chat) => {

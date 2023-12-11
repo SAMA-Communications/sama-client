@@ -14,7 +14,6 @@ async function showLocalNotification(pushMessage) {
   if (document.hasFocus() && selectedConversation === pushMessage.cid) {
     return;
   }
-
   const conversation = storeState.conversations.entities[pushMessage.cid];
   //ERROR: if conversation not found (new message from new user) - case failed
   if (!conversation) {
