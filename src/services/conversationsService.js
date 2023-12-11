@@ -4,12 +4,7 @@ import showCustomAlert from "../utils/show_alert";
 import store from "../store/store";
 import { addUsers, upsertUsers } from "../store/Participants";
 import { history } from "../_helpers/history";
-import {
-  insertChats,
-  removeChat,
-  upsertChat,
-  upsertParticipants,
-} from "../store/Conversations";
+import { insertChats, removeChat, upsertChat } from "../store/Conversations";
 import { notificationQueueByCid } from "./notifications";
 import { setSelectedConversation } from "../store/SelectedConversation";
 
@@ -59,7 +54,9 @@ class ConversationsService {
 
   async syncData() {
     api.conversationList({}).then((chats) => {
-      store.dispatch(insertChats(chats));
+      store.dispatch(
+        insertChats(chats.map((obj) => ({ ...obj, participants: [] })))
+      );
       chats.length &&
         api
           .getParticipantsByCids({ cids: chats.map((el) => el._id) })
