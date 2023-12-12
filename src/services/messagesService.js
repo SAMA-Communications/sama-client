@@ -1,12 +1,13 @@
 import api from "../api/api";
 import store from "../store/store";
+import jwtDecode from "jwt-decode";
+import DownloadManager from "../adapters/base/DownloadManager";
 import {
   addMessage,
   addMessages,
   markMessagesAsRead,
   upsertMessages,
 } from "../store/Messages";
-import { getDownloadFileLinks } from "../api/download_manager";
 import { setSelectedConversation } from "../store/SelectedConversation";
 import {
   markConversationAsRead,
@@ -16,7 +17,6 @@ import {
 } from "../store/Conversations";
 import { history } from "../_helpers/history";
 import { addUser } from "../store/Participants";
-import jwtDecode from "jwt-decode";
 
 class MessagesService {
   currentChatId;
@@ -133,7 +133,7 @@ class MessagesService {
         }
 
         if (Object.keys(mAttachments).length > 0) {
-          getDownloadFileLinks(mAttachments).then((msgs) => {
+          DownloadManager.getDownloadFileLinks(mAttachments).then((msgs) => {
             const messagesToUpdate = msgs.flatMap((msg) => {
               const mids = Array.isArray(msg._id) ? msg._id : [msg._id];
               return mids.map((mid) => ({ ...msg, _id: mid }));

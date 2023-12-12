@@ -1,15 +1,15 @@
 import ChatMessage from "../../generic/messageComponents/ChatMessage";
-import api from "../../../api/api";
-import jwtDecode from "jwt-decode";
+import DownloadManager from "../../../adapters/base/DownloadManager";
 import InfiniteScroll from "react-infinite-scroll-component";
 import InformativeMessage from "../../generic/messageComponents/InformativeMessage";
+import api from "../../../api/api";
+import jwtDecode from "jwt-decode";
 import {
   addMessages,
   getActiveConversationMessages,
   upsertMessages,
 } from "../../../store/Messages";
 import { getConverastionById, upsertChat } from "../../../store/Conversations";
-import { getDownloadFileLinks } from "../../../api/download_manager";
 import { selectParticipantsEntities } from "../../../store/Participants";
 import { useCallback, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -83,13 +83,13 @@ export default function MessagesList({ scrollRef, openModalFunc }) {
         }
 
         if (Object.keys(mAttachments).length > 0) {
-          getDownloadFileLinks(mAttachments).then((msgs) =>
+          DownloadManager.getDownloadFileLinks(mAttachments).then((msgs) =>
             dispatch(upsertMessages(msgs))
           );
         }
 
         if (Object.keys(mAttachments).length > 0) {
-          getDownloadFileLinks(mAttachments).then((msgs) => {
+          DownloadManager.getDownloadFileLinks(mAttachments).then((msgs) => {
             const messagesToUpdate = msgs.flatMap((msg) => {
               const mids = Array.isArray(msg._id) ? msg._id : [msg._id];
               return mids.map((mid) => ({ ...msg, _id: mid }));

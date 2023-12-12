@@ -3,7 +3,7 @@ import AttachmentsList from "../../../generic/messageComponents/AttachmentsList.
 import isMobile from "./../../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import heicToPng from "../../../../utils/heic_to_png";
-import { getFileObjects } from "../../../../api/download_manager";
+import DownloadManager from "../../../../adapters/base/DownloadManager.js";
 import { getNetworkState } from "../../../../store/NetworkState";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -69,6 +69,7 @@ export default function ChatFormInputs({
       t: Date.now(),
     };
 
+    //addPreview for attachments
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
@@ -80,7 +81,7 @@ export default function ChatFormInputs({
     };
 
     if (files?.length) {
-      attachments = await getFileObjects(files);
+      attachments = await DownloadManager.getFileObjects(files);
       reqData["attachments"] = attachments.map((obj) => {
         return { file_id: obj.file_id, file_name: obj.file_name };
       });
@@ -204,7 +205,7 @@ export default function ChatFormInputs({
     }
   };
 
-  const fileView = useMemo(() => {
+  const inputFilesView = useMemo(() => {
     if (isLoadingFile) {
       return (
         <div className="chat-files-preview">
@@ -222,7 +223,7 @@ export default function ChatFormInputs({
 
   return (
     <>
-      {fileView}
+      {inputFilesView}
       <form id="chat-form-send" action="">
         <div className="form-send-file">
           <SendFilesButton onClick={pickUserFiles} />
