@@ -35,32 +35,25 @@ export default function Main() {
 
   const additionalContent = useMemo(() => {
     const { pathname, hash } = location;
-    const allBlocks = [];
 
-    if (pathname.includes("/search") || hash.includes("/search")) {
-      allBlocks.push(<UserSearch key="/search" type={"create_group_chat"} />);
-    }
-    if (hash.includes("/addparticipants")) {
-      allBlocks.push(
-        <UserSearch key="/addparticipants" type={"add_participants"} />
-      );
-    }
+    const blockMap = {
+      "/search": <UserSearch type={"create_group_chat"} />,
+      "/addparticipants": <UserSearch type={"add_participants"} />,
+      "/user": <UserProfile />,
+      "/info": <ChatInfoPage />,
+      "/opponentinfo": <ParticipantProfile />,
+      "/participant": <ParticipantProfile />,
+      "/modal": <ModalWindow />,
+    };
 
-    if (pathname.includes("/user") || hash.includes("/user")) {
-      allBlocks.push(<UserProfile key="/user" />);
-    }
-
-    if (hash.includes("/info") && !hash.includes("/opponentinfo")) {
-      allBlocks.push(<ChatInfoPage key="/info" />);
-    }
-
-    if (hash.includes("/opponentinfo") || hash.includes("/participant")) {
-      allBlocks.push(<ParticipantProfile key="/opponentinfo" />);
-    }
-
-    if (hash.includes("/modal")) {
-      allBlocks.push(<ModalWindow key="/modal" />);
-    }
+    const allBlocks = Object.entries(blockMap)
+      .filter(([key, component]) => {
+        if (key === "/info") {
+          return hash.includes(key) && !hash.includes("/opponentinfo");
+        }
+        return pathname.includes(key) || hash.includes(key);
+      })
+      .map(([key, component]) => React.cloneElement(component, { key }));
 
     return allBlocks;
   }, [location]);
