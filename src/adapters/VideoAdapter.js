@@ -1,5 +1,3 @@
-import DownloadManager from "./base/DownloadManager";
-
-class VideoAdapter extends DownloadManager {}
+class VideoAdapter {}
 
 export default VideoAdapter;

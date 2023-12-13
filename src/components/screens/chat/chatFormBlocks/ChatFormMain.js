@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 import { ReactComponent as EmptyChat } from "./../../../../assets/icons/chatForm/EmptyChat.svg";
 
-export default function ChatFormMain({ scrollRef, open }) {
+export default function ChatFormMain({ scrollRef }) {
   const messages = useSelector(getActiveConversationMessages);
 
   return !messages.length ? (
@@ -14,7 +14,7 @@ export default function ChatFormMain({ scrollRef, open }) {
     </div>
   ) : (
     <div id="chatMessagesScrollable">
-      <MessagesList scrollRef={scrollRef} openModalFunc={open} />
+      <MessagesList scrollRef={scrollRef} />
     </div>
   );
 }

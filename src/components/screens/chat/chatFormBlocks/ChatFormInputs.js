@@ -1,9 +1,9 @@
-import api from "../../../../api/api";
 import AttachmentsList from "../../../generic/messageComponents/AttachmentsList.js";
+import DownloadManager from "../../../../adapters/downloadManager.js";
+import api from "../../../../api/api";
+import heicToPng from "../../../../utils/heic_to_png";
 import isMobile from "./../../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
-import heicToPng from "../../../../utils/heic_to_png";
-import DownloadManager from "../../../../adapters/base/DownloadManager.js";
 import { getNetworkState } from "../../../../store/NetworkState";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -69,7 +69,6 @@ export default function ChatFormInputs({
       t: Date.now(),
     };
 
-    //addPreview for attachments
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
@@ -150,11 +149,12 @@ export default function ChatFormInputs({
           });
         }
 
-        if (!file.type.startsWith("image/") && !/^\w+\.HEIC$/.test(file.name)) {
-          throw new Error("Please select an image file.", {
-            cause: { message: "Please select an image file." },
-          });
-        } else if (/^\w+\.HEIC$/.test(file.name)) {
+        // if (!file.type.startsWith("image/") && !/^\w+\.HEIC$/.test(file.name)) {
+        //   throw new Error("Please select an image file.", {
+        //     cause: { message: "Please select an image file." },
+        //   });
+        // } else
+        if (/^\w+\.HEIC$/.test(file.name)) {
           const pngFile = await heicToPng(file);
           selectedFiles.push(pngFile);
           continue;
@@ -232,7 +232,7 @@ export default function ChatFormInputs({
             ref={filePicker}
             onChange={handlerChange}
             type="file"
-            accept="image/*"
+            // accept="image/*"
             multiple
           />
         </div>

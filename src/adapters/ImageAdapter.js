@@ -1,5 +1,3 @@
-import DownloadManager from "./base/DownloadManager";
-
-class ImageAdapter extends DownloadManager {}
+class ImageAdapter {}
 
 export default new ImageAdapter();

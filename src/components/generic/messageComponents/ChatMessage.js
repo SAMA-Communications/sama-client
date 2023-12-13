@@ -17,7 +17,6 @@ export default function ChatMessage({
   isNextMessageYours,
   attachments,
   tSend,
-  openModalParam,
 }) {
   const timeSend = useMemo(() => {
     const t = new Date(tSend * 1000);
@@ -58,10 +57,7 @@ export default function ChatMessage({
         <div className="message-info">
           {!isPrevMesssageYours && <p className="message-user-name">{uName}</p>}
           {!!attachments?.length && (
-            <MessageAttachments
-              attachments={attachments}
-              openModalParam={openModalParam}
-            />
+            <MessageAttachments attachments={attachments} />
           )}
           {text && (
             <p

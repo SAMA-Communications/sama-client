@@ -7,6 +7,7 @@ import ChatForm from "./screens/chat/ChatForm";
 import ChatInfoPage from "./screens/info/ChatInfoPage";
 import ChatList from "./screens/chat/ChatList";
 
+import ModalWindow from "./screens/chat/ModalWindow";
 import ParticipantProfile from "./screens/info/ParticipantProfile";
 import UserProfile from "./screens/info/UserProfile";
 import UserSearch from "./screens/info/UserSearch";
@@ -55,6 +56,10 @@ export default function Main() {
 
     if (hash.includes("/opponentinfo") || hash.includes("/participant")) {
       allBlocks.push(<ParticipantProfile key="/opponentinfo" />);
+    }
+
+    if (hash.includes("/modal")) {
+      allBlocks.push(<ModalWindow key="/modal" />);
     }
 
     return allBlocks;

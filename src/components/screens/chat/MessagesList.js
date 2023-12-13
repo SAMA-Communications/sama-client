@@ -1,5 +1,5 @@
 import ChatMessage from "../../generic/messageComponents/ChatMessage";
-import DownloadManager from "../../../adapters/base/DownloadManager";
+import DownloadManager from "../../../adapters/downloadManager";
 import InfiniteScroll from "react-infinite-scroll-component";
 import InformativeMessage from "../../generic/messageComponents/InformativeMessage";
 import api from "../../../api/api";
@@ -14,7 +14,7 @@ import { selectParticipantsEntities } from "../../../store/Participants";
 import { useCallback, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function MessagesList({ scrollRef, openModalFunc }) {
+export default function MessagesList({ scrollRef }) {
   const dispatch = useDispatch();
 
   const userInfo = localStorage.getItem("sessionId")
@@ -155,7 +155,6 @@ export default function MessagesList({ scrollRef, openModalFunc }) {
                 : false
             }
             attachments={msg.attachments}
-            openModalParam={openModalFunc}
             status={msg.status}
             tSend={msg.t}
           />
