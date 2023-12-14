@@ -18,6 +18,7 @@ export default class DownloadManager {
         mUpdate[mid].attachments.push({
           file_id: attachments[fileId].file_id,
           file_name: attachments[fileId].file_name,
+          file_blur_hash: attachments[fileId].file_blur_hash,
           file_url: urls[fileId],
         });
       }

@@ -1,12 +1,13 @@
 import AttachmentsList from "../../../generic/messageComponents/AttachmentsList.js";
 import DownloadManager from "../../../../adapters/downloadManager.js";
 import api from "../../../../api/api";
+import encodeImageToBlurhash from "../../../../utils/get_blur_hash.js";
 import heicToPng from "../../../../utils/heic_to_png";
 import isMobile from "./../../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
 import { getNetworkState } from "../../../../store/NetworkState";
-import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   addMessage,
   getActiveConversationMessages,
@@ -67,6 +68,13 @@ export default function ChatFormInputs({
       body: text,
       from: userInfo._id,
       t: Date.now(),
+      attachments: files.map((file) => {
+        return {
+          file_id: file.name,
+          file_name: file.name,
+          file_blur_hash: file.blurHash,
+        };
+      }),
     };
 
     dispatch(addMessage(msg));
@@ -81,8 +89,13 @@ export default function ChatFormInputs({
 
     if (files?.length) {
       attachments = await DownloadManager.getFileObjects(files);
-      reqData["attachments"] = attachments.map((obj) => {
-        return { file_id: obj.file_id, file_name: obj.file_name };
+      console.log(attachments, files);
+      reqData["attachments"] = attachments.map((obj, i) => {
+        return {
+          file_id: obj.file_id,
+          file_name: obj.file_name,
+          file_blur_hash: files[i].blurHash,
+        };
       });
     }
 
@@ -160,6 +173,7 @@ export default function ChatFormInputs({
           continue;
         }
 
+        file.blurHash = await encodeImageToBlurhash(URL.createObjectURL(file));
         selectedFiles.push(file);
       }
 
