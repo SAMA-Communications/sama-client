@@ -8,7 +8,6 @@ export default function MessageAttachment({ id, url, name, blurHash }) {
   const navigate = useNavigate();
 
   const [loaded, setLoaded] = useState(false);
-  console.log(id, url);
   return name.includes(".mp4") ? (
     <div
       className="attachment-img"
