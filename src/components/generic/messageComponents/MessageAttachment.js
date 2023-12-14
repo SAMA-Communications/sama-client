@@ -8,25 +8,7 @@ export default function MessageAttachment({ id, url, name, blurHash }) {
   const navigate = useNavigate();
 
   const [loaded, setLoaded] = useState(false);
-
-  const attachmentPreloader = (key, hash) => {
-    if (!hash) {
-      return <div key={key} className="attachment-preloader"></div>;
-    }
-    return (
-      <Blurhash
-        className="canvas-preloader"
-        key={key}
-        hash={hash}
-        width={400}
-        height={300}
-        resolutionX={32}
-        resolutionY={32}
-        punch={1}
-      />
-    );
-  };
-
+  console.log(id, url);
   return name.includes(".mp4") ? (
     <div
       className="attachment-img"
@@ -48,7 +30,18 @@ export default function MessageAttachment({ id, url, name, blurHash }) {
         src={url}
         alt={name}
       />
-      {loaded ? null : attachmentPreloader(id, blurHash)}
+      {loaded || !blurHash ? null : (
+        <Blurhash
+          className="canvas-preloader"
+          key={id}
+          hash={blurHash}
+          width={400}
+          height={300}
+          resolutionX={32}
+          resolutionY={32}
+          punch={1}
+        />
+      )}
     </div>
   );
 }

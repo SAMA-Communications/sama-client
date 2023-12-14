@@ -68,13 +68,11 @@ export default function ChatFormInputs({
       body: text,
       from: userInfo._id,
       t: Date.now(),
-      attachments: files.map((file) => {
-        return {
-          file_id: file.name,
-          file_name: file.name,
-          file_blur_hash: file.blurHash,
-        };
-      }),
+      attachments: files.map((file) => ({
+        file_id: file.name,
+        file_name: file.name,
+        file_blur_hash: file.blurHash,
+      })),
     };
 
     dispatch(addMessage(msg));
@@ -89,14 +87,11 @@ export default function ChatFormInputs({
 
     if (files?.length) {
       attachments = await DownloadManager.getFileObjects(files);
-      console.log(attachments, files);
-      reqData["attachments"] = attachments.map((obj, i) => {
-        return {
-          file_id: obj.file_id,
-          file_name: obj.file_name,
-          file_blur_hash: files[i].blurHash,
-        };
-      });
+      reqData["attachments"] = attachments.map((obj, i) => ({
+        file_id: obj.file_id,
+        file_name: obj.file_name,
+        file_blur_hash: files[i].blurHash,
+      }));
     }
 
     let response;
@@ -120,7 +115,12 @@ export default function ChatFormInputs({
         from: userInfo._id,
         status: "sent",
         t: response.t,
-        attachments,
+        attachments: attachments.map((obj, i) => ({
+          file_id: obj.file_id,
+          file_name: obj.file_name,
+          file_blur_hash: files[i].blurHash,
+          file_url: obj.file_url,
+        })),
       };
 
       dispatch(addMessage(msg));
