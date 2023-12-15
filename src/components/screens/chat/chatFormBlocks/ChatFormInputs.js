@@ -23,6 +23,7 @@ import {
 import { ReactComponent as SendFilesButton } from "./../../../../assets/icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as Loading } from "./../../../../assets/icons/chatForm/Loading.svg";
 import { ReactComponent as SendMessageButton } from "./../../../../assets/icons/chatForm/SendMessageButton.svg";
+import globalConstants from "../../../../_helpers/constants.js";
 
 export default function ChatFormInputs({
   chatMessagesBlockRef,
@@ -162,12 +163,14 @@ export default function ChatFormInputs({
           });
         }
 
-        // if (!file.type.startsWith("image/") && !/^\w+\.HEIC$/.test(file.name)) {
-        //   throw new Error("Please select an image file.", {
-        //     cause: { message: "Please select an image file." },
-        //   });
-        // } else
-        if (/^\w+\.HEIC$/.test(file.name)) {
+        if (
+          !globalConstants.allowedFileFormats.includes(file.type) &&
+          !/^\w+\.HEIC$/.test(file.name)
+        ) {
+          throw new Error("Please select an image file.", {
+            cause: { message: "Please select an image file." },
+          });
+        } else if (/^\w+\.HEIC$/.test(file.name)) {
           const pngFile = await heicToPng(file);
           selectedFiles.push(pngFile);
           continue;
@@ -246,7 +249,7 @@ export default function ChatFormInputs({
             ref={filePicker}
             onChange={handlerChange}
             type="file"
-            // accept="image/*"
+            accept={globalConstants.allowedFileFormats}
             multiple
           />
         </div>
