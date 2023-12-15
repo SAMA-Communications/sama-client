@@ -14,6 +14,14 @@ export default function MessageAttachment({
 
   const [loaded, setLoaded] = useState(false);
 
+  const videoView = useMemo(() => {
+    const video = <video controls src={url} poster={name} />;
+
+    //get first clip from video for bg
+
+    return video;
+  }, []);
+
   const preloaderView = useMemo(() => {
     if (loaded || !blurHash) {
       return null;
@@ -34,26 +42,25 @@ export default function MessageAttachment({
     );
   }, [loaded, localUrl, blurHash]);
 
-  return name.includes(".mp4") ? (
-    <div
-      className="attachment-img"
-      onClick={() => navigate(hash + `/modal?id=${id.replaceAll(" ", "%")}`)}
-    >
-      <video controls src={url} poster={name} />
-    </div>
-  ) : (
+  return (
     <div
       className="attachment-img"
       onClick={() => navigate(hash + `/modal?id=${id.replaceAll(" ", "%")}`)}
     >
       {/* !!! DOUBLE LOADING???? !!! */}
-      <img
-        style={loaded ? {} : { display: "none" }}
-        onLoad={() => setLoaded(true)}
-        src={url}
-        alt={name}
-      />
-      {preloaderView}
+      {name.includes(".mp4") ? (
+        videoView
+      ) : (
+        <>
+          <img
+            style={loaded ? {} : { display: "none" }}
+            onLoad={() => setLoaded(true)}
+            src={url}
+            alt={name}
+          />
+          {preloaderView}
+        </>
+      )}
     </div>
   );
 }

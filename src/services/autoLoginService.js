@@ -20,7 +20,7 @@ class AutoLoginService {
   }
 
   async userLogin(token) {
-    const currentPath = history.location.hash;
+    const currentPath = history.location?.hash;
 
     const handleLoginFailure = () => {
       localStorage.removeItem("sessionId");
