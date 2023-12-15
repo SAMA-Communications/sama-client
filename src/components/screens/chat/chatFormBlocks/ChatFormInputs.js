@@ -2,6 +2,7 @@ import AttachmentsList from "../../../generic/messageComponents/AttachmentsList.
 import DownloadManager from "../../../../adapters/downloadManager.js";
 import api from "../../../../api/api";
 import encodeImageToBlurhash from "../../../../utils/get_blur_hash.js";
+import globalConstants from "../../../../_helpers/constants.js";
 import heicToPng from "../../../../utils/heic_to_png";
 import isMobile from "./../../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
@@ -23,7 +24,6 @@ import {
 import { ReactComponent as SendFilesButton } from "./../../../../assets/icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as Loading } from "./../../../../assets/icons/chatForm/Loading.svg";
 import { ReactComponent as SendMessageButton } from "./../../../../assets/icons/chatForm/SendMessageButton.svg";
-import globalConstants from "../../../../_helpers/constants.js";
 
 export default function ChatFormInputs({
   chatMessagesBlockRef,
@@ -72,7 +72,7 @@ export default function ChatFormInputs({
       attachments: files.map((file) => ({
         file_id: file.name,
         file_name: file.name,
-        file_blur_hash: file.blurHash,
+        file_url: file.localUrl,
       })),
     };
 
@@ -119,8 +119,9 @@ export default function ChatFormInputs({
         attachments: attachments.map((obj, i) => ({
           file_id: obj.file_id,
           file_name: obj.file_name,
-          file_blur_hash: files[i].blurHash,
           file_url: obj.file_url,
+          file_local_url: files[i].localUrl,
+          file_blur_hash: files[i].blurHash,
         })),
       };
 
@@ -176,7 +177,10 @@ export default function ChatFormInputs({
           continue;
         }
 
-        file.blurHash = await encodeImageToBlurhash(URL.createObjectURL(file));
+        const localFileUrl = URL.createObjectURL(file);
+        file.localUrl = localFileUrl;
+        file.blurHash = await encodeImageToBlurhash(localFileUrl);
+
         selectedFiles.push(file);
       }
 

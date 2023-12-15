@@ -14,6 +14,7 @@ export default function MessageAttachments({ attachments }) {
           id={att.file_id}
           url={att.file_url}
           name={att.file_name}
+          localUrl={att.file_local_url}
           blurHash={att.file_blur_hash}
         />
       ))}
