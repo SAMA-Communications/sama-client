@@ -1,3 +1,4 @@
+import * as imageConversion from "image-conversion";
 import AttachmentsList from "../../../generic/messageComponents/AttachmentsList.js";
 import DownloadManager from "../../../../adapters/downloadManager.js";
 import api from "../../../../api/api";
@@ -155,7 +156,7 @@ export default function ChatFormInputs({
     const selectedFiles = [];
     try {
       for (let i = 0; i < pickedFiles.length; i++) {
-        const file = pickedFiles[i];
+        let file = pickedFiles[i];
         if (file.name.length > 255) {
           throw new Error("The file name should not exceed 255 characters.", {
             cause: {
@@ -177,6 +178,14 @@ export default function ChatFormInputs({
           continue;
         }
 
+        const compressedfile = await imageConversion.compressAccurately(
+          file,
+          200
+        );
+        const formData = new FormData();
+        formData.append("file", compressedfile, file.name);
+
+        file = formData.get("file");
         const localFileUrl = URL.createObjectURL(file);
         file.localUrl = localFileUrl;
         file.blurHash = await encodeImageToBlurhash(localFileUrl);
