@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Blurhash } from "react-blurhash";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -13,14 +13,15 @@ export default function MessageAttachment({
   const navigate = useNavigate();
 
   const [loaded, setLoaded] = useState(false);
+  const videoRef = useRef(null);
 
   const videoView = useMemo(() => {
-    const video = <video controls src={url} poster={name} />;
+    const video = <video ref={videoRef} controls src={url} poster={name} />;
 
     //get first clip from video for bg
 
     return video;
-  }, []);
+  }, [url]);
 
   const preloaderView = useMemo(() => {
     if (loaded || !blurHash) {
@@ -45,7 +46,14 @@ export default function MessageAttachment({
   return (
     <div
       className="attachment-img"
-      onClick={() => navigate(hash + `/modal?id=${id.replaceAll(" ", "%")}`)}
+      onClick={() => {
+        navigate(hash + `/modal?id=${id.replaceAll(" ", "%")}`);
+        videoRef.current &&
+          localStorage.setItem(
+            "currentTimeVideo",
+            videoRef.current.currentTime
+          );
+      }}
     >
       {/* !!! DOUBLE LOADING???? !!! */}
       {name.includes(".mp4") ? (
