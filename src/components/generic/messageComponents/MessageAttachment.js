@@ -20,7 +20,7 @@ export default function MessageAttachment({
       <video
         ref={videoRef}
         controls
-        src={url}
+        src={url + "#t=0.1"}
         poster={name}
         onClick={(event) => {
           event.preventDefault();

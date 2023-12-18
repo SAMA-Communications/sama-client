@@ -53,7 +53,7 @@ export default function ModalWindow() {
           }
           autoPlay
           controls
-          src={fileParams.url}
+          src={fileParams.url + "#t=0.1"}
           poster={fileParams.name}
         />
       ) : (
