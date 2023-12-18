@@ -221,3 +221,14 @@
 .br-tl {
   border-top-left-radius: 0;
 }
+
+.blur-hash-preloader {
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.blur-hash-loader {
+  position: absolute;
+}
