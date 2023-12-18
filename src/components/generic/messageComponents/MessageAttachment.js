@@ -16,7 +16,18 @@ export default function MessageAttachment({
   const videoRef = useRef(null);
 
   const videoView = useMemo(() => {
-    const video = <video ref={videoRef} controls src={url} poster={name} />;
+    const video = (
+      <video
+        ref={videoRef}
+        controls
+        src={url}
+        poster={name}
+        onClick={(event) => {
+          event.preventDefault();
+          videoRef.current.pause();
+        }}
+      />
+    );
 
     //get first clip from video for bg
 
@@ -48,11 +59,12 @@ export default function MessageAttachment({
       className="attachment-img"
       onClick={() => {
         navigate(hash + `/modal?id=${id.replaceAll(" ", "%")}`);
-        videoRef.current &&
+        if (videoRef.current) {
           localStorage.setItem(
             "currentTimeVideo",
             videoRef.current.currentTime
           );
+        }
       }}
     >
       {/* !!! DOUBLE LOADING???? !!! */}
