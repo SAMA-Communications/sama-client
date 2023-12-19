@@ -182,7 +182,11 @@ export default function ChatFormInputs({
           file = await compressFile(file);
           const localFileUrl = URL.createObjectURL(file);
           file.localUrl = localFileUrl;
-          file.blurHash = await encodeImageToBlurhash(localFileUrl);
+          try {
+            file.blurHash = await encodeImageToBlurhash(localFileUrl);
+          } catch (e) {
+            file.blurHash = globalConstants.defaultBlurHash;
+          }
         }
 
         selectedFiles.push(file);
