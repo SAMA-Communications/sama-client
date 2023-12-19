@@ -80,8 +80,8 @@ export default function MessageAttachment({
           );
         }
       }}
+      style={{ gridColumnEnd: `span ${1}`, gridRowEnd: `span ${1}` }}
     >
-      {/* !!! DOUBLE LOADING???? !!! */}
       {name.includes(".mp4") ? (
         videoView
       ) : (
