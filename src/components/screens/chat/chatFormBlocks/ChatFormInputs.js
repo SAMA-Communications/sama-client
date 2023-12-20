@@ -157,6 +157,7 @@ export default function ChatFormInputs({
     try {
       for (let i = 0; i < pickedFiles.length; i++) {
         let file = pickedFiles[i];
+        console.log(file);
         if (file.name.length > 255) {
           throw new Error("The file name should not exceed 255 characters.", {
             cause: {
@@ -174,6 +175,7 @@ export default function ChatFormInputs({
           });
         } else if (/^\w+\.HEIC$/.test(file.name)) {
           const pngFile = await compressFile(await heicToPng(file));
+          //add hash
           selectedFiles.push(pngFile);
           continue;
         }

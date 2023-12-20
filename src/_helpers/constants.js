@@ -11,6 +11,7 @@ const globalConstants = {
     "image/bmp",
     "video/mp4",
     "video/webm",
+    "video/quicktime",
     "video/ogg",
   ],
   defaultBlurHash:

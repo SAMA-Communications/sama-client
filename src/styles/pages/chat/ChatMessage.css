@@ -159,6 +159,7 @@
 
   background-color: var(--bg-dark-block);
 }
+.modal-window video,
 .modal-window img {
   max-width: 90vw;
   max-height: 90vh;
