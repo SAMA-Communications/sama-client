@@ -41,10 +41,7 @@ export default function ImageView({ url, localUrl, blurHash, altName }) {
     <>
       <img
         style={loaded ? {} : { display: "none" }}
-        onLoad={() => {
-          setLoaded(true);
-          console.log(1);
-        }}
+        onLoad={() => setLoaded(true)}
         src={url}
         alt={altName}
       />
