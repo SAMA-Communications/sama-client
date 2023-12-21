@@ -196,11 +196,8 @@ export default function ChatFormInputs({
             cause: { message: "Please select an image file." },
           });
         } else if (["heic", "HEIC"].includes(fileExtension)) {
-          console.log(file);
           const tmp = await heicToPng(file);
-          console.log(tmp);
           const pngFile = await compressAndHashFile(tmp);
-          console.log(pngFile);
 
           selectedFiles.push(pngFile);
           continue;
