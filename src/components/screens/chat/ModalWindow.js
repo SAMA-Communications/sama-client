@@ -1,6 +1,6 @@
 import DownloadManager from "../../../adapters/downloadManager";
 import getPrevPage from "../../../utils/get_prev_page";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function ModalWindow() {
@@ -8,7 +8,6 @@ export default function ModalWindow() {
   const { hash } = useLocation();
 
   const [fileParams, setFileParams] = useState({});
-  const [videoCurrentTime, setVideoCurrentTime] = useState(0);
 
   const videoElRef = useRef(null);
 
@@ -34,12 +33,6 @@ export default function ModalWindow() {
     }).then((res) => {
       const { file_url, file_name } = res[0].attachments[0];
       setFileParams({ url: file_url, name: file_name });
-
-      const currentTimeVideo = localStorage.getItem("currentTimeVideo");
-      if (currentTimeVideo) {
-        localStorage.removeItem("currentTimeVideo");
-        setVideoCurrentTime(currentTimeVideo);
-      }
     });
   }, [hash]);
 
@@ -48,9 +41,6 @@ export default function ModalWindow() {
       {fileParams.name?.includes(".mp4") ? (
         <video
           ref={videoElRef}
-          onLoadedData={() =>
-            (videoElRef.current.currentTime = videoCurrentTime)
-          }
           autoPlay
           controls
           src={fileParams.url + "#t=0.1"}

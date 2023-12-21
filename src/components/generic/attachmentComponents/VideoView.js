@@ -1,14 +1,11 @@
-export default function VideoView({ vRef, url, posterName }) {
+export default function VideoView({ url, posterName }) {
   return (
     <video
-      ref={vRef}
-      controls
+      muted
+      loop
+      autoplay="autoplay"
       src={url + "#t=0.1"}
       poster={posterName}
-      onClick={(event) => {
-        event.preventDefault();
-        vRef.current.pause();
-      }}
     />
   );
 }
