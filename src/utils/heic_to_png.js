@@ -5,9 +5,8 @@ export default async function heicToPng(file) {
 
   const pngBuffer = await heic2any({
     blob,
-    // toType: "image/png",
     toType: "image/jpeg",
-    quality: 0.5,
+    quality: 0.2,
   });
 
   const pngBlob = new Blob([pngBuffer], { type: "image/jpeg" });

@@ -133,7 +133,7 @@
 .attachment-img img,
 .attachment-img video {
   width: 100%;
-  max-height: 40svh;
+  max-height: min(40svh, 500px);
 }
 
 .canvas-preloader {

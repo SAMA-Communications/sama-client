@@ -3,7 +3,7 @@ export default function VideoView({ url, posterName }) {
     <video
       muted
       loop
-      autoplay="autoplay"
+      autoPlay="autoplay"
       src={url + "#t=0.1"}
       poster={posterName}
     />

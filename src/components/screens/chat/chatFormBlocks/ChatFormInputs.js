@@ -153,11 +153,24 @@ export default function ChatFormInputs({
     }
     setIsLoadingFile(true);
 
+    async function compressAndHashFile(file) {
+      file = await compressFile(file);
+      const localFileUrl = URL.createObjectURL(file);
+      file.localUrl = localFileUrl;
+
+      try {
+        file.blurHash = await encodeImageToBlurhash(localFileUrl);
+      } catch (e) {
+        file.blurHash = globalConstants.defaultBlurHash;
+      }
+
+      return file;
+    }
+
     const selectedFiles = [];
     try {
       for (let i = 0; i < pickedFiles.length; i++) {
         let file = pickedFiles[i];
-        console.log(file);
         if (file.name.length > 255) {
           throw new Error("The file name should not exceed 255 characters.", {
             cause: {
@@ -165,30 +178,36 @@ export default function ChatFormInputs({
             },
           });
         }
+        if (file.size > 104857600) {
+          throw new Error("The file size should not exceed 100 MB.", {
+            cause: {
+              message: "The file size should not exceed 100 MB.",
+            },
+          });
+        }
+
+        const fileExtension = file.name.split(".").slice(-1)[0];
 
         if (
           !globalConstants.allowedFileFormats.includes(file.type) &&
-          !/^\w+\.HEIC$/.test(file.name)
+          !["heic", "HEIC"].includes(fileExtension)
         ) {
           throw new Error("Please select an image file.", {
             cause: { message: "Please select an image file." },
           });
-        } else if (/^\w+\.HEIC$/.test(file.name)) {
-          const pngFile = await compressFile(await heicToPng(file));
-          //add hash
+        } else if (["heic", "HEIC"].includes(fileExtension)) {
+          console.log(file);
+          const tmp = await heicToPng(file);
+          console.log(tmp);
+          const pngFile = await compressAndHashFile(tmp);
+          console.log(pngFile);
+
           selectedFiles.push(pngFile);
           continue;
         }
 
         if (file.type.startsWith("image/")) {
-          file = await compressFile(file);
-          const localFileUrl = URL.createObjectURL(file);
-          file.localUrl = localFileUrl;
-          try {
-            file.blurHash = await encodeImageToBlurhash(localFileUrl);
-          } catch (e) {
-            file.blurHash = globalConstants.defaultBlurHash;
-          }
+          file = await compressAndHashFile(file);
         }
 
         selectedFiles.push(file);
