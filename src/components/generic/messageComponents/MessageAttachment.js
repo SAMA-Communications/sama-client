@@ -1,3 +1,4 @@
+import getFileType from "../../../utils/get_file_type";
 import ImageView from "../attachmentComponents/ImageView";
 import VideoView from "../attachmentComponents/VideoView";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -20,7 +21,7 @@ export default function MessageAttachment({
         navigate(hash + `/modal?id=${id.replaceAll(" ", "%")}`);
       }}
     >
-      {name.includes(".mp4") ? (
+      {getFileType(name) === "Video" ? (
         <VideoView url={url} posterName={name} />
       ) : (
         <ImageView

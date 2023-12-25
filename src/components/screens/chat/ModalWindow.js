@@ -1,4 +1,5 @@
 import DownloadManager from "../../../adapters/downloadManager";
+import getFileType from "../../../utils/get_file_type";
 import getPrevPage from "../../../utils/get_prev_page";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -38,7 +39,7 @@ export default function ModalWindow() {
 
   return (
     <div className="modal-window" onClick={closeWindow}>
-      {fileParams.name?.includes(".mp4") ? (
+      {getFileType(fileParams.name) === "Video" ? (
         <video
           ref={videoElRef}
           autoPlay

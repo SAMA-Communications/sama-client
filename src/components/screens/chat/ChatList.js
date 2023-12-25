@@ -90,7 +90,7 @@ export default function ChatList() {
   }, [currentTheme]);
 
   const chatsList = useMemo(() => {
-    let list = [];
+    const list = [];
     for (const obj of conversations) {
       const chatName = !obj.name
         ? obj.owner_id === userInfo?._id
