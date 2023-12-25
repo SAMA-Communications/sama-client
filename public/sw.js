@@ -2,7 +2,7 @@ console.log("[push.customer] SW.js init success!");
 
 function showNotification(e, data) {
   if (!("image" in Notification.prototype) && data.firstAttachmentUrl) {
-    data.body += "\nPhoto";
+    data.body += "\nFile";
   }
 
   const options = {

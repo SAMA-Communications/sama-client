@@ -43,9 +43,10 @@ async function showLocalNotification(pushMessage) {
       ? userLogin
       : `${userLogin} | ${conversation?.name}`;
 
+  const bodyCrop = body.length > 75 ? body.slice(0, 75) + "..." : body;
   const notificationMessage = {
     ...pushMessage,
-    body: `${body}${attachmentText}`,
+    body: `${bodyCrop}${attachmentText}`,
     title,
   };
 
