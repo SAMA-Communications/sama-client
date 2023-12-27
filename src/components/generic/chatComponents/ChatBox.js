@@ -100,7 +100,7 @@ export default function ChatBox({
             )}
           </div>
         ) : null}
-        <p>{text?.length ? text : getFileType(lastAtt.file_name)}</p>
+        <p>{text?.length ? text : getFileType(lastAtt?.file_name)}</p>
         {status}
       </div>
     );

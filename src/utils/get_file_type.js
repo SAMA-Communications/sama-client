@@ -1,5 +1,5 @@
 export default function getFileType(fileName) {
-  const fileExtension = fileName.split(".").slice(-1)[0];
+  const fileExtension = fileName?.split(".").slice(-1)[0];
 
   if (
     ["jpeg", "jpg", "gif", "bmp", "png", "heic", "HEIC"].includes(fileExtension)
