@@ -27,7 +27,6 @@ async function showLocalNotification(pushMessage) {
   }
 
   const { attachments, from, body } = pushMessage;
-  console.log(attachments);
   const userLogin = storeState.participants.entities[from]?.login;
 
   const typeOfLastAttachment = attachments
