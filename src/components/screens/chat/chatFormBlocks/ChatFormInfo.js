@@ -1,7 +1,7 @@
 import jwtDecode from "jwt-decode";
 import api from "../../../../api/api";
-import showCustomAlert from "../../../../utils/show_alert";
-import getLastVisitTime from "../../../../utils/get_last_visit_time";
+import showCustomAlert from "@utils/show_alert";
+import getLastVisitTime from "@utils/get_last_visit_time";
 import {
   getConverastionById,
   removeChat,

@@ -5,7 +5,11 @@
       "@services/*": ["src/services/*"],
       "@helpers/*": ["src/_helpers/*"],
       "@event/*": ["src/event/*"],
-      "@store/*": ["src/store/*"]
+      "@store/*": ["src/store/*"],
+      "@styles/*": ["src/styles/*"],
+      "@components/*": ["src/components/*"],
+      "@screens/*": ["src/components/screens/*"],
+      "@utils/*": ["src/utils/*"]
     }
   }
 }

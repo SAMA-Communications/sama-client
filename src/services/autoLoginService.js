@@ -1,5 +1,5 @@
 import api from "../api/api";
-import showCustomAlert from "../utils/show_alert";
+import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
 import subscribeForNotifications from "./notifications";
 import { default as EventEmitter } from "@event/eventEmitter";

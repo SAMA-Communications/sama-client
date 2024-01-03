@@ -2,13 +2,10 @@ import MainLogo from "../static/MainLogo";
 import React, { useState } from "react";
 import api from "../../api/api";
 import subscribeForNotifications from "@services/notifications";
-import showCustomAlert from "../../utils/show_alert";
+import showCustomAlert from "@utils/show_alert";
 import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
-import {
-  changeOpacity,
-  loginBox,
-} from "../../styles/animations/animationBlocks";
+import { changeOpacity, loginBox } from "@styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
 import { setSelectedConversation } from "@store/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/UserIsLoggedIn ";
@@ -16,7 +13,7 @@ import { upsertUser } from "@store/Participants";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 
-import "../../styles/AuthForm.css";
+import "@styles/AuthForm.css";
 
 import { ReactComponent as HidePassword } from "./../../assets/icons/authForm/HidePassword.svg";
 import { ReactComponent as ShowPassword } from "./../../assets/icons/authForm/ShowPassword.svg";

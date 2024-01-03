@@ -1,10 +1,10 @@
-import getPrevPage from "../../../utils/get_prev_page.js";
+import getPrevPage from "@utils/get_prev_page.js";
 import { selectParticipantsEntities } from "@store/Participants.js";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import "./../../../styles/pages/UserProfile.css";
+import "@styles/pages/UserProfile.css";
 
 import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
 import { ReactComponent as EmailIcon } from "./../../../assets/icons/userProfile/EmailIcon.svg";

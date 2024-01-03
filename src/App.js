@@ -11,16 +11,16 @@ import { getIsMobileView, setIsMobileView } from "@store/IsMobileView";
 import { updateNetworkState } from "@store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 
-import PageLoader from "./components/PageLoader";
-import SignUp from "./components/screens/SignUp";
+import PageLoader from "@components/PageLoader";
+import SignUp from "@screens/SignUp";
 
-import "./styles/GlobalParam.css";
-import "./styles/themes/DarkTheme.css";
-import "./styles/themes/DefaultTheme.css";
+import "@styles/GlobalParam.css";
+import "@styles/themes/DarkTheme.css";
+import "@styles/themes/DefaultTheme.css";
 
-const Main = React.lazy(() => import("./components/Main"));
-const Login = React.lazy(() => import("./components/screens/Login"));
-const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
+const Main = React.lazy(() => import("@components/Main"));
+const Login = React.lazy(() => import("@screens/Login"));
+const ErrorPage = React.lazy(() => import("@components/ErrorPage"));
 
 export default function App() {
   const dispatch = useDispatch();

@@ -1,4 +1,4 @@
-import getFileType from "../../../utils/get_file_type";
+import getFileType from "@utils/get_file_type";
 import ImageView from "../attachmentComponents/ImageView";
 import VideoView from "../attachmentComponents/VideoView";
 import { useLocation, useNavigate } from "react-router-dom";

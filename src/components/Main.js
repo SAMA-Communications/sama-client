@@ -3,16 +3,16 @@ import { getIsMobileView } from "@store/IsMobileView";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
-import ChatForm from "./screens/chat/ChatForm";
-import ChatInfoPage from "./screens/info/ChatInfoPage";
-import ChatList from "./screens/chat/ChatList";
+import ChatForm from "@screens/chat/ChatForm";
+import ChatInfoPage from "@screens/info/ChatInfoPage";
+import ChatList from "@screens/chat/ChatList";
 
-import ModalWindow from "./screens/chat/ModalWindow";
-import ParticipantProfile from "./screens/info/ParticipantProfile";
-import UserProfile from "./screens/info/UserProfile";
-import UserSearch from "./screens/info/UserSearch";
+import ModalWindow from "@screens/chat/ModalWindow";
+import ParticipantProfile from "@screens/info/ParticipantProfile";
+import UserProfile from "@screens/info/UserProfile";
+import UserSearch from "@screens/info/UserSearch";
 
-import "../styles/Main.css";
+import "@styles/Main.css";
 
 export default function Main() {
   const isMobileView = useSelector(getIsMobileView);

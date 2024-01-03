@@ -15,7 +15,7 @@ import { setUserIsLoggedIn } from "@store/UserIsLoggedIn .js";
 import { updateNetworkState } from "@store/NetworkState.js";
 import { useSelector, useDispatch } from "react-redux";
 
-import "../../../styles/pages/chat/ChatList.css";
+import "@styles/pages/chat/ChatList.css";
 
 import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
 import { ReactComponent as IconMoon } from "./../../../assets/icons/ThemeMoon.svg";

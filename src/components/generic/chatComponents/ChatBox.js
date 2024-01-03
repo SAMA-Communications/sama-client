@@ -1,7 +1,7 @@
 import MessageStatus from "../messageComponents/MessageStatus";
 import React, { useMemo } from "react";
 import ImageView from "../attachmentComponents/ImageView";
-import getFileType from "../../../utils/get_file_type";
+import getFileType from "@utils/get_file_type";
 
 import { ReactComponent as ChatIconPrivate } from "./../../../assets/icons/chatList/ChatIconPrivate.svg";
 import { ReactComponent as ChatIconGroup } from "./../../../assets/icons/chatList/ChatIconGroup.svg";

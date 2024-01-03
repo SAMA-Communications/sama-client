@@ -1,8 +1,8 @@
 import ParticipantInChatInfo from "../../generic/chatComponents/ParticipantInChatInfo";
 import api from "../../../api/api";
-import getPrevPage from "../../../utils/get_prev_page";
+import getPrevPage from "@utils/get_prev_page";
 import jwtDecode from "jwt-decode";
-import showCustomAlert from "../../../utils/show_alert";
+import showCustomAlert from "@utils/show_alert";
 import { clearSelectedConversation } from "@store/SelectedConversation";
 import { getConverastionById, removeChat } from "@store/Conversations";
 import { selectParticipantsEntities } from "@store/Participants";
@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMemo, useState } from "react";
 
-import "../../../styles/pages/chat/ChatInfoPage.css";
+import "@styles/pages/chat/ChatInfoPage.css";
 
 import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
 import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";

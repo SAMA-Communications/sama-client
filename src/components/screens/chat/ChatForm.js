@@ -17,7 +17,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import "../../../styles/pages/chat/ChatForm.css";
+import "@styles/pages/chat/ChatForm.css";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
