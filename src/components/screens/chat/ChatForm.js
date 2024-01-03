@@ -3,7 +3,7 @@ import ChatFormInfo from "./chatFormBlocks/ChatFormInfo.js";
 import ChatFormInputs from "./chatFormBlocks/ChatFormInputs.js";
 import NoChatSelected from "../../static/NoChatSelected.js";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import api from "../../../api/api";
+import api from "@api/api";
 import { getUserIsLoggedIn } from "@store/UserIsLoggedIn .js";
 import {
   clearCountOfUnreadMessages,

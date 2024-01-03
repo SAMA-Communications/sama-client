@@ -1,4 +1,4 @@
-import api from "../api/api";
+import api from "@api/api";
 import eventEmitter from "@event/eventEmitter";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";

@@ -1,5 +1,5 @@
 import ParticipantInChatInfo from "../../generic/chatComponents/ParticipantInChatInfo";
-import api from "../../../api/api";
+import api from "@api/api";
 import getPrevPage from "@utils/get_prev_page";
 import jwtDecode from "jwt-decode";
 import showCustomAlert from "@utils/show_alert";

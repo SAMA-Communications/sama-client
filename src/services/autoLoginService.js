@@ -1,4 +1,4 @@
-import api from "../api/api";
+import api from "@api/api";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
 import subscribeForNotifications from "./notifications";

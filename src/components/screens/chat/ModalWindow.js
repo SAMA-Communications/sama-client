@@ -1,4 +1,4 @@
-import DownloadManager from "../../../adapters/downloadManager";
+import DownloadManager from "@adapters/downloadManager";
 import getFileType from "@utils/get_file_type";
 import getPrevPage from "@utils/get_prev_page";
 import { useEffect, useRef, useState } from "react";

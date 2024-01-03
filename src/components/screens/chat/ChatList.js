@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import api from "../../../api/api.js";
+import api from "@api/api.js";
 import jwtDecode from "jwt-decode";
 import ChatBox from "../../generic/chatComponents/ChatBox.js";
 import MiniLogo from "./../../static/MiniLogo.js";

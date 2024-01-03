@@ -1,8 +1,8 @@
-import api from "../api/api";
-import urlBase64ToUint8Array from "../api/base64_to_uint8Array.js";
+import api from "@api/api";
+import urlBase64ToUint8Array from "@api/base64_to_uint8Array";
 import { default as EventEmitter } from "@event/eventEmitter";
-import { default as store } from "@store/store.js";
-import getFileType from "@utils/get_file_type.js";
+import { default as store } from "@store/store";
+import getFileType from "@utils/get_file_type";
 
 let sw = null;
 

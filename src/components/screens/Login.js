@@ -1,6 +1,6 @@
 import MainLogo from "../static/MainLogo";
 import React, { useState } from "react";
-import api from "../../api/api";
+import api from "@api/api";
 import subscribeForNotifications from "@services/notifications";
 import showCustomAlert from "@utils/show_alert";
 import { Link, useNavigate } from "react-router-dom";
