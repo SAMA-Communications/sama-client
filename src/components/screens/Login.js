@@ -1,8 +1,8 @@
 import MainLogo from "@static/MainLogo";
 import React, { useState } from "react";
 import api from "@api/api";
-import subscribeForNotifications from "@services/notifications";
 import showCustomAlert from "@utils/show_alert";
+import subscribeForNotifications from "@services/notifications";
 import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import { changeOpacity, loginBox } from "@styles/animations/animationBlocks";

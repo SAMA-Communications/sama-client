@@ -1,6 +1,6 @@
-import getFileType from "@utils/get_file_type";
 import ImageView from "@generic/attachmentComponents/ImageView";
 import VideoView from "@generic/attachmentComponents/VideoView";
+import getFileType from "@utils/get_file_type";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function MessageAttachment({

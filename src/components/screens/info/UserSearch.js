@@ -6,8 +6,8 @@ import getPrevPage from "@utils/get_prev_page.js";
 import showCustomAlert from "@utils/show_alert.js";
 import { addUsers } from "@store/Participants.js";
 import { getConverastionById, insertChat } from "@store/Conversations.js";
-import { setSelectedConversation } from "@store/SelectedConversation.js";
 import { getIsMobileView } from "@store/IsMobileView.js";
+import { setSelectedConversation } from "@store/SelectedConversation.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 

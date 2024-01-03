@@ -6,8 +6,8 @@ import globalConstants from "@helpers/constants";
 import messagesService from "@services/messagesService";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { history } from "@helpers/history";
 import { getIsMobileView, setIsMobileView } from "@store/IsMobileView";
+import { history } from "@helpers/history";
 import { updateNetworkState } from "@store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 

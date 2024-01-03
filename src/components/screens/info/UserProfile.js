@@ -1,7 +1,7 @@
 import api from "@api/api";
+import getPrevPage from "@utils/get_prev_page";
 import jwtDecode from "jwt-decode";
 import showCustomAlert from "@utils/show_alert";
-import getPrevPage from "@utils/get_prev_page";
 import { selectParticipantsEntities, upsertUser } from "@store/Participants";
 import { updateNetworkState } from "@store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,8 +17,8 @@ import { ReactComponent as PasswordIcon } from "@icons/userProfile/PasswordIcon.
 import { ReactComponent as PenEditIcon } from "@icons/userProfile/PenEditIcon.svg";
 import { ReactComponent as PhoneIcon } from "@icons/userProfile/PhoneIcon.svg";
 import { ReactComponent as TrashCan } from "@icons/chatForm/TrashCan.svg";
-import { ReactComponent as UserLoginIcon } from "@icons/userProfile/UserLoginIcon.svg";
 import { ReactComponent as UndoChangeIcon } from "@icons/userProfile/UndoEditIcon.svg";
+import { ReactComponent as UserLoginIcon } from "@icons/userProfile/UserLoginIcon.svg";
 
 export default function UserProfile() {
   const dispatch = useDispatch();

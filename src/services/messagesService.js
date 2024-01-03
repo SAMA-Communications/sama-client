@@ -1,7 +1,8 @@
-import api from "@api/api";
-import store from "@store/store";
-import jwtDecode from "jwt-decode";
 import DownloadManager from "@adapters/downloadManager";
+import api from "@api/api";
+import jwtDecode from "jwt-decode";
+import store from "@store/store";
+import { addUser } from "@store/Participants";
 import {
   addMessage,
   addMessages,
@@ -9,14 +10,13 @@ import {
   upsertMessages,
 } from "@store/Messages";
 import { setSelectedConversation } from "@store/SelectedConversation";
+import { history } from "@helpers/history";
 import {
   markConversationAsRead,
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
 } from "@store/Conversations";
-import { history } from "@helpers/history";
-import { addUser } from "@store/Participants";
 
 class MessagesService {
   currentChatId;

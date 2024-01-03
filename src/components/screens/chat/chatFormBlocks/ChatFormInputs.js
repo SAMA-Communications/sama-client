@@ -22,8 +22,8 @@ import {
   updateLastMessageField,
 } from "@store/Conversations";
 
-import { ReactComponent as SendFilesButton } from "@icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as Loading } from "@icons/chatForm/Loading.svg";
+import { ReactComponent as SendFilesButton } from "@icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as SendMessageButton } from "@icons/chatForm/SendMessageButton.svg";
 
 export default function ChatFormInputs({

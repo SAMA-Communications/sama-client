@@ -1,6 +1,6 @@
-import ChatFormMain from "@screens/chat/chatFormBlocks/ChatFormMain.js";
 import ChatFormInfo from "@screens/chat/chatFormBlocks/ChatFormInfo.js";
 import ChatFormInputs from "@screens/chat/chatFormBlocks/ChatFormInputs.js";
+import ChatFormMain from "@screens/chat/chatFormBlocks/ChatFormMain.js";
 import NoChatSelected from "@static/NoChatSelected.js";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import api from "@api/api";
@@ -14,8 +14,8 @@ import {
   clearSelectedConversation,
   setSelectedConversation,
 } from "@store/SelectedConversation";
-import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import "@styles/pages/chat/ChatForm.css";
 
