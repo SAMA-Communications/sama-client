@@ -1,4 +1,4 @@
-import AttachmentsList from "../../../generic/messageComponents/AttachmentsList.js";
+import AttachmentsList from "@generic/messageComponents/AttachmentsList.js";
 import DownloadManager from "@adapters/downloadManager.js";
 import api from "@api/api";
 import compressFile from "@utils/compress_file.js";

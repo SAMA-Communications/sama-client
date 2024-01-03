@@ -1,4 +1,4 @@
-import MessageAttachment from "../../generic/messageComponents/MessageAttachment";
+import MessageAttachment from "@generic/messageComponents/MessageAttachment";
 import React from "react";
 
 export default function MessageAttachments({ attachments }) {

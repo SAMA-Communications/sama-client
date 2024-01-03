@@ -8,6 +8,8 @@
       "@event/*": ["src/event/*"],
       "@helpers/*": ["src/_helpers/*"],
       "@screens/*": ["src/components/screens/*"],
+      "@generic/*": ["src/components/generic/*"],
+      "@static/*": ["src/components/static/*"],
       "@services/*": ["src/services/*"],
       "@store/*": ["src/store/*"],
       "@styles/*": ["src/styles/*"],

@@ -1,7 +1,7 @@
-import ChatMessage from "../../generic/messageComponents/ChatMessage";
+import ChatMessage from "@generic/messageComponents/ChatMessage";
 import DownloadManager from "@adapters/downloadManager";
 import InfiniteScroll from "react-infinite-scroll-component";
-import InformativeMessage from "../../generic/messageComponents/InformativeMessage";
+import InformativeMessage from "@generic/messageComponents/InformativeMessage";
 import api from "@api/api";
 import jwtDecode from "jwt-decode";
 import {

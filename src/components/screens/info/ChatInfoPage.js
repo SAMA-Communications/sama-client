@@ -1,4 +1,4 @@
-import ParticipantInChatInfo from "../../generic/chatComponents/ParticipantInChatInfo";
+import ParticipantInChatInfo from "@generic/chatComponents/ParticipantInChatInfo";
 import api from "@api/api";
 import getPrevPage from "@utils/get_prev_page";
 import jwtDecode from "jwt-decode";

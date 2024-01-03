@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from "react";
 import api from "@api/api.js";
 import jwtDecode from "jwt-decode";
-import ChatBox from "../../generic/chatComponents/ChatBox.js";
-import MiniLogo from "./../../static/MiniLogo.js";
+import ChatBox from "@generic/chatComponents/ChatBox.js";
+import MiniLogo from "@static/MiniLogo.js";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { selectParticipantsEntities } from "@store/Participants.js";
 import {
