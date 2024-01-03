@@ -1,4 +1,4 @@
-import MessagesList from "../MessagesList";
+import MessagesList from "@screens/chat/MessagesList";
 import { getActiveConversationMessages } from "@store/Messages";
 import { useSelector } from "react-redux";
 

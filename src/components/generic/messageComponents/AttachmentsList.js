@@ -1,4 +1,4 @@
-import AttachmentsListItem from "./AttachmentsListItem";
+import AttachmentsListItem from "@generic/messageComponents/AttachmentsListItem";
 import getUniqueId from "@api/uuid";
 
 import { ReactComponent as ClearFilesButton } from "@icons/chatForm/ClearFilesButton.svg";

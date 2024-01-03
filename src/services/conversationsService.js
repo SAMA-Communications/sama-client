@@ -5,7 +5,7 @@ import store from "@store/store";
 import { addUsers, upsertUsers } from "@store/Participants";
 import { history } from "@helpers/history";
 import { insertChats, removeChat, upsertChat } from "@store/Conversations";
-import { notificationQueueByCid } from "./notifications";
+import { notificationQueueByCid } from "@services/notifications";
 import { setSelectedConversation } from "@store/SelectedConversation";
 
 class ConversationsService {

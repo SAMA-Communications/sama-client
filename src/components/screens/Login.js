@@ -1,4 +1,4 @@
-import MainLogo from "../static/MainLogo";
+import MainLogo from "@static/MainLogo";
 import React, { useState } from "react";
 import api from "@api/api";
 import subscribeForNotifications from "@services/notifications";
@@ -8,7 +8,7 @@ import { Oval } from "react-loader-spinner";
 import { changeOpacity, loginBox } from "@styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
 import { setSelectedConversation } from "@store/SelectedConversation";
-import { setUserIsLoggedIn } from "@store/UserIsLoggedIn ";
+import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
 import { upsertUser } from "@store/Participants";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";

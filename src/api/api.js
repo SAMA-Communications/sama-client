@@ -1,9 +1,9 @@
 import getBrowserFingerprint from "get-browser-fingerprint";
-import getUniqueId from "./uuid.js";
-import { default as EventEmitter } from "@event/eventEmitter.js";
-import { default as reduxStore } from "@store/store.js";
-import { setUserIsLoggedIn } from "@store/UserIsLoggedIn .js";
-import { updateNetworkState } from "@store/NetworkState.js";
+import getUniqueId from "@api/uuid";
+import { default as EventEmitter } from "@event/eventEmitter";
+import { default as reduxStore } from "@store/store";
+import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
+import { updateNetworkState } from "@store/NetworkState";
 
 class Api {
   constructor(baseUrl) {

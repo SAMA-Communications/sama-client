@@ -1,5 +1,5 @@
 import MessageAttachments from "@screens/chat/MessageAttachments";
-import MessageStatus from "./MessageStatus";
+import MessageStatus from "@generic/messageComponents/MessageStatus";
 import React, { useMemo } from "react";
 import { urlify } from "@utils/urlify";
 

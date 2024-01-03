@@ -6,15 +6,15 @@
       "@api/*": ["src/api/*"],
       "@components/*": ["src/components/*"],
       "@event/*": ["src/event/*"],
-      "@helpers/*": ["src/_helpers/*"],
-      "@screens/*": ["src/components/screens/*"],
       "@generic/*": ["src/components/generic/*"],
-      "@static/*": ["src/components/static/*"],
+      "@helpers/*": ["src/_helpers/*"],
+      "@icons/*": ["src/assets/icons/*"],
+      "@screens/*": ["src/components/screens/*"],
       "@services/*": ["src/services/*"],
+      "@static/*": ["src/components/static/*"],
       "@store/*": ["src/store/*"],
       "@styles/*": ["src/styles/*"],
-      "@utils/*": ["src/utils/*"],
-      "@icons/*": ["src/assets/icons/*"]
+      "@utils/*": ["src/utils/*"]
     }
   }
 }

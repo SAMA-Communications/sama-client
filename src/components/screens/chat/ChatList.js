@@ -11,7 +11,7 @@ import {
   selectAllConversations,
 } from "@store/Conversations.js";
 import { setSelectedConversation } from "@store/SelectedConversation.js";
-import { setUserIsLoggedIn } from "@store/UserIsLoggedIn .js";
+import { setUserIsLoggedIn } from "@store/UserIsLoggedIn.js";
 import { updateNetworkState } from "@store/NetworkState.js";
 import { useSelector, useDispatch } from "react-redux";
 

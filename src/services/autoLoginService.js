@@ -1,11 +1,11 @@
 import api from "@api/api";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
-import subscribeForNotifications from "./notifications";
+import subscribeForNotifications from "@services/notifications";
 import { default as EventEmitter } from "@event/eventEmitter";
 import { history } from "@helpers/history";
 import { setSelectedConversation } from "@store/SelectedConversation";
-import { setUserIsLoggedIn } from "@store/UserIsLoggedIn ";
+import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
 import { upsertUser } from "@store/Participants";
 
 class AutoLoginService {
