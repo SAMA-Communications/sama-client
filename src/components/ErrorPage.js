@@ -2,7 +2,7 @@ import React from "react";
 
 import "@styles/helpers/ErrorPage.css";
 
-import { ReactComponent as PageNotFound } from "./../assets/icons/PageNotFound.svg";
+import { ReactComponent as PageNotFound } from "@icons/PageNotFound.svg";
 
 export default function ErrorPage() {
   return (

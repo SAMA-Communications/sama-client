@@ -13,8 +13,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import "@styles/pages/UserSearch.css";
 
-import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
-import { ReactComponent as SearchIndicator } from "./../../../assets/icons/SearchIndicator.svg";
+import { ReactComponent as BackBtn } from "@icons/chatForm/BackBtn.svg";
+import { ReactComponent as SearchIndicator } from "@icons/SearchIndicator.svg";
 
 export default function UserSearch({ type }) {
   const dispatch = useDispatch();

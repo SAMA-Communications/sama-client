@@ -17,11 +17,11 @@ import { useSelector, useDispatch } from "react-redux";
 
 import "@styles/pages/chat/ChatList.css";
 
-import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
-import { ReactComponent as IconMoon } from "./../../../assets/icons/ThemeMoon.svg";
-import { ReactComponent as IconSun } from "./../../../assets/icons/ThemeSun.svg";
-import { ReactComponent as LogoutBtn } from "./../../../assets/icons/chatList/LogoutBtn.svg";
-import { ReactComponent as MoreOptions } from "./../../../assets/icons/chatList/MoreOptions.svg";
+import { ReactComponent as CreateChatButton } from "@icons/chatList/CreateChatButton.svg";
+import { ReactComponent as IconMoon } from "@icons/ThemeMoon.svg";
+import { ReactComponent as IconSun } from "@icons/ThemeSun.svg";
+import { ReactComponent as LogoutBtn } from "@icons/chatList/LogoutBtn.svg";
+import { ReactComponent as MoreOptions } from "@icons/chatList/MoreOptions.svg";
 
 export default function ChatList() {
   const dispatch = useDispatch();

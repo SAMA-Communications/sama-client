@@ -15,8 +15,8 @@ import { motion as m } from "framer-motion";
 
 import "@styles/AuthForm.css";
 
-import { ReactComponent as HidePassword } from "./../../assets/icons/authForm/HidePassword.svg";
-import { ReactComponent as ShowPassword } from "./../../assets/icons/authForm/ShowPassword.svg";
+import { ReactComponent as HidePassword } from "@icons/authForm/HidePassword.svg";
+import { ReactComponent as ShowPassword } from "@icons/authForm/ShowPassword.svg";
 
 export default function SignUp() {
   const dispatch = useDispatch();

@@ -5,7 +5,7 @@ import { urlify } from "@utils/urlify";
 
 import "@styles/pages/chat/ChatMessage.css";
 
-import { ReactComponent as UserPhoto } from "./../../../assets/icons/chatForm/UserPhotoIconChat.svg";
+import { ReactComponent as UserPhoto } from "@icons/chatForm/UserPhotoIconChat.svg";
 
 export default function ChatMessage({
   fromId,

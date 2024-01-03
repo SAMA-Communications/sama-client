@@ -13,10 +13,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ReactComponent as TrashCan } from "./../../../../assets/icons/chatForm/TrashCan.svg";
-import { ReactComponent as BackBtn } from "./../../../../assets/icons/chatForm/BackBtn.svg";
-import { ReactComponent as GroupChatPhoto } from "./../../../../assets/icons/chatList/ChatIconGroup.svg";
-import { ReactComponent as PrivateChatPhoto } from "./../../../../assets/icons/chatList/ChatIconPrivate.svg";
+import { ReactComponent as TrashCan } from "@icons/chatForm/TrashCan.svg";
+import { ReactComponent as BackBtn } from "@icons/chatForm/BackBtn.svg";
+import { ReactComponent as GroupChatPhoto } from "@icons/chatList/ChatIconGroup.svg";
+import { ReactComponent as PrivateChatPhoto } from "@icons/chatList/ChatIconPrivate.svg";
 
 export default function ChatFormInfo({ closeForm }) {
   const navigate = useNavigate();

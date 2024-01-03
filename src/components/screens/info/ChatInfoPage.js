@@ -12,12 +12,12 @@ import { useMemo, useState } from "react";
 
 import "@styles/pages/chat/ChatInfoPage.css";
 
-import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
-import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
-import { ReactComponent as GroupChatPhoto } from "./../../../assets/icons/chatList/ChatIconGroup.svg";
-import { ReactComponent as AddParticipants } from "./../../../assets/icons/chatList/CreateChatButton.svg";
-import { ReactComponent as PenEditIcon } from "./../../../assets/icons/userProfile/PenEditIcon.svg";
-import { ReactComponent as ConfirmIcon } from "./../../../assets/icons/userProfile/ConfirmIcon.svg";
+import { ReactComponent as TrashCan } from "@icons/chatForm/TrashCan.svg";
+import { ReactComponent as BackBtn } from "@icons/chatForm/BackBtn.svg";
+import { ReactComponent as GroupChatPhoto } from "@icons/chatList/ChatIconGroup.svg";
+import { ReactComponent as AddParticipants } from "@icons/chatList/CreateChatButton.svg";
+import { ReactComponent as PenEditIcon } from "@icons/userProfile/PenEditIcon.svg";
+import { ReactComponent as ConfirmIcon } from "@icons/userProfile/ConfirmIcon.svg";
 
 export default function ChatInfoPage() {
   const dispatch = useDispatch();
