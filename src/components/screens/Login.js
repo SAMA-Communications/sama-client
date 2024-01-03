@@ -1,7 +1,7 @@
 import MainLogo from "../static/MainLogo";
 import React, { useState } from "react";
 import api from "../../api/api";
-import subscribeForNotifications from "../../services/notifications";
+import subscribeForNotifications from "@services/notifications";
 import showCustomAlert from "../../utils/show_alert";
 import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
@@ -10,9 +10,9 @@ import {
   loginBox,
 } from "../../styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
-import { setSelectedConversation } from "../../store/SelectedConversation";
-import { setUserIsLoggedIn } from "../../store/UserIsLoggedIn ";
-import { upsertUser } from "../../store/Participants";
+import { setSelectedConversation } from "@store/SelectedConversation";
+import { setUserIsLoggedIn } from "@store/UserIsLoggedIn ";
+import { upsertUser } from "@store/Participants";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 

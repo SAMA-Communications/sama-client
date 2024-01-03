@@ -1,5 +1,5 @@
 import MessagesList from "../MessagesList";
-import { getActiveConversationMessages } from "../../../../store/Messages";
+import { getActiveConversationMessages } from "@store/Messages";
 import { useSelector } from "react-redux";
 
 import { ReactComponent as EmptyChat } from "./../../../../assets/icons/chatForm/EmptyChat.svg";

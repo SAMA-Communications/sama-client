@@ -3,24 +3,24 @@ import DownloadManager from "../../../../adapters/downloadManager.js";
 import api from "../../../../api/api";
 import compressFile from "../../../../utils/compress_file.js";
 import encodeImageToBlurhash from "../../../../utils/get_blur_hash.js";
-import globalConstants from "../../../../_helpers/constants.js";
+import globalConstants from "@helpers/constants.js";
 import heicToPng from "../../../../utils/heic_to_png";
 import isMobile from "./../../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
-import { getNetworkState } from "../../../../store/NetworkState";
+import { getNetworkState } from "@store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   addMessage,
   getActiveConversationMessages,
   removeMessage,
-} from "../../../../store/Messages";
+} from "@store/Messages";
 import showCustomAlert from "../../../../utils/show_alert";
 import {
   getConverastionById,
   setLastMessageField,
   updateLastMessageField,
-} from "../../../../store/Conversations";
+} from "@store/Conversations";
 
 import { ReactComponent as SendFilesButton } from "./../../../../assets/icons/chatForm/SendFilesButton.svg";
 import { ReactComponent as Loading } from "./../../../../assets/icons/chatForm/Loading.svg";

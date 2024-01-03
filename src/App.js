@@ -1,14 +1,14 @@
 import React, { Suspense, useEffect, useRef } from "react";
-import activityService from "./services/activityService";
-import autoLoginService from "./services/autoLoginService.js";
-import conversationService from "./services/conversationsService";
-import globalConstants from "./_helpers/constants";
-import messagesService from "./services/messagesService";
+import activityService from "@services/activityService";
+import autoLoginService from "@services/autoLoginService.js";
+import conversationService from "@services/conversationsService";
+import globalConstants from "@helpers/constants";
+import messagesService from "@services/messagesService";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { history } from "./_helpers/history";
-import { getIsMobileView, setIsMobileView } from "./store/IsMobileView";
-import { updateNetworkState } from "./store/NetworkState";
+import { history } from "@helpers/history";
+import { getIsMobileView, setIsMobileView } from "@store/IsMobileView";
+import { updateNetworkState } from "@store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 
 import PageLoader from "./components/PageLoader";

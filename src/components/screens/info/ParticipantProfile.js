@@ -1,6 +1,5 @@
 import getPrevPage from "../../../utils/get_prev_page.js";
-import { history } from "../../../_helpers/history.js";
-import { selectParticipantsEntities } from "../../../store/Participants.js";
+import { selectParticipantsEntities } from "@store/Participants.js";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";

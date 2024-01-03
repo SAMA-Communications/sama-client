@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@services/*": ["src/services/*"],
+      "@helpers/*": ["src/_helpers/*"],
+      "@event/*": ["src/event/*"],
+      "@store/*": ["src/store/*"]
+    }
+  }
+}

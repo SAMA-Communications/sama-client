@@ -4,15 +4,15 @@ import jwtDecode from "jwt-decode";
 import ChatBox from "../../generic/chatComponents/ChatBox.js";
 import MiniLogo from "./../../static/MiniLogo.js";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { selectParticipantsEntities } from "../../../store/Participants.js";
+import { selectParticipantsEntities } from "@store/Participants.js";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
   selectAllConversations,
-} from "../../../store/Conversations.js";
-import { setSelectedConversation } from "../../../store/SelectedConversation.js";
-import { setUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
-import { updateNetworkState } from "../../../store/NetworkState.js";
+} from "@store/Conversations.js";
+import { setSelectedConversation } from "@store/SelectedConversation.js";
+import { setUserIsLoggedIn } from "@store/UserIsLoggedIn .js";
+import { updateNetworkState } from "@store/NetworkState.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../../styles/pages/chat/ChatList.css";

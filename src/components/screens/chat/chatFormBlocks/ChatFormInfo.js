@@ -6,9 +6,9 @@ import {
   getConverastionById,
   removeChat,
   selectConversationsEntities,
-} from "../../../../store/Conversations";
-import { clearSelectedConversation } from "../../../../store/SelectedConversation";
-import { selectParticipantsEntities } from "../../../../store/Participants";
+} from "@store/Conversations";
+import { clearSelectedConversation } from "@store/SelectedConversation";
+import { selectParticipantsEntities } from "@store/Participants";
 import { useDispatch, useSelector } from "react-redux";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";

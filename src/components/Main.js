@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { getIsMobileView } from "../store/IsMobileView";
+import { getIsMobileView } from "@store/IsMobileView";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
