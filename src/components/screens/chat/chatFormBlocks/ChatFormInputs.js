@@ -170,7 +170,11 @@ export default function ChatFormInputs({
     const selectedFiles = [];
     try {
       for (let i = 0; i < pickedFiles.length; i++) {
-        let file = pickedFiles[i];
+        const fileObj = pickedFiles[i];
+        const formData = new FormData();
+        formData.append("file", fileObj, fileObj.name.toLocaleLowerCase());
+        let file = formData.get("file");
+
         if (file.name.length > 255) {
           throw new Error("The file name should not exceed 255 characters.", {
             cause: {
