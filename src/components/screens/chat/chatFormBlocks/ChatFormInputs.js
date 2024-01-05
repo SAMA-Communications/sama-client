@@ -186,6 +186,7 @@ export default function ChatFormInputs({
           });
         }
 
+        file.name = file.name.toLocaleLowerCase();
         const fileExtension = file.name.split(".").slice(-1)[0];
 
         if (
