@@ -3,7 +3,7 @@ import {
   createSelector,
   createSlice,
 } from "@reduxjs/toolkit";
-import { getConverastionById } from "./Conversations";
+import { getConverastionById } from "@store/Conversations";
 
 export const messagesAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,

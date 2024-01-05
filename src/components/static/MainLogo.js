@@ -1,4 +1,4 @@
-import { animateSVG } from "../../styles/animations/animationSVG.js";
+import { animateSVG } from "@styles/animations/animationSVG.js";
 import { motion as m } from "framer-motion";
 
 export default function MainLogo() {

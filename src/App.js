@@ -1,26 +1,26 @@
 import React, { Suspense, useEffect, useRef } from "react";
-import activityService from "./services/activityService";
-import autoLoginService from "./services/autoLoginService.js";
-import conversationService from "./services/conversationsService";
-import globalConstants from "./_helpers/constants";
-import messagesService from "./services/messagesService";
+import activityService from "@services/activityService";
+import autoLoginService from "@services/autoLoginService.js";
+import conversationService from "@services/conversationsService";
+import globalConstants from "@helpers/constants";
+import messagesService from "@services/messagesService";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { history } from "./_helpers/history";
-import { getIsMobileView, setIsMobileView } from "./store/IsMobileView";
-import { updateNetworkState } from "./store/NetworkState";
+import { getIsMobileView, setIsMobileView } from "@store/IsMobileView";
+import { history } from "@helpers/history";
+import { updateNetworkState } from "@store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 
-import PageLoader from "./components/PageLoader";
-import SignUp from "./components/screens/SignUp";
+import PageLoader from "@components/PageLoader";
+import SignUp from "@screens/SignUp";
 
-import "./styles/GlobalParam.css";
-import "./styles/themes/DarkTheme.css";
-import "./styles/themes/DefaultTheme.css";
+import "@styles/GlobalParam.css";
+import "@styles/themes/DarkTheme.css";
+import "@styles/themes/DefaultTheme.css";
 
-const Main = React.lazy(() => import("./components/Main"));
-const Login = React.lazy(() => import("./components/screens/Login"));
-const ErrorPage = React.lazy(() => import("./components/ErrorPage"));
+const Main = React.lazy(() => import("@components/Main"));
+const Login = React.lazy(() => import("@screens/Login"));
+const ErrorPage = React.lazy(() => import("@components/ErrorPage"));
 
 export default function App() {
   const dispatch = useDispatch();

@@ -1,11 +1,11 @@
-import MessageStatus from "../messageComponents/MessageStatus";
+import ImageView from "@generic/attachmentComponents/ImageView";
+import MessageStatus from "@generic/messageComponents/MessageStatus";
 import React, { useMemo } from "react";
-import ImageView from "../attachmentComponents/ImageView";
-import getFileType from "../../../utils/get_file_type";
+import getFileType from "@utils/get_file_type";
 
-import { ReactComponent as ChatIconPrivate } from "./../../../assets/icons/chatList/ChatIconPrivate.svg";
-import { ReactComponent as ChatIconGroup } from "./../../../assets/icons/chatList/ChatIconGroup.svg";
-import { ReactComponent as ImagePreviewIcon } from "./../../../assets/icons/chatList/ImagePreviewIcon.svg";
+import { ReactComponent as ChatIconGroup } from "@icons/chatList/ChatIconGroup.svg";
+import { ReactComponent as ChatIconPrivate } from "@icons/chatList/ChatIconPrivate.svg";
+import { ReactComponent as ImagePreviewIcon } from "@icons/chatList/ImagePreviewIcon.svg";
 
 export default function ChatBox({
   chatName,

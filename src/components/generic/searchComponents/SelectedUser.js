@@ -1,8 +1,8 @@
 import React from "react";
-import { changeOpacity } from "../../../styles/animations/animationBlocks";
+import { changeOpacity } from "@styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
 
-import { ReactComponent as CloseButtonMini } from "./../../../assets/icons/chatForm/CloseButtonMini.svg";
+import { ReactComponent as CloseButtonMini } from "@icons/chatForm/CloseButtonMini.svg";
 
 export default function SelectedUser({ uLogin, onClick }) {
   return (

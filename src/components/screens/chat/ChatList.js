@@ -1,27 +1,27 @@
+import ChatBox from "@generic/chatComponents/ChatBox.js";
+import MiniLogo from "@static/MiniLogo.js";
 import React, { useMemo, useState } from "react";
-import api from "../../../api/api.js";
+import api from "@api/api.js";
 import jwtDecode from "jwt-decode";
-import ChatBox from "../../generic/chatComponents/ChatBox.js";
-import MiniLogo from "./../../static/MiniLogo.js";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { selectParticipantsEntities } from "../../../store/Participants.js";
+import { selectParticipantsEntities } from "@store/Participants.js";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
   selectAllConversations,
-} from "../../../store/Conversations.js";
-import { setSelectedConversation } from "../../../store/SelectedConversation.js";
-import { setUserIsLoggedIn } from "../../../store/UserIsLoggedIn .js";
-import { updateNetworkState } from "../../../store/NetworkState.js";
+} from "@store/Conversations.js";
+import { setSelectedConversation } from "@store/SelectedConversation.js";
+import { setUserIsLoggedIn } from "@store/UserIsLoggedIn.js";
+import { updateNetworkState } from "@store/NetworkState.js";
 import { useSelector, useDispatch } from "react-redux";
 
-import "../../../styles/pages/chat/ChatList.css";
+import "@styles/pages/chat/ChatList.css";
 
-import { ReactComponent as CreateChatButton } from "./../../../assets/icons/chatList/CreateChatButton.svg";
-import { ReactComponent as IconMoon } from "./../../../assets/icons/ThemeMoon.svg";
-import { ReactComponent as IconSun } from "./../../../assets/icons/ThemeSun.svg";
-import { ReactComponent as LogoutBtn } from "./../../../assets/icons/chatList/LogoutBtn.svg";
-import { ReactComponent as MoreOptions } from "./../../../assets/icons/chatList/MoreOptions.svg";
+import { ReactComponent as CreateChatButton } from "@icons/chatList/CreateChatButton.svg";
+import { ReactComponent as IconMoon } from "@icons/ThemeMoon.svg";
+import { ReactComponent as IconSun } from "@icons/ThemeSun.svg";
+import { ReactComponent as LogoutBtn } from "@icons/chatList/LogoutBtn.svg";
+import { ReactComponent as MoreOptions } from "@icons/chatList/MoreOptions.svg";
 
 export default function ChatList() {
   const dispatch = useDispatch();

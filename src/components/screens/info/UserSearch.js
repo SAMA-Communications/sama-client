@@ -1,23 +1,20 @@
 import React, { useEffect, useState, useTransition } from "react";
-import SearchedUser from "../../generic/searchComponents/SearchedUser.js";
-import SelectedUser from "../../generic/searchComponents/SelectedUser.js";
-import api from "../../../api/api.js";
-import getPrevPage from "../../../utils/get_prev_page.js";
-import showCustomAlert from "../../../utils/show_alert.js";
-import { addUsers } from "../../../store/Participants.js";
-import {
-  getConverastionById,
-  insertChat,
-} from "../../../store/Conversations.js";
-import { setSelectedConversation } from "../../../store/SelectedConversation.js";
-import { getIsMobileView } from "../../../store/IsMobileView.js";
+import SearchedUser from "@generic/searchComponents/SearchedUser.js";
+import SelectedUser from "@generic/searchComponents/SelectedUser.js";
+import api from "@api/api";
+import getPrevPage from "@utils/get_prev_page.js";
+import showCustomAlert from "@utils/show_alert.js";
+import { addUsers } from "@store/Participants.js";
+import { getConverastionById, insertChat } from "@store/Conversations.js";
+import { getIsMobileView } from "@store/IsMobileView.js";
+import { setSelectedConversation } from "@store/SelectedConversation.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import "../../../styles/pages/UserSearch.css";
+import "@styles/pages/UserSearch.css";
 
-import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
-import { ReactComponent as SearchIndicator } from "./../../../assets/icons/SearchIndicator.svg";
+import { ReactComponent as BackBtn } from "@icons/chatForm/BackBtn.svg";
+import { ReactComponent as SearchIndicator } from "@icons/SearchIndicator.svg";
 
 export default function UserSearch({ type }) {
   const dispatch = useDispatch();

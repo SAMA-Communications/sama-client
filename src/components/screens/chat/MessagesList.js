@@ -1,16 +1,16 @@
-import ChatMessage from "../../generic/messageComponents/ChatMessage";
-import DownloadManager from "../../../adapters/downloadManager";
+import ChatMessage from "@generic/messageComponents/ChatMessage";
+import DownloadManager from "@adapters/downloadManager";
 import InfiniteScroll from "react-infinite-scroll-component";
-import InformativeMessage from "../../generic/messageComponents/InformativeMessage";
-import api from "../../../api/api";
+import InformativeMessage from "@generic/messageComponents/InformativeMessage";
+import api from "@api/api";
 import jwtDecode from "jwt-decode";
 import {
   addMessages,
   getActiveConversationMessages,
   upsertMessages,
-} from "../../../store/Messages";
-import { getConverastionById, upsertChat } from "../../../store/Conversations";
-import { selectParticipantsEntities } from "../../../store/Participants";
+} from "@store/Messages";
+import { getConverastionById, upsertChat } from "@store/Conversations";
+import { selectParticipantsEntities } from "@store/Participants";
 import { useCallback, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 

@@ -1,27 +1,25 @@
-import api from "../../../api/api";
+import api from "@api/api";
+import getPrevPage from "@utils/get_prev_page";
 import jwtDecode from "jwt-decode";
-import showCustomAlert from "../../../utils/show_alert";
-import getPrevPage from "../../../utils/get_prev_page";
-import {
-  selectParticipantsEntities,
-  upsertUser,
-} from "../../../store/Participants";
-import { updateNetworkState } from "../../../store/NetworkState";
+import showCustomAlert from "@utils/show_alert";
+import { selectParticipantsEntities, upsertUser } from "@store/Participants";
+import { updateNetworkState } from "@store/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import "./../../../styles/pages/UserProfile.css";
+import "@styles/pages/UserProfile.css";
 
-import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
-import { ReactComponent as ConfirmIcon } from "./../../../assets/icons/userProfile/ConfirmIcon.svg";
-import { ReactComponent as EmailIcon } from "./../../../assets/icons/userProfile/EmailIcon.svg";
-import { ReactComponent as PasswordIcon } from "./../../../assets/icons/userProfile/PasswordIcon.svg";
-import { ReactComponent as PenEditIcon } from "./../../../assets/icons/userProfile/PenEditIcon.svg";
-import { ReactComponent as PhoneIcon } from "./../../../assets/icons/userProfile/PhoneIcon.svg";
-import { ReactComponent as TrashCan } from "./../../../assets/icons/chatForm/TrashCan.svg";
-import { ReactComponent as UserLoginIcon } from "./../../../assets/icons/userProfile/UserLoginIcon.svg";
-import { ReactComponent as UndoChangeIcon } from "./../../../assets/icons/userProfile/UndoEditIcon.svg";
+import { ReactComponent as BackBtn } from "@icons/chatForm/BackBtn.svg";
+import { ReactComponent as ConfirmIcon } from "@icons/userProfile/ConfirmIcon.svg";
+import { ReactComponent as EmailIcon } from "@icons/userProfile/EmailIcon.svg";
+import { ReactComponent as PasswordIcon } from "@icons/userProfile/PasswordIcon.svg";
+import { ReactComponent as PenEditIcon } from "@icons/userProfile/PenEditIcon.svg";
+import { ReactComponent as PhoneIcon } from "@icons/userProfile/PhoneIcon.svg";
+import { ReactComponent as TrashCan } from "@icons/chatForm/TrashCan.svg";
+import { ReactComponent as UndoChangeIcon } from "@icons/userProfile/UndoEditIcon.svg";
+import { ReactComponent as UserLoginIcon } from "@icons/userProfile/UserLoginIcon.svg";
+
 export default function UserProfile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();

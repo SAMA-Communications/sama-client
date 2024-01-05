@@ -1,10 +1,10 @@
-import conversationsReducer from "./Conversations";
-import isMobileViewReducer from "./IsMobileView";
-import messageReducer from "./Messages";
-import networkStateReducer from "./NetworkState";
-import participantsReducer from "./Participants";
-import selectedConversationReducer from "./SelectedConversation";
-import userIsLoggedInReducer from "./UserIsLoggedIn ";
+import conversationsReducer from "@store/Conversations";
+import isMobileViewReducer from "@store/IsMobileView";
+import messageReducer from "@store/Messages";
+import networkStateReducer from "@store/NetworkState";
+import participantsReducer from "@store/Participants";
+import selectedConversationReducer from "@store/SelectedConversation";
+import userIsLoggedInReducer from "@store/UserIsLoggedIn";
 import { combineReducers } from "@reduxjs/toolkit";
 
 const appReducer = combineReducers({

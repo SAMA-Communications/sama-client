@@ -1,4 +1,4 @@
-import api from "../api/api";
+import api from "@api/api";
 
 export default class DownloadManager {
   static async getDownloadFileLinks(attachments) {

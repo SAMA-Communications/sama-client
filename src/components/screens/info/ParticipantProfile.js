@@ -1,16 +1,15 @@
-import getPrevPage from "../../../utils/get_prev_page.js";
-import { history } from "../../../_helpers/history.js";
-import { selectParticipantsEntities } from "../../../store/Participants.js";
+import getPrevPage from "@utils/get_prev_page.js";
+import { selectParticipantsEntities } from "@store/Participants.js";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
 
-import "./../../../styles/pages/UserProfile.css";
+import "@styles/pages/UserProfile.css";
 
-import { ReactComponent as BackBtn } from "./../../../assets/icons/chatForm/BackBtn.svg";
-import { ReactComponent as EmailIcon } from "./../../../assets/icons/userProfile/EmailIcon.svg";
-import { ReactComponent as PhoneIcon } from "./../../../assets/icons/userProfile/PhoneIcon.svg";
-import { ReactComponent as UserLoginIcon } from "./../../../assets/icons/userProfile/UserLoginIcon.svg";
+import { ReactComponent as BackBtn } from "@icons/chatForm/BackBtn.svg";
+import { ReactComponent as EmailIcon } from "@icons/userProfile/EmailIcon.svg";
+import { ReactComponent as PhoneIcon } from "@icons/userProfile/PhoneIcon.svg";
+import { ReactComponent as UserLoginIcon } from "@icons/userProfile/UserLoginIcon.svg";
 
 export default function ParticipantProfile() {
   const location = useLocation();

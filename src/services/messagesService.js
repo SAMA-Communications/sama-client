@@ -1,22 +1,22 @@
-import api from "../api/api";
-import store from "../store/store";
+import DownloadManager from "@adapters/downloadManager";
+import api from "@api/api";
 import jwtDecode from "jwt-decode";
-import DownloadManager from "../adapters/downloadManager";
+import store from "@store/store";
+import { addUser } from "@store/Participants";
 import {
   addMessage,
   addMessages,
   markMessagesAsRead,
   upsertMessages,
-} from "../store/Messages";
-import { setSelectedConversation } from "../store/SelectedConversation";
+} from "@store/Messages";
+import { setSelectedConversation } from "@store/SelectedConversation";
+import { history } from "@helpers/history";
 import {
   markConversationAsRead,
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
-} from "../store/Conversations";
-import { history } from "../_helpers/history";
-import { addUser } from "../store/Participants";
+} from "@store/Conversations";
 
 class MessagesService {
   currentChatId;

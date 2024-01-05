@@ -1,4 +1,4 @@
-import globalConstants from "../_helpers/constants";
+import globalConstants from "@helpers/constants";
 
 export default function getLastVisitTime(timestamp, userLocale) {
   if (!timestamp) {
