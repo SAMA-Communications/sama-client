@@ -2,6 +2,7 @@ import api from "../api/api";
 import urlBase64ToUint8Array from "../api/base64_to_uint8Array.js";
 import { default as EventEmitter } from "../event/eventEmitter";
 import { default as store } from "../store/store.js";
+import getFileType from "../utils/get_file_type.js";
 
 let sw = null;
 
@@ -28,11 +29,12 @@ async function showLocalNotification(pushMessage) {
   const { attachments, from, body } = pushMessage;
   const userLogin = storeState.participants.entities[from]?.login;
 
+  const typeOfLastAttachment = attachments
+    ? getFileType(attachments?.slice(-1)[0].file_name)
+    : "file";
   const attachmentText =
     attachments?.length > 0
-      ? attachments.length > 1
-        ? "\nPhotos"
-        : "\nPhoto"
+      ? `\n${typeOfLastAttachment}${attachments.length > 1 ? "s" : ""}`
       : "";
 
   const title =
@@ -40,9 +42,10 @@ async function showLocalNotification(pushMessage) {
       ? userLogin
       : `${userLogin} | ${conversation?.name}`;
 
+  const bodyCrop = body.length > 75 ? body.slice(0, 75) + "..." : body;
   const notificationMessage = {
     ...pushMessage,
-    body: `${body}${attachmentText}`,
+    body: `${bodyCrop}${attachmentText}`,
     title,
   };
 

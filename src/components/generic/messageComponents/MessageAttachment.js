@@ -1,18 +1,36 @@
-import { motion as m } from "framer-motion";
+import getFileType from "../../../utils/get_file_type";
+import ImageView from "../attachmentComponents/ImageView";
+import VideoView from "../attachmentComponents/VideoView";
+import { useLocation, useNavigate } from "react-router-dom";
 
-export default function MessageAttachment({ url, name, openModalParam }) {
+export default function MessageAttachment({
+  id,
+  url,
+  name,
+  localUrl,
+  blurHash,
+}) {
+  const { hash } = useLocation();
+  const navigate = useNavigate();
+
   return (
     <div
       className="attachment-img"
-      onClick={() => openModalParam({ url, name })}
+      style={{ gridColumnEnd: `span ${1}`, gridRowEnd: `span ${1}` }}
+      onClick={() => {
+        navigate(hash + `/modal?id=${id.replaceAll(" ", "%")}`);
+      }}
     >
-      <m.img
-        loading="lazy"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.9 }}
-        src={url}
-        alt={name}
-      />
+      {getFileType(name) === "Video" ? (
+        <VideoView url={url} posterName={name} />
+      ) : (
+        <ImageView
+          url={url}
+          localUrl={localUrl}
+          blurHash={blurHash}
+          altName={name}
+        />
+      )}
     </div>
   );
 }

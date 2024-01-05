@@ -81,22 +81,6 @@ export default function ChatForm() {
     }
   };
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const close = () => setModalOpen(false);
-  const open = (options) => setModalOpen(options);
-
-  const modalWindow = () => {
-    window.onkeydown = function (event) {
-      event.keyCode === 27 && close();
-    };
-
-    return (
-      <div exit="exit" className="modal-window" onClick={() => close()}>
-        <img src={modalOpen?.url} alt={modalOpen?.name} />
-      </div>
-    );
-  };
-
   if (!selectedCID) {
     return (
       <section className="chat-form">
@@ -108,14 +92,13 @@ export default function ChatForm() {
   return (
     <section className="chat-form">
       <ChatFormInfo closeForm={closeForm} />
-      <ChatFormMain scrollRef={chatMessagesBlock} open={open} />
+      <ChatFormMain scrollRef={chatMessagesBlock} />
       <ChatFormInputs
         chatMessagesBlockRef={chatMessagesBlock}
         messageInputEl={messageInputEl}
         files={files}
         setFiles={setFiles}
       />
-      {modalOpen && modalWindow()}
     </section>
   );
 }

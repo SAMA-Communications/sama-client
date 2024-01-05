@@ -1,5 +1,7 @@
 import MessageStatus from "../messageComponents/MessageStatus";
 import React, { useMemo } from "react";
+import ImageView from "../attachmentComponents/ImageView";
+import getFileType from "../../../utils/get_file_type";
 
 import { ReactComponent as ChatIconPrivate } from "./../../../assets/icons/chatList/ChatIconPrivate.svg";
 import { ReactComponent as ChatIconGroup } from "./../../../assets/icons/chatList/ChatIconGroup.svg";
@@ -55,7 +57,7 @@ export default function ChatBox({
     }
   }, [timeOfLastUpdate, lastMessage]);
 
-  const lastMessageView = useMemo(() => {
+  const lastMessageParams = useMemo(() => {
     if (lastMessage) {
       const param = { text: lastMessage.body };
       if (lastMessage.from === uId) {
@@ -63,11 +65,46 @@ export default function ChatBox({
           <MessageStatus key={lastMessage._id} status={lastMessage.status} />
         );
       }
-      return [param.text, param.status];
+
+      return {
+        att: lastMessage.attachments,
+        text: param.text,
+        status: param.status,
+      };
     } else {
       return null;
     }
   }, [lastMessage]);
+
+  const lastMessageView = useMemo(() => {
+    if (!lastMessage || !lastMessageParams) {
+      return null;
+    }
+
+    const { att, text, status } = lastMessageParams;
+    const lastAtt = att?.slice(-1)[0];
+
+    return (
+      <div className="last-message">
+        {lastAtt ? (
+          <div className="media-container">
+            {lastAtt.file_blur_hash ? (
+              <ImageView
+                blurHash={lastAtt.file_blur_hash}
+                url={null}
+                localUrl={null}
+                altName={lastAtt.file_name}
+              />
+            ) : (
+              <ImagePreviewIcon />
+            )}
+          </div>
+        ) : null}
+        <p>{text?.length ? text : getFileType(lastAtt?.file_name)}</p>
+        {status}
+      </div>
+    );
+  }, [lastMessageParams]);
 
   return (
     <div className="chat-box">
@@ -81,15 +118,7 @@ export default function ChatBox({
 
       <div className="chat-box-info">
         <p className="chat-name">{chatName}</p>
-        {lastMessage &&
-          (lastMessageView[0] === "" ? (
-            <div className="last-message-img-preview">
-              <ImagePreviewIcon />
-              <p>photo</p>
-            </div>
-          ) : (
-            <p className="chat-message">{lastMessageView}</p>
-          ))}
+        {lastMessageView}
       </div>
       {countOfNewMessages > 0 && (
         <div className="chat-indicator">{countOfNewMessages}</div>

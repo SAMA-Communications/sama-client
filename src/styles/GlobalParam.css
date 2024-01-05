@@ -9,7 +9,7 @@
   --font-size: 1rem;
 
   --darken-color: rgba(0, 0, 0, 0.6);
-  --preloader-bg: #fff;
+  --preloader-bg: "transperent";
 }
 
 * {

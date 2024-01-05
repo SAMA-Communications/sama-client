@@ -1,12 +1,15 @@
-import api from "../../../../api/api";
 import AttachmentsList from "../../../generic/messageComponents/AttachmentsList.js";
+import DownloadManager from "../../../../adapters/downloadManager.js";
+import api from "../../../../api/api";
+import compressFile from "../../../../utils/compress_file.js";
+import encodeImageToBlurhash from "../../../../utils/get_blur_hash.js";
+import globalConstants from "../../../../_helpers/constants.js";
+import heicToPng from "../../../../utils/heic_to_png";
 import isMobile from "./../../../../utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
-import heicToPng from "../../../../utils/heic_to_png";
-import { getFileObjects } from "../../../../api/download_manager";
 import { getNetworkState } from "../../../../store/NetworkState";
-import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   addMessage,
   getActiveConversationMessages,
@@ -67,6 +70,11 @@ export default function ChatFormInputs({
       body: text,
       from: userInfo._id,
       t: Date.now(),
+      attachments: files.map((file) => ({
+        file_id: file.name,
+        file_name: file.name,
+        file_url: file.localUrl,
+      })),
     };
 
     dispatch(addMessage(msg));
@@ -80,10 +88,12 @@ export default function ChatFormInputs({
     };
 
     if (files?.length) {
-      attachments = await getFileObjects(files);
-      reqData["attachments"] = attachments.map((obj) => {
-        return { file_id: obj.file_id, file_name: obj.file_name };
-      });
+      attachments = await DownloadManager.getFileObjects(files);
+      reqData["attachments"] = attachments.map((obj, i) => ({
+        file_id: obj.file_id,
+        file_name: obj.file_name,
+        file_blur_hash: files[i].blurHash,
+      }));
     }
 
     let response;
@@ -107,7 +117,13 @@ export default function ChatFormInputs({
         from: userInfo._id,
         status: "sent",
         t: response.t,
-        attachments,
+        attachments: attachments.map((obj, i) => ({
+          file_id: obj.file_id,
+          file_name: obj.file_name,
+          file_url: obj.file_url,
+          file_local_url: files[i].localUrl,
+          file_blur_hash: files[i].blurHash,
+        })),
       };
 
       dispatch(addMessage(msg));
@@ -137,10 +153,28 @@ export default function ChatFormInputs({
     }
     setIsLoadingFile(true);
 
+    async function compressAndHashFile(file) {
+      file = await compressFile(file);
+      const localFileUrl = URL.createObjectURL(file);
+      file.localUrl = localFileUrl;
+
+      try {
+        file.blurHash = await encodeImageToBlurhash(localFileUrl);
+      } catch (e) {
+        file.blurHash = globalConstants.defaultBlurHash;
+      }
+
+      return file;
+    }
+
     const selectedFiles = [];
     try {
       for (let i = 0; i < pickedFiles.length; i++) {
-        const file = pickedFiles[i];
+        const fileObj = pickedFiles[i];
+        const formData = new FormData();
+        formData.append("file", fileObj, fileObj.name.toLocaleLowerCase());
+        let file = formData.get("file");
+
         if (file.name.length > 255) {
           throw new Error("The file name should not exceed 255 characters.", {
             cause: {
@@ -148,15 +182,33 @@ export default function ChatFormInputs({
             },
           });
         }
+        if (file.size > 104857600) {
+          throw new Error("The file size should not exceed 100 MB.", {
+            cause: {
+              message: "The file size should not exceed 100 MB.",
+            },
+          });
+        }
 
-        if (!file.type.startsWith("image/") && !/^\w+\.HEIC$/.test(file.name)) {
+        const fileExtension = file.name.split(".").slice(-1)[0];
+
+        if (
+          !globalConstants.allowedFileFormats.includes(file.type) &&
+          !["heic", "HEIC"].includes(fileExtension)
+        ) {
           throw new Error("Please select an image file.", {
             cause: { message: "Please select an image file." },
           });
-        } else if (/^\w+\.HEIC$/.test(file.name)) {
-          const pngFile = await heicToPng(file);
+        } else if (["heic", "HEIC"].includes(fileExtension)) {
+          const tmp = await heicToPng(file);
+          const pngFile = await compressAndHashFile(tmp);
+
           selectedFiles.push(pngFile);
           continue;
+        }
+
+        if (file.type.startsWith("image/")) {
+          file = await compressAndHashFile(file);
         }
 
         selectedFiles.push(file);
@@ -204,7 +256,7 @@ export default function ChatFormInputs({
     }
   };
 
-  const fileView = useMemo(() => {
+  const inputFilesView = useMemo(() => {
     if (isLoadingFile) {
       return (
         <div className="chat-files-preview">
@@ -222,7 +274,7 @@ export default function ChatFormInputs({
 
   return (
     <>
-      {fileView}
+      {inputFilesView}
       <form id="chat-form-send" action="">
         <div className="form-send-file">
           <SendFilesButton onClick={pickUserFiles} />
@@ -231,7 +283,7 @@ export default function ChatFormInputs({
             ref={filePicker}
             onChange={handlerChange}
             type="file"
-            accept="image/*"
+            accept={globalConstants.allowedFileFormats}
             multiple
           />
         </div>
