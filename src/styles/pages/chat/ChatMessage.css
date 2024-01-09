@@ -166,6 +166,8 @@
   max-height: 90vh;
   width: auto;
   height: auto;
+
+  z-index: 12;
 }
 
 .informative-message {
