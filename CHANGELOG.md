@@ -4,12 +4,12 @@
 
 ### Features
 
-- Improved functionality for uploading links to images. This will allow the bot to send you your picture in response, and in the future, it will optimize the forwarding of messages with attachments to other chats.
-- Implemented support for video attribution. Now you can send not only photos, but also videos.
+- Improved functionality for **uploading links** to images. This will allow the bot to send you your picture in response, and in the future, it will optimize the forwarding of messages with attachments to other chats.
+- Implemented support for **video** attribution. Now you can send not only photos, but also videos.
 
 ### Improvement
 
-- To make the code cleaner, we optimized the paths of all imports. Namely, we used react-app-alias, which allowed us to turn annoying and long import strings "../../../../../myFile.js" into "@components/myFile.js".
+- To make the code cleaner, we **optimized** the paths of all imports. Namely, we used `react-app-alias`, which allowed us to turn annoying and long import strings `../../../../../myFile.js` into `@components/myFile.js`.
 
 ## 0.4.0
 
