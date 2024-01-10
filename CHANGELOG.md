@@ -4,14 +4,14 @@
 
 ### Features
 
-- Improved functionality for **uploading links** to images. This will allow the bot to send you your picture in response, and in the future, it will optimize the forwarding of messages with attachments to other chats.
-- Implemented support for **video** attribution. Now you can send not only photos, but also videos (up to 100 MB)(available formats .webm .mp4 .mov).
+- Improved functionality for **uploading links** to images. This will allow the bot to send picture in response, and in the future, it will optimize the forwarding of messages with attachments to other chats.
+- Implemented support for **video** attribution. Now video attachments are also supported, along with image attachments (up to 100 MB)(available formats .webm .mp4 .mov).
 - For all images sent by the user, a **blurHash** string is generated. Using the `react-blurhash` library, this string will be converted into a **compressed** image for previewing the image on the client while the **full size** image is being loaded.
 - Implemented an algorithm for **compressing** the size of images sent as attachments to a message.
 
-### Improvement
+### Improvements
 
-- To make the code cleaner, we **optimized** the paths of all imports. Namely, we used `react-app-alias`, which allowed us to turn annoying and long import strings `../../../../../myFile.js` into `@components/myFile.js`.
+- To make the code cleaner, all import paths have been **optimized**. The `react-app-alias` library has been used to convert the annoying and long import strings `../.../.../.../.../.../.../.../myFile.js` to `@components/myFile.js`.
 - Optimized algorithm for displaying pages and containers.
 - Improved processing of `.heic` images and **compression** of their size.
 
