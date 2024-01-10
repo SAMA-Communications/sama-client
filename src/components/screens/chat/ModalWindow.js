@@ -1,7 +1,7 @@
 import DownloadManager from "@adapters/downloadManager";
 import getFileType from "@utils/get_file_type";
 import getPrevPage from "@utils/get_prev_page";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function ModalWindow() {
@@ -9,8 +9,6 @@ export default function ModalWindow() {
   const { hash } = useLocation();
 
   const [fileParams, setFileParams] = useState({});
-
-  const videoElRef = useRef(null);
 
   const closeWindow = () => navigate(getPrevPage(hash));
 
@@ -41,11 +39,11 @@ export default function ModalWindow() {
     <div className="modal-window" onClick={closeWindow}>
       {getFileType(fileParams.name) === "Video" ? (
         <video
-          ref={videoElRef}
           autoPlay
           controls
           src={fileParams.url + "#t=0.1"}
           poster={fileParams.name}
+          onClick={(event) => event.stopPropagation()}
         />
       ) : (
         <img src={fileParams.url} alt={fileParams.name} />
