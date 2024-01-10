@@ -5,7 +5,7 @@
 ### Features
 
 - Improved functionality for **uploading links** to images. This will allow the bot to send you your picture in response, and in the future, it will optimize the forwarding of messages with attachments to other chats.
-- Implemented support for **video** attribution. Now you can send not only photos, but also videos.
+- Implemented support for **video** attribution. Now you can send not only photos, but also videos (up to 100 MB)(available formats .webm .mp4 .mov).
 - For all images sent by the user, a **blurHash** string is generated. Using the `react-blurhash` library, this string will be converted into a **compressed** image for previewing the image on the client while the **full size** image is being loaded.
 - Implemented an algorithm for **compressing** the size of images sent as attachments to a message.
 
