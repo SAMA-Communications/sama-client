@@ -41,12 +41,17 @@
 
   box-sizing: border-box;
 
+  font-variant-numeric: tabular-nums;
   font-family: var(--font-family);
   font-size: var(--font-p);
   color: var(--color-text-dark);
 
   line-height: 100%;
   font-weight: 200;
+}
+
+a {
+  text-decoration: none;
 }
 
 body {

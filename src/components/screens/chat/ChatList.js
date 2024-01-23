@@ -41,28 +41,6 @@ export default function ChatList() {
     [userInfo, participants]
   );
 
-  const sendLogout = async () => {
-    navigator.serviceWorker.ready
-      .then((reg) =>
-        reg.pushManager.getSubscription().then((sub) =>
-          sub.unsubscribe().then(async () => {
-            await api.pushSubscriptionDelete();
-            await api.userLogout();
-            dispatch({ type: "RESET_STORE" });
-            dispatch(updateNetworkState(true));
-          })
-        )
-      )
-      .catch(async (err) => {
-        console.error(err);
-        await api.userLogout();
-        dispatch({ type: "RESET_STORE" });
-        dispatch(updateNetworkState(true));
-        dispatch(setUserIsLoggedIn(false));
-      });
-    localStorage.removeItem("sessionId");
-  };
-
   const [currentTheme, setCurrentTheme] = useState(
     localStorage.getItem("theme")
   );
@@ -171,11 +149,7 @@ export default function ChatList() {
             <span>|</span>
           </div>
 
-          <div className="nav-logout-btn">
-            <Link to={"/login"} onClick={sendLogout} className="logout-btn fcc">
-              <LogoutBtn />
-            </Link>
-          </div>
+          <div className="nav-logout-btn"></div>
         </div>
       </div>
       <div className="user-box">

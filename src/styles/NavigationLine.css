@@ -13,6 +13,10 @@
   background-color: var(--color-hover-dark);
 }
 
+.navigation__logo {
+  cursor: pointer;
+}
+
 .navigation__menu {
   flex-direction: column;
   gap: 30px;
@@ -37,13 +41,6 @@
 .menu__create:hover,
 .menu__logout:hover {
   background-color: var(--color-hover-dark);
-}
-
-.menu__list > svg {
-  height: 42px;
-}
-.menu__list > svg > path {
-  height: 42px;
 }
 
 .menu__profile span {
