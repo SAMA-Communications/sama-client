@@ -1,11 +1,9 @@
 import api from "@api/api";
-import jwtDecode from "jwt-decode";
+import getUserInitials from "@utils/get_user_initials";
 import { Link, useNavigate } from "react-router-dom";
-import { selectParticipantsEntities } from "@store/Participants";
 import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
 import { updateNetworkState } from "@store/NetworkState";
-import { useDispatch, useSelector } from "react-redux";
-import { useMemo } from "react";
+import { useDispatch } from "react-redux";
 
 import "../../newstyles/NavigationLine.css";
 
@@ -18,31 +16,6 @@ import { ReactComponent as Logout } from "../../newassets/icons/Logout.svg";
 export default function NavigationLine() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const participants = useSelector(selectParticipantsEntities);
-
-  const userInfo = localStorage.getItem("sessionId")
-    ? jwtDecode(localStorage.getItem("sessionId"))
-    : null;
-  const currentUser = useMemo(
-    () => (userInfo ? participants[userInfo._id] : {}),
-    [userInfo, participants]
-  );
-
-  const userLetters = useMemo(() => {
-    if (!currentUser || !Object.keys(currentUser).length) {
-      return null;
-    }
-
-    const { first_name, last_name, login } = currentUser;
-    if (first_name) {
-      return last_name
-        ? first_name.slice(0, 1) + last_name.slice(0, 1)
-        : first_name.slice(0, 1);
-    }
-
-    return login.slice(0, 2).toUpperCase();
-  }, [currentUser]);
 
   const sendLogout = async () => {
     navigator.serviceWorker.ready
@@ -73,7 +46,7 @@ export default function NavigationLine() {
       </div>
       <div className="navigation__menu fcc">
         <Link to={"/profile"} className="menu__profile fcc">
-          <span className="fcc">{userLetters}</span>
+          <span className="fcc">{getUserInitials()}</span>
         </Link>
         <Link to={"/main"} className="menu__list fcc active">
           <List />
