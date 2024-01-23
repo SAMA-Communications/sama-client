@@ -14,6 +14,7 @@ import UserProfile from "@screens/info/UserProfile";
 import UserSearch from "@screens/info/UserSearch";
 
 import "@styles/Main.css";
+import EmptyHub from "./hub/EmptyHub";
 
 export default function Main() {
   const isMobileView = useSelector(getIsMobileView);
@@ -62,7 +63,8 @@ export default function Main() {
   return (
     <>
       <NavigationLine />
-      {mainContent}
+      <EmptyHub />
+      {/* {mainContent} */}
       {additionalContent}
     </>
   );

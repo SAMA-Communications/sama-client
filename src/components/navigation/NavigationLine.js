@@ -1,17 +1,19 @@
-import "@styles/NavigationLine.css";
+import api from "@api/api";
+import jwtDecode from "jwt-decode";
+import { Link, useNavigate } from "react-router-dom";
+import { selectParticipantsEntities } from "@store/Participants";
+import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
+import { updateNetworkState } from "@store/NetworkState";
+import { useDispatch, useSelector } from "react-redux";
+import { useMemo } from "react";
+
+import "../../newstyles/NavigationLine.css";
 
 import SamaLogo from "@components/static/SamaLogo";
+
 import { ReactComponent as List } from "../../newassets/icons/Conversations.svg";
 import { ReactComponent as Create } from "../../newassets/icons/AddConversation.svg";
 import { ReactComponent as Logout } from "../../newassets/icons/Logout.svg";
-import { Link, useNavigate } from "react-router-dom";
-import jwtDecode from "jwt-decode";
-import { useMemo } from "react";
-import { selectParticipantsEntities } from "@store/Participants";
-import { useDispatch, useSelector } from "react-redux";
-import { updateNetworkState } from "@store/NetworkState";
-import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
-import api from "@api/api";
 
 export default function NavigationLine() {
   const navigate = useNavigate();

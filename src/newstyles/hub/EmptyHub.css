@@ -1,0 +1,12 @@
+.hub--empty {
+  flex: 1 1;
+  flex-direction: column;
+  gap: 40px;
+
+  border-radius: var(--border-48);
+  background-color: var(--color-bg-light);
+}
+.hub__title {
+  text-align: center;
+  font-size: var(--font-72);
+}
