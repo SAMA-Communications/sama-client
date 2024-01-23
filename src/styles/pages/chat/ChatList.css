@@ -1,8 +1,8 @@
-aside {
+section {
   box-sizing: border-box;
 
   width: min(400px, 100vw);
-  height: 100svh;
+  /* height: 100svh; */
 
   display: flex;
   flex-direction: column;

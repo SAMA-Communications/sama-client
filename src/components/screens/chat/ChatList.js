@@ -154,7 +154,7 @@ export default function ChatList() {
   }, [currentUser]);
 
   return (
-    <aside>
+    <section>
       <div className="nav-navigate-bar">
         <div className="nav-logo">
           <MiniLogo />
@@ -197,6 +197,6 @@ export default function ChatList() {
           chatsList
         )}
       </div>
-    </aside>
+    </section>
   );
 }

@@ -19,7 +19,7 @@
   --font-p: 1rem;
   --font-span: 0.833rem;
 
-  --colro-white: #fff;
+  --color-white: #fff;
   --color-black: #000;
   --color-bg-light: #f6f6f6;
   --color-bg-dark: #1b1b1d;
@@ -34,26 +34,29 @@
 }
 
 * {
+  position: relative;
+
   padding: 0;
   margin: 0;
 
   box-sizing: border-box;
 
-  color: var(--text-main);
   font-family: var(--font-family);
   font-size: var(--font-p);
+  color: var(--color-text-dark);
+
   line-height: 100%;
   font-weight: 200;
 }
-body {
-  overflow: hidden;
 
-  background-color: var(--bg-default-color);
+body {
+  background-color: var(--color-bg-dark);
 }
 
 .hide {
   display: none !important;
 }
+
 .fcc {
   display: flex;
   justify-content: center;

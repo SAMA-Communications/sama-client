@@ -2,7 +2,11 @@ main {
   width: 100svw;
   height: 100svh;
 
+  padding: 20px 30px 20px 0;
+
   display: flex;
+
+  background-color: var(--color-bg-dark);
 }
 
 .nav-logo {
