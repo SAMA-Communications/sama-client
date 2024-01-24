@@ -5,7 +5,7 @@ import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
 import { updateNetworkState } from "@store/NetworkState";
 import { useDispatch } from "react-redux";
 
-import "@newstyles/NavigationLine.css";
+import "@newstyles/navigation/NavigationLine.css";
 
 import SamaLogo from "@newcomponents/static/SamaLogo";
 

@@ -1,4 +1,4 @@
-import "@newstyles/SearchBar.css";
+import "@newstyles/static/SearchBar.css";
 
 import { ReactComponent as Search } from "@newicons/Search.svg";
 
