@@ -6,7 +6,6 @@
   width: 500px;
 
   padding: 14px 20px;
-  padding-left: 60px;
 
   font-size: var(--font-h6);
   font-weight: 300;
@@ -19,12 +18,22 @@
   outline: none;
 }
 
-.searchbar__icon {
+.searchbar__icon,
+.searchbar__close {
   position: absolute;
   top: 50%;
-  left: 20px;
 
   transform: translateY(-50%);
 
   z-index: 1;
+}
+
+.searchbar__icon {
+  left: 20px;
+}
+
+.searchbar__close {
+  right: 20px;
+
+  cursor: pointer;
 }
