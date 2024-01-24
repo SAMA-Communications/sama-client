@@ -11,6 +11,7 @@
   --font-family: "Inter", sans-serif;
 
   --font-72: 72px;
+  --font-58: 58px;
   --font-h1: 2.986rem;
   --font-h2: 2.488rem;
   --font-h3: 2.074rem;
@@ -22,6 +23,7 @@
 
   --color-white: #fff;
   --color-black: #000;
+  --color-red: #df2e38;
   --color-bg-light: #f6f6f6;
   --color-bg-dark: #1b1b1d;
   --color-text-light: #b0b0b0;
@@ -31,7 +33,6 @@
   --color-accent-light: #dbdcfc;
   --color-accent-dark: #7678e5;
   --color-indicator: #68174d;
-  --color-red: #df2e38;
 }
 
 * {

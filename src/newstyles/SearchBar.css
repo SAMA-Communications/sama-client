@@ -3,12 +3,12 @@
 }
 
 .searchbar__input {
-  width: 540px;
+  width: 500px;
 
   padding: 14px 20px;
-  padding-left: 72px;
+  padding-left: 58px;
 
-  font-size: var(--font-h4);
+  font-size: var(--font-h6);
   font-weight: 300;
 
   border: 0;
