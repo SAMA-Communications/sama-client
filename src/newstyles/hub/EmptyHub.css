@@ -6,7 +6,15 @@
   border-radius: var(--border-48);
   background-color: var(--color-bg-light);
 }
-.hub__title {
+.hub-title__container {
+  overflow: hidden;
+
+  /* background-color: rgb(126, 174, 126); */
+  text-wrap: nowrap;
+
+  transition: 0.5s width;
+}
+.hub-title__text {
   text-align: center;
   font-size: var(--font-58);
 }

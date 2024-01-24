@@ -1,12 +1,13 @@
-.searchbar {
+.search-bar {
   position: relative;
 }
 
-.searchbar__input {
+.search-bar__input {
   width: 500px;
 
   padding: 14px 20px;
 
+  color: var(--color-black);
   font-size: var(--font-h6);
   font-weight: 300;
 
@@ -16,12 +17,12 @@
 
   transition: 0.3s padding-left, 0.3s padding-right;
 }
-.searchbar__input:focus {
+.search-bar__input:focus {
   outline: none;
 }
 
-.searchbar__icon,
-.searchbar__close {
+.search-bar__icon,
+.search-bar__close {
   position: absolute;
   top: 50%;
 
@@ -32,11 +33,11 @@
   transition: 0.3s width;
 }
 
-.searchbar__icon {
+.search-bar__icon {
   left: 20px;
 }
 
-.searchbar__close {
+.search-bar__close {
   right: 20px;
 
   cursor: pointer;
