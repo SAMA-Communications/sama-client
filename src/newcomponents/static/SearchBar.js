@@ -9,7 +9,7 @@ export default function SearchInput({ text }) {
   const inputRef = useRef(null);
   const [isTextInInput, setIsTextInInput] = useState(false);
 
-  const showProperty = (v) => ({ display: v ? "block" : "none" });
+  const showProperty = (v) => ({ width: v ? "24px" : "0" });
 
   const onClear = () => {
     inputRef.current.value = "";

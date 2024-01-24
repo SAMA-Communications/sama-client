@@ -13,6 +13,8 @@
   border: 0;
   border-radius: var(--border-12);
   background-color: var(--color-hover-light);
+
+  transition: 0.3s padding-left, 0.3s padding-right;
 }
 .searchbar__input:focus {
   outline: none;
@@ -26,6 +28,8 @@
   transform: translateY(-50%);
 
   z-index: 1;
+
+  transition: 0.3s width;
 }
 
 .searchbar__icon {
