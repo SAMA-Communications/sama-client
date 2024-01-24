@@ -1,6 +1,6 @@
-import SearchInput from "@components/static/SearchBar";
+import SearchInput from "@newcomponents/static/SearchBar";
 
-import "../../newstyles/hub/EmptyHub.css";
+import "@newstyles/hub/EmptyHub.css";
 
 export default function EmptyHub() {
   return (

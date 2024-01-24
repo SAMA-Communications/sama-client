@@ -1,6 +1,6 @@
-import "../../newstyles/SearchBar.css";
+import "@newstyles/SearchBar.css";
 
-import { ReactComponent as Search } from "../../newassets/icons/Search.svg";
+import { ReactComponent as Search } from "@newicons/Search.svg";
 
 export default function SearchInput({ text }) {
   return (

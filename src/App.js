@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PageLoader from "@components/PageLoader";
 import SignUp from "@screens/SignUp";
 
-import "@styles/GlobalParam.css";
+import "@newstyles/GlobalParam.css";
 import "@styles/themes/DarkTheme.css";
 import "@styles/themes/DefaultTheme.css";
 

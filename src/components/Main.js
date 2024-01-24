@@ -7,14 +7,14 @@ import ChatForm from "@screens/chat/ChatForm";
 import ChatInfoPage from "@screens/info/ChatInfoPage";
 import ChatList from "@screens/chat/ChatList";
 
-import NavigationLine from "@components/navigation/NavigationLine";
+import EmptyHub from "@newcomponents/hub/EmptyHub";
+import NavigationLine from "@newcomponents/navigation/NavigationLine";
 import ModalWindow from "@screens/chat/ModalWindow";
 import ParticipantProfile from "@screens/info/ParticipantProfile";
 import UserProfile from "@screens/info/UserProfile";
 import UserSearch from "@screens/info/UserSearch";
 
 import "@styles/Main.css";
-import EmptyHub from "./hub/EmptyHub";
 
 export default function Main() {
   const isMobileView = useSelector(getIsMobileView);

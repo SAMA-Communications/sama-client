@@ -5,13 +5,13 @@ import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
 import { updateNetworkState } from "@store/NetworkState";
 import { useDispatch } from "react-redux";
 
-import "../../newstyles/NavigationLine.css";
+import "@newstyles/NavigationLine.css";
 
-import SamaLogo from "@components/static/SamaLogo";
+import SamaLogo from "@newcomponents/static/SamaLogo";
 
-import { ReactComponent as List } from "../../newassets/icons/Conversations.svg";
-import { ReactComponent as Create } from "../../newassets/icons/AddConversation.svg";
-import { ReactComponent as Logout } from "../../newassets/icons/Logout.svg";
+import { ReactComponent as List } from "@newicons/Conversations.svg";
+import { ReactComponent as Create } from "@newicons/AddConversation.svg";
+import { ReactComponent as Logout } from "@newicons/Logout.svg";
 
 export default function NavigationLine() {
   const navigate = useNavigate();
