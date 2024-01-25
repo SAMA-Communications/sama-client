@@ -1,0 +1,7 @@
+.search__container {
+  flex: 1;
+}
+
+.search__text {
+  font-size: var(--font-h5);
+}

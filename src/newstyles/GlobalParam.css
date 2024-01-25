@@ -51,6 +51,8 @@
 
   line-height: 100%;
   font-weight: 200;
+
+  overflow: hidden;
 }
 
 a {
