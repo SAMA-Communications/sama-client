@@ -219,7 +219,7 @@ class Api {
       request: {
         user_search: {
           login: data.login,
-          ignore_ids: data.ignore_ids,
+          ignore_ids: data.ignore_ids || [],
         },
         id: getUniqueId("userSearch"),
       },

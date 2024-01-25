@@ -1,0 +1,32 @@
+.searched-user {
+  width: 400px;
+
+  padding: 10px;
+
+  gap: 15px;
+  justify-content: flex-start;
+
+  border-radius: var(--border-12);
+
+  cursor: pointer;
+}
+.searched-user:hover {
+  background-color: var(--color-hover-light);
+}
+
+.searched-user__photo {
+  width: 70px;
+  height: 70px;
+
+  font-weight: 300;
+  font-size: var(--font-h4);
+
+  border-radius: var(--border-8);
+  background-color: var(--color-bg-dark);
+}
+
+.searched-user__name {
+  font-size: var(--font-h6);
+  font-weight: 500;
+  color: #000;
+}

@@ -1,8 +1,10 @@
 import store from "@store/store";
 import jwtDecode from "jwt-decode";
 
-export default function getUserInitials() {
-  const userInfo = localStorage.getItem("sessionId")
+export default function getUserInitials(user) {
+  const userInfo = user
+    ? user
+    : localStorage.getItem("sessionId")
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
 
@@ -10,12 +12,13 @@ export default function getUserInitials() {
     return "AA";
   }
 
-  const currentUser = store.getState().participants.entities[userInfo._id];
-  if (!currentUser || !Object.keys(currentUser).length) {
+  const userObject =
+    store.getState().participants.entities[userInfo._id] || user;
+  if (!userObject || !Object.keys(userObject).length) {
     return "AA";
   }
 
-  const { first_name, last_name, login } = currentUser;
+  const { first_name, last_name, login } = userObject;
   if (first_name) {
     return last_name
       ? first_name.slice(0, 1) + last_name.slice(0, 1)

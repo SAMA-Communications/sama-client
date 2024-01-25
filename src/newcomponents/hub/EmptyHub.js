@@ -9,18 +9,26 @@ export default function EmptyHub() {
 
   const viewProperty = useMemo(
     () => ({
-      width: inputText ? "0px" : "100%",
+      display: inputText ? "none" : "block",
+    }),
+    [inputText]
+  );
+
+  const viewHubProperty = useMemo(
+    () => ({
+      padding: "60px 0",
+      justifyContent: inputText ? "flex-start" : "center",
     }),
     [inputText]
   );
 
   return (
-    <section className="hub--empty fcc">
+    <section className="hub--empty fcc" style={viewHubProperty}>
       <div className="hub-title__container" style={viewProperty}>
         <p className="hub-title__text">You don't have any created chats.</p>
       </div>
       <SearchInput shadowText={"Search"} setState={setInputText} />
-      {/* <SearchBlock style={{ display: "none" }} /> */}
+      <SearchBlock searchText={inputText} />
     </section>
   );
 }

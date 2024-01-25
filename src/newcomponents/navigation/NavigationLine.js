@@ -1,5 +1,5 @@
 import api from "@api/api";
-import getUserInitials from "@utils/get_user_initials";
+import getUserInitials from "@utils/user/get_user_initials";
 import { Link, useNavigate } from "react-router-dom";
 import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
 import { updateNetworkState } from "@store/NetworkState";

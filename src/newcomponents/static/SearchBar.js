@@ -9,7 +9,7 @@ export default function SearchInput({ shadowText, setState }) {
   const inputRef = useRef(null);
   const [isTextInInput, setIsTextInInput] = useState(false);
 
-  const viewroperty = (v) => ({ width: v ? "24px" : "0" });
+  const viewProperty = (v) => ({ width: v ? "24px" : "0" });
 
   const onClear = () => {
     inputRef.current.value = "";
@@ -21,7 +21,7 @@ export default function SearchInput({ shadowText, setState }) {
     <div className="search-bar">
       <Search
         className="search-bar__icon"
-        style={viewroperty(!isTextInInput)}
+        style={viewProperty(!isTextInInput)}
       />
       <input
         ref={inputRef}
@@ -35,7 +35,7 @@ export default function SearchInput({ shadowText, setState }) {
       />
       <Close
         className="search-bar__close"
-        style={viewroperty(isTextInInput)}
+        style={viewProperty(isTextInInput)}
         onClick={onClear}
       />
     </div>

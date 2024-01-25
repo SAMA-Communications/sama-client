@@ -1,20 +1,17 @@
 .hub--empty {
   flex: 1 1;
   flex-direction: column;
-  gap: 40px;
+  gap: 20px;
 
   border-radius: var(--border-48);
   background-color: var(--color-bg-light);
 }
 .hub-title__container {
   overflow: hidden;
-
-  /* background-color: rgb(126, 174, 126); */
-  text-wrap: nowrap;
-
-  transition: 0.5s width;
 }
 .hub-title__text {
+  margin-bottom: 20px;
+
   text-align: center;
   font-size: var(--font-58);
 }
