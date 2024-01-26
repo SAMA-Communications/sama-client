@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useTransition } from "react";
 import SearchedUser from "./elements/SearchedUser";
 import api from "@api/api";
+import { Oval } from "react-loader-spinner";
+import Scrollbars from "react-custom-scrollbars-2";
 
 import "@newstyles/search/SearchBlock.css";
-import Scrollbars from "react-custom-scrollbars-2";
 
 export default function SearchBlock({ searchText, type }) {
   const viewProperty = (v) => ({ display: v ? "block" : "none" });
@@ -41,7 +42,19 @@ export default function SearchBlock({ searchText, type }) {
 
   return (
     <div className="search__container fcc" style={viewProperty(searchText)}>
-      {searchedUsers.length ? (
+      {isPending ? (
+        <Oval
+          height={80}
+          width={80}
+          color="#2a2a2a"
+          secondaryColor="#6d6d6d"
+          wrapperClass={"search__pending"}
+          visible={true}
+          ariaLabel="oval-loading"
+          strokeWidth={2}
+          strokeWidthSecondary={3}
+        />
+      ) : searchedUsers.length ? (
         <Scrollbars
           autoHide
           autoHideTimeout={400}
