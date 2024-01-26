@@ -3,6 +3,7 @@ import SearchedUser from "./elements/SearchedUser";
 import api from "@api/api";
 
 import "@newstyles/search/SearchBlock.css";
+import Scrollbars from "react-custom-scrollbars-2";
 
 export default function SearchBlock({ searchText, type }) {
   const viewProperty = (v) => ({ display: v ? "block" : "none" });
@@ -41,7 +42,16 @@ export default function SearchBlock({ searchText, type }) {
   return (
     <div className="search__container fcc" style={viewProperty(searchText)}>
       {searchedUsers.length ? (
-        searchedUsers.map((u) => <SearchedUser key={u._id} uObject={u} />)
+        <Scrollbars
+          autoHide
+          autoHideTimeout={400}
+          autoHideDuration={400}
+          style={{ width: "400px" }}
+        >
+          {searchedUsers.map((u) => (
+            <SearchedUser key={u._id} uObject={u} />
+          ))}
+        </Scrollbars>
       ) : (
         <p className="search__text">{isUserSearched}</p>
       )}

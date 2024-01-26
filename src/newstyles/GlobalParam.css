@@ -51,8 +51,6 @@
 
   line-height: 100%;
   font-weight: 200;
-
-  overflow: hidden;
 }
 
 a {
@@ -71,19 +69,4 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  border-radius: 8px;
-  background: var(--scrollbar-track-color);
-}
-::-webkit-scrollbar-thumb {
-  border-radius: 8px;
-  background: var(--scrollbar-thumb-color);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--scrollbar-thumb-hover-color);
 }
