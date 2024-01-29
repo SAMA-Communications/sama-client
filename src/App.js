@@ -18,9 +18,9 @@ import "@newstyles/GlobalParam.css";
 import "@styles/themes/DarkTheme.css";
 import "@styles/themes/DefaultTheme.css";
 
-const Main = React.lazy(() => import("@components/Main"));
+const Main = React.lazy(() => import("@newcomponents/Main"));
 const Login = React.lazy(() => import("@screens/Login"));
-const ErrorPage = React.lazy(() => import("@components/ErrorPage"));
+// const ErrorPage = React.lazy(() => import("@components/ErrorPage"));
 
 export default function App() {
   const dispatch = useDispatch();
@@ -67,9 +67,9 @@ export default function App() {
         <Routes location={history.location}>
           <Route path="/loading" element={<PageLoader />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/main/*" element={<Main />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/*" element={<ErrorPage />} />
+          <Route path="/*" element={<Main />} />
+          {/* <Route path="/*" element={<ErrorPage />} /> */}
         </Routes>
       </AnimatePresence>
     </Suspense>

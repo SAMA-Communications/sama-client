@@ -56,7 +56,7 @@ export default function NavigationLine() {
         </Link>
       </div>
       <Link
-        to={"/authorization"}
+        to={"/login"} //authorization
         className="menu__logout fcc"
         onClick={sendLogout}
       >

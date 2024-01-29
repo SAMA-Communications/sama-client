@@ -15,27 +15,32 @@ import UserProfile from "@screens/info/UserProfile";
 import UserSearch from "@screens/info/UserSearch";
 
 import "@styles/Main.css";
+import { selectAllConversations } from "@store/Conversations";
 
 export default function Main() {
   const isMobileView = useSelector(getIsMobileView);
   const location = useLocation();
 
-  const mainContent = useMemo(
-    () =>
-      !isMobileView ? (
-        <>
-          <ChatList />
-          <ChatForm />
-        </>
-      ) : !!location.hash ? (
-        <ChatForm />
-      ) : (
-        <ChatList />
-      ),
-    [location, isMobileView]
-  );
+  const conversations = useSelector(selectAllConversations);
 
-  const additionalContent = useMemo(() => {
+  const hubContainer = useMemo(() => {
+    console.log(conversations);
+    if (!conversations.length) {
+      return <EmptyHub />;
+    }
+    return !isMobileView ? (
+      <>
+        <ChatList />
+        <ChatForm />
+      </>
+    ) : !!location.hash ? (
+      <ChatForm />
+    ) : (
+      <ChatList />
+    );
+  }, [location, isMobileView]);
+
+  const additionalContainer = useMemo(() => {
     const { pathname, hash } = location;
 
     const blockMap = {
@@ -63,9 +68,10 @@ export default function Main() {
   return (
     <>
       <NavigationLine />
-      <EmptyHub />
-      {/* {mainContent} */}
-      {additionalContent}
+      {/* left  side */}
+      {hubContainer}
+      {/* right side */}
+      {additionalContainer}
     </>
   );
 }
