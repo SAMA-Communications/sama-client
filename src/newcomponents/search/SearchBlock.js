@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useTransition } from "react";
+import Scrollbars from "react-custom-scrollbars-2";
 import SearchedUser from "./elements/SearchedUser";
 import api from "@api/api";
 import { Oval } from "react-loader-spinner";
-import Scrollbars from "react-custom-scrollbars-2";
 
 import "@newstyles/search/SearchBlock.css";
 
