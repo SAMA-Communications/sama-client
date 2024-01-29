@@ -1,9 +1,9 @@
 import ChatBox from "@generic/chatComponents/ChatBox.js";
 import MiniLogo from "@static/MiniLogo.js";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import api from "@api/api.js";
 import jwtDecode from "jwt-decode";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { selectParticipantsEntities } from "@store/Participants.js";
 import {
   clearCountOfUnreadMessages,
@@ -11,16 +11,11 @@ import {
   selectAllConversations,
 } from "@store/Conversations.js";
 import { setSelectedConversation } from "@store/SelectedConversation.js";
-import { setUserIsLoggedIn } from "@store/UserIsLoggedIn.js";
-import { updateNetworkState } from "@store/NetworkState.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import "@styles/pages/chat/ChatList.css";
 
 import { ReactComponent as CreateChatButton } from "@icons/chatList/CreateChatButton.svg";
-import { ReactComponent as IconMoon } from "@icons/ThemeMoon.svg";
-import { ReactComponent as IconSun } from "@icons/ThemeSun.svg";
-import { ReactComponent as LogoutBtn } from "@icons/chatList/LogoutBtn.svg";
 import { ReactComponent as MoreOptions } from "@icons/chatList/MoreOptions.svg";
 
 export default function ChatList() {
@@ -40,32 +35,6 @@ export default function ChatList() {
     () => (userInfo ? participants[userInfo._id] : {}),
     [userInfo, participants]
   );
-
-  const [currentTheme, setCurrentTheme] = useState(
-    localStorage.getItem("theme")
-  );
-  const changeToDarkTheme = () => {
-    localStorage.setItem("theme", "dark");
-    document.body.classList.add("dark-theme");
-    setCurrentTheme("dark");
-  };
-  const changeToLightTheme = () => {
-    localStorage.setItem("theme", "light");
-    document.body.classList.remove("dark-theme");
-    setCurrentTheme("light");
-  };
-
-  const changeThemeBtn = useMemo(() => {
-    return currentTheme === "dark" ? (
-      <div className="change-themes" onClick={changeToLightTheme}>
-        <IconSun />
-      </div>
-    ) : (
-      <div className="change-themes" onClick={changeToDarkTheme}>
-        <IconMoon />
-      </div>
-    );
-  }, [currentTheme]);
 
   const chatsList = useMemo(() => {
     const list = [];
@@ -138,7 +107,6 @@ export default function ChatList() {
           <MiniLogo />
         </div>
         <div className="nav-btns fcc">
-          {changeThemeBtn}
           <div
             className="nav-create-btn"
             onClick={() => navigate(pathname + hash + "/search")}
