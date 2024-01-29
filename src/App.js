@@ -50,19 +50,6 @@ export default function App() {
       setIsMobileView(window.innerWidth <= globalConstants.windowChangeWitdh)
     );
 
-    const userTheme = localStorage.getItem("theme");
-    const prefersDarkMode = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-
-    if (userTheme === "dark" || (!userTheme && prefersDarkMode)) {
-      localStorage.setItem("theme", "dark");
-      document.body.classList.add("dark-theme");
-    } else {
-      localStorage.setItem("theme", "light");
-      document.body.classList.remove("dark-theme");
-    }
-
     const token = localStorage.getItem("sessionId");
     if (token && token !== "undefined") {
       const { pathname, hash } = history.location;
