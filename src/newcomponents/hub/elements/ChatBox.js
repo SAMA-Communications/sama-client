@@ -1,4 +1,3 @@
-import ImageView from "@newcomponents/message/elements/ImageView";
 import MessageStatus from "@newcomponents/message/elements/MessageStatus";
 import React, { useMemo } from "react";
 import getFileType from "@utils/get_file_type";

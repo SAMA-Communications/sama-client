@@ -110,6 +110,9 @@
   width: 16px;
   height: 16px;
 }
-/* .image__blur-hash {
-  border-radius: 2px;
-} */
+
+.image__blur-hash {
+  border-radius: 3px;
+
+  overflow: hidden;
+}
