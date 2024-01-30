@@ -1,6 +1,6 @@
 import api from "@api/api";
 import getUserInitials from "@utils/user/get_user_initials";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
 import { updateNetworkState } from "@store/NetworkState";
 import { useDispatch } from "react-redux";
@@ -45,23 +45,25 @@ export default function NavigationLine() {
         <SamaLogo />
       </div>
       <div className="navigation__menu fcc">
-        <Link to={"/profile"} className="menu__profile fcc">
+        <div onClick={() => navigate("/profile")} className="menu__profile fcc">
           <span className="fcc">{getUserInitials()}</span>
-        </Link>
-        <Link to={"/main"} className="menu__list fcc active">
+        </div>
+        <div onClick={() => navigate("/")} className="menu__list fcc active">
           <List />
-        </Link>
-        <Link to={"/create"} className="menu__create fcc">
+        </div>
+        <div onClick={() => navigate("/create")} className="menu__create fcc">
           <Create />
-        </Link>
+        </div>
       </div>
-      <Link
-        to={"/login"} //authorization
+      <div
+        onClick={() => {
+          sendLogout();
+          navigate("/login");
+        }} //authorization
         className="menu__logout fcc"
-        onClick={sendLogout}
       >
         <Logout />
-      </Link>
+      </div>
     </aside>
   );
 }

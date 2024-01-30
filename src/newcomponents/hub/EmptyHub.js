@@ -27,7 +27,11 @@ export default function EmptyHub() {
       <div className="hub-title__container" style={viewProperty}>
         <p className="hub-title__text">You don't have any created chats.</p>
       </div>
-      <SearchInput shadowText={"Search"} setState={setInputText} />
+      <SearchInput
+        shadowText={"Search"}
+        setState={setInputText}
+        isLargeSize={true}
+      />
       <SearchBlock searchText={inputText} />
     </section>
   );

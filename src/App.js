@@ -53,7 +53,7 @@ export default function App() {
     const token = localStorage.getItem("sessionId");
     if (token && token !== "undefined") {
       const { pathname, hash } = history.location;
-      const path = hash ? pathname + hash : "/main";
+      const path = hash ? pathname + hash : "/";
       history.navigate(path);
     } else {
       localStorage.removeItem("sessionId");

@@ -2,10 +2,11 @@ import React, { useMemo } from "react";
 import { getIsMobileView } from "@store/IsMobileView";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { selectAllConversations } from "@store/Conversations";
 
-import ChatForm from "@screens/chat/ChatForm";
+import ChatForm from "@newcomponents/hub/ChatForm";
 import ChatInfoPage from "@screens/info/ChatInfoPage";
-import ChatList from "@screens/chat/ChatList";
+import ChatList from "@newcomponents/hub/ChatList";
 
 import EmptyHub from "@newcomponents/hub/EmptyHub";
 import NavigationLine from "@newcomponents/navigation/NavigationLine";
@@ -15,7 +16,7 @@ import UserProfile from "@screens/info/UserProfile";
 import UserSearch from "@screens/info/UserSearch";
 
 import "@styles/Main.css";
-import { selectAllConversations } from "@store/Conversations";
+import "@newstyles/hub/MainHub.css";
 
 export default function Main() {
   const isMobileView = useSelector(getIsMobileView);
@@ -24,21 +25,21 @@ export default function Main() {
   const conversations = useSelector(selectAllConversations);
 
   const hubContainer = useMemo(() => {
-    console.log(conversations);
     if (!conversations.length) {
       return <EmptyHub />;
     }
-    return !isMobileView ? (
-      <>
+
+    if (isMobileView) {
+      return !!location.hash ? <ChatForm /> : <ChatList />;
+    }
+
+    return (
+      <section className="hub">
         <ChatList />
         <ChatForm />
-      </>
-    ) : !!location.hash ? (
-      <ChatForm />
-    ) : (
-      <ChatList />
+      </section>
     );
-  }, [location, isMobileView]);
+  }, [location, isMobileView, conversations]);
 
   const additionalContainer = useMemo(() => {
     const { pathname, hash } = location;

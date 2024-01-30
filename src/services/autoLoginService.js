@@ -47,7 +47,7 @@ class AutoLoginService {
         store.dispatch(setUserIsLoggedIn(true));
 
         const { pathname, hash } = history.location;
-        const path = hash ? pathname + hash : "/main";
+        const path = hash ? pathname + hash : "/";
         setTimeout(() => history.navigate(path), 20);
       } else {
         handleLoginFailure();
