@@ -7,6 +7,14 @@
   justify-content: flex-start;
   align-items: center;
 }
+.chat-list__container > .scroll-bar__outer-container {
+  border-radius: var(--border-8);
+}
+.chat-list__container > .scroll-bar__outer-container > div:nth-child(1) {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
 .chat-box__container,
 .chat-box__container--selected {

@@ -1,7 +1,8 @@
 import ChatBox from "@newcomponents/hub/elements/ChatBox.js";
 import React, { useMemo, useState } from "react";
-import SearchInput from "@newcomponents/static/SearchBar";
+import Scrollbars from "react-custom-scrollbars-2";
 import SearchBlock from "@newcomponents/search/SearchBlock";
+import SearchInput from "@newcomponents/static/SearchBar";
 import api from "@api/api.js";
 import jwtDecode from "jwt-decode";
 import {
@@ -15,7 +16,6 @@ import { setSelectedConversation } from "@store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import "@newstyles/hub/ChatList.css";
-import Scrollbars from "react-custom-scrollbars-2";
 
 export default function ChatList() {
   const dispatch = useDispatch();
@@ -75,7 +75,7 @@ export default function ChatList() {
           autoHide
           autoHideTimeout={400}
           autoHideDuration={400}
-          style={{ width: "400px" }}
+          className="scroll-bar__outer-container"
         >
           {chatsList}
         </Scrollbars>
