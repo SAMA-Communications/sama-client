@@ -79,6 +79,10 @@
   color: var(--color-black);
   font-weight: 500;
   font-size: var(--font-h6);
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .content-top__time {
   font-weight: 300;
