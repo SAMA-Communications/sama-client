@@ -67,6 +67,9 @@
   align-items: center;
   justify-content: space-between;
 }
+.content-bottom {
+  height: 1.5rem;
+}
 
 .content-top__name {
   color: var(--color-black);
