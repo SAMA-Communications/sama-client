@@ -8,6 +8,8 @@ import { ReactComponent as ChatIconPrivate } from "@icons/chatList/ChatIconPriva
 import { ReactComponent as ImagePreviewIcon } from "@icons/chatList/ImagePreviewIcon.svg";
 
 export default function ChatBox({
+  onClickFunc,
+  isSelected,
   chatName,
   countOfNewMessages,
   timeOfLastUpdate,
@@ -85,7 +87,7 @@ export default function ChatBox({
     const lastAtt = att?.slice(-1)[0];
 
     return (
-      <div className="last-message">
+      <div className="content__last-message">
         {lastAtt ? (
           <div className="media-container">
             {lastAtt.file_blur_hash ? (
@@ -107,23 +109,25 @@ export default function ChatBox({
   }, [lastMessageParams]);
 
   return (
-    <div className="chat-box">
+    <div
+      className={`chat-box__container${isSelected ? "--selected" : ""}`}
+      onClick={onClickFunc}
+    >
       <div
-        className={`chat-box-icon ${
+        className={`chat-box__icon ${
           chatType === "g" ? "chat-box-icon-g-bg" : "chat-box-icon-u-bg"
         }`}
       >
         {chatType === "g" ? <ChatIconGroup /> : <ChatIconPrivate />}
       </div>
-
-      <div className="chat-box-info">
-        <p className="chat-name">{chatName}</p>
+      <div className="chat-box__content">
+        <p className="content__name">{chatName}</p>
         {lastMessageView}
       </div>
       {countOfNewMessages > 0 && (
-        <div className="chat-indicator">{countOfNewMessages}</div>
+        <div className="chat__indicator">{countOfNewMessages}</div>
       )}
-      <div className="chat-last-update">{tView}</div>
+      <div className="chat__status">{tView}</div>
     </div>
   );
 }

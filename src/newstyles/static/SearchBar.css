@@ -2,8 +2,6 @@
   position: relative;
 }
 
-/* Default styles */
-
 .search-bar__input,
 .search-bar__input--large {
   width: 360px;

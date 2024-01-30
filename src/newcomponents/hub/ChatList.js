@@ -1,22 +1,26 @@
 import ChatBox from "@newcomponents/hub/elements/ChatBox.js";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import SearchInput from "@newcomponents/static/SearchBar";
+import SearchBlock from "@newcomponents/search/SearchBlock";
 import api from "@api/api.js";
 import jwtDecode from "jwt-decode";
-import { NavLink } from "react-router-dom";
-import { selectParticipantsEntities } from "@store/Participants.js";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
   selectAllConversations,
 } from "@store/Conversations.js";
+import { useNavigate } from "react-router-dom";
+import { selectParticipantsEntities } from "@store/Participants.js";
 import { setSelectedConversation } from "@store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import "@newstyles/hub/ChatList.css";
-import SearchInput from "@newcomponents/static/SearchBar";
 
 export default function ChatList() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [inputText, setInputText] = useState(null);
 
   const conversations = useSelector(selectAllConversations);
   const participants = useSelector(selectParticipantsEntities);
@@ -37,27 +41,24 @@ export default function ChatList() {
         : obj.name;
 
       list.push(
-        <NavLink
-          to={`/main/#${obj._id}`}
+        <ChatBox
           key={obj._id}
-          className={activeConv === obj._id ? "selected" : ""}
-          onClick={async () => {
+          isSelected={activeConv === obj._id}
+          onClickFunc={() => {
             dispatch(setSelectedConversation({ id: obj._id }));
             if (obj.unread_messages_count > 0) {
               dispatch(clearCountOfUnreadMessages(obj._id));
               api.markConversationAsRead({ cid: obj._id });
             }
+            navigate(`/#${obj._id}`);
           }}
-        >
-          <ChatBox
-            chatName={chatName}
-            timeOfLastUpdate={obj.updated_at}
-            countOfNewMessages={obj.unread_messages_count}
-            chatType={obj.type}
-            lastMessage={obj.last_message}
-            uId={userInfo?._id}
-          />
-        </NavLink>
+          chatName={chatName}
+          timeOfLastUpdate={obj.updated_at}
+          countOfNewMessages={obj.unread_messages_count}
+          chatType={obj.type}
+          lastMessage={obj.last_message}
+          uId={userInfo?._id}
+        />
       );
     }
     return list;
@@ -65,8 +66,8 @@ export default function ChatList() {
 
   return (
     <div className="chat-list__container">
-      <SearchInput />
-      {chatsList}
+      <SearchInput shadowText={"Search"} setState={setInputText} />
+      {inputText ? <SearchBlock searchText={inputText} /> : chatsList}
     </div>
   );
 }

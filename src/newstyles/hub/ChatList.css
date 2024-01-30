@@ -7,9 +7,9 @@
   justify-content: flex-start;
   align-items: center;
 }
-/* /asdasdasd */
 
-.chat-box {
+.chat-box__container,
+.chat-box__container--selected {
   width: 100%;
 
   position: relative;
@@ -21,15 +21,16 @@
   display: flex;
   align-items: center;
 }
-.chat-box:hover {
+.chat-box__container:hover {
   cursor: pointer;
 
   background-color: var(--block-hover);
 }
-.selected > .chat-box {
+.chat-box__container--selected {
   background-color: var(--block-selected);
 }
-.chat-box-icon {
+
+.chat-box__icon {
   width: 52px;
   height: 52px;
 
