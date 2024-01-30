@@ -8,10 +8,6 @@
   align-items: center;
 }
 
-.chat-list__container > .search-bar {
-  margin-bottom: 10px;
-}
-
 .chat-box__container,
 .chat-box__container--selected {
   position: relative;

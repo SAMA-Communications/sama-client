@@ -15,6 +15,7 @@ import { setSelectedConversation } from "@store/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import "@newstyles/hub/ChatList.css";
+import Scrollbars from "react-custom-scrollbars-2";
 
 export default function ChatList() {
   const dispatch = useDispatch();
@@ -67,7 +68,18 @@ export default function ChatList() {
   return (
     <div className="chat-list__container">
       <SearchInput shadowText={"Search"} setState={setInputText} />
-      {inputText ? <SearchBlock searchText={inputText} /> : chatsList}
+      {inputText ? (
+        <SearchBlock searchText={inputText} />
+      ) : (
+        <Scrollbars
+          autoHide
+          autoHideTimeout={400}
+          autoHideDuration={400}
+          style={{ width: "400px" }}
+        >
+          {chatsList}
+        </Scrollbars>
+      )}
     </div>
   );
 }

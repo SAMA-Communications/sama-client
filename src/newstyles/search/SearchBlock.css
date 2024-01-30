@@ -1,5 +1,7 @@
 .search__container {
   flex: 1;
+
+  margin-top: 5px;
 }
 
 .search__text {
