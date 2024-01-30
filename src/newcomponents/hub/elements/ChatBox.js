@@ -1,11 +1,12 @@
-import ImageView from "@generic/attachmentComponents/ImageView";
-import MessageStatus from "@generic/messageComponents/MessageStatus";
+import ImageView from "@newcomponents/message/elements/ImageView";
+import MessageStatus from "@newcomponents/message/elements/MessageStatus";
 import React, { useMemo } from "react";
 import getFileType from "@utils/get_file_type";
+import globalConstants from "@helpers/constants";
 
-import { ReactComponent as ChatIconGroup } from "@icons/chatList/ChatIconGroup.svg";
-import { ReactComponent as ChatIconPrivate } from "@icons/chatList/ChatIconPrivate.svg";
-import { ReactComponent as ImagePreviewIcon } from "@icons/chatList/ImagePreviewIcon.svg";
+import { ReactComponent as Group } from "@newicons/users/Group.svg";
+import { ReactComponent as Image } from "@newicons/media/Image.svg";
+import { Blurhash } from "react-blurhash";
 
 export default function ChatBox({
   onClickFunc,
@@ -17,16 +18,6 @@ export default function ChatBox({
   chatType,
   uId,
 }) {
-  const days = {
-    0: "Su",
-    1: "Mo",
-    2: "Tu",
-    3: "We",
-    4: "Th",
-    5: "Fr",
-    6: "Sa",
-  };
-
   const tView = useMemo(() => {
     const t = new Date(
       lastMessage
@@ -49,7 +40,7 @@ export default function ChatBox({
         t.getFullYear().toString().slice(2)
       );
     } else if (tToday.getDay() - t.getDay()) {
-      return days[t.getDay()];
+      return globalConstants.weekDays[t.getDay()];
     } else {
       return (
         t.getHours() +
@@ -83,27 +74,30 @@ export default function ChatBox({
       return null;
     }
 
-    const { att, text, status } = lastMessageParams;
+    const { att, text } = lastMessageParams;
     const lastAtt = att?.slice(-1)[0];
 
     return (
-      <div className="content__last-message">
+      <div className="content-bottom__last-message">
         {lastAtt ? (
-          <div className="media-container">
+          <div className="last-message__media">
             {lastAtt.file_blur_hash ? (
-              <ImageView
-                blurHash={lastAtt.file_blur_hash}
-                url={null}
-                localUrl={null}
-                altName={lastAtt.file_name}
+              <Blurhash
+                className="image__blur-hash"
+                hash={lastAtt.file_blur_hash}
+                width={16}
+                height={16}
+                resolutionX={32}
+                resolutionY={32}
               />
             ) : (
-              <ImagePreviewIcon />
+              <Image />
             )}
           </div>
         ) : null}
-        <p>{text?.length ? text : getFileType(lastAtt?.file_name)}</p>
-        {status}
+        <p className="last-message__text">
+          {text?.length ? text : getFileType(lastAtt?.file_name)}
+        </p>
       </div>
     );
   }, [lastMessageParams]);
@@ -113,21 +107,25 @@ export default function ChatBox({
       className={`chat-box__container${isSelected ? "--selected" : ""}`}
       onClick={onClickFunc}
     >
-      <div
-        className={`chat-box__icon ${
-          chatType === "g" ? "chat-box-icon-g-bg" : "chat-box-icon-u-bg"
-        }`}
-      >
-        {chatType === "g" ? <ChatIconGroup /> : <ChatIconPrivate />}
+      <div className="box__photo fcc">
+        {chatType === "g" ? <Group /> : chatName?.slice(0, 2).toUpperCase()}
       </div>
-      <div className="chat-box__content">
-        <p className="content__name">{chatName}</p>
-        {lastMessageView}
+      <div className="box__content">
+        <div className="content-top">
+          <p className="content-top__name">{chatName}</p>
+          <div className="content-top__time">{tView}</div>
+        </div>
+        <div className="content-bottom">
+          {lastMessageView}
+          {countOfNewMessages > 0 ? (
+            <div className="content-bottom__indicator">
+              {countOfNewMessages}
+            </div>
+          ) : (
+            lastMessageParams?.status
+          )}
+        </div>
       </div>
-      {countOfNewMessages > 0 && (
-        <div className="chat__indicator">{countOfNewMessages}</div>
-      )}
-      <div className="chat__status">{tView}</div>
     </div>
   );
 }

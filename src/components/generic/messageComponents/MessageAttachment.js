@@ -1,4 +1,4 @@
-import ImageView from "@generic/attachmentComponents/ImageView";
+import ImageView from "@newcomponents/message/elements/ImageView";
 import VideoView from "@generic/attachmentComponents/VideoView";
 import getFileType from "@utils/get_file_type";
 import { useLocation, useNavigate } from "react-router-dom";
