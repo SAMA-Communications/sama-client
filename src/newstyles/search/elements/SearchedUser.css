@@ -1,9 +1,9 @@
 .searched-user {
-  width: 400px;
+  width: 25rem;
 
-  padding: 10px;
+  padding: 0.625rem;
 
-  gap: 15px;
+  gap: 0.938rem;
   justify-content: flex-start;
 
   border-radius: var(--border-12);
@@ -15,8 +15,8 @@
 }
 
 .searched-user__photo {
-  width: 70px;
-  height: 70px;
+  width: 4.375rem;
+  height: 4.375rem;
 
   font-weight: 300;
   font-size: var(--font-h4);

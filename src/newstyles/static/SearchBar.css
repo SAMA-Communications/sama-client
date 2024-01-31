@@ -4,9 +4,9 @@
 
 .search-bar__input,
 .search-bar__input--large {
-  width: 360px;
+  width: 22.5rem;
 
-  padding: 11px 15px;
+  padding: 0.688rem 0.938rem;
 
   color: var(--color-black);
   font-size: var(--font-p);
@@ -19,9 +19,9 @@
   transition: 0.3s padding-left, 0.3s padding-right;
 }
 .search-bar__input--large {
-  width: 500px;
+  width: 31.25rem;
 
-  padding: 14px 20px;
+  padding: 0.875rem 1.25rem;
 
   font-size: var(--font-h6);
 }
@@ -45,18 +45,18 @@
 }
 
 .search-bar__icon {
-  left: 15px;
+  left: 0.938rem;
 }
 .search-bar__close {
-  right: 15px;
+  right: 0.938rem;
 
   cursor: pointer;
 }
 .search-bar__icon--large {
-  left: 20px;
+  left: 1.25rem;
 }
 .search-bar__close--large {
-  right: 20px;
+  right: 1.25rem;
 
   cursor: pointer;
 }
