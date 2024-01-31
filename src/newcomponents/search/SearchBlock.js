@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useTransition } from "react";
 import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
+import OvalLoader from "@newcomponents/_helpers/OvalLoader";
+import React, { useEffect, useState, useTransition } from "react";
 import SearchedUser from "./elements/SearchedUser";
 import api from "@api/api";
-import { Oval } from "react-loader-spinner";
 
 import "@newstyles/search/SearchBlock.css";
 
@@ -43,17 +43,7 @@ export default function SearchBlock({ searchText, type }) {
   return (
     <div className="search__container fcc" style={viewProperty(searchText)}>
       {isPending ? (
-        <Oval
-          height={80}
-          width={80}
-          color="#2a2a2a"
-          secondaryColor="#6d6d6d"
-          wrapperClass={"search__pending"}
-          visible={true}
-          ariaLabel="oval-loading"
-          strokeWidth={2}
-          strokeWidthSecondary={3}
-        />
+        <OvalLoader width={80} height={80} />
       ) : searchedUsers.length ? (
         <CustomScrollBar
           customStyle={{ width: "calc(400px * var(--base-scale))" }}
