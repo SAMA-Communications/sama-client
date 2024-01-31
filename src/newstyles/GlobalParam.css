@@ -1,4 +1,4 @@
-@import url("https:/*fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 :root {
   --base-scale: 1;
@@ -15,7 +15,7 @@
   --font-family: "Inter", sans-serif;
 
   --font-72: calc(var(--base-font) * 4.5);
-  --font-58: calc(var(--base-font) * 3.625);
+  --font-58: 58px;
   --font-h1: calc(var(--base-font) * 2.986);
   --font-h2: calc(var(--base-font) * 2.488);
   --font-h3: calc(var(--base-font) * 2.074);
@@ -52,6 +52,14 @@
   :root {
     --base-scale: 0.711;
     --base-font: 11.376px;
+  }
+}
+
+/* 1600px*/
+@media (min-width: 100em) {
+  :root {
+    --base-scale: 0.833;
+    --base-font: 13.33px;
   }
 }
 
