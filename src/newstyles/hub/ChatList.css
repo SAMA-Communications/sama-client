@@ -13,7 +13,7 @@
 .chat-list__container > .scroll-bar__outer-container > div:nth-child(1) {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 
 .chat-box__container,
@@ -22,7 +22,7 @@
 
   width: 100%;
 
-  padding: 15px 10px;
+  padding: 10px;
 
   display: flex;
   gap: 15px;
@@ -76,6 +76,8 @@
 }
 
 .content-top__name {
+  height: 20px;
+
   color: var(--color-black);
   font-weight: 500;
   font-size: var(--font-h6);
