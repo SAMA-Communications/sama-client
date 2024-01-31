@@ -1,26 +1,29 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https:/*fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 :root {
+  --base-scale: 1;
+  --base-font: 16px;
+
   --border-0: 0;
-  --border-8: 8px;
-  --border-12: 12px;
-  --border-16: 16px;
-  --border-24: 24px;
-  --border-32: 32px;
-  --border-48: 48px;
+  --border-8: calc(var(--base-scale) * 8px);
+  --border-12: calc(var(--base-scale) * 12px);
+  --border-16: calc(var(--base-scale) * 16px);
+  --border-24: calc(var(--base-scale) * 24px);
+  --border-32: calc(var(--base-scale) * 32px);
+  --border-48: calc(var(--base-scale) * 48px);
 
   --font-family: "Inter", sans-serif;
 
-  --font-72: 4.5rem;
-  --font-58: 3.625rem;
-  --font-h1: 2.986rem;
-  --font-h2: 2.488rem;
-  --font-h3: 2.074rem;
-  --font-h4: 1.728rem;
-  --font-h5: 1.44rem;
-  --font-h6: 1.2rem;
-  --font-p: 1rem;
-  --font-span: 0.833rem;
+  --font-72: calc(var(--base-font) * 4.5);
+  --font-58: calc(var(--base-font) * 3.625);
+  --font-h1: calc(var(--base-font) * 2.986);
+  --font-h2: calc(var(--base-font) * 2.488);
+  --font-h3: calc(var(--base-font) * 2.074);
+  --font-h4: calc(var(--base-font) * 1.728);
+  --font-h5: calc(var(--base-font) * 1.44);
+  --font-h6: calc(var(--base-font) * 1.2);
+  --font-p: calc(var(--base-font) * 1);
+  --font-span: calc(var(--base-font) * 0.833);
 
   --color-white: #fff;
   --color-black: #000;
@@ -34,6 +37,46 @@
   --color-accent-light: #dbdcfc;
   --color-accent-dark: #7678e5;
   --color-indicator: #68174d;
+}
+
+/* 768px */
+@media (min-width: 48em) {
+  :root {
+    --base-scale: 1;
+    --base-font: 16px;
+  }
+}
+
+/* 1024px*/
+@media (min-width: 64em) {
+  :root {
+    --base-scale: 1;
+    --base-font: 16px;
+  }
+}
+
+/* 1366px*/
+@media (min-width: 85.375em) {
+  :root {
+    --base-scale: 1;
+    --base-font: 16px;
+  }
+}
+
+/* 1920px*/
+@media (min-width: 120em) {
+  :root {
+    --base-scale: 1;
+    --base-font: 16px;
+  }
+}
+
+/* 2560px*/
+@media (min-width: 160em) {
+  :root {
+    --base-scale: 1.75;
+    --base-font: 28px;
+  }
 }
 
 * {
@@ -61,12 +104,31 @@ body {
   background-color: var(--color-bg-dark);
 }
 
-.hide {
-  display: none !important;
+main {
+  width: 100svw;
+  height: 100svh;
+
+  padding: calc(20px * var(--base-scale)) calc(30px * var(--base-scale))
+    calc(20px * var(--base-scale)) 0;
+
+  display: flex;
+
+  background-color: var(--color-bg-dark);
 }
 
 .fcc {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* vertical scroll */
+.scroll-bar__outer-container > div:nth-child(3) {
+  width: calc(6px * var(--base-scale)) !important;
+
+  right: calc(4px * var(--base-scale)) !important;
+  bottom: calc(4px * var(--base-scale)) !important;
+  top: calc(4px * var(--base-scale)) !important;
+
+  border-radius: calc(3px * var(--base-scale)) !important;
 }

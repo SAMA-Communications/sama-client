@@ -1,7 +1,7 @@
 .navigation__container {
-  width: 84px;
+  width: calc(84px * var(--base-scale));
 
-  padding: 0 10px;
+  padding: 0 calc(10px * var(--base-scale));
 
   display: flex;
   flex-direction: column;
@@ -21,17 +21,17 @@
 
 .navigation__menu {
   flex-direction: column;
-  gap: 20px;
+  gap: calc(20px * var(--base-scale));
 }
 
 .menu__profile,
 .menu__list,
 .menu__create,
 .menu__logout {
-  width: 64px;
-  height: 64px;
+  width: calc(64px * var(--base-scale));
+  height: calc(64px * var(--base-scale));
 
-  padding: 6px;
+  padding: calc(6px * var(--base-scale));
 
   border-radius: var(--border-16);
 
@@ -50,6 +50,7 @@
   height: 100%;
 
   font-size: var(--font-h5);
+  font-weight: 300;
   color: var(--color-black);
 
   border-radius: var(--border-16);

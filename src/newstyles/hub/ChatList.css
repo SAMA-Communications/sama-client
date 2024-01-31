@@ -1,8 +1,8 @@
 .chat-list__container {
-  width: 400px;
+  width: calc(400px * var(--base-scale));
 
   display: flex;
-  gap: 10px;
+  gap: calc(10px * var(--base-scale));
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
@@ -11,9 +11,11 @@
   border-radius: var(--border-8);
 }
 .chat-list__container > .scroll-bar__outer-container > div:nth-child(1) {
+  margin-top: calc(5px * var(--base-scale));
+
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: calc(5px * var(--base-scale));
 }
 
 .chat-box__container,
@@ -22,10 +24,10 @@
 
   width: 100%;
 
-  padding: 10px;
+  padding: calc(10px * var(--base-scale));
 
   display: flex;
-  gap: 15px;
+  gap: calc(15px * var(--base-scale));
   align-items: center;
 
   border-radius: var(--border-12);
@@ -40,8 +42,8 @@
 }
 
 .box__photo {
-  width: 70px;
-  height: 70px;
+  width: calc(70px * var(--base-scale));
+  height: calc(70px * var(--base-scale));
 
   font-weight: 300;
   font-size: var(--font-h4);
@@ -52,13 +54,13 @@
 }
 
 .box__content {
-  max-width: calc(100% - 90px);
-  max-height: 70px;
+  max-width: calc(100% - calc(90px * var(--base-scale)));
+  max-height: calc(70px * var(--base-scale));
 
   flex: 1;
 
   display: flex;
-  gap: 10px;
+  gap: calc(10px * var(--base-scale));
   flex-direction: column;
 
   overflow: hidden;
@@ -67,16 +69,16 @@
 .content-top,
 .content-bottom {
   display: flex;
-  gap: 12px;
+  gap: calc(12px * var(--base-scale));
   align-items: center;
   justify-content: space-between;
 }
 .content-bottom {
-  height: 1.5rem;
+  height: calc(32px * var(--base-scale));
 }
 
 .content-top__name {
-  height: 20px;
+  height: calc(20px * var(--base-scale));
 
   color: var(--color-black);
   font-weight: 500;
@@ -91,7 +93,7 @@
   color: var(--color-text-light);
 }
 .content-bottom__indicator {
-  padding: 4px 6px;
+  padding: calc(4px * var(--base-scale)) calc(6px * var(--base-scale));
 
   font-weight: 300;
   color: var(--color-white);
@@ -103,7 +105,8 @@
 
 .content-bottom__last-message {
   display: flex;
-  gap: 5px;
+  align-items: center;
+  gap: calc(5px * var(--base-scale));
 
   overflow-y: hidden;
 }
@@ -120,11 +123,14 @@
 }
 
 .last-message__media {
-  width: 16px;
-  height: 16px;
+  width: calc(16px * var(--base-scale));
+  height: calc(16px * var(--base-scale));
 }
 
 .image__blur-hash {
+  width: calc(16px * var(--base-scale)) !important;
+  height: calc(16px * var(--base-scale)) !important;
+
   border-radius: 3px;
 
   overflow: hidden;

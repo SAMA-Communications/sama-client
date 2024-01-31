@@ -59,7 +59,7 @@ export default function SearchBlock({ searchText, type }) {
           autoHide
           autoHideTimeout={400}
           autoHideDuration={400}
-          style={{ width: "400px" }}
+          style={{ width: "calc(400px * var(--base-scale))" }}
         >
           {searchedUsers.map((u) => (
             <SearchedUser key={u._id} uObject={u} />

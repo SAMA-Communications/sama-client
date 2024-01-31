@@ -4,9 +4,9 @@
 
 .search-bar__input,
 .search-bar__input--large {
-  width: 360px;
+  width: calc(360px * var(--base-scale));
 
-  padding: 11px 15px;
+  padding: calc(11px * var(--base-scale)) calc(15px * var(--base-scale));
 
   color: var(--color-black);
   font-size: var(--font-p);
@@ -19,9 +19,9 @@
   transition: 0.3s padding-left, 0.3s padding-right;
 }
 .search-bar__input--large {
-  width: 500px;
+  width: calc(500px * var(--base-scale));
 
-  padding: 14px 20px;
+  padding: calc(14px * var(--base-scale)) calc(20px * var(--base-scale));
 
   font-size: var(--font-h6);
 }
@@ -45,18 +45,18 @@
 }
 
 .search-bar__icon {
-  left: 15px;
+  left: calc(15px * var(--base-scale));
 }
 .search-bar__close {
-  right: 15px;
+  right: calc(15px * var(--base-scale));
 
   cursor: pointer;
 }
 .search-bar__icon--large {
-  left: 20px;
+  left: calc(20px * var(--base-scale));
 }
 .search-bar__close--large {
-  right: 20px;
+  right: calc(20px * var(--base-scale));
 
   cursor: pointer;
 }

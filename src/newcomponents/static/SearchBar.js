@@ -10,7 +10,13 @@ export default function SearchInput({ shadowText, setState, isLargeSize }) {
   const [isTextInInput, setIsTextInInput] = useState(false);
 
   const viewProperty = (v) => ({
-    width: v ? `${isLargeSize ? 24 : 18}px` : "0",
+    width: v
+      ? `${
+          isLargeSize
+            ? `calc(24px * var(--base-scale))`
+            : `calc(18px * var(--base-scale))`
+        }`
+      : "0",
   });
 
   const onClear = () => {
@@ -35,8 +41,10 @@ export default function SearchInput({ shadowText, setState, isLargeSize }) {
         }}
         style={{
           [`padding${isTextInInput ? "Right" : "Left"}`]: `${
-            isLargeSize ? 60 : 48
-          }px`,
+            isLargeSize
+              ? `calc(60px * var(--base-scale))`
+              : `calc(48px * var(--base-scale))`
+          }`,
         }}
       />
       <Close

@@ -84,8 +84,6 @@ export default function ChatBox({
               <Blurhash
                 className="image__blur-hash"
                 hash={lastAtt.file_blur_hash}
-                width={16}
-                height={16}
                 resolutionX={32}
                 resolutionY={32}
               />
