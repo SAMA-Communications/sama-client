@@ -42,24 +42,16 @@
 /* 768px */
 @media (min-width: 48em) {
   :root {
-    --base-scale: 1;
-    --base-font: 16px;
-  }
-}
-
-/* 1024px*/
-@media (min-width: 64em) {
-  :root {
-    --base-scale: 1;
-    --base-font: 16px;
+    --base-scale: 0.6;
+    --base-font: 9.6px;
   }
 }
 
 /* 1366px*/
 @media (min-width: 85.375em) {
   :root {
-    --base-scale: 1;
-    --base-font: 16px;
+    --base-scale: 0.711;
+    --base-font: 11.376px;
   }
 }
 

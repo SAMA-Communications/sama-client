@@ -1,5 +1,5 @@
 .hub {
-  padding: 30px;
+  padding: calc(30px * var(--base-scale));
 
   display: flex;
   flex: 1;
