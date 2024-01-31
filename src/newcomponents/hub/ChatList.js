@@ -1,6 +1,6 @@
 import ChatBox from "@newcomponents/hub/elements/ChatBox.js";
+import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 import React, { useMemo, useState } from "react";
-import Scrollbars from "react-custom-scrollbars-2";
 import SearchBlock from "@newcomponents/search/SearchBlock";
 import SearchInput from "@newcomponents/static/SearchBar";
 import api from "@api/api.js";
@@ -71,14 +71,14 @@ export default function ChatList() {
       {inputText ? (
         <SearchBlock searchText={inputText} />
       ) : (
-        <Scrollbars
+        <CustomScrollBar
           autoHide
           autoHideTimeout={400}
           autoHideDuration={400}
           className="scroll-bar__outer-container"
         >
           {chatsList}
-        </Scrollbars>
+        </CustomScrollBar>
       )}
     </div>
   );

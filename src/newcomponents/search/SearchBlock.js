@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useTransition } from "react";
-import Scrollbars from "react-custom-scrollbars-2";
+import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 import SearchedUser from "./elements/SearchedUser";
 import api from "@api/api";
 import { Oval } from "react-loader-spinner";
@@ -55,16 +55,13 @@ export default function SearchBlock({ searchText, type }) {
           strokeWidthSecondary={3}
         />
       ) : searchedUsers.length ? (
-        <Scrollbars
-          autoHide
-          autoHideTimeout={400}
-          autoHideDuration={400}
-          style={{ width: "calc(400px * var(--base-scale))" }}
+        <CustomScrollBar
+          customStyle={{ width: "calc(400px * var(--base-scale))" }}
         >
           {searchedUsers.map((u) => (
             <SearchedUser key={u._id} uObject={u} />
           ))}
-        </Scrollbars>
+        </CustomScrollBar>
       ) : (
         <p className="search__text">{isUserSearched}</p>
       )}
