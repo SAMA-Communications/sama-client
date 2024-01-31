@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
 
-  background-color: var(--color-bg-light);
+  background-color: var(--bg-default-color);
 }
 .chat-form-loading > P {
   margin-left: 15px;
@@ -37,7 +37,7 @@
 .chat-form {
   flex-grow: 1;
 
-  max-width: calc(100svw - 25rem);
+  max-width: calc(100svw - 400px);
   /* height: 100svh; */
 
   display: flex;

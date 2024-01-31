@@ -1,7 +1,7 @@
 .navigation__container {
-  width: 5.25rem;
+  width: 84px;
 
-  padding: 0 0.625rem;
+  padding: 0 10px;
 
   display: flex;
   flex-direction: column;
@@ -21,17 +21,17 @@
 
 .navigation__menu {
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 20px;
 }
 
 .menu__profile,
 .menu__list,
 .menu__create,
 .menu__logout {
-  width: 4rem;
-  height: 4rem;
+  width: 64px;
+  height: 64px;
 
-  padding: 0.375rem;
+  padding: 6px;
 
   border-radius: var(--border-16);
 
