@@ -1,4 +1,4 @@
-import getUserFullTime from "@utils/user/get_user_full_name";
+import getUserFullName from "@utils/user/get_user_full_name";
 import getUserInitials from "@utils/user/get_user_initials";
 import { addUsers } from "@store/Participants";
 import { insertChat } from "@store/Conversations";
@@ -39,7 +39,7 @@ export default function SearchedUser({ uObject }) {
       }}
     >
       <div className="searched-user__photo fcc">{getUserInitials(uObject)}</div>
-      <p className="searched-user__name">{getUserFullTime(uObject)}</p>
+      <p className="searched-user__name">{getUserFullName(uObject)}</p>
     </div>
   );
 }

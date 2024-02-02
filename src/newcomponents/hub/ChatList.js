@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 import SearchBlock from "@newcomponents/search/SearchBlock";
 import SearchInput from "@newcomponents/static/SearchBar";
 import api from "@api/api.js";
+import getUserFullName from "@utils/user/get_user_full_name";
 import jwtDecode from "jwt-decode";
 import {
   clearCountOfUnreadMessages,
@@ -35,12 +36,6 @@ export default function ChatList() {
   const chatsList = useMemo(() => {
     const list = [];
     for (const obj of conversations) {
-      const chatName = !obj.name
-        ? obj.owner_id === userInfo?._id
-          ? participants[obj.opponent_id]?.login
-          : participants[obj.owner_id]?.login
-        : obj.name;
-
       list.push(
         <ChatBox
           key={obj._id}
@@ -53,12 +48,16 @@ export default function ChatList() {
             }
             navigate(`/#${obj._id}`);
           }}
-          chatName={chatName}
-          timeOfLastUpdate={obj.updated_at}
-          countOfNewMessages={obj.unread_messages_count}
-          chatType={obj.type}
-          lastMessage={obj.last_message}
-          uId={userInfo?._id}
+          chatName={
+            obj.name ||
+            getUserFullName(
+              participants[
+                obj[obj.owner_id === userInfo?._id ? "opponent_id" : "owner_id"]
+              ] || {}
+            )
+          }
+          chatObject={obj}
+          currentUserId={userInfo?._id}
         />
       );
     }
@@ -71,14 +70,7 @@ export default function ChatList() {
       {inputText ? (
         <SearchBlock searchText={inputText} />
       ) : (
-        <CustomScrollBar
-          autoHide
-          autoHideTimeout={400}
-          autoHideDuration={400}
-          className="scroll-bar__outer-container"
-        >
-          {chatsList}
-        </CustomScrollBar>
+        <CustomScrollBar>{chatsList}</CustomScrollBar>
       )}
     </div>
   );

@@ -3,9 +3,5 @@ import { ReactComponent as Sending } from "@newicons/status/Sending.svg";
 import { ReactComponent as Sent } from "@newicons/status/Sent.svg";
 
 export default function MessageStatus({ status }) {
-  return (
-    <span>
-      {status ? status === "read" ? <Read /> : <Sent /> : <Sending />}
-    </span>
-  );
+  return status ? status === "read" ? <Read /> : <Sent /> : <Sending />;
 }

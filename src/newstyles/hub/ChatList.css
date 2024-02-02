@@ -60,7 +60,7 @@
   flex: 1;
 
   display: flex;
-  gap: calc(10px * var(--base-scale));
+  gap: calc(7px * var(--base-scale));
   flex-direction: column;
 
   overflow: hidden;
@@ -123,7 +123,8 @@
 }
 
 .last-message__media {
-  width: calc(16px * var(--base-scale));
+  width: auto;
+  max-width: 24px;
   height: calc(16px * var(--base-scale));
 }
 
