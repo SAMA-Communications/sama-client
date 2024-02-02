@@ -33,19 +33,14 @@ export default function ChatList() {
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
 
-  const chatsList = useMemo(() => {
-    const list = [];
-    for (const obj of conversations) {
-      list.push(
+  const chatsList = useMemo(
+    () =>
+      conversations.map((obj) => (
         <ChatBox
           key={obj._id}
           isSelected={activeConv === obj._id}
           onClickFunc={() => {
             dispatch(setSelectedConversation({ id: obj._id }));
-            if (obj.unread_messages_count > 0) {
-              dispatch(clearCountOfUnreadMessages(obj._id));
-              api.markConversationAsRead({ cid: obj._id });
-            }
             navigate(`/#${obj._id}`);
           }}
           chatName={
@@ -59,10 +54,9 @@ export default function ChatList() {
           chatObject={obj}
           currentUserId={userInfo?._id}
         />
-      );
-    }
-    return list;
-  }, [conversations, participants, activeConv]);
+      )),
+    [conversations, participants, activeConv]
+  );
 
   return (
     <div className="chat-list__container">

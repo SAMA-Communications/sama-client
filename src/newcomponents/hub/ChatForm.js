@@ -89,6 +89,11 @@ export default function ChatForm() {
     );
   }
 
+  // if (obj.unread_messages_count > 0) {
+  //   dispatch(clearCountOfUnreadMessages(obj._id));
+  //   api.markConversationAsRead({ cid: obj._id });
+  // }
+
   return (
     <section className="chat-form">
       <ChatFormInfo closeForm={closeForm} />
