@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 import { ReactComponent as EmptyChat } from "@icons/chatForm/EmptyChat.svg";
 
-export default function ChatFormMain({ scrollRef }) {
+export default function ChatFormContent({ scrollRef }) {
   const messages = useSelector(getActiveConversationMessages);
 
   return !messages.length ? (

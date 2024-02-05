@@ -18,7 +18,7 @@ import { ReactComponent as GroupChatPhoto } from "@icons/chatList/ChatIconGroup.
 import { ReactComponent as PrivateChatPhoto } from "@icons/chatList/ChatIconPrivate.svg";
 import { ReactComponent as TrashCan } from "@icons/chatForm/TrashCan.svg";
 
-export default function ChatFormInfo({ closeForm }) {
+export default function ChatFormHeader({ closeForm }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

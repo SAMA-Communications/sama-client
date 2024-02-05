@@ -1,6 +1,6 @@
-import ChatFormInfo from "@screens/chat/chatFormBlocks/ChatFormInfo.js";
-import ChatFormInputs from "@screens/chat/chatFormBlocks/ChatFormInputs.js";
-import ChatFormMain from "@screens/chat/chatFormBlocks/ChatFormMain.js";
+import ChatFormHeader from "@newcomponents/hub/chatForm/ChatFormHeader.js";
+import ChatFormInputs from "@newcomponents/hub/chatForm/ChatFormInputs.js";
+import ChatFormContent from "@newcomponents/hub/chatForm/ChatFormContent.js";
 import NoChatSelected from "@static/NoChatSelected.js";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import api from "@api/api";
@@ -96,8 +96,8 @@ export default function ChatForm() {
 
   return (
     <section className="chat-form">
-      <ChatFormInfo closeForm={closeForm} />
-      <ChatFormMain scrollRef={chatMessagesBlock} />
+      <ChatFormHeader closeForm={closeForm} />
+      <ChatFormContent scrollRef={chatMessagesBlock} />
       <ChatFormInputs
         chatMessagesBlockRef={chatMessagesBlock}
         messageInputEl={messageInputEl}
