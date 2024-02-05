@@ -35,26 +35,30 @@ export default function ChatList() {
 
   const chatsList = useMemo(
     () =>
-      conversations.map((obj) => (
-        <ChatBox
-          key={obj._id}
-          isSelected={activeConv === obj._id}
-          onClickFunc={() => {
-            dispatch(setSelectedConversation({ id: obj._id }));
-            navigate(`/#${obj._id}`);
-          }}
-          chatName={
-            obj.name ||
-            getUserFullName(
-              participants[
-                obj[obj.owner_id === userInfo?._id ? "opponent_id" : "owner_id"]
-              ] || {}
-            )
-          }
-          chatObject={obj}
-          currentUserId={userInfo?._id}
-        />
-      )),
+      conversations.map((obj) =>
+        obj.last_message ? (
+          <ChatBox
+            key={obj._id}
+            isSelected={activeConv === obj._id}
+            onClickFunc={() => {
+              dispatch(setSelectedConversation({ id: obj._id }));
+              navigate(`/#${obj._id}`);
+            }}
+            chatName={
+              obj.name ||
+              getUserFullName(
+                participants[
+                  obj[
+                    obj.owner_id === userInfo?._id ? "opponent_id" : "owner_id"
+                  ]
+                ] || {}
+              )
+            }
+            chatObject={obj}
+            currentUserId={userInfo?._id}
+          />
+        ) : null
+      ),
     [conversations, participants, activeConv]
   );
 
