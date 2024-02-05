@@ -1,4 +1,4 @@
-import { getNetworkState } from "@store/NetworkState";
+import { getNetworkState } from "@store/values/NetworkState";
 import { motion as m } from "framer-motion";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";

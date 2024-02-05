@@ -1,7 +1,7 @@
 import api from "@api/api";
 import jwtDecode from "jwt-decode";
 import store from "@store/store";
-import { upsertUser } from "@store/Participants";
+import { upsertUser } from "@store/values/Participants";
 
 class ActivityService {
   currentChatId;

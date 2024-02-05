@@ -8,9 +8,9 @@ import {
   addMessages,
   getActiveConversationMessages,
   upsertMessages,
-} from "@store/Messages";
-import { getConverastionById, upsertChat } from "@store/Conversations";
-import { selectParticipantsEntities } from "@store/Participants";
+} from "@store/values/Messages";
+import { getConverastionById, upsertChat } from "@store/values/Conversations";
+import { selectParticipantsEntities } from "@store/values/Participants";
 import { useCallback, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 

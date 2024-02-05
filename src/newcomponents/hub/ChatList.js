@@ -10,10 +10,10 @@ import {
   clearCountOfUnreadMessages,
   getConverastionById,
   selectAllConversations,
-} from "@store/Conversations.js";
+} from "@store/values/Conversations.js";
 import { useNavigate } from "react-router-dom";
-import { selectParticipantsEntities } from "@store/Participants.js";
-import { setSelectedConversation } from "@store/SelectedConversation.js";
+import { selectParticipantsEntities } from "@store/values/Participants.js";
+import { setSelectedConversation } from "@store/values/SelectedConversation.js";
 import { useSelector, useDispatch } from "react-redux";
 
 import "@newstyles/hub/ChatList.css";

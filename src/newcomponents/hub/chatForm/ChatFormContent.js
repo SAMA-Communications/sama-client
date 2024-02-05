@@ -1,20 +1,17 @@
 import MessagesList from "@screens/chat/MessagesList";
-import { getActiveConversationMessages } from "@store/Messages";
+import { getActiveConversationMessages } from "@store/values/Messages";
 import { useSelector } from "react-redux";
-
-import { ReactComponent as EmptyChat } from "@icons/chatForm/EmptyChat.svg";
 
 export default function ChatFormContent({ scrollRef }) {
   const messages = useSelector(getActiveConversationMessages);
 
-  return !messages.length ? (
-    <div className="chat-empty">
-      <EmptyChat />
-      <p>Please type your message...</p>
-    </div>
-  ) : (
+  return (
     <div id="chatMessagesScrollable">
-      <MessagesList scrollRef={scrollRef} />
+      {messages.length ? (
+        <MessagesList scrollRef={scrollRef} />
+      ) : (
+        <p className="chat-emty__text">Write the first message...</p>
+      )}
     </div>
   );
 }

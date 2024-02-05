@@ -7,20 +7,20 @@ import globalConstants from "@helpers/constants.js";
 import heicToPng from "@utils/heic_to_png";
 import isMobile from "@utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
-import { getNetworkState } from "@store/NetworkState";
+import { getNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   addMessage,
   getActiveConversationMessages,
   removeMessage,
-} from "@store/Messages";
+} from "@store/values/Messages";
 import showCustomAlert from "@utils/show_alert";
 import {
   getConverastionById,
   setLastMessageField,
   updateLastMessageField,
-} from "@store/Conversations";
+} from "@store/values/Conversations";
 
 import { ReactComponent as Loading } from "@icons/chatForm/Loading.svg";
 import { ReactComponent as SendFilesButton } from "@icons/chatForm/SendFilesButton.svg";

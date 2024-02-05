@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
-import { getIsMobileView } from "@store/IsMobileView";
+import { getIsMobileView } from "@store/values/IsMobileView";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectAllConversations } from "@store/Conversations";
+import { selectAllConversations } from "@store/values/Conversations";
 
 import ChatForm from "@newcomponents/hub/ChatForm";
 import ChatInfoPage from "@screens/info/ChatInfoPage";

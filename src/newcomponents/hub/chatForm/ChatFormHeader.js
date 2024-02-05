@@ -1,136 +1,122 @@
 import api from "@api/api";
 import getLastVisitTime from "@utils/get_last_visit_time";
+import getUserFullName from "@utils/user/get_user_full_name";
 import jwtDecode from "jwt-decode";
 import showCustomAlert from "@utils/show_alert";
 import {
   getConverastionById,
   removeChat,
   selectConversationsEntities,
-} from "@store/Conversations";
-import { clearSelectedConversation } from "@store/SelectedConversation";
-import { selectParticipantsEntities } from "@store/Participants";
+} from "@store/values/Conversations";
+import { clearSelectedConversation } from "@store/values/SelectedConversation";
+import { selectParticipantsEntities } from "@store/values/Participants";
 import { useDispatch, useSelector } from "react-redux";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { ReactComponent as BackBtn } from "@icons/chatForm/BackBtn.svg";
-import { ReactComponent as GroupChatPhoto } from "@icons/chatList/ChatIconGroup.svg";
-import { ReactComponent as PrivateChatPhoto } from "@icons/chatList/ChatIconPrivate.svg";
-import { ReactComponent as TrashCan } from "@icons/chatForm/TrashCan.svg";
+import "@newstyles/hub/chatForm/ChatFormHeader.css";
 
-export default function ChatFormHeader({ closeForm }) {
+import { ReactComponent as More } from "@newicons/options/More.svg";
+import { getCurrentUser } from "@store/values/CurrentUser";
+
+export default function ChatFormHeader() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const userInfo = localStorage.getItem("sessionId")
-    ? jwtDecode(localStorage.getItem("sessionId"))
-    : null;
-
   const participants = useSelector(selectParticipantsEntities);
   const conversations = useSelector(selectConversationsEntities);
+  const currentUser = useSelector(getCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
-  const chatNameView = useMemo(() => {
-    if (!selectedConversation || !participants) {
-      return <p></p>;
+  const closeForm = (event) => {
+    if (event && event.stopPropagation) {
+      event.stopPropagation();
     }
 
-    const { owner_id, opponent_id, name } = selectedConversation;
-    if (name) {
-      return <p>{name}</p>;
-    }
+    dispatch(clearSelectedConversation());
+    api.unsubscribeFromUserActivity({});
+    navigate("/main");
+  };
 
-    function getParticipantName(uId) {
-      const u = participants[uId];
-
-      if (u && (u.first_name || u.last_name)) {
-        return `${u.first_name || ""} ${u.last_name || ""}`.trim();
-      }
-
-      return u?.login;
-    }
-
-    return (
-      <p>
-        {getParticipantName(owner_id === userInfo._id ? opponent_id : owner_id)}
-      </p>
-    );
-  }, [selectedConversation, participants]);
+  document.addEventListener("swiped-left", closeForm);
+  document.addEventListener("swiped-right", closeForm);
+  window.onkeydown = function ({ keyCode }) {
+    keyCode === 27 && closeForm();
+  };
 
   const opponentId = useMemo(() => {
-    const conv = conversations[selectedCID];
-    if (!conv) {
+    const conversation = conversations[selectedCID];
+    if (!conversation) {
       return null;
     }
 
-    return conv.owner_id === userInfo._id
-      ? participants[conv.opponent_id]?._id
-      : participants[conv.owner_id]?._id;
-  }, [selectedCID, participants]);
+    const { owner_id, opponent_id } = conversation;
+    return participants[owner_id === currentUser._id ? opponent_id : owner_id]
+      ?._id;
+  }, [selectedCID, conversations, participants]);
 
-  const opponentLastActivity = participants[opponentId]?.recent_activity;
-  const recentActivityView = useMemo(() => {
-    if (selectedConversation.type === "u") {
-      return opponentLastActivity === "online"
-        ? opponentLastActivity
-        : getLastVisitTime(opponentLastActivity);
+  const viewChatName = useMemo(() => {
+    if (!selectedConversation || !participants) {
+      return;
     }
 
-    return null;
-  }, [opponentId, opponentLastActivity, selectedConversation]);
-
-  const deleteChat = async () => {
-    const isConfirm = window.confirm(`Do you want to delete this chat?`);
-    if (isConfirm) {
-      try {
-        await api.conversationDelete({ cid: selectedCID });
-        dispatch(clearSelectedConversation());
-        dispatch(removeChat(selectedCID));
-        navigate("/main");
-      } catch (error) {
-        showCustomAlert(error.message, "warning");
-      }
+    if (selectedConversation.name) {
+      return selectedConversation.name;
     }
+    return getUserFullName(participants[opponentId]);
+  }, [selectedConversation, participants, opponentId]);
+
+  const viewStatusActivity = useMemo(() => {
+    if (selectedConversation.type = == "u") {
+      const opponentLastActivity = participants[opponentId].recent_activity;
+      return opponentLastActivity === "online" ? (
+        <ul className="activity--online">
+          <li>online</li>
+        </ul>
+      ) : (
+        getLastVisitTime(opponentLastActivity)
+      );
+    }
+
+    const count = selectedConversation.participants.length;
+    return `${count} member${count > 1 ? "s" : ""}`;
+  }, [opponentId, participants, selectedConversation]);
+
+  // MOVE TO MORE OPTIONS BLOCK
+  // const deleteChat = async () => {
+  //   const isConfirm = window.confirm(`Do you want to delete this chat?`);
+  //   if (isConfirm) {
+  //     try {
+  //       await api.conversationDelete({ cid: selectedCID });
+  //       dispatch(clearSelectedConversation());
+  //       dispatch(removeChat(selectedCID));
+  //       navigate("/main");
+  //     } catch (error) {
+  //       showCustomAlert(error.message, "warning");
+  //     }
+  //   }
+  // };
+
+  const viewChatOrPaticipantInfo = () => {
+    navigate(
+      `/main/#${selectedCID}${
+        selectedConversation.type === "g"
+          ? "/info"
+          : "/opponentinfo?uid=" + participants[opponentId]._id
+      }`
+    );
   };
 
   return (
-    <div
-      className="chat-form-info"
-      onClick={() =>
-        navigate(
-          `/main/#${selectedCID}${
-            selectedConversation.type === "g"
-              ? "/info"
-              : "/opponentinfo?uid=" + participants[opponentId]._id
-          }`
-        )
-      }
-    >
-      <div className="chat-return-btn fcc" onClick={closeForm}>
-        <BackBtn />
+    <div className="header__container" onClick={viewChatOrPaticipantInfo}>
+      {/* <div className="header-back"></div> */}
+      <div className="header-content">
+        <div className="content__name">{viewChatName}</div>
+        <div className="content__activity">{viewStatusActivity}</div>
       </div>
-      <div className="chat-info-block">
-        <div
-          className={`chat-recipient-photo ${
-            selectedConversation.type === "g" ? "chat-box-icon-g-bg" : null
-          }`}
-        >
-          {selectedConversation.type === "g" ? (
-            <GroupChatPhoto />
-          ) : (
-            <PrivateChatPhoto />
-          )}
-        </div>
-        <div className="chat-recipient-info">
-          {chatNameView}
-          <div className="chat-recipient-status">{recentActivityView}</div>
-        </div>
-      </div>
-      <div className="chat-delete-btn">
-        {selectedConversation.type === "u" ? (
-          <TrashCan onClick={deleteChat} />
-        ) : null}
+      <div className="header-more">
+        <More />
       </div>
     </div>
   );

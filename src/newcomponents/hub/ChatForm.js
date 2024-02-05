@@ -4,17 +4,14 @@ import ChatFormContent from "@newcomponents/hub/chatForm/ChatFormContent.js";
 import NoChatSelected from "@static/NoChatSelected.js";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import api from "@api/api";
-import { getUserIsLoggedIn } from "@store/UserIsLoggedIn.js";
+import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
   selectConversationsEntities,
-} from "@store/Conversations";
-import {
-  clearSelectedConversation,
-  setSelectedConversation,
-} from "@store/SelectedConversation";
-import { useLocation, useNavigate } from "react-router-dom";
+} from "@store/values/Conversations";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
+import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import "@newstyles/hub/ChatForm.css";
@@ -22,7 +19,6 @@ import "@newstyles/hub/ChatForm.css";
 export default function ChatForm() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const navigate = useNavigate();
 
   const isUserLogin = useSelector(getUserIsLoggedIn);
 
@@ -57,22 +53,7 @@ export default function ChatForm() {
     files.length && setFiles([]);
   }, [selectedCID, conversations[selectedCID]]);
 
-  const closeForm = (event) => {
-    if (event && event.stopPropagation) {
-      event.stopPropagation();
-    }
-
-    dispatch(clearSelectedConversation());
-    api.unsubscribeFromUserActivity({});
-    navigate("/main");
-  };
-
-  document.addEventListener("swiped-left", closeForm);
-  document.addEventListener("swiped-right", closeForm);
-  window.onkeydown = function (event) {
-    event.keyCode === 27 && closeForm();
-  };
-  window.onresize = function (event) {
+  window.onresize = function () {
     if (messageInputEl.current) {
       messageInputEl.current.scrollIntoView({
         behavior: "smooth",
@@ -83,7 +64,7 @@ export default function ChatForm() {
 
   if (!selectedCID) {
     return (
-      <section className="chat-form">
+      <section className="chat-form__container">
         <NoChatSelected />
       </section>
     );
@@ -95,8 +76,8 @@ export default function ChatForm() {
   // }
 
   return (
-    <section className="chat-form">
-      <ChatFormHeader closeForm={closeForm} />
+    <section className="chat-form__container">
+      <ChatFormHeader />
       <ChatFormContent scrollRef={chatMessagesBlock} />
       <ChatFormInputs
         chatMessagesBlockRef={chatMessagesBlock}

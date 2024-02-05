@@ -4,9 +4,10 @@ import store from "@store/store";
 import subscribeForNotifications from "@services/notifications";
 import { default as EventEmitter } from "@event/eventEmitter";
 import { history } from "@helpers/history";
-import { setSelectedConversation } from "@store/SelectedConversation";
-import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
-import { upsertUser } from "@store/Participants";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
+import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
+import { upsertUser } from "@store/values/Participants";
+import { setCurrentUser } from "@store/values/CurrentUser";
 
 class AutoLoginService {
   constructor() {
@@ -35,6 +36,7 @@ class AutoLoginService {
 
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
+        store.dispatch(setCurrentUser(userData));
         api.curerntUserId = userData._id;
 
         subscribeForNotifications();

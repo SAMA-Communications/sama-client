@@ -1,8 +1,8 @@
 import api from "@api/api";
 import getUserInitials from "@utils/user/get_user_initials";
 import { useNavigate } from "react-router-dom";
-import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
-import { updateNetworkState } from "@store/NetworkState";
+import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
+import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch } from "react-redux";
 
 import "@newstyles/navigation/NavigationLine.css";
