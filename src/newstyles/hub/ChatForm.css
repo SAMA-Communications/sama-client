@@ -11,6 +11,11 @@
   font-size: var(--font-h5);
   color: var(--color-text-light);
 }
+.chat-form__title {
+  font-weight: 200;
+  font-size: var(--font-72);
+  color: var(--color-text-light);
+}
 
 #chatMessagesScrollable {
   padding: 0 5px 0 10px;

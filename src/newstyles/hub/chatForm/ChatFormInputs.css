@@ -1,0 +1,51 @@
+.inputs__container {
+  position: relative;
+}
+
+#inputMessage {
+  width: 100%;
+  height: calc(70px * var(--base-scale));
+
+  padding: 25px 77px;
+
+  color: var(--color-black);
+  font-size: var(--font-h5);
+
+  border: 0;
+  border-radius: var(--border-16);
+  background-color: var(--color-hover-light);
+
+  resize: none;
+}
+#inputMessage:focus {
+  outline: none;
+}
+#inputMessage::-webkit-scrollbar {
+  display: none;
+}
+#inputMessage::placeholder {
+  color: var(--color-text-dark);
+  font-size: var(--font-h5);
+}
+
+#inputFile {
+  display: none;
+}
+
+.input-file__button,
+.input-text__button {
+  position: absolute;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  cursor: pointer;
+
+  z-index: 1;
+}
+.input-file__button {
+  left: 30px;
+}
+.input-text__button {
+  right: 30px;
+}

@@ -1,7 +1,6 @@
 import ChatFormHeader from "@newcomponents/hub/chatForm/ChatFormHeader.js";
 import ChatFormInputs from "@newcomponents/hub/chatForm/ChatFormInputs.js";
 import ChatFormContent from "@newcomponents/hub/chatForm/ChatFormContent.js";
-import NoChatSelected from "@static/NoChatSelected.js";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import api from "@api/api";
 import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
@@ -51,7 +50,7 @@ export default function ChatForm() {
     }
 
     files.length && setFiles([]);
-  }, [selectedCID, conversations[selectedCID]]);
+  }, [selectedCID, conversations]);
 
   window.onresize = function () {
     if (messageInputEl.current) {
@@ -62,29 +61,22 @@ export default function ChatForm() {
     }
   };
 
-  if (!selectedCID) {
-    return (
-      <section className="chat-form__container">
-        <NoChatSelected />
-      </section>
-    );
-  }
-
-  // if (obj.unread_messages_count > 0) {
-  //   dispatch(clearCountOfUnreadMessages(obj._id));
-  //   api.markConversationAsRead({ cid: obj._id });
-  // }
-
   return (
-    <section className="chat-form__container">
-      <ChatFormHeader />
-      <ChatFormContent scrollRef={chatMessagesBlock} />
-      <ChatFormInputs
-        chatMessagesBlockRef={chatMessagesBlock}
-        messageInputEl={messageInputEl}
-        files={files}
-        setFiles={setFiles}
-      />
+    <section className={`chat-form__container ${selectedCID ? "" : "fcc"}`}>
+      {selectedCID ? (
+        <>
+          <ChatFormHeader />
+          <ChatFormContent scrollRef={chatMessagesBlock} />
+          <ChatFormInputs
+            chatMessagesBlockRef={chatMessagesBlock}
+            messageInputEl={messageInputEl}
+            files={files}
+            setFiles={setFiles}
+          />
+        </>
+      ) : (
+        <p className="chat-form__title">Select your chat…</p>
+      )}
     </section>
   );
 }

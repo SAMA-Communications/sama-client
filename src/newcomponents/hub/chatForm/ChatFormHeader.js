@@ -66,7 +66,7 @@ export default function ChatFormHeader() {
 
   const viewStatusActivity = useMemo(() => {
     if (selectedConversation.type === "u") {
-      const opponentLastActivity = participants[opponentId].recent_activity;
+      const opponentLastActivity = participants[opponentId]?.recent_activity;
       return opponentLastActivity === "online" ? (
         <ul className="activity--online">
           <li>online</li>
@@ -76,7 +76,7 @@ export default function ChatFormHeader() {
       );
     }
 
-    const count = selectedConversation.participants.length;
+    const count = selectedConversation.participants?.length;
     return `${count} member${count > 1 ? "s" : ""}`;
   }, [opponentId, participants, selectedConversation]);
 
