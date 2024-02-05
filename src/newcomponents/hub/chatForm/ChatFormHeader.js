@@ -1,14 +1,12 @@
 import api from "@api/api";
 import getLastVisitTime from "@utils/get_last_visit_time";
 import getUserFullName from "@utils/user/get_user_full_name";
-import jwtDecode from "jwt-decode";
-import showCustomAlert from "@utils/show_alert";
 import {
   getConverastionById,
-  removeChat,
   selectConversationsEntities,
 } from "@store/values/Conversations";
 import { clearSelectedConversation } from "@store/values/SelectedConversation";
+import { getCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useDispatch, useSelector } from "react-redux";
 import { useMemo } from "react";
@@ -17,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import "@newstyles/hub/chatForm/ChatFormHeader.css";
 
 import { ReactComponent as More } from "@newicons/options/More.svg";
-import { getCurrentUser } from "@store/values/CurrentUser";
 
 export default function ChatFormHeader() {
   const navigate = useNavigate();
