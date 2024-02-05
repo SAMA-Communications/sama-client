@@ -68,7 +68,7 @@ export default function ChatFormHeader() {
   }, [selectedConversation, participants, opponentId]);
 
   const viewStatusActivity = useMemo(() => {
-    if (selectedConversation.type = == "u") {
+    if (selectedConversation.type === "u") {
       const opponentLastActivity = participants[opponentId].recent_activity;
       return opponentLastActivity === "online" ? (
         <ul className="activity--online">
