@@ -128,43 +128,6 @@ export default function ChatFormInputs({
     messageInputEl.current.style.height = `calc(70px * var(--base-scale))`;
   }, [selectedCID]);
 
-  const calculateNumLines = (textarea) => {
-    const parseValue = (v) =>
-      v.endsWith("px") ? parseInt(v.slice(0, -2), 10) : 0;
-
-    const textareaStyles = window.getComputedStyle(textarea);
-    const font = `${textareaStyles.fontSize} ${textareaStyles.fontFamily}`;
-    const paddingLeft = parseValue(textareaStyles.paddingLeft);
-    const paddingRight = parseValue(textareaStyles.paddingRight);
-    const textareaWidth =
-      textarea.getBoundingClientRect().width - paddingLeft - paddingRight;
-
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-    context.font = font;
-
-    const words = textarea.value.split(" ");
-    let lineCount = 0;
-    let currentLine = "";
-    for (let i = 0; i < words.length; i++) {
-      const wordWidth = context.measureText(words[i] + " ").width;
-      const lineWidth = context.measureText(currentLine).width;
-
-      if (lineWidth + wordWidth > textareaWidth) {
-        lineCount++;
-        currentLine = words[i] + " ";
-      } else {
-        currentLine += words[i] + " ";
-      }
-    }
-
-    if (currentLine.trim() !== "") {
-      lineCount++;
-    }
-
-    return lineCount;
-  };
-
   const handleInput = (e) => {
     if (messageInputEl.current) {
       const countOfLines = e.target.value.split("\n").length - 1;
