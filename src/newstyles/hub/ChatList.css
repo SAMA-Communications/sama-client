@@ -104,6 +104,8 @@
 }
 
 .content-bottom__last-message {
+  flex: 1;
+
   display: flex;
   align-items: center;
   gap: calc(5px * var(--base-scale));

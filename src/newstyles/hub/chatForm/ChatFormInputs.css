@@ -6,7 +6,7 @@
   width: 100%;
   height: calc(70px * var(--base-scale));
 
-  padding: 25px 77px;
+  padding: calc(25px * var(--base-scale)) calc(77px * var(--base-scale));
 
   color: var(--color-black);
   font-size: var(--font-h5);
@@ -35,17 +35,16 @@
 .input-file__button,
 .input-text__button {
   position: absolute;
-  top: 50%;
-
-  transform: translateY(-50%);
+  bottom: calc(20px * var(--base-scale));
 
   cursor: pointer;
 
   z-index: 1;
 }
 .input-file__button {
-  left: 30px;
+  left: calc(30px * var(--base-scale));
 }
 .input-text__button {
-  right: 30px;
+  bottom: calc(21px * var(--base-scale));
+  right: calc(30px * var(--base-scale));
 }
