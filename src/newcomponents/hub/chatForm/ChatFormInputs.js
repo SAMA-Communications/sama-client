@@ -1,26 +1,21 @@
-import AttachmentsList from "@generic/messageComponents/AttachmentsList.js";
-import DownloadManager from "@adapters/downloadManager.js";
 import api from "@api/api";
-import compressFile from "@utils/compress_file.js";
-import encodeImageToBlurhash from "@utils/get_blur_hash.js";
 import globalConstants from "@helpers/constants.js";
-import heicToPng from "@utils/heic_to_png";
 import isMobile from "@utils/get_device_type.js";
 import jwtDecode from "jwt-decode";
-import { getNetworkState } from "@store/values/NetworkState";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo, useRef, useState } from "react";
+import showCustomAlert from "@utils/show_alert";
 import {
   addMessage,
   getActiveConversationMessages,
   removeMessage,
 } from "@store/values/Messages";
-import showCustomAlert from "@utils/show_alert";
 import {
   getConverastionById,
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
+import { getNetworkState } from "@store/values/NetworkState";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
 
 import "@newstyles/hub/chatForm/ChatFormInputs.css";
 
