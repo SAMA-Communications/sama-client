@@ -14,6 +14,7 @@
   font-size: var(--font-72);
   color: var(--color-text-light);
 }
+
 .chat-content__container {
   padding-top: 110px;
   padding-bottom: 90px;
@@ -22,6 +23,7 @@
   display: flex;
   flex-direction: column-reverse;
 }
+
 #chatMessagesScrollable {
   display: flex;
   flex-direction: column-reverse;
