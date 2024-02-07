@@ -1,28 +1,26 @@
-import ChatMessage from "@generic/messageComponents/ChatMessage";
+import ChatMessage from "@newcomponents/hub/elements/ChatMessage";
 import DownloadManager from "@adapters/downloadManager";
 import InfiniteScroll from "react-infinite-scroll-component";
-import InformativeMessage from "@generic/messageComponents/InformativeMessage";
+import InformativeMessage from "@newcomponents/hub/elements/InformativeMessage";
 import api from "@api/api";
-import jwtDecode from "jwt-decode";
 import {
   addMessages,
   getActiveConversationMessages,
   upsertMessages,
 } from "@store/values/Messages";
 import { getConverastionById, upsertChat } from "@store/values/Conversations";
+import { getCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useCallback, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 
 export default function MessagesList({ scrollRef }) {
   const dispatch = useDispatch();
 
-  const userInfo = localStorage.getItem("sessionId")
-    ? jwtDecode(localStorage.getItem("sessionId"))
-    : null;
-
   const messages = useSelector(getActiveConversationMessages);
   const participants = useSelector(selectParticipantsEntities);
+  const currentUser = useSelector(getCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
@@ -139,7 +137,7 @@ export default function MessagesList({ scrollRef }) {
           <ChatMessage
             key={msg._id}
             fromId={msg.from}
-            userId={userInfo._id}
+            userId={currentUser._id}
             text={msg.body}
             uName={participants[msg.from]?.login}
             isPrevMesssageYours={

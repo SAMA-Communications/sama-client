@@ -3,17 +3,15 @@ import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 import React, { useMemo, useState } from "react";
 import SearchBlock from "@newcomponents/search/SearchBlock";
 import SearchInput from "@newcomponents/static/SearchBar";
-import api from "@api/api.js";
 import getUserFullName from "@utils/user/get_user_full_name";
-import jwtDecode from "jwt-decode";
 import {
-  clearCountOfUnreadMessages,
   getConverastionById,
   selectAllConversations,
 } from "@store/values/Conversations.js";
-import { useNavigate } from "react-router-dom";
+import { getCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 import { setSelectedConversation } from "@store/values/SelectedConversation.js";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import "@newstyles/hub/ChatList.css";
@@ -26,17 +24,14 @@ export default function ChatList() {
 
   const conversations = useSelector(selectAllConversations);
   const participants = useSelector(selectParticipantsEntities);
+  const currentuser = useSelector(getCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
   const activeConv = selectedConversation?._id;
-
-  const userInfo = localStorage.getItem("sessionId")
-    ? jwtDecode(localStorage.getItem("sessionId"))
-    : null;
 
   const chatsList = useMemo(
     () =>
       conversations.map((obj) =>
-        obj.last_message ? (
+        obj.type === "g" || obj.last_message ? (
           <ChatBox
             key={obj._id}
             isSelected={activeConv === obj._id}
@@ -49,13 +44,15 @@ export default function ChatList() {
               getUserFullName(
                 participants[
                   obj[
-                    obj.owner_id === userInfo?._id ? "opponent_id" : "owner_id"
+                    obj.owner_id === currentuser._id
+                      ? "opponent_id"
+                      : "owner_id"
                   ]
                 ] || {}
               )
             }
             chatObject={obj}
-            currentUserId={userInfo?._id}
+            currentUserId={currentuser._id}
           />
         ) : null
       ),

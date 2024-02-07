@@ -5,8 +5,6 @@
 }
 
 .chat-emty__text {
-  margin-bottom: 15px;
-
   font-weight: 200;
   font-size: var(--font-h5);
   color: var(--color-text-light);
@@ -16,18 +14,19 @@
   font-size: var(--font-72);
   color: var(--color-text-light);
 }
+.chat-content__container {
+  padding-top: 110px;
+  padding-bottom: 90px;
 
-#chatMessagesScrollable {
-  padding: 0 5px 0 10px;
-
-  display: flex;
-  overflow: auto;
   flex-grow: 1;
+  display: flex;
   flex-direction: column-reverse;
-
-  overflow: auto;
-
-  border-right: 5px solid transparent;
-  border-left: 5px solid transparent;
-  background-color: var(--color-bg-light);
+}
+#chatMessagesScrollable {
+  display: flex;
+  flex-direction: column-reverse;
+}
+#chatMessagesScrollable .infinite-scroll-component {
+  padding-top: 110px;
+  padding-bottom: 90px;
 }
