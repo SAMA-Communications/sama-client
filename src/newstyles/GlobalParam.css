@@ -124,7 +124,7 @@ main {
 }
 
 /* vertical scroll */
-/* .scroll-bar__outer-container > div:nth-child(3) {
+.scroll-bar__outer-container > div:nth-child(3) {
   width: calc(6px * var(--base-scale)) !important;
 
   right: calc(4px * var(--base-scale)) !important;
@@ -132,4 +132,4 @@ main {
   top: calc(4px * var(--base-scale)) !important;
 
   border-radius: calc(3px * var(--base-scale)) !important;
-} */
+}
