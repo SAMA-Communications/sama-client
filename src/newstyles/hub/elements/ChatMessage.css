@@ -97,3 +97,7 @@
 .message__container--my .status__time {
   color: var(--color-white);
 }
+
+.mt-8 {
+  margin-top: 8px;
+}

@@ -9,6 +9,7 @@ import "@newstyles/hub/elements/ChatMessage.css";
 
 import { ReactComponent as UserPhoto } from "@icons/chatForm/UserPhotoIconChat.svg";
 import { ReactComponent as CornerLight } from "@newicons/_helpers/CornerLight.svg";
+import { ReactComponent as CornerAccent } from "@newicons/_helpers/CornerAccent.svg";
 
 export default function ChatMessage({
   message,
@@ -28,7 +29,11 @@ export default function ChatMessage({
   }, [t]);
 
   return (
-    <div className={`message__container${isCurrentUser ? "--my" : ""}`}>
+    <div
+      className={`message__container${isCurrentUser ? "--my" : ""} ${
+        prev ? "" : "mt-8"
+      }`}
+    >
       <div className="message-photo">
         {next ? null : (
           <div className="photo__container fcc">
@@ -37,7 +42,11 @@ export default function ChatMessage({
         )}
       </div>
       <div className={`message-content__container ${next ? "" : "br-bl-0"}`}>
-        {next ? null : <CornerLight className="message-content--corner" />}
+        {next ? null : isCurrentUser ? (
+          <CornerAccent className="message-content--corner" />
+        ) : (
+          <CornerLight className="message-content--corner" />
+        )}
         {prev ? null : (
           <div className="content__uname">{getUserFullName(userObject)}</div>
         )}
