@@ -25,3 +25,9 @@
   padding-top: 110px;
   padding-bottom: 90px;
 }
+
+#chatMessagesScrollable .infinite-scroll-component {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}

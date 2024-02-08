@@ -1,87 +1,63 @@
 import MessageAttachments from "@screens/chat/MessageAttachments";
 import MessageStatus from "@newcomponents/message/elements/MessageStatus";
-import React, { useMemo } from "react";
+import getUserFullName from "@utils/user/get_user_full_name";
+import getUserInitials from "@utils/user/get_user_initials";
 import { urlify } from "@utils/urlify";
+import { useMemo } from "react";
 
-import "@styles/pages/chat/ChatMessage.css";
+import "@newstyles/hub/elements/ChatMessage.css";
 
 import { ReactComponent as UserPhoto } from "@icons/chatForm/UserPhotoIconChat.svg";
+import { ReactComponent as CornerLight } from "@newicons/_helpers/CornerLight.svg";
 
 export default function ChatMessage({
-  fromId,
-  text,
-  userId,
-  uName,
-  status,
-  isPrevMesssageYours,
-  isNextMessageYours,
-  attachments,
-  tSend,
+  message,
+  userObject,
+  currentUserId,
+  isPrevMesssageYours: prev,
+  isNextMessageYours: next,
 }) {
+  const { body, from, attachments, status, t } = message;
+  const isCurrentUser = from === currentUserId;
+
   const timeSend = useMemo(() => {
-    const t = new Date(tSend * 1000);
-    return (
-      t.getHours() +
-      ":" +
-      (t.getMinutes() > 9 ? t.getMinutes() : "0" + t.getMinutes())
-    );
-  }, [tSend]);
-
-  const messageStyle = useMemo(() => {
-    let status = "message-content";
-    status += isPrevMesssageYours ? " br-tl" : " mt-10";
-
-    if (!attachments?.length) {
-      status += text?.length < 25 ? " m-pr" : " m-pb";
-    } else if (text?.length > 16 && window.innerWidth < 800) {
-      status += " m-pb";
-    }
-
-    return status;
-  }, [isPrevMesssageYours, attachments]);
+    const time = new Date(t * 1000);
+    return `${time.getHours()}:${
+      time.getMinutes() > 9 ? time.getMinutes() : "0" + time.getMinutes()
+    }`;
+  }, [t]);
 
   return (
-    <div
-      className={
-        fromId === userId.toString() ? "message my-message" : "message"
-      }
-    >
-      {isNextMessageYours ? (
-        <div className="message-user-photo-none"></div>
-      ) : (
-        <div className="message-user-photo">
-          {uName ? uName.slice(0, 2) : <UserPhoto />}
-        </div>
-      )}
-      <div className={messageStyle}>
-        <div className="message-info">
-          {!isPrevMesssageYours && <p className="message-user-name">{uName}</p>}
+    <div className={`message__container${isCurrentUser ? "--my" : ""}`}>
+      <div className="message-photo">
+        {next ? null : (
+          <div className="photo__container fcc">
+            {userObject ? getUserInitials(userObject) : <UserPhoto />}
+          </div>
+        )}
+      </div>
+      <div className={`message-content__container ${next ? "" : "br-bl-0"}`}>
+        {next ? null : <CornerLight className="message-content--corner" />}
+        {prev ? null : (
+          <div className="content__uname">{getUserFullName(userObject)}</div>
+        )}
+        <div className="content__container">
           {!!attachments?.length && (
             <MessageAttachments attachments={attachments} />
           )}
-          {text && (
-            <p
-              className={
-                attachments?.length || isPrevMesssageYours
-                  ? "message-body mt-10"
-                  : "message-body"
-              }
+          {body ? <div className="content__text">{urlify(body)}</div> : null}
+          {isCurrentUser ? (
+            <div
+              className={`content__status${
+                attachments?.length && !body ? "--darken" : ""
+              } fcc`}
             >
-              {urlify(text)}
-            </p>
-          )}
-        </div>
-        <div
-          className={
-            attachments?.length && !text
-              ? "message-status bg-status-att"
-              : "message-status"
-          }
-        >
-          <div className="message-status-time">{timeSend}</div>
-          <div className="message-status-icon">
-            <MessageStatus status={status} />
-          </div>
+              <div className="status__time">{timeSend}</div>
+              <div className="status__icon">
+                <MessageStatus status={status} />
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

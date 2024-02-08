@@ -13,7 +13,6 @@ import { getCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useCallback, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 
 export default function MessagesList({ scrollRef }) {
   const dispatch = useDispatch();
@@ -136,10 +135,9 @@ export default function MessagesList({ scrollRef }) {
         ) : (
           <ChatMessage
             key={msg._id}
-            fromId={msg.from}
-            userId={currentUser._id}
-            text={msg.body}
-            uName={participants[msg.from]?.login}
+            message={msg}
+            currentUserId={currentUser._id}
+            userObject={participants[msg.from] || {}}
             isPrevMesssageYours={
               i > 0
                 ? messages[i - 1].from === messages[i].from &&
@@ -152,9 +150,6 @@ export default function MessagesList({ scrollRef }) {
                   !messages[i + 1].x?.type
                 : false
             }
-            attachments={msg.attachments}
-            status={msg.status}
-            tSend={msg.t}
           />
         )
       )}

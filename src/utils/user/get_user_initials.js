@@ -14,7 +14,7 @@ export default function getUserInitials(user) {
 
   const userObject =
     store.getState().participants.entities[userInfo._id] || user;
-  if (!userObject || !Object.keys(userObject).length) {
+  if (!userObject || !Object.keys(userObject).length || !userObject.login) {
     return "AA";
   }
 
