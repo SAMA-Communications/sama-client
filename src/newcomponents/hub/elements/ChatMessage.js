@@ -54,7 +54,10 @@ export default function ChatMessage({
             >
               <div className="status__time">{timeSend}</div>
               <div className="status__icon">
-                <MessageStatus status={status} />
+                <MessageStatus
+                  status={status}
+                  type={isCurrentUser ? "white" : "accent"}
+                />
               </div>
             </div>
           ) : null}

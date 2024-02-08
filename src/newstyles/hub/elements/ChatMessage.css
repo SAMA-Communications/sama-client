@@ -85,3 +85,15 @@
   left: -16px;
   bottom: 0;
 }
+
+.message__container--my .photo__container,
+.message__container--my .message-content__container {
+  background-color: var(--color-accent-dark);
+}
+
+.message__container--my .photo__container,
+.message__container--my .content__text,
+.message__container--my .content__uname,
+.message__container--my .status__time {
+  color: var(--color-white);
+}
