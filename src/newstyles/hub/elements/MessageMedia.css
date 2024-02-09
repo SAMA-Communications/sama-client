@@ -1,5 +1,6 @@
 .message-media__container {
   display: flex;
+  flex-direction: column;
   row-gap: 7px;
 }
 
@@ -9,6 +10,7 @@
   overflow: hidden;
 }
 
-.media-attachment > img {
+.media-attachment > img,
+.media-attachment > video {
   width: 100%;
 }
