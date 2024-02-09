@@ -1,4 +1,4 @@
-import MessageAttachments from "@screens/chat/MessageAttachments";
+import MessageAttachments from "@newcomponents/message/elements/MessageAttachments";
 import MessageStatus from "@newcomponents/message/elements/MessageStatus";
 import getUserFullName from "@utils/user/get_user_full_name";
 import getUserInitials from "@utils/user/get_user_initials";
@@ -51,9 +51,9 @@ export default function ChatMessage({
           <div className="content__uname">{getUserFullName(userObject)}</div>
         )}
         <div className="content__container">
-          {!!attachments?.length && (
+          {attachments?.length ? (
             <MessageAttachments attachments={attachments} />
-          )}
+          ) : null}
           {body ? <div className="content__text">{urlify(body)}</div> : null}
 
           <div

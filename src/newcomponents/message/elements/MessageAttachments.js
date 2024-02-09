@@ -1,5 +1,7 @@
-import MessageAttachment from "@generic/messageComponents/MessageAttachment";
+import MessageAttachment from "@newcomponents/message/elements/MessageAttachment";
 import React from "react";
+
+import "@newstyles/hub/elements/MessageMedia.css";
 
 export default function MessageAttachments({ attachments }) {
   if (!attachments) {
@@ -7,7 +9,7 @@ export default function MessageAttachments({ attachments }) {
   }
 
   return (
-    <div className="message-file">
+    <div className="message-media__container">
       {attachments.map((att) => (
         <MessageAttachment
           key={att.file_id}

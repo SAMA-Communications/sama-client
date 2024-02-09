@@ -1,5 +1,5 @@
 import ImageView from "@newcomponents/message/elements/ImageView";
-import VideoView from "@generic/attachmentComponents/VideoView";
+import VideoView from "@newcomponents/message/elements/VideoView";
 import getFileType from "@utils/get_file_type";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -15,8 +15,7 @@ export default function MessageAttachment({
 
   return (
     <div
-      className="attachment-img"
-      style={{ gridColumnEnd: `span ${1}`, gridRowEnd: `span ${1}` }}
+      className="media-attachment"
       onClick={() => {
         navigate(hash + `/modal?id=${id.replaceAll(" ", "%")}`);
       }}

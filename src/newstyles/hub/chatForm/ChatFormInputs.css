@@ -1,12 +1,14 @@
 .inputs__container {
   position: absolute;
-  bottom: 0;
+  bottom: -2px;
 
   width: 100%;
 
   padding-top: 20px;
 
   background-color: var(--color-bg-light-90);
+
+  z-index: 50;
 }
 
 #inputMessage {

@@ -1,0 +1,14 @@
+.message-media__container {
+  display: flex;
+  row-gap: 7px;
+}
+
+.media-attachment {
+  border-radius: var(--border-8);
+
+  overflow: hidden;
+}
+
+.media-attachment > img {
+  width: 100%;
+}
