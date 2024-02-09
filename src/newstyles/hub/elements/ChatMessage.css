@@ -57,15 +57,12 @@
 }
 
 .content__text {
-  text-align-last: justify;
-
   color: var(--color-black);
   line-height: var(--font-h5);
 }
 .content__status {
   flex-grow: 1;
 
-  padding-right: 29px;
   justify-content: flex-end;
 }
 .status__time {
@@ -100,4 +97,8 @@
 
 .mt-8 {
   margin-top: 8px;
+}
+
+.pr-28 {
+  padding-right: 29px;
 }

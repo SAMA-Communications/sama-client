@@ -55,21 +55,22 @@ export default function ChatMessage({
             <MessageAttachments attachments={attachments} />
           )}
           {body ? <div className="content__text">{urlify(body)}</div> : null}
-          {isCurrentUser ? (
-            <div
-              className={`content__status${
-                attachments?.length && !body ? "--darken" : ""
-              } fcc`}
-            >
-              <div className="status__time">{timeSend}</div>
+
+          <div
+            className={`content__status${
+              attachments?.length && !body ? "--darken" : ""
+            } fcc ${isCurrentUser ? "pr-28" : ""}`}
+          >
+            <div className="status__time">{timeSend}</div>
+            {isCurrentUser ? (
               <div className="status__icon">
                 <MessageStatus
                   status={status}
                   type={isCurrentUser ? "white" : "accent"}
                 />
               </div>
-            </div>
-          ) : null}
+            ) : null}
+          </div>
         </div>
       </div>
     </div>
