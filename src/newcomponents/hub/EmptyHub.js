@@ -25,7 +25,7 @@ export default function EmptyHub() {
   return (
     <section className="hub--empty fcc" style={viewHubProperty}>
       <div className="hub-title__container" style={viewProperty}>
-        <p className="hub-title__text">You don't have any created chats.</p>
+        <p className="hub-title__text">You don't have any chats yet.</p>
       </div>
       <SearchInput
         shadowText={"Search"}
