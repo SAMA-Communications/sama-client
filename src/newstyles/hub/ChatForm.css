@@ -19,8 +19,10 @@
   color: var(--color-text-light);
 }
 .chat-form__title {
+  line-height: var(--font-72);
+  text-align: center;
   font-weight: 200;
-  font-size: var(--font-72);
+  font-size: var(--font-58);
   color: var(--color-text-light);
 }
 

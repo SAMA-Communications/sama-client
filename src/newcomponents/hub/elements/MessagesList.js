@@ -136,8 +136,8 @@ export default function MessagesList({ scrollRef }) {
           <ChatMessage
             key={msg._id}
             message={msg}
+            sender={participants[msg.from] || {}}
             currentUserId={currentUser._id}
-            userObject={participants[msg.from] || {}}
             isPrevMesssageYours={
               i > 0
                 ? messages[i - 1].from === messages[i].from &&

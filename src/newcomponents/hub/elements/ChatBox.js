@@ -1,5 +1,5 @@
 import LastMessage from "@newcomponents/message/LastMessage";
-import globalConstants from "@helpers/constants";
+import getLastUpdateTime from "@utils/conversation/get_last_update_time";
 import { useMemo } from "react";
 
 import { ReactComponent as Group } from "@newicons/users/Group.svg";
@@ -14,34 +14,7 @@ export default function ChatBox({
   const { updated_at, unread_messages_count, type, last_message } = chatObject;
 
   const tView = useMemo(() => {
-    const t = new Date(
-      last_message
-        ? last_message.t / 1000000000 < 10
-          ? last_message.t * 1000
-          : last_message.t
-        : Date.parse(updated_at)
-    );
-    const tToday = new Date(Date.now());
-
-    if (
-      tToday.getFullYear() - t.getFullYear() ||
-      tToday.getMonth() - t.getMonth() ||
-      tToday.getDate() - t.getDate() > 6
-    ) {
-      return (
-        `${t.getDate() < 10 ? "0" : ""}${t.getDate()}` +
-        "." +
-        `${t.getMonth() < 10 ? "0" : ""}${t.getMonth() + 1}` +
-        "." +
-        t.getFullYear().toString().slice(2)
-      );
-    }
-
-    return tToday.getDay() - t.getDay()
-      ? globalConstants.weekDays[t.getDay()]
-      : t.getHours() +
-          ":" +
-          (t.getMinutes() < 10 ? "0" + t.getMinutes() : t.getMinutes());
+    return getLastUpdateTime(updated_at, last_message);
   }, [updated_at, last_message]);
 
   return (

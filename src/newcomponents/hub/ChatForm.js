@@ -75,7 +75,9 @@ export default function ChatForm() {
           />
         </>
       ) : (
-        <p className="chat-form__title">Select your chat…</p>
+        <p className="chat-form__title">
+          Select a conversation to start chatting
+        </p>
       )}
     </section>
   );

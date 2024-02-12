@@ -12,8 +12,8 @@ import { ReactComponent as CornerLight } from "@newicons/_helpers/CornerLight.sv
 import { ReactComponent as CornerAccent } from "@newicons/_helpers/CornerAccent.svg";
 
 export default function ChatMessage({
+  sender,
   message,
-  userObject,
   currentUserId,
   isPrevMesssageYours: prev,
   isNextMessageYours: next,
@@ -37,7 +37,7 @@ export default function ChatMessage({
       <div className="message-photo">
         {next ? null : (
           <div className="photo__container fcc">
-            {userObject ? getUserInitials(userObject) : <UserPhoto />}
+            {sender ? getUserInitials(sender) : <UserPhoto />}
           </div>
         )}
       </div>
@@ -48,7 +48,7 @@ export default function ChatMessage({
           <CornerLight className="message-content--corner" />
         )}
         {prev ? null : (
-          <div className="content__uname">{getUserFullName(userObject)}</div>
+          <div className="content__uname">{getUserFullName(sender)}</div>
         )}
         <div className="content__container">
           {attachments?.length ? (
