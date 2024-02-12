@@ -24,13 +24,13 @@ export default function SearchedUser({ uObject }) {
     };
 
     const chat = await api.conversationCreate(requestData);
-    const users = await api.getParticipantsByCids({ cids: [chat._id] });
-    dispatch(addUsers(users));
+    dispatch(addUsers([uObject]));
     dispatch(insertChat({ ...chat, messagesIds: [] }));
 
     navigate(`/main/#${chat._id}`);
     dispatch(setSelectedConversation({ id: chat._id }));
   };
+
   return (
     <div
       className="searched-user fcc"
