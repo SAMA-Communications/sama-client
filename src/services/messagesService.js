@@ -7,6 +7,7 @@ import {
   addMessage,
   addMessages,
   markMessagesAsRead,
+  removeMessage,
   upsertMessages,
 } from "@store/values/Messages";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
@@ -93,6 +94,7 @@ class MessagesService {
       }
     });
   }
+
   async syncData() {
     api
       .messageList({
@@ -164,6 +166,19 @@ class MessagesService {
         store.dispatch(setSelectedConversation({}));
         history.navigate("/main");
       });
+  }
+
+  async sendMessage(message) {
+    const { server_mid, t } = await api.messageCreate(message);
+    const { mid, body, cid, from } = message;
+
+    const mObject = { _id: server_mid, body, from, status: "sent", t };
+
+    store.dispatch(addMessage(mObject));
+    store.dispatch(
+      updateLastMessageField({ cid, resaveLastMessageId: mid, msg: mObject })
+    );
+    store.dispatch(removeMessage(mid));
   }
 }
 

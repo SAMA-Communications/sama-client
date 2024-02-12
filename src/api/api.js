@@ -278,8 +278,8 @@ class Api {
       const requestData = {
         message: {
           id: data.mid,
-          body: data.text,
-          cid: data.chatId,
+          body: data.body,
+          cid: data.cid,
           attachments: data.attachments,
         },
       };

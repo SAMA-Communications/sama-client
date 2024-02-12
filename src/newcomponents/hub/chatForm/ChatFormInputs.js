@@ -1,18 +1,17 @@
-import api from "@api/api";
 import globalConstants from "@helpers/constants.js";
 import isMobile from "@utils/get_device_type.js";
-import jwtDecode from "jwt-decode";
+import messagesService from "@services/messagesService";
 import showCustomAlert from "@utils/show_alert";
 import {
   addMessage,
   getActiveConversationMessages,
-  removeMessage,
 } from "@store/values/Messages";
 import {
   getConverastionById,
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
+import { getCurrentUser } from "@store/values/CurrentUser";
 import { getNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
@@ -26,22 +25,23 @@ export default function ChatFormInputs({
   chatMessagesBlockRef,
   messageInputEl,
 }) {
+  const { current: inputEl } = messageInputEl;
+
   const dispatch = useDispatch();
 
   const connectState = useSelector(getNetworkState);
-  const userInfo = localStorage.getItem("sessionId")
-    ? jwtDecode(localStorage.getItem("sessionId"))
-    : null;
-
+  const currentUser = useSelector(getCurrentUser);
+  const messages = useSelector(getActiveConversationMessages);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
-  const messages = useSelector(getActiveConversationMessages);
   const filePicker = useRef(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
   const scrollChatToBottom = () =>
     chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
+
+  const pickUserFiles = () => filePicker.current.click();
 
   const sendMessage = async (event) => {
     event.preventDefault();
@@ -51,33 +51,28 @@ export default function ChatFormInputs({
       return;
     }
 
-    const text = messageInputEl.current.value.trim();
-    if (text.length === 0 || isSendMessageDisable) {
+    const body = inputEl.value.trim();
+    if (body.length === 0 || isSendMessageDisable) {
       return;
     }
     setIsSendMessageDisable(true);
-    messageInputEl.current.value = "";
-    const mid = userInfo._id + Date.now();
-    let msg = {
+    inputEl.value = "";
+    const mid = currentUser._id + Date.now();
+    const msg = {
       _id: mid,
-      body: text,
-      from: userInfo._id,
+      body,
+      from: currentUser._id,
       t: Date.now(),
     };
 
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
-    const reqData = {
-      mid,
-      text: text,
-      chatId: selectedCID,
-    };
+    const mObject = { mid, body, cid: selectedCID, from: currentUser._id };
 
-    let response;
     try {
-      response = await api.messageCreate(reqData);
-    } catch (err) {
+      await messagesService.sendMessage(mObject);
+    } catch (e) {
       showCustomAlert("The server connection is unavailable.", "warning");
       dispatch(
         setLastMessageField({
@@ -88,35 +83,14 @@ export default function ChatFormInputs({
       return;
     }
 
-    if (response.mid) {
-      msg = {
-        _id: response.server_mid,
-        body: text,
-        from: userInfo._id,
-        status: "sent",
-        t: response.t,
-      };
-
-      dispatch(addMessage(msg));
-      dispatch(
-        updateLastMessageField({
-          cid: selectedCID,
-          resaveLastMessageId: mid,
-          msg,
-        })
-      );
-      dispatch(removeMessage(mid));
-    }
     filePicker.current.value = "";
-    isMobile && messageInputEl.current.blur();
+    isMobile && inputEl.blur();
 
     setIsSendMessageDisable(false);
     scrollChatToBottom();
-    messageInputEl.current.focus();
-    messageInputEl.current.style.height = `calc(70px * var(--base-scale))`;
+    inputEl.focus();
+    inputEl.style.height = `calc(70px * var(--base-scale))`;
   };
-
-  const pickUserFiles = () => filePicker.current.click();
 
   useEffect(() => {
     messageInputEl.current.value = "";
@@ -124,12 +98,12 @@ export default function ChatFormInputs({
   }, [selectedCID]);
 
   const handleInput = (e) => {
-    if (messageInputEl.current) {
+    if (inputEl) {
       const countOfLines = e.target.value.split("\n").length - 1;
-      messageInputEl.current.style.height = `calc(${
+      inputEl.style.height = `calc(${
         70 + countOfLines * 20 < 230 ? 70 + countOfLines * 20 : 230
       }px * var(--base-scale)) `;
-      messageInputEl.current.scrollTop = messageInputEl.current.scrollHeight;
+      inputEl.scrollTop = inputEl.scrollHeight;
     }
   };
 
