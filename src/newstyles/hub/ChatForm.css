@@ -4,7 +4,16 @@
   flex: 1;
 }
 
+.chat-content__container {
+  padding-top: 110px;
+  padding-bottom: 90px;
+
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+}
 .chat-emty__text {
+  line-height: var(--font-h4);
   font-weight: 200;
   font-size: var(--font-h5);
   color: var(--color-text-light);
