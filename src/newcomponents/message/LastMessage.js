@@ -14,7 +14,7 @@ export default function LastMessage({ message, count, userId }) {
     if (!text && !att) {
       return "";
     }
-    const fileType = att && getFileType(att.name);
+    const fileType = att && getFileType(att.file_name);
     return text || fileType || "";
   };
 
