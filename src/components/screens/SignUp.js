@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import { changeOpacity, loginBox } from "@styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
+import { setCurrentUser } from "@store/values/CurrentUser";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { upsertUser } from "@store/values/Participants";
@@ -48,6 +49,7 @@ export default function SignUp() {
         dispatch(setSelectedConversation({}));
         dispatch(setUserIsLoggedIn(true));
         dispatch(upsertUser(userData));
+        dispatch(setCurrentUser(userData));
       }
 
       showCustomAlert(

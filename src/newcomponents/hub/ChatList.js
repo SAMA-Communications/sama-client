@@ -24,7 +24,7 @@ export default function ChatList() {
 
   const conversations = useSelector(selectAllConversations);
   const participants = useSelector(selectParticipantsEntities);
-  const currentuser = useSelector(getCurrentUser);
+  const currentUser = useSelector(getCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
   const activeConv = selectedConversation?._id;
 
@@ -44,7 +44,7 @@ export default function ChatList() {
               getUserFullName(
                 participants[
                   obj[
-                    obj.owner_id === currentuser._id
+                    obj.owner_id === currentUser._id
                       ? "opponent_id"
                       : "owner_id"
                   ]
@@ -52,11 +52,11 @@ export default function ChatList() {
               )
             }
             chatObject={obj}
-            currentUserId={currentuser._id}
+            currentUserId={currentUser._id}
           />
         ) : null
       ),
-    [conversations, participants, activeConv]
+    [conversations, participants, activeConv, currentUser]
   );
 
   return (
