@@ -1,4 +1,4 @@
-import ChatBox from "@newcomponents/hub/elements/ChatBox.js";
+import ConversationItem from "@newcomponents/hub/elements/ConversationItem.js";
 import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 import React, { useMemo, useState } from "react";
 import SearchBlock from "@newcomponents/search/SearchBlock";
@@ -32,7 +32,7 @@ export default function ChatList() {
     () =>
       conversations.map((obj) =>
         obj.type === "g" || obj.last_message ? (
-          <ChatBox
+          <ConversationItem
             key={obj._id}
             isSelected={activeConv === obj._id}
             onClickFunc={() => {

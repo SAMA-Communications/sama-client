@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import { ReactComponent as Group } from "@newicons/users/Group.svg";
 
-export default function ChatBox({
+export default function ConversationItem({
   isSelected,
   onClickFunc,
   chatName,
