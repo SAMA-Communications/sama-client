@@ -9,7 +9,7 @@ import { clearSelectedConversation } from "@store/values/SelectedConversation";
 import { getCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useDispatch, useSelector } from "react-redux";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "@newstyles/hub/chatForm/ChatFormHeader.css";
@@ -26,21 +26,23 @@ export default function ChatFormHeader() {
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
-  const closeForm = (event) => {
-    if (event && event.stopPropagation) {
-      event.stopPropagation();
-    }
+  useEffect(() => {
+    const closeForm = (event) => {
+      if (event && event.stopPropagation) {
+        event.stopPropagation();
+      }
 
-    dispatch(clearSelectedConversation());
-    api.unsubscribeFromUserActivity({});
-    navigate("/main");
-  };
+      dispatch(clearSelectedConversation());
+      api.unsubscribeFromUserActivity({});
+      navigate("/main");
+    };
 
-  document.addEventListener("swiped-left", closeForm);
-  document.addEventListener("swiped-right", closeForm);
-  window.onkeydown = function ({ keyCode }) {
-    keyCode === 27 && closeForm();
-  };
+    document.addEventListener("swiped-left", closeForm);
+    document.addEventListener("swiped-right", closeForm);
+    window.onkeydown = function ({ keyCode }) {
+      keyCode === 27 && closeForm();
+    };
+  }, []);
 
   const opponentId = useMemo(() => {
     const conversation = conversations[selectedCID];
