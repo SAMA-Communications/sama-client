@@ -1,26 +1,20 @@
 import SearchInput from "@newcomponents/static/SearchBar";
 import SearchBlock from "@newcomponents/search/SearchBlock";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import "@newstyles/hub/EmptyHub.css";
 
 export default function EmptyHub() {
   const [inputText, setInputText] = useState(null);
 
-  const viewProperty = useMemo(
-    () => ({
-      display: inputText ? "none" : "block",
-    }),
-    [inputText]
-  );
+  const viewProperty = {
+    display: inputText ? "none" : "block",
+  };
 
-  const viewHubProperty = useMemo(
-    () => ({
-      padding: "60px 0",
-      justifyContent: inputText ? "flex-start" : "center",
-    }),
-    [inputText]
-  );
+  const viewHubProperty = {
+    padding: "60px 0",
+    justifyContent: inputText ? "flex-start" : "center",
+  };
 
   return (
     <section className="hub--empty fcc" style={viewHubProperty}>
