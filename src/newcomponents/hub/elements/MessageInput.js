@@ -6,10 +6,10 @@ import { ReactComponent as Send } from "@newicons/options/Send.svg";
 
 export default function MessageInput({
   inputTextRef,
-  inputFileRef,
+  inputFilesRef,
   onSubmitFunc,
 }) {
-  const pickUserFiles = () => inputFileRef.current.click();
+  const pickUserFiles = () => inputFilesRef.current.click();
 
   const handleInput = (e) => {
     if (inputTextRef.current) {
@@ -36,7 +36,7 @@ export default function MessageInput({
       <Attach className="input-file__button" onClick={pickUserFiles} />
       <input
         id="inputFile"
-        ref={inputFileRef}
+        ref={inputFilesRef}
         //onChange open pop-up window for attach files
         type="file"
         accept={globalConstants.allowedFileFormats}
