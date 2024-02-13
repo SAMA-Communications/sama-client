@@ -26,7 +26,6 @@ export default function ChatForm() {
   const selectedCID = selectedConversation?._id;
 
   const chatMessagesBlock = useRef();
-  const messageInputEl = useRef(null);
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
@@ -52,15 +51,6 @@ export default function ChatForm() {
     files.length && setFiles([]);
   }, [selectedCID, conversations]);
 
-  window.onresize = function () {
-    if (messageInputEl.current) {
-      messageInputEl.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    }
-  };
-
   return (
     <section className={`chat-form__container ${selectedCID ? "" : "fcc"}`}>
       {selectedCID ? (
@@ -69,7 +59,6 @@ export default function ChatForm() {
           <ChatFormContent scrollRef={chatMessagesBlock} />
           <ChatFormInputs
             chatMessagesBlockRef={chatMessagesBlock}
-            messageInputEl={messageInputEl}
             files={files}
             setFiles={setFiles}
           />

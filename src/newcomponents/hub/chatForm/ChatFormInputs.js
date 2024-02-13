@@ -1,4 +1,4 @@
-import globalConstants from "@helpers/constants.js";
+import MessageInput from "../elements/MessageInput";
 import isMobile from "@utils/get_device_type.js";
 import messagesService from "@services/messagesService";
 import showCustomAlert from "@utils/show_alert";
@@ -18,15 +18,7 @@ import { useEffect, useRef, useState } from "react";
 
 import "@newstyles/hub/chatForm/ChatFormInputs.css";
 
-import { ReactComponent as Attach } from "@newicons/options/Attach.svg";
-import { ReactComponent as Send } from "@newicons/options/Send.svg";
-
-export default function ChatFormInputs({
-  chatMessagesBlockRef,
-  messageInputEl,
-}) {
-  const { current: inputEl } = messageInputEl;
-
+export default function ChatFormInputs({ chatMessagesBlockRef }) {
   const dispatch = useDispatch();
 
   const connectState = useSelector(getNetworkState);
@@ -35,28 +27,31 @@ export default function ChatFormInputs({
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
+  const inputRef = useRef(null);
   const filePicker = useRef(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
-  const scrollChatToBottom = () =>
-    chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
+  window.onresize = function () {
+    if (inputRef.current) {
+      inputRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  };
 
-  const pickUserFiles = () => filePicker.current.click();
-
-  const sendMessage = async (event) => {
-    event.preventDefault();
-
+  const createAndSendMessage = async () => {
     if (!connectState) {
       showCustomAlert("No internet connection…", "warning");
       return;
     }
 
-    const body = inputEl.value.trim();
+    const body = inputRef.current.value.trim();
     if (body.length === 0 || isSendMessageDisable) {
       return;
     }
     setIsSendMessageDisable(true);
-    inputEl.value = "";
+    inputRef.current.value = "";
     const mid = currentUser._id + Date.now();
     const msg = {
       _id: mid,
@@ -84,61 +79,33 @@ export default function ChatFormInputs({
     }
 
     filePicker.current.value = "";
-    isMobile && inputEl.blur();
+    isMobile && inputRef.current.blur();
 
     setIsSendMessageDisable(false);
-    scrollChatToBottom();
-    inputEl.focus();
-    inputEl.style.height = `calc(70px * var(--base-scale))`;
+    chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
+    inputRef.current.focus();
+    inputRef.current.style.height = `calc(70px * var(--base-scale))`;
+  };
+
+  window.onresize = function () {
+    if (inputRef.current) {
+      inputRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
   };
 
   useEffect(() => {
-    messageInputEl.current.value = "";
-    messageInputEl.current.style.height = `calc(70px * var(--base-scale))`;
+    inputRef.current.value = "";
+    inputRef.current.style.height = `calc(70px * var(--base-scale))`;
   }, [selectedCID]);
 
-  const handleInput = (e) => {
-    if (inputEl) {
-      const countOfLines = e.target.value.split("\n").length - 1;
-      inputEl.style.height = `calc(${
-        70 + countOfLines * 20 < 230 ? 70 + countOfLines * 20 : 230
-      }px * var(--base-scale)) `;
-      inputEl.scrollTop = inputEl.scrollHeight;
-    }
-  };
-
-  const handeOnKeyDown = (e) => {
-    if (
-      e.keyCode === 13 &&
-      ((!isMobile && !e.shiftKey) || (isMobile && e.shiftKey))
-    ) {
-      sendMessage(e);
-    }
-  };
-
   return (
-    <div className="inputs__container">
-      <Attach className="input-file__button" onClick={pickUserFiles} />
-      <input
-        id="inputFile"
-        ref={filePicker}
-        //onChange open pop up window
-        type="file"
-        accept={globalConstants.allowedFileFormats}
-        multiple
-      />
-      <textarea
-        id="inputMessage"
-        ref={messageInputEl}
-        onTouchStart={(e) => !e.target.value.length && e.target.blur()}
-        onInput={handleInput}
-        onKeyDown={handeOnKeyDown}
-        onBlur={handleInput}
-        autoComplete="off"
-        autoFocus={!isMobile}
-        placeholder="Type your message..."
-      />
-      <Send className="input-text__button" onClick={sendMessage} />
-    </div>
+    <MessageInput
+      inputTextRef={inputRef}
+      inputFileRef={filePicker}
+      onClickFunc={createAndSendMessage}
+    />
   );
 }
