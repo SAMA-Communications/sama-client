@@ -105,7 +105,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     <MessageInput
       inputTextRef={inputRef}
       inputFileRef={filePicker}
-      onClickFunc={createAndSendMessage}
+      onSubmitFunc={createAndSendMessage}
     />
   );
 }

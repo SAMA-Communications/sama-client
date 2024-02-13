@@ -7,7 +7,7 @@ import { ReactComponent as Send } from "@newicons/options/Send.svg";
 export default function MessageInput({
   inputTextRef,
   inputFileRef,
-  onClickFunc,
+  onSubmitFunc,
 }) {
   const pickUserFiles = () => inputFileRef.current.click();
 
@@ -27,7 +27,7 @@ export default function MessageInput({
       ((!isMobile && !e.shiftKey) || (isMobile && e.shiftKey))
     ) {
       e.preventDefault();
-      onClickFunc();
+      onSubmitFunc();
     }
   };
 
@@ -53,7 +53,7 @@ export default function MessageInput({
         autoFocus={!isMobile}
         placeholder="Type your message..."
       />
-      <Send className="input-text__button" onClick={onClickFunc} />
+      <Send className="input-text__button" onClick={onSubmitFunc} />
     </div>
   );
 }
