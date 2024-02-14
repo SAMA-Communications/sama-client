@@ -26,7 +26,13 @@
 }
 
 .searched-user__name {
+  flex: 1;
+
   font-size: var(--font-h6);
   font-weight: 500;
   color: #000;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

@@ -1,3 +1,4 @@
+import api from "@api/api";
 import getUserFullName from "@utils/user/get_user_full_name";
 import getUserInitials from "@utils/user/get_user_initials";
 import { addUsers } from "@store/values/Participants";
@@ -7,7 +8,6 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import "@newstyles/search/elements/SearchedUser.css";
-import api from "@api/api";
 
 export default function SearchedUser({ uObject }) {
   const navigate = useNavigate();
