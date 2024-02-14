@@ -18,8 +18,11 @@
   gap: calc(5px * var(--base-scale));
 }
 .chat-list__empty {
+  margin-top: 10px;
+
   font-size: var(--font-h5);
   text-align: center;
+  color: var(--color-text-light);
 }
 
 .chat-box__container,
