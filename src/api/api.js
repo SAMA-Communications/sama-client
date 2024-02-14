@@ -158,6 +158,7 @@ class Api {
               login: data.ulogin,
               password: data.pass,
               deviceId: getBrowserFingerprint(true),
+              application_id: 4
             },
         id: getUniqueId("userLogin"),
       },
