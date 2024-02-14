@@ -25,7 +25,11 @@ export default function Main() {
   const conversations = useSelector(selectAllConversations);
 
   const hubContainer = useMemo(() => {
-    if (!conversations.length) {
+    if (
+      !location.hash &&
+      !conversations.filter((obj) => obj.type === "g" || obj.last_message)
+        .length
+    ) {
       return <EmptyHub />;
     }
 

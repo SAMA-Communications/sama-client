@@ -30,8 +30,9 @@ export default function ChatList() {
 
   const chatsList = useMemo(
     () =>
-      conversations.map((obj) =>
-        obj.type === "g" || obj.last_message ? (
+      conversations
+        .filter((obj) => obj.type === "g" || obj.last_message)
+        .map((obj) => (
           <ConversationItem
             key={obj._id}
             isSelected={activeConv === obj._id}
@@ -54,8 +55,7 @@ export default function ChatList() {
             chatObject={obj}
             currentUserId={currentUser._id}
           />
-        ) : null
-      ),
+        )),
     [conversations, participants, activeConv, currentUser]
   );
 
@@ -65,7 +65,13 @@ export default function ChatList() {
       {inputText ? (
         <SearchBlock searchText={inputText} />
       ) : (
-        <CustomScrollBar>{chatsList}</CustomScrollBar>
+        <CustomScrollBar>
+          {chatsList.length ? (
+            chatsList
+          ) : (
+            <p className="chat-list__empty">No chats are available.</p>
+          )}
+        </CustomScrollBar>
       )}
     </div>
   );

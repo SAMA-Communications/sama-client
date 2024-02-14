@@ -17,6 +17,10 @@
   flex-direction: column;
   gap: calc(5px * var(--base-scale));
 }
+.chat-list__empty {
+  font-size: var(--font-h5);
+  text-align: center;
+}
 
 .chat-box__container,
 .chat-box__container--selected {
