@@ -1,23 +1,15 @@
 .user-options-bg {
-  width: 100svw;
-  height: 100svh;
-
+  max-width: 400px;
   padding: 7svh 1svw;
-
-  position: fixed;
-  top: 0;
-  left: 0;
 
   display: flex;
   justify-content: center;
   align-items: flex-start;
 
-  background-color: var(--bg-dark-block);
-
   z-index: 112;
 }
 .user-options-container {
-  width: 450px;
+  flex: 1;
 
   padding: 15px 20px 30px 20px;
 

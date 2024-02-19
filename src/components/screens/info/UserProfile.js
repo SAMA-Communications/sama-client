@@ -1,5 +1,4 @@
 import api from "@api/api";
-import getPrevPage from "@utils/get_prev_page";
 import jwtDecode from "jwt-decode";
 import showCustomAlert from "@utils/show_alert";
 import {
@@ -22,6 +21,7 @@ import { ReactComponent as PhoneIcon } from "@icons/userProfile/PhoneIcon.svg";
 import { ReactComponent as TrashCan } from "@icons/chatForm/TrashCan.svg";
 import { ReactComponent as UndoChangeIcon } from "@icons/userProfile/UndoEditIcon.svg";
 import { ReactComponent as UserLoginIcon } from "@icons/userProfile/UserLoginIcon.svg";
+import removePrefix from "@utils/navigation/remove_prefix";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
@@ -48,7 +48,7 @@ export default function UserProfile() {
   };
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && navigate(getPrevPage(pathname + hash));
+    event.keyCode === 27 && removePrefix(pathname + hash, "/profile");
     event.keyCode === 13 && event.preventDefault();
   };
 
@@ -227,7 +227,7 @@ export default function UserProfile() {
         <div className="uo-navigation">
           <div
             className="uo-close"
-            onClick={() => navigate(getPrevPage(pathname + hash))}
+            onClick={() => removePrefix(pathname + hash, "/profile")}
           >
             <BackBtn />
           </div>

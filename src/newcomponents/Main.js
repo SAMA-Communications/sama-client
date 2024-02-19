@@ -39,19 +39,23 @@ export default function Main() {
 
     return (
       <section className="hub">
-        <ChatList />
+        {location.pathname.includes("/profile") ? null : <ChatList />}
         <ChatForm />
       </section>
     );
   }, [location, isMobileView, conversations]);
 
-  const additionalContainer = useMemo(() => {
+  const additionalContainerLeft = useMemo(() => {
+    return location.pathname.includes("/profile") ? <UserProfile /> : null;
+  }, [location]);
+
+  const additionalContainerRight = useMemo(() => {
     const { pathname, hash } = location;
 
     const blockMap = {
       "/search": <UserSearch type={"create_group_chat"} />,
       "/addparticipants": <UserSearch type={"add_participants"} />,
-      "/user": <UserProfile />,
+      // "/profile": <UserProfile />,
       "/info": <ChatInfoPage />,
       "/opponentinfo": <ParticipantProfile />,
       "/participant": <ParticipantProfile />,
@@ -73,10 +77,9 @@ export default function Main() {
   return (
     <>
       <NavigationLine />
-      {/* left  side */}
+      {additionalContainerLeft}
       {hubContainer}
-      {/* right side */}
-      {additionalContainer}
+      {additionalContainerRight}
     </>
   );
 }
