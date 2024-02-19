@@ -67,9 +67,10 @@ export default function App() {
         <Routes location={history.location}>
           <Route path="/loading" element={<PageLoader />} />
           <Route path="/login" element={<Login />} />
+          {/* //authorization */}
           <Route path="/signup" element={<SignUp />} />
+          {/* //authorization */}
           <Route path="/*" element={<Main />} />
-          {/* <Route path="/*" element={<ErrorPage />} /> */}
         </Routes>
       </AnimatePresence>
     </Suspense>

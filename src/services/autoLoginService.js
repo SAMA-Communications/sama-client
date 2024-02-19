@@ -25,7 +25,7 @@ class AutoLoginService {
 
     const handleLoginFailure = () => {
       localStorage.removeItem("sessionId");
-      history.navigate("/login");
+      history.navigate("/login"); //authorization
       store.dispatch(setUserIsLoggedIn(false));
     };
 
