@@ -1,15 +1,15 @@
-aside {
+/* section {
   box-sizing: border-box;
 
   width: min(400px, 100vw);
-  height: 100svh;
+   height: 100svh; 
 
   display: flex;
   flex-direction: column;
 
   border-right: 1px solid var(--border-dark-color);
   background-color: var(--bg-main-color);
-}
+} */
 
 .user-box {
   position: relative;

@@ -7,6 +7,8 @@ import ChatForm from "@screens/chat/ChatForm";
 import ChatInfoPage from "@screens/info/ChatInfoPage";
 import ChatList from "@screens/chat/ChatList";
 
+import EmptyHub from "@newcomponents/hub/EmptyHub";
+import NavigationLine from "@newcomponents/navigation/NavigationLine";
 import ModalWindow from "@screens/chat/ModalWindow";
 import ParticipantProfile from "@screens/info/ParticipantProfile";
 import UserProfile from "@screens/info/UserProfile";
@@ -59,9 +61,11 @@ export default function Main() {
   }, [location]);
 
   return (
-    <main>
-      {mainContent}
+    <>
+      <NavigationLine />
+      <EmptyHub />
+      {/* {mainContent} */}
       {additionalContent}
-    </main>
+    </>
   );
 }
