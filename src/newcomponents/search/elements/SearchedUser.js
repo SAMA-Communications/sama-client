@@ -27,7 +27,7 @@ export default function SearchedUser({ uObject }) {
     dispatch(addUsers([uObject]));
     dispatch(insertChat({ ...chat, messagesIds: [] }));
 
-    navigate(`/main/#${chat._id}`);
+    navigate(`/#${chat._id}`);
     dispatch(setSelectedConversation({ id: chat._id }));
   };
 

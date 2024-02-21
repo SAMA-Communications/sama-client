@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
-import "@styles/pages/UserProfile.css";
+import "@newstyles/info/UserProfile.css";
 
 import { ReactComponent as BackBtn } from "@icons/chatForm/BackBtn.svg";
 import { ReactComponent as EmailIcon } from "@icons/userProfile/EmailIcon.svg";

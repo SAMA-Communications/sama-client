@@ -42,7 +42,7 @@ class ConversationsService {
           `You were removed from the ${chat.name} conversation`,
           "warning"
         );
-        history.navigate("/main");
+        history.navigate("/");
       }
     };
 

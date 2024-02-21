@@ -1,9 +1,10 @@
 .hub {
-  padding: calc(30px * var(--base-scale));
+  padding: 30px;
 
   display: flex;
   flex: 1;
   flex-direction: row;
+  gap: 15px;
 
   border-radius: var(--border-48);
   background-color: var(--color-bg-light);

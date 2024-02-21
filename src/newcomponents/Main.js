@@ -12,7 +12,7 @@ import EmptyHub from "@newcomponents/hub/EmptyHub";
 import NavigationLine from "@newcomponents/navigation/NavigationLine";
 import ModalWindow from "@screens/chat/ModalWindow";
 import ParticipantProfile from "@screens/info/ParticipantProfile";
-import UserProfile from "@screens/info/UserProfile";
+import UserProfile from "@newcomponents/info/UserProfile";
 import UserSearch from "@screens/info/UserSearch";
 
 import "@styles/Main.css";

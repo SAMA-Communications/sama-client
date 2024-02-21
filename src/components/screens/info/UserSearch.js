@@ -69,7 +69,7 @@ export default function UserSearch({ type }) {
       dispatch(addUsers(users));
       dispatch(insertChat({ ...chat, messagesIds: [] }));
 
-      navigate(`/main/#${chat._id}`);
+      navigate(`/#${chat._id}`);
       dispatch(setSelectedConversation({ id: chat._id }));
     }
   };
@@ -93,7 +93,7 @@ export default function UserSearch({ type }) {
       }
 
       await api.conversationUpdate(requestData);
-      navigate(`/main/#${isMobileView ? selectedCID : selectedCID + "/info"}`);
+      navigate(`/#${isMobileView ? selectedCID : selectedCID + "/info"}`);
     }
   };
 
