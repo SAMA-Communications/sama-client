@@ -31,6 +31,10 @@
   border-radius: var(--border-24);
   background-color: var(--color-bg-light);
 }
+.uname__last,
+.uname__first {
+  cursor: pointer;
+}
 .uname__first {
   text-align: center;
   font-weight: 700;

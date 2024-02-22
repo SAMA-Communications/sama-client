@@ -107,7 +107,9 @@ export default function UserProfile() {
             <p>Email address</p>
           </div>
           <p className="info__phone">
-            {currentUser.phone || "Enter your phone number"}
+            {currentUser.phone || (
+              <span className="text-grey">Enter your phone number</span>
+            )}
           </p>
         </div>
         <div className="info__link">
