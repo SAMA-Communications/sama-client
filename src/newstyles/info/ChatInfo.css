@@ -107,13 +107,6 @@
   cursor: pointer;
 }
 
-.ci-participants {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
 .participant__box {
   padding: 10px;
 

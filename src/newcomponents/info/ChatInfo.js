@@ -17,6 +17,7 @@ import { ReactComponent as AddParticipants } from "@newicons/AddParticipants.svg
 import { ReactComponent as Close } from "@newicons/actions/CloseGray.svg";
 import { ReactComponent as ImageBig } from "@newicons/media/ImageBig.svg";
 import addSuffix from "@utils/navigation/add_suffix";
+import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 
 export default function ChatInfo() {
   const dispatch = useDispatch();
@@ -141,7 +142,7 @@ export default function ChatInfo() {
             />
           ) : null}
         </div>
-        <div className="ci-participants">{participantsList}</div>
+        <CustomScrollBar>{participantsList}</CustomScrollBar>
       </div>
     </div>
   );
