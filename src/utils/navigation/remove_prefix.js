@@ -1,15 +1,8 @@
 import { history } from "@helpers/history";
 
-export default function removePrefix(currentPath, pathname) {
-  const isInclude = currentPath.includes(pathname);
-  if (!isInclude) {
-    return;
-  }
+export default function removeAndNavigateSubLink(currentPath, pathname) {
+  const escapedSubstring = pathname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp(escapedSubstring, "g");
 
-  const newPath = currentPath
-    .split("/")
-    .filter((i) => i !== pathname.slice(1))
-    .join("/");
-
-  history.navigate(newPath);
+  history.navigate(currentPath.replace(pattern, ""));
 }

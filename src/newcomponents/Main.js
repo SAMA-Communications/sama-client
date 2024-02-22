@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { selectAllConversations } from "@store/values/Conversations";
 
 import ChatForm from "@newcomponents/hub/ChatForm";
-import ChatInfoPage from "@screens/info/ChatInfoPage";
+import ChatInfo from "@newcomponents/info/ChatInfo";
 import ChatList from "@newcomponents/hub/ChatList";
 
 import EmptyHub from "@newcomponents/hub/EmptyHub";
@@ -56,8 +56,8 @@ export default function Main() {
       "/search": <UserSearch type={"create_group_chat"} />,
       "/addparticipants": <UserSearch type={"add_participants"} />,
       // "/profile": <UserProfile />,
-      "/info": <ChatInfoPage />,
-      "/opponentinfo": <ParticipantProfile />,
+      "/info": <ChatInfo />,
+      "/user": <ParticipantProfile />,
       "/participant": <ParticipantProfile />,
       "/modal": <ModalWindow />,
     };
@@ -65,7 +65,7 @@ export default function Main() {
     const allBlocks = Object.entries(blockMap)
       .filter(([key, component]) => {
         if (key === "/info") {
-          return hash.includes(key) && !hash.includes("/opponentinfo");
+          return hash.includes(key) && !hash.includes("/user");
         }
         return pathname.includes(key) || hash.includes(key);
       })

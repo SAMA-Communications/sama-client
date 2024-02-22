@@ -124,6 +124,10 @@ main {
   align-items: center;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 /* vertical scroll */
 .scroll-bar__outer-container > div:nth-child(3) {
   width: calc(6px * var(--base-scale)) !important;

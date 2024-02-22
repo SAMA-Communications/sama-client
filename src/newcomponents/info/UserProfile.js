@@ -1,5 +1,5 @@
 import api from "@api/api";
-import removePrefix from "@utils/navigation/remove_prefix";
+import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import showCustomAlert from "@utils/show_alert";
 import { getCurrentUser } from "@store/values/CurrentUser";
 import { updateNetworkState } from "@store/values/NetworkState";
@@ -33,7 +33,8 @@ export default function UserProfile() {
   };
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && removePrefix(pathname + hash, "/profile");
+    event.keyCode === 27 &&
+      removeAndNavigateSubLink(pathname + hash, "/profile");
     event.keyCode === 13 && event.preventDefault();
   };
 
@@ -69,7 +70,7 @@ export default function UserProfile() {
       <div className="profile__container--top fcc">
         <Close
           className="profile__close"
-          onClick={() => removePrefix(pathname + hash, "/profile")}
+          onClick={() => removeAndNavigateSubLink(pathname + hash, "/profile")}
         />
         <div className="profile__photo fcc">
           <UserIcon />
@@ -97,7 +98,7 @@ export default function UserProfile() {
           </div>
           <p className="info__email">
             {currentUser.email || (
-              <span className="text-grey">Enter your email address</span>
+              <span className="text-gray">Enter your email address</span>
             )}
           </p>
         </div>
@@ -108,7 +109,7 @@ export default function UserProfile() {
           </div>
           <p className="info__phone">
             {currentUser.phone || (
-              <span className="text-grey">Enter your phone number</span>
+              <span className="text-gray">Enter your phone number</span>
             )}
           </p>
         </div>
