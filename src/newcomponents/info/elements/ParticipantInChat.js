@@ -3,16 +3,12 @@ import getUserFullName from "@utils/user/get_user_full_name";
 import getUserInitials from "@utils/user/get_user_initials";
 import { useLocation } from "react-router-dom";
 
-export default function ParticipantInChat({
-  userObject,
-  isCurrentUser,
-  isOwner,
-}) {
+export default function ParticipantInChat({ userObject, isOwner }) {
   const { pathname, hash } = useLocation();
 
   return (
     <div
-      className={`participant__box ${isCurrentUser ? "" : "cursor-pointer"}`}
+      className={`participant__box`}
       onClick={() => addSuffix(pathname + hash, `/user?uid=${userObject._id}`)}
     >
       <div className="participant__photo fcc">

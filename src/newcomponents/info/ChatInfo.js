@@ -66,7 +66,6 @@ export default function ChatInfo() {
         return null;
       }
 
-      const isCurrentUser = userObject._id === currentUser._id;
       const isOwner =
         userObject._id === selectedConversation.owner_id?.toString();
 
@@ -90,7 +89,6 @@ export default function ChatInfo() {
         <ParticipantInChat
           key={uId}
           userObject={userObject}
-          isCurrentUser={isCurrentUser}
           isOwner={isOwner}
         />
       );
