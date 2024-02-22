@@ -97,7 +97,7 @@ export default function ChatInfo() {
   }, [selectedConversation, participants, currentUser]);
 
   const participantsCount = useMemo(
-    () => selectedConversation.participants?.length,
+    () => selectedConversation?.participants?.length,
     [selectedConversation]
   );
 
