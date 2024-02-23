@@ -48,7 +48,7 @@ export default function OtherUserProfile() {
           <div className="profile__photo fcc">
             <UserIcon />
           </div>
-          <div>
+          <div className="profile__info">
             <p className="uname__full">{getUserFullName(userObject)}</p>
             <p className="profile__status">{viewStatusActivity}</p>
           </div>

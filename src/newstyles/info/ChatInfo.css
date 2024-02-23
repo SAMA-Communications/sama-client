@@ -134,9 +134,17 @@
   background-color: var(--color-bg-light);
 }
 .participant__info {
+  height: var(--font-5);
+
+  flex: 1;
+
   display: flex;
   flex-direction: column;
   gap: 5px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .participant__info > p,
 .participant__info > span {

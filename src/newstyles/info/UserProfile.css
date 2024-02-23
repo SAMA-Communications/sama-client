@@ -31,14 +31,29 @@
   border-radius: var(--border-24);
   background-color: var(--color-bg-light);
 }
+.profile__info {
+  width: 100%;
+  padding: 0 30px;
+}
 .uname__full {
+  margin-top: -5px;
+
   text-align: center;
   font-weight: 500;
   font-size: var(--font-h3);
+  line-height: var(--font-h2);
   color: var(--color-black);
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .uname__last,
 .uname__first {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
   cursor: pointer;
 }
 .uname__first {
@@ -74,7 +89,8 @@
   font-size: var(--font-h5);
   color: var(--color-black);
 }
-.info__box {
+.info__box,
+.info__box--not-hover {
   padding: 20px 10px;
 
   display: flex;
