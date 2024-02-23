@@ -2,7 +2,7 @@ import React, { useEffect, useState, useTransition } from "react";
 import SearchedUser from "@generic/searchComponents/SearchedUser.js";
 import SelectedUser from "@generic/searchComponents/SelectedUser.js";
 import api from "@api/api";
-import getPrevPage from "@utils/get_prev_page.js";
+import getPrevPage from "@utils/navigation/get_prev_page.js";
 import showCustomAlert from "@utils/show_alert.js";
 import { addUsers } from "@store/values/Participants.js";
 import {
@@ -18,6 +18,7 @@ import "@styles/pages/UserSearch.css";
 
 import { ReactComponent as BackBtn } from "@icons/chatForm/BackBtn.svg";
 import { ReactComponent as SearchIndicator } from "@icons/SearchIndicator.svg";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
 
 export default function UserSearch({ type }) {
   const dispatch = useDispatch();
@@ -142,7 +143,7 @@ export default function UserSearch({ type }) {
   };
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && navigate(getPrevPage(pathname + hash));
+    event.keyCode === 27 && removeAndNavigateLastSection(pathname + hash);
     event.keyCode === 13 && event.preventDefault();
   };
 
@@ -154,7 +155,7 @@ export default function UserSearch({ type }) {
       <div className="search-options fcc">
         <div
           className="search-close-chat"
-          onClick={() => navigate(getPrevPage(pathname + hash))}
+          onClick={() => removeAndNavigateLastSection(pathname + hash)}
         >
           <BackBtn />
         </div>

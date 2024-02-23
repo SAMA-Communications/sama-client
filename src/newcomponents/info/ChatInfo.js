@@ -1,32 +1,26 @@
+import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 import ParticipantInChat from "@newcomponents/info/elements/ParticipantInChat";
-import api from "@api/api";
-import navigateTo from "@utils/navigation/navigate_to";
+import addSuffix from "@utils/navigation/add_suffix";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
-import showCustomAlert from "@utils/show_alert";
-import { clearSelectedConversation } from "@store/values/SelectedConversation";
-import { getConverastionById, removeChat } from "@store/values/Conversations";
+import { getConverastionById } from "@store/values/Conversations";
 import { getCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
-import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
+import { useSelector } from "react-redux";
 
 import "@newstyles/info/ChatInfo.css";
 
 import { ReactComponent as AddParticipants } from "@newicons/AddParticipants.svg";
 import { ReactComponent as Close } from "@newicons/actions/CloseGray.svg";
 import { ReactComponent as ImageBig } from "@newicons/media/ImageBig.svg";
-import addSuffix from "@utils/navigation/add_suffix";
-import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 
 export default function ChatInfo() {
-  const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
   const participants = useSelector(selectParticipantsEntities);
   const currentUser = useSelector(getCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
-  const selectedCID = selectedConversation?._id;
 
   const isCurrentUserOwner = useMemo(() => {
     if (!currentUser || !selectedConversation) {

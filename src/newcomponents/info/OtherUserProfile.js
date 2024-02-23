@@ -1,9 +1,10 @@
+import activityService from "@services/activityService";
 import conversationService from "@services/conversationsService";
-import getPrevPage from "@utils/get_prev_page.js";
+import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
 import getUserFullName from "@utils/user/get_user_full_name";
-import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
@@ -16,21 +17,25 @@ import { ReactComponent as User } from "@newicons/users/User.svg";
 import { ReactComponent as UserIcon } from "@newicons/users/ProfileIcon.svg";
 
 export default function OtherUserProfile() {
-  const { pathname, hash } = useLocation();
-  const navigate = useNavigate();
+  const { pathname, hash, search } = useLocation();
 
   const participants = useSelector(selectParticipantsEntities);
 
   const userObject = useMemo(
-    () => participants[hash.split("=")[1]] || {},
-    [participants, hash]
+    () => participants[extractUserIdFromUrl(pathname + hash + search)] || {},
+    [participants, hash, search]
   );
   const { _id: userId, login, email, phone } = userObject;
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && navigate(getPrevPage(pathname + hash));
+    event.keyCode === 27 && removeAndNavigateLastSection(pathname + hash);
     event.keyCode === 13 && event.preventDefault();
   };
+
+  const viewStatusActivity = useMemo(
+    () => activityService.getUserLastActivity(userId),
+    [userId, participants]
+  );
 
   return (
     <div className="first-window__container">
@@ -38,18 +43,14 @@ export default function OtherUserProfile() {
         <div className="profile__container--top fcc">
           <Close
             className="profile__close"
-            onClick={() =>
-              removeAndNavigateSubLink(pathname + hash, "/profile")
-            }
+            onClick={() => removeAndNavigateLastSection(pathname + hash)}
           />
           <div className="profile__photo fcc">
             <UserIcon />
           </div>
           <div>
             <p className="uname__full">{getUserFullName(userObject)}</p>
-            <p className="profile__status">
-              <span className="status--online">online</span>
-            </p>
+            <p className="profile__status">{viewStatusActivity}</p>
           </div>
         </div>
         <div className="profile__container--bottom">

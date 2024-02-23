@@ -1,6 +1,7 @@
 import DownloadManager from "@adapters/downloadManager";
 import getFileType from "@utils/get_file_type";
-import getPrevPage from "@utils/get_prev_page";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import getPrevPage from "@utils/navigation/get_prev_page";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -10,7 +11,7 @@ export default function ModalWindow() {
 
   const [fileParams, setFileParams] = useState({});
 
-  const closeWindow = () => navigate(getPrevPage(hash));
+  const closeWindow = () => removeAndNavigateLastSection(hash);
 
   window.onkeydown = function (event) {
     event.keyCode === 27 && closeWindow();

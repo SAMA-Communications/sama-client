@@ -6,5 +6,10 @@ export default function addSuffix(currentPath, pathname) {
     return;
   }
 
-  history.navigate(currentPath + pathname);
+  const filteredCurrentPath =
+    currentPath[currentPath.length - 1] === "/"
+      ? currentPath.slice(0, -1)
+      : currentPath;
+
+  history.navigate(filteredCurrentPath + pathname);
 }

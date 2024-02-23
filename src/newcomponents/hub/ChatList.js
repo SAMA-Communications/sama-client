@@ -63,7 +63,11 @@ export default function ChatList() {
     <div className="chat-list__container">
       <SearchInput shadowText={"Search"} setState={setInputText} />
       {inputText ? (
-        <SearchBlock searchText={inputText} />
+        <SearchBlock
+          searchText={inputText}
+          isClearInputText={true}
+          clearInputText={() => setInputText(null)}
+        />
       ) : (
         <CustomScrollBar>
           {chatsList.length ? (

@@ -1,16 +1,14 @@
-import api from "@api/api";
-import getLastVisitTime from "@utils/get_last_visit_time";
+import getLastVisitTime from "@utils/user/get_last_visit_time";
 import getUserFullName from "@utils/user/get_user_full_name";
 import {
   getConverastionById,
   selectConversationsEntities,
 } from "@store/values/Conversations";
-import { clearSelectedConversation } from "@store/values/SelectedConversation";
 import { getCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import "@newstyles/hub/chatForm/ChatFormHeader.css";
 
@@ -18,31 +16,12 @@ import { ReactComponent as More } from "@newicons/options/More.svg";
 
 export default function ChatFormHeader() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const participants = useSelector(selectParticipantsEntities);
   const conversations = useSelector(selectConversationsEntities);
   const currentUser = useSelector(getCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
-
-  useEffect(() => {
-    const closeForm = (event) => {
-      if (event && event.stopPropagation) {
-        event.stopPropagation();
-      }
-
-      dispatch(clearSelectedConversation());
-      api.unsubscribeFromUserActivity({});
-      navigate("/main");
-    };
-
-    document.addEventListener("swiped-left", closeForm);
-    document.addEventListener("swiped-right", closeForm);
-    window.onkeydown = function ({ keyCode }) {
-      keyCode === 27 && closeForm();
-    };
-  }, []);
 
   const opponentId = useMemo(() => {
     const conversation = conversations[selectedCID];

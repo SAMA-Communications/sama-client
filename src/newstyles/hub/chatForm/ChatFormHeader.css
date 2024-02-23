@@ -45,7 +45,7 @@
 }
 
 .activity--online {
-  padding-left: calc(15px * var(--base-scale));
+  padding-left: calc(25px * var(--base-scale));
 }
 .activity--online > li {
   color: var(--color-accent-dark);

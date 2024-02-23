@@ -69,7 +69,7 @@ class ConversationsService {
     });
   }
 
-  async createPrivateChat(userId) {
+  async createPrivateChat(userId, userObject) {
     if (!userId) {
       return;
     }
@@ -80,6 +80,7 @@ class ConversationsService {
     };
 
     const chat = await api.conversationCreate(requestData);
+    userObject && store.dispatch(addUsers([userObject]));
     store.dispatch(insertChat({ ...chat, messagesIds: [] }));
 
     history.navigate(`/#${chat._id}`);

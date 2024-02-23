@@ -1,4 +1,5 @@
 import api from "@api/api";
+import getLastVisitTime from "@utils/user/get_last_visit_time";
 import jwtDecode from "jwt-decode";
 import store from "@store/store";
 import { upsertUser } from "@store/values/Participants";
@@ -64,6 +65,16 @@ class ActivityService {
         })
       );
     });
+  }
+
+  getUserLastActivity(userId) {
+    const opponentLastActivity =
+      store.getState().participants.entities[userId]?.recent_activity;
+    return opponentLastActivity === "online" ? (
+      <span className="status--online">online</span>
+    ) : (
+      getLastVisitTime(opponentLastActivity)
+    );
   }
 }
 
