@@ -31,6 +31,12 @@
   border-radius: var(--border-24);
   background-color: var(--color-bg-light);
 }
+.uname__full {
+  text-align: center;
+  font-weight: 500;
+  font-size: var(--font-h3);
+  color: var(--color-black);
+}
 .uname__last,
 .uname__first {
   cursor: pointer;
@@ -79,14 +85,17 @@
 
   cursor: pointer;
 }
-.uname__box {
+.uname__box,
+.info__box--not-hover {
   cursor: default;
 }
-.info__box > div {
+.info__box > div,
+.info__box--not-hover > div {
   display: flex;
   gap: 10px;
 }
-.info__box > p {
+.info__box > p,
+.info__box--not-hover > p {
   font-size: var(--font-h6);
   color: var(--color-black);
 }
@@ -115,4 +124,23 @@
 }
 .info__link:nth-last-child(2) {
   margin-top: 15px;
+}
+
+.info__new-conversation {
+  margin-top: 25px;
+
+  color: var(--color-accent-dark) !important;
+  font-size: var(--font-h6);
+}
+
+.profile__status {
+  margin-top: 10px;
+  margin-bottom: -10px;
+
+  text-align: center;
+  font-size: var(--font-h5);
+}
+.status--online {
+  color: var(--color-accent-dark);
+  font-size: var(--font-h5);
 }

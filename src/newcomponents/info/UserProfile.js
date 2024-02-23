@@ -22,6 +22,7 @@ export default function UserProfile() {
   const { pathname, hash } = useLocation();
 
   const currentUser = useSelector(getCurrentUser);
+  const { login, email, phone, first_name, last_name } = currentUser || {};
 
   const deleteCurrentUser = async () => {
     if (window.confirm("Are you sure you want to delete this user?")) {
@@ -76,10 +77,8 @@ export default function UserProfile() {
           <UserIcon />
         </div>
         <div>
-          <p className="uname__first">
-            {currentUser.first_name || "First name"}
-          </p>
-          <p className="uname__last">{currentUser.last_name || "Last name"}</p>
+          <p className="uname__first">{first_name || "First name"}</p>
+          <p className="uname__last">{last_name || "Last name"}</p>
         </div>
       </div>
       <div className="profile__container--bottom">
@@ -89,16 +88,16 @@ export default function UserProfile() {
             <User />
             <p>Username</p>
           </div>
-          <p className="info__login">{currentUser.login}</p>
+          <p className="info__login">{login}</p>
         </div>
         <div className="info__box">
           <div>
             <Phone />
             <p>Mobile phone</p>
           </div>
-          <p className="info__email">
-            {currentUser.email || (
-              <span className="text-gray">Enter your email address</span>
+          <p className="info__phone">
+            {phone || (
+              <span className="text-gray">Enter your phone number</span>
             )}
           </p>
         </div>
@@ -107,9 +106,9 @@ export default function UserProfile() {
             <Email />
             <p>Email address</p>
           </div>
-          <p className="info__phone">
-            {currentUser.phone || (
-              <span className="text-gray">Enter your phone number</span>
+          <p className="info__email">
+            {email || (
+              <span className="text-gray">Enter your email address</span>
             )}
           </p>
         </div>

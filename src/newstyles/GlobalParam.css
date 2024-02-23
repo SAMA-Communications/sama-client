@@ -128,6 +128,26 @@ main {
   cursor: pointer;
 }
 
+.first-window__container {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  padding: 40px;
+
+  width: 100svw;
+  height: 100svh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  background-color: var(--color-black-50);
+
+  z-index: 200;
+}
+
 /* vertical scroll */
 .scroll-bar__outer-container > div:nth-child(3) {
   width: calc(6px * var(--base-scale)) !important;

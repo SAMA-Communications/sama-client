@@ -5,6 +5,7 @@ import store from "@store/store";
 import { addUsers, upsertUsers } from "@store/values/Participants";
 import { history } from "@helpers/history";
 import {
+  insertChat,
   insertChats,
   removeChat,
   upsertChat,
@@ -66,6 +67,23 @@ class ConversationsService {
           .getParticipantsByCids({ cids: chats.map((el) => el._id) })
           .then((users) => store.dispatch(upsertUsers(users)));
     });
+  }
+
+  async createPrivateChat(userId) {
+    if (!userId) {
+      return;
+    }
+
+    const requestData = {
+      type: "u",
+      participants: [userId],
+    };
+
+    const chat = await api.conversationCreate(requestData);
+    store.dispatch(insertChat({ ...chat, messagesIds: [] }));
+
+    history.navigate(`/#${chat._id}`);
+    store.dispatch(setSelectedConversation({ id: chat._id }));
   }
 }
 

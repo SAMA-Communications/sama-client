@@ -11,7 +11,7 @@ import ChatList from "@newcomponents/hub/ChatList";
 import EmptyHub from "@newcomponents/hub/EmptyHub";
 import NavigationLine from "@newcomponents/navigation/NavigationLine";
 import ModalWindow from "@screens/chat/ModalWindow";
-import ParticipantProfile from "@screens/info/ParticipantProfile";
+import OtherUserProfile from "@newcomponents/info/OtherUserProfile";
 import UserProfile from "@newcomponents/info/UserProfile";
 import UserSearch from "@screens/info/UserSearch";
 
@@ -57,8 +57,8 @@ export default function Main() {
       "/addparticipants": <UserSearch type={"add_participants"} />,
       // "/profile": <UserProfile />,
       "/info": <ChatInfo />,
-      "/user": <ParticipantProfile />,
-      "/participant": <ParticipantProfile />,
+      "/user": <OtherUserProfile />,
+      "/participant": <OtherUserProfile />,
       "/modal": <ModalWindow />,
     };
 
