@@ -53,22 +53,18 @@ export default function Main() {
     const { pathname, hash } = location;
 
     const blockMap = {
-      "/search": <UserSearch type={"create_group_chat"} />,
-      "/addparticipants": <UserSearch type={"add_participants"} />,
-      // "/profile": <UserProfile />,
+      // "/create": <UserSearch type={"create_group_chat"} />,
+      // "/add": <UserSearch type={"add_participants"} />,
       "/info": <ChatInfo />,
       "/user": <OtherUserProfile />,
-      "/participant": <OtherUserProfile />,
-      "/modal": <ModalWindow />,
+      // "/participant": <OtherUserProfile />,
+      // "/modal": <ModalWindow />,
     };
 
     const allBlocks = Object.entries(blockMap)
-      .filter(([key, component]) => {
-        if (key === "/info") {
-          return hash.includes(key) && !hash.includes("/user");
-        }
-        return pathname.includes(key) || hash.includes(key);
-      })
+      .filter(
+        ([key, component]) => pathname.includes(key) || hash.includes(key)
+      )
       .map(([key, component]) => React.cloneElement(component, { key }));
 
     return allBlocks;
