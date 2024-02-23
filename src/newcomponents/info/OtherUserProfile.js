@@ -1,3 +1,4 @@
+import InfoBox from "@newcomponents/info/elements/InfoBox";
 import activityService from "@services/activityService";
 import conversationService from "@services/conversationsService";
 import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
@@ -11,9 +12,6 @@ import { useSelector } from "react-redux";
 import "@newstyles/info/UserProfile.css";
 
 import { ReactComponent as Close } from "@newicons/actions/CloseGray.svg";
-import { ReactComponent as Email } from "@newicons/media/Email.svg";
-import { ReactComponent as Phone } from "@newicons/media/Phone.svg";
-import { ReactComponent as User } from "@newicons/users/User.svg";
 import { ReactComponent as UserIcon } from "@newicons/users/ProfileIcon.svg";
 
 export default function OtherUserProfile() {
@@ -55,31 +53,28 @@ export default function OtherUserProfile() {
         </div>
         <div className="profile__container--bottom">
           <p className="info__title">Personal information</p>
-          <div className="info__box uname__box">
-            <div>
-              <User />
-              <p>Username</p>
-            </div>
-            <p className="info__login">{login}</p>
-          </div>
-          {phone ? (
-            <div className="info__box--not-hover">
-              <div>
-                <Phone />
-                <p>Mobile phone</p>
-              </div>
-              <p className="info__phone">{phone}</p>
-            </div>
-          ) : null}
-          {email ? (
-            <div className="info__box--not-hover">
-              <div>
-                <Email />
-                <p>Email address</p>
-              </div>
-              <p className="info__email">{email}</p>
-            </div>
-          ) : null}
+          <InfoBox
+            className="uname__box"
+            modifier={"--not-hover"}
+            iconType={"login"}
+            title={"Username"}
+            value={login}
+            hideIfNull={true}
+          />
+          <InfoBox
+            modifier={"--not-hover"}
+            iconType={"phone"}
+            title={"Mobile phone"}
+            value={phone}
+            hideIfNull={true}
+          />
+          <InfoBox
+            modifier={"--not-hover"}
+            iconType={"email"}
+            title={"Email address"}
+            value={email}
+            hideIfNull={true}
+          />
           <div className="info__link">
             <p
               className="info__new-conversation"

@@ -1,3 +1,4 @@
+import InfoBox from "@newcomponents/info/elements/InfoBox";
 import api from "@api/api";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import showCustomAlert from "@utils/show_alert";
@@ -9,11 +10,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "@newstyles/info/UserProfile.css";
 
 import { ReactComponent as Close } from "@newicons/actions/Close.svg";
-import { ReactComponent as Email } from "@newicons/media/Email.svg";
 import { ReactComponent as Password } from "@newicons/users/Password.svg";
-import { ReactComponent as Phone } from "@newicons/media/Phone.svg";
 import { ReactComponent as Trash } from "@newicons/actions/Trash.svg";
-import { ReactComponent as User } from "@newicons/users/User.svg";
 import { ReactComponent as UserIcon } from "@newicons/users/ProfileIcon.svg";
 
 export default function UserProfile() {
@@ -83,35 +81,24 @@ export default function UserProfile() {
       </div>
       <div className="profile__container--bottom">
         <p className="info__title">Personal information</p>
-        <div className="info__box uname__box">
-          <div>
-            <User />
-            <p>Username</p>
-          </div>
-          <p className="info__login">{login}</p>
-        </div>
-        <div className="info__box">
-          <div>
-            <Phone />
-            <p>Mobile phone</p>
-          </div>
-          <p className="info__phone">
-            {phone || (
-              <span className="text-gray">Enter your phone number</span>
-            )}
-          </p>
-        </div>
-        <div className="info__box">
-          <div>
-            <Email />
-            <p>Email address</p>
-          </div>
-          <p className="info__email">
-            {email || (
-              <span className="text-gray">Enter your email address</span>
-            )}
-          </p>
-        </div>
+        <InfoBox
+          className="uname__box"
+          iconType={"login"}
+          title={"Username"}
+          value={login}
+        />
+        <InfoBox
+          iconType={"mobile"}
+          title={"Mobile phone"}
+          value={phone}
+          placeholder={"Enter your phone number"}
+        />
+        <InfoBox
+          iconType={"email"}
+          title={"Email address"}
+          value={email}
+          placeholder={"Enter your email address"}
+        />
         <div className="info__link">
           <Password />
           <p className="info__password" onClick={changePasswordRequest}>
