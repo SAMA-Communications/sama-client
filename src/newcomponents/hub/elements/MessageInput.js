@@ -1,5 +1,6 @@
 import globalConstants from "@helpers/constants";
 import isMobile from "@utils/get_device_type";
+import { KEY_CODES } from "@helpers/keyCodes";
 
 import { ReactComponent as Attach } from "@newicons/options/Attach.svg";
 import { ReactComponent as Send } from "@newicons/options/Send.svg";
@@ -23,7 +24,7 @@ export default function MessageInput({
 
   const handeOnKeyDown = (e) => {
     if (
-      e.keyCode === 13 &&
+      e.keyCode === KEY_CODES.ENTER &&
       ((!isMobile && !e.shiftKey) || (isMobile && e.shiftKey))
     ) {
       e.preventDefault();

@@ -4,6 +4,7 @@ import conversationService from "@services/conversationsService";
 import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
 import getUserFullName from "@utils/user/get_user_full_name";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
+import { KEY_CODES } from "@helpers/keyCodes";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
@@ -26,8 +27,9 @@ export default function OtherUserProfile() {
   const { _id: userId, login, email, phone } = userObject;
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && removeAndNavigateLastSection(pathname + hash);
-    event.keyCode === 13 && event.preventDefault();
+    event.keyCode === KEY_CODES.ESCAPE &&
+      removeAndNavigateLastSection(pathname + hash);
+    event.keyCode === KEY_CODES.ENTER && event.preventDefault();
   };
 
   const viewStatusActivity = useMemo(

@@ -13,6 +13,7 @@ import {
   clearSelectedConversation,
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
+import { KEY_CODES } from "@helpers/keyCodes";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -47,7 +48,7 @@ export default function ChatForm() {
     document.addEventListener("swiped-left", closeForm);
     document.addEventListener("swiped-right", closeForm);
     window.onkeydown = function ({ keyCode }) {
-      keyCode === 27 && closeForm();
+      keyCode === KEY_CODES.ESCAPE && closeForm();
     };
   }, [location]);
 

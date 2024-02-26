@@ -1,24 +1,24 @@
-import React, { useEffect, useState, useTransition } from "react";
 import SearchedUser from "@generic/searchComponents/SearchedUser.js";
 import SelectedUser from "@generic/searchComponents/SelectedUser.js";
 import api from "@api/api";
-import getPrevPage from "@utils/navigation/get_prev_page.js";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
 import showCustomAlert from "@utils/show_alert.js";
 import { addUsers } from "@store/values/Participants.js";
 import {
   getConverastionById,
   insertChat,
 } from "@store/values/Conversations.js";
+import { KEY_CODES } from "@helpers/keyCodes";
 import { getIsMobileView } from "@store/values/IsMobileView.js";
 import { setSelectedConversation } from "@store/values/SelectedConversation.js";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState, useTransition } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import "@styles/pages/UserSearch.css";
 
 import { ReactComponent as BackBtn } from "@icons/chatForm/BackBtn.svg";
 import { ReactComponent as SearchIndicator } from "@icons/SearchIndicator.svg";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
 
 export default function UserSearch({ type }) {
   const dispatch = useDispatch();
@@ -143,8 +143,9 @@ export default function UserSearch({ type }) {
   };
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && removeAndNavigateLastSection(pathname + hash);
-    event.keyCode === 13 && event.preventDefault();
+    event.keyCode === KEY_CODES.ESCAPE &&
+      removeAndNavigateLastSection(pathname + hash);
+    event.keyCode === KEY_CODES.ENTER && event.preventDefault();
   };
 
   return (

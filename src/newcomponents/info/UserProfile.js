@@ -2,6 +2,7 @@ import InfoBox from "@newcomponents/info/elements/InfoBox";
 import api from "@api/api";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import showCustomAlert from "@utils/show_alert";
+import { KEY_CODES } from "@helpers/keyCodes";
 import { getCurrentUser } from "@store/values/CurrentUser";
 import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,9 +33,9 @@ export default function UserProfile() {
   };
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 &&
+    event.keyCode === KEY_CODES.ESCAPE &&
       removeAndNavigateSubLink(pathname + hash, "/profile");
-    event.keyCode === 13 && event.preventDefault();
+    event.keyCode === KEY_CODES.ENTER && event.preventDefault();
   };
 
   const changePasswordRequest = async () => {

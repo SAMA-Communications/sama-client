@@ -2,6 +2,7 @@ import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 import ParticipantInChat from "@newcomponents/info/elements/ParticipantInChat";
 import addSuffix from "@utils/navigation/add_suffix";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
+import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
 import { getCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
@@ -30,8 +31,9 @@ export default function ChatInfo() {
   }, [currentUser, selectedConversation]);
 
   window.onkeydown = function (event) {
-    event.keyCode === 27 && removeAndNavigateSubLink(pathname + hash, "/info");
-    event.keyCode === 13 && event.preventDefault();
+    event.keyCode === KEY_CODES.ESCAPE &&
+      removeAndNavigateSubLink(pathname + hash, "/info");
+    event.keyCode === KEY_CODES.ENTER && event.preventDefault();
   };
 
   //HOLD FOR RIGHT CLICK CONTEXT MENU
