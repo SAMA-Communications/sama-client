@@ -45,8 +45,12 @@ export default function ChatForm() {
       removeAndNavigateLastSection(pathname + hash);
     };
 
+    document.removeEventListener("swiped-left", closeForm);
+    document.removeEventListener("swiped-right", closeForm);
+
     document.addEventListener("swiped-left", closeForm);
     document.addEventListener("swiped-right", closeForm);
+
     window.onkeydown = function ({ keyCode }) {
       keyCode === KEY_CODES.ESCAPE && closeForm();
     };
