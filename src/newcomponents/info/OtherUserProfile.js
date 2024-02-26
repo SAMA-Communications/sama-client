@@ -22,7 +22,7 @@ export default function OtherUserProfile() {
 
   const userObject = useMemo(
     () => participants[extractUserIdFromUrl(pathname + hash + search)] || {},
-    [participants, hash, search]
+    [participants, pathname, hash, search]
   );
   const { _id: userId, login, email, phone } = userObject;
 
