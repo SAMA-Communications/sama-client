@@ -2,11 +2,11 @@ import InfoBox from "@newcomponents/info/elements/InfoBox";
 import api from "@api/api";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import showCustomAlert from "@utils/show_alert";
+import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getCurrentUser } from "@store/values/CurrentUser";
-import { updateNetworkState } from "@store/values/NetworkState";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import "@newstyles/info/UserProfile.css";
 
@@ -16,20 +16,10 @@ import { ReactComponent as Trash } from "@newicons/actions/Trash.svg";
 import { ReactComponent as UserIcon } from "@newicons/users/ProfileIcon.svg";
 
 export default function UserProfile() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { pathname, hash } = useLocation();
 
   const currentUser = useSelector(getCurrentUser);
   const { login, email, phone, first_name, last_name } = currentUser || {};
-
-  const deleteCurrentUser = async () => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      await api.userDelete();
-      navigate("/login");
-      dispatch({ type: "RESET_STORE" });
-    }
-  };
 
   window.onkeydown = function (event) {
     event.keyCode === KEY_CODES.ESCAPE &&
@@ -107,7 +97,7 @@ export default function UserProfile() {
         </div>
         <div className="info__link">
           <Trash />
-          <p className="info__delete" onClick={deleteCurrentUser}>
+          <p className="info__delete" onClick={usersService.deleteCurrentUser}>
             Delete account...
           </p>
         </div>
