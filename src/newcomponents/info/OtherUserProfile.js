@@ -80,9 +80,7 @@ export default function OtherUserProfile() {
           <div className="info__link">
             <p
               className="info__new-conversation"
-              onClick={async () =>
-                await conversationService.createPrivateChat(userId)
-              }
+              onClick={() => conversationService.createPrivateChat(userId)}
             >
               Start a conversation
             </p>

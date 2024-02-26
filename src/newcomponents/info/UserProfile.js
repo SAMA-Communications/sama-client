@@ -28,7 +28,6 @@ export default function UserProfile() {
       await api.userDelete();
       navigate("/login");
       dispatch({ type: "RESET_STORE" });
-      dispatch(updateNetworkState(true));
     }
   };
 
