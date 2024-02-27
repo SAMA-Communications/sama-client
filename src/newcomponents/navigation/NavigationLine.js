@@ -1,21 +1,24 @@
+import addPrefix from "@utils/navigation/add_prefix";
 import api from "@api/api";
-import getUserInitials from "@utils/get_user_initials";
-import { Link, useNavigate } from "react-router-dom";
-import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
-import { updateNetworkState } from "@store/NetworkState";
+import getUserInitials from "@utils/user/get_user_initials";
+import navigateTo from "@utils/navigation/navigate_to";
+import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
+import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import "@newstyles/NavigationLine.css";
+import "@newstyles/navigation/NavigationLine.css";
 
 import SamaLogo from "@newcomponents/static/SamaLogo";
 
 import { ReactComponent as List } from "@newicons/Conversations.svg";
 import { ReactComponent as Create } from "@newicons/AddConversation.svg";
-import { ReactComponent as Logout } from "@newicons/Logout.svg";
+import { ReactComponent as Logout } from "@newicons/actions/Logout.svg";
 
 export default function NavigationLine() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { pathname, hash } = useLocation();
 
   const sendLogout = async () => {
     navigator.serviceWorker.ready
@@ -45,23 +48,34 @@ export default function NavigationLine() {
         <SamaLogo />
       </div>
       <div className="navigation__menu fcc">
-        <Link to={"/profile"} className="menu__profile fcc">
+        <div
+          onClick={() => addPrefix(pathname + hash, "/profile")}
+          className="menu__profile fcc"
+        >
           <span className="fcc">{getUserInitials()}</span>
-        </Link>
-        <Link to={"/main"} className="menu__list fcc active">
+        </div>
+        <div
+          onClick={() => navigateTo(`/${hash || ""}`)}
+          className="menu__list fcc active"
+        >
           <List />
-        </Link>
-        <Link to={"/create"} className="menu__create fcc">
+        </div>
+        <div
+          onClick={() => addPrefix(pathname + hash, "/create")}
+          className="menu__create fcc"
+        >
           <Create />
-        </Link>
+        </div>
       </div>
-      <Link
-        to={"/authorization"}
+      <div
+        onClick={() => {
+          sendLogout();
+          navigate("/login");
+        }} //authorization
         className="menu__logout fcc"
-        onClick={sendLogout}
       >
         <Logout />
-      </Link>
+      </div>
     </aside>
   );
 }

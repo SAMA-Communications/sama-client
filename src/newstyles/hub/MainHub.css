@@ -1,0 +1,11 @@
+.hub {
+  padding: calc(30px * var(--base-scale));
+
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  gap: calc(60px * var(--base-scale));
+
+  border-radius: var(--border-48);
+  background-color: var(--color-bg-light);
+}

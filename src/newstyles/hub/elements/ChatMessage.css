@@ -1,0 +1,120 @@
+.message__container,
+.message__container--my {
+  position: relative;
+  width: max-content;
+  max-width: min(80%, 820px);
+
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 16px;
+}
+
+.message-photo {
+  width: 46px;
+
+  display: flex;
+  align-items: flex-end;
+}
+
+.photo__container {
+  width: 46px;
+  height: 46px;
+
+  text-transform: uppercase;
+  color: var(--color-black);
+
+  border-radius: var(--border-16);
+  background-color: var(--color-hover-light);
+}
+
+.message-content__container {
+  padding: 15px;
+
+  min-height: 46px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  border-radius: var(--border-16);
+  background-color: var(--color-hover-light);
+}
+.content__container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  column-gap: 15px;
+  row-gap: 8px;
+}
+.br-bl-0 {
+  border-bottom-left-radius: 0;
+}
+
+.content__uname {
+  color: var(--color-accent-dark);
+  font-weight: 500;
+}
+
+.content__text {
+  color: var(--color-black);
+  line-height: var(--font-h5);
+}
+.content__status {
+  flex-grow: 1;
+
+  justify-content: flex-end;
+}
+.content__status--darken {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+
+  padding: 8px;
+
+  border-radius: var(--border-8);
+  background-color: var(--color-black-50);
+
+  z-index: 1;
+}
+.content__status--darken .status__time {
+  color: var(--color-white);
+}
+
+.status__time {
+  color: var(--color-text-dark);
+  font-size: var(--font-span);
+}
+.status__icon {
+  position: absolute;
+  right: 0;
+  top: 50%;
+
+  transform: translateY(-50%);
+}
+
+.message-content--corner {
+  position: absolute;
+  left: -16px;
+  bottom: 0;
+}
+
+.message__container--my .photo__container,
+.message__container--my .message-content__container {
+  background-color: var(--color-accent-dark);
+}
+
+.message__container--my .photo__container,
+.message__container--my .content__text,
+.message__container--my .content__uname,
+.message__container--my .status__time {
+  color: var(--color-white);
+}
+
+.mt-8 {
+  margin-top: 8px;
+}
+
+.pr-28 {
+  padding-right: 29px;
+}

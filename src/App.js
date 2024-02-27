@@ -6,9 +6,9 @@ import globalConstants from "@helpers/constants";
 import messagesService from "@services/messagesService";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { getIsMobileView, setIsMobileView } from "@store/IsMobileView";
+import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
 import { history } from "@helpers/history";
-import { updateNetworkState } from "@store/NetworkState";
+import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 
 import PageLoader from "@components/PageLoader";
@@ -18,9 +18,9 @@ import "@newstyles/GlobalParam.css";
 import "@styles/themes/DarkTheme.css";
 import "@styles/themes/DefaultTheme.css";
 
-const Main = React.lazy(() => import("@components/Main"));
+const Main = React.lazy(() => import("@newcomponents/Main"));
 const Login = React.lazy(() => import("@screens/Login"));
-const ErrorPage = React.lazy(() => import("@components/ErrorPage"));
+// const ErrorPage = React.lazy(() => import("@components/ErrorPage"));
 
 export default function App() {
   const dispatch = useDispatch();
@@ -50,23 +50,10 @@ export default function App() {
       setIsMobileView(window.innerWidth <= globalConstants.windowChangeWitdh)
     );
 
-    const userTheme = localStorage.getItem("theme");
-    const prefersDarkMode = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-
-    if (userTheme === "dark" || (!userTheme && prefersDarkMode)) {
-      localStorage.setItem("theme", "dark");
-      document.body.classList.add("dark-theme");
-    } else {
-      localStorage.setItem("theme", "light");
-      document.body.classList.remove("dark-theme");
-    }
-
     const token = localStorage.getItem("sessionId");
     if (token && token !== "undefined") {
       const { pathname, hash } = history.location;
-      const path = hash ? pathname + hash : "/main";
+      const path = hash ? pathname + hash : "/";
       history.navigate(path);
     } else {
       localStorage.removeItem("sessionId");
@@ -80,9 +67,10 @@ export default function App() {
         <Routes location={history.location}>
           <Route path="/loading" element={<PageLoader />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/main/*" element={<Main />} />
+          {/* //authorization */}
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/*" element={<ErrorPage />} />
+          {/* //authorization */}
+          <Route path="/*" element={<Main />} />
         </Routes>
       </AnimatePresence>
     </Suspense>

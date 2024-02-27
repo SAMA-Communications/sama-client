@@ -2,8 +2,8 @@ import getBrowserFingerprint from "get-browser-fingerprint";
 import getUniqueId from "@api/uuid";
 import { default as EventEmitter } from "@event/eventEmitter";
 import { default as reduxStore } from "@store/store";
-import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
-import { updateNetworkState } from "@store/NetworkState";
+import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
+import { updateNetworkState } from "@store/values/NetworkState";
 
 class Api {
   constructor(baseUrl) {
@@ -219,7 +219,7 @@ class Api {
       request: {
         user_search: {
           login: data.login,
-          ignore_ids: data.ignore_ids,
+          ignore_ids: data.ignore_ids || [],
         },
         id: getUniqueId("userSearch"),
       },
@@ -278,8 +278,8 @@ class Api {
       const requestData = {
         message: {
           id: data.mid,
-          body: data.text,
-          cid: data.chatId,
+          body: data.body,
+          cid: data.cid,
           attachments: data.attachments,
         },
       };

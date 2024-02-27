@@ -2,8 +2,11 @@ import api from "@api/api";
 import getPrevPage from "@utils/get_prev_page";
 import jwtDecode from "jwt-decode";
 import showCustomAlert from "@utils/show_alert";
-import { selectParticipantsEntities, upsertUser } from "@store/Participants";
-import { updateNetworkState } from "@store/NetworkState";
+import {
+  selectParticipantsEntities,
+  upsertUser,
+} from "@store/values/Participants";
+import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";

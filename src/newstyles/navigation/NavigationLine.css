@@ -1,0 +1,58 @@
+.navigation__container {
+  width: calc(84px * var(--base-scale));
+
+  padding: 0 calc(10px * var(--base-scale));
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  background-color: transparent;
+}
+.navigation__container .active {
+  background-color: var(--color-hover-dark);
+}
+
+.navigation__logo {
+  font-weight: 300;
+
+  cursor: pointer;
+}
+
+.navigation__menu {
+  flex-direction: column;
+  gap: calc(20px * var(--base-scale));
+}
+
+.menu__profile,
+.menu__list,
+.menu__create,
+.menu__logout {
+  width: calc(64px * var(--base-scale));
+  height: calc(64px * var(--base-scale));
+
+  padding: calc(6px * var(--base-scale));
+
+  border-radius: var(--border-16);
+
+  cursor: pointer;
+}
+
+.menu__profile:hover,
+.menu__list:hover,
+.menu__create:hover,
+.menu__logout:hover {
+  background-color: var(--color-hover-dark);
+}
+
+.menu__profile span {
+  width: 100%;
+  height: 100%;
+
+  font-size: var(--font-h5);
+  font-weight: 300;
+  color: var(--color-black);
+
+  border-radius: var(--border-16);
+  background-color: var(--color-bg-light);
+}

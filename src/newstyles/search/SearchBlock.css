@@ -1,0 +1,9 @@
+.search__container {
+  flex: 1;
+
+  margin-top: calc(5px * var(--base-scale));
+}
+
+.search__text {
+  font-size: var(--font-h5);
+}

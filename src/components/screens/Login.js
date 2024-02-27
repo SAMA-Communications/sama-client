@@ -7,9 +7,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import { changeOpacity, loginBox } from "@styles/animations/animationBlocks";
 import { motion as m } from "framer-motion";
-import { setSelectedConversation } from "@store/SelectedConversation";
-import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
-import { upsertUser } from "@store/Participants";
+import { setCurrentUser } from "@store/values/CurrentUser";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
+import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
+import { upsertUser } from "@store/values/Participants";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 
@@ -45,6 +46,7 @@ export default function Login() {
       subscribeForNotifications();
       dispatch(setSelectedConversation({}));
       dispatch(setUserIsLoggedIn(true));
+      dispatch(setCurrentUser(userData));
       dispatch(upsertUser(userData));
     } catch (error) {
       localStorage.removeItem("sessionId");

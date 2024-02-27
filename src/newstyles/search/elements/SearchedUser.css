@@ -1,0 +1,38 @@
+.searched-user {
+  width: calc(400px * var(--base-scale));
+
+  padding: calc(10px * var(--base-scale));
+
+  gap: calc(15px * var(--base-scale));
+  justify-content: flex-start;
+
+  border-radius: var(--border-12);
+
+  cursor: pointer;
+}
+.searched-user:hover {
+  background-color: var(--color-hover-light);
+}
+
+.searched-user__photo {
+  width: calc(70px * var(--base-scale));
+  height: calc(70px * var(--base-scale));
+
+  font-weight: 300;
+  font-size: var(--font-h4);
+
+  border-radius: var(--border-8);
+  background-color: var(--color-bg-dark);
+}
+
+.searched-user__name {
+  flex: 1;
+
+  font-size: var(--font-h6);
+  font-weight: 500;
+  color: #000;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

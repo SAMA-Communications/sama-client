@@ -4,9 +4,10 @@ import store from "@store/store";
 import subscribeForNotifications from "@services/notifications";
 import { default as EventEmitter } from "@event/eventEmitter";
 import { history } from "@helpers/history";
-import { setSelectedConversation } from "@store/SelectedConversation";
-import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
-import { upsertUser } from "@store/Participants";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
+import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
+import { upsertUser } from "@store/values/Participants";
+import { setCurrentUser } from "@store/values/CurrentUser";
 
 class AutoLoginService {
   constructor() {
@@ -24,7 +25,7 @@ class AutoLoginService {
 
     const handleLoginFailure = () => {
       localStorage.removeItem("sessionId");
-      history.navigate("/login");
+      history.navigate("/login"); //authorization
       store.dispatch(setUserIsLoggedIn(false));
     };
 
@@ -35,6 +36,7 @@ class AutoLoginService {
 
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
+        store.dispatch(setCurrentUser(userData));
         api.curerntUserId = userData._id;
 
         subscribeForNotifications();
@@ -47,7 +49,7 @@ class AutoLoginService {
         store.dispatch(setUserIsLoggedIn(true));
 
         const { pathname, hash } = history.location;
-        const path = hash ? pathname + hash : "/main";
+        const path = hash ? pathname + hash : "/";
         setTimeout(() => history.navigate(path), 20);
       } else {
         handleLoginFailure();

@@ -2,11 +2,15 @@ import api from "@api/api";
 import eventEmitter from "@event/eventEmitter";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
-import { addUsers, upsertUsers } from "@store/Participants";
+import { addUsers, upsertUsers } from "@store/values/Participants";
 import { history } from "@helpers/history";
-import { insertChats, removeChat, upsertChat } from "@store/Conversations";
+import {
+  insertChats,
+  removeChat,
+  upsertChat,
+} from "@store/values/Conversations";
 import { notificationQueueByCid } from "@services/notifications";
-import { setSelectedConversation } from "@store/SelectedConversation";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
 
 class ConversationsService {
   userIsLoggedIn = false;
