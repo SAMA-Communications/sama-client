@@ -4,12 +4,10 @@
   left: 0;
 
   width: 100%;
-  height: calc(110px * var(--base-scale));
-
-  padding: calc(20px * var(--base-scale)) 0;
+  height: calc(75px * var(--base-scale));
 
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
   background-color: var(--color-bg-light-90);
 
@@ -23,7 +21,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  gap: calc(14px * var(--base-scale));
+  gap: calc(5px * var(--base-scale));
 
   cursor: pointer;
 }
@@ -40,6 +38,8 @@
 }
 
 .header-more {
+  padding-top: calc(20px * var(--base-scale));
+
   align-self: flex-start;
 
   cursor: pointer;
