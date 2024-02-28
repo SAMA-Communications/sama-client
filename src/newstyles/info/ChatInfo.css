@@ -14,7 +14,7 @@
   flex-direction: column;
   gap: 20px;
 
-  border-radius: var(--border-48);
+  border-radius: var(--border-32);
   background-color: var(--color-bg-light);
 }
 .ci-top__title {
@@ -90,7 +90,7 @@
   flex-direction: column;
   gap: 15px;
 
-  border-radius: var(--border-48);
+  border-radius: var(--border-32);
   background-color: var(--color-accent-light);
 }
 .ci-bottom__header {

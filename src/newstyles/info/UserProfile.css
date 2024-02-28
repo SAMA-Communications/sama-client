@@ -14,7 +14,7 @@
   flex-direction: column;
   gap: 20px;
 
-  border-radius: var(--border-48);
+  border-radius: var(--border-32);
   background-color: var(--color-accent-light);
 }
 .profile__close {
@@ -93,7 +93,7 @@
   display: flex;
   flex-direction: column;
 
-  border-radius: var(--border-48);
+  border-radius: var(--border-32);
   background-color: var(--color-bg-light);
 }
 .info__title {
@@ -127,6 +127,8 @@
 }
 .info__box > p,
 .info__box--not-hover > p {
+  padding-left: 26px;
+
   font-size: var(--font-h6);
   color: var(--color-black);
 }
@@ -141,6 +143,7 @@
 
 .info__link {
   display: flex;
+  align-items: center;
   gap: 10px;
 
   padding: 0 10px;
@@ -148,7 +151,7 @@
   cursor: pointer;
 }
 .info__link:nth-last-child(1) {
-  margin-top: auto;
+  margin-top: 25px;
 }
 .info__link:nth-last-child(1) > p {
   color: var(--color-red);
@@ -158,8 +161,6 @@
 }
 
 .info__new-conversation {
-  margin-top: 25px;
-
   color: var(--color-accent-dark) !important;
   font-size: var(--font-h6);
 }
