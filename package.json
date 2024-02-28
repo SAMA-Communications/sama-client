@@ -23,6 +23,7 @@
     "react-icons": "^4.4.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-loader-spinner": "^5.3.4",
+    "react-loading-skeleton": "^3.4.0",
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.4.2",
     "react-scripts": "5.0.1",

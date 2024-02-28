@@ -16,6 +16,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import "@newstyles/hub/ChatList.css";
 
+import SChatList from "@skeletons/hub/SChatList";
+
 export default function ChatList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,36 +30,39 @@ export default function ChatList() {
   const selectedConversation = useSelector(getConverastionById);
   const activeConv = selectedConversation?._id;
 
-  const chatsList = useMemo(
-    () =>
-      conversations
-        .filter((obj) => obj.type === "g" || obj.last_message)
-        .map((obj) => (
-          <ConversationItem
-            key={obj._id}
-            isSelected={activeConv === obj._id}
-            onClickFunc={() => {
-              dispatch(setSelectedConversation({ id: obj._id }));
-              navigate(`/#${obj._id}`);
-            }}
-            chatName={
-              obj.name ||
-              getUserFullName(
-                participants[
-                  obj[
-                    obj.owner_id === currentUser._id
-                      ? "opponent_id"
-                      : "owner_id"
-                  ]
-                ] || {}
-              )
-            }
-            chatObject={obj}
-            currentUserId={currentUser._id}
-          />
-        )),
-    [conversations, participants, activeConv, currentUser]
-  );
+  const chatsList = useMemo(() => {
+    if (!conversations) {
+      return <SChatList />;
+    }
+
+    const filteredConversations = conversations.filter(
+      (obj) => obj.type === "g" || obj.last_message
+    );
+    if (!filteredConversations.length) {
+      return <p className="chat-list__empty">No chats are available.</p>;
+    }
+
+    return filteredConversations.map((obj) => (
+      <ConversationItem
+        key={obj._id}
+        isSelected={activeConv === obj._id}
+        onClickFunc={() => {
+          dispatch(setSelectedConversation({ id: obj._id }));
+          navigate(`/#${obj._id}`);
+        }}
+        chatName={
+          obj.name ||
+          getUserFullName(
+            participants[
+              obj[obj.owner_id === currentUser._id ? "opponent_id" : "owner_id"]
+            ] || {}
+          )
+        }
+        chatObject={obj}
+        currentUserId={currentUser._id}
+      />
+    ));
+  }, [conversations, participants, activeConv, currentUser]);
 
   return (
     <div className="chat-list__container">
@@ -69,13 +74,7 @@ export default function ChatList() {
           clearInputText={() => setInputText(null)}
         />
       ) : (
-        <CustomScrollBar>
-          {chatsList.length ? (
-            chatsList
-          ) : (
-            <p className="chat-list__empty">No chats are available.</p>
-          )}
-        </CustomScrollBar>
+        <CustomScrollBar>{chatsList}</CustomScrollBar>
       )}
     </div>
   );

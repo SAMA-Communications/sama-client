@@ -17,6 +17,7 @@ import UserSearch from "@screens/info/UserSearch";
 
 import "@styles/Main.css";
 import "@newstyles/hub/MainHub.css";
+import "react-loading-skeleton/dist/skeleton.css";
 
 export default function Main() {
   const isMobileView = useSelector(getIsMobileView);

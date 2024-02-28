@@ -16,6 +16,7 @@
       "@styles/*": ["src/styles/*"],
       "@utils/*": ["src/utils/*"],
 
+      "@skeletons": ["src/skeletons"],
       "@newcomponents/*": ["src/newcomponents/*"],
       "@newstyles/*": ["src/newstyles/*"],
       "@newicons/*": ["src/newassets/icons/*"]
