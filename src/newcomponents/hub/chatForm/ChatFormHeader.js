@@ -79,7 +79,7 @@ export default function ChatFormHeader() {
   const viewChatOrPaticipantInfo = () => {
     navigate(
       `/#${selectedCID}${
-        selectedConversation.type === "g"
+        selectedConversation.type !== "g"
           ? "/info"
           : "/user?uid=" + participants[opponentId]._id
       }`

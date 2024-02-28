@@ -35,6 +35,21 @@
   width: 100%;
   padding: 0 30px;
 }
+
+.uname__first .text-gray {
+  text-align: center;
+  font-weight: 700;
+  font-size: var(--font-h3);
+  color: var(--color-text-dark);
+}
+.uname__last .text-gray {
+  margin-top: 10px;
+
+  text-align: center;
+  font-weight: 400;
+  font-size: var(--font-h5);
+  color: var(--color-text-dark);
+}
 .uname__full {
   margin-top: -5px;
 
@@ -119,7 +134,7 @@
   background-color: var(--color-white);
 }
 
-.text-gray {
+.info__box .text-gray {
   font-size: var(--font-h6);
   color: var(--color-text-dark);
 }
