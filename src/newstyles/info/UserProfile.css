@@ -158,6 +158,9 @@
 .info__link:nth-last-child(1) {
   margin-top: 25px;
 }
+.profile__container--bottom .info__link:nth-child(6) {
+  margin-top: auto;
+}
 .info__link:nth-last-child(1) > p {
   color: var(--color-red);
 }
