@@ -129,8 +129,13 @@
 .info__box--not-hover > p {
   padding-left: 26px;
 
+  line-height: var(--font-h5);
   font-size: var(--font-h6);
   color: var(--color-black);
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .info__box:hover {
   background-color: var(--color-white);
