@@ -9,7 +9,7 @@ export default function ChatFormContent({ scrollRef }) {
   const messages = useSelector(getActiveConversationMessages);
 
   const chatContentView = useMemo(() => {
-    if (messages) {
+    if (!messages) {
       return (
         <CustomScrollBar customId={"chatMessagesScrollable"}>
           <SMessageList />
