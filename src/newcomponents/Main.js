@@ -17,7 +17,6 @@ import UserSearch from "@screens/info/UserSearch";
 
 import SHub from "@skeletons/hub/SHub";
 
-import "@styles/Main.css";
 import "@newstyles/hub/MainHub.css";
 import "react-loading-skeleton/dist/skeleton.css";
 
