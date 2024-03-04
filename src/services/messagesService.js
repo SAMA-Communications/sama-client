@@ -164,7 +164,7 @@ class MessagesService {
       })
       .catch(() => {
         store.dispatch(setSelectedConversation({}));
-        history.navigate("/main");
+        history.navigate("/");
       });
   }
 

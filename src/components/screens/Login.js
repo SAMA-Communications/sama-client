@@ -42,7 +42,7 @@ export default function Login() {
       localStorage.setItem("sessionId", userToken);
       api.curerntUserId = userData._id;
 
-      navigate("/main");
+      navigate("/");
       subscribeForNotifications();
       dispatch(setSelectedConversation({}));
       dispatch(setUserIsLoggedIn(true));

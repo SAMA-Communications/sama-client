@@ -5,6 +5,7 @@ import navigateTo from "@utils/navigation/navigate_to";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch } from "react-redux";
+import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import "@newstyles/navigation/NavigationLine.css";
@@ -42,6 +43,16 @@ export default function NavigationLine() {
     localStorage.removeItem("sessionId");
   };
 
+  const [isProfilePageActive, isChatListActive, isCreatePageActive] =
+    useMemo(() => {
+      const isProfilePage = pathname.includes("/profile");
+      return [
+        isProfilePage ? "active" : "",
+        !isProfilePage ? "active" : "",
+        pathname.includes("/create") ? "active" : "",
+      ];
+    }, [pathname]);
+
   return (
     <aside className="navigation__container">
       <div className="navigation__logo fcc" onClick={() => navigate("/")}>
@@ -50,19 +61,19 @@ export default function NavigationLine() {
       <div className="navigation__menu fcc">
         <div
           onClick={() => addPrefix(pathname + hash, "/profile")}
-          className="menu__profile fcc"
+          className={`menu__profile fcc ${isProfilePageActive}`}
         >
           <span className="fcc">{getUserInitials()}</span>
         </div>
         <div
           onClick={() => navigateTo(`/${hash || ""}`)}
-          className="menu__list fcc active"
+          className={`menu__list fcc ${isChatListActive}`}
         >
           <List />
         </div>
         <div
           onClick={() => addPrefix(pathname + hash, "/create")}
-          className="menu__create fcc"
+          className={`menu__create fcc ${isCreatePageActive}`}
         >
           <Create />
         </div>

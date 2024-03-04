@@ -1,0 +1,94 @@
+import InfoBox from "@newcomponents/info/elements/InfoBox";
+import activityService from "@services/activityService";
+import conversationService from "@services/conversationsService";
+import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
+import getUserFullName from "@utils/user/get_user_full_name";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
+import { KEY_CODES } from "@helpers/keyCodes";
+import { selectParticipantsEntities } from "@store/values/Participants.js";
+import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
+
+import "@newstyles/info/UserProfile.css";
+
+import { ReactComponent as Close } from "@newicons/actions/CloseGray.svg";
+import { ReactComponent as LinkTo } from "@newicons/options/LinkTo.svg";
+import { ReactComponent as UserIcon } from "@newicons/users/ProfileIcon.svg";
+
+export default function OtherUserProfile() {
+  const { pathname, hash, search } = useLocation();
+
+  const participants = useSelector(selectParticipantsEntities);
+
+  const userObject = useMemo(
+    () => participants[extractUserIdFromUrl(pathname + hash + search)] || {},
+    [participants, pathname, hash, search]
+  );
+  const { _id: userId, login, email, phone } = userObject;
+
+  window.onkeydown = function (event) {
+    event.keyCode === KEY_CODES.ESCAPE &&
+      removeAndNavigateLastSection(pathname + hash);
+    event.keyCode === KEY_CODES.ENTER && event.preventDefault();
+  };
+
+  const viewStatusActivity = useMemo(
+    () => activityService.getUserLastActivity(userId),
+    [userId, participants]
+  );
+
+  return (
+    <div className="first-window__container">
+      <div className="profile__container">
+        <div className="profile__container--top fcc">
+          <Close
+            className="profile__close"
+            onClick={() => removeAndNavigateLastSection(pathname + hash)}
+          />
+          <div className="profile__photo fcc">
+            <UserIcon />
+          </div>
+          <div className="profile__info">
+            <p className="uname__full">{getUserFullName(userObject)}</p>
+            <p className="profile__status">{viewStatusActivity}</p>
+          </div>
+        </div>
+        <div className="profile__container--bottom">
+          <p className="info__title">Personal information</p>
+          <InfoBox
+            className="uname__box"
+            modifier={"--not-hover"}
+            iconType={"login"}
+            title={"Username"}
+            value={login}
+            hideIfNull={true}
+          />
+          <InfoBox
+            modifier={"--not-hover"}
+            iconType={"phone"}
+            title={"Mobile phone"}
+            value={phone}
+            hideIfNull={true}
+          />
+          <InfoBox
+            modifier={"--not-hover"}
+            iconType={"email"}
+            title={"Email address"}
+            value={email}
+            hideIfNull={true}
+          />
+          <div className="info__link">
+            <LinkTo />
+            <p
+              className="info__new-conversation"
+              onClick={() => conversationService.createPrivateChat(userId)}
+            >
+              Start a conversation
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

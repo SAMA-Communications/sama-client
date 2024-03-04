@@ -58,7 +58,7 @@ export default function SignUp() {
         }.`,
         "success"
       );
-      navigate(isLogin ? "/main" : "/login");
+      navigate(isLogin ? "/" : "/login");
     } catch (error) {
       isLogin && localStorage.removeItem("sessionId");
       showCustomAlert(error.message, "danger");

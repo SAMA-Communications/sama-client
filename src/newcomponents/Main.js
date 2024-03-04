@@ -5,14 +5,14 @@ import { useSelector } from "react-redux";
 import { selectAllConversations } from "@store/values/Conversations";
 
 import ChatForm from "@newcomponents/hub/ChatForm";
-import ChatInfoPage from "@screens/info/ChatInfoPage";
+import ChatInfo from "@newcomponents/info/ChatInfo";
 import ChatList from "@newcomponents/hub/ChatList";
 
 import EmptyHub from "@newcomponents/hub/EmptyHub";
 import NavigationLine from "@newcomponents/navigation/NavigationLine";
 import ModalWindow from "@screens/chat/ModalWindow";
-import ParticipantProfile from "@screens/info/ParticipantProfile";
-import UserProfile from "@screens/info/UserProfile";
+import OtherUserProfile from "@newcomponents/info/OtherUserProfile";
+import UserProfile from "@newcomponents/info/UserProfile";
 import UserSearch from "@screens/info/UserSearch";
 
 import "@styles/Main.css";
@@ -39,32 +39,32 @@ export default function Main() {
 
     return (
       <section className="hub">
-        <ChatList />
+        {location.pathname.includes("/profile") ? null : <ChatList />}
         <ChatForm />
       </section>
     );
   }, [location, isMobileView, conversations]);
 
-  const additionalContainer = useMemo(() => {
+  const additionalContainerLeft = useMemo(() => {
+    return location.pathname.includes("/profile") ? <UserProfile /> : null;
+  }, [location]);
+
+  const additionalContainerRight = useMemo(() => {
     const { pathname, hash } = location;
 
     const blockMap = {
-      "/search": <UserSearch type={"create_group_chat"} />,
-      "/addparticipants": <UserSearch type={"add_participants"} />,
-      "/user": <UserProfile />,
-      "/info": <ChatInfoPage />,
-      "/opponentinfo": <ParticipantProfile />,
-      "/participant": <ParticipantProfile />,
-      "/modal": <ModalWindow />,
+      // "/create": <UserSearch type={"create_group_chat"} />,
+      // "/add": <UserSearch type={"add_participants"} />,
+      "/info": <ChatInfo />,
+      "/user": <OtherUserProfile />,
+      // "/participant": <OtherUserProfile />,
+      // "/modal": <ModalWindow />,
     };
 
     const allBlocks = Object.entries(blockMap)
-      .filter(([key, component]) => {
-        if (key === "/info") {
-          return hash.includes(key) && !hash.includes("/opponentinfo");
-        }
-        return pathname.includes(key) || hash.includes(key);
-      })
+      .filter(
+        ([key, component]) => pathname.includes(key) || hash.includes(key)
+      )
       .map(([key, component]) => React.cloneElement(component, { key }));
 
     return allBlocks;
@@ -73,10 +73,9 @@ export default function Main() {
   return (
     <>
       <NavigationLine />
-      {/* left  side */}
+      {additionalContainerLeft}
       {hubContainer}
-      {/* right side */}
-      {additionalContainer}
+      {additionalContainerRight}
     </>
   );
 }

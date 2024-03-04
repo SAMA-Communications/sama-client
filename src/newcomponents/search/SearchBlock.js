@@ -6,7 +6,12 @@ import api from "@api/api";
 
 import "@newstyles/search/SearchBlock.css";
 
-export default function SearchBlock({ searchText, type }) {
+export default function SearchBlock({
+  searchText,
+  clearInputText,
+  isClearInputText = false,
+  isPreviewUserProfile = false,
+}) {
   const viewProperty = (v) => ({ display: v ? "block" : "none" });
 
   const [isPending, startTransition] = useTransition();
@@ -49,7 +54,13 @@ export default function SearchBlock({ searchText, type }) {
           customStyle={{ width: "calc(400px * var(--base-scale))" }}
         >
           {searchedUsers.map((u) => (
-            <SearchedUser key={u._id} uObject={u} />
+            <SearchedUser
+              key={u._id}
+              uObject={u}
+              clearInputText={clearInputText}
+              isClearInputText={isClearInputText}
+              isPreviewUserProfile={isPreviewUserProfile}
+            />
           ))}
         </CustomScrollBar>
       ) : (

@@ -4,13 +4,13 @@
   width: max-content;
   max-width: min(80%, 820px);
 
-  display: grid;
-  grid-template-columns: 46px 1fr;
+  display: flex;
+  flex-direction: row;
   gap: 16px;
 }
 
 .message-photo {
-  width: 46px;
+  min-width: 46px;
 
   display: flex;
   align-items: flex-end;
@@ -28,6 +28,7 @@
 }
 
 .message-content__container {
+  max-width: 100%;
   padding: 15px;
 
   min-height: 46px;
@@ -57,8 +58,13 @@
 }
 
 .content__text {
+  max-width: 100%;
+
   color: var(--color-black);
   line-height: var(--font-h5);
+
+  inline-size: auto;
+  overflow-wrap: break-word;
 }
 .content__status {
   flex-grow: 1;

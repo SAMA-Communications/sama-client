@@ -1,15 +1,20 @@
+import ChatFormContent from "@newcomponents/hub/chatForm/ChatFormContent.js";
 import ChatFormHeader from "@newcomponents/hub/chatForm/ChatFormHeader.js";
 import ChatFormInputs from "@newcomponents/hub/chatForm/ChatFormInputs.js";
-import ChatFormContent from "@newcomponents/hub/chatForm/ChatFormContent.js";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import api from "@api/api";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
   selectConversationsEntities,
 } from "@store/values/Conversations";
-import { setSelectedConversation } from "@store/values/SelectedConversation";
+import {
+  clearSelectedConversation,
+  setSelectedConversation,
+} from "@store/values/SelectedConversation";
+import { KEY_CODES } from "@helpers/keyCodes";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -27,6 +32,29 @@ export default function ChatForm() {
 
   const chatMessagesBlock = useRef();
   const [files, setFiles] = useState([]);
+
+  useEffect(() => {
+    const { pathname, hash } = location;
+    const closeForm = (event) => {
+      if (event && event.stopPropagation) {
+        event.stopPropagation();
+      }
+
+      dispatch(clearSelectedConversation());
+      api.unsubscribeFromUserActivity({});
+      removeAndNavigateLastSection(pathname + hash);
+    };
+
+    document.removeEventListener("swiped-left", closeForm);
+    document.removeEventListener("swiped-right", closeForm);
+
+    document.addEventListener("swiped-left", closeForm);
+    document.addEventListener("swiped-right", closeForm);
+
+    window.onkeydown = function ({ keyCode }) {
+      keyCode === KEY_CODES.ESCAPE && closeForm();
+    };
+  }, [location]);
 
   useEffect(() => {
     const { hash } = location;
