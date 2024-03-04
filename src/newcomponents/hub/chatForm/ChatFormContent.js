@@ -9,6 +9,7 @@ export default function ChatFormContent({ scrollRef }) {
   const messages = useSelector(getActiveConversationMessages);
 
   const chatContentView = useMemo(() => {
+    console.log(messages);
     if (!messages) {
       return (
         <CustomScrollBar customId={"chatMessagesScrollable"}>
@@ -18,9 +19,11 @@ export default function ChatFormContent({ scrollRef }) {
     }
 
     if (messages.length) {
-      <CustomScrollBar customId={"chatMessagesScrollable"}>
-        <MessagesList scrollRef={scrollRef} />
-      </CustomScrollBar>;
+      return (
+        <CustomScrollBar customId={"chatMessagesScrollable"}>
+          <MessagesList scrollRef={scrollRef} />
+        </CustomScrollBar>
+      );
     }
 
     return (
