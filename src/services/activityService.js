@@ -21,15 +21,18 @@ class ActivityService {
       const selectedConversationId = selectedConversation.value.id;
 
       if (
-        !conversations.entities[selectedConversationId]?.created_at ||
-        !participants.ids.length ||
-        this.currentChatId === selectedConversationId
+        conversations.entities &&
+        (!conversations.entities[selectedConversationId]?.created_at ||
+          !participants.ids.length ||
+          this.currentChatId === selectedConversationId)
       ) {
         return;
       }
 
       this.currentChatId = selectedConversationId;
-      this.activeChat = conversations.entities[this.currentChatId];
+      this.activeChat = conversations.entities
+        ? conversations.entities[this.currentChatId]
+        : {};
       if (this.activeChat.type !== "u") {
         return;
       }

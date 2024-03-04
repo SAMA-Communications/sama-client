@@ -28,21 +28,27 @@ export const getConverastionById = createSelector(
 
 export const conversations = createSlice({
   name: "Conversations",
-  initialState: conversationsAdapter.getInitialState(),
+  initialState: conversationsAdapter.getInitialState({ entities: null }),
   reducers: {
     setChats: (state, action) => {
       const conversations = action.payload;
       conversations.forEach((conv) => {
-        conv.messagesIds = [];
+        conv.messagesIds = null;
       });
       conversationsAdapter.setAll(state, conversations);
     },
 
     insertChats: (state, action) => {
       const conversations = action.payload;
+      if (!state.entities) {
+        state.entities = {};
+        conversationsAdapter.upsertMany(state, conversations);
+        return;
+      }
+
       const conversationsToUpdate = [];
       conversations.forEach((conv) => {
-        !state.entities[conv._id] && (conv.messagesIds = []);
+        !state.entities[conv._id] && (conv.messagesIds = null);
         conversationsToUpdate.push(conv);
       });
       if (!conversationsToUpdate.length) {

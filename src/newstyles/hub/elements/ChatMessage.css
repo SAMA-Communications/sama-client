@@ -27,7 +27,8 @@
   background-color: var(--color-hover-light);
 }
 
-.message-content__container {
+.message-content__container,
+.message-content__container--skeleton {
   padding: 15px;
 
   min-height: 46px;
@@ -38,6 +39,10 @@
 
   border-radius: var(--border-16);
   background-color: var(--color-hover-light);
+}
+
+.message-content__container--skeleton {
+  padding: 0;
 }
 .content__container {
   display: flex;
