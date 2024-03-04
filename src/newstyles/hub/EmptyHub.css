@@ -1,6 +1,7 @@
 .hub--empty {
   flex: 1 1;
   flex-direction: column;
+
   gap: calc(20px * var(--base-scale));
 
   border-radius: var(--border-48);

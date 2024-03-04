@@ -2,11 +2,11 @@ import addSuffix from "@utils/navigation/add_suffix";
 import conversationService from "@services/conversationsService";
 import getUserFullName from "@utils/user/get_user_full_name";
 import getUserInitials from "@utils/user/get_user_initials";
+import { addUsers } from "@store/values/Participants";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 
 import "@newstyles/search/elements/SearchedUser.css";
-import { addUsers } from "@store/values/Participants";
 
 export default function SearchedUser({
   uObject,
