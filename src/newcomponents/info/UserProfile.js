@@ -65,8 +65,12 @@ export default function UserProfile() {
           <UserIcon />
         </div>
         <div>
-          <p className="uname__first">{first_name || "First name"}</p>
-          <p className="uname__last">{last_name || "Last name"}</p>
+          <p className="uname__first">
+            {first_name || <span className="text-gray">First name</span>}
+          </p>
+          <p className="uname__last">
+            {last_name || <span className="text-gray">Last name</span>}
+          </p>
         </div>
       </div>
       <div className="profile__container--bottom">

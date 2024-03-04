@@ -128,10 +128,6 @@ main {
   cursor: pointer;
 }
 
-.flex-grow-1 {
-  flex-grow: 1;
-}
-
 .first-window__container {
   position: absolute;
   top: 0;

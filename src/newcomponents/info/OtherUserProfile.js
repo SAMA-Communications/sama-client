@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import "@newstyles/info/UserProfile.css";
 
 import { ReactComponent as Close } from "@newicons/actions/CloseGray.svg";
+import { ReactComponent as LinkTo } from "@newicons/options/LinkTo.svg";
 import { ReactComponent as UserIcon } from "@newicons/users/ProfileIcon.svg";
 
 export default function OtherUserProfile() {
@@ -78,6 +79,7 @@ export default function OtherUserProfile() {
             hideIfNull={true}
           />
           <div className="info__link">
+            <LinkTo />
             <p
               className="info__new-conversation"
               onClick={() => conversationService.createPrivateChat(userId)}

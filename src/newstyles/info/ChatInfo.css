@@ -90,7 +90,7 @@
   flex-direction: column;
   gap: 15px;
 
-  border-radius: var(--border-48);
+  border-radius: var(--border-32);
   background-color: var(--color-accent-light);
 }
 .ci-bottom__header {
@@ -155,6 +155,10 @@
 .participant__info > p {
   font-weight: 500;
   font-size: var(--font-h6);
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .participant__info > span {
   font-weight: 200;
