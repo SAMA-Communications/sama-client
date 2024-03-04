@@ -1,0 +1,57 @@
+.navigation__container {
+  width: 84px;
+
+  padding: 0 10px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  background-color: transparent;
+}
+.navigation__container .active {
+  background-color: var(--color-hover-dark);
+}
+
+.navigation__logo {
+  font-weight: 300;
+
+  cursor: pointer;
+}
+
+.navigation__menu {
+  flex-direction: column;
+  gap: 20px;
+}
+
+.menu__profile,
+.menu__list,
+.menu__create,
+.menu__logout {
+  width: 64px;
+  height: 64px;
+
+  padding: 6px;
+
+  border-radius: var(--border-16);
+
+  cursor: pointer;
+}
+
+.menu__profile:hover,
+.menu__list:hover,
+.menu__create:hover,
+.menu__logout:hover {
+  background-color: var(--color-hover-dark);
+}
+
+.menu__profile span {
+  width: 100%;
+  height: 100%;
+
+  font-size: var(--font-h5);
+  color: var(--color-black);
+
+  border-radius: var(--border-16);
+  background-color: var(--color-bg-light);
+}
