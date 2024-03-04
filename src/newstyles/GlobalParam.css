@@ -132,6 +132,12 @@ main {
   cursor: pointer;
 }
 
+.page-loader {
+  flex: 1;
+
+  padding-left: calc(30px * var(--base-scale));
+}
+
 .first-window__container {
   position: absolute;
   top: 0;

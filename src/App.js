@@ -11,7 +11,7 @@ import { history } from "@helpers/history";
 import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 
-import PageLoader from "@components/PageLoader";
+import PageLoader from "@newcomponents/PageLoader";
 import SignUp from "@screens/SignUp";
 
 import "@newstyles/GlobalParam.css";
