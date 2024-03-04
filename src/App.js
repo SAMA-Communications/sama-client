@@ -62,17 +62,17 @@ export default function App() {
   }, []);
 
   return (
-    // <Suspense fallback={<PageLoader />}>
-    <AnimatePresence initial={false} mode="wait">
-      <Routes location={history.location}>
-        {/* <Route path="/loading" element={<PageLoader />} /> */}
-        <Route path="/login" element={<Login />} />
-        {/* //authorization */}
-        <Route path="/signup" element={<SignUp />} />
-        {/* //authorization */}
-        <Route path="/*" element={<Main />} />
-      </Routes>
-    </AnimatePresence>
-    // </Suspense>
+    <Suspense fallback={<PageLoader />}>
+      <AnimatePresence initial={false} mode="wait">
+        <Routes location={history.location}>
+          {/* <Route path="/loading" element={<PageLoader />} /> */}
+          <Route path="/login" element={<Login />} />
+          {/* //authorization */}
+          <Route path="/signup" element={<SignUp />} />
+          {/* //authorization */}
+          <Route path="/*" element={<Main />} />
+        </Routes>
+      </AnimatePresence>
+    </Suspense>
   );
 }
