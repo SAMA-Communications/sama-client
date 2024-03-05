@@ -65,7 +65,13 @@ export const conversations = createSlice({
       ]);
     },
 
-    upsertChat: conversationsAdapter.upsertOne,
+    upsertChat: (state, action) => {
+      const conversation = action.payload;
+      if (!state.entities) {
+        state.entities = {};
+      }
+      conversationsAdapter.upsertOne(state, conversation);
+    },
     removeChat: conversationsAdapter.removeOne,
 
     updateLastMessageField: (state, { payload }) => {
