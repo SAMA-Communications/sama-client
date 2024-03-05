@@ -11,7 +11,8 @@ import { history } from "@helpers/history";
 import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 
-import PageLoader from "@newcomponents/PageLoader";
+import SMain from "@skeletons/SMain";
+import SPageLoader from "@skeletons/SPageLoader";
 import SignUp from "@screens/SignUp";
 
 import "@newstyles/GlobalParam.css";
@@ -20,7 +21,6 @@ import "@styles/themes/DefaultTheme.css";
 
 const Main = lazy(() => import("@newcomponents/Main"));
 const Login = lazy(() => import("@screens/Login"));
-// const ErrorPage = lazy(() => import("@components/ErrorPage"));
 
 export default function App() {
   const dispatch = useDispatch();
@@ -62,14 +62,13 @@ export default function App() {
   }, []);
 
   return (
-    <Suspense fallback={<PageLoader />}>
+    <Suspense
+      fallback={localStorage.getItem("sessionId") ? <SMain /> : <SPageLoader />}
+    >
       <AnimatePresence initial={false} mode="wait">
         <Routes location={history.location}>
-          {/* <Route path="/loading" element={<PageLoader />} /> */}
           <Route path="/login" element={<Login />} />
-          {/* //authorization */}
           <Route path="/signup" element={<SignUp />} />
-          {/* //authorization */}
           <Route path="/*" element={<Main />} />
         </Routes>
       </AnimatePresence>

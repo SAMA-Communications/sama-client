@@ -1,7 +1,7 @@
 import React from "react";
 import { FallingLines } from "react-loader-spinner";
 
-export default function PageLoader() {
+export default function SPageLoader() {
   return (
     <div className="page-loader fcc">
       <FallingLines

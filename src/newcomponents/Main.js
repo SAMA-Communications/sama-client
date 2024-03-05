@@ -13,11 +13,9 @@ import NavigationLine from "@newcomponents/navigation/NavigationLine";
 import ModalWindow from "@screens/chat/ModalWindow";
 import OtherUserProfile from "@newcomponents/info/OtherUserProfile";
 import UserProfile from "@newcomponents/info/UserProfile";
-import UserSearch from "@screens/info/UserSearch";
 
 import SHub from "@skeletons/hub/SHub";
 
-import "@newstyles/hub/MainHub.css";
 import "react-loading-skeleton/dist/skeleton.css";
 
 export default function Main() {
@@ -64,8 +62,7 @@ export default function Main() {
       // "/add": <UserSearch type={"add_participants"} />,
       "/info": <ChatInfo />,
       "/user": <OtherUserProfile />,
-      // "/participant": <OtherUserProfile />,
-      // "/modal": <ModalWindow />,
+      "/modal": <ModalWindow />,
     };
 
     const allBlocks = Object.entries(blockMap)
