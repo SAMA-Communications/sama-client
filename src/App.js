@@ -54,11 +54,9 @@ export default function App() {
     if (token && token !== "undefined") {
       const { pathname, hash } = history.location;
       const path = hash ? pathname + hash : "/";
-      console.log("App.js: ", path);
       history.navigate(path);
     } else {
       localStorage.removeItem("sessionId");
-      console.log("App.js: ", "/login");
       history.navigate("/login");
     }
   }, []);

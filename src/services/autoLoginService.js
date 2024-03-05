@@ -22,10 +22,8 @@ class AutoLoginService {
 
   async userLogin(token) {
     const currentPath = history.location?.hash;
-    console.log("oldPath: ", currentPath);
     const handleLoginFailure = () => {
       localStorage.removeItem("sessionId");
-      console.log("navigate to ->", "/login");
       history.navigate("/login"); //authorization
       store.dispatch(setUserIsLoggedIn(false));
     };
@@ -51,9 +49,7 @@ class AutoLoginService {
 
         const { pathname, hash } = history.location;
         const path = hash ? pathname + hash : "/";
-        console.log("newpath: ", path);
         setTimeout(() => {
-          console.log("navigate to -> ", path);
           history.navigate(path);
         }, 20);
       } else {

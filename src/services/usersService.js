@@ -6,8 +6,6 @@ class UsersService {
   async deleteCurrentUser() {
     if (window.confirm("Are you sure you want to delete this user?")) {
       await api.userDelete();
-
-      console.log("usersService.js:", "/login");
       history.navigate("/login");
       store.dispatch({ type: "RESET_STORE" });
     }

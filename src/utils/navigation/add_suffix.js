@@ -11,6 +11,5 @@ export default function addSuffix(currentPath, pathname) {
       ? currentPath.slice(0, -1)
       : currentPath;
 
-  console.log("addSuffix:", filteredCurrentPath + pathname);
   history.navigate(filteredCurrentPath + pathname);
 }

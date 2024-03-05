@@ -143,7 +143,6 @@ class MessagesService {
             store.dispatch(upsertMessages(messagesToUpdate));
           });
         }
-        console.log("state:", store.getState());
         const conv =
           store.getState().conversations.entities[this.currentChatId];
         if (conv.type !== "u") {
@@ -163,7 +162,6 @@ class MessagesService {
         }
       })
       .catch(() => {
-        console.log("clear state:");
         store.dispatch(setSelectedConversation({}));
         history.navigate("/");
       });
