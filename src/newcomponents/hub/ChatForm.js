@@ -42,6 +42,7 @@ export default function ChatForm() {
 
       dispatch(clearSelectedConversation());
       api.unsubscribeFromUserActivity({});
+      console.log("ChatForm.js:", pathname + hash);
       removeAndNavigateLastSection(pathname + hash);
     };
 

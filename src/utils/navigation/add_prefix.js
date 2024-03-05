@@ -5,6 +5,6 @@ export default function addPrefix(currentPath, pathname) {
   if (isInclude) {
     return;
   }
-
+  console.log("addPrefix:", pathname + currentPath);
   history.navigate(pathname + currentPath);
 }
