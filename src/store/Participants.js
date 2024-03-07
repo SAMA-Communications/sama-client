@@ -1,8 +1,8 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 
 export const participantsAdapter = createEntityAdapter({
-  selectId: ({ _id }) => _id,
-  sortComparer: (a, b) => a._id.localeCompare(b._id),
+  selectId: ({ _id, native_id }) => native_id,
+  sortComparer: (a, b) => typeof a.native_id === 'string' ? a.native_id.localeCompare(b.native_id) : a.native_id - b.native_id,
 });
 
 export const {

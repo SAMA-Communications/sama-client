@@ -9,7 +9,7 @@ class Api {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
     this.socket = null;
-    this.curerntUserId = null;
+    this.currentUserId = null;
     this.responsesPromises = {};
     this.onMessageListener = null;
     this.onMessageStatusListener = null;
@@ -40,6 +40,12 @@ class Api {
             );
             return;
           }
+          if (message.event.conversation_updated) {
+            this.onConversationCreateListener?.(
+              message.event.conversation_updated
+            );
+            return;
+          }
           if (message.event.conversation_kicked) {
             this.onConversationDeleteListener?.(
               message.event.conversation_kicked
@@ -67,7 +73,7 @@ class Api {
           if (this.onMessageListener) {
             this.onMessageListener(message.message);
           }
-          if (message.message.from.toString() !== this.curerntUserId) {
+          if (message.message.from !== this.currentUserId) {
             EventEmitter.emit("onMessage", message.message);
           }
           return;

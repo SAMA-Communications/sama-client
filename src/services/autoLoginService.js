@@ -35,7 +35,7 @@ class AutoLoginService {
 
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
-        api.curerntUserId = userData._id;
+        api.currentUserId = userData.native_id;
 
         subscribeForNotifications();
         store.dispatch(upsertUser(userData));

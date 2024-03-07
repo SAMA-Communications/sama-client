@@ -31,7 +31,7 @@ export default function UserProfile() {
     : null;
 
   const currentUser = useMemo(
-    () => (userInfo ? participants[userInfo._id] : {}),
+    () => (userInfo ? participants[userInfo.native_id] : {}),
     [participants, userInfo]
   );
 

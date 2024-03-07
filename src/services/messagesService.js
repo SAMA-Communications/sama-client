@@ -44,13 +44,13 @@ class MessagesService {
       }
 
       const userInfo = jwtDecode(localStorage.getItem("sessionId"));
-      message.from === userInfo._id && (message["status"] = "sent");
+      message.from === userInfo.native_id && (message["status"] = "sent");
       store.dispatch(addMessage(message));
 
       let countOfNewMessages = 0;
       message.cid === this.currentChatId
         ? api.markConversationAsRead({ cid: this.currentChatId })
-        : (countOfNewMessages = message.from === userInfo._id ? 0 : 1);
+        : (countOfNewMessages = message.from === userInfo.native_id ? 0 : 1);
       store.dispatch(
         updateLastMessageField({
           cid: message.cid,
@@ -66,7 +66,7 @@ class MessagesService {
         store.dispatch(
           upsertChat({
             _id: message.cid,
-            participants: [...conv.participants, user._id],
+            participants: [...conv.participants, user.native_id],
           })
         );
       }
@@ -75,7 +75,7 @@ class MessagesService {
         store.dispatch(
           upsertChat({
             _id: message.cid,
-            participants: conv.participants.filter((uId) => uId !== user._id),
+            participants: conv.participants.filter((uId) => uId !== user.native_id),
           })
         );
       }
@@ -154,7 +154,7 @@ class MessagesService {
               store.dispatch(
                 upsertParticipants({
                   cid: this.currentChatId,
-                  participants: arr.map((obj) => obj._id),
+                  participants: arr.map((obj) => obj.native_id),
                 })
               )
             );

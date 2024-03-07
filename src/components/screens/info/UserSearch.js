@@ -56,7 +56,7 @@ export default function UserSearch({ type }) {
     if (selectedUsers.length) {
       const requestData = {
         type: selectedUsers.length > 1 ? "g" : "u", //fix it in future
-        participants: selectedUsers.map((el) => el._id),
+        participants: selectedUsers.map((el) => el.native_id),
       };
       selectedUsers.length > 1 &&
         (requestData["name"] = window.prompt("Please enter a chat name."));
@@ -75,7 +75,7 @@ export default function UserSearch({ type }) {
     event.preventDefault();
 
     if (selectedUsers.length) {
-      const addUsersArr = selectedUsers.map((el) => el._id);
+      const addUsersArr = selectedUsers.map((el) => el.native_id);
       const requestData = {
         cid: selectedCID,
         participants: { add: addUsersArr },
@@ -110,12 +110,12 @@ export default function UserSearch({ type }) {
     }
 
     setSelectedUsers([...selectedUsers, data]);
-    setIgnoreIds([...ignoreIds, data._id]);
-    setSearchedUsers(searchedUsers.filter((el) => el._id !== data._id));
+    setIgnoreIds([...ignoreIds, data.native_id]);
+    setSearchedUsers(searchedUsers.filter((el) => el.native_id !== data.native_id));
   };
   const removeUserToIgnore = async (data) => {
-    setSelectedUsers(selectedUsers.filter((el) => el._id !== data._id));
-    setIgnoreIds(ignoreIds.filter((id) => id !== data._id));
+    setSelectedUsers(selectedUsers.filter((el) => el.native_id !== data.native_id));
+    setIgnoreIds(ignoreIds.filter((id) => id !== data.native_id));
     setSearchedUsers([...searchedUsers, data]);
   };
 
@@ -172,7 +172,7 @@ export default function UserSearch({ type }) {
         {selectedUsers.length
           ? selectedUsers.map((d) => (
               <SelectedUser
-                key={d._id + "-selected"}
+                key={`${d.native_id}-selected`}
                 onClick={() => removeUserToIgnore(d)}
                 uLogin={d.login}
               />
@@ -183,7 +183,7 @@ export default function UserSearch({ type }) {
         {searchedUsers.length ? (
           searchedUsers.map((d) => (
             <SearchedUser
-              key={d._id}
+              key={`${d.native_id}`}
               onClick={() => addUserToIgnore(d)}
               uLogin={d.login}
             />

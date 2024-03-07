@@ -53,7 +53,7 @@ export default function ChatFormInfo({ closeForm }) {
 
     return (
       <p>
-        {getParticipantName(owner_id === userInfo._id ? opponent_id : owner_id)}
+        {getParticipantName(owner_id === userInfo.native_id ? opponent_id : owner_id)}
       </p>
     );
   }, [selectedConversation, participants]);
@@ -64,9 +64,9 @@ export default function ChatFormInfo({ closeForm }) {
       return null;
     }
 
-    return conv.owner_id === userInfo._id
-      ? participants[conv.opponent_id]?._id
-      : participants[conv.owner_id]?._id;
+    return conv.owner_id === userInfo.native_id
+      ? participants[conv.opponent_id]?.native_id
+      : participants[conv.owner_id]?.native_id;
   }, [selectedCID, participants]);
 
   const opponentLastActivity = participants[opponentId]?.recent_activity;
@@ -102,7 +102,7 @@ export default function ChatFormInfo({ closeForm }) {
           `/main/#${selectedCID}${
             selectedConversation.type === "g"
               ? "/info"
-              : "/opponentinfo?uid=" + participants[opponentId]._id
+              : "/opponentinfo?uid=" + participants[opponentId].native_id
           }`
         )
       }

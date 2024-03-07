@@ -37,7 +37,7 @@ export default function ChatList() {
     ? jwtDecode(localStorage.getItem("sessionId"))
     : null;
   const currentUser = useMemo(
-    () => (userInfo ? participants[userInfo._id] : {}),
+    () => (userInfo ? participants[userInfo.native_id] : {}),
     [userInfo, participants]
   );
 
@@ -93,7 +93,7 @@ export default function ChatList() {
     const list = [];
     for (const obj of conversations) {
       const chatName = !obj.name
-        ? obj.owner_id === userInfo?._id
+        ? obj.owner_id === userInfo?.native_id
           ? participants[obj.opponent_id]?.login
           : participants[obj.owner_id]?.login
         : obj.name;
@@ -117,7 +117,7 @@ export default function ChatList() {
             countOfNewMessages={obj.unread_messages_count}
             chatType={obj.type}
             lastMessage={obj.last_message}
-            uId={userInfo?._id}
+            uId={userInfo?.native_id}
           />
         </NavLink>
       );

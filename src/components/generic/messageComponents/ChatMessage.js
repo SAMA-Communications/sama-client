@@ -43,7 +43,7 @@ export default function ChatMessage({
   return (
     <div
       className={
-        fromId === userId.toString() ? "message my-message" : "message"
+        fromId === userId ? "message my-message" : "message"
       }
     >
       {isNextMessageYours ? (

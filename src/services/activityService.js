@@ -11,7 +11,7 @@ class ActivityService {
   constructor() {
     api.onUserActivityListener = (user) => {
       const uId = Object.keys(user)[0];
-      store.dispatch(upsertUser({ _id: uId, recent_activity: user[uId] }));
+      store.dispatch(upsertUser({ native_id: +uId, recent_activity: user[uId] }));
     };
 
     store.subscribe(() => {
@@ -48,7 +48,7 @@ class ActivityService {
     }
 
     const uId =
-      this.activeChat.owner_id === userInfo._id
+      this.activeChat.owner_id === userInfo.native_id
         ? this.activeChat.opponent_id
         : this.activeChat.owner_id;
 
@@ -59,7 +59,7 @@ class ActivityService {
     api.subscribeToUserActivity(uId).then((activity) => {
       store.dispatch(
         upsertUser({
-          _id: uId,
+          native_id: +uId,
           recent_activity: activity[uId],
         })
       );

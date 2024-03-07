@@ -39,7 +39,7 @@ export default function Login() {
 
       const { token: userToken, user: userData } = await api.userLogin(data);
       localStorage.setItem("sessionId", userToken);
-      api.curerntUserId = userData._id;
+      api.currentUserId = userData.native_id;
 
       navigate("/main");
       subscribeForNotifications();

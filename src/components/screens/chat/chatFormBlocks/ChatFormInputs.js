@@ -64,11 +64,11 @@ export default function ChatFormInputs({
     }
     setIsSendMessageDisable(true);
     messageInputEl.current.value = "";
-    const mid = userInfo._id + Date.now();
+    const mid = `${userInfo.native_id}${Date.now()}`;
     let msg = {
       _id: mid,
       body: text,
-      from: userInfo._id,
+      from: userInfo.native_id,
       t: Date.now(),
       attachments: files.map((file) => ({
         file_id: file.name,
@@ -114,7 +114,7 @@ export default function ChatFormInputs({
       msg = {
         _id: response.server_mid,
         body: text,
-        from: userInfo._id,
+        from: userInfo.native_id,
         status: "sent",
         t: response.t,
         attachments: attachments.map((obj, i) => ({

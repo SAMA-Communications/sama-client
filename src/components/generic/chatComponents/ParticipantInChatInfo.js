@@ -29,7 +29,7 @@ export default function ParticipantInChatInfo({
         if (isCurrentUser) {
           return;
         }
-        navigate(pathname + hash + `/participant?uid=${user._id}`);
+        navigate(pathname + hash + `/participant?uid=${user.native_id}`);
       }}
     >
       {user.login}
