@@ -19,6 +19,11 @@ class ActivityService {
         store.getState();
       const selectedConversationId = selectedConversation.value.id;
 
+      if (!selectedConversationId) {
+        this.currentChatId = null
+        return
+      }
+
       if (
         !conversations.entities[selectedConversationId]?.created_at ||
         !participants.ids.length ||
