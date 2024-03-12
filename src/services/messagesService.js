@@ -143,7 +143,6 @@ class MessagesService {
             store.dispatch(upsertMessages(messagesToUpdate));
           });
         }
-
         const conv =
           store.getState().conversations.entities[this.currentChatId];
         if (conv.type !== "u") {

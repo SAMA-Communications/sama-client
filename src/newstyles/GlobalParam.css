@@ -124,8 +124,38 @@ main {
   align-items: center;
 }
 
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
 .cursor-pointer {
   cursor: pointer;
+}
+
+.page-loader {
+  flex: 1;
+
+  padding-left: calc(30px * var(--base-scale));
+}
+
+.connect-line {
+  position: absolute;
+  top: 0;
+
+  width: 100vw;
+  height: 28px;
+
+  background-color: var(--color-accent-dark);
+  box-shadow: 0 4px 8px 0 var(--shadow-block), 0 6px 20px 0 var(--shadow-block);
+
+  z-index: 1000;
+}
+.connect-line__text {
+  text-align: center;
+  line-height: 26px;
+  font-weight: 300;
+  font-size: calc(var(--font-size) * 1.1);
+  color: var(--color-white);
 }
 
 .first-window__container {

@@ -102,7 +102,6 @@ export default function MessagesList({ scrollRef }) {
     const scrollComponent = document.querySelector(
       ".infinite-scroll-component"
     );
-
     scrollComponent.scrollIntoView({
       behavior: "smooth",
       block: "end",

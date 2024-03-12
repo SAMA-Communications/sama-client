@@ -23,7 +23,7 @@ class ConversationsService {
           upsertChat({
             ...chat,
             unread_messages_count: chat.unread_messages_count || 0,
-            messagesIds: [],
+            messagesIds: null,
             participants: users.map((u) => u._id),
           })
         );
@@ -81,7 +81,7 @@ class ConversationsService {
 
     const chat = await api.conversationCreate(requestData);
     userObject && store.dispatch(addUsers([userObject]));
-    store.dispatch(insertChat({ ...chat, messagesIds: [] }));
+    store.dispatch(insertChat({ ...chat, messagesIds: null }));
 
     history.navigate(`/#${chat._id}`);
     store.dispatch(setSelectedConversation({ id: chat._id }));

@@ -22,7 +22,6 @@ class AutoLoginService {
 
   async userLogin(token) {
     const currentPath = history.location?.hash;
-
     const handleLoginFailure = () => {
       localStorage.removeItem("sessionId");
       history.navigate("/login"); //authorization
@@ -42,15 +41,19 @@ class AutoLoginService {
         subscribeForNotifications();
         store.dispatch(upsertUser(userData));
 
-        currentPath &&
-          store.dispatch(
-            setSelectedConversation({ id: currentPath.split("/")[0].slice(1) })
-          );
         store.dispatch(setUserIsLoggedIn(true));
 
         const { pathname, hash } = history.location;
         const path = hash ? pathname + hash : "/";
-        setTimeout(() => history.navigate(path), 20);
+        setTimeout(() => {
+          history.navigate(path);
+          currentPath &&
+            store.dispatch(
+              setSelectedConversation({
+                id: currentPath.split("/")[0].slice(1),
+              })
+            );
+        }, 20);
       } else {
         handleLoginFailure();
         showCustomAlert("Invalid session token.", "warning");

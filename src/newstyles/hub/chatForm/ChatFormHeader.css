@@ -11,7 +11,7 @@
 
   background-color: var(--color-bg-light-90);
 
-  z-index: 1;
+  z-index: 3;
 }
 
 .header-content {
