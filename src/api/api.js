@@ -40,6 +40,12 @@ class Api {
             );
             return;
           }
+          if (message.event.conversation_updated) {
+            this.onConversationCreateListener?.(
+              message.event.conversation_updated
+            );
+            return;
+          }
           if (message.event.conversation_kicked) {
             this.onConversationDeleteListener?.(
               message.event.conversation_kicked
