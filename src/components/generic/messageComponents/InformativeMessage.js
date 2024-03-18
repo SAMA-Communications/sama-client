@@ -16,7 +16,7 @@ export default function InformativeMessage({
           : "informative-message"
       }
       onClick={() =>
-        navigate(pathname + hash + `/participant?uid=${params?.user?._id}`)
+        navigate(pathname + hash + `/participant?uid=${params?.user?.native_id}`)
       }
     >
       {text}

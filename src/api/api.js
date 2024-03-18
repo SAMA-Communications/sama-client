@@ -9,7 +9,7 @@ class Api {
   constructor(baseUrl) {
     this.baseUrl = baseUrl;
     this.socket = null;
-    this.curerntUserId = null;
+    this.currentUserId = null;
     this.responsesPromises = {};
     this.onMessageListener = null;
     this.onMessageStatusListener = null;
@@ -73,7 +73,7 @@ class Api {
           if (this.onMessageListener) {
             this.onMessageListener(message.message);
           }
-          if (message.message.from.toString() !== this.curerntUserId) {
+          if (message.message.from !== this.currentUserId) {
             EventEmitter.emit("onMessage", message.message);
           }
           return;
@@ -164,6 +164,7 @@ class Api {
               login: data.ulogin,
               password: data.pass,
               deviceId: getBrowserFingerprint(true),
+              application_id: 6783
             },
         id: getUniqueId("userLogin"),
       },

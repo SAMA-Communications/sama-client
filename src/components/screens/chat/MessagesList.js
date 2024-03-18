@@ -139,7 +139,7 @@ export default function MessagesList({ scrollRef }) {
           <ChatMessage
             key={msg._id}
             fromId={msg.from}
-            userId={userInfo._id}
+            userId={userInfo.native_id}
             text={msg.body}
             uName={participants[msg.from]?.login}
             isPrevMesssageYours={

@@ -38,7 +38,7 @@ export default function ChatInfoPage() {
     if (!userInfo || !selectedConversation) {
       return false;
     }
-    return userInfo._id === selectedConversation.owner_id?.toString();
+    return userInfo.native_id === selectedConversation.owner_id;
   }, [userInfo, selectedConversation]);
 
   window.onkeydown = function (event) {
@@ -71,7 +71,7 @@ export default function ChatInfoPage() {
         return null;
       }
 
-      const isCurrentUser = u._id === userInfo._id;
+      const isCurrentUser = u.native_id === userInfo.native_id;
 
       const deleteUser = async (event) => {
         event.stopPropagation();
@@ -82,7 +82,7 @@ export default function ChatInfoPage() {
 
         const requestData = {
           cid: selectedCID,
-          participants: { remove: [u._id] },
+          participants: { remove: [u.native_id] },
         };
         await api.conversationUpdate(requestData);
         //remove user form participants field - redux
@@ -90,7 +90,7 @@ export default function ChatInfoPage() {
 
       return (
         <ParticipantInChatInfo
-          key={u._id}
+          key={`${u.native_id}`}
           user={u}
           deleteUserFunc={deleteUser}
           isCurrentUser={isCurrentUser}

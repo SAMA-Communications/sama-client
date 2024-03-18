@@ -19,7 +19,7 @@ class ConversationsService {
             ...chat,
             unread_messages_count: chat.unread_messages_count || 0,
             messagesIds: [],
-            participants: users.map((u) => u._id),
+            participants: users.map((u) => u.native_id),
           })
         );
         store.dispatch(addUsers(users));
