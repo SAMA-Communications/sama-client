@@ -117,6 +117,17 @@
   color: var(--color-white);
 }
 
+.informative-message {
+  align-self: center;
+
+  padding: 6px 18px;
+
+  border-radius: var(--border-16);
+  background-color: var(--color-hover-light);
+
+  cursor: pointer;
+}
+
 .mt-8 {
   margin-top: 8px;
 }

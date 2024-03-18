@@ -17,6 +17,9 @@
   border-radius: var(--border-32);
   background-color: var(--color-accent-light);
 }
+.profile__container--top > div:nth-last-child(1) {
+  width: 90%;
+}
 .profile__close {
   position: absolute;
   right: 30px;

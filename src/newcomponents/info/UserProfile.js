@@ -1,7 +1,6 @@
 import InfoBox from "@newcomponents/info/elements/InfoBox";
-import api from "@api/api";
+import addSuffix from "@utils/navigation/add_suffix";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
-import showCustomAlert from "@utils/show_alert";
 import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getCurrentUser } from "@store/values/CurrentUser";
@@ -27,33 +26,6 @@ export default function UserProfile() {
     event.keyCode === KEY_CODES.ENTER && event.preventDefault();
   };
 
-  const changePasswordRequest = async () => {
-    const currentPassword = window.prompt("Enter your current password:");
-    if (!currentPassword) {
-      return;
-    }
-
-    let newPassword = window.prompt("Enter a new password:");
-    while (newPassword?.length < 3 || newPassword?.length > 40) {
-      alert("Password length must be in the range of 3 to 40.");
-      newPassword = window.prompt("Enter a new password:");
-    }
-
-    if (!newPassword || !currentPassword) {
-      return;
-    }
-
-    try {
-      await api.userEdit({
-        current_password: currentPassword,
-        new_password: newPassword,
-      });
-      showCustomAlert("Password has been successfully updated.", "success");
-    } catch (error) {
-      showCustomAlert(error.message, "danger");
-    }
-  };
-
   return (
     <div className="profile__container">
       <div className="profile__container--top fcc">
@@ -64,7 +36,7 @@ export default function UserProfile() {
         <div className="profile__photo fcc">
           <UserIcon />
         </div>
-        <div>
+        <div onClick={() => addSuffix(pathname + hash, "/edit?type=user")}>
           <p className="uname__first">
             {first_name || <span className="text-gray">First name</span>}
           </p>
@@ -82,12 +54,14 @@ export default function UserProfile() {
           value={login}
         />
         <InfoBox
+          onClickFunc={() => addSuffix(pathname + hash, "/edit?type=personal")}
           iconType={"mobile"}
           title={"Mobile phone"}
           value={phone}
           placeholder={"Enter your phone number"}
         />
         <InfoBox
+          onClickFunc={() => addSuffix(pathname + hash, "/edit?type=personal")}
           iconType={"email"}
           title={"Email address"}
           value={email}
@@ -95,7 +69,10 @@ export default function UserProfile() {
         />
         <div className="info__link">
           <Password />
-          <p className="info__password" onClick={changePasswordRequest}>
+          <p
+            className="info__password"
+            onClick={usersService.changePasswordRequest}
+          >
             Change password...
           </p>
         </div>

@@ -10,6 +10,7 @@ export default function InfoBox({
   placeholder = "",
   value,
   hideIfNull = false,
+  onClickFunc,
 }) {
   if (!value && hideIfNull) {
     return;
@@ -21,7 +22,7 @@ export default function InfoBox({
   };
 
   return (
-    <div className={`info__box${modifier} ${className}`}>
+    <div className={`info__box${modifier} ${className}`} onClick={onClickFunc}>
       <div>
         {infoIcons[iconType]}
         <p>{title}</p>

@@ -24,6 +24,7 @@
   --font-h6: calc(var(--base-font) * 1.2);
   --font-p: calc(var(--base-font) * 1);
   --font-span: calc(var(--base-font) * 0.833);
+  --font-indicator: calc(var(--base-font) * 0.75);
 
   --color-white: #fff;
   --color-black: #000;

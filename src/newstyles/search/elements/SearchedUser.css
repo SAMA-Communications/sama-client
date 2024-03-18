@@ -36,3 +36,17 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.searched-user__indecator {
+  position: absolute;
+  bottom: -3px;
+  right: -6px;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+  background-color: var(--color-accent-dark);
+
+  z-index: 10;
+}
