@@ -4,7 +4,7 @@
 
 ### Updated
 
-- Use System Message API for conversation event messages
+- Added system Message API for conversation event messages
 
 ## 0.5.0
 
