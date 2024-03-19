@@ -29,6 +29,9 @@ export default function ChatFormHeader() {
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
+  const conversationOwner = selectedConversation.owner_id?.toString();
+  const isCurrentUserOwner = currentUser._id === conversationOwner;
+
   const opponentId = useMemo(() => {
     const conversation = conversations[selectedCID];
     if (!conversation) {
@@ -67,21 +70,6 @@ export default function ChatFormHeader() {
     return `${count} member${count > 1 ? "s" : ""}`;
   }, [opponentId, participants, selectedConversation]);
 
-  // MOVE TO MORE OPTIONS BLOCK
-  // const deleteChat = async () => {
-  //   const isConfirm = window.confirm(`Do you want to delete this chat?`);
-  //   if (isConfirm) {
-  //     try {
-  //       await api.conversationDelete({ cid: selectedCID });
-  //       dispatch(clearSelectedConversation());
-  //       dispatch(removeChat(selectedCID));
-  //       navigate("/main");
-  //     } catch (error) {
-  //       showCustomAlert(error.message, "warning");
-  //     }
-  //   }
-  // };
-
   const viewChatOrPaticipantInfo = () => {
     const path =
       selectedConversation.type === "g"
@@ -101,8 +89,8 @@ export default function ChatFormHeader() {
     dispatch(
       setList([
         currentPath.includes("/info") ? null : "infoChat",
-        "edit",
-        "addParticipants",
+        isCurrentUserOwner ? "edit" : null,
+        isCurrentUserOwner ? "addParticipants" : null,
         "leave",
       ])
     );

@@ -2,13 +2,26 @@ import addPrefix from "@utils/navigation/add_prefix";
 import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
 import getUserInitials from "@utils/user/get_user_initials";
-import { useDispatch } from "react-redux";
+import { getCurrentUser } from "@store/values/CurrentUser";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { setClicked, setCoords, setList } from "@store/values/ContextMenu";
+import {
+  setClicked,
+  setCoords,
+  setExternalProps,
+  setList,
+} from "@store/values/ContextMenu";
 
-export default function ParticipantInChat({ userObject, isOwner }) {
+export default function ParticipantInChat({
+  userObject,
+  isOwner,
+  isCurrentUserOwner,
+}) {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
+
+  const currentUser = useSelector(getCurrentUser);
+  const isCurrentUser = currentUser._id === userObject._id;
 
   return (
     <div
@@ -20,8 +33,15 @@ export default function ParticipantInChat({ userObject, isOwner }) {
       }
       onContextMenu={(e) => {
         e.preventDefault();
+        dispatch(
+          setList([
+            "infoUser",
+            isCurrentUser ? null : "newChat",
+            !isCurrentUserOwner || isCurrentUser ? null : "removeParticipant",
+          ])
+        );
         dispatch(setCoords({ x: e.pageX, y: e.pageY }));
-        dispatch(setList(["infoUser", "newChat", "removeParticipant"]));
+        dispatch(setExternalProps({ userObject }));
         dispatch(setClicked(true));
       }}
     >

@@ -9,8 +9,15 @@ export const contextMenu = createSlice({
     coords: { x: null, y: null },
   },
   reducers: {
-    setCoords: (state, { payload }) => {
-      state.coords = { x: payload.x, y: payload.y };
+    setCoords: (state, { payload: { x, y } }) => {
+      const { innerHeight, innerWidth } = window;
+      const list = JSON.parse(JSON.stringify(state.list))?.filter((el) => !!el);
+      const popUpHeight = 25 + list.length * 40;
+
+      state.coords = {
+        x: x + 240 > innerWidth ? innerWidth - 245 : x,
+        y: y + popUpHeight > innerHeight ? innerHeight - popUpHeight : y,
+      };
     },
     setClicked: (state, { payload }) => {
       state.clicked = payload;

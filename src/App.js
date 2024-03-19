@@ -48,6 +48,7 @@ export default function App() {
       if (isMobileView !== isMobileViewRef.current) {
         dispatch(setIsMobileView(isMobileView));
       }
+      dispatch(setClicked(false));
     });
 
     dispatch(
@@ -78,7 +79,9 @@ export default function App() {
       fallback={localStorage.getItem("sessionId") ? <SMain /> : <SPageLoader />}
     >
       <AnimatePresence initial={false} mode="wait">
-        {isContextClicked ? <ContextMenuHub key={"ContextMenu"} /> : null}
+        {isContextClicked ? (
+          <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
+        ) : null}
         <Routes location={history.location}>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />

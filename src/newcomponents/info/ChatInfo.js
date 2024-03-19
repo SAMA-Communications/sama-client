@@ -22,6 +22,7 @@ export default function ChatInfo() {
   const participants = useSelector(selectParticipantsEntities);
   const currentUser = useSelector(getCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
+  const conversationOwner = selectedConversation.owner_id?.toString();
 
   const isCurrentUserOwner = useMemo(() => {
     if (!currentUser || !selectedConversation) {
@@ -62,8 +63,8 @@ export default function ChatInfo() {
         return null;
       }
 
-      const isOwner =
-        userObject._id === selectedConversation.owner_id?.toString();
+      const isOwner = userObject._id === conversationOwner;
+      const isCurrentUserOwner = currentUser._id === conversationOwner;
 
       //HOLD FOR RIGHT CLICK CONTEXT MENU
       // const deleteUser = async (event) => {
@@ -86,6 +87,7 @@ export default function ChatInfo() {
           key={uId}
           userObject={userObject}
           isOwner={isOwner}
+          isCurrentUserOwner={isCurrentUserOwner}
         />
       );
     });

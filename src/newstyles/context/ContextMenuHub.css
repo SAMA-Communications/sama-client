@@ -2,6 +2,8 @@
   position: absolute;
   left: 10px;
 
+  width: 240px;
+
   padding: 10px 4px;
 
   display: flex;
@@ -39,6 +41,7 @@
 }
 
 .context-menu__text {
+  color: var(--color-black);
   font-size: var(--font-h6);
   text-wrap: nowrap;
 }

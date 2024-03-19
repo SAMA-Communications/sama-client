@@ -12,7 +12,10 @@ import {
   upsertChat,
 } from "@store/values/Conversations";
 import { notificationQueueByCid } from "@services/notifications";
-import { setSelectedConversation } from "@store/values/SelectedConversation";
+import {
+  clearSelectedConversation,
+  setSelectedConversation,
+} from "@store/values/SelectedConversation";
 
 class ConversationsService {
   userIsLoggedIn = false;
@@ -157,6 +160,22 @@ class ConversationsService {
     }
 
     return await api.conversationUpdate(requestData);
+  }
+
+  async sendDeleteRequest() {
+    const isConfirm = window.confirm(`Do you want to delete this chat?`);
+    if (isConfirm) {
+      const selectedConversation = store.getState().selectedConversation.value;
+
+      try {
+        await api.conversationDelete({ cid: selectedConversation.id });
+        store.dispatch(clearSelectedConversation());
+        store.dispatch(removeChat(selectedConversation.id));
+        navigateTo("/");
+      } catch (error) {
+        showCustomAlert(error.message, "warning");
+      }
+    }
   }
 }
 
