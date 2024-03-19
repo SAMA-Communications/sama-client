@@ -108,6 +108,7 @@ export default function ChatInfo() {
           className={`chat-info__content ${
             isCurrentUserOwner ? "cursor-pointer" : ""
           }`}
+          onClick={() => addSuffix(pathname + hash, "/edit?type=chat")}
         >
           <p className="ci-name">
             {selectedConversation?.name || (

@@ -1,26 +1,17 @@
 import ChatNameInput from "./components/ChatNameInput";
 import UserSelectorBlock from "@newcomponents/modals/components/UserSelectorBlock";
-import navigateTo from "@utils/navigation/navigate_to";
+import conversationService from "@services/conversationsService";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
-import showCustomAlert from "@utils/show_alert";
-import {
-  addUsers,
-  selectAllParticipants,
-  selectParticipantsEntities,
-} from "@store/values/Participants";
-import { getConverastionById, insertChat } from "@store/values/Conversations";
-import { setSelectedConversation } from "@store/values/SelectedConversation";
-import { useDispatch, useSelector } from "react-redux";
+import { getConverastionById } from "@store/values/Conversations";
+import { selectParticipantsEntities } from "@store/values/Participants";
 import { useLocation } from "react-router-dom";
 import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
 import "@newstyles/modals/UsersSelectModalHub.css";
-import api from "@api/api";
 
 export default function UsersSelectModalHub({ type }) {
-  const dispatch = useDispatch();
-
   const selectedConversation = useSelector(getConverastionById);
   const participants = useSelector(selectParticipantsEntities);
 
@@ -29,45 +20,12 @@ export default function UsersSelectModalHub({ type }) {
 
   const closeModal = () => removeAndNavigateSubLink(pathname + hash, "/create");
 
-  const sendChatCreateRequest = async (participants) => {
-    if (!participants.length || !chatName) {
-      showCustomAlert("Choose participants.", "warning");
-      return;
-    }
-
-    const chat = await api.conversationCreate({
-      type: "g",
-      name: chatName,
-      participants: participants.map((el) => el._id),
-    });
-
-    dispatch(addUsers(participants));
-    dispatch(insertChat({ ...chat, messagesIds: null }));
-
-    navigateTo(`/#${chat._id}`);
-    dispatch(setSelectedConversation({ id: chat._id }));
+  const sendCreateRequest = async (participants) => {
+    await conversationService.createGroupChat(participants, chatName);
   };
 
-  const sendAddParticipantsRequest = async (participants) => {
-    if (!participants.length) {
-      return;
-    }
-
-    const addUsersArr = participants.map((el) => el._id);
-    const requestData = {
-      cid: selectedConversation._id,
-      participants: { add: addUsersArr },
-    };
-
-    if (
-      !window.confirm(
-        `Add selected user${participants.length > 1 ? "s" : ""} to the chat?`
-      )
-    ) {
-      return;
-    }
-
-    await api.conversationUpdate(requestData);
+  const sendEditRequest = async (participants) => {
+    await conversationService.sendAddParticipantsRequest(participants);
     removeAndNavigateLastSection(pathname + hash);
   };
 
@@ -79,7 +37,7 @@ export default function UsersSelectModalHub({ type }) {
           initSelectedUsers={selectedConversation.participants.map(
             (uId) => participants[uId]
           )}
-          onClickCreateFunc={sendAddParticipantsRequest}
+          onClickCreateFunc={sendEditRequest}
         />
       );
     }
@@ -87,7 +45,7 @@ export default function UsersSelectModalHub({ type }) {
     return chatName ? (
       <UserSelectorBlock
         closeWindow={closeModal}
-        onClickCreateFunc={sendChatCreateRequest}
+        onClickCreateFunc={sendCreateRequest}
       />
     ) : (
       <ChatNameInput setState={setChatName} closeWindow={closeModal} />

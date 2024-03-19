@@ -10,7 +10,7 @@ export default function UserSelectorBlock({
   onClickCreateFunc,
 }) {
   const [inputText, setInputText] = useState(null);
-  const [counter, setCounter] = useState(initSelectedUsers.length || 1);
+  const [counter, setCounter] = useState(initSelectedUsers?.length || 1);
   const [selectedUsers, setSelectedUsers] = useState(initSelectedUsers || []);
 
   const meInArray = initSelectedUsers ? 0 : 1;

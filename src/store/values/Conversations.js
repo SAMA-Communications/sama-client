@@ -22,7 +22,7 @@ export const {
 export const getConverastionById = createSelector(
   [getSelectedConversationId, selectConversationsEntities],
   (id, conversations) => {
-    return conversations[id];
+    return conversations ? conversations[id] : {};
   }
 );
 

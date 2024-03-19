@@ -45,7 +45,7 @@ export default function SearchBlock({
       }
     });
   };
-  console.log(selectedUsers);
+
   return (
     <div className="search__container fcc" style={viewProperty(searchText)}>
       {isPending ? (

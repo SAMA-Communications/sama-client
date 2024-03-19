@@ -17,6 +17,7 @@
       "@utils/*": ["src/utils/*"],
 
       "@skeletons": ["src/skeletons"],
+      "@hooks": ["src/hooks"],
 
       "@newcomponents/*": ["src/newcomponents/*"],
       "@newstyles/*": ["src/newstyles/*"],

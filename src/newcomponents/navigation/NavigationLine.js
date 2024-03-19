@@ -2,11 +2,12 @@ import addPrefix from "@utils/navigation/add_prefix";
 import api from "@api/api";
 import getUserInitials from "@utils/user/get_user_initials";
 import navigateTo from "@utils/navigation/navigate_to";
+import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch } from "react-redux";
-import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 
 import "@newstyles/navigation/NavigationLine.css";
 
@@ -60,7 +61,11 @@ export default function NavigationLine() {
       </div>
       <div className="navigation__menu fcc">
         <div
-          onClick={() => addPrefix(pathname + hash, "/profile")}
+          onClick={() =>
+            ((pathname + hash).includes("/profile")
+              ? removeAndNavigateSubLink
+              : addPrefix)(pathname + hash, "/profile")
+          }
           className={`menu__profile fcc ${isProfilePageActive}`}
         >
           <span className="fcc">{getUserInitials()}</span>

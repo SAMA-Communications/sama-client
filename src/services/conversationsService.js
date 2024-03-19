@@ -1,5 +1,6 @@
 import api from "@api/api";
 import eventEmitter from "@event/eventEmitter";
+import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
 import { addUsers, upsertUsers } from "@store/values/Participants";
@@ -83,8 +84,79 @@ class ConversationsService {
     userObject && store.dispatch(addUsers([userObject]));
     store.dispatch(insertChat({ ...chat, messagesIds: null }));
 
-    history.navigate(`/#${chat._id}`);
+    navigateTo(`/#${chat._id}`);
     store.dispatch(setSelectedConversation({ id: chat._id }));
+  }
+
+  async createGroupChat(participants, name) {
+    if (!participants.length || !name) {
+      showCustomAlert("Choose participants.", "warning");
+      return;
+    }
+
+    const chat = await api.conversationCreate({
+      type: "g",
+      name,
+      participants: participants.map((el) => el._id),
+    });
+
+    store.dispatch(addUsers(participants));
+    store.dispatch(insertChat({ ...chat, messagesIds: null }));
+
+    navigateTo(`/#${chat._id}`);
+    store.dispatch(setSelectedConversation({ id: chat._id }));
+  }
+
+  #validateFieldLength(field) {
+    return field.length < 256 && field.length > 0;
+  }
+
+  async sendEditNameAndDescriptionRequest(data) {
+    const keys = Object.keys(data);
+    if (!keys.length) {
+      return;
+    }
+
+    for (const key of keys) {
+      if (!this.#validateFieldLength(data[key])) {
+        showCustomAlert(
+          `The length of the ${key} field must be from 0 to 255 characters.`,
+          "warning"
+        );
+        return false;
+      }
+    }
+
+    const selectedConversation = store.getState().selectedConversation.value;
+
+    return await api.conversationUpdate({
+      cid: selectedConversation.id,
+      ...data,
+    });
+  }
+
+  async sendAddParticipantsRequest(participants) {
+    const selectedConversation = store.getState().selectedConversation.value;
+
+    if (!participants.length) {
+      return;
+    }
+
+    const addUsersArr = participants.map((el) => el._id);
+    const requestData = {
+      cid: selectedConversation.id,
+      participants: { add: addUsersArr },
+    };
+
+    if (
+      !window.confirm(
+        `Add selected user${participants.length > 1 ? "s" : ""} to the chat?`
+      )
+    ) {
+      return;
+    }
+
+    return await api.conversationUpdate(requestData);
   }
 }
 

@@ -28,6 +28,7 @@
 
   --color-white: #fff;
   --color-black: #000;
+  --color-black-25: rgba(0, 0, 0, 0.25);
   --color-black-50: rgba(0, 0, 0, 0.5);
   --color-red: #df2e38;
   --color-bg-light: #f6f6f6;

@@ -40,6 +40,8 @@
 
 .header-more {
   padding-top: calc(20px * var(--base-scale));
+  padding-right: 2px;
+  padding-left: 2px;
 
   align-self: flex-start;
 
