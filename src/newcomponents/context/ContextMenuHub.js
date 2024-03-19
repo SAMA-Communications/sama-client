@@ -8,13 +8,13 @@ import {
 
 import "@newstyles/context/ContextMenuHub.css";
 
-import AddParticipantsLink from "./elements/AddParticipantsLink";
+import AddParticipantsLink from "@newcomponents/context/elements/AddParticipantsLink";
 import EditLink from "@newcomponents/context/elements/EditLink";
 import InfoChatLink from "@newcomponents/context/elements/InfoChatLink";
 import InfoUserLink from "@newcomponents/context/elements/InfoUserLink";
-import LeaveAndDeleteLink from "./elements/LeaveAndDeleteLink";
-import RemoveParticipantLink from "./elements/RemoveParticipantLink";
-import SendMessageLink from "./elements/SendMessageLink";
+import LeaveAndDeleteLink from "@newcomponents/context/elements/LeaveAndDeleteLink";
+import RemoveParticipantLink from "@newcomponents/context/elements/RemoveParticipantLink";
+import SendMessageLink from "@newcomponents/context/elements/SendMessageLink";
 
 export default function ContextMenuHub() {
   const list = useSelector(getContextList);
@@ -25,10 +25,15 @@ export default function ContextMenuHub() {
     const links = {
       infoChat: <InfoChatLink key={"infoChat"} />,
       edit: <EditLink key={"edit"} />,
-      infoUser: <InfoUserLink key={"infoUser"} uId={userObject._id} />,
+      infoUser: <InfoUserLink key={"infoUser"} uId={userObject?._id} />,
       addParticipants: <AddParticipantsLink key={"addParticipants"} />,
       leave: <LeaveAndDeleteLink key={"leave"} />,
-      removeParticipant: <RemoveParticipantLink key={"removeParticipant"} />,
+      removeParticipant: (
+        <RemoveParticipantLink
+          key={"removeParticipant"}
+          uId={userObject?._id}
+        />
+      ),
       newChat: <SendMessageLink key={"newChat"} uObject={userObject} />,
     };
 

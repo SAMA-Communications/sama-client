@@ -10,6 +10,7 @@ import {
   insertChats,
   removeChat,
   upsertChat,
+  upsertParticipants,
 } from "@store/values/Conversations";
 import { notificationQueueByCid } from "@services/notifications";
 import {
@@ -160,6 +161,28 @@ class ConversationsService {
     }
 
     return await api.conversationUpdate(requestData);
+  }
+
+  async sendRemoveParticipantRequest(userId) {
+    if (!window.confirm(`Do you want to delete this user?`)) {
+      return;
+    }
+    const { selectedConversation, conversations } = store.getState();
+    const selectedCID = selectedConversation.value.id;
+
+    await api.conversationUpdate({
+      cid: selectedCID,
+      participants: { remove: [userId] },
+    });
+
+    store.dispatch(
+      upsertParticipants({
+        cid: selectedCID,
+        participants: conversations.entities[selectedCID].participants.filter(
+          (uId) => uId !== userId
+        ),
+      })
+    );
   }
 
   async sendDeleteRequest() {

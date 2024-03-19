@@ -22,7 +22,7 @@ export default function ChatInfo() {
   const participants = useSelector(selectParticipantsEntities);
   const currentUser = useSelector(getCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
-  const conversationOwner = selectedConversation.owner_id?.toString();
+  const conversationOwner = selectedConversation?.owner_id?.toString();
 
   const isCurrentUserOwner = useMemo(() => {
     if (!currentUser || !selectedConversation) {
@@ -37,21 +37,6 @@ export default function ChatInfo() {
     event.keyCode === KEY_CODES.ENTER && event.preventDefault();
   };
 
-  //HOLD FOR RIGHT CLICK CONTEXT MENU
-  // const deleteChat = async () => {
-  //   const isConfirm = window.confirm(`Do you want to delete this chat?`);
-  //   if (isConfirm) {
-  //     try {
-  //       await api.conversationDelete({ cid: selectedCID });
-  //       dispatch(clearSelectedConversation());
-  //       dispatch(removeChat(selectedCID));
-  //       navigateTo("/");
-  //     } catch (error) {
-  //       showCustomAlert(error.message, "warning");
-  //     }
-  //   }
-  // };
-
   const participantsList = useMemo(() => {
     if (!selectedConversation?.participants || !currentUser) {
       return null;
@@ -65,22 +50,6 @@ export default function ChatInfo() {
 
       const isOwner = userObject._id === conversationOwner;
       const isCurrentUserOwner = currentUser._id === conversationOwner;
-
-      //HOLD FOR RIGHT CLICK CONTEXT MENU
-      // const deleteUser = async (event) => {
-      //   event.stopPropagation();
-
-      //   if (!window.confirm(`Do you want to delete this user?`)) {
-      //     return;
-      //   }
-
-      //   const requestData = {
-      //     cid: selectedCID,
-      //     participants: { remove: [u._id] },
-      //   };
-      //   await api.conversationUpdate(requestData);
-      //remove user form participants field - redux
-      // };
 
       return (
         <ParticipantInChat

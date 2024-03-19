@@ -31,6 +31,7 @@ export default function ChatFormHeader() {
 
   const conversationOwner = selectedConversation.owner_id?.toString();
   const isCurrentUserOwner = currentUser._id === conversationOwner;
+  const isGroupChat = selectedConversation.type === "g";
 
   const opponentId = useMemo(() => {
     const conversation = conversations[selectedCID];
@@ -89,8 +90,8 @@ export default function ChatFormHeader() {
     dispatch(
       setList([
         currentPath.includes("/info") ? null : "infoChat",
-        isCurrentUserOwner ? "edit" : null,
-        isCurrentUserOwner ? "addParticipants" : null,
+        isCurrentUserOwner && isGroupChat ? "edit" : null,
+        isCurrentUserOwner && isGroupChat ? "addParticipants" : null,
         "leave",
       ])
     );

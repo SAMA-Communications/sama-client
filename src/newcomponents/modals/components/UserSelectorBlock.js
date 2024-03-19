@@ -75,7 +75,7 @@ export default function UserSelectorBlock({
           className="em-navigation__link"
           onClick={() => onClickCreateFunc(selectedUsers)}
         >
-          Create
+          {initSelectedUsers ? "Add" : "Create"}
         </p>
       </div>
     </>
