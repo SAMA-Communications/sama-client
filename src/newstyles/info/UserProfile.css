@@ -59,7 +59,6 @@
   text-align: center;
   font-weight: 500;
   font-size: var(--font-h3);
-  line-height: var(--font-h2);
   color: var(--color-black);
 
   overflow: hidden;
@@ -132,7 +131,6 @@
 .info__box--not-hover > p {
   padding-left: 26px;
 
-  line-height: var(--font-h5);
   font-size: var(--font-h6);
   color: var(--color-black);
 

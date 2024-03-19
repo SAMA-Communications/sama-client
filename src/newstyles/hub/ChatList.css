@@ -1,6 +1,8 @@
 .chat-list__container {
   width: calc(400px * var(--base-scale));
 
+  margin-top: 5px;
+
   display: flex;
   gap: calc(10px * var(--base-scale));
   flex-direction: column;
@@ -85,8 +87,6 @@
 }
 
 .content-top__name {
-  height: calc(20px * var(--base-scale));
-
   color: var(--color-black);
   font-weight: 500;
   font-size: var(--font-h6);
@@ -124,7 +124,6 @@
   width: 100%;
 
   font-weight: 300;
-  line-height: var(--font-h6);
 
   overflow: hidden;
   text-overflow: ellipsis;

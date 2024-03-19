@@ -13,9 +13,8 @@
 
 #inputMessage {
   width: 100%;
-  height: calc(70px * var(--base-scale));
 
-  padding: calc(25px * var(--base-scale)) calc(77px * var(--base-scale));
+  padding: calc(20px * var(--base-scale)) calc(77px * var(--base-scale));
 
   color: var(--color-black);
   font-size: var(--font-h5);

@@ -61,7 +61,6 @@
   max-width: 100%;
 
   color: var(--color-black);
-  line-height: var(--font-h5);
 
   inline-size: auto;
   overflow-wrap: break-word;

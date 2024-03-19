@@ -58,8 +58,8 @@ export default function SearchBlock({
             <SearchedUser
               key={u._id}
               uObject={u}
-              isSelected={selectedUsers.find((uObj) => uObj._id === u._id)}
-              isDisableClick={selectedUsers.find((uObj) => uObj._id === u._id)}
+              isSelected={selectedUsers?.find((uObj) => uObj._id === u._id)}
+              isDisableClick={selectedUsers?.find((uObj) => uObj._id === u._id)}
               clearInputText={clearInputText}
               addUserToArray={addUserToArray}
               isClearInputText={isClearInputText}

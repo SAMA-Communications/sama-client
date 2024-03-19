@@ -13,13 +13,11 @@
   align-items: flex-end;
 }
 .chat-emty__text {
-  line-height: var(--font-h4);
   font-weight: 200;
   font-size: var(--font-h5);
   color: var(--color-text-light);
 }
 .chat-form__title {
-  line-height: var(--font-72);
   text-align: center;
   font-weight: 200;
   font-size: var(--font-58);

@@ -96,7 +96,7 @@
   font-size: var(--font-p);
   color: var(--color-text-dark);
 
-  line-height: 100%;
+  line-height: normal;
   font-weight: 200;
 }
 
@@ -154,7 +154,6 @@ main {
 }
 .connect-line__text {
   text-align: center;
-  line-height: 26px;
   font-weight: 300;
   font-size: calc(var(--font-size) * 1.1);
   color: var(--color-white);
