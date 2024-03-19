@@ -2,13 +2,13 @@ import addPrefix from "@utils/navigation/add_prefix";
 import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
 import getUserInitials from "@utils/user/get_user_initials";
-import { useContextMenu } from "@hooks/useContextMenu";
+import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import ContextMenuHub from "@newcomponents/context/ContextMenuHub";
+import { setClicked, setCoords, setList } from "@store/values/ContextMenu";
 
 export default function ParticipantInChat({ userObject, isOwner }) {
+  const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
-  const { clicked, setClicked, coords, setCoords } = useContextMenu();
 
   return (
     <div
@@ -20,18 +20,11 @@ export default function ParticipantInChat({ userObject, isOwner }) {
       }
       onContextMenu={(e) => {
         e.preventDefault();
-        e.stopPropagation();
-        setClicked(true);
-        setCoords({ x: e.nativeEvent.layerX, y: e.nativeEvent.layerY });
+        dispatch(setCoords({ x: e.pageX, y: e.pageY }));
+        dispatch(setList(["infoUser", "newChat", "removeParticipant"]));
+        dispatch(setClicked(true));
       }}
     >
-      {clicked && (
-        <ContextMenuHub
-          top={coords.y}
-          left={coords.x}
-          listOfButtons={["info", "newChat", "removeParticipant"]}
-        />
-      )}
       <div className="participant__photo fcc">
         {getUserInitials(userObject)}
       </div>

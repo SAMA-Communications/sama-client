@@ -1,3 +1,4 @@
+import contextMenuReducer from "@store/values/ContextMenu";
 import conversationsReducer from "@store/values/Conversations";
 import currentUserReducer from "@store/values/CurrentUser";
 import isMobileViewReducer from "@store/values/IsMobileView";
@@ -9,6 +10,7 @@ import userIsLoggedInReducer from "@store/values/UserIsLoggedIn";
 import { combineReducers } from "@reduxjs/toolkit";
 
 const appReducer = combineReducers({
+  contextMenu: contextMenuReducer,
   conversations: conversationsReducer,
   currentUser: currentUserReducer,
   isMobileView: isMobileViewReducer,

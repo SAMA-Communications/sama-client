@@ -13,7 +13,7 @@ import EmptyHub from "@newcomponents/hub/EmptyHub";
 import NavigationLine from "@newcomponents/navigation/NavigationLine";
 import OtherUserProfile from "@newcomponents/info/OtherUserProfile";
 import UserProfile from "@newcomponents/info/UserProfile";
-import UsersSelectModalHub from "./modals/UsersSelectModalHub";
+import UsersSelectModalHub from "@newcomponents/modals/UsersSelectModalHub";
 
 import SHub from "@skeletons/hub/SHub";
 

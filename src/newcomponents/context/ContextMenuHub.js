@@ -1,4 +1,8 @@
+import addSuffix from "@utils/navigation/add_suffix";
+import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { getContextList, getCoords } from "@store/values/ContextMenu";
 
 import "@newstyles/context/ContextMenuHub.css";
 
@@ -14,10 +18,19 @@ export default function ContextMenuHub({
   left,
   bottom,
   customStyle = {},
-  listOfButtons = [],
 }) {
+  const { pathname, hash } = useLocation();
+
+  const list = useSelector(getContextList);
+  const { x, y } = useSelector(getCoords);
+
   const buttonsList = {
-    info: {
+    infoChat: {
+      text: "Info",
+      icon: <Info />,
+      onClickFunc: () => addSuffix(pathname + hash, "/info"),
+    },
+    infoUser: {
       text: "Info",
       icon: <Info />,
       onClickFunc: () => {},
@@ -52,7 +65,7 @@ export default function ContextMenuHub({
   };
 
   const listView = useMemo(() => {
-    return listOfButtons.map((name) => {
+    return list.map((name) => {
       const { text, icon, onClickFunc, isDangerStyle } =
         buttonsList[name] || {};
 
@@ -64,22 +77,18 @@ export default function ContextMenuHub({
         <div
           key={name}
           className={`context-menu__link${isDangerStyle ? "--danger" : ""}`}
+          onClick={onClickFunc}
         >
           {icon} <p className="context-menu__text">{text}</p>
         </div>
       );
     });
-  }, [listOfButtons]);
+  }, [list]);
 
   return (
     <div
       className="context-menu__container"
-      style={{
-        top: `${top}px`,
-        left: `${left}px`,
-        bottom: `${bottom}px`,
-        ...customStyle,
-      }}
+      style={{ top: `${y}px`, left: `${x}px` }}
     >
       {listView}
     </div>

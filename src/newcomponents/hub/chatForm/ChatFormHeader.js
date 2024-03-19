@@ -1,27 +1,27 @@
-import ContextMenuHub from "@newcomponents/context/ContextMenuHub";
+import addSuffix from "@utils/navigation/add_suffix";
 import getLastVisitTime from "@utils/user/get_last_visit_time";
 import getUserFullName from "@utils/user/get_user_full_name";
-import navigateTo from "@utils/navigation/navigate_to";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import {
   getConverastionById,
   selectConversationsEntities,
 } from "@store/values/Conversations";
 import { getCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
-import { useContextMenu } from "@hooks/useContextMenu";
+import { setClicked, setCoords, setList } from "@store/values/ContextMenu";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
-import { useSelector } from "react-redux";
 
 import "@newstyles/hub/chatForm/ChatFormHeader.css";
 
 import { ReactComponent as More } from "@icons/options/More.svg";
-import addSuffix from "@utils/navigation/add_suffix";
-import { useLocation } from "react-router-dom";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 
 export default function ChatFormHeader() {
+  const dispatch = useDispatch();
+
   const { pathname, hash } = useLocation();
-  const { clicked, setClicked, coords, setCoords } = useContextMenu();
+  const currentPath = pathname + hash;
 
   const participants = useSelector(selectParticipantsEntities);
   const conversations = useSelector(selectConversationsEntities);
@@ -83,7 +83,6 @@ export default function ChatFormHeader() {
   // };
 
   const viewChatOrPaticipantInfo = () => {
-    const currentPath = pathname + hash;
     const path =
       selectedConversation.type === "g"
         ? "/info"
@@ -98,8 +97,16 @@ export default function ChatFormHeader() {
   const openContextMenu = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setClicked(true);
-    setCoords({ x: 7, y: 0 });
+    dispatch(setCoords({ x: e.pageX, y: e.pageY }));
+    dispatch(
+      setList([
+        currentPath.includes("/info") ? null : "infoChat",
+        "edit",
+        "addParticipants",
+        "leave",
+      ])
+    );
+    dispatch(setClicked(true));
   };
 
   return (
@@ -114,14 +121,6 @@ export default function ChatFormHeader() {
         onContextMenu={openContextMenu}
         onClick={openContextMenu}
       >
-        {clicked && (
-          <ContextMenuHub
-            bottom={coords.y}
-            left={coords.x}
-            customStyle={{ transform: "translate(-100%, 100%)" }}
-            listOfButtons={["info", "edit", "addParticipants", "leave"]}
-          />
-        )}
         <More />
       </div>
     </div>

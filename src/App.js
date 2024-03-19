@@ -1,3 +1,4 @@
+import ContextMenuHub from "@newcomponents/context/ContextMenuHub";
 import activityService from "@services/activityService";
 import autoLoginService from "@services/autoLoginService.js";
 import conversationService from "@services/conversationsService";
@@ -6,6 +7,7 @@ import messagesService from "@services/messagesService";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Suspense, lazy, useEffect, useRef } from "react";
+import { getIsClicked, setClicked } from "@store/values/ContextMenu";
 import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
 import { history } from "@helpers/history";
 import { updateNetworkState } from "@store/values/NetworkState";
@@ -26,8 +28,11 @@ export default function App() {
   history.location = useLocation();
   history.navigate = useNavigate();
 
+  const isContextClicked = useSelector(getIsClicked);
+
   const isMobileView = useSelector(getIsMobileView);
   const isMobileViewRef = useRef(isMobileView);
+
   useEffect(() => {
     isMobileViewRef.current = isMobileView;
   }, [isMobileView]);
@@ -60,11 +65,20 @@ export default function App() {
     }
   }, []);
 
+  useEffect(() => {
+    const handleClick = () => dispatch(setClicked(false));
+    document.addEventListener("click", handleClick);
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
+
   return (
     <Suspense
       fallback={localStorage.getItem("sessionId") ? <SMain /> : <SPageLoader />}
     >
       <AnimatePresence initial={false} mode="wait">
+        {isContextClicked ? <ContextMenuHub key={"ContextMenu"} /> : null}
         <Routes location={history.location}>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
