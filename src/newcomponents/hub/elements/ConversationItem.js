@@ -2,7 +2,7 @@ import LastMessage from "@newcomponents/message/LastMessage";
 import getLastUpdateTime from "@utils/conversation/get_last_update_time";
 import { useMemo } from "react";
 
-import { ReactComponent as Group } from "@newicons/users/Group.svg";
+import { ReactComponent as Group } from "@icons/users/Group.svg";
 
 export default function ConversationItem({
   isSelected,

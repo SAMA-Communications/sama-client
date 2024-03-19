@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 
 import "@newstyles/search/elements/SearchedUser.css";
 
-import { ReactComponent as Selected } from "@newicons/status/Selected.svg";
+import { ReactComponent as Selected } from "@icons/status/Selected.svg";
 
 export default function SearchedUser({
   uObject,

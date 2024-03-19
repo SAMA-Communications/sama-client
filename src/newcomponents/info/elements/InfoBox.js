@@ -1,6 +1,6 @@
-import { ReactComponent as Email } from "@newicons/media/Email.svg";
-import { ReactComponent as Phone } from "@newicons/media/Phone.svg";
-import { ReactComponent as User } from "@newicons/users/User.svg";
+import { ReactComponent as Email } from "@icons/media/Email.svg";
+import { ReactComponent as Phone } from "@icons/media/Phone.svg";
+import { ReactComponent as User } from "@icons/users/User.svg";
 
 export default function InfoBox({
   className = "",

@@ -1,7 +1,7 @@
 import showCustomAlert from "@utils/show_alert";
 import { useState } from "react";
 
-import { ReactComponent as ImageMedium } from "@newicons/media/ImageMedium.svg";
+import { ReactComponent as ImageMedium } from "@icons/media/ImageMedium.svg";
 
 export default function ChatNameInput({ setState, closeWindow }) {
   const [name, setName] = useState(null);

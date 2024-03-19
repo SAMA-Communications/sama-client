@@ -7,9 +7,10 @@ import { useMemo } from "react";
 
 import "@newstyles/hub/elements/ChatMessage.css";
 
-import { ReactComponent as UserPhoto } from "@icons/chatForm/UserPhotoIconChat.svg";
-import { ReactComponent as CornerLight } from "@newicons/_helpers/CornerLight.svg";
-import { ReactComponent as CornerAccent } from "@newicons/_helpers/CornerAccent.svg";
+import { ReactComponent as UserIconBlack } from "@icons/users/UserIconBlack.svg";
+import { ReactComponent as UserIconWhite } from "@icons/users/UserIconWhite.svg";
+import { ReactComponent as CornerLight } from "@icons/_helpers/CornerLight.svg";
+import { ReactComponent as CornerAccent } from "@icons/_helpers/CornerAccent.svg";
 
 export default function ChatMessage({
   sender,
@@ -37,7 +38,13 @@ export default function ChatMessage({
       <div className="message-photo">
         {next ? null : (
           <div className="photo__container fcc">
-            {sender ? getUserInitials(sender) : <UserPhoto />}
+            {sender ? (
+              getUserInitials(sender)
+            ) : isCurrentUser ? (
+              <UserIconWhite />
+            ) : (
+              <UserIconBlack />
+            )}
           </div>
         )}
       </div>

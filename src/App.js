@@ -16,7 +16,6 @@ import SPageLoader from "@skeletons/SPageLoader";
 import SignUp from "@screens/SignUp";
 
 import "@newstyles/GlobalParam.css";
-import "@styles/themes/DarkTheme.css";
 import "@styles/themes/DefaultTheme.css";
 
 const Main = lazy(() => import("@newcomponents/Main"));

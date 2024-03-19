@@ -13,9 +13,9 @@ import "@newstyles/navigation/NavigationLine.css";
 
 import SamaLogo from "@newcomponents/static/SamaLogo";
 
-import { ReactComponent as List } from "@newicons/Conversations.svg";
-import { ReactComponent as Create } from "@newicons/AddConversation.svg";
-import { ReactComponent as Logout } from "@newicons/actions/Logout.svg";
+import { ReactComponent as List } from "@icons/Conversations.svg";
+import { ReactComponent as Create } from "@icons/AddConversation.svg";
+import { ReactComponent as Logout } from "@icons/actions/Logout.svg";
 
 export default function NavigationLine() {
   const navigate = useNavigate();

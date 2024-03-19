@@ -2,12 +2,12 @@ import { useMemo } from "react";
 
 import "@newstyles/context/ContextMenuHub.css";
 
-import { ReactComponent as AddParticipants } from "@newicons/context/AddParticipants.svg";
-import { ReactComponent as Edit } from "@newicons/context/Edit.svg";
-import { ReactComponent as Info } from "@newicons/context/Info.svg";
-import { ReactComponent as Leave } from "@newicons/context/Leave.svg";
-import { ReactComponent as Remove } from "@newicons/context/Remove.svg";
-import { ReactComponent as SendMessage } from "@newicons/context/SendMessage.svg";
+import { ReactComponent as AddParticipants } from "@icons/context/AddParticipants.svg";
+import { ReactComponent as Edit } from "@icons/context/Edit.svg";
+import { ReactComponent as Info } from "@icons/context/Info.svg";
+import { ReactComponent as Leave } from "@icons/context/Leave.svg";
+import { ReactComponent as Remove } from "@icons/context/Remove.svg";
+import { ReactComponent as SendMessage } from "@icons/context/SendMessage.svg";
 
 export default function ContextMenuHub({
   top,

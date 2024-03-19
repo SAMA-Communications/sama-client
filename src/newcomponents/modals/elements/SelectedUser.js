@@ -1,7 +1,7 @@
 import getUserFullName from "@utils/user/get_user_full_name";
 import getUserInitials from "@utils/user/get_user_initials";
 
-import { ReactComponent as Unselect } from "@newicons/status/Unselect.svg";
+import { ReactComponent as Unselect } from "@icons/status/Unselect.svg";
 
 export default function SelectedUser({ uObject, onClickFunc }) {
   return (

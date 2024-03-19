@@ -12,9 +12,9 @@ import { useSelector } from "react-redux";
 
 import "@newstyles/info/UserProfile.css";
 
-import { ReactComponent as Close } from "@newicons/actions/CloseGray.svg";
-import { ReactComponent as LinkTo } from "@newicons/options/LinkTo.svg";
-import { ReactComponent as UserIcon } from "@newicons/users/ProfileIcon.svg";
+import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
+import { ReactComponent as LinkTo } from "@icons/options/LinkTo.svg";
+import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
 
 export default function OtherUserProfile() {
   const { pathname, hash, search } = useLocation();

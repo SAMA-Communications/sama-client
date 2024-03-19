@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 
 import "@newstyles/hub/chatForm/ChatFormHeader.css";
 
-import { ReactComponent as More } from "@newicons/options/More.svg";
+import { ReactComponent as More } from "@icons/options/More.svg";
 import addSuffix from "@utils/navigation/add_suffix";
 import { useLocation } from "react-router-dom";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";

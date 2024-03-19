@@ -2,8 +2,8 @@ import globalConstants from "@helpers/constants";
 import isMobile from "@utils/get_device_type";
 import { KEY_CODES } from "@helpers/keyCodes";
 
-import { ReactComponent as Attach } from "@newicons/options/Attach.svg";
-import { ReactComponent as Send } from "@newicons/options/Send.svg";
+import { ReactComponent as Attach } from "@icons/options/Attach.svg";
+import { ReactComponent as Send } from "@icons/options/Send.svg";
 
 export default function MessageInput({
   inputTextRef,

@@ -12,9 +12,9 @@ import { useSelector } from "react-redux";
 
 import "@newstyles/info/ChatInfo.css";
 
-import { ReactComponent as AddParticipants } from "@newicons/AddParticipants.svg";
-import { ReactComponent as Close } from "@newicons/actions/CloseGray.svg";
-import { ReactComponent as ImageBig } from "@newicons/media/ImageBig.svg";
+import { ReactComponent as AddParticipants } from "@icons/AddParticipants.svg";
+import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
+import { ReactComponent as ImageBig } from "@icons/media/ImageBig.svg";
 
 export default function ChatInfo() {
   const { pathname, hash } = useLocation();

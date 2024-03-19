@@ -9,10 +9,10 @@ import { useSelector } from "react-redux";
 
 import "@newstyles/info/UserProfile.css";
 
-import { ReactComponent as Close } from "@newicons/actions/Close.svg";
-import { ReactComponent as Password } from "@newicons/users/Password.svg";
-import { ReactComponent as Trash } from "@newicons/actions/Trash.svg";
-import { ReactComponent as UserIcon } from "@newicons/users/ProfileIcon.svg";
+import { ReactComponent as Close } from "@icons/actions/Close.svg";
+import { ReactComponent as Password } from "@icons/users/Password.svg";
+import { ReactComponent as Trash } from "@icons/actions/Trash.svg";
+import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
 
 export default function UserProfile() {
   const { pathname, hash } = useLocation();

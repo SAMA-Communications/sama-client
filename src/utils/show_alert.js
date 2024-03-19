@@ -1,4 +1,4 @@
-import "@styles/customs/Alert.css";
+import "@newstyles/system/Alert.css";
 
 let timer = null;
 

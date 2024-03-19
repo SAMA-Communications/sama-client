@@ -2,8 +2,8 @@ import { useRef, useState } from "react";
 
 import "@newstyles/static/SearchBar.css";
 
-import { ReactComponent as Search } from "@newicons/actions/Search.svg";
-import { ReactComponent as Close } from "@newicons/options/Close.svg";
+import { ReactComponent as Search } from "@icons/actions/Search.svg";
+import { ReactComponent as Close } from "@icons/options/Close.svg";
 
 export default function SearchInput({ shadowText, setState, isLargeSize }) {
   const inputRef = useRef(null);
