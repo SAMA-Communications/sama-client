@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.1
+
+### Updated
+
+- Integrated System Message API for conversation event messages
+
 ## 0.5.0
 
 ### Features
