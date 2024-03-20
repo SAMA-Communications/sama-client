@@ -6,8 +6,12 @@ import globalConstants from "@helpers/constants";
 import messagesService from "@services/messagesService";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { Suspense, lazy, useEffect, useRef } from "react";
-import { getIsClicked, setClicked } from "@store/values/ContextMenu";
+import { Suspense, lazy, useEffect, useMemo, useRef } from "react";
+import {
+  contextMenu,
+  getIsClicked,
+  setClicked,
+} from "@store/values/ContextMenu";
 import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
 import { history } from "@helpers/history";
 import { updateNetworkState } from "@store/values/NetworkState";
@@ -78,10 +82,10 @@ export default function App() {
     <Suspense
       fallback={localStorage.getItem("sessionId") ? <SMain /> : <SPageLoader />}
     >
+      {isContextClicked ? (
+        <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
+      ) : null}
       <AnimatePresence initial={false} mode="wait">
-        {isContextClicked ? (
-          <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
-        ) : null}
         <Routes location={history.location}>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
