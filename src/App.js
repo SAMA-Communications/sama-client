@@ -9,7 +9,7 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Suspense, lazy, useEffect, useMemo, useRef } from "react";
 import {
   contextMenu,
-  getIsClicked,
+  selectIsClicked,
   setClicked,
 } from "@store/values/ContextMenu";
 import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
@@ -32,7 +32,7 @@ export default function App() {
   history.location = useLocation();
   history.navigate = useNavigate();
 
-  const isContextClicked = useSelector(getIsClicked);
+  const isContextClicked = useSelector(selectIsClicked);
 
   const isMobileView = useSelector(getIsMobileView);
   const isMobileViewRef = useRef(isMobileView);

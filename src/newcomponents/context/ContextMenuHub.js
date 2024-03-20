@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import {
-  getContextExternalProps,
-  getContextList,
-  getCoords,
+  selectContextExternalProps,
+  selectContextList,
+  selectCoords,
 } from "@store/values/ContextMenu";
 
 import "@newstyles/context/ContextMenuHub.css";
@@ -17,9 +17,9 @@ import RemoveParticipantLink from "@newcomponents/context/elements/RemovePartici
 import SendMessageLink from "@newcomponents/context/elements/SendMessageLink";
 
 export default function ContextMenuHub() {
-  const list = useSelector(getContextList);
-  const { userObject } = useSelector(getContextExternalProps);
-  const { x: left, y: top } = useSelector(getCoords);
+  const list = useSelector(selectContextList);
+  const { userObject } = useSelector(selectContextExternalProps);
+  const { x: left, y: top } = useSelector(selectCoords);
 
   const listView = useMemo(() => {
     const links = {
@@ -37,14 +37,8 @@ export default function ContextMenuHub() {
       newChat: <SendMessageLink key={"newChat"} uObject={userObject} />,
     };
 
-    return list.map((linkName) => {
-      const component = links[linkName];
-      if (!component) {
-        return null;
-      }
-      return links[linkName];
-    });
-  }, [list]);
+    return list.map((linkName) => links[linkName]).filter(Boolean);
+  }, [list, userObject]);
 
   return (
     <div className="context-menu__container" style={{ top, left }}>

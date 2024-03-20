@@ -8,10 +8,7 @@ export default function ContextLink({
     <div
       key={text}
       className={`context-menu__link${isDangerStyle ? "--danger" : ""}`}
-      onClick={(e) => {
-        e.preventDefault();
-        onClickFunc();
-      }}
+      onClick={onClickFunc}
     >
       {icon} <p className="context-menu__text">{text}</p>
     </div>

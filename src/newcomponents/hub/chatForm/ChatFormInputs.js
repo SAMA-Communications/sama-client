@@ -4,14 +4,14 @@ import messagesService from "@services/messagesService";
 import showCustomAlert from "@utils/show_alert";
 import {
   addMessage,
-  getActiveConversationMessages,
+  selectActiveConversationMessages,
 } from "@store/values/Messages";
 import {
   getConverastionById,
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
-import { getCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUser } from "@store/values/CurrentUser";
 import { getNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
@@ -22,8 +22,8 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   const dispatch = useDispatch();
 
   const connectState = useSelector(getNetworkState);
-  const currentUser = useSelector(getCurrentUser);
-  const messages = useSelector(getActiveConversationMessages);
+  const currentUser = useSelector(selectCurrentUser);
+  const messages = useSelector(selectActiveConversationMessages);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 

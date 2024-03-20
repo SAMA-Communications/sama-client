@@ -22,56 +22,70 @@ class ConversationsService {
   userIsLoggedIn = false;
 
   constructor() {
-    api.onConversationCreateListener = (chat) => {
-      api.getParticipantsByCids({ cids: [chat._id] }).then((users) => {
-        store.dispatch(
-          upsertChat({
-            ...chat,
-            unread_messages_count: chat.unread_messages_count || 0,
-            messagesIds: null,
-            participants: users.map((u) => u._id),
-          })
-        );
-        store.dispatch(addUsers(users));
+    api.onConversationCreateListener = this.handleConversationCreate;
+    api.onConversationDeleteListener = this.handleConversationDelete;
 
-        notificationQueueByCid[chat._id]?.map((pushMessage) =>
-          eventEmitter.emit("onMessage", pushMessage)
-        );
-      });
-    };
-
-    api.onConversationDeleteListener = (chat) => {
-      store.dispatch(removeChat(chat._id));
-      if (history.location.hash.includes(chat._id.toString())) {
-        store.dispatch(setSelectedConversation({}));
-        showCustomAlert(
-          `You were removed from the ${chat.name} conversation`,
-          "warning"
-        );
-        history.navigate("/");
-      }
-    };
-
-    store.subscribe(() => {
-      let previousValue = this.userIsLoggedIn;
-      this.userIsLoggedIn = store.getState().userIsLoggedIn.value;
-
-      if (this.userIsLoggedIn && !previousValue) {
-        this.syncData();
-      }
-    });
+    store.subscribe(this.handleStoreUpdate);
   }
 
+  handleStoreUpdate = () => {
+    const currentUserIsLoggedIn = store.getState().userIsLoggedIn.value;
+    if (currentUserIsLoggedIn && !this.userIsLoggedIn) {
+      this.userIsLoggedIn = true;
+      this.syncData();
+    } else if (!currentUserIsLoggedIn && this.userIsLoggedIn) {
+      this.userIsLoggedIn = false;
+    }
+  };
+
+  handleConversationCreate = async (chat) => {
+    try {
+      const users = await api.getParticipantsByCids({ cids: [chat._id] });
+      store.dispatch(
+        upsertChat({
+          ...chat,
+          unread_messages_count: chat.unread_messages_count || 0,
+          messagesIds: null,
+          participants: users.map((u) => u._id),
+        })
+      );
+      store.dispatch(addUsers(users));
+
+      notificationQueueByCid[chat._id]?.forEach((pushMessage) =>
+        eventEmitter.emit("onMessage", pushMessage)
+      );
+    } catch (error) {
+      showCustomAlert(error.message, "danger");
+    }
+  };
+
+  handleConversationDelete = (chat) => {
+    store.dispatch(removeChat(chat._id));
+    if (history.location.hash.includes(chat._id.toString())) {
+      store.dispatch(setSelectedConversation({}));
+      showCustomAlert(
+        `You were removed from the ${chat.name} conversation`,
+        "warning"
+      );
+      history.navigate("/");
+    }
+  };
+
   async syncData() {
-    api.conversationList({}).then((chats) => {
+    try {
+      const chats = await api.conversationList({});
       store.dispatch(
         insertChats(chats.map((obj) => ({ ...obj, participants: [] })))
       );
-      chats.length &&
-        api
-          .getParticipantsByCids({ cids: chats.map((el) => el._id) })
-          .then((users) => store.dispatch(upsertUsers(users)));
-    });
+      if (chats.length > 0) {
+        const users = await api.getParticipantsByCids({
+          cids: chats.map((el) => el._id),
+        });
+        store.dispatch(upsertUsers(users));
+      }
+    } catch (error) {
+      showCustomAlert(error.message, "danger");
+    }
   }
 
   async createPrivateChat(userId, userObject) {
@@ -133,10 +147,15 @@ class ConversationsService {
 
     const selectedConversation = store.getState().selectedConversation.value;
 
-    return await api.conversationUpdate({
-      cid: selectedConversation.id,
-      ...data,
-    });
+    try {
+      return await api.conversationUpdate({
+        cid: selectedConversation.id,
+        ...data,
+      });
+    } catch (error) {
+      showCustomAlert(error.message, "danger");
+      return false;
+    }
   }
 
   async sendAddParticipantsRequest(participants) {
@@ -186,18 +205,19 @@ class ConversationsService {
   }
 
   async sendDeleteRequest() {
-    const isConfirm = window.confirm(`Do you want to delete this chat?`);
-    if (isConfirm) {
-      const selectedConversation = store.getState().selectedConversation.value;
+    try {
+      const isConfirm = window.confirm(`Do you want to delete this chat?`);
+      if (isConfirm) {
+        const selectedConversation =
+          store.getState().selectedConversation.value;
 
-      try {
         await api.conversationDelete({ cid: selectedConversation.id });
         store.dispatch(clearSelectedConversation());
         store.dispatch(removeChat(selectedConversation.id));
         navigateTo("/");
-      } catch (error) {
-        showCustomAlert(error.message, "warning");
       }
+    } catch (error) {
+      showCustomAlert(error.message, "warning");
     }
   }
 }

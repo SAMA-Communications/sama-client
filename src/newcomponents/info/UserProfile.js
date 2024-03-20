@@ -3,7 +3,7 @@ import addSuffix from "@utils/navigation/add_suffix";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
-import { getCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUser } from "@store/values/CurrentUser";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -17,7 +17,7 @@ import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
 export default function UserProfile() {
   const { pathname, hash } = useLocation();
 
-  const currentUser = useSelector(getCurrentUser);
+  const currentUser = useSelector(selectCurrentUser);
   const { login, email, phone, first_name, last_name } = currentUser || {};
 
   window.onkeydown = function (event) {

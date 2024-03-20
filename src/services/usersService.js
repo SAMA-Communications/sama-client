@@ -4,11 +4,42 @@ import store from "@store/store";
 import { history } from "@helpers/history";
 
 class UsersService {
-  currentUser = store.getState().currentUser.value;
+  constructor() {
+    this.currentUser = store.getState().currentUser.value;
+  }
 
   #showWarningAlert(message) {
     showCustomAlert(message, "warning");
     return true;
+  }
+
+  #validateFieldLength(value, min, max, fieldName) {
+    const length = value?.trim().length;
+    if (length < min || length > max) {
+      this.#showWarningAlert(
+        `The ${fieldName} length must be in the range from ${min} to ${max}.`
+      );
+      return true;
+    }
+    return false;
+  }
+
+  #validateEmail(email) {
+    if (email && !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(email)) {
+      this.#showWarningAlert("The format of the email address is incorrect.");
+      return true;
+    }
+    return false;
+  }
+
+  #validatePhone(phone) {
+    if (phone && !/^[0-9]{3,15}$/.test(phone)) {
+      this.#showWarningAlert(
+        "The phone number should be 3 to 15 digits in length."
+      );
+      return true;
+    }
+    return false;
   }
 
   #validateIsEmptyObject(obj) {
@@ -23,87 +54,38 @@ class UsersService {
     return isValueEmpty;
   }
 
-  #validateFirstAndLastNameFields(obj) {
-    const { first_name: newFirstName, last_name: newLastName } = obj;
-    const { first_name: oldFirstName, last_name: oldLastName } =
-      this.currentUser;
-
-    if (newFirstName !== oldFirstName) {
-      if (newFirstName?.length < 1 || newFirstName?.length > 20) {
-        return this.#showWarningAlert(
-          "The first name length must be in the range from 1 to 20."
-        );
-      }
-    } else if (!newFirstName && oldFirstName !== undefined) {
-      return this.#showWarningAlert("The first name field must not be empty.");
-    }
-
-    if (newLastName !== oldLastName) {
-      if (newLastName?.length < 1 || newLastName?.length > 20) {
-        return this.#showWarningAlert(
-          "The last name length must be in the range from 1 to 20."
-        );
-      }
-    } else if (!newLastName && oldLastName !== undefined) {
-      return this.#showWarningAlert("The last name field must not be empty.");
-    }
-
-    return false;
-  }
-
-  #validateMobileAndEmailFields(obj) {
-    const { email: newEmail, phone: newPhone } = obj;
-    const { email: oldEmail, phone: oldPhone } = this.currentUser;
-
-    if (newEmail !== oldEmail) {
-      if (
-        newEmail &&
-        !/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(newEmail)
-      ) {
-        return this.#showWarningAlert(
-          "The format of the email address is incorrect."
-        );
-      }
-    } else if (!newEmail && oldEmail !== undefined) {
-      return this.#showWarningAlert("The email address field cannot be empty.");
-    }
-
-    if (newPhone !== oldPhone) {
-      if (newPhone && !/^[0-9]{3,15}$/.test(newPhone)) {
-        return this.#showWarningAlert(
-          "The phone number should be 3 to 15 digits in length."
-        );
-      }
-    } else if (!newPhone && oldPhone !== undefined) {
-      return this.#showWarningAlert(
-        "The phone number field must not be empty."
-      );
-    }
-
-    return false;
-  }
-
   async sendEditRequest(data, typeOfValidation) {
-    console.log(data);
     if (this.#validateIsEmptyObject(data)) {
       return;
     }
 
-    if (
-      typeOfValidation === "user" &&
-      this.#validateFirstAndLastNameFields(data)
-    ) {
-      return false;
+    switch (typeOfValidation) {
+      case "user":
+        if (
+          this.#validateFieldLength(data.first_name, 1, 20, "first name") ||
+          this.#validateFieldLength(data.last_name, 1, 20, "last name")
+        ) {
+          return false;
+        }
+        break;
+      case "personal":
+        if (
+          this.#validateEmail(data.email) ||
+          this.#validatePhone(data.phone)
+        ) {
+          return false;
+        }
+        break;
+      default:
+        break;
     }
 
-    if (
-      typeOfValidation === "personal" &&
-      this.#validateMobileAndEmailFields(data)
-    ) {
+    try {
+      return await api.userEdit(data);
+    } catch (err) {
+      showCustomAlert(err.message, "danger");
       return false;
     }
-
-    return await api.userEdit(data);
   }
 
   async sendSearchRequest(data) {
@@ -117,8 +99,7 @@ class UsersService {
     }
 
     let newPassword = window.prompt("Enter a new password:");
-    while (newPassword?.length < 3 || newPassword?.length > 40) {
-      alert("Password length must be in the range of 3 to 40.");
+    while (this.#validateFieldLength(newPassword, 3, 40, "password")) {
       newPassword = window.prompt("Enter a new password:");
     }
 
@@ -139,9 +120,13 @@ class UsersService {
 
   async deleteCurrentUser() {
     if (window.confirm("Are you sure you want to delete this user?")) {
-      await api.userDelete();
-      history.navigate("/login");
-      store.dispatch({ type: "RESET_STORE" });
+      try {
+        await api.userDelete();
+        history.navigate("/login");
+        store.dispatch({ type: "RESET_STORE" });
+      } catch (err) {
+        showCustomAlert(err.message, "danger");
+      }
     }
   }
 }

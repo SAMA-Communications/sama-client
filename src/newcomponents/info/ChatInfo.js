@@ -4,7 +4,7 @@ import addSuffix from "@utils/navigation/add_suffix";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
-import { getCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
@@ -20,7 +20,7 @@ export default function ChatInfo() {
   const { pathname, hash } = useLocation();
 
   const participants = useSelector(selectParticipantsEntities);
-  const currentUser = useSelector(getCurrentUser);
+  const currentUser = useSelector(selectCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
   const conversationOwner = selectedConversation?.owner_id?.toString();
 

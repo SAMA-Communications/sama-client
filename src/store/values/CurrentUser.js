@@ -12,9 +12,7 @@ export const CurrentUser = createSlice({
   },
 });
 
-export const getCurrentUser = (state) => {
-  return state.currentUser.value;
-};
+export const selectCurrentUser = (state) => state.currentUser.value;
 
 export const { setCurrentUser } = CurrentUser.actions;
 

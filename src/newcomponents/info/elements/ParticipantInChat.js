@@ -2,7 +2,7 @@ import addPrefix from "@utils/navigation/add_prefix";
 import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
 import getUserInitials from "@utils/user/get_user_initials";
-import { getCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUser } from "@store/values/CurrentUser";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import {
@@ -20,7 +20,7 @@ export default function ParticipantInChat({
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
-  const currentUser = useSelector(getCurrentUser);
+  const currentUser = useSelector(selectCurrentUser);
   const isCurrentUser = currentUser._id === userObject._id;
 
   return (

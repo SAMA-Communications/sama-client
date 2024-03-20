@@ -1,9 +1,9 @@
 import EditModalInput from "../elements/EditModalInput";
-import { getCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUser } from "@store/values/CurrentUser";
 import { useSelector } from "react-redux";
 
 export default function UserInputs({ setState }) {
-  const currentUser = useSelector(getCurrentUser);
+  const currentUser = useSelector(selectCurrentUser);
 
   return (
     <>

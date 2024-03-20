@@ -31,21 +31,11 @@ export const contextMenu = createSlice({
   },
 });
 
-export const getIsClicked = (state) => {
-  return state.contextMenu.clicked;
-};
-
-export const getCoords = (state) => {
-  return state.contextMenu.coords;
-};
-
-export const getContextList = (state) => {
-  return state.contextMenu.list;
-};
-
-export const getContextExternalProps = (state) => {
-  return state.contextMenu.externalProps;
-};
+export const selectIsClicked = (state) => state.contextMenu.clicked;
+export const selectCoords = (state) => state.contextMenu.coords;
+export const selectContextList = (state) => state.contextMenu.list;
+export const selectContextExternalProps = (state) =>
+  state.contextMenu.externalProps;
 
 export const { setCoords, setClicked, setList, setExternalProps } =
   contextMenu.actions;

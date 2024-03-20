@@ -6,7 +6,7 @@ import {
   getConverastionById,
   selectConversationsEntities,
 } from "@store/values/Conversations";
-import { getCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setClicked, setCoords, setList } from "@store/values/ContextMenu";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,7 @@ export default function ChatFormHeader() {
 
   const participants = useSelector(selectParticipantsEntities);
   const conversations = useSelector(selectConversationsEntities);
-  const currentUser = useSelector(getCurrentUser);
+  const currentUser = useSelector(selectCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 

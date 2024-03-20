@@ -1,12 +1,12 @@
 import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 import MessagesList from "@newcomponents/hub/elements/MessagesList";
 import SMessageList from "@skeletons/hub/elements/SMessageList";
-import { getActiveConversationMessages } from "@store/values/Messages";
+import { selectActiveConversationMessages } from "@store/values/Messages";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 export default function ChatFormContent({ scrollRef }) {
-  const messages = useSelector(getActiveConversationMessages);
+  const messages = useSelector(selectActiveConversationMessages);
 
   const chatContentView = useMemo(() => {
     if (!messages) {
