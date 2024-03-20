@@ -3,10 +3,10 @@ import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
 import { history } from "@helpers/history";
 
-import validateEmail from "src/validations/user/validateEmail";
-import validateFieldLength from "src/validations/validateFieldLength";
-import validateIsEmptyObject from "src/validations/validateIsEmtpyObject";
-import validatePhone from "src/validations/user/validatePhone";
+import validateEmail from "@validations/user/validateEmail";
+import validateFieldLength from "@validations/validateFieldLength";
+import validateIsEmptyObject from "@validations/validateIsEmtpyObject";
+import validatePhone from "@validations/user/validatePhone";
 
 class UsersService {
   constructor() {

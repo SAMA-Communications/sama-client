@@ -19,6 +19,7 @@
       "@icons/*": ["src/assets/icons/*"],
       "@styles/*": ["src/styles/*"],
       "@utils/*": ["src/utils/*"],
+      "@validations": ["src/validations"],
 
       "@skeletons": ["src/skeletons"],
       "@hooks": ["src/hooks"],

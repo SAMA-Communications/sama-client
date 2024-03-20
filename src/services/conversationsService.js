@@ -17,7 +17,7 @@ import {
   clearSelectedConversation,
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
-import validateFieldLength from "src/validations/validateFieldLength";
+import validateFieldLength from "@validations/validateFieldLength";
 
 class ConversationsService {
   userIsLoggedIn = false;
