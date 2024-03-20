@@ -17,6 +17,7 @@ import {
   clearSelectedConversation,
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
+import validateFieldLength from "src/validations/validateFieldLength";
 
 class ConversationsService {
   userIsLoggedIn = false;
@@ -125,10 +126,6 @@ class ConversationsService {
     store.dispatch(setSelectedConversation({ id: chat._id }));
   }
 
-  #validateFieldLength(field) {
-    return field.length < 256 && field.length > 0;
-  }
-
   async sendEditNameAndDescriptionRequest(data) {
     const keys = Object.keys(data);
     if (!keys.length) {
@@ -136,11 +133,7 @@ class ConversationsService {
     }
 
     for (const key of keys) {
-      if (!this.#validateFieldLength(data[key])) {
-        showCustomAlert(
-          `The length of the ${key} field must be from 0 to 255 characters.`,
-          "warning"
-        );
+      if (!validateFieldLength(data[key], 0, 255, "fields")) {
         return false;
       }
     }
