@@ -61,7 +61,9 @@
 
   background-color: var(--color-bg-dark);
 }
-
+.box__photo > span {
+  height: 75px;
+}
 .box__content {
   max-width: calc(100% - calc(90px * var(--base-scale)));
   max-height: calc(70px * var(--base-scale));

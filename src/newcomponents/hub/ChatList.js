@@ -31,7 +31,7 @@ export default function ChatList() {
   const activeConv = selectedConversation?._id;
 
   const chatsList = useMemo(() => {
-    if (!conversations) {
+    if (conversations) {
       return <SChatList />;
     }
 
