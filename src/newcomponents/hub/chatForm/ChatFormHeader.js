@@ -8,7 +8,7 @@ import {
 } from "@store/values/Conversations";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
-import { setClicked, setCoords, setList } from "@store/values/ContextMenu";
+import { setAllParams } from "@store/values/ContextMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
@@ -86,16 +86,18 @@ export default function ChatFormHeader() {
   const openContextMenu = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(setCoords({ x: e.pageX, y: e.pageY }));
     dispatch(
-      setList([
-        currentPath.includes("/info") ? null : "infoChat",
-        isCurrentUserOwner && isGroupChat ? "edit" : null,
-        isCurrentUserOwner && isGroupChat ? "addParticipants" : null,
-        "leave",
-      ])
+      setAllParams({
+        list: [
+          currentPath.includes("/info") ? null : "infoChat",
+          isCurrentUserOwner && isGroupChat ? "edit" : null,
+          isCurrentUserOwner && isGroupChat ? "addParticipants" : null,
+          "leave",
+        ],
+        coords: { x: e.pageX, y: e.pageY },
+        clicked: true,
+      })
     );
-    dispatch(setClicked(true));
   };
 
   return (

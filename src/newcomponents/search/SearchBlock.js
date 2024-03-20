@@ -33,7 +33,7 @@ export default function SearchBlock({
   const sendSearchRequest = async (text) => {
     startTransition(async () => {
       if (text?.length > 1) {
-        const users = await usersService.sendSearchRequest({
+        const users = await usersService.search({
           login: text,
           limit: 10,
         });

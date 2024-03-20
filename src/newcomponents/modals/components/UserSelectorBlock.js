@@ -1,7 +1,7 @@
 import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 import SearchBlock from "@newcomponents/search/SearchBlock";
 import SearchInput from "@newcomponents/static/SearchBar";
-import SelectedUser from "@newcomponents/modals/elements/SelectedUser";
+import UserInfo from "@newcomponents/modals/elements/UserInfo";
 import { useMemo, useState } from "react";
 
 export default function UserSelectorBlock({
@@ -30,7 +30,7 @@ export default function UserSelectorBlock({
         {filteredUsers.length ? (
           <CustomScrollBar>
             {filteredUsers.map((u) => (
-              <SelectedUser
+              <UserInfo
                 key={u._id}
                 uObject={u}
                 onClickFunc={() =>
@@ -42,7 +42,7 @@ export default function UserSelectorBlock({
             ))}
           </CustomScrollBar>
         ) : (
-          <p className="em-selected__text">Who do you want to add?</p>
+          <p className="em-selected__text">Select users to add...</p>
         )}
       </div>
     );

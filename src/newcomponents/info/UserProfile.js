@@ -71,7 +71,21 @@ export default function UserProfile() {
           <Password />
           <p
             className="info__password"
-            onClick={usersService.changePasswordRequest}
+            onClick={() => {
+              const currentPassword = window.prompt(
+                "Enter your current password:"
+              );
+              if (!currentPassword) {
+                return;
+              }
+
+              const newPassword = window.prompt("Enter a new password:");
+              if (!newPassword || !currentPassword) {
+                return;
+              }
+
+              usersService.changePassword(currentPassword, newPassword);
+            }}
           >
             Change password...
           </p>

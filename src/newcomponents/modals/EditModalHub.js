@@ -1,6 +1,6 @@
-import ChatInputs from "@newcomponents/modals/components/ChatInputs";
-import PersonalInputs from "@newcomponents/modals/components/PersonalInputs";
-import UserInputs from "@newcomponents/modals/components/UserInputs";
+import GroupDetailsInputs from "@newcomponents/modals/components/GroupDetailsInputs";
+import UserContactsInput from "@newcomponents/modals/components/UserContactsInput";
+import UserNameInputs from "@newcomponents/modals/components/UserNameInputs";
 import conversationService from "@services/conversationsService";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import showCustomAlert from "@utils/show_alert";
@@ -36,17 +36,17 @@ export default function EditModalHub() {
 
   const types = {
     chat: {
-      component: <ChatInputs setState={addFieldToEdit} />,
+      component: <GroupDetailsInputs setState={addFieldToEdit} />,
       title: "Edit chat information",
       styleName: "chatname",
     },
     personal: {
-      component: <PersonalInputs setState={addFieldToEdit} />,
+      component: <UserContactsInput setState={addFieldToEdit} />,
       title: "Edit personal info",
       styleName: "user",
     },
     user: {
-      component: <UserInputs setState={addFieldToEdit} />,
+      component: <UserNameInputs setState={addFieldToEdit} />,
       title: "Edit your name",
       styleName: "user",
     },
@@ -77,7 +77,7 @@ export default function EditModalHub() {
       delete updatedChat?.participants;
       dispatch(upsertChat(updatedChat));
     } else {
-      const newUserObject = await usersService.sendEditRequest(content, type);
+      const newUserObject = await usersService.edit(content, type);
       if (!validateDataAndShowAlert(newUserObject)) {
         return;
       }

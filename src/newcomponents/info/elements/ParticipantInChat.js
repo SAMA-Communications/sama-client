@@ -5,12 +5,7 @@ import getUserInitials from "@utils/user/get_user_initials";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import {
-  setClicked,
-  setCoords,
-  setExternalProps,
-  setList,
-} from "@store/values/ContextMenu";
+import { setAllParams } from "@store/values/ContextMenu";
 
 export default function ParticipantInChat({
   userObject,
@@ -34,15 +29,17 @@ export default function ParticipantInChat({
       onContextMenu={(e) => {
         e.preventDefault();
         dispatch(
-          setList([
-            "infoUser",
-            isCurrentUser ? null : "newChat",
-            !isCurrentUserOwner || isCurrentUser ? null : "removeParticipant",
-          ])
+          setAllParams({
+            list: [
+              "infoUser",
+              isCurrentUser ? null : "newChat",
+              !isCurrentUserOwner || isCurrentUser ? null : "removeParticipant",
+            ],
+            coords: { x: e.pageX, y: e.pageY },
+            externalProps: { userObject },
+            clicked: true,
+          })
         );
-        dispatch(setCoords({ x: e.pageX, y: e.pageY }));
-        dispatch(setExternalProps({ userObject }));
-        dispatch(setClicked(true));
       }}
     >
       <div className="participant__photo fcc">

@@ -54,7 +54,7 @@ class UsersService {
     return isValueEmpty;
   }
 
-  async sendEditRequest(data, typeOfValidation) {
+  async edit(data, typeOfValidation) {
     if (this.#validateIsEmptyObject(data)) {
       return;
     }
@@ -88,22 +88,12 @@ class UsersService {
     }
   }
 
-  async sendSearchRequest(data) {
+  async search(data) {
     return await api.userSearch(data);
   }
 
-  async changePasswordRequest() {
-    const currentPassword = window.prompt("Enter your current password:");
-    if (!currentPassword) {
-      return;
-    }
-
-    let newPassword = window.prompt("Enter a new password:");
-    while (this.#validateFieldLength(newPassword, 3, 40, "password")) {
-      newPassword = window.prompt("Enter a new password:");
-    }
-
-    if (!newPassword || !currentPassword) {
+  async changePassword(currentPassword, newPassword) {
+    if (this.#validateFieldLength(newPassword, 3, 40, "password")) {
       return;
     }
 

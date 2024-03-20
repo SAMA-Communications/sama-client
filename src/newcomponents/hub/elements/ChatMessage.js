@@ -1,14 +1,12 @@
 import MessageAttachments from "@newcomponents/message/elements/MessageAttachments";
 import MessageStatus from "@newcomponents/message/elements/MessageStatus";
+import MessageUserIcon from "./MessageUserIcon";
 import getUserFullName from "@utils/user/get_user_full_name";
-import getUserInitials from "@utils/user/get_user_initials";
 import { urlify } from "@utils/urlify";
 import { useMemo } from "react";
 
 import "@newstyles/hub/elements/ChatMessage.css";
 
-import { ReactComponent as UserIconBlack } from "@icons/users/UserIconBlack.svg";
-import { ReactComponent as UserIconWhite } from "@icons/users/UserIconWhite.svg";
 import { ReactComponent as CornerLight } from "@icons/_helpers/CornerLight.svg";
 import { ReactComponent as CornerAccent } from "@icons/_helpers/CornerAccent.svg";
 
@@ -38,13 +36,10 @@ export default function ChatMessage({
       <div className="message-photo">
         {next ? null : (
           <div className="photo__container fcc">
-            {sender ? (
-              getUserInitials(sender)
-            ) : isCurrentUser ? (
-              <UserIconWhite />
-            ) : (
-              <UserIconBlack />
-            )}
+            <MessageUserIcon
+              userObject={sender}
+              isCurrentUser={isCurrentUser}
+            />
           </div>
         )}
       </div>

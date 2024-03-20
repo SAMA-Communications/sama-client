@@ -1,8 +1,8 @@
-import { getConverastionById } from "@store/values/Conversations";
 import EditModalInput from "../elements/EditModalInput";
+import { getConverastionById } from "@store/values/Conversations";
 import { useSelector } from "react-redux";
 
-export default function PersonalInputs({ setState }) {
+export default function GroupDetailsInputs({ setState }) {
   const selectedConversation = useSelector(getConverastionById);
 
   return (

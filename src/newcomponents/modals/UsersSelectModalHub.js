@@ -25,7 +25,7 @@ export default function UsersSelectModalHub({ type }) {
   };
 
   const sendEditRequest = async (participants) => {
-    await conversationService.sendAddParticipantsRequest(participants);
+    await conversationService.addParticipants(participants);
     removeAndNavigateLastSection(pathname + hash);
   };
 

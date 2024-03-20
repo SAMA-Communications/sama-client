@@ -6,15 +6,11 @@ export const isMobileView = createSlice({
     value: null,
   },
   reducers: {
-    setIsMobileView: (state, action) => {
-      state.value = action.payload;
-    },
+    setIsMobileView: (state, action) => void (state.value = action.payload),
   },
 });
 
-export const getIsMobileView = (state) => {
-  return state.isMobileView.value;
-};
+export const getIsMobileView = (state) => state.isMobileView.value;
 
 export const { setIsMobileView } = isMobileView.actions;
 

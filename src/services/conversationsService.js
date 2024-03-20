@@ -158,7 +158,7 @@ class ConversationsService {
     }
   }
 
-  async sendAddParticipantsRequest(participants) {
+  async addParticipants(participants) {
     const selectedConversation = store.getState().selectedConversation.value;
 
     if (!participants.length) {
@@ -182,7 +182,7 @@ class ConversationsService {
     return await api.conversationUpdate(requestData);
   }
 
-  async sendRemoveParticipantRequest(userId) {
+  async removeParticipant(userId) {
     if (!window.confirm(`Do you want to delete this user?`)) {
       return;
     }
@@ -204,7 +204,7 @@ class ConversationsService {
     );
   }
 
-  async sendDeleteRequest() {
+  async deleteConversation() {
     try {
       const isConfirm = window.confirm(`Do you want to delete this chat?`);
       if (isConfirm) {
