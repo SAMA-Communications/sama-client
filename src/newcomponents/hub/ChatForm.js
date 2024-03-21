@@ -50,8 +50,9 @@ export default function ChatForm() {
       removeAndNavigateLastSection(pathname + hash);
     };
 
-    const keydownHandler = ({ keyCode }) =>
-      void (keyCode === KEY_CODES.ESCAPE && closeForm());
+    const keydownHandler = (e) => {
+      e.keyCode === KEY_CODES.ESCAPE && closeForm();
+    };
 
     document.addEventListener("swiped-left", closeForm);
     document.addEventListener("swiped-right", closeForm);
@@ -62,7 +63,7 @@ export default function ChatForm() {
       document.removeEventListener("swiped-right", closeForm);
       window.removeEventListener("keydown", keydownHandler);
     };
-  }, [location]);
+  }, [location, selectedCID]);
 
   useEffect(() => {
     const { hash } = location;

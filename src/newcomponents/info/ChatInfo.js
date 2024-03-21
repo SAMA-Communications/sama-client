@@ -7,7 +7,7 @@ import { getConverastionById } from "@store/values/Conversations";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useLocation } from "react-router-dom";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import "@newstyles/info/ChatInfo.css";
@@ -31,11 +31,18 @@ export default function ChatInfo() {
     return currentUser._id === selectedConversation.owner_id?.toString();
   }, [currentUser, selectedConversation]);
 
-  window.onkeydown = function (event) {
-    event.keyCode === KEY_CODES.ESCAPE &&
-      removeAndNavigateSubLink(pathname + hash, "/info");
-    event.keyCode === KEY_CODES.ENTER && event.preventDefault();
-  };
+  useEffect(() => {
+    const keydownHandler = (e) => {
+      e.keyCode === KEY_CODES.ESCAPE &&
+        removeAndNavigateSubLink(pathname + hash, "/info");
+      e.keyCode === KEY_CODES.ENTER && e.preventDefault();
+    };
+
+    window.addEventListener("keydown", keydownHandler);
+    return () => {
+      window.removeEventListener("keydown", keydownHandler);
+    };
+  }, [hash, pathname]);
 
   const participantsList = useMemo(() => {
     if (!selectedConversation?.participants || !currentUser) {

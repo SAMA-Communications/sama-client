@@ -3,10 +3,11 @@ import UserSelectorBlock from "@newcomponents/modals/components/UserSelectorBloc
 import conversationService from "@services/conversationsService";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
+import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
 import { selectParticipantsEntities } from "@store/values/Participants";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import "@newstyles/modals/UsersSelectModalHub.css";
@@ -19,6 +20,17 @@ export default function UsersSelectModalHub({ type }) {
   const [chatName, setChatName] = useState(null);
 
   const closeModal = () => removeAndNavigateSubLink(pathname + hash, "/create");
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      e.keyCode === KEY_CODES.ESCAPE &&
+        removeAndNavigateSubLink(pathname + hash, "/create");
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   const sendCreateRequest = async (participants) => {
     await conversationService.createGroupChat(participants, chatName);

@@ -6,12 +6,8 @@ import globalConstants from "@helpers/constants";
 import messagesService from "@services/messagesService";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { Suspense, lazy, useEffect, useMemo, useRef } from "react";
-import {
-  contextMenu,
-  selectIsClicked,
-  setClicked,
-} from "@store/values/ContextMenu";
+import { Suspense, lazy, useEffect, useRef } from "react";
+import { selectIsClicked, setClicked } from "@store/values/ContextMenu";
 import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
 import { history } from "@helpers/history";
 import { updateNetworkState } from "@store/values/NetworkState";

@@ -4,6 +4,7 @@ import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { selectCurrentUser } from "@store/values/CurrentUser";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -20,11 +21,18 @@ export default function UserProfile() {
   const currentUser = useSelector(selectCurrentUser);
   const { login, email, phone, first_name, last_name } = currentUser || {};
 
-  window.onkeydown = function (event) {
-    event.keyCode === KEY_CODES.ESCAPE &&
-      removeAndNavigateSubLink(pathname + hash, "/profile");
-    event.keyCode === KEY_CODES.ENTER && event.preventDefault();
-  };
+  useEffect(() => {
+    const keydownHandler = (e) => {
+      e.keyCode === KEY_CODES.ESCAPE &&
+        removeAndNavigateSubLink(pathname + hash, "/profile");
+      e.keyCode === KEY_CODES.ENTER && e.preventDefault();
+    };
+
+    window.addEventListener("keydown", keydownHandler);
+    return () => {
+      window.removeEventListener("keydown", keydownHandler);
+    };
+  }, [hash, pathname]);
 
   return (
     <div className="profile__container">

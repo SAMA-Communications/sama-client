@@ -16,13 +16,13 @@ export default function ChatNameInput({ setState, closeWindow }) {
   }, [name, setState]);
 
   useEffect(() => {
-    const handleKeyDown = ({ keyCode }) => {
-      if (keyCode === KEY_CODES.ENTER) {
-        confirmChatName();
-      }
+    const handleKeyDown = (e) => {
+      e.keyCode === KEY_CODES.ENTER && confirmChatName();
     };
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [confirmChatName]);
 
   return (
