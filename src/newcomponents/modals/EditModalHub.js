@@ -66,7 +66,7 @@ export default function EditModalHub() {
       }
       return true;
     }
-
+    console.log(type, content);
     if (type === "chat") {
       const updatedChat =
         await conversationService.sendEditNameAndDescriptionRequest(content);

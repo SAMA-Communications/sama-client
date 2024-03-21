@@ -133,7 +133,7 @@ class ConversationsService {
     }
 
     for (const key of keys) {
-      if (!validateFieldLength(data[key], 0, 255, "fields")) {
+      if (validateFieldLength(data[key], 0, 255, "fields")) {
         return false;
       }
     }

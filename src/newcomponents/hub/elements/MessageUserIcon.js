@@ -4,7 +4,7 @@ import { ReactComponent as UserIconBlack } from "@icons/users/UserIconBlack.svg"
 import { ReactComponent as UserIconWhite } from "@icons/users/UserIconWhite.svg";
 
 export default function MessageUserIcon({ userObject, isCurrentUser }) {
-  return userObject ? (
+  return userObject && !!Object.keys(userObject).length ? (
     getUserInitials(userObject)
   ) : isCurrentUser ? (
     <UserIconWhite />

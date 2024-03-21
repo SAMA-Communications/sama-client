@@ -50,7 +50,9 @@ export default function ChatMessage({
           <CornerLight className="message-content--corner" />
         )}
         {prev ? null : (
-          <div className="content__uname">{getUserFullName(sender)}</div>
+          <div className="content__uname">
+            {getUserFullName(sender) || "Deleted account"}
+          </div>
         )}
         <div className="content__container">
           {attachments?.length ? (
