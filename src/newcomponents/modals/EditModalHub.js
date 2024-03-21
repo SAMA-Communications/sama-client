@@ -10,7 +10,7 @@ import { setCurrentUser } from "@store/values/CurrentUser";
 import { upsertChat } from "@store/values/Conversations";
 import { upsertUser } from "@store/values/Participants";
 import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import "@newstyles/modals/EditModalHub.css";
@@ -20,16 +20,6 @@ export default function EditModalHub() {
   const { pathname, hash, search } = useLocation();
 
   const [content, setContent] = useState({});
-
-  useEffect(() => {
-    const handleKeyDown = ({ keyCode }) => {
-      if (keyCode === KEY_CODES.ENTER) {
-        sendRequest();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
 
   const addFieldToEdit = (field, value) =>
     setContent((prev) => ({ ...prev, [field]: value }));
@@ -55,9 +45,11 @@ export default function EditModalHub() {
   const type = (search || hash).split("=")[1];
   const { component, title, styleName } = types[type];
 
-  const closeModal = () => removeAndNavigateLastSection(pathname + hash);
-
-  const sendRequest = async () => {
+  const closeModal = useCallback(
+    () => removeAndNavigateLastSection(pathname + hash),
+    [pathname, hash]
+  );
+  const sendRequest = useCallback(async () => {
     function validateDataAndShowAlert(data) {
       if (!data) {
         data !== false &&
@@ -66,7 +58,7 @@ export default function EditModalHub() {
       }
       return true;
     }
-    console.log(type, content);
+
     if (type === "chat") {
       const updatedChat =
         await conversationService.sendEditNameAndDescriptionRequest(content);
@@ -87,7 +79,17 @@ export default function EditModalHub() {
       showCustomAlert("User data has been successfully updated.", "success");
     }
     closeModal();
-  };
+  }, [closeModal, content, dispatch, type]);
+
+  useEffect(() => {
+    const handleKeyDown = ({ keyCode }) => {
+      if (keyCode === KEY_CODES.ENTER) {
+        sendRequest();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [sendRequest]);
 
   return (
     <div className="edit-modal__container fcc">

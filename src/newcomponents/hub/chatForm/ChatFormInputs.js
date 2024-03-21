@@ -84,7 +84,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     setIsSendMessageDisable(false);
     chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
     inputRef.current.focus();
-    inputRef.current.style.height = `calc(70px * var(--base-scale))`;
+    inputRef.current.style.height = `calc(55px * var(--base-scale))`;
   };
 
   window.onresize = function () {
@@ -98,7 +98,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
 
   useEffect(() => {
     inputRef.current.value = "";
-    inputRef.current.style.height = `calc(70px * var(--base-scale))`;
+    inputRef.current.style.height = `calc(55px * var(--base-scale))`;
   }, [selectedCID]);
 
   return (

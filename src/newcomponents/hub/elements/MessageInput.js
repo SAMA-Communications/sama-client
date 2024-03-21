@@ -16,7 +16,7 @@ export default function MessageInput({
     if (inputTextRef.current) {
       const countOfLines = e.target.value.split("\n").length - 1;
       inputTextRef.current.style.height = `calc(${
-        70 + countOfLines * 20 < 230 ? 70 + countOfLines * 20 : 230
+        55 + countOfLines * 20 < 230 ? 55 + countOfLines * 20 : 215
       }px * var(--base-scale)) `;
       inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
     }

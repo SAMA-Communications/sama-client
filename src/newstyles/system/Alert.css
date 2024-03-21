@@ -1,6 +1,6 @@
 .alert {
   position: fixed;
-  top: 2svh;
+  top: 25px;
   left: 50%;
 
   max-width: 98vw;

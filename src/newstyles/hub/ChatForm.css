@@ -32,7 +32,7 @@
 #chatMessagesScrollable .infinite-scroll-component,
 .chat-form__container .scroll-bar__outer-container > div:nth-child(3) {
   padding-top: 75px !important;
-  padding-bottom: 85px !important;
+  padding-bottom: 70px !important;
 }
 
 #chatMessagesScrollable .infinite-scroll-component {

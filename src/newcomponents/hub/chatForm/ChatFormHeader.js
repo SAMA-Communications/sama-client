@@ -58,7 +58,7 @@ export default function ChatFormHeader() {
     if (selectedConversation.name) {
       return selectedConversation.name;
     }
-    return getUserFullName(opponentParams) || "Deleted account";
+    return opponentParams ? getUserFullName(opponentParams) : "Deleted account";
   }, [selectedConversation, participants, opponentId]);
 
   const viewStatusActivity = useMemo(() => {

@@ -11,6 +11,7 @@ export default function SearchBlock({
   selectedUsers,
   clearInputText,
   addUserToArray,
+  removeUserFromArray,
   isSelectUserToArray = false,
   isClearInputText = false,
   isPreviewUserProfile = false,
@@ -59,9 +60,9 @@ export default function SearchBlock({
               key={u._id}
               uObject={u}
               isSelected={selectedUsers?.find((uObj) => uObj._id === u._id)}
-              isDisableClick={selectedUsers?.find((uObj) => uObj._id === u._id)}
               clearInputText={clearInputText}
               addUserToArray={addUserToArray}
+              removeUserFromArray={removeUserFromArray}
               isClearInputText={isClearInputText}
               isSelectUserToArray={isSelectUserToArray}
               isPreviewUserProfile={isPreviewUserProfile}

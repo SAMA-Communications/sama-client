@@ -2,7 +2,8 @@ import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 import SearchBlock from "@newcomponents/search/SearchBlock";
 import SearchInput from "@newcomponents/static/SearchBar";
 import UserInfo from "@newcomponents/modals/elements/UserInfo";
-import { useMemo, useState } from "react";
+import { KEY_CODES } from "@helpers/keyCodes";
+import { useEffect, useMemo, useState } from "react";
 
 export default function UserSelectorBlock({
   initSelectedUsers,
@@ -48,6 +49,16 @@ export default function UserSelectorBlock({
     );
   }, [selectedUsers]);
 
+  useEffect(() => {
+    const handleKeyDown = ({ keyCode }) => {
+      if (keyCode === KEY_CODES.ENTER) {
+        onClickCreateFunc(selectedUsers);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClickCreateFunc, selectedUsers]);
+
   return (
     <>
       <div className="em__header">
@@ -64,6 +75,9 @@ export default function UserSelectorBlock({
             const isInclude = prev.find((u) => u._id === uObj._id);
             return isInclude ? prev : [...prev, uObj];
           })
+        }
+        removeUserFromArray={(uObj) =>
+          setSelectedUsers((prev) => prev.filter((u) => u._id !== uObj._id))
         }
         isSelectUserToArray={true}
       />

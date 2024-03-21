@@ -1,19 +1,29 @@
 import showCustomAlert from "@utils/show_alert";
-import { useState } from "react";
+import { KEY_CODES } from "@helpers/keyCodes";
+import { useCallback, useEffect, useState } from "react";
 
 import { ReactComponent as ImageMedium } from "@icons/media/ImageMedium.svg";
 
 export default function ChatNameInput({ setState, closeWindow }) {
   const [name, setName] = useState(null);
 
-  const confirmChatName = () => {
-    console.log(name);
+  const confirmChatName = useCallback(() => {
     if (!name?.length) {
-      showCustomAlert("Enter chat name pls", "warning");
+      showCustomAlert("Enter a name for the group chat.", "warning");
       return;
     }
     setState(name);
-  };
+  }, [name, setState]);
+
+  useEffect(() => {
+    const handleKeyDown = ({ keyCode }) => {
+      if (keyCode === KEY_CODES.ENTER) {
+        confirmChatName();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [confirmChatName]);
 
   return (
     <>
@@ -27,6 +37,7 @@ export default function ChatNameInput({ setState, closeWindow }) {
             className="em-create__name-input"
             placeholder="Enter group name"
             onChange={(e) => setName(e.target.value)}
+            autoFocus
           />
         </div>
       </div>
