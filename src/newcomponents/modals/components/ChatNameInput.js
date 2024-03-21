@@ -12,6 +12,13 @@ export default function ChatNameInput({ setState, closeWindow }) {
       showCustomAlert("Enter a name for the group chat.", "warning");
       return;
     }
+    if (name?.length > 255) {
+      showCustomAlert(
+        "The length of the chat name should not exceed 255 characters.",
+        "warning"
+      );
+      return;
+    }
     setState(name);
   }, [name, setState]);
 
