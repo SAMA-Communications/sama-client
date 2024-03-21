@@ -72,7 +72,7 @@
 }
 .content__status--darken {
   position: absolute;
-  bottom: 2px;
+  bottom: 8px;
   right: 2px;
 
   padding: 8px;

@@ -48,7 +48,10 @@ export const conversations = createSlice({
 
       const conversationsToUpdate = [];
       conversations.forEach((conv) => {
-        !state.entities[conv._id] && (conv.messagesIds = null);
+        if (!state.entities[conv._id]) {
+          delete conv.participants;
+          conv.messagesIds = null;
+        }
         conversationsToUpdate.push(conv);
       });
       if (!conversationsToUpdate.length) {
