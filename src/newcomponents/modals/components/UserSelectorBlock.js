@@ -78,7 +78,7 @@ export default function UserSelectorBlock({
     <>
       <div className="em__header">
         <p className="edit-modal__title">Add participants</p>
-        <p className="edit-modal__counter">{counter}/50</p>
+        <p className="edit-modal__counter">{counter}/20</p>
       </div>
       <SearchInput shadowText={"Enter a username"} setState={setInputText} />
       {selectedUsersBlock}
@@ -95,7 +95,7 @@ export default function UserSelectorBlock({
           setSelectedUsers((prev) => prev.filter((u) => u._id !== uObj._id))
         }
         isClickDisabled={(uObj) =>
-          initSelectedUsers?.find((u) => u._id === uObj._id)
+          initSelectedUsers?.find((u) => u._id === uObj._id) || counter > 19
         }
         isSelectUserToArray={true}
       />
