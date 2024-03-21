@@ -169,7 +169,7 @@ class ConversationsService {
         `Add selected user${participants.length > 1 ? "s" : ""} to the chat?`
       )
     ) {
-      return;
+      return false;
     }
 
     return await api.conversationUpdate(requestData);

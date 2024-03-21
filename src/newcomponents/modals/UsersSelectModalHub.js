@@ -25,7 +25,9 @@ export default function UsersSelectModalHub({ type }) {
   };
 
   const sendEditRequest = async (participants) => {
-    await conversationService.addParticipants(participants);
+    if ((await conversationService.addParticipants(participants)) === false) {
+      return;
+    }
     removeAndNavigateLastSection(pathname + hash);
   };
 
@@ -50,7 +52,7 @@ export default function UsersSelectModalHub({ type }) {
     ) : (
       <ChatNameInput setState={setChatName} closeWindow={closeModal} />
     );
-  }, [type, chatName]);
+  }, [type, chatName, selectedConversation, participants]);
 
   return (
     <div className="edit-modal__container fcc">

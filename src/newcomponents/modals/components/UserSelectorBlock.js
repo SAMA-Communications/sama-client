@@ -16,6 +16,15 @@ export default function UserSelectorBlock({
 
   const meInArray = initSelectedUsers ? 0 : 1;
 
+  useEffect(() => {
+    if (!initSelectedUsers) {
+      return;
+    }
+
+    setCounter(initSelectedUsers?.length);
+    setSelectedUsers(initSelectedUsers);
+  }, [initSelectedUsers]);
+
   const selectedUsersBlock = useMemo(() => {
     selectedUsers.length + meInArray !== counter &&
       setCounter(meInArray + selectedUsers.length);
@@ -47,12 +56,18 @@ export default function UserSelectorBlock({
         )}
       </div>
     );
-  }, [selectedUsers]);
+  }, [counter, initSelectedUsers, meInArray, selectedUsers]);
 
   useEffect(() => {
     const handleKeyDown = ({ keyCode }) => {
       if (keyCode === KEY_CODES.ENTER) {
-        onClickCreateFunc(selectedUsers);
+        onClickCreateFunc(
+          initSelectedUsers
+            ? selectedUsers.filter(
+                (u) => !initSelectedUsers.find((uObj) => u._id === uObj._id)
+              )
+            : selectedUsers
+        );
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -79,6 +94,9 @@ export default function UserSelectorBlock({
         removeUserFromArray={(uObj) =>
           setSelectedUsers((prev) => prev.filter((u) => u._id !== uObj._id))
         }
+        isClickDisabled={(uObj) =>
+          initSelectedUsers?.find((u) => u._id === uObj._id)
+        }
         isSelectUserToArray={true}
       />
       <div className="em-navigation__container fcc">
@@ -87,7 +105,15 @@ export default function UserSelectorBlock({
         </p>
         <p
           className="em-navigation__link"
-          onClick={() => onClickCreateFunc(selectedUsers)}
+          onClick={() =>
+            onClickCreateFunc(
+              initSelectedUsers
+                ? selectedUsers.filter(
+                    (u) => !initSelectedUsers.find((uObj) => u._id === uObj._id)
+                  )
+                : selectedUsers
+            )
+          }
         >
           {initSelectedUsers ? "Add" : "Create"}
         </p>

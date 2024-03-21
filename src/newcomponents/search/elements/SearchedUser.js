@@ -16,6 +16,7 @@ export default function SearchedUser({
   addUserToArray,
   removeUserFromArray,
   isSelected = false,
+  isClickDisabled,
   isClearInputText = false,
   isSelectUserToArray = false,
   isPreviewUserProfile = false,
@@ -24,6 +25,10 @@ export default function SearchedUser({
   const dispatch = useDispatch();
 
   const onClickFunc = async () => {
+    if (isClickDisabled) {
+      return;
+    }
+
     isClearInputText && clearInputText();
 
     if (isPreviewUserProfile) {
