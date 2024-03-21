@@ -29,6 +29,7 @@ export default function UserSelectorBlock({
     selectedUsers.length + meInArray !== counter &&
       setCounter(meInArray + selectedUsers.length);
 
+    console.log(selectedUsers, initSelectedUsers);
     const filteredUsers = initSelectedUsers?.length
       ? selectedUsers.filter(
           (u) => !initSelectedUsers.find((uObj) => uObj._id === u._id)
