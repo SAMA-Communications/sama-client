@@ -37,7 +37,7 @@ export default function SearchBlock({
       if (text?.length > 1) {
         const users = await usersService.search({
           login: text,
-          limit: 10,
+          limit: 30,
         });
 
         setSearchedUsers(users);

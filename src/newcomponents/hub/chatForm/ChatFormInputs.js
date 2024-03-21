@@ -104,13 +104,12 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   }, [selectedCID]);
 
   const isBlockedConv = useMemo(() => {
-    const { type, opponent_id } = selectedConversation;
-    console.log(
-      type,
-      !participants[opponent_id]?.login,
-      participants[opponent_id]
+    const { type, owner_id, opponent_id } = selectedConversation;
+
+    return (
+      type === "u" &&
+      (!participants[opponent_id]?.login || !participants[owner_id]?.login)
     );
-    return type === "u" && !participants[opponent_id]?.login;
   }, [selectedConversation, participants]);
 
   return (
