@@ -22,7 +22,7 @@
       "@validations": ["src/validations"],
 
       "@skeletons": ["src/skeletons"],
-      // "@hooks": ["src/hooks"],
+      "@hooks": ["src/hooks"],
 
       "@newcomponents/*": ["src/newcomponents/*"],
       "@newstyles/*": ["src/newstyles/*"]
