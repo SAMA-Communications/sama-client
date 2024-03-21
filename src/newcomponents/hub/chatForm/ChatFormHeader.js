@@ -45,8 +45,8 @@ export default function ChatFormHeader() {
       ?._id;
   }, [selectedCID, conversations, participants, currentUser]);
 
-  const opponentParams = useMemo(
-    () => participants[opponentId],
+  const isOpponentExist = useMemo(
+    () => !!participants[opponentId]?.login,
     [participants, opponentId]
   );
 
@@ -58,15 +58,17 @@ export default function ChatFormHeader() {
     if (selectedConversation.name) {
       return selectedConversation.name;
     }
-    return opponentParams ? getUserFullName(opponentParams) : "Deleted account";
+    return isOpponentExist
+      ? getUserFullName(participants[opponentId])
+      : "Deleted account";
   }, [selectedConversation, participants, opponentId]);
 
   const viewStatusActivity = useMemo(() => {
     if (selectedConversation.type === "u") {
-      if (!opponentParams) {
+      if (!isOpponentExist) {
         return null;
       }
-      const opponentLastActivity = opponentParams?.recent_activity;
+      const opponentLastActivity = participants[opponentId]?.recent_activity;
       return opponentLastActivity === "online" ? (
         <ul className="activity--online">
           <li>online</li>
@@ -81,12 +83,14 @@ export default function ChatFormHeader() {
   }, [opponentId, participants, selectedConversation]);
 
   const viewChatOrPaticipantInfo = () => {
-    if (!isGroupChat && !opponentParams) {
+    if (!isGroupChat && !isOpponentExist) {
       showCustomAlert("This account has been deleted.", "warning");
       return;
     }
 
-    const path = isGroupChat ? "/info" : "/user?uid=" + opponentParams._id;
+    const path = isGroupChat
+      ? "/info"
+      : "/user?uid=" + participants[opponentId]._id;
 
     (currentPath.includes(path) ? removeAndNavigateLastSection : addSuffix)(
       currentPath,
@@ -102,7 +106,7 @@ export default function ChatFormHeader() {
         list: [
           currentPath.includes("/info")
             ? null
-            : !opponentParams && !isGroupChat
+            : !isOpponentExist && !isGroupChat
             ? null
             : "infoChat",
           isCurrentUserOwner && isGroupChat ? "edit" : null,
