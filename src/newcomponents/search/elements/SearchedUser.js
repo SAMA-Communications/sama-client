@@ -16,7 +16,7 @@ export default function SearchedUser({
   addUserToArray,
   removeUserFromArray,
   isSelected = false,
-  isClickDisabled,
+  isClickDisabled = false,
   isClearInputText = false,
   isSelectUserToArray = false,
   isPreviewUserProfile = false,
