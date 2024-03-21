@@ -36,9 +36,9 @@ export default function UsersSelectModalHub({ type }) {
       return (
         <UserSelectorBlock
           closeWindow={() => removeAndNavigateLastSection(pathname + hash)}
-          initSelectedUsers={selectedConversation.participants?.map(
-            (uId) => participants[uId]
-          )}
+          initSelectedUsers={selectedConversation.participants
+            ?.map((uId) => participants[uId])
+            ?.filter((el) => !!el)}
           onClickCreateFunc={sendEditRequest}
         />
       );
