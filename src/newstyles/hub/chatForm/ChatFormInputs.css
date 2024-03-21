@@ -25,6 +25,9 @@
 
   resize: none;
 }
+#inputMessage:disabled {
+  padding: calc(18px * var(--base-scale));
+}
 #inputMessage:focus {
   outline: none;
 }

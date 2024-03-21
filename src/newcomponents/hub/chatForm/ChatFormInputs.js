@@ -12,9 +12,10 @@ import {
   updateLastMessageField,
 } from "@store/values/Conversations";
 import { selectCurrentUser } from "@store/values/CurrentUser";
+import { selectParticipantsEntities } from "@store/values/Participants";
 import { getNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import "@newstyles/hub/chatForm/ChatFormInputs.css";
 
@@ -24,6 +25,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   const connectState = useSelector(getNetworkState);
   const currentUser = useSelector(selectCurrentUser);
   const messages = useSelector(selectActiveConversationMessages);
+  const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
@@ -101,10 +103,16 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     inputRef.current.style.height = `calc(55px * var(--base-scale))`;
   }, [selectedCID]);
 
+  const isBlockedConv = useMemo(() => {
+    const { type, opponent_id } = selectedConversation;
+    return type === "u" && !participants[opponent_id]?.login;
+  }, [selectedConversation, participants]);
+
   return (
     <MessageInput
       inputTextRef={inputRef}
       inputFilesRef={filePicker}
+      isBlockedConv={isBlockedConv}
       onSubmitFunc={createAndSendMessage}
     />
   );
