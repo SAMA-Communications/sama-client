@@ -68,7 +68,7 @@ class UsersService {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         await api.userDelete();
-        history.navigate("/login");
+        history.navigate("/authorization");
         store.dispatch({ type: "RESET_STORE" });
       } catch (err) {
         showCustomAlert(err.message, "danger");

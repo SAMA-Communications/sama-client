@@ -16,8 +16,10 @@
       "@event/*": ["src/event/*"],
       "@services/*": ["src/services/*"],
 
+      "@animations/*": ["src/animations/*"],
       "@icons/*": ["src/assets/icons/*"],
       "@styles/*": ["src/styles/*"],
+
       "@utils/*": ["src/utils/*"],
       "@validations": ["src/validations"],
 

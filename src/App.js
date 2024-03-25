@@ -7,21 +7,21 @@ import messagesService from "@services/messagesService";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Suspense, lazy, useEffect, useRef } from "react";
-import { selectIsClicked, setClicked } from "@store/values/ContextMenu";
 import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
 import { history } from "@helpers/history";
+import { selectIsClicked, setClicked } from "@store/values/ContextMenu";
 import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 
 import SMain from "@skeletons/SMain";
 import SPageLoader from "@skeletons/SPageLoader";
-import SignUp from "@screens/SignUp";
 
 import "@newstyles/GlobalParam.css";
-import "@styles/themes/DefaultTheme.css";
 
 const Main = lazy(() => import("@newcomponents/Main"));
-const Login = lazy(() => import("@screens/Login"));
+const AuthorizationHub = lazy(() =>
+  import("@newcomponents/auth/AuthorizationHub")
+);
 
 export default function App() {
   const dispatch = useDispatch();
@@ -62,7 +62,7 @@ export default function App() {
       history.navigate(path);
     } else {
       localStorage.removeItem("sessionId");
-      history.navigate("/login");
+      history.navigate("/authorization");
     }
   }, []);
 
@@ -83,8 +83,7 @@ export default function App() {
       ) : null}
       <AnimatePresence initial={false} mode="wait">
         <Routes location={history.location}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/authorization" element={<AuthorizationHub />} />
           <Route path="/*" element={<Main />} />
         </Routes>
       </AnimatePresence>
