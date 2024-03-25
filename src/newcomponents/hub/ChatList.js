@@ -8,7 +8,7 @@ import {
   getConverastionById,
   selectAllConversations,
 } from "@store/values/Conversations.js";
-import { getCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 import { setSelectedConversation } from "@store/values/SelectedConversation.js";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ export default function ChatList() {
 
   const conversations = useSelector(selectAllConversations);
   const participants = useSelector(selectParticipantsEntities);
-  const currentUser = useSelector(getCurrentUser);
+  const currentUser = useSelector(selectCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
   const activeConv = selectedConversation?._id;
 

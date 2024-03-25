@@ -4,24 +4,25 @@ import addSuffix from "@utils/navigation/add_suffix";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
-import { getCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useLocation } from "react-router-dom";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import "@newstyles/info/ChatInfo.css";
 
-import { ReactComponent as AddParticipants } from "@newicons/AddParticipants.svg";
-import { ReactComponent as Close } from "@newicons/actions/CloseGray.svg";
-import { ReactComponent as ImageBig } from "@newicons/media/ImageBig.svg";
+import { ReactComponent as AddParticipants } from "@icons/AddParticipants.svg";
+import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
+import { ReactComponent as ImageBig } from "@icons/media/ImageBig.svg";
 
 export default function ChatInfo() {
   const { pathname, hash } = useLocation();
 
   const participants = useSelector(selectParticipantsEntities);
-  const currentUser = useSelector(getCurrentUser);
+  const currentUser = useSelector(selectCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
+  const conversationOwner = selectedConversation?.owner_id?.toString();
 
   const isCurrentUserOwner = useMemo(() => {
     if (!currentUser || !selectedConversation) {
@@ -30,26 +31,18 @@ export default function ChatInfo() {
     return currentUser._id === selectedConversation.owner_id?.toString();
   }, [currentUser, selectedConversation]);
 
-  window.onkeydown = function (event) {
-    event.keyCode === KEY_CODES.ESCAPE &&
-      removeAndNavigateSubLink(pathname + hash, "/info");
-    event.keyCode === KEY_CODES.ENTER && event.preventDefault();
-  };
+  useEffect(() => {
+    const keydownHandler = (e) => {
+      e.keyCode === KEY_CODES.ESCAPE &&
+        removeAndNavigateSubLink(pathname + hash, "/info");
+      e.keyCode === KEY_CODES.ENTER && e.preventDefault();
+    };
 
-  //HOLD FOR RIGHT CLICK CONTEXT MENU
-  // const deleteChat = async () => {
-  //   const isConfirm = window.confirm(`Do you want to delete this chat?`);
-  //   if (isConfirm) {
-  //     try {
-  //       await api.conversationDelete({ cid: selectedCID });
-  //       dispatch(clearSelectedConversation());
-  //       dispatch(removeChat(selectedCID));
-  //       navigateTo("/");
-  //     } catch (error) {
-  //       showCustomAlert(error.message, "warning");
-  //     }
-  //   }
-  // };
+    window.addEventListener("keydown", keydownHandler);
+    return () => {
+      window.removeEventListener("keydown", keydownHandler);
+    };
+  }, [hash, pathname]);
 
   const participantsList = useMemo(() => {
     if (!selectedConversation?.participants || !currentUser) {
@@ -62,30 +55,14 @@ export default function ChatInfo() {
         return null;
       }
 
-      const isOwner =
-        userObject._id === selectedConversation.owner_id?.toString();
-
-      //HOLD FOR RIGHT CLICK CONTEXT MENU
-      // const deleteUser = async (event) => {
-      //   event.stopPropagation();
-
-      //   if (!window.confirm(`Do you want to delete this user?`)) {
-      //     return;
-      //   }
-
-      //   const requestData = {
-      //     cid: selectedCID,
-      //     participants: { remove: [u._id] },
-      //   };
-      //   await api.conversationUpdate(requestData);
-      //remove user form participants field - redux
-      // };
+      const isOwner = userObject._id === conversationOwner;
 
       return (
         <ParticipantInChat
           key={uId}
           userObject={userObject}
           isOwner={isOwner}
+          isCurrentUserOwner={isCurrentUserOwner}
         />
       );
     });
@@ -108,6 +85,7 @@ export default function ChatInfo() {
           className={`chat-info__content ${
             isCurrentUserOwner ? "cursor-pointer" : ""
           }`}
+          onClick={() => addSuffix(pathname + hash, "/edit?type=chat")}
         >
           <p className="ci-name">
             {selectedConversation?.name || (

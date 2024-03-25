@@ -27,8 +27,6 @@
   cursor: pointer;
 }
 .content__name {
-  height: calc(44px * var(--base-scale));
-
   font-weight: 500;
   font-size: var(--font-h2);
   color: var(--color-black);
@@ -40,6 +38,8 @@
 
 .header-more {
   padding-top: calc(20px * var(--base-scale));
+  padding-right: 5px;
+  padding-left: 5px;
 
   align-self: flex-start;
 

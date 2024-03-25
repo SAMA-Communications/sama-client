@@ -6,20 +6,18 @@
 
 .chat-content__container {
   padding-top: 110px;
-  padding-bottom: 90px;
+  padding-bottom: 70px;
 
   flex: 1;
   display: flex;
   align-items: flex-end;
 }
 .chat-emty__text {
-  line-height: var(--font-h4);
   font-weight: 200;
   font-size: var(--font-h5);
   color: var(--color-text-light);
 }
 .chat-form__title {
-  line-height: var(--font-72);
   text-align: center;
   font-weight: 200;
   font-size: var(--font-58);
@@ -34,7 +32,7 @@
 #chatMessagesScrollable .infinite-scroll-component,
 .chat-form__container .scroll-bar__outer-container > div:nth-child(3) {
   padding-top: 75px !important;
-  padding-bottom: 80px !important;
+  padding-bottom: 70px !important;
 }
 
 #chatMessagesScrollable .infinite-scroll-component {

@@ -16,8 +16,8 @@ import { useForm } from "react-hook-form";
 
 import "@styles/AuthForm.css";
 
-import { ReactComponent as HidePassword } from "@icons/authForm/HidePassword.svg";
-import { ReactComponent as ShowPassword } from "@icons/authForm/ShowPassword.svg";
+import { ReactComponent as HidePassword } from "@icons/actions/HidePassword.svg";
+import { ReactComponent as ShowPassword } from "@icons/actions/ShowPassword.svg";
 
 export default function SignUp() {
   const dispatch = useDispatch();

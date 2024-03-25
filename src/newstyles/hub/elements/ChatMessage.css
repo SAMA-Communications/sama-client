@@ -61,7 +61,6 @@
   max-width: 100%;
 
   color: var(--color-black);
-  line-height: var(--font-h5);
 
   inline-size: auto;
   overflow-wrap: break-word;
@@ -73,7 +72,7 @@
 }
 .content__status--darken {
   position: absolute;
-  bottom: 2px;
+  bottom: 8px;
   right: 2px;
 
   padding: 8px;
@@ -115,6 +114,17 @@
 .message__container--my .content__uname,
 .message__container--my .status__time {
   color: var(--color-white);
+}
+
+.informative-message {
+  align-self: center;
+
+  padding: 6px 18px;
+
+  border-radius: var(--border-16);
+  background-color: var(--color-hover-light);
+
+  cursor: pointer;
 }
 
 .mt-8 {

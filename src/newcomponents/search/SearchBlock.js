@@ -1,14 +1,20 @@
 import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 import OvalLoader from "@newcomponents/_helpers/OvalLoader";
-import React, { useEffect, useState, useTransition } from "react";
 import SearchedUser from "./elements/SearchedUser";
-import api from "@api/api";
+import { useEffect, useState, useTransition } from "react";
 
 import "@newstyles/search/SearchBlock.css";
+import usersService from "@services/usersService";
 
 export default function SearchBlock({
   searchText,
+  selectedUsers,
   clearInputText,
+  addUserToArray,
+  removeUserFromArray,
+  isMaxLimit,
+  isClickDisabledFunc,
+  isSelectUserToArray = false,
   isClearInputText = false,
   isPreviewUserProfile = false,
 }) {
@@ -30,14 +36,12 @@ export default function SearchBlock({
   const sendSearchRequest = async (text) => {
     startTransition(async () => {
       if (text?.length > 1) {
-        const requestData = {
+        const users = await usersService.search({
           login: text,
-          limit: 10,
-        };
+          limit: 30,
+        });
 
-        const users = await api.userSearch(requestData);
         setSearchedUsers(users);
-
         setIsUserSearched(
           users.length ? null : "We couldn't find the specified user."
         );
@@ -57,8 +61,20 @@ export default function SearchBlock({
             <SearchedUser
               key={u._id}
               uObject={u}
+              isSelected={selectedUsers?.find((uObj) => uObj._id === u._id)}
+              isClickDisabled={
+                isMaxLimit
+                  ? isClickDisabledFunc(u)
+                    ? true
+                    : !selectedUsers?.find((uObj) => uObj._id === u._id)
+                  : isClickDisabledFunc(u) &&
+                    selectedUsers?.find((uObj) => uObj._id === u._id)
+              }
               clearInputText={clearInputText}
+              addUserToArray={addUserToArray}
+              removeUserFromArray={removeUserFromArray}
               isClearInputText={isClearInputText}
+              isSelectUserToArray={isSelectUserToArray}
               isPreviewUserProfile={isPreviewUserProfile}
             />
           ))}

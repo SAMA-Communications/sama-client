@@ -1,8 +1,8 @@
 import getFileType from "@utils/get_file_type";
 import { Blurhash } from "react-blurhash";
 
-import { ReactComponent as Image } from "@newicons/media/Image.svg";
-import { ReactComponent as Video } from "@newicons/media/Video.svg";
+import { ReactComponent as Image } from "@icons/media/Image.svg";
+import { ReactComponent as Video } from "@icons/media/Video.svg";
 
 export default function LastMessageMedia({ attachment }) {
   const attIcons = {

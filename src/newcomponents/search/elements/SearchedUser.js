@@ -8,16 +8,27 @@ import { useLocation } from "react-router-dom";
 
 import "@newstyles/search/elements/SearchedUser.css";
 
+import { ReactComponent as Selected } from "@icons/status/Selected.svg";
+
 export default function SearchedUser({
   uObject,
   clearInputText,
-  isClearInputText,
-  isPreviewUserProfile,
+  addUserToArray,
+  removeUserFromArray,
+  isSelected = false,
+  isClickDisabled = false,
+  isClearInputText = false,
+  isSelectUserToArray = false,
+  isPreviewUserProfile = false,
 }) {
   const { pathname, hash } = useLocation();
   const dispatch = useDispatch();
 
   const onClickFunc = async () => {
+    if (isClickDisabled) {
+      return;
+    }
+
     isClearInputText && clearInputText();
 
     if (isPreviewUserProfile) {
@@ -25,12 +36,25 @@ export default function SearchedUser({
       addSuffix(pathname + hash, `/user?uid=${uObject._id}`);
       return;
     }
+
+    if (isSelectUserToArray) {
+      (isSelected ? removeUserFromArray : addUserToArray)(uObject);
+      return;
+    }
+
     await conversationService.createPrivateChat(uObject._id, uObject);
   };
 
   return (
     <div className="searched-user fcc" onClick={onClickFunc}>
-      <div className="searched-user__photo fcc">{getUserInitials(uObject)}</div>
+      <div className="searched-user__photo fcc">
+        {getUserInitials(uObject)}
+        {isSelected ? (
+          <div className="searched-user__indecator fcc">
+            <Selected />
+          </div>
+        ) : null}
+      </div>
       <p className="searched-user__name">{getUserFullName(uObject)}</p>
     </div>
   );

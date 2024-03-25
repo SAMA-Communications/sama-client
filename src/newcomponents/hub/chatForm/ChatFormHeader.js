@@ -1,27 +1,38 @@
+import addSuffix from "@utils/navigation/add_suffix";
 import getLastVisitTime from "@utils/user/get_last_visit_time";
 import getUserFullName from "@utils/user/get_user_full_name";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import showCustomAlert from "@utils/show_alert";
 import {
   getConverastionById,
   selectConversationsEntities,
 } from "@store/values/Conversations";
-import { getCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
+import { setAllParams } from "@store/values/ContextMenu";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 import "@newstyles/hub/chatForm/ChatFormHeader.css";
 
-import { ReactComponent as More } from "@newicons/options/More.svg";
+import { ReactComponent as More } from "@icons/options/More.svg";
 
 export default function ChatFormHeader() {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { pathname, hash } = useLocation();
+  const currentPath = pathname + hash;
 
   const participants = useSelector(selectParticipantsEntities);
   const conversations = useSelector(selectConversationsEntities);
-  const currentUser = useSelector(getCurrentUser);
+  const currentUser = useSelector(selectCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
+
+  const isCurrentUserOwner =
+    currentUser._id === selectedConversation.owner_id?.toString();
+  const isGroupChat = selectedConversation.type === "g";
 
   const opponentId = useMemo(() => {
     const conversation = conversations[selectedCID];
@@ -32,7 +43,12 @@ export default function ChatFormHeader() {
     const { owner_id, opponent_id } = conversation;
     return participants[owner_id === currentUser._id ? opponent_id : owner_id]
       ?._id;
-  }, [selectedCID, conversations, participants]);
+  }, [selectedCID, conversations, participants, currentUser]);
+
+  const isOpponentExist = useMemo(
+    () => !!participants[opponentId]?.login,
+    [participants, opponentId]
+  );
 
   const viewChatName = useMemo(() => {
     if (!selectedConversation || !participants) {
@@ -42,11 +58,16 @@ export default function ChatFormHeader() {
     if (selectedConversation.name) {
       return selectedConversation.name;
     }
-    return getUserFullName(participants[opponentId]);
+    return isOpponentExist
+      ? getUserFullName(participants[opponentId])
+      : "Deleted account";
   }, [selectedConversation, participants, opponentId]);
 
   const viewStatusActivity = useMemo(() => {
     if (selectedConversation.type === "u") {
+      if (!isOpponentExist) {
+        return null;
+      }
       const opponentLastActivity = participants[opponentId]?.recent_activity;
       return opponentLastActivity === "online" ? (
         <ul className="activity--online">
@@ -57,32 +78,44 @@ export default function ChatFormHeader() {
       );
     }
 
-    const count = selectedConversation.participants?.length;
+    const count = selectedConversation.participants?.length || 0;
     return `${count} member${count > 1 ? "s" : ""}`;
   }, [opponentId, participants, selectedConversation]);
 
-  // MOVE TO MORE OPTIONS BLOCK
-  // const deleteChat = async () => {
-  //   const isConfirm = window.confirm(`Do you want to delete this chat?`);
-  //   if (isConfirm) {
-  //     try {
-  //       await api.conversationDelete({ cid: selectedCID });
-  //       dispatch(clearSelectedConversation());
-  //       dispatch(removeChat(selectedCID));
-  //       navigate("/main");
-  //     } catch (error) {
-  //       showCustomAlert(error.message, "warning");
-  //     }
-  //   }
-  // };
-
   const viewChatOrPaticipantInfo = () => {
-    navigate(
-      `/#${selectedCID}${
-        selectedConversation.type === "g"
-          ? "/info"
-          : "/user?uid=" + participants[opponentId]._id
-      }`
+    if (!isGroupChat && !isOpponentExist) {
+      showCustomAlert("This account has been deleted.", "warning");
+      return;
+    }
+
+    const path = isGroupChat
+      ? "/info"
+      : "/user?uid=" + participants[opponentId]._id;
+
+    (currentPath.includes(path) ? removeAndNavigateLastSection : addSuffix)(
+      currentPath,
+      path
+    );
+  };
+
+  const openContextMenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(
+      setAllParams({
+        list: [
+          currentPath.includes("/info")
+            ? null
+            : !isOpponentExist && !isGroupChat
+            ? null
+            : "infoChat",
+          isCurrentUserOwner && isGroupChat ? "edit" : null,
+          isCurrentUserOwner && isGroupChat ? "addParticipants" : null,
+          "leave",
+        ],
+        coords: { x: e.pageX, y: e.pageY },
+        clicked: true,
+      })
     );
   };
 
@@ -93,7 +126,11 @@ export default function ChatFormHeader() {
         <div className="content__name">{viewChatName}</div>
         <div className="content__activity">{viewStatusActivity}</div>
       </div>
-      <div className="header-more">
+      <div
+        className="header-more"
+        onContextMenu={openContextMenu}
+        onClick={openContextMenu}
+      >
         <More />
       </div>
     </div>

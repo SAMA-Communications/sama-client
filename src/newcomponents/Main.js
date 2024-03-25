@@ -1,18 +1,19 @@
 import { cloneElement, useMemo } from "react";
 import { getIsMobileView } from "@store/values/IsMobileView";
+import { selectConversationsEntities } from "@store/values/Conversations";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectConversationsEntities } from "@store/values/Conversations";
 
 import ChatForm from "@newcomponents/hub/ChatForm";
 import ChatInfo from "@newcomponents/info/ChatInfo";
 import ChatList from "@newcomponents/hub/ChatList";
 
+import EditModalHub from "@newcomponents/modals/EditModalHub";
 import EmptyHub from "@newcomponents/hub/EmptyHub";
 import NavigationLine from "@newcomponents/navigation/NavigationLine";
-import ModalWindow from "@screens/chat/ModalWindow";
 import OtherUserProfile from "@newcomponents/info/OtherUserProfile";
 import UserProfile from "@newcomponents/info/UserProfile";
+import UsersSelectModalHub from "@newcomponents/modals/UsersSelectModalHub";
 
 import SHub from "@skeletons/hub/SHub";
 
@@ -58,11 +59,11 @@ export default function Main() {
     const { pathname, hash } = location;
 
     const blockMap = {
-      // "/create": <UserSearch type={"create_group_chat"} />,
-      // "/add": <UserSearch type={"add_participants"} />,
+      "/add": <UsersSelectModalHub type={"add_participants"} />,
+      "/create": <UsersSelectModalHub />,
+      "/edit": <EditModalHub />,
       "/info": <ChatInfo />,
       "/user": <OtherUserProfile />,
-      "/modal": <ModalWindow />,
     };
 
     const allBlocks = Object.entries(blockMap)

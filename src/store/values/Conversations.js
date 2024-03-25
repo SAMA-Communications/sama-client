@@ -22,7 +22,7 @@ export const {
 export const getConverastionById = createSelector(
   [getSelectedConversationId, selectConversationsEntities],
   (id, conversations) => {
-    return conversations[id];
+    return conversations ? conversations[id] : {};
   }
 );
 
@@ -48,7 +48,10 @@ export const conversations = createSlice({
 
       const conversationsToUpdate = [];
       conversations.forEach((conv) => {
-        !state.entities[conv._id] && (conv.messagesIds = null);
+        if (!state.entities[conv._id]) {
+          conv.messagesIds = null;
+        }
+        delete conv.participants;
         conversationsToUpdate.push(conv);
       });
       if (!conversationsToUpdate.length) {

@@ -2,7 +2,8 @@ import LastMessage from "@newcomponents/message/LastMessage";
 import getLastUpdateTime from "@utils/conversation/get_last_update_time";
 import { useMemo } from "react";
 
-import { ReactComponent as Group } from "@newicons/users/Group.svg";
+import { ReactComponent as Group } from "@icons/users/Group.svg";
+import { ReactComponent as UnknownPhoto } from "@icons/users/UnknownPhoto.svg";
 
 export default function ConversationItem({
   isSelected,
@@ -17,17 +18,22 @@ export default function ConversationItem({
     return getLastUpdateTime(updated_at, last_message);
   }, [updated_at, last_message]);
 
+  const chatPhoto = useMemo(() => {
+    if (type === "g") {
+      return <Group />;
+    }
+    return chatName ? chatName.slice(0, 2).toUpperCase() : <UnknownPhoto />;
+  }, [type, chatName]);
+
   return (
     <div
       className={`chat-box__container${isSelected ? "--selected" : ""}`}
       onClick={onClickFunc}
     >
-      <div className="box__photo fcc">
-        {type === "g" ? <Group /> : chatName?.slice(0, 2).toUpperCase()}
-      </div>
+      <div className="box__photo fcc">{chatPhoto}</div>
       <div className="box__content">
         <div className="content-top">
-          <p className="content-top__name">{chatName}</p>
+          <p className="content-top__name">{chatName || "Deleted account"}</p>
           <div className="content-top__time">{tView}</div>
         </div>
         <div className="content-bottom">

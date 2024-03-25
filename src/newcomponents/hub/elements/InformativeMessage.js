@@ -1,11 +1,11 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import addSuffix from "@utils/navigation/add_suffix";
+import { useLocation } from "react-router-dom";
 
 export default function InformativeMessage({
   text,
   params,
   isPrevMesssageUsers,
 }) {
-  const navigate = useNavigate();
   const { pathname, hash } = useLocation();
 
   return (
@@ -16,7 +16,7 @@ export default function InformativeMessage({
           : "informative-message"
       }
       onClick={() =>
-        navigate(pathname + hash + `/participant?uid=${params?.user?._id}`)
+        addSuffix(pathname + hash, `/user?uid=${params?.user?._id}`)
       }
     >
       {text}

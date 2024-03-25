@@ -6,15 +6,11 @@ export const networkState = createSlice({
     value: true,
   },
   reducers: {
-    updateNetworkState: (state, action) => {
-      state.value = action.payload;
-    },
+    updateNetworkState: (state, action) => void (state.value = action.payload),
   },
 });
 
-export const getNetworkState = (state) => {
-  return state.networkState.value;
-};
+export const getNetworkState = (state) => state.networkState.value;
 
 export const { updateNetworkState } = networkState.actions;
 

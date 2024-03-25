@@ -24,9 +24,11 @@
   --font-h6: calc(var(--base-font) * 1.2);
   --font-p: calc(var(--base-font) * 1);
   --font-span: calc(var(--base-font) * 0.833);
+  --font-indicator: calc(var(--base-font) * 0.75);
 
   --color-white: #fff;
   --color-black: #000;
+  --color-black-25: rgba(0, 0, 0, 0.25);
   --color-black-50: rgba(0, 0, 0, 0.5);
   --color-red: #df2e38;
   --color-bg-light: #f6f6f6;
@@ -94,7 +96,7 @@
   font-size: var(--font-p);
   color: var(--color-text-dark);
 
-  line-height: 100%;
+  line-height: normal;
   font-weight: 200;
 }
 
@@ -152,7 +154,6 @@ main {
 }
 .connect-line__text {
   text-align: center;
-  line-height: 26px;
   font-weight: 300;
   font-size: calc(var(--font-size) * 1.1);
   color: var(--color-white);

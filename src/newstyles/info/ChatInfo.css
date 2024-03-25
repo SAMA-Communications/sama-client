@@ -143,8 +143,6 @@
   gap: 5px;
 
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .participant__info > p,
 .participant__info > span {

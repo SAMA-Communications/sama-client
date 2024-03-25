@@ -7,14 +7,14 @@ import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 import { useLocation } from "react-router-dom";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import "@newstyles/info/UserProfile.css";
 
-import { ReactComponent as Close } from "@newicons/actions/CloseGray.svg";
-import { ReactComponent as LinkTo } from "@newicons/options/LinkTo.svg";
-import { ReactComponent as UserIcon } from "@newicons/users/ProfileIcon.svg";
+import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
+import { ReactComponent as LinkTo } from "@icons/options/LinkTo.svg";
+import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
 
 export default function OtherUserProfile() {
   const { pathname, hash, search } = useLocation();
@@ -27,11 +27,18 @@ export default function OtherUserProfile() {
   );
   const { _id: userId, login, email, phone } = userObject;
 
-  window.onkeydown = function (event) {
-    event.keyCode === KEY_CODES.ESCAPE &&
-      removeAndNavigateLastSection(pathname + hash);
-    event.keyCode === KEY_CODES.ENTER && event.preventDefault();
-  };
+  useEffect(() => {
+    const keydownHandler = ({ e }) => {
+      e.keyCode === KEY_CODES.ESCAPE &&
+        removeAndNavigateLastSection(pathname + hash, "/profile");
+      e.keyCode === KEY_CODES.ENTER && e.preventDefault();
+    };
+
+    window.addEventListener("keydown", keydownHandler);
+    return () => {
+      window.removeEventListener("keydown", keydownHandler);
+    };
+  }, [hash, pathname]);
 
   const viewStatusActivity = useMemo(
     () => activityService.getUserLastActivity(userId),

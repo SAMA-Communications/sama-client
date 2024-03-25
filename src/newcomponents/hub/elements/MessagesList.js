@@ -5,11 +5,11 @@ import InformativeMessage from "@newcomponents/hub/elements/InformativeMessage";
 import api from "@api/api";
 import {
   addMessages,
-  getActiveConversationMessages,
+  selectActiveConversationMessages,
   upsertMessages,
 } from "@store/values/Messages";
 import { getConverastionById, upsertChat } from "@store/values/Conversations";
-import { getCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useCallback, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,9 +17,9 @@ import { useDispatch, useSelector } from "react-redux";
 export default function MessagesList({ scrollRef }) {
   const dispatch = useDispatch();
 
-  const messages = useSelector(getActiveConversationMessages);
+  const messages = useSelector(selectActiveConversationMessages);
   const participants = useSelector(selectParticipantsEntities);
-  const currentUser = useSelector(getCurrentUser);
+  const currentUser = useSelector(selectCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 

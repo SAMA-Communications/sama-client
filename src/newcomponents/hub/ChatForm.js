@@ -35,9 +35,14 @@ export default function ChatForm() {
 
   useEffect(() => {
     const { pathname, hash } = location;
+
     const closeForm = (event) => {
       if (event && event.stopPropagation) {
         event.stopPropagation();
+      }
+
+      if (!selectedCID) {
+        return;
       }
 
       dispatch(clearSelectedConversation());
@@ -45,16 +50,20 @@ export default function ChatForm() {
       removeAndNavigateLastSection(pathname + hash);
     };
 
-    document.removeEventListener("swiped-left", closeForm);
-    document.removeEventListener("swiped-right", closeForm);
+    const keydownHandler = (e) => {
+      e.keyCode === KEY_CODES.ESCAPE && closeForm();
+    };
 
     document.addEventListener("swiped-left", closeForm);
     document.addEventListener("swiped-right", closeForm);
+    window.addEventListener("keydown", keydownHandler);
 
-    window.onkeydown = function ({ keyCode }) {
-      keyCode === KEY_CODES.ESCAPE && closeForm();
+    return () => {
+      document.removeEventListener("swiped-left", closeForm);
+      document.removeEventListener("swiped-right", closeForm);
+      window.removeEventListener("keydown", keydownHandler);
     };
-  }, [location]);
+  }, [location, selectedCID]);
 
   useEffect(() => {
     const { hash } = location;

@@ -4,17 +4,18 @@ import messagesService from "@services/messagesService";
 import showCustomAlert from "@utils/show_alert";
 import {
   addMessage,
-  getActiveConversationMessages,
+  selectActiveConversationMessages,
 } from "@store/values/Messages";
 import {
   getConverastionById,
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
-import { getCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUser } from "@store/values/CurrentUser";
+import { selectParticipantsEntities } from "@store/values/Participants";
 import { getNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import "@newstyles/hub/chatForm/ChatFormInputs.css";
 
@@ -22,8 +23,9 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   const dispatch = useDispatch();
 
   const connectState = useSelector(getNetworkState);
-  const currentUser = useSelector(getCurrentUser);
-  const messages = useSelector(getActiveConversationMessages);
+  const currentUser = useSelector(selectCurrentUser);
+  const messages = useSelector(selectActiveConversationMessages);
+  const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
@@ -84,7 +86,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     setIsSendMessageDisable(false);
     chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
     inputRef.current.focus();
-    inputRef.current.style.height = `calc(70px * var(--base-scale))`;
+    inputRef.current.style.height = `calc(55px * var(--base-scale))`;
   };
 
   window.onresize = function () {
@@ -98,13 +100,23 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
 
   useEffect(() => {
     inputRef.current.value = "";
-    inputRef.current.style.height = `calc(70px * var(--base-scale))`;
+    inputRef.current.style.height = `calc(55px * var(--base-scale))`;
   }, [selectedCID]);
+
+  const isBlockedConv = useMemo(() => {
+    const { type, owner_id, opponent_id } = selectedConversation;
+
+    return (
+      type === "u" &&
+      (!participants[opponent_id]?.login || !participants[owner_id]?.login)
+    );
+  }, [selectedConversation, participants]);
 
   return (
     <MessageInput
       inputTextRef={inputRef}
       inputFilesRef={filePicker}
+      isBlockedConv={isBlockedConv}
       onSubmitFunc={createAndSendMessage}
     />
   );

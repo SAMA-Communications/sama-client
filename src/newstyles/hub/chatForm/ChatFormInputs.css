@@ -13,18 +13,20 @@
 
 #inputMessage {
   width: 100%;
-  height: calc(70px * var(--base-scale));
 
-  padding: calc(25px * var(--base-scale)) calc(77px * var(--base-scale));
+  padding: calc(18px * var(--base-scale)) calc(58px * var(--base-scale));
 
   color: var(--color-black);
-  font-size: var(--font-h5);
+  font-size: var(--font-p);
 
   border: 0;
   border-radius: var(--border-16);
   background-color: var(--color-hover-light);
 
   resize: none;
+}
+#inputMessage:disabled {
+  padding: calc(18px * var(--base-scale));
 }
 #inputMessage:focus {
   outline: none;
@@ -34,7 +36,7 @@
 }
 #inputMessage::placeholder {
   color: var(--color-text-dark);
-  font-size: var(--font-h5);
+  font-size: var(--font-p);
 }
 
 #inputFile {
@@ -44,16 +46,15 @@
 .input-file__button,
 .input-text__button {
   position: absolute;
-  bottom: calc(20px * var(--base-scale));
+  bottom: calc(17px * var(--base-scale));
 
   cursor: pointer;
 
   z-index: 1;
 }
 .input-file__button {
-  left: calc(30px * var(--base-scale));
+  left: calc(25px * var(--base-scale));
 }
 .input-text__button {
-  bottom: calc(21px * var(--base-scale));
-  right: calc(30px * var(--base-scale));
+  right: calc(25px * var(--base-scale));
 }

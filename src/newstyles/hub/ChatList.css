@@ -1,6 +1,8 @@
 .chat-list__container {
   width: calc(400px * var(--base-scale));
 
+  margin-top: 5px;
+
   display: flex;
   gap: calc(10px * var(--base-scale));
   flex-direction: column;
@@ -59,7 +61,9 @@
 
   background-color: var(--color-bg-dark);
 }
-
+.box__photo > span {
+  height: 75px;
+}
 .box__content {
   max-width: calc(100% - calc(90px * var(--base-scale)));
   max-height: calc(70px * var(--base-scale));
@@ -85,8 +89,6 @@
 }
 
 .content-top__name {
-  height: calc(20px * var(--base-scale));
-
   color: var(--color-black);
   font-weight: 500;
   font-size: var(--font-h6);
@@ -124,7 +126,6 @@
   width: 100%;
 
   font-weight: 300;
-  line-height: var(--font-h6);
 
   overflow: hidden;
   text-overflow: ellipsis;

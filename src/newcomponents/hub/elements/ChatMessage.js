@@ -1,15 +1,14 @@
 import MessageAttachments from "@newcomponents/message/elements/MessageAttachments";
 import MessageStatus from "@newcomponents/message/elements/MessageStatus";
+import MessageUserIcon from "./MessageUserIcon";
 import getUserFullName from "@utils/user/get_user_full_name";
-import getUserInitials from "@utils/user/get_user_initials";
 import { urlify } from "@utils/urlify";
 import { useMemo } from "react";
 
 import "@newstyles/hub/elements/ChatMessage.css";
 
-import { ReactComponent as UserPhoto } from "@icons/chatForm/UserPhotoIconChat.svg";
-import { ReactComponent as CornerLight } from "@newicons/_helpers/CornerLight.svg";
-import { ReactComponent as CornerAccent } from "@newicons/_helpers/CornerAccent.svg";
+import { ReactComponent as CornerLight } from "@icons/_helpers/CornerLight.svg";
+import { ReactComponent as CornerAccent } from "@icons/_helpers/CornerAccent.svg";
 
 export default function ChatMessage({
   sender,
@@ -37,7 +36,10 @@ export default function ChatMessage({
       <div className="message-photo">
         {next ? null : (
           <div className="photo__container fcc">
-            {sender ? getUserInitials(sender) : <UserPhoto />}
+            <MessageUserIcon
+              userObject={sender}
+              isCurrentUser={isCurrentUser}
+            />
           </div>
         )}
       </div>
@@ -48,7 +50,9 @@ export default function ChatMessage({
           <CornerLight className="message-content--corner" />
         )}
         {prev ? null : (
-          <div className="content__uname">{getUserFullName(sender)}</div>
+          <div className="content__uname">
+            {getUserFullName(sender) || "Deleted account"}
+          </div>
         )}
         <div className="content__container">
           {attachments?.length ? (
