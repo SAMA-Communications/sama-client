@@ -13,6 +13,36 @@ class UsersService {
     this.currentUser = store.getState().currentUser.value;
   }
 
+  async login(data) {
+    const { login, password } = data;
+
+    if (!login || !password) {
+      return;
+    }
+
+    const { token: userToken, user: userData } = await api.userLogin({
+      login: login.trim().toLowerCase(),
+      password: password.trim(),
+    });
+    localStorage.setItem("sessionId", userToken);
+    api.curerntUserId = userData._id;
+
+    return userData;
+  }
+
+  async create(data) {
+    const { login, password } = data;
+
+    if (!login || !password) {
+      return;
+    }
+
+    return await api.userCreate({
+      login: login.trim().toLowerCase(),
+      password: password.trim(),
+    });
+  }
+
   async edit(data, typeOfValidation) {
     if (validateIsEmptyObject(data)) {
       return;

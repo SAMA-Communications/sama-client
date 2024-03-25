@@ -1,12 +1,15 @@
-import Login from "@newcomponents/auth/components/Login";
-import SignUp from "@newcomponents/auth/components/SignUp";
 import AnimationSamaLogo from "@newcomponents/static/AnimationSamaLogo";
+import LoginLinks from "@newcomponents/auth/components/LoginLinks";
+import PasswordInput from "@newcomponents/auth/elements/PasswordInput";
+import SignUpLinks from "@newcomponents/auth/components/SignUpLinks";
+import UserNameInput from "@newcomponents/auth/elements/UserNameInput";
+import { useState } from "react";
 
 import "@newstyles/auth/AuthorizationPage.css";
-import { useState } from "react";
 
 export default function AuthorizationHub() {
   const [page, setPage] = useState("login");
+  const [content, setContent] = useState({});
 
   const isLoginPage = page === "login";
 
@@ -36,13 +39,23 @@ export default function AuthorizationHub() {
             <div className={`title__bottom-line${isLoginPage ? "gray" : ""}`} />
           </div>
         </div>
-        {isLoginPage ? (
-          <Login changePage={() => setPage("signup")} />
-        ) : (
-          <SignUp changePage={() => setPage("login")} />
-        )}
+        <div className="authorization__form">
+          <UserNameInput setState={setContent} />
+          <PasswordInput setState={setContent} />
+          {isLoginPage ? (
+            <LoginLinks
+              changePage={() => setPage("signup")}
+              content={content}
+            />
+          ) : (
+            <SignUpLinks
+              changePage={() => setPage("login")}
+              content={content}
+            />
+          )}
+        </div>
       </div>
-      <div className={`authorization__side--right-${page}`}></div>
+      <div className={`authorization__side--right-${page}`} />
     </section>
   );
 }

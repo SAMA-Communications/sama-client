@@ -155,8 +155,8 @@ class Api {
               deviceId: getBrowserFingerprint(true),
             }
           : {
-              login: data.ulogin,
-              password: data.pass,
+              login: data.login,
+              password: data.password,
               deviceId: getBrowserFingerprint(true),
             },
         id: getUniqueId("userLogin"),
@@ -170,8 +170,8 @@ class Api {
     const requestData = {
       request: {
         user_create: {
-          login: data.ulogin,
-          password: data.pass,
+          login: data.login,
+          password: data.password,
         },
         id: getUniqueId("userCreate"),
       },
