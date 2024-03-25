@@ -6,6 +6,8 @@ import { history } from "@helpers/history";
 import validateEmail from "@validations/user/validateEmail";
 import validateFieldLength from "@validations/validateFieldLength";
 import validateIsEmptyObject from "@validations/validateIsEmtpyObject";
+import validateLogin from "@validations/user/validateLogin";
+import validatePassword from "@validations/user/validatePassword";
 import validatePhone from "@validations/user/validatePhone";
 
 class UsersService {
@@ -16,8 +18,16 @@ class UsersService {
   async login(data) {
     const { login, password } = data;
 
-    if (!login || !password) {
-      return;
+    if (!login?.length || !password?.length) {
+      return "The login and password fields must not be empty.";
+    }
+
+    if (!validateLogin(login)) {
+      return "The login field must contain from 3 to 20 characters.";
+    }
+
+    if (!validatePassword(password)) {
+      return "The password field must contain from 3 to 20 characters";
     }
 
     const { token: userToken, user: userData } = await api.userLogin({
@@ -33,8 +43,16 @@ class UsersService {
   async create(data) {
     const { login, password } = data;
 
-    if (!login || !password) {
-      return;
+    if (!login?.length || !password?.length) {
+      return "The login and password fields must not be empty.";
+    }
+
+    if (!validateLogin(login)) {
+      return "The login field must contain from 3 to 20 characters.";
+    }
+
+    if (!validatePassword(password)) {
+      return "The password field must contain from 3 to 20 characters";
     }
 
     return await api.userCreate({

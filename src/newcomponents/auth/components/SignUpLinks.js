@@ -19,9 +19,16 @@ export default function SignUpLinks({ changePage, content }) {
   const onSubmit = async () => {
     setIsLoader(true);
     try {
-      await usersService.create(content);
+      const userObject = await usersService.create(content);
+      if (typeof userObject === "string") {
+        throw new Error(userObject, { message: userObject });
+      }
+
       if (isLogin) {
         const userData = await usersService.login(content);
+        if (typeof userData === "string") {
+          throw new Error(userData, { message: userData });
+        }
 
         subscribeForNotifications();
         dispatch(setSelectedConversation({}));

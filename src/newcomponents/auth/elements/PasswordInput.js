@@ -9,7 +9,6 @@ export default function PasswordInput({ setState }) {
 
   return (
     <div className="auth-form__input">
-      {/* min 8  "The username is a required field." */}
       <input
         onKeyDown={(e) => e.key === " " && e.preventDefault()}
         onChange={({ target }) =>

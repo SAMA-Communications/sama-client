@@ -12,12 +12,16 @@ import { useState } from "react";
 
 export default function LoginLinks({ changePage, content }) {
   const dispatch = useDispatch();
+
   const [isLoader, setIsLoader] = useState(false);
 
   const sendRequest = async () => {
     setIsLoader(true);
     try {
       const userData = await usersService.login(content);
+      if (typeof userData === "string") {
+        throw new Error(userData, { message: userData });
+      }
 
       navigateTo("/");
       subscribeForNotifications();
