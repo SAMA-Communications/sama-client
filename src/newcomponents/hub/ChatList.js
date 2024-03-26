@@ -1,9 +1,9 @@
 import ConversationItem from "@newcomponents/hub/elements/ConversationItem.js";
 import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
-import React, { useMemo, useState } from "react";
 import SearchBlock from "@newcomponents/search/SearchBlock";
 import SearchInput from "@newcomponents/static/SearchBar";
 import getUserFullName from "@utils/user/get_user_full_name";
+import navigateTo from "@utils/navigation/navigate_to";
 import {
   getConverastionById,
   selectAllConversations,
@@ -11,7 +11,7 @@ import {
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 import { setSelectedConversation } from "@store/values/SelectedConversation.js";
-import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import "@newstyles/hub/ChatList.css";
@@ -20,7 +20,6 @@ import SChatList from "@skeletons/hub/SChatList";
 
 export default function ChatList() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [inputText, setInputText] = useState(null);
 
@@ -48,7 +47,7 @@ export default function ChatList() {
         isSelected={activeConv === obj._id}
         onClickFunc={() => {
           dispatch(setSelectedConversation({ id: obj._id }));
-          navigate(`/#${obj._id}`);
+          navigateTo(`/#${obj._id}`);
         }}
         chatName={
           obj.name ||

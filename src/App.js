@@ -4,6 +4,7 @@ import autoLoginService from "@services/autoLoginService.js";
 import conversationService from "@services/conversationsService";
 import globalConstants from "@helpers/constants";
 import messagesService from "@services/messagesService";
+import navigateTo from "@utils/navigation/navigate_to";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Suspense, lazy, useEffect, useRef } from "react";
@@ -59,10 +60,10 @@ export default function App() {
     if (token && token !== "undefined") {
       const { pathname, hash } = history.location;
       const path = hash ? pathname + hash : "/";
-      history.navigate(path);
+      navigateTo(path);
     } else {
       localStorage.removeItem("sessionId");
-      history.navigate("/authorization");
+      navigateTo("/authorization");
     }
   }, []);
 

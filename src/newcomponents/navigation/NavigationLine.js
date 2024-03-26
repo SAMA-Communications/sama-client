@@ -5,7 +5,7 @@ import navigateTo from "@utils/navigation/navigate_to";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
 
 import "@newstyles/navigation/NavigationLine.css";
@@ -17,7 +17,6 @@ import { ReactComponent as Create } from "@icons/AddConversation.svg";
 import { ReactComponent as Logout } from "@icons/actions/Logout.svg";
 
 export default function NavigationLine() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
@@ -55,7 +54,7 @@ export default function NavigationLine() {
 
   return (
     <aside className="navigation__container">
-      <div className="navigation__logo fcc" onClick={() => navigate("/")}>
+      <div className="navigation__logo fcc" onClick={() => navigateTo("/")}>
         <SamaLogo />
       </div>
       <div className="navigation__menu fcc">
@@ -81,7 +80,7 @@ export default function NavigationLine() {
       <div
         onClick={() => {
           sendLogout();
-          navigate("/authorization");
+          navigateTo("/authorization");
         }} //authorization
         className="menu__logout fcc"
       >
