@@ -15,54 +15,52 @@ class UsersService {
   }
 
   async login(data) {
-    return new Promise(async (resolve, reject) => {
-      const { login, password } = data;
+    const { login, password } = data;
 
-      if (!login?.length || !password?.length) {
-        reject("The login and password fields must not be empty.");
-      }
+    if (!login?.length || !password?.length) {
+      throw new Error("The login and password fields must not be empty.");
+    }
 
-      if (!validateLogin(login)) {
-        reject("The login field must contain from 3 to 20 characters.");
-      }
+    if (!validateLogin(login)) {
+      throw new Error("The login field must contain from 3 to 20 characters.");
+    }
 
-      if (!validatePassword(password)) {
-        reject("The password field must contain from 3 to 20 characters");
-      }
+    if (!validatePassword(password)) {
+      throw new Error(
+        "The password field must contain from 3 to 20 characters"
+      );
+    }
 
-      const { token: userToken, user: userData } = await api.userLogin({
-        login: login.trim().toLowerCase(),
-        password: password.trim(),
-      });
-      localStorage.setItem("sessionId", userToken);
-      api.curerntUserId = userData._id;
-
-      resolve(userData);
+    const { token: userToken, user: userData } = await api.userLogin({
+      login: login.trim().toLowerCase(),
+      password: password.trim(),
     });
+    localStorage.setItem("sessionId", userToken);
+    api.curerntUserId = userData._id;
+
+    return userData;
   }
 
   async create(data) {
-    return new Promise(async (resolve, reject) => {
-      const { login, password } = data;
+    const { login, password } = data;
 
-      if (!login?.length || !password?.length) {
-        reject("The login and password fields must not be empty.");
-      }
+    if (!login?.length || !password?.length) {
+      throw new Error("The login and password fields must not be empty.");
+    }
 
-      if (!validateLogin(login)) {
-        reject("The login field must contain from 3 to 20 characters.");
-      }
+    if (!validateLogin(login)) {
+      throw new Error("The login field must contain from 3 to 20 characters.");
+    }
 
-      if (!validatePassword(password)) {
-        reject("The password field must contain from 3 to 20 characters");
-      }
-
-      resolve(
-        await api.userCreate({
-          login: login.trim().toLowerCase(),
-          password: password.trim(),
-        })
+    if (!validatePassword(password)) {
+      throw new Error(
+        "The password field must contain from 3 to 20 characters"
       );
+    }
+
+    return await api.userCreate({
+      login: login.trim().toLowerCase(),
+      password: password.trim(),
     });
   }
 
