@@ -1,5 +1,6 @@
 import InfoBox from "@newcomponents/info/elements/InfoBox";
 import addSuffix from "@utils/navigation/add_suffix";
+import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
@@ -14,7 +15,6 @@ import { ReactComponent as Close } from "@icons/actions/Close.svg";
 import { ReactComponent as Password } from "@icons/users/Password.svg";
 import { ReactComponent as Trash } from "@icons/actions/Trash.svg";
 import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
-
 export default function UserProfile() {
   const { pathname, hash } = useLocation();
 
@@ -100,7 +100,13 @@ export default function UserProfile() {
         </div>
         <div className="info__link">
           <Trash />
-          <p className="info__delete" onClick={usersService.deleteCurrentUser}>
+          <p
+            className="info__delete"
+            onClick={async () => {
+              await usersService.deleteCurrentUser();
+              navigateTo("/authorization");
+            }}
+          >
             Delete account...
           </p>
         </div>

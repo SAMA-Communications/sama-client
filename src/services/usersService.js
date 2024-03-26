@@ -1,5 +1,4 @@
 import api from "@api/api";
-import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
 
@@ -116,7 +115,6 @@ class UsersService {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         await api.userDelete();
-        navigateTo("/authorization");
         store.dispatch({ type: "RESET_STORE" });
       } catch (err) {
         showCustomAlert(err.message, "danger");
