@@ -19,10 +19,6 @@ export default function LoginLinks({ changePage, content }) {
     setIsLoader(true);
     try {
       const userData = await usersService.login(content);
-      if (typeof userData === "string") {
-        throw new Error(userData, { message: userData });
-      }
-
       navigateTo("/");
       subscribeForNotifications();
       dispatch(setSelectedConversation({}));
@@ -31,7 +27,7 @@ export default function LoginLinks({ changePage, content }) {
       dispatch(upsertUser(userData));
     } catch (err) {
       localStorage.removeItem("sessionId");
-      showCustomAlert(err.message, "danger");
+      showCustomAlert(err, "danger");
     }
     setIsLoader(false);
   };

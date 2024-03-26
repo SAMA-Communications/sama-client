@@ -19,16 +19,10 @@ export default function SignUpLinks({ changePage, content }) {
   const onSubmit = async () => {
     setIsLoader(true);
     try {
-      const userObject = await usersService.create(content);
-      if (typeof userObject === "string") {
-        throw new Error(userObject, { message: userObject });
-      }
+      await usersService.create(content);
 
       if (isLogin) {
         const userData = await usersService.login(content);
-        if (typeof userData === "string") {
-          throw new Error(userData, { message: userData });
-        }
 
         subscribeForNotifications();
         dispatch(setSelectedConversation({}));
@@ -46,7 +40,7 @@ export default function SignUpLinks({ changePage, content }) {
       navigateTo(isLogin ? "/" : "/authorization");
     } catch (err) {
       isLogin && localStorage.removeItem("sessionId");
-      showCustomAlert(err.message, "danger");
+      showCustomAlert(err, "danger");
     }
     setIsLoader(false);
   };
