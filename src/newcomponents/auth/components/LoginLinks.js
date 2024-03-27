@@ -41,7 +41,7 @@ export default function LoginLinks({ changePage, content }) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [sendRequest]);
 
   return (
     <>

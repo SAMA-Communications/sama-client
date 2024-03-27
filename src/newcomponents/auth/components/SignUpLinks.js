@@ -54,7 +54,7 @@ export default function SignUpLinks({ changePage, content }) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [sendRequest]);
 
   return (
     <>
