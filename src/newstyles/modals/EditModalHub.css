@@ -1,0 +1,86 @@
+.edit-modal__container {
+  position: absolute;
+  top: 0;
+
+  padding: 10px;
+
+  width: 100svw;
+  height: 100svh;
+
+  background-color: var(--color-black-50);
+
+  z-index: 200;
+}
+.edit-modal__content--user,
+.edit-modal__content--chat,
+.edit-modal__content--chatname {
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  border-radius: var(--border-32);
+  background-color: var(--color-bg-light);
+}
+
+.edit-modal__content--user {
+  width: min(360px, 100%);
+}
+.edit-modal__content--chat,
+.edit-modal__content--chatname {
+  width: min(460px, 100%);
+}
+.edit-modal__title {
+  font-size: var(--font-h5);
+  font-weight: 400;
+  color: var(--color-black);
+}
+
+.em-inputs__container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.edit-modal__input {
+  flex: 1;
+}
+.edit-modal__input > input {
+  width: 100%;
+
+  padding: 38px 15px 12px 15px;
+
+  font-size: var(--font-h6);
+  color: var(--color-black);
+  font-weight: 300;
+
+  border: 0;
+  border-radius: var(--border-12);
+  background-color: var(--color-hover-light);
+}
+.edit-modal__input > input:focus {
+  outline: none;
+}
+.edit-modal__input > p {
+  position: absolute;
+  top: 12px;
+  left: 15px;
+
+  font-weight: 300;
+
+  z-index: 212;
+}
+
+.em-navigation__container {
+  margin-top: auto;
+
+  justify-content: flex-end;
+  gap: 30px;
+}
+.em-navigation__link {
+  font-size: var(--font-h6);
+  color: var(--color-accent-dark);
+  font-weight: 300;
+
+  cursor: pointer;
+}

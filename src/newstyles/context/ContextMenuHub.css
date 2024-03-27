@@ -1,0 +1,47 @@
+.context-menu__container {
+  position: absolute;
+  left: 10px;
+
+  width: 240px;
+
+  padding: 10px 4px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+
+  border-radius: var(--border-12);
+  box-shadow: 0 0 4px var(--color-black-25);
+  background-color: var(--color-bg-light);
+
+  z-index: 55;
+}
+
+.context-menu__link,
+.context-menu__link--danger {
+  padding: 7px 13px;
+
+  display: flex;
+  gap: 15px;
+  align-items: center;
+
+  border-radius: var(--border-8);
+
+  cursor: pointer;
+}
+.context-menu__link:hover,
+.context-menu__link--danger:hover {
+  background-color: var(--color-hover-light);
+}
+.context-menu__link--danger {
+  margin-top: 5px;
+}
+.context-menu__link--danger > .context-menu__text {
+  color: var(--color-red);
+}
+
+.context-menu__text {
+  color: var(--color-black);
+  font-size: var(--font-h6);
+  text-wrap: nowrap;
+}

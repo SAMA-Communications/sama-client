@@ -1,34 +1,39 @@
-import React, { Suspense, useEffect, useRef } from "react";
+import ContextMenuHub from "@newcomponents/context/ContextMenuHub";
 import activityService from "@services/activityService";
 import autoLoginService from "@services/autoLoginService.js";
 import conversationService from "@services/conversationsService";
 import globalConstants from "@helpers/constants";
 import messagesService from "@services/messagesService";
+import navigateTo from "@utils/navigation/navigate_to";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { getIsMobileView, setIsMobileView } from "@store/IsMobileView";
+import { Suspense, lazy, useEffect, useRef } from "react";
+import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
 import { history } from "@helpers/history";
-import { updateNetworkState } from "@store/NetworkState";
+import { selectIsClicked, setClicked } from "@store/values/ContextMenu";
+import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 
-import PageLoader from "@components/PageLoader";
-import SignUp from "@screens/SignUp";
+import SMain from "@skeletons/SMain";
+import SPageLoader from "@skeletons/SPageLoader";
 
-import "@styles/GlobalParam.css";
-import "@styles/themes/DarkTheme.css";
-import "@styles/themes/DefaultTheme.css";
+import "@newstyles/GlobalParam.css";
 
-const Main = React.lazy(() => import("@components/Main"));
-const Login = React.lazy(() => import("@screens/Login"));
-const ErrorPage = React.lazy(() => import("@components/ErrorPage"));
+const Main = lazy(() => import("@newcomponents/Main"));
+const AuthorizationHub = lazy(() =>
+  import("@newcomponents/auth/AuthorizationHub")
+);
 
 export default function App() {
   const dispatch = useDispatch();
   history.location = useLocation();
   history.navigate = useNavigate();
 
+  const isContextClicked = useSelector(selectIsClicked);
+
   const isMobileView = useSelector(getIsMobileView);
   const isMobileViewRef = useRef(isMobileView);
+
   useEffect(() => {
     isMobileViewRef.current = isMobileView;
   }, [isMobileView]);
@@ -44,45 +49,43 @@ export default function App() {
       if (isMobileView !== isMobileViewRef.current) {
         dispatch(setIsMobileView(isMobileView));
       }
+      dispatch(setClicked(false));
     });
 
     dispatch(
       setIsMobileView(window.innerWidth <= globalConstants.windowChangeWitdh)
     );
 
-    const userTheme = localStorage.getItem("theme");
-    const prefersDarkMode = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-
-    if (userTheme === "dark" || (!userTheme && prefersDarkMode)) {
-      localStorage.setItem("theme", "dark");
-      document.body.classList.add("dark-theme");
-    } else {
-      localStorage.setItem("theme", "light");
-      document.body.classList.remove("dark-theme");
-    }
-
     const token = localStorage.getItem("sessionId");
     if (token && token !== "undefined") {
       const { pathname, hash } = history.location;
-      const path = hash ? pathname + hash : "/main";
-      history.navigate(path);
+      const path = hash ? pathname + hash : "/";
+      navigateTo(path);
     } else {
       localStorage.removeItem("sessionId");
-      history.navigate("/login");
+      navigateTo("/authorization");
     }
   }, []);
 
+  useEffect(() => {
+    const handleClick = () => dispatch(setClicked(false));
+    document.addEventListener("click", handleClick);
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
+
   return (
-    <Suspense fallback={<PageLoader />}>
+    <Suspense
+      fallback={localStorage.getItem("sessionId") ? <SMain /> : <SPageLoader />}
+    >
+      {isContextClicked ? (
+        <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
+      ) : null}
       <AnimatePresence initial={false} mode="wait">
         <Routes location={history.location}>
-          <Route path="/loading" element={<PageLoader />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/main/*" element={<Main />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/*" element={<ErrorPage />} />
+          <Route path="/authorization" element={<AuthorizationHub />} />
+          <Route path="/*" element={<Main />} />
         </Routes>
       </AnimatePresence>
     </Suspense>
