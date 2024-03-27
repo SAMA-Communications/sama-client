@@ -3,12 +3,13 @@ import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import subscribeForNotifications from "@services/notifications";
 import usersService from "@services/usersService";
+import { KEY_CODES } from "@helpers/keyCodes";
 import { setCurrentUser } from "@store/values/CurrentUser";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { upsertUser } from "@store/values/Participants";
 import { useDispatch } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function LoginLinks({ changePage, content }) {
   const dispatch = useDispatch();
@@ -31,6 +32,16 @@ export default function LoginLinks({ changePage, content }) {
     }
     setIsLoader(false);
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      e.keyCode === KEY_CODES.ENTER && sendRequest();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <>
