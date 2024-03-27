@@ -1,10 +1,10 @@
 import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
 import OvalLoader from "@newcomponents/_helpers/OvalLoader";
 import SearchedUser from "./elements/SearchedUser";
+import usersService from "@services/usersService";
 import { useEffect, useState, useTransition } from "react";
 
 import "@newstyles/search/SearchBlock.css";
-import usersService from "@services/usersService";
 
 export default function SearchBlock({
   searchText,
@@ -13,7 +13,7 @@ export default function SearchBlock({
   addUserToArray,
   removeUserFromArray,
   isMaxLimit,
-  isClickDisabledFunc,
+  isClickDisabledFunc = () => false,
   isSelectUserToArray = false,
   isClearInputText = false,
   isPreviewUserProfile = false,
