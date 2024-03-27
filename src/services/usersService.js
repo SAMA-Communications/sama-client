@@ -1,16 +1,67 @@
 import api from "@api/api";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
-import { history } from "@helpers/history";
 
 import validateEmail from "@validations/user/validateEmail";
 import validateFieldLength from "@validations/validateFieldLength";
 import validateIsEmptyObject from "@validations/validateIsEmtpyObject";
+import validateLogin from "@validations/user/validateLogin";
+import validatePassword from "@validations/user/validatePassword";
 import validatePhone from "@validations/user/validatePhone";
 
 class UsersService {
   constructor() {
     this.currentUser = store.getState().currentUser.value;
+  }
+
+  async login(data) {
+    const { login, password } = data;
+
+    if (!login?.length || !password?.length) {
+      throw new Error("The login and password fields must not be empty.");
+    }
+
+    if (!validateLogin(login)) {
+      throw new Error("The login field must contain from 3 to 20 characters.");
+    }
+
+    if (!validatePassword(password)) {
+      throw new Error(
+        "The password field must contain from 3 to 20 characters"
+      );
+    }
+
+    const { token: userToken, user: userData } = await api.userLogin({
+      login: login.trim().toLowerCase(),
+      password: password.trim(),
+    });
+    localStorage.setItem("sessionId", userToken);
+    api.curerntUserId = userData._id;
+
+    return userData;
+  }
+
+  async create(data) {
+    const { login, password } = data;
+
+    if (!login?.length || !password?.length) {
+      throw new Error("The login and password fields must not be empty.");
+    }
+
+    if (!validateLogin(login)) {
+      throw new Error("The login field must contain from 3 to 20 characters.");
+    }
+
+    if (!validatePassword(password)) {
+      throw new Error(
+        "The password field must contain from 3 to 20 characters"
+      );
+    }
+
+    return await api.userCreate({
+      login: login.trim().toLowerCase(),
+      password: password.trim(),
+    });
   }
 
   async edit(data, typeOfValidation) {
@@ -68,7 +119,6 @@ class UsersService {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         await api.userDelete();
-        history.navigate("/login");
         store.dispatch({ type: "RESET_STORE" });
       } catch (err) {
         showCustomAlert(err.message, "danger");

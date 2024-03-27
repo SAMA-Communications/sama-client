@@ -1,6 +1,7 @@
 import ChatNameInput from "./components/ChatNameInput";
 import UserSelectorBlock from "@newcomponents/modals/components/UserSelectorBlock";
 import conversationService from "@services/conversationsService";
+import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@helpers/keyCodes";
@@ -33,7 +34,11 @@ export default function UsersSelectModalHub({ type }) {
   }, []);
 
   const sendCreateRequest = async (participants) => {
-    await conversationService.createGroupChat(participants, chatName);
+    const chatId = await conversationService.createGroupChat(
+      participants,
+      chatName
+    );
+    navigateTo(`/#${chatId}`);
   };
 
   const sendEditRequest = async (participants) => {

@@ -23,6 +23,7 @@ import InfoUserLink from "@newcomponents/context/elements/InfoUserLink";
 import LeaveAndDeleteLink from "@newcomponents/context/elements/LeaveAndDeleteLink";
 import RemoveParticipantLink from "@newcomponents/context/elements/RemoveParticipantLink";
 import SendMessageLink from "@newcomponents/context/elements/SendMessageLink";
+import navigateTo from "@utils/navigation/navigate_to";
 
 export default function ContextMenuHub() {
   const { pathname, hash } = useLocation();
@@ -74,7 +75,10 @@ export default function ContextMenuHub() {
       leave: (
         <LeaveAndDeleteLink
           key={"leave"}
-          onClick={() => conversationService.deleteConversation()}
+          onClick={async () => {
+            await conversationService.deleteConversation();
+            navigateTo("/");
+          }}
         />
       ),
       removeParticipant: (
@@ -87,9 +91,13 @@ export default function ContextMenuHub() {
         <SendMessageLink
           key={"newChat"}
           uObject={userObject}
-          onClick={() =>
-            conversationService.createPrivateChat(userObject?._id, userObject)
-          }
+          onClick={async () => {
+            const chatId = await conversationService.createPrivateChat(
+              userObject?._id,
+              userObject
+            );
+            navigateTo(`/#${chatId}`);
+          }}
         />
       ),
     };

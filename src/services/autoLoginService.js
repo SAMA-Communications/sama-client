@@ -1,13 +1,14 @@
 import api from "@api/api";
+import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
 import subscribeForNotifications from "@services/notifications";
 import { default as EventEmitter } from "@event/eventEmitter";
 import { history } from "@helpers/history";
+import { setCurrentUser } from "@store/values/CurrentUser";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { upsertUser } from "@store/values/Participants";
-import { setCurrentUser } from "@store/values/CurrentUser";
 
 class AutoLoginService {
   constructor() {
@@ -24,7 +25,7 @@ class AutoLoginService {
     const currentPath = history.location?.hash;
     const handleLoginFailure = () => {
       localStorage.removeItem("sessionId");
-      history.navigate("/login"); //authorization
+      navigateTo("/authorization");
       store.dispatch(setUserIsLoggedIn(false));
     };
 
@@ -46,7 +47,7 @@ class AutoLoginService {
         const { pathname, hash } = history.location;
         const path = hash ? pathname + hash : "/";
         setTimeout(() => {
-          history.navigate(path);
+          navigateTo(path);
           currentPath &&
             store.dispatch(
               setSelectedConversation({

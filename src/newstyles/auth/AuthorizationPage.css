@@ -1,0 +1,179 @@
+.authorization__container {
+  flex: 1;
+
+  margin: calc(-20px * var(--base-scale)) calc(-30px * var(--base-scale))
+    calc(-20px * var(--base-scale)) 0;
+
+  display: flex;
+  flex-direction: row;
+}
+.authorization__side--left-login,
+.authorization__side--left-signup {
+  flex: 1;
+
+  background-color: var(--color-black-50);
+  background-blend-mode: darken;
+}
+.authorization__side--left-login {
+  background-image: url(./../../assets/LoginBg.png);
+}
+.authorization__side--left-signup {
+  background-image: url(./../../assets/SignUp.png);
+}
+
+.authorization__side--right-login,
+.authorization__side--right-signup {
+  flex-basis: 120px;
+
+  background-color: var(--color-black-50);
+  background-blend-mode: darken;
+  background-position-x: 0;
+}
+.authorization__side--right-login {
+  background-image: url(./../../assets/LoginBg.png);
+}
+.authorization__side--right-signup {
+  background-position-x: center;
+  background-image: url(./../../assets/SignUp.png);
+}
+
+.authorization__side--main {
+  flex-basis: 700px;
+
+  gap: 60px;
+  flex-direction: column;
+
+  background-color: var(--color-bg-light);
+}
+.authorization__title > div {
+  position: relative;
+
+  font-size: var(--font-72);
+  color: var(--color-black);
+
+  cursor: pointer;
+}
+.authorization__title > div.gray {
+  color: var(--color-hover-light);
+}
+
+.title__bottom-line {
+  position: absolute;
+  bottom: -6px;
+
+  width: 100%;
+  height: 2px;
+
+  background-color: var(--color-accent-dark);
+}
+.title__bottom-line--none {
+  display: none;
+}
+
+.authorization__form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.auth-form__input {
+  width: 420px;
+  height: 80px;
+}
+.auth-form__input > input {
+  width: 100%;
+  height: 100%;
+
+  padding: 42px 15px 15px 15px;
+
+  color: var(--color-black);
+  font-size: var(--font-h5);
+
+  border: 0;
+  border-radius: var(--border-12);
+  background-color: var(--color-hover-light);
+}
+.auth-form__input > input:focus {
+  outline: none;
+}
+.auth-form__input:nth-child(2) > input {
+  padding-right: 50px;
+}
+
+.auth-form__placeholder {
+  position: absolute;
+  top: 12px;
+  left: 15px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-form__password-visibility {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+
+  height: 30px;
+
+  cursor: pointer;
+}
+
+.auth-form__button {
+  padding: 7px 0;
+
+  border-radius: var(--border-12);
+  background-color: var(--color-accent-dark);
+
+  cursor: pointer;
+}
+.auth-form__button > p {
+  padding: 8px 0;
+
+  font-size: var(--font-h6);
+  color: var(--color-white);
+}
+
+.authorization__footer {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+
+  font-size: var(--font-h6);
+}
+.auth-form__link {
+  color: var(--color-accent-dark);
+  font-size: var(--font-h6);
+  font-weight: 500;
+
+  transition: 0.2s color;
+
+  cursor: pointer;
+}
+
+.auth-form__link:hover {
+  color: var(--color-accent-light);
+}
+.auth-form__checkbox {
+  gap: 5px;
+
+  cursor: pointer;
+}
+.auth-form__checkbox > input {
+  width: 18px;
+  height: 18px;
+
+  accent-color: var(--color-hover-light);
+
+  cursor: pointer;
+}
+.auth-form__checkbox > label {
+  color: var(--color-text-hover);
+
+  cursor: pointer;
+}
+
+.login-form__mt-49 {
+  margin-top: -49px;
+}

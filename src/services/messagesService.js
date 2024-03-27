@@ -1,6 +1,7 @@
 import DownloadManager from "@adapters/downloadManager";
 import api from "@api/api";
 import jwtDecode from "jwt-decode";
+import navigateTo from "@utils/navigation/navigate_to";
 import store from "@store/store";
 import { addUser } from "@store/values/Participants";
 import {
@@ -11,7 +12,6 @@ import {
   upsertMessages,
 } from "@store/values/Messages";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
-import { history } from "@helpers/history";
 import {
   markConversationAsRead,
   updateLastMessageField,
@@ -163,7 +163,7 @@ class MessagesService {
       })
       .catch(() => {
         store.dispatch(setSelectedConversation({}));
-        history.navigate("/");
+        navigateTo("/");
       });
   }
 

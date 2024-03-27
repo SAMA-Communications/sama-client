@@ -82,10 +82,8 @@ export default function EditModalHub() {
   }, [closeModal, content, dispatch, type]);
 
   useEffect(() => {
-    const handleKeyDown = ({ keyCode }) => {
-      if (keyCode === KEY_CODES.ENTER) {
-        sendRequest();
-      }
+    const handleKeyDown = (e) => {
+      e.keyCode === KEY_CODES.ENTER && sendRequest();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);

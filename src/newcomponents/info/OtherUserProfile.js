@@ -3,11 +3,12 @@ import activityService from "@services/activityService";
 import conversationService from "@services/conversationsService";
 import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
 import getUserFullName from "@utils/user/get_user_full_name";
+import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
-import { useLocation } from "react-router-dom";
 import { useEffect, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import "@newstyles/info/UserProfile.css";
@@ -89,7 +90,12 @@ export default function OtherUserProfile() {
             <LinkTo />
             <p
               className="info__new-conversation"
-              onClick={() => conversationService.createPrivateChat(userId)}
+              onClick={async () => {
+                const chatId = await conversationService.createPrivateChat(
+                  userId
+                );
+                navigateTo(`/#${chatId}`);
+              }}
             >
               Start a conversation
             </p>

@@ -13,12 +13,6 @@
   background-color: var(--color-hover-dark);
 }
 
-.navigation__logo {
-  font-weight: 300;
-
-  cursor: pointer;
-}
-
 .navigation__menu {
   flex-direction: column;
   gap: calc(20px * var(--base-scale));

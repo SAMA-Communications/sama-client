@@ -68,7 +68,7 @@ class ConversationsService {
         `You were removed from the ${chat.name} conversation`,
         "warning"
       );
-      history.navigate("/");
+      navigateTo("/");
     }
   };
 
@@ -102,9 +102,9 @@ class ConversationsService {
     const chat = await api.conversationCreate(requestData);
     userObject && store.dispatch(addUsers([userObject]));
     store.dispatch(insertChat({ ...chat, messagesIds: null }));
-
-    navigateTo(`/#${chat._id}`);
     store.dispatch(setSelectedConversation({ id: chat._id }));
+
+    return chat._id;
   }
 
   async createGroupChat(participants, name) {
@@ -121,9 +121,9 @@ class ConversationsService {
 
     store.dispatch(addUsers(participants));
     store.dispatch(insertChat({ ...chat, messagesIds: null }));
-
-    navigateTo(`/#${chat._id}`);
     store.dispatch(setSelectedConversation({ id: chat._id }));
+
+    return chat._id;
   }
 
   async sendEditNameAndDescriptionRequest(data) {
@@ -207,7 +207,6 @@ class ConversationsService {
         await api.conversationDelete({ cid: selectedConversation.id });
         store.dispatch(clearSelectedConversation());
         store.dispatch(removeChat(selectedConversation.id));
-        navigateTo("/");
       }
     } catch (error) {
       showCustomAlert(error.message, "warning");

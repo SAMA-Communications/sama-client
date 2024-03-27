@@ -1,7 +1,8 @@
 import ImageView from "@newcomponents/message/elements/ImageView";
 import VideoView from "@newcomponents/message/elements/VideoView";
 import getFileType from "@utils/get_file_type";
-import { useLocation, useNavigate } from "react-router-dom";
+import navigateTo from "@utils/navigation/navigate_to";
+import { useLocation } from "react-router-dom";
 
 export default function MessageAttachment({
   id,
@@ -11,13 +12,12 @@ export default function MessageAttachment({
   blurHash,
 }) {
   const { hash } = useLocation();
-  const navigate = useNavigate();
 
   return (
     <div
       className="media-attachment"
       onClick={() => {
-        navigate(hash + `/modal?id=${id.replaceAll(" ", "%")}`);
+        navigateTo(hash + `/modal?id=${id.replaceAll(" ", "%")}`);
       }}
     >
       {getFileType(name) === "Video" ? (
