@@ -9,14 +9,14 @@ import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { upsertUser } from "@store/values/Participants";
 import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function LoginLinks({ changePage, content }) {
   const dispatch = useDispatch();
 
   const [isLoader, setIsLoader] = useState(false);
 
-  const sendRequest = async () => {
+  const sendRequest = useCallback(async () => {
     setIsLoader(true);
     try {
       const userData = await usersService.login(content);
@@ -31,7 +31,7 @@ export default function LoginLinks({ changePage, content }) {
       showCustomAlert(err?.message || err, "danger");
     }
     setIsLoader(false);
-  };
+  }, [content]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
