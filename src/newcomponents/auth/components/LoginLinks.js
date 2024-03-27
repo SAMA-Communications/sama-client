@@ -27,7 +27,7 @@ export default function LoginLinks({ changePage, content }) {
       dispatch(upsertUser(userData));
     } catch (err) {
       localStorage.removeItem("sessionId");
-      showCustomAlert(err, "danger");
+      showCustomAlert(err?.message || err, "danger");
     }
     setIsLoader(false);
   };

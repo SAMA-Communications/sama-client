@@ -40,7 +40,7 @@ export default function SignUpLinks({ changePage, content }) {
       navigateTo(isLogin ? "/" : "/authorization");
     } catch (err) {
       isLogin && localStorage.removeItem("sessionId");
-      showCustomAlert(err, "danger");
+      showCustomAlert(err?.message || err, "danger");
     }
     setIsLoader(false);
   };
@@ -66,7 +66,7 @@ export default function SignUpLinks({ changePage, content }) {
           checked={isLogin}
           onChange={() => setIsLogin((prev) => !prev)}
         />
-        <label htmlFor="isLogin">* also log in as a new user</label>
+        <label htmlFor="isLogin">* Sign in automatically</label>
       </div>
       <div className="authorization__footer">
         Already have an account?&nbsp;
