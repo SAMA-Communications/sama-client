@@ -179,6 +179,18 @@ main {
   z-index: 200;
 }
 
+.navigation__logo {
+  font-weight: 300;
+
+  cursor: pointer;
+}
+#logo-icon-line {
+  position: absolute;
+}
+#logo-text {
+  margin: 0 12px;
+}
+
 /* vertical scroll */
 .scroll-bar__outer-container > div:nth-child(3) {
   width: calc(6px * var(--base-scale)) !important;

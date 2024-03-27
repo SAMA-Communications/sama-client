@@ -37,13 +37,6 @@
   background-image: url(./../../assets/SignUp.png);
 }
 
-#logo-icon-line {
-  position: absolute;
-}
-#logo-text {
-  margin: 0 12px;
-}
-
 .authorization__side--main {
   flex-basis: 700px;
 
