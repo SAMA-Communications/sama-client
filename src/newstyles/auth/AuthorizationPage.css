@@ -176,7 +176,7 @@
   cursor: pointer;
 }
 .auth-form__checkbox > label {
-  font-size: var(--font-h6);
+  color: var(--color-text-hover);
 
   cursor: pointer;
 }
