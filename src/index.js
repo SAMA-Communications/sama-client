@@ -1,5 +1,5 @@
-import App from "./App";
-import ConnectLine from "@newcomponents/_helpers/ConnectLine";
+import App from "@src/App";
+import ConnectLine from "@components/_helpers/ConnectLine";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import store from "@store/store";

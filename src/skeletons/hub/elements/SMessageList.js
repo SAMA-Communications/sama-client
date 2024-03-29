@@ -1,4 +1,4 @@
-import SChatMessage from "./SChatMessage";
+import SChatMessage from "@skeletons/hub/elements/SChatMessage";
 
 export default function SMessageList() {
   return (
