@@ -30,7 +30,6 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   const selectedCID = selectedConversation?._id;
 
   const inputRef = useRef(null);
-  const filePicker = useRef(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
   window.onresize = function () {
@@ -80,7 +79,6 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
       return;
     }
 
-    filePicker.current.value = "";
     isMobile && inputRef.current.blur();
 
     setIsSendMessageDisable(false);
@@ -115,7 +113,6 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   return (
     <MessageInput
       inputTextRef={inputRef}
-      inputFilesRef={filePicker}
       isBlockedConv={isBlockedConv}
       onSubmitFunc={createAndSendMessage}
     />

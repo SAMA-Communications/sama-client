@@ -49,6 +49,7 @@ export default function EditModalHub() {
     () => removeAndNavigateLastSection(pathname + hash),
     [pathname, hash]
   );
+
   const sendRequest = useCallback(async () => {
     function validateDataAndShowAlert(data) {
       if (!data) {

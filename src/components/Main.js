@@ -8,6 +8,7 @@ import ChatForm from "@components/hub/ChatForm";
 import ChatInfo from "@components/info/ChatInfo";
 import ChatList from "@components/hub/ChatList";
 
+import AttachHub from "./attach/AttachHub";
 import EditModalHub from "@components/modals/EditModalHub";
 import EmptyHub from "@components/hub/EmptyHub";
 import NavigationLine from "@components/navigation/NavigationLine";
@@ -60,6 +61,7 @@ export default function Main() {
 
     const blockMap = {
       "/add": <UsersSelectModalHub type={"add_participants"} />,
+      "/attach": <AttachHub />,
       "/create": <UsersSelectModalHub />,
       "/edit": <EditModalHub />,
       "/info": <ChatInfo />,

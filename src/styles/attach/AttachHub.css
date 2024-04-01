@@ -1,0 +1,43 @@
+.attach-window__container {
+  position: absolute;
+  top: 0;
+
+  padding: 10px;
+
+  width: 100svw;
+  height: 100svh;
+
+  background-color: var(--color-black-50);
+
+  z-index: 200;
+}
+.attach-modal__content {
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  border-radius: var(--border-32);
+  background-color: var(--color-bg-light);
+}
+
+.attach-modal__title {
+  font-size: var(--font-h5);
+  font-weight: 400;
+  color: var(--color-black);
+}
+
+.attach-navigation__container {
+  margin-top: auto;
+
+  justify-content: flex-end;
+  gap: 30px;
+}
+.attach-navigation__link {
+  font-size: var(--font-h6);
+  color: var(--color-accent-dark);
+  font-weight: 300;
+
+  cursor: pointer;
+}

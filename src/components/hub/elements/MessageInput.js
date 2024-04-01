@@ -1,22 +1,20 @@
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
-import globalConstants from "@helpers/constants";
+import addSuffix from "@src/utils/navigation/add_suffix";
 import isMobile from "@utils/get_device_type";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { useCallback, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 
 import { ReactComponent as Attach } from "@icons/options/Attach.svg";
 import { ReactComponent as Send } from "@icons/options/Send.svg";
 
 export default function MessageInput({
   inputTextRef,
-  inputFilesRef,
   onSubmitFunc,
   isBlockedConv,
 }) {
-  const pickUserFiles = useCallback(
-    () => inputFilesRef.current.click(),
-    [inputFilesRef]
-  );
+  const location = useLocation();
+
   const handleInput = useCallback(
     (e) => {
       if (inputTextRef.current) {
@@ -60,14 +58,11 @@ export default function MessageInput({
 
     return (
       <>
-        <Attach className="input-file__button" onClick={pickUserFiles} />
-        <input
-          id="inputFile"
-          ref={inputFilesRef}
-          //onChange open pop-up window for attach files
-          type="file"
-          accept={globalConstants.allowedFileFormats}
-          multiple
+        <Attach
+          className="input-file__button"
+          onClick={() =>
+            addSuffix(location.pathname + location.hash, "/attach")
+          }
         />
         <TextAreaInput
           inputRef={inputTextRef}
@@ -83,11 +78,10 @@ export default function MessageInput({
   }, [
     handeOnKeyDown,
     handleInput,
-    inputFilesRef,
+    location,
     inputTextRef,
     isBlockedConv,
     onSubmitFunc,
-    pickUserFiles,
   ]);
 
   return <div className="inputs__container">{inputsView}</div>;
