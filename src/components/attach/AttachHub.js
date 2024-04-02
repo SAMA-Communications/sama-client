@@ -120,7 +120,7 @@ export default function AttachHub() {
     }
 
     setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
-    inputTextRef.current.focus();
+    // inputTextRef.current.focus();
   };
 
   const removeFile = (index) => {
