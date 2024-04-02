@@ -43,90 +43,86 @@ export default function AttachHub() {
 
   const [files, setFiles] = useState([]);
 
-  const addFiles = (newFiles) => {
+  const addFiles = async (newFiles) => {
+    if (!newFiles.length) {
+      return;
+    }
+
     newFiles.forEach((el) => (el.localUrl = URL.createObjectURL(el)));
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
 
-    // if (!newFiles.length) {
-    //   return;
-    // }
+    async function compressAndHashFile(file) {
+      file = await compressFile(file);
+      const localFileUrl = URL.createObjectURL(file);
+      file.localUrl = localFileUrl;
 
-    // async function compressAndHashFile(file) {
-    //   file = await compressFile(file);
-    //   const localFileUrl = URL.createObjectURL(file);
-    //   file.localUrl = localFileUrl;
+      try {
+        file.blurHash = await encodeImageToBlurhash(localFileUrl);
+      } catch (e) {
+        file.blurHash = globalConstants.defaultBlurHash;
+      }
 
-    //   try {
-    //     file.blurHash = await encodeImageToBlurhash(localFileUrl);
-    //   } catch (e) {
-    //     file.blurHash = globalConstants.defaultBlurHash;
-    //   }
+      return file;
+    }
 
-    //   return file;
-    // }
+    const selectedFiles = [];
+    try {
+      for (let i = 0; i < newFiles.length; i++) {
+        const fileObj = newFiles[i];
+        const formData = new FormData();
+        formData.append("file", fileObj, fileObj.name.toLocaleLowerCase());
+        let file = formData.get("file");
 
-    // const selectedFiles = [];
-    // try {
-    //   for (let i = 0; i < newFiles.length; i++) {
-    //     const fileObj = newFiles[i];
-    //     const formData = new FormData();
-    //     formData.append("file", fileObj, fileObj.name.toLocaleLowerCase());
-    //     let file = formData.get("file");
+        if (file.name.length > 255) {
+          throw new Error("The file name should not exceed 255 characters.", {
+            message: "The file name should not exceed 255 characters.",
+          });
+        }
+        if (file.size > 104857600) {
+          throw new Error("The file size should not exceed 100 MB.", {
+            message: "The file size should not exceed 100 MB.",
+          });
+        }
 
-    //     if (file.name.length > 255) {
-    //       throw new Error("The file name should not exceed 255 characters.", {
-    //         cause: {
-    //           message: "The file name should not exceed 255 characters.",
-    //         },
-    //       });
-    //     }
-    //     if (file.size > 104857600) {
-    //       throw new Error("The file size should not exceed 100 MB.", {
-    //         cause: {
-    //           message: "The file size should not exceed 100 MB.",
-    //         },
-    //       });
-    //     }
+        const fileExtension = file.name.split(".").slice(-1)[0];
 
-    //     const fileExtension = file.name.split(".").slice(-1)[0];
+        if (
+          !globalConstants.allowedFileFormats.includes(file.type) &&
+          !["heic", "HEIC"].includes(fileExtension)
+        ) {
+          throw new Error("Please select an image file.", {
+            message: "Please select an image file.",
+          });
+        } else if (["heic", "HEIC"].includes(fileExtension)) {
+          const tmp = await heicToPng(file);
+          const pngFile = await compressAndHashFile(tmp);
 
-    //     if (
-    //       !globalConstants.allowedFileFormats.includes(file.type) &&
-    //       !["heic", "HEIC"].includes(fileExtension)
-    //     ) {
-    //       throw new Error("Please select an image file.", {
-    //         cause: { message: "Please select an image file." },
-    //       });
-    //     } else if (["heic", "HEIC"].includes(fileExtension)) {
-    //       const tmp = await heicToPng(file);
-    //       const pngFile = await compressAndHashFile(tmp);
+          selectedFiles.push(pngFile);
+          continue;
+        }
 
-    //       selectedFiles.push(pngFile);
-    //       continue;
-    //     }
+        if (file.type.startsWith("image/")) {
+          file = await compressAndHashFile(file);
+        }
 
-    //     if (file.type.startsWith("image/")) {
-    //       file = await compressAndHashFile(file);
-    //     }
+        selectedFiles.push(file);
+      }
 
-    //     selectedFiles.push(file);
-    //   }
+      if (files?.length + newFiles.length > 10) {
+        throw new Error("The maximum limit for file uploads is 10.", {
+          message: "The maximum limit for file uploads is 10.",
+        });
+      }
+    } catch (err) {
+      err.message
+        ? showCustomAlert(err.message, "warning")
+        : console.error(err);
+      return;
+    }
 
-    //   if (files?.length + newFiles.length > 10) {
-    //     throw new Error("The maximum limit for file uploads is 10.", {
-    //       cause: { message: "The maximum limit for file uploads is 10." },
-    //     });
-    //   }
-    // } catch (err) {
-    //   err.cause
-    //     ? showCustomAlert(err.cause.message, "warning")
-    //     : console.error(err);
-    //   return;
-    // }
-
-    // setFiles(files?.length ? [...files, ...selectedFiles] : [...selectedFiles]);
-    // inputTextRef.current.focus();
+    setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+    inputTextRef.current.focus();
   };
+
   const removeFile = (index) => {
     if (files.length === 1 && !closeModal()) {
       return;
