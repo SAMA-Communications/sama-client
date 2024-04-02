@@ -1,0 +1,49 @@
+.att-item__container {
+  padding: 14px;
+
+  display: flex;
+  gap: 10px;
+
+  border-radius: var(--border-12);
+  background-color: var(--color-accent-light);
+}
+
+.att-item__photo {
+  width: 70px;
+  height: 70px;
+
+  border-radius: var(--border-8);
+  background-color: var(--color-accent-dark);
+
+  overflow: hidden;
+}
+
+.att-item__photo > img {
+  width: auto;
+  height: 100%;
+  object-fit: cover;
+}
+
+.att-item__content {
+  width: calc(100% - 122px);
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+}
+.att-item__name {
+  font-weight: 300;
+  color: var(--color-black);
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.att-item__container > svg {
+  padding: 0 2px;
+
+  align-self: center;
+  cursor: pointer;
+}

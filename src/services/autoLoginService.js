@@ -47,7 +47,9 @@ class AutoLoginService {
         const { pathname, hash } = history.location;
         const path = hash ? pathname + hash : "/";
         setTimeout(() => {
-          navigateTo(path);
+          navigateTo(
+            path.includes("/attach") ? path.replace("/attach", "") : path
+          );
           currentPath &&
             store.dispatch(
               setSelectedConversation({
