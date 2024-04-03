@@ -1,6 +1,6 @@
 import ItemLoader from "@components/attach/elements/ItemLoader";
 import getFileType from "@src/utils/get_file_type";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import "@styles/attach/AttachmentItem.css";
 
@@ -16,11 +16,12 @@ export default function AttachmentItem({
     file_url: url,
     file_blur_hash: blurHash,
     file_name: name,
-    size,
+    size: initFileSize,
   } = file;
 
-  const localUrl = file.file_local_url || file.localUrl;
+  const [size, setSize] = useState(initFileSize);
   const fileType = getFileType(name);
+  const localUrl = file.file_local_url || file.localUrl;
 
   const pictureView = useMemo(() => {
     if (fileType === "Video") {
@@ -31,14 +32,20 @@ export default function AttachmentItem({
     }
 
     if (url) {
-      return <img src={url} alt={name} />;
+      const image = <img src={url} alt={name} />;
+      if (!size) {
+        fetch(url).then((res) =>
+          setSize((res.headers.get("Content-Length") / 1000000).toFixed(2))
+        );
+      }
+      return image;
     }
     return localUrl ? (
       <img src={localUrl} alt={name} />
     ) : (
       <ItemLoader blurHash={blurHash} />
     );
-  }, [blurHash, fileType, localUrl, name, url]);
+  }, [blurHash, fileType, localUrl, name, size, url]);
 
   return (
     <div
