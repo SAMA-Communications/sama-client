@@ -9,6 +9,7 @@ import globalConstants from "@helpers/constants";
 import heicToPng from "@utils/heic_to_png";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import showCustomAlert from "@utils/show_alert";
+import TextAreaInput from "@components/hub/elements/TextAreaInput";
 import { KEY_CODES } from "@helpers/keyCodes";
 import {
   addMessage,
@@ -20,6 +21,7 @@ import {
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
+import { getIsMobileView } from "@src/store/values/IsMobileView";
 import { getNetworkState } from "@store/values/NetworkState";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -33,6 +35,8 @@ export default function AttachHub() {
   const { pathname, hash } = useLocation();
 
   const connectState = useSelector(getNetworkState);
+  const isMobile = useSelector(getIsMobileView);
+
   const messages = useSelector(selectAllMessages);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation._id;
@@ -214,8 +218,8 @@ export default function AttachHub() {
         return;
       }
 
-      const text = inputTextRef.current.value.trim();
-      if ((text.length === 0 && !files) || isSendMessageDisable) {
+      const body = inputTextRef.current.value.trim();
+      if ((body.length === 0 && !files) || isSendMessageDisable) {
         return;
       }
       setIsSendMessageDisable(true);
@@ -227,7 +231,7 @@ export default function AttachHub() {
 
       let msg = {
         _id: mid,
-        body: text,
+        body,
         from: currentUser._id,
         t: Date.now(),
         attachments: files.map((file) => ({
@@ -241,7 +245,7 @@ export default function AttachHub() {
       dispatch(updateLastMessageField({ cid, msg }));
 
       let attachments = [];
-      const reqData = { mid, text, cid };
+      const reqData = { mid, body, cid };
 
       if (files?.length) {
         attachments = await DownloadManager.getFileObjects(files);
@@ -266,7 +270,7 @@ export default function AttachHub() {
       if (response.mid) {
         msg = {
           _id: response.server_mid,
-          body: text,
+          body,
           from: currentUser._id,
           status: "sent",
           t: response.t,
@@ -302,6 +306,32 @@ export default function AttachHub() {
     ]
   );
 
+  const handeOnKeyDown = useCallback(
+    (e) => {
+      if (
+        e.keyCode === KEY_CODES.ENTER &&
+        ((!isMobile && !e.shiftKey) || (isMobile && e.shiftKey))
+      ) {
+        e.preventDefault();
+        sendMessage();
+      }
+    },
+    [isMobile, sendMessage]
+  );
+
+  const handleInput = useCallback(
+    (e) => {
+      if (inputTextRef.current) {
+        const countOfLines = e.target.value.split("\n").length - 1;
+        inputTextRef.current.style.height = `calc(${
+          40 + countOfLines * 20 < 230 ? 40 + countOfLines * 20 : 215
+        }px * var(--base-scale)) `;
+        inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
+      }
+    },
+    [inputTextRef]
+  );
+
   const pickFileClick = useCallback(
     () => inputFilesRef.current.click(),
     [inputFilesRef]
@@ -312,14 +342,17 @@ export default function AttachHub() {
     syncInputText();
   }, [pickFileClick, syncInputText]);
 
+  //Move to useKeyDownHook (custom)
   useEffect(() => {
     const handleKeyDown = (e) => {
       e.keyCode === KEY_CODES.ESCAPE && closeModal(); //not working sync text
-      e.keyCode === KEY_CODES.ENTER && sendMessage();
+      e.keyCode === KEY_CODES.ENTER &&
+        ((!isMobile && !e.shiftKey) || (isMobile && e.shiftKey)) &&
+        sendMessage();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [closeModal, sendMessage]);
+  }, [closeModal, isMobile, sendMessage]);
 
   return (
     <>
@@ -341,14 +374,18 @@ export default function AttachHub() {
           <CustomScrollBar
             customId={"attach-view__container"}
             autoHeight={true}
-            autoHeightMax={550}
+            autoHeightMax={460}
           >
             {attachListView}
           </CustomScrollBar>
-          <textarea
-            ref={inputTextRef}
-            className="attach-inputs__message"
-            placeholder="Type your message"
+          <TextAreaInput
+            customId="attach-inputs__message"
+            inputRef={inputTextRef}
+            handleInput={handleInput}
+            handeOnKeyDown={handeOnKeyDown}
+            isDisabled={false}
+            // isMobile={isMobile}
+            placeholder={"Type your message..."}
           />
           <div className="attach-navigation__container fcc">
             <p className="attach-navigation__link" onClick={pickFileClick}>

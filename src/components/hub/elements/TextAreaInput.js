@@ -1,4 +1,5 @@
 export default function TextAreaInput({
+  customId,
   inputRef,
   handleInput,
   handeOnKeyDown,
@@ -8,7 +9,7 @@ export default function TextAreaInput({
 }) {
   return (
     <textarea
-      id="inputMessage"
+      id={customId || "inputMessage"}
       ref={inputRef}
       onTouchStart={(e) => !e.target.value.length && e.target.blur()}
       onInput={handleInput}

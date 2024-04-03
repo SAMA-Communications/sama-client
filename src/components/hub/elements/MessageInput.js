@@ -18,35 +18,6 @@ export default function MessageInput({
 
   const [isPrevLocationAttach, setIsPrevLocationAttach] = useState(false);
 
-  const uploadInputText = useCallback(() => {
-    if (inputTextRef.current.value) {
-      localStorage.setItem("mtext", inputTextRef.current.value);
-      inputTextRef.current.value = "";
-      inputTextRef.current.style.height = `55px`;
-    }
-  }, [inputTextRef]);
-
-  const syncInputText = useCallback(() => {
-    const mtext = localStorage.getItem("mtext");
-    if (mtext) {
-      localStorage.removeItem("mtext");
-      inputTextRef.current.value = mtext;
-    }
-  }, [inputTextRef]);
-
-  useEffect(() => {
-    const isCurrentLocationAttach = location.hash.includes("/attach");
-
-    if (!isCurrentLocationAttach && isPrevLocationAttach) {
-      chatMessagesBlockRef.current?._infScroll?.scrollIntoView({
-        block: "end",
-      });
-      syncInputText();
-    }
-
-    setIsPrevLocationAttach(isCurrentLocationAttach);
-  }, [location, syncInputText, isPrevLocationAttach, chatMessagesBlockRef]);
-
   const handleInput = useCallback(
     (e) => {
       if (inputTextRef.current) {
@@ -71,6 +42,36 @@ export default function MessageInput({
     },
     [onSubmitFunc]
   );
+
+  const uploadInputText = useCallback(() => {
+    if (inputTextRef.current.value) {
+      localStorage.setItem("mtext", inputTextRef.current.value);
+      inputTextRef.current.value = "";
+      inputTextRef.current.style.height = `55px`;
+    }
+  }, [inputTextRef]);
+
+  const syncInputText = useCallback(() => {
+    const mtext = localStorage.getItem("mtext");
+    if (mtext) {
+      localStorage.removeItem("mtext");
+      inputTextRef.current.value = mtext;
+      handleInput({ target: { value: mtext } });
+    }
+  }, [inputTextRef, handleInput]);
+
+  useEffect(() => {
+    const isCurrentLocationAttach = location.hash.includes("/attach");
+
+    if (!isCurrentLocationAttach && isPrevLocationAttach) {
+      chatMessagesBlockRef.current?._infScroll?.scrollIntoView({
+        block: "end",
+      });
+      syncInputText();
+    }
+
+    setIsPrevLocationAttach(isCurrentLocationAttach);
+  }, [location, syncInputText, isPrevLocationAttach, chatMessagesBlockRef]);
 
   const inputsView = useMemo(() => {
     if (isBlockedConv) {
