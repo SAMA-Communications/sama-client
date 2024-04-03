@@ -54,7 +54,11 @@ export default function ChatMessage({
             {getUserFullName(sender) || "Deleted account"}
           </div>
         )}
-        <div className="content__container">
+        <div
+          className={`content__container${
+            attachments?.length ? "--with-media" : ""
+          }`}
+        >
           {attachments?.length ? (
             <MessageAttachments attachments={attachments} mid={message._id} />
           ) : null}

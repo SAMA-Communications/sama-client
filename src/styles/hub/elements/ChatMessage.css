@@ -29,9 +29,10 @@
 
 .message-content__container {
   max-width: 100%;
-  padding: 15px;
-
+  width: fit-content;
   min-height: 46px;
+
+  padding: 15px;
 
   display: flex;
   flex-direction: column;
@@ -40,13 +41,20 @@
   border-radius: var(--border-16);
   background-color: var(--color-hover-light);
 }
-.content__container {
+.content__container,
+.content__container--with-media {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-  flex-wrap: wrap;
   column-gap: 15px;
   row-gap: 8px;
+}
+.content__container--with-media {
+  flex-direction: column;
+}
+.content__container--with-media .content__text {
+  max-width: 440px;
+  align-self: flex-start;
 }
 .br-bl-0 {
   border-bottom-left-radius: 0;
@@ -60,6 +68,8 @@
 .content__text {
   max-width: 100%;
 
+  white-space: pre;
+  text-wrap: wrap;
   color: var(--color-black);
 
   inline-size: auto;

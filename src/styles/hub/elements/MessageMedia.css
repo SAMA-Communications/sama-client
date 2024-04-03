@@ -1,4 +1,6 @@
 .message-media__container {
+  max-width: 440px;
+
   display: flex;
   flex-direction: column;
   row-gap: 7px;
