@@ -2,7 +2,7 @@ import TextAreaInput from "@components/hub/elements/TextAreaInput";
 import addSuffix from "@src/utils/navigation/add_suffix";
 import isMobile from "@utils/get_device_type";
 import { KEY_CODES } from "@helpers/keyCodes";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { ReactComponent as Attach } from "@icons/options/Attach.svg";
@@ -14,6 +14,31 @@ export default function MessageInput({
   isBlockedConv,
 }) {
   const location = useLocation();
+
+  const [isAttachPrevLocation, setIsAttachPrevLocation] = useState(false);
+
+  const uploadInputText = useCallback(() => {
+    if (inputTextRef.current.value) {
+      localStorage.setItem("mtext", inputTextRef.current.value);
+      inputTextRef.current.value = "";
+    }
+  }, [inputTextRef]);
+
+  const syncInputText = useCallback(() => {
+    const mtext = localStorage.getItem("mtext");
+    if (mtext) {
+      localStorage.removeItem("mtext");
+      inputTextRef.current.value = mtext;
+    }
+  }, [inputTextRef]);
+
+  useEffect(() => {
+    setIsAttachPrevLocation(location.hash.includes("/attach"));
+    if (!isAttachPrevLocation) {
+      return;
+    }
+    syncInputText();
+  }, [location, syncInputText, isAttachPrevLocation]);
 
   const handleInput = useCallback(
     (e) => {
@@ -60,9 +85,10 @@ export default function MessageInput({
       <>
         <Attach
           className="input-file__button"
-          onClick={() =>
-            addSuffix(location.pathname + location.hash, "/attach")
-          }
+          onClick={() => {
+            addSuffix(location.pathname + location.hash, "/attach");
+            uploadInputText();
+          }}
         />
         <TextAreaInput
           inputRef={inputTextRef}
@@ -78,6 +104,7 @@ export default function MessageInput({
   }, [
     handeOnKeyDown,
     handleInput,
+    uploadInputText,
     location,
     inputTextRef,
     isBlockedConv,

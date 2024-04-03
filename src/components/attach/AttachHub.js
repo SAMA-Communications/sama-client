@@ -1,6 +1,7 @@
 import AttachmentItem from "@components/attach/components/AttachmentItem";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import DownloadManager from "@src/adapters/downloadManager";
+import OvalLoader from "@components/_helpers/OvalLoader";
 import api from "@src/api/api";
 import compressFile from "@src/utils/compress_file";
 import encodeImageToBlurhash from "@src/utils/get_blur_hash";
@@ -26,18 +27,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
 import "@styles/attach/AttachHub.css";
-import { editableInputTypes } from "@testing-library/user-event/dist/utils";
 
 export default function AttachHub() {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
   const connectState = useSelector(getNetworkState);
-  const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
   const messages = useSelector(selectAllMessages);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation._id;
   const currentUser = useSelector(selectCurrentUser);
+
+  const [isPending, setIsPending] = useState(false);
+  const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
   const inputFilesRef = useRef(null);
   const inputTextRef = useRef(null);
@@ -49,6 +51,7 @@ export default function AttachHub() {
       return;
     }
 
+    setIsPending(true);
     newFiles.forEach((el) => (el.localUrl = URL.createObjectURL(el)));
 
     async function compressAndHashFile(file) {
@@ -121,6 +124,7 @@ export default function AttachHub() {
     }
 
     setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+    setIsPending(false);
   };
 
   const removeFile = (index) => {
@@ -132,10 +136,26 @@ export default function AttachHub() {
     );
   };
 
+  const uploadInputText = () => {
+    if (inputTextRef.current.value) {
+      localStorage.setItem("mtext", inputTextRef.current.value);
+      inputTextRef.current.value = "";
+    }
+  };
+
+  const syncInputText = () => {
+    const mtext = localStorage.getItem("mtext");
+    if (mtext) {
+      localStorage.removeItem("mtext");
+      inputTextRef.current.value = mtext;
+    }
+  };
+
   const closeModal = useCallback(
     (isForseClose) => {
       if (isForseClose) {
         removeAndNavigateLastSection(pathname + hash);
+        uploadInputText();
         return true;
       }
 
@@ -146,25 +166,32 @@ export default function AttachHub() {
         return false;
       }
 
+      uploadInputText();
       removeAndNavigateLastSection(pathname + hash);
       return true;
     },
     [files, pathname, hash]
   );
 
-  const attachListView = useMemo(
-    () =>
-      files.map((file, index) => (
-        <AttachmentItem
-          key={index}
-          removeFileFunc={() => removeFile(index)}
-          url={file.localUrl}
-          name={file.name}
-          size={(file.size / 1000000).toFixed(2)}
-        />
-      )),
-    [files]
-  );
+  const attachListView = useMemo(() => {
+    if (isPending) {
+      return <OvalLoader width={80} height={80} />;
+    }
+
+    if (!files.length) {
+      return <p className="attach-input__alt">Select files</p>;
+    }
+
+    return files.map((file, index) => (
+      <AttachmentItem
+        key={index}
+        removeFileFunc={() => removeFile(index)}
+        url={file.localUrl}
+        name={file.name}
+        size={(file.size / 1000000).toFixed(2)}
+      />
+    ));
+  }, [files]);
 
   const sendMessage = useCallback(
     async (event) => {
@@ -294,17 +321,31 @@ export default function AttachHub() {
     //     window.onfocus = null;
     //   };
     // });
-
     // inputFilesRef.current.click();
+
     pickFileClick();
+    syncInputText();
   }, [pickFileClick]);
 
-  const attachPreView = useMemo(() => {
-    if (!files.length) {
-      return null;
-    }
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      e.keyCode === KEY_CODES.ESCAPE && closeModal();
+      e.keyCode === KEY_CODES.ENTER && sendMessage();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [closeModal, sendMessage]);
 
-    return (
+  return (
+    <>
+      <input
+        id="inputFile"
+        ref={inputFilesRef}
+        type="file"
+        onChange={(e) => addFiles(Array.from(e.target.files))}
+        accept={globalConstants.allowedFileFormats}
+        multiple
+      />
       <div className="attach-window__container fcc">
         <div className="attach-modal__content">
           <p className="attach-modal__title">
@@ -338,29 +379,6 @@ export default function AttachHub() {
           </div>
         </div>
       </div>
-    );
-  }, [files, attachListView, pickFileClick, closeModal, sendMessage]);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      e.keyCode === KEY_CODES.ESCAPE && closeModal();
-      e.keyCode === KEY_CODES.ENTER && sendMessage();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [closeModal, sendMessage]);
-
-  return (
-    <>
-      <input
-        id="inputFile"
-        ref={inputFilesRef}
-        type="file"
-        onChange={(e) => addFiles(Array.from(e.target.files))}
-        accept={globalConstants.allowedFileFormats}
-        multiple
-      />
-      {attachPreView}
     </>
   );
 }
