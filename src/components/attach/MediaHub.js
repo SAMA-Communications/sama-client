@@ -12,63 +12,70 @@ import { ReactComponent as Next } from "@icons/options/Next.svg";
 
 export default function MediaHub() {
   const { pathname, hash } = useLocation();
-  const [, mid, index] = useMemo(() => hash.split("="), [hash]);
+
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    const [, , index] = hash.split("=");
+    return +index;
+  });
+
+  const mid = hash.split("=")[1];
   const messages = useSelector(selectMessagesEntities);
-
-  const [curretnIndex, setCurretnIndex] = useState(+index);
-
   const attachments = useMemo(() => {
     const currentMessage = messages[mid];
-    return currentMessage.attachments;
+    return currentMessage ? currentMessage.attachments : [];
   }, [messages, mid]);
 
-  const isLastIndex = curretnIndex === attachments.length - 1;
-  const isFirstIndex = curretnIndex === 0;
+  const isLastIndex = currentIndex === attachments.length - 1;
+  const isFirstIndex = currentIndex === 0;
 
   const closeModal = () => {
     removeAndNavigateLastSection(pathname + hash);
+  };
+
+  const handleIndexChange = (index) => {
+    setCurrentIndex(index);
   };
 
   return (
     <div className="media-window__container fcc" onClick={closeModal}>
       <div className="media-modal__content fcc">
         <MessageAttachment
-          url={attachments[curretnIndex].file_url}
-          name={attachments[curretnIndex].file_name}
+          url={attachments[currentIndex]?.file_url}
+          name={attachments[currentIndex]?.file_name}
         />
       </div>
-      {!isFirstIndex ? (
+      {!isFirstIndex && (
         <div
           className="media-modal__prev fcc"
           onClick={(e) => {
             e.stopPropagation();
-            setCurretnIndex((prev) => --prev);
+            handleIndexChange(currentIndex - 1);
           }}
         >
           <Prev />
         </div>
-      ) : null}
-      {!isLastIndex ? (
+      )}
+      {!isLastIndex && (
         <div
           className="media-modal__next fcc"
           onClick={(e) => {
             e.stopPropagation();
-            setCurretnIndex((prev) => ++prev);
+            handleIndexChange(currentIndex + 1);
           }}
         >
           <Next />
         </div>
-      ) : null}
+      )}
       <div className="media-modal__list">
         {attachments.map((file, i) => (
           <div
             key={i}
             className={`mm-list__item${
-              i === curretnIndex ? "--active" : ""
+              i === currentIndex ? "--active" : ""
             } fcc`}
             onClick={(e) => {
               e.stopPropagation();
-              setCurretnIndex(i);
+              handleIndexChange(i);
             }}
           >
             <img src={file.file_url} alt={file.file_name} />

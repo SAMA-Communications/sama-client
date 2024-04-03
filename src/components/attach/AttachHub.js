@@ -26,10 +26,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
 import "@styles/attach/AttachHub.css";
+import { editableInputTypes } from "@testing-library/user-event/dist/utils";
 
 export default function AttachHub() {
-  const { pathname, hash } = useLocation();
   const dispatch = useDispatch();
+  const { pathname, hash } = useLocation();
 
   const connectState = useSelector(getNetworkState);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
@@ -120,7 +121,6 @@ export default function AttachHub() {
     }
 
     setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
-    // inputTextRef.current.focus();
   };
 
   const removeFile = (index) => {
@@ -131,11 +131,6 @@ export default function AttachHub() {
       prevFiles.slice(0, index).concat(prevFiles.slice(index + 1))
     );
   };
-
-  const pickFileClick = useCallback(
-    () => inputFilesRef.current.click(),
-    [inputFilesRef]
-  );
 
   const closeModal = useCallback(
     (isForseClose) => {
@@ -157,25 +152,23 @@ export default function AttachHub() {
     [files, pathname, hash]
   );
 
-  useEffect(() => {
-    pickFileClick();
-  }, [pickFileClick]);
-
-  const attachListView = useMemo(() => {
-    return files.map((file, index) => (
-      <AttachmentItem
-        key={index}
-        removeFileFunc={() => removeFile(index)}
-        url={file.localUrl}
-        name={file.name}
-        size={(file.size / 1000000).toFixed(2)}
-      />
-    ));
-  }, [files]);
+  const attachListView = useMemo(
+    () =>
+      files.map((file, index) => (
+        <AttachmentItem
+          key={index}
+          removeFileFunc={() => removeFile(index)}
+          url={file.localUrl}
+          name={file.name}
+          size={(file.size / 1000000).toFixed(2)}
+        />
+      )),
+    [files]
+  );
 
   const sendMessage = useCallback(
     async (event) => {
-      event.preventDefault();
+      event?.preventDefault();
 
       if (!connectState) {
         showCustomAlert("No internet connection…", "warning");
@@ -281,9 +274,33 @@ export default function AttachHub() {
     ]
   );
 
+  const pickFileClick = useCallback(
+    () => inputFilesRef.current.click(),
+    [inputFilesRef]
+  );
+
+  useEffect(() => {
+    // inputFilesRef.current.addEventListener("click", function () {
+    //   window.onfocus = function () {
+    //     const inputFile = document.getElementById("inputFile");
+
+    //     console.log(inputFile.value, inputFile.files);
+    //     if (inputFile.files.length === 0) {
+    //       console.log("NO files were added");
+    //     } else {
+    //       console.log("Files were added");
+    //     }
+
+    //     window.onfocus = null;
+    //   };
+    // });
+
+    // inputFilesRef.current.click();
+    pickFileClick();
+  }, [pickFileClick]);
+
   const attachPreView = useMemo(() => {
     if (!files.length) {
-      // closeModal();
       return null;
     }
 
@@ -322,16 +339,16 @@ export default function AttachHub() {
         </div>
       </div>
     );
-  }, [files.length, attachListView, pickFileClick, closeModal, sendMessage]);
+  }, [files, attachListView, pickFileClick, closeModal, sendMessage]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       e.keyCode === KEY_CODES.ESCAPE && closeModal();
-      // e.keyCode === KEY_CODES.ENTER && sendRequest();
+      e.keyCode === KEY_CODES.ENTER && sendMessage();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [closeModal]);
+  }, [closeModal, sendMessage]);
 
   return (
     <>
