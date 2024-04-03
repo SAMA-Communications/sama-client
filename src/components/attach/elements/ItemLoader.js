@@ -1,4 +1,4 @@
-import OvalLoader from "@src/components/_helpers/OvalLoader";
+import OvalLoader from "@components/_helpers/OvalLoader";
 import { Blurhash } from "react-blurhash";
 
 export default function ItemLoader({ blurHash }) {

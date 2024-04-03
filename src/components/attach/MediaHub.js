@@ -1,4 +1,5 @@
 import MessageAttachment from "@components/message/elements/MessageAttachment";
+import getFileType from "@utils/media/get_file_type";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import { selectMessagesEntities } from "@store/values/Messages";
 import { useLocation } from "react-router-dom";
@@ -9,7 +10,6 @@ import "@styles/attach/MediaHub.css";
 
 import { ReactComponent as Prev } from "@icons/options/Prev.svg";
 import { ReactComponent as Next } from "@icons/options/Next.svg";
-import getFileType from "@src/utils/get_file_type";
 
 export default function MediaHub() {
   const { pathname, hash } = useLocation();

@@ -1,5 +1,5 @@
 import ItemLoader from "@components/attach/elements/ItemLoader";
-import getFileType from "@src/utils/get_file_type";
+import getFileType from "@utils/media/get_file_type";
 import { useMemo, useState } from "react";
 
 import "@styles/attach/AttachmentItem.css";

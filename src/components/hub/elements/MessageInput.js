@@ -1,5 +1,5 @@
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
-import addSuffix from "@src/utils/navigation/add_suffix";
+import addSuffix from "@utils/navigation/add_suffix";
 import isMobile from "@utils/get_device_type";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { useCallback, useEffect, useMemo, useState } from "react";

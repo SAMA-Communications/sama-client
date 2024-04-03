@@ -1,8 +1,8 @@
-import MessageAttachments from "@src/components/message/elements/MessageAttachments";
+import MessageAttachments from "@components/message/elements/MessageAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
 import getUserFullName from "@utils/user/get_user_full_name";
-import { urlify } from "@utils/urlify";
+import { urlify } from "@utils/text/urlify";
 import { useMemo } from "react";
 
 import "@styles/hub/elements/ChatMessage.css";

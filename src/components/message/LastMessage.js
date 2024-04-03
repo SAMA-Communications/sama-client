@@ -1,6 +1,6 @@
 import LastMessageMedia from "@components/message/lastMessage/LastMessageMedia";
 import LastMessageStatus from "@components/message/lastMessage/LastMessageStatus";
-import getFileType from "@utils/get_file_type";
+import getFileType from "@utils/media/get_file_type";
 
 export default function LastMessage({ message, count, userId }) {
   if (!message) {

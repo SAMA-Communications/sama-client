@@ -1,4 +1,4 @@
-import EditModalInput from "../elements/EditModalInput";
+import EditModalInput from "@components/modals/elements/EditModalInput";
 import { getConverastionById } from "@store/values/Conversations";
 import { useSelector } from "react-redux";
 

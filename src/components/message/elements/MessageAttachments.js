@@ -1,5 +1,5 @@
 import AttachmentItem from "@components/attach/components/AttachmentItem";
-import addSuffix from "@src/utils/navigation/add_suffix";
+import addSuffix from "@utils/navigation/add_suffix";
 import { useLocation } from "react-router-dom";
 
 import "@styles/hub/elements/MessageMedia.css";

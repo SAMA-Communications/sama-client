@@ -1,4 +1,4 @@
-import getFileType from "@utils/get_file_type";
+import getFileType from "@utils/media/get_file_type";
 import { Blurhash } from "react-blurhash";
 
 import { ReactComponent as Image } from "@icons/media/Image.svg";

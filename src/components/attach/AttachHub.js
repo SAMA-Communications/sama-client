@@ -3,10 +3,10 @@ import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import DownloadManager from "@src/adapters/downloadManager";
 import OvalLoader from "@components/_helpers/OvalLoader";
 import api from "@api/api";
-import compressFile from "@utils/compress_file";
-import encodeImageToBlurhash from "@utils/get_blur_hash";
+import compressFile from "@utils/media/compress_file";
+import encodeImageToBlurhash from "@utils/media/get_blur_hash";
 import globalConstants from "@helpers/constants";
-import heicToPng from "@utils/heic_to_png";
+import heicToPng from "@utils/media/heic_to_png";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import showCustomAlert from "@utils/show_alert";
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
@@ -21,7 +21,7 @@ import {
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
-import { getIsMobileView } from "@src/store/values/IsMobileView";
+import { getIsMobileView } from "@store/values/IsMobileView";
 import { getNetworkState } from "@store/values/NetworkState";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";

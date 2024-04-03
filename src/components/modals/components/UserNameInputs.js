@@ -1,4 +1,4 @@
-import EditModalInput from "../elements/EditModalInput";
+import EditModalInput from "@components/modals/elements/EditModalInput";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { useSelector } from "react-redux";
 

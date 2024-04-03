@@ -1,4 +1,4 @@
-import MessageStatus from "../elements/MessageStatus";
+import MessageStatus from "@components/message/elements/MessageStatus";
 
 export default function LastMessageStatus({ message, userId }) {
   if (!message || message.from !== userId) {
