@@ -12,15 +12,17 @@ export default function MessageInput({
   inputTextRef,
   onSubmitFunc,
   isBlockedConv,
+  chatMessagesBlockRef,
 }) {
   const location = useLocation();
 
-  const [isAttachPrevLocation, setIsAttachPrevLocation] = useState(false);
+  const [isPrevLocationAttach, setIsPrevLocationAttach] = useState(false);
 
   const uploadInputText = useCallback(() => {
     if (inputTextRef.current.value) {
       localStorage.setItem("mtext", inputTextRef.current.value);
       inputTextRef.current.value = "";
+      inputTextRef.current.style.height = `55px`;
     }
   }, [inputTextRef]);
 
@@ -33,12 +35,17 @@ export default function MessageInput({
   }, [inputTextRef]);
 
   useEffect(() => {
-    setIsAttachPrevLocation(location.hash.includes("/attach"));
-    if (!isAttachPrevLocation) {
-      return;
+    const isCurrentLocationAttach = location.hash.includes("/attach");
+
+    if (!isCurrentLocationAttach && isPrevLocationAttach) {
+      chatMessagesBlockRef.current?._infScroll?.scrollIntoView({
+        block: "end",
+      });
+      syncInputText();
     }
-    syncInputText();
-  }, [location, syncInputText, isAttachPrevLocation]);
+
+    setIsPrevLocationAttach(isCurrentLocationAttach);
+  }, [location, syncInputText, isPrevLocationAttach, chatMessagesBlockRef]);
 
   const handleInput = useCallback(
     (e) => {

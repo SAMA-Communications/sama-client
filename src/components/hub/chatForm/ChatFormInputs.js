@@ -115,6 +115,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
       inputTextRef={inputRef}
       isBlockedConv={isBlockedConv}
       onSubmitFunc={createAndSendMessage}
+      chatMessagesBlockRef={chatMessagesBlockRef}
     />
   );
 }

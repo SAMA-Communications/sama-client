@@ -2,26 +2,26 @@ import AttachmentItem from "@components/attach/components/AttachmentItem";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import DownloadManager from "@src/adapters/downloadManager";
 import OvalLoader from "@components/_helpers/OvalLoader";
-import api from "@src/api/api";
-import compressFile from "@src/utils/compress_file";
-import encodeImageToBlurhash from "@src/utils/get_blur_hash";
+import api from "@api/api";
+import compressFile from "@utils/compress_file";
+import encodeImageToBlurhash from "@utils/get_blur_hash";
 import globalConstants from "@helpers/constants";
-import heicToPng from "@src/utils/heic_to_png";
-import removeAndNavigateLastSection from "@src/utils/navigation/get_prev_page";
-import showCustomAlert from "@src/utils/show_alert";
+import heicToPng from "@utils/heic_to_png";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@helpers/keyCodes";
 import {
   addMessage,
   removeMessage,
   selectAllMessages,
-} from "@src/store/values/Messages";
+} from "@store/values/Messages";
 import {
   getConverastionById,
   setLastMessageField,
   updateLastMessageField,
-} from "@src/store/values/Conversations";
-import { getNetworkState } from "@src/store/values/NetworkState";
-import { selectCurrentUser } from "@src/store/values/CurrentUser";
+} from "@store/values/Conversations";
+import { getNetworkState } from "@store/values/NetworkState";
+import { selectCurrentUser } from "@store/values/CurrentUser";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -107,7 +107,6 @@ export default function AttachHub() {
         if (file.type.startsWith("image/")) {
           file = await compressAndHashFile(file);
         }
-
         selectedFiles.push(file);
       }
 
@@ -127,36 +126,31 @@ export default function AttachHub() {
     setIsPending(false);
   };
 
-  const removeFile = (index) => {
-    if (files.length === 1 && !closeModal()) {
-      return;
-    }
-    setFiles((prevFiles) =>
-      prevFiles.slice(0, index).concat(prevFiles.slice(index + 1))
-    );
-  };
-
-  const uploadInputText = () => {
+  const uploadInputText = useCallback(() => {
     if (inputTextRef.current.value) {
       localStorage.setItem("mtext", inputTextRef.current.value);
       inputTextRef.current.value = "";
     }
-  };
+  }, [inputTextRef]);
 
-  const syncInputText = () => {
+  const syncInputText = useCallback(() => {
     const mtext = localStorage.getItem("mtext");
     if (mtext) {
       localStorage.removeItem("mtext");
       inputTextRef.current.value = mtext;
     }
-  };
+  }, [inputTextRef]);
 
   const closeModal = useCallback(
     (isForseClose) => {
-      if (isForseClose) {
+      const close = () => {
         removeAndNavigateLastSection(pathname + hash);
         uploadInputText();
         return true;
+      };
+
+      if (isForseClose === true) {
+        return close();
       }
 
       if (
@@ -165,12 +159,21 @@ export default function AttachHub() {
       ) {
         return false;
       }
-
-      uploadInputText();
-      removeAndNavigateLastSection(pathname + hash);
-      return true;
+      return close();
     },
-    [files, pathname, hash]
+    [files.length, pathname, hash, uploadInputText]
+  );
+
+  const removeFile = useCallback(
+    (index) => {
+      if (files.length === 1 && !closeModal()) {
+        return;
+      }
+      setFiles((prevFiles) =>
+        prevFiles.slice(0, index).concat(prevFiles.slice(index + 1))
+      );
+    },
+    [closeModal, files.length]
   );
 
   const attachListView = useMemo(() => {
@@ -191,7 +194,7 @@ export default function AttachHub() {
         size={(file.size / 1000000).toFixed(2)}
       />
     ));
-  }, [files]);
+  }, [files, isPending, removeFile]);
 
   const sendMessage = useCallback(
     async (event) => {
@@ -207,8 +210,12 @@ export default function AttachHub() {
         return;
       }
       setIsSendMessageDisable(true);
+      setIsPending(true);
+
       inputTextRef.current.value = "";
+      const cid = selectedCID;
       const mid = currentUser._id + Date.now();
+
       let msg = {
         _id: mid,
         body: text,
@@ -222,14 +229,10 @@ export default function AttachHub() {
       };
 
       dispatch(addMessage(msg));
-      dispatch(updateLastMessageField({ cid: selectedCID, msg }));
+      dispatch(updateLastMessageField({ cid, msg }));
 
       let attachments = [];
-      const reqData = {
-        mid,
-        text: text,
-        cid: selectedCID,
-      };
+      const reqData = { mid, text, cid };
 
       if (files?.length) {
         attachments = await DownloadManager.getFileObjects(files);
@@ -246,10 +249,7 @@ export default function AttachHub() {
       } catch (err) {
         showCustomAlert("The server connection is unavailable.", "warning");
         dispatch(
-          setLastMessageField({
-            cid: selectedCID,
-            msg: messages[messages.length - 1],
-          })
+          setLastMessageField({ cid, msg: messages[messages.length - 1] })
         );
         return;
       }
@@ -272,22 +272,14 @@ export default function AttachHub() {
 
         dispatch(addMessage(msg));
         dispatch(
-          updateLastMessageField({
-            cid: selectedCID,
-            resaveLastMessageId: mid,
-            msg,
-          })
+          updateLastMessageField({ cid, resaveLastMessageId: mid, msg })
         );
         dispatch(removeMessage(mid));
       }
-      setFiles([]);
-      inputFilesRef.current.value = "";
 
       setIsSendMessageDisable(false);
-      // scrollChatToBottom();
+      setIsPending(false);
       closeModal(true);
-      inputTextRef.current.focus();
-      inputTextRef.current.style.height = `40px`;
     },
     [
       closeModal,
@@ -307,29 +299,13 @@ export default function AttachHub() {
   );
 
   useEffect(() => {
-    // inputFilesRef.current.addEventListener("click", function () {
-    //   window.onfocus = function () {
-    //     const inputFile = document.getElementById("inputFile");
-
-    //     console.log(inputFile.value, inputFile.files);
-    //     if (inputFile.files.length === 0) {
-    //       console.log("NO files were added");
-    //     } else {
-    //       console.log("Files were added");
-    //     }
-
-    //     window.onfocus = null;
-    //   };
-    // });
-    // inputFilesRef.current.click();
-
     pickFileClick();
     syncInputText();
-  }, [pickFileClick]);
+  }, [pickFileClick, syncInputText]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      e.keyCode === KEY_CODES.ESCAPE && closeModal();
+      e.keyCode === KEY_CODES.ESCAPE && closeModal(); //not working sync text
       e.keyCode === KEY_CODES.ENTER && sendMessage();
     };
     window.addEventListener("keydown", handleKeyDown);
