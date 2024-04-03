@@ -78,7 +78,9 @@
   overflow: hidden;
 }
 .mm-list__item--active > img,
-.mm-list__item > img {
+.mm-list__item > img,
+.mm-list__item--active > video,
+.mm-list__item > video {
   width: auto;
   height: 100%;
   object-fit: cover;

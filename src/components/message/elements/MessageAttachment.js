@@ -1,5 +1,5 @@
-import ImageView from "@src/components/attach/components/ImageView";
-import VideoView from "@components/message/elements/VideoView";
+import ImageView from "@components/attach/components/ImageView";
+import VideoView from "@src/components/attach/components/VideoView";
 import getFileType from "@utils/get_file_type";
 
 export default function MessageAttachment({ url, name, localUrl, blurHash }) {

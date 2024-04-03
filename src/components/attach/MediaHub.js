@@ -9,6 +9,7 @@ import "@styles/attach/MediaHub.css";
 
 import { ReactComponent as Prev } from "@icons/options/Prev.svg";
 import { ReactComponent as Next } from "@icons/options/Next.svg";
+import getFileType from "@src/utils/get_file_type";
 
 export default function MediaHub() {
   const { pathname, hash } = useLocation();
@@ -78,7 +79,11 @@ export default function MediaHub() {
               handleIndexChange(i);
             }}
           >
-            <img src={file.file_url} alt={file.file_name} />
+            {getFileType(file.file_name) === "Video" ? (
+              <video src={file.file_url} alt={file.file_name} />
+            ) : (
+              <img src={file.file_url} alt={file.file_name} />
+            )}
           </div>
         ))}
       </div>

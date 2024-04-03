@@ -1,5 +1,8 @@
 .att-item__container {
+  min-width: 240px;
+  width: 100%;
   max-width: 440px;
+
   padding: 14px;
 
   display: flex;
@@ -9,6 +12,9 @@
   background-color: var(--color-accent-light);
 
   cursor: pointer;
+}
+.att-item__container[aria-label="disabled"] {
+  cursor: default;
 }
 
 .att-item__photo {
@@ -32,7 +38,8 @@
   transform: translate(-50%, -50%);
 }
 
-.att-item__photo > img {
+.att-item__photo > img,
+.att-item__photo > video {
   width: auto;
   height: 100%;
   object-fit: cover;

@@ -52,7 +52,6 @@ export default function AttachHub() {
     }
 
     setIsPending(true);
-    newFiles.forEach((el) => (el.localUrl = URL.createObjectURL(el)));
 
     async function compressAndHashFile(file) {
       file = await compressFile(file);
@@ -106,6 +105,10 @@ export default function AttachHub() {
 
         if (file.type.startsWith("image/")) {
           file = await compressAndHashFile(file);
+        }
+
+        if (file.type.startsWith("video/")) {
+          file.localUrl = URL.createObjectURL(file);
         }
         selectedFiles.push(file);
       }
@@ -185,15 +188,21 @@ export default function AttachHub() {
       return <p className="attach-input__alt">Select files</p>;
     }
 
-    return files.map((file, index) => (
-      <AttachmentItem
-        key={index}
-        removeFileFunc={() => removeFile(index)}
-        url={file.localUrl}
-        name={file.name}
-        size={(file.size / 1000000).toFixed(2)}
-      />
-    ));
+    return files.map((file, index) => {
+      return (
+        <AttachmentItem
+          key={index}
+          file={{
+            ...file,
+            file_name: file.name,
+            size: (file.size / 1000000).toFixed(2),
+          }}
+          isOnClickDisabled={true}
+          removeFileFunc={() => removeFile(index)}
+          url={file.localUrl}
+        />
+      );
+    });
   }, [files, isPending, removeFile]);
 
   const sendMessage = useCallback(

@@ -53,6 +53,8 @@
 
   resize: none;
 
+  color: var(--color-black);
+
   border: 0;
   border-radius: var(--border-12);
   background-color: var(--color-hover-light);
@@ -76,4 +78,8 @@
   flex-direction: column;
   align-items: center;
   gap: 7px;
+}
+#testVideo {
+  display: none;
+  visibility: hidden;
 }
