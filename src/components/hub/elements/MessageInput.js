@@ -2,7 +2,7 @@ import TextAreaInput from "@components/hub/elements/TextAreaInput";
 import addSuffix from "@utils/navigation/add_suffix";
 import isMobile from "@utils/get_device_type";
 import { KEY_CODES } from "@helpers/keyCodes";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { ReactComponent as Attach } from "@icons/options/Attach.svg";
@@ -18,47 +18,42 @@ export default function MessageInput({
 
   const [isPrevLocationAttach, setIsPrevLocationAttach] = useState(false);
 
-  const handleInput = useCallback(
-    (e) => {
-      if (inputTextRef.current) {
-        const countOfLines = e.target.value.split("\n").length - 1;
-        inputTextRef.current.style.height = `calc(${
-          55 + countOfLines * 20 < 230 ? 55 + countOfLines * 20 : 215
-        }px * var(--base-scale)) `;
-        inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
-      }
-    },
-    [inputTextRef]
-  );
-  const handeOnKeyDown = useCallback(
-    (e) => {
-      if (
-        e.keyCode === KEY_CODES.ENTER &&
-        ((!isMobile && !e.shiftKey) || (isMobile && e.shiftKey))
-      ) {
-        e.preventDefault();
-        onSubmitFunc();
-      }
-    },
-    [onSubmitFunc]
-  );
+  const handleInput = (e) => {
+    if (inputTextRef.current) {
+      const countOfLines = e.target.value.split("\n").length - 1;
+      inputTextRef.current.style.height = `calc(${
+        55 + countOfLines * 20 < 230 ? 55 + countOfLines * 20 : 215
+      }px * var(--base-scale)) `;
+      inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
+    }
+  };
 
-  const uploadInputText = useCallback(() => {
+  const handeOnKeyDown = (e) => {
+    if (
+      e.keyCode === KEY_CODES.ENTER &&
+      ((!isMobile && !e.shiftKey) || (isMobile && e.shiftKey))
+    ) {
+      e.preventDefault();
+      onSubmitFunc();
+    }
+  };
+
+  const uploadInputText = () => {
     if (inputTextRef.current.value) {
       localStorage.setItem("mtext", inputTextRef.current.value);
       inputTextRef.current.value = "";
       inputTextRef.current.style.height = `55px`;
     }
-  }, [inputTextRef]);
+  };
 
-  const syncInputText = useCallback(() => {
+  const syncInputText = () => {
     const mtext = localStorage.getItem("mtext");
     if (mtext) {
       localStorage.removeItem("mtext");
       inputTextRef.current.value = mtext;
       handleInput({ target: { value: mtext } });
     }
-  }, [inputTextRef, handleInput]);
+  };
 
   useEffect(() => {
     const isCurrentLocationAttach = location.hash.includes("/attach");
@@ -71,7 +66,7 @@ export default function MessageInput({
     }
 
     setIsPrevLocationAttach(isCurrentLocationAttach);
-  }, [location, syncInputText, isPrevLocationAttach, chatMessagesBlockRef]);
+  }, [location, chatMessagesBlockRef]);
 
   const inputsView = useMemo(() => {
     if (isBlockedConv) {
@@ -109,15 +104,7 @@ export default function MessageInput({
         <Send className="input-text__button" onClick={onSubmitFunc} />
       </>
     );
-  }, [
-    handeOnKeyDown,
-    handleInput,
-    uploadInputText,
-    location,
-    inputTextRef,
-    isBlockedConv,
-    onSubmitFunc,
-  ]);
+  }, [uploadInputText, location, inputTextRef, isBlockedConv, onSubmitFunc]);
 
   return <div className="inputs__container">{inputsView}</div>;
 }

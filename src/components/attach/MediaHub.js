@@ -1,9 +1,9 @@
 import MessageAttachment from "@components/message/elements/MessageAttachment";
 import getFileType from "@utils/media/get_file_type";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import { selectMessagesEntities } from "@store/values/Messages";
+import { getMessageById } from "@store/values/Messages";
 import { useLocation } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
 import "@styles/attach/MediaHub.css";
@@ -20,21 +20,15 @@ export default function MediaHub() {
   });
 
   const mid = hash.split("=")[1];
-  const messages = useSelector(selectMessagesEntities);
-  const attachments = useMemo(() => {
-    const currentMessage = messages[mid];
-    return currentMessage ? currentMessage.attachments : [];
-  }, [messages, mid]);
+  const { attachments = [] } = useSelector((state) =>
+    getMessageById(state, mid)
+  );
 
   const isLastIndex = currentIndex === attachments.length - 1;
   const isFirstIndex = currentIndex === 0;
 
   const closeModal = () => {
     removeAndNavigateLastSection(pathname + hash);
-  };
-
-  const handleIndexChange = (index) => {
-    setCurrentIndex(index);
   };
 
   return (
@@ -50,7 +44,7 @@ export default function MediaHub() {
           className="media-modal__prev fcc"
           onClick={(e) => {
             e.stopPropagation();
-            handleIndexChange(currentIndex - 1);
+            setCurrentIndex(currentIndex - 1);
           }}
         >
           <Prev />
@@ -61,7 +55,7 @@ export default function MediaHub() {
           className="media-modal__next fcc"
           onClick={(e) => {
             e.stopPropagation();
-            handleIndexChange(currentIndex + 1);
+            setCurrentIndex(currentIndex + 1);
           }}
         >
           <Next />
@@ -76,7 +70,7 @@ export default function MediaHub() {
             } fcc`}
             onClick={(e) => {
               e.stopPropagation();
-              handleIndexChange(i);
+              setCurrentIndex(i);
             }}
           >
             {getFileType(file.file_name) === "Video" ? (

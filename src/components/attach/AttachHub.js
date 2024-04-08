@@ -2,14 +2,12 @@ import AttachmentItem from "@components/attach/components/AttachmentItem";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import DownloadManager from "@src/adapters/downloadManager";
 import OvalLoader from "@components/_helpers/OvalLoader";
+import TextAreaInput from "@components/hub/elements/TextAreaInput";
 import api from "@api/api";
-import compressFile from "@utils/media/compress_file";
-import encodeImageToBlurhash from "@utils/media/get_blur_hash";
 import globalConstants from "@helpers/constants";
-import heicToPng from "@utils/media/heic_to_png";
+import processFile from "@src/utils/media/process_file";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import showCustomAlert from "@utils/show_alert";
-import TextAreaInput from "@components/hub/elements/TextAreaInput";
 import { KEY_CODES } from "@helpers/keyCodes";
 import {
   addMessage,
@@ -57,70 +55,17 @@ export default function AttachHub() {
 
     setIsPending(true);
 
-    async function compressAndHashFile(file) {
-      file = await compressFile(file);
-      const localFileUrl = URL.createObjectURL(file);
-      file.localUrl = localFileUrl;
-
-      try {
-        file.blurHash = await encodeImageToBlurhash(localFileUrl);
-      } catch (e) {
-        file.blurHash = globalConstants.defaultBlurHash;
-      }
-
-      return file;
-    }
-
     const selectedFiles = [];
     try {
-      for (let i = 0; i < newFiles.length; i++) {
-        const fileObj = newFiles[i];
-        const formData = new FormData();
-        formData.append("file", fileObj, fileObj.name.toLocaleLowerCase());
-        let file = formData.get("file");
-
-        if (file.name.length > 255) {
-          throw new Error("The file name should not exceed 255 characters.", {
-            message: "The file name should not exceed 255 characters.",
-          });
-        }
-        if (file.size > 104857600) {
-          throw new Error("The file size should not exceed 100 MB.", {
-            message: "The file size should not exceed 100 MB.",
-          });
-        }
-
-        const fileExtension = file.name.split(".").slice(-1)[0];
-
-        if (
-          !globalConstants.allowedFileFormats.includes(file.type) &&
-          !["heic", "HEIC"].includes(fileExtension)
-        ) {
-          throw new Error("Please select an image file.", {
-            message: "Please select an image file.",
-          });
-        } else if (["heic", "HEIC"].includes(fileExtension)) {
-          const tmp = await heicToPng(file);
-          const pngFile = await compressAndHashFile(tmp);
-
-          selectedFiles.push(pngFile);
-          continue;
-        }
-
-        if (file.type.startsWith("image/")) {
-          file = await compressAndHashFile(file);
-        }
-
-        if (file.type.startsWith("video/")) {
-          file.localUrl = URL.createObjectURL(file);
-        }
-        selectedFiles.push(file);
-      }
-
       if (files?.length + newFiles.length > 10) {
+        setIsPending(false);
         throw new Error("The maximum limit for file uploads is 10.", {
           message: "The maximum limit for file uploads is 10.",
         });
+      }
+
+      for (let i = 0; i < newFiles.length; i++) {
+        selectedFiles.push(await processFile(newFiles[i]));
       }
     } catch (err) {
       err.message
@@ -133,20 +78,20 @@ export default function AttachHub() {
     setIsPending(false);
   };
 
-  const uploadInputText = useCallback(() => {
+  const uploadInputText = () => {
     if (inputTextRef.current.value) {
       localStorage.setItem("mtext", inputTextRef.current.value);
       inputTextRef.current.value = "";
     }
-  }, [inputTextRef]);
+  };
 
-  const syncInputText = useCallback(() => {
+  const syncInputText = () => {
     const mtext = localStorage.getItem("mtext");
     if (mtext) {
       localStorage.removeItem("mtext");
       inputTextRef.current.value = mtext;
     }
-  }, [inputTextRef]);
+  };
 
   const closeModal = useCallback(
     (isForseClose) => {
@@ -168,20 +113,17 @@ export default function AttachHub() {
       }
       return close();
     },
-    [files.length, pathname, hash, uploadInputText]
+    [files.length, pathname, hash]
   );
 
-  const removeFile = useCallback(
-    (index) => {
-      if (files.length === 1 && !closeModal()) {
-        return;
-      }
-      setFiles((prevFiles) =>
-        prevFiles.slice(0, index).concat(prevFiles.slice(index + 1))
-      );
-    },
-    [closeModal, files.length]
-  );
+  const removeFile = (index) => {
+    if (files.length === 1 && !closeModal()) {
+      return;
+    }
+    setFiles((prevFiles) =>
+      prevFiles.slice(0, index).concat(prevFiles.slice(index + 1))
+    );
+  };
 
   const attachListView = useMemo(() => {
     if (isPending) {
@@ -207,7 +149,7 @@ export default function AttachHub() {
         />
       );
     });
-  }, [files, isPending, removeFile]);
+  }, [files, isPending]);
 
   const sendMessage = useCallback(
     async (event) => {
@@ -340,7 +282,7 @@ export default function AttachHub() {
   useEffect(() => {
     pickFileClick();
     syncInputText();
-  }, [pickFileClick, syncInputText]);
+  }, [pickFileClick]);
 
   //Move to useKeyDownHook (custom)
   useEffect(() => {

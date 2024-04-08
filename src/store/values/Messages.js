@@ -45,6 +45,13 @@ export const selectActiveConversationMessages = createSelector(
   }
 );
 
+const getId = (_, id) => id;
+
+export const getMessageById = createSelector(
+  [selectMessagesEntities, getId],
+  (messages, id) => messages[id]
+);
+
 export const {
   addMessage,
   addMessages,
