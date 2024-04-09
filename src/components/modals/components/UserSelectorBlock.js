@@ -4,6 +4,7 @@ import SearchInput from "@components/static/SearchBar";
 import UserInfo from "@components/modals/elements/UserInfo";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { useEffect, useMemo, useState } from "react";
+import { useKeyDown } from "@hooks/useKeyDown";
 
 export default function UserSelectorBlock({
   initSelectedUsers,
@@ -58,21 +59,15 @@ export default function UserSelectorBlock({
     );
   }, [counter, initSelectedUsers, meInArray, selectedUsers]);
 
-  useEffect(() => {
-    const handleKeyDown = ({ keyCode }) => {
-      if (keyCode === KEY_CODES.ENTER) {
-        onClickCreateFunc(
-          initSelectedUsers
-            ? selectedUsers.filter(
-                (u) => !initSelectedUsers.find((uObj) => u._id === uObj._id)
-              )
-            : selectedUsers
-        );
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onClickCreateFunc, selectedUsers]);
+  useKeyDown(KEY_CODES.ENTER, () =>
+    onClickCreateFunc(
+      initSelectedUsers
+        ? selectedUsers.filter(
+            (u) => !initSelectedUsers.find((uObj) => u._id === uObj._id)
+          )
+        : selectedUsers
+    )
+  );
 
   return (
     <>

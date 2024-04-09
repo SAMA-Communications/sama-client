@@ -1,6 +1,7 @@
 import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@helpers/keyCodes";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import { useKeyDown } from "@hooks/useKeyDown";
 
 import { ReactComponent as ImageMedium } from "@icons/media/ImageMedium.svg";
 
@@ -22,15 +23,7 @@ export default function ChatNameInput({ setState, closeWindow }) {
     setState(name);
   }, [name, setState]);
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      e.keyCode === KEY_CODES.ENTER && confirmChatName();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [confirmChatName]);
+  useKeyDown(KEY_CODES.ENTER, confirmChatName);
 
   return (
     <>

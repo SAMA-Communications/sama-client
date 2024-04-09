@@ -7,8 +7,9 @@ import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
-import { useEffect, useMemo } from "react";
+import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import "@styles/info/UserProfile.css";
@@ -28,18 +29,10 @@ export default function OtherUserProfile() {
   );
   const { _id: userId, login, email, phone } = userObject;
 
-  useEffect(() => {
-    const keydownHandler = ({ e }) => {
-      e.keyCode === KEY_CODES.ESCAPE &&
-        removeAndNavigateLastSection(pathname + hash, "/profile");
-      e.keyCode === KEY_CODES.ENTER && e.preventDefault();
-    };
-
-    window.addEventListener("keydown", keydownHandler);
-    return () => {
-      window.removeEventListener("keydown", keydownHandler);
-    };
-  }, [hash, pathname]);
+  useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
+  useKeyDown(KEY_CODES.ESCAPE, () =>
+    removeAndNavigateLastSection(pathname + hash, "/profile")
+  );
 
   const viewStatusActivity = useMemo(
     () => activityService.getUserLastActivity(userId),

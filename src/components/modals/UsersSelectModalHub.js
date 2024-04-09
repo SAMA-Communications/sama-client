@@ -7,8 +7,9 @@ import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
 import { selectParticipantsEntities } from "@store/values/Participants";
-import { useEffect, useMemo, useState } from "react";
+import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import "@styles/modals/UsersSelectModalHub.css";
@@ -21,17 +22,6 @@ export default function UsersSelectModalHub({ type }) {
   const [chatName, setChatName] = useState(null);
 
   const closeModal = () => removeAndNavigateSubLink(pathname + hash, "/create");
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      e.keyCode === KEY_CODES.ESCAPE &&
-        removeAndNavigateSubLink(pathname + hash, "/create");
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
 
   const sendCreateRequest = async (participants) => {
     const chatId = await conversationService.createGroupChat(
@@ -47,6 +37,10 @@ export default function UsersSelectModalHub({ type }) {
     }
     removeAndNavigateLastSection(pathname + hash);
   };
+
+  useKeyDown(KEY_CODES.ESCAPE, () =>
+    removeAndNavigateSubLink(pathname + hash, "/create")
+  );
 
   const typeOfFunc = useMemo(() => {
     if (type === "add_participants") {

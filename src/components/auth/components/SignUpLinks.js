@@ -8,8 +8,9 @@ import { setCurrentUser } from "@store/values/CurrentUser";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { upsertUser } from "@store/values/Participants";
+import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useCallback, useEffect, useState } from "react";
+import { useKeyDown } from "@hooks/useKeyDown";
 
 export default function SignUpLinks({ changePage, content }) {
   const dispatch = useDispatch();
@@ -46,15 +47,7 @@ export default function SignUpLinks({ changePage, content }) {
     setIsLoader(false);
   }, [content, isLogin]);
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      e.keyCode === KEY_CODES.ENTER && sendRequest();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [sendRequest]);
+  useKeyDown(KEY_CODES.ENTER, sendRequest);
 
   return (
     <>

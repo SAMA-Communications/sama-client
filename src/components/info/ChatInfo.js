@@ -6,8 +6,9 @@ import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
+import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import "@styles/info/ChatInfo.css";
@@ -31,18 +32,10 @@ export default function ChatInfo() {
     return currentUser._id === selectedConversation.owner_id?.toString();
   }, [currentUser, selectedConversation]);
 
-  useEffect(() => {
-    const keydownHandler = (e) => {
-      e.keyCode === KEY_CODES.ESCAPE &&
-        removeAndNavigateSubLink(pathname + hash, "/info");
-      e.keyCode === KEY_CODES.ENTER && e.preventDefault();
-    };
-
-    window.addEventListener("keydown", keydownHandler);
-    return () => {
-      window.removeEventListener("keydown", keydownHandler);
-    };
-  }, [hash, pathname]);
+  useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
+  useKeyDown(KEY_CODES.ESCAPE, () =>
+    removeAndNavigateSubLink(pathname + hash, "/info")
+  );
 
   const participantsList = useMemo(() => {
     if (!selectedConversation?.participants || !currentUser) {

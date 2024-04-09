@@ -9,8 +9,9 @@ import { KEY_CODES } from "@helpers/keyCodes";
 import { setCurrentUser } from "@store/values/CurrentUser";
 import { upsertChat } from "@store/values/Conversations";
 import { upsertUser } from "@store/values/Participants";
+import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useCallback, useEffect, useState } from "react";
+import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 
 import "@styles/modals/EditModalHub.css";
@@ -82,13 +83,7 @@ export default function EditModalHub() {
     closeModal();
   }, [closeModal, content, dispatch, type]);
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      e.keyCode === KEY_CODES.ENTER && sendRequest();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [sendRequest]);
+  useKeyDown(KEY_CODES.ENTER, sendRequest);
 
   return (
     <div className="edit-modal__container fcc">

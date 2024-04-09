@@ -24,6 +24,7 @@ import { getNetworkState } from "@store/values/NetworkState";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 
 import "@styles/attach/AttachHub.css";
@@ -79,7 +80,7 @@ export default function AttachHub() {
   };
 
   const storeInputText = () => {
-    if (inputTextRef.current.value) {
+    if (inputTextRef.current?.value) {
       localStorage.setItem("mtext", inputTextRef.current.value);
       inputTextRef.current.value = "";
     }
@@ -277,17 +278,12 @@ export default function AttachHub() {
     syncInputText();
   }, []);
 
-  //Move to useKeyDownHook (custom)
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      e.keyCode === KEY_CODES.ESCAPE && closeModal(); //not working sync text
-      e.keyCode === KEY_CODES.ENTER &&
-        ((!isMobile && !e.shiftKey) || (isMobile && e.shiftKey)) &&
-        sendMessage();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [closeModal, isMobile, sendMessage]);
+  useKeyDown(KEY_CODES.ESCAPE, closeModal);
+  useKeyDown(
+    KEY_CODES.ENTER,
+    (e) =>
+      ((!isMobile && !e.shiftKey) || (isMobile && e.shiftKey)) && sendMessage()
+  );
 
   return (
     <>

@@ -5,7 +5,7 @@ import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { selectCurrentUser } from "@store/values/CurrentUser";
-import { useEffect } from "react";
+import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -15,24 +15,17 @@ import { ReactComponent as Close } from "@icons/actions/Close.svg";
 import { ReactComponent as Password } from "@icons/users/Password.svg";
 import { ReactComponent as Trash } from "@icons/actions/Trash.svg";
 import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
+
 export default function UserProfile() {
   const { pathname, hash } = useLocation();
 
   const currentUser = useSelector(selectCurrentUser);
   const { login, email, phone, first_name, last_name } = currentUser || {};
 
-  useEffect(() => {
-    const keydownHandler = (e) => {
-      e.keyCode === KEY_CODES.ESCAPE &&
-        removeAndNavigateSubLink(pathname + hash, "/profile");
-      e.keyCode === KEY_CODES.ENTER && e.preventDefault();
-    };
-
-    window.addEventListener("keydown", keydownHandler);
-    return () => {
-      window.removeEventListener("keydown", keydownHandler);
-    };
-  }, [hash, pathname]);
+  useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
+  useKeyDown(KEY_CODES.ENTER, () =>
+    removeAndNavigateSubLink(pathname + hash, "/profile")
+  );
 
   return (
     <div className="profile__container">

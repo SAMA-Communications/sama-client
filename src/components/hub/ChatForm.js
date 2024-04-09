@@ -16,6 +16,7 @@ import {
 import { KEY_CODES } from "@helpers/keyCodes";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useKeyDown } from "@hooks/useKeyDown";
 import { useSelector, useDispatch } from "react-redux";
 
 import "@styles/hub/ChatForm.css";
@@ -33,35 +34,30 @@ export default function ChatForm() {
   const chatMessagesBlock = useRef();
   const [files, setFiles] = useState([]);
 
-  useEffect(() => {
+  const closeForm = (event) => {
     const { pathname, hash } = location;
 
-    const closeForm = (event) => {
-      if (event && event.stopPropagation) {
-        event.stopPropagation();
-      }
+    if (event && event.stopPropagation) {
+      event.stopPropagation();
+    }
 
-      if (!selectedCID) {
-        return;
-      }
+    if (!selectedCID) {
+      return;
+    }
 
-      dispatch(clearSelectedConversation());
-      api.unsubscribeFromUserActivity({});
-      removeAndNavigateLastSection(pathname + hash);
-    };
+    dispatch(clearSelectedConversation());
+    api.unsubscribeFromUserActivity({});
+    removeAndNavigateLastSection(pathname + hash);
+  };
 
-    const keydownHandler = (e) => {
-      e.keyCode === KEY_CODES.ESCAPE && closeForm();
-    };
-
+  // check on mobile key code of swiped-left action
+  useEffect(() => {
     document.addEventListener("swiped-left", closeForm);
     document.addEventListener("swiped-right", closeForm);
-    window.addEventListener("keydown", keydownHandler);
 
     return () => {
       document.removeEventListener("swiped-left", closeForm);
       document.removeEventListener("swiped-right", closeForm);
-      window.removeEventListener("keydown", keydownHandler);
     };
   }, [location, selectedCID]);
 
@@ -87,6 +83,8 @@ export default function ChatForm() {
 
     files.length && setFiles([]);
   }, [selectedCID, conversations]);
+
+  useKeyDown(KEY_CODES.ESCAPE, closeForm);
 
   return (
     <section className={`chat-form__container ${selectedCID ? "" : "fcc"}`}>
