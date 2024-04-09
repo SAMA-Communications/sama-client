@@ -78,7 +78,7 @@ export default function AttachHub() {
     setIsPending(false);
   };
 
-  const uploadInputText = () => {
+  const storeInputText = () => {
     if (inputTextRef.current.value) {
       localStorage.setItem("mtext", inputTextRef.current.value);
       inputTextRef.current.value = "";
@@ -97,7 +97,7 @@ export default function AttachHub() {
     (isForseClose) => {
       const close = () => {
         removeAndNavigateLastSection(pathname + hash);
-        uploadInputText();
+        storeInputText();
         return true;
       };
 
@@ -240,7 +240,6 @@ export default function AttachHub() {
       closeModal,
       connectState,
       currentUser,
-      dispatch,
       files,
       isSendMessageDisable,
       messages,
@@ -261,28 +260,22 @@ export default function AttachHub() {
     [isMobile, sendMessage]
   );
 
-  const handleInput = useCallback(
-    (e) => {
-      if (inputTextRef.current) {
-        const countOfLines = e.target.value.split("\n").length - 1;
-        inputTextRef.current.style.height = `calc(${
-          40 + countOfLines * 20 < 230 ? 40 + countOfLines * 20 : 215
-        }px * var(--base-scale)) `;
-        inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
-      }
-    },
-    [inputTextRef]
-  );
+  const handleInput = (e) => {
+    if (inputTextRef.current) {
+      const countOfLines = e.target.value.split("\n").length - 1;
+      inputTextRef.current.style.height = `calc(${
+        40 + countOfLines * 20 < 230 ? 40 + countOfLines * 20 : 215
+      }px * var(--base-scale)) `;
+      inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
+    }
+  };
 
-  const pickFileClick = useCallback(
-    () => inputFilesRef.current.click(),
-    [inputFilesRef]
-  );
+  const pickFileClick = () => inputFilesRef.current.click();
 
   useEffect(() => {
     pickFileClick();
     syncInputText();
-  }, [pickFileClick]);
+  }, []);
 
   //Move to useKeyDownHook (custom)
   useEffect(() => {

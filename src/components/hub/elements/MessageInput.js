@@ -38,7 +38,7 @@ export default function MessageInput({
     }
   };
 
-  const uploadInputText = () => {
+  const storeInputText = () => {
     if (inputTextRef.current.value) {
       localStorage.setItem("mtext", inputTextRef.current.value);
       inputTextRef.current.value = "";
@@ -66,7 +66,7 @@ export default function MessageInput({
     }
 
     setIsPrevLocationAttach(isCurrentLocationAttach);
-  }, [location, chatMessagesBlockRef]);
+  }, [location]);
 
   const inputsView = useMemo(() => {
     if (isBlockedConv) {
@@ -90,7 +90,7 @@ export default function MessageInput({
           className="input-file__button"
           onClick={() => {
             addSuffix(location.pathname + location.hash, "/attach");
-            uploadInputText();
+            storeInputText();
           }}
         />
         <TextAreaInput
@@ -104,7 +104,7 @@ export default function MessageInput({
         <Send className="input-text__button" onClick={onSubmitFunc} />
       </>
     );
-  }, [uploadInputText, location, inputTextRef, isBlockedConv, onSubmitFunc]);
+  }, [location, isBlockedConv, onSubmitFunc]);
 
   return <div className="inputs__container">{inputsView}</div>;
 }
