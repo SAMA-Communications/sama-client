@@ -72,6 +72,7 @@ export default function AttachHub() {
       err.message
         ? showCustomAlert(err.message, "warning")
         : console.error(err);
+      setIsPending(false);
       return;
     }
 
@@ -314,22 +315,28 @@ export default function AttachHub() {
             inputRef={inputTextRef}
             handleInput={handleInput}
             handeOnKeyDown={handeOnKeyDown}
-            isDisabled={false}
+            isDisabled={isSendMessageDisable}
             // isMobile={isMobile}
-            placeholder={"Type your message..."}
+            placeholder={
+              isSendMessageDisable
+                ? "Processing and sending files..."
+                : "Type your message..."
+            }
           />
-          <div className="attach-navigation__container fcc">
-            <p className="attach-navigation__link" onClick={pickFileClick}>
-              Add
-            </p>
-            <p className="attach-navigation__link" onClick={closeModal}>
-              Cancel
-            </p>
+          {isSendMessageDisable ? null : (
+            <div className="attach-navigation__container fcc">
+              <p className="attach-navigation__link" onClick={pickFileClick}>
+                Add
+              </p>
+              <p className="attach-navigation__link" onClick={closeModal}>
+                Cancel
+              </p>
 
-            <p className="attach-navigation__link" onClick={sendMessage}>
-              Send
-            </p>
-          </div>
+              <p className="attach-navigation__link" onClick={sendMessage}>
+                Send
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </>
