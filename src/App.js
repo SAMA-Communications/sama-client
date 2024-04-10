@@ -1,4 +1,4 @@
-import ContextMenuHub from "@newcomponents/context/ContextMenuHub";
+import ContextMenuHub from "@components/context/ContextMenuHub";
 import activityService from "@services/activityService";
 import autoLoginService from "@services/autoLoginService.js";
 import conversationService from "@services/conversationsService";
@@ -17,11 +17,11 @@ import { useDispatch, useSelector } from "react-redux";
 import SMain from "@skeletons/SMain";
 import SPageLoader from "@skeletons/SPageLoader";
 
-import "@newstyles/GlobalParam.css";
+import "@styles/GlobalParam.css";
 
-const Main = lazy(() => import("@newcomponents/Main"));
+const Main = lazy(() => import("@components/Main"));
 const AuthorizationHub = lazy(() =>
-  import("@newcomponents/auth/AuthorizationHub")
+  import("@components/auth/AuthorizationHub")
 );
 
 export default function App() {

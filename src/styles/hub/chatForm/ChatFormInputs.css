@@ -1,0 +1,61 @@
+.inputs__container {
+  position: absolute;
+  bottom: -5px;
+
+  width: 100%;
+
+  padding-top: 10px;
+
+  background-color: var(--color-bg-light-90);
+
+  z-index: 50;
+}
+
+#inputMessage {
+  width: 100%;
+  height: 55px;
+
+  padding: calc(18px * var(--base-scale)) calc(58px * var(--base-scale));
+
+  color: var(--color-black);
+  font-size: var(--font-p);
+
+  border: 0;
+  border-radius: var(--border-16);
+  background-color: var(--color-hover-light);
+
+  resize: none;
+}
+#inputMessage:disabled {
+  padding: calc(18px * var(--base-scale));
+}
+#inputMessage:focus {
+  outline: none;
+}
+#inputMessage::-webkit-scrollbar {
+  display: none;
+}
+#inputMessage::placeholder {
+  color: var(--color-text-dark);
+  font-size: var(--font-p);
+}
+
+#inputFile {
+  display: none;
+}
+
+.input-file__button,
+.input-text__button {
+  position: absolute;
+  bottom: calc(17px * var(--base-scale));
+
+  cursor: pointer;
+
+  z-index: 1;
+}
+.input-file__button {
+  left: calc(25px * var(--base-scale));
+}
+.input-text__button {
+  right: calc(25px * var(--base-scale));
+}

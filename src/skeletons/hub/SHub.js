@@ -1,8 +1,8 @@
-import CustomScrollBar from "@newcomponents/_helpers/CustomScrollBar";
-import SearchInput from "@newcomponents/static/SearchBar";
+import CustomScrollBar from "@components/_helpers/CustomScrollBar";
+import SearchInput from "@components/static/SearchBar";
 import SChatList from "@skeletons/hub/SChatList";
 
-import "@newstyles/hub/ChatList.css";
+import "@styles/hub/ChatList.css";
 
 export default function SHub() {
   return (

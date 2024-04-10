@@ -1,5 +1,5 @@
 import api from "@api/api";
-import getFileType from "@utils/get_file_type";
+import getFileType from "@utils/media/get_file_type";
 import urlBase64ToUint8Array from "@api/base64_to_uint8Array";
 import { default as EventEmitter } from "@event/eventEmitter";
 import { default as store } from "@store/store";

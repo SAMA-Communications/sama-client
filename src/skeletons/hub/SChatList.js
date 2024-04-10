@@ -1,4 +1,4 @@
-import SConversationItem from "./elements/SConversationItem";
+import SConversationItem from "@skeletons/hub/elements/SConversationItem";
 
 export default function SChatList() {
   return (

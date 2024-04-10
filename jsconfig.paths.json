@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@src/*": ["src/*"],
       "@api/*": ["src/api/*"],
 
       "@adapters/*": ["src/adapters/*"],
@@ -24,10 +25,7 @@
       "@validations": ["src/validations"],
 
       "@skeletons": ["src/skeletons"],
-      "@hooks": ["src/hooks"],
-
-      "@newcomponents/*": ["src/newcomponents/*"],
-      "@newstyles/*": ["src/newstyles/*"]
+      "@hooks": ["src/hooks"]
     }
   }
 }
