@@ -53,6 +53,7 @@
 
   resize: none;
   min-height: 40px;
+  height: 40px;
   max-height: 140px;
 
   color: var(--color-black);
