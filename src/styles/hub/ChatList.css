@@ -170,7 +170,12 @@
   }
 
   .chat-list__container > .search-bar {
+    max-width: calc(100% - 65px);
+
     margin-top: 10px;
-    margin-left: 50px;
+    margin-left: 65px;
+  }
+  .chat-list__container .search-bar__input {
+    max-width: calc(100% - 15px);
   }
 }
