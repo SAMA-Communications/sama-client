@@ -59,3 +59,14 @@
 .input-text__button {
   right: calc(25px * var(--base-scale));
 }
+
+@media screen and (max-width: 600px) {
+  .inputs__container {
+    bottom: 4svw;
+
+    width: 92svw;
+  }
+  #inputMessage:disabled {
+    padding: calc(9px * var(--base-scale));
+  }
+}

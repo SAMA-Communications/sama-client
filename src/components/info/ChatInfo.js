@@ -4,6 +4,7 @@ import addSuffix from "@utils/navigation/add_suffix";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
+import { getIsMobileView } from "@store/values/IsMobileView";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useKeyDown } from "@hooks/useKeyDown";
@@ -14,11 +15,14 @@ import { useSelector } from "react-redux";
 import "@styles/info/ChatInfo.css";
 
 import { ReactComponent as AddParticipants } from "@icons/AddParticipants.svg";
+import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
 import { ReactComponent as ImageBig } from "@icons/media/ImageBig.svg";
 
 export default function ChatInfo() {
   const { pathname, hash } = useLocation();
+
+  const isMobileView = useSelector(getIsMobileView);
 
   const participants = useSelector(selectParticipantsEntities);
   const currentUser = useSelector(selectCurrentUser);
@@ -67,10 +71,17 @@ export default function ChatInfo() {
     <div className="chat-info__container">
       <div className="chat-info__container--top fcc">
         <div className="ci-top__title">Chat info</div>
-        <Close
-          className="ci-close"
-          onClick={() => removeAndNavigateSubLink(pathname + hash, "/info")}
-        />
+        {isMobileView ? (
+          <BackBtn
+            className="ci-close"
+            onClick={() => removeAndNavigateSubLink(pathname + hash, "/info")}
+          />
+        ) : (
+          <Close
+            className="ci-close"
+            onClick={() => removeAndNavigateSubLink(pathname + hash, "/info")}
+          />
+        )}
         <div className="ci-photo fcc">
           <ImageBig />
         </div>

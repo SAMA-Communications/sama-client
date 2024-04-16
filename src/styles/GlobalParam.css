@@ -30,6 +30,7 @@
   --color-black: #000;
   --color-black-25: rgba(0, 0, 0, 0.25);
   --color-black-50: rgba(0, 0, 0, 0.5);
+  --color-black-75: rgba(0, 0, 0, 0.75);
   --color-grey-50: rgba(26, 26, 26, 0.5);
   --color-red: #df2e38;
   --color-bg-light: #f6f6f6;
@@ -201,4 +202,16 @@ main {
   top: calc(4px * var(--base-scale)) !important;
 
   border-radius: calc(3px * var(--base-scale)) !important;
+}
+
+@media screen and (max-width: 600px) {
+  main {
+    padding: 0;
+  }
+
+  .first-window__container {
+    padding: 0;
+
+    background-color: var(--color-bg-dark);
+  }
 }

@@ -40,3 +40,11 @@
   flex-direction: column;
   gap: 7px;
 }
+
+@media screen and (max-width: 600px) {
+  .chat-form__container {
+    padding: 4svw;
+
+    background-color: var(--color-bg-light);
+  }
+}

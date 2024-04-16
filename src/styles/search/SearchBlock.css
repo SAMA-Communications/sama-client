@@ -7,3 +7,15 @@
 .search__text {
   font-size: var(--font-h6);
 }
+
+@media screen and (max-width: 600px) {
+  .search__container {
+    width: 100svw;
+
+    margin-top: 0;
+    padding: 2svh 2svw 0 2svw;
+
+    border-radius: var(--border-16) var(--border-16) 0 0;
+    background-color: var(--color-bg-light);
+  }
+}

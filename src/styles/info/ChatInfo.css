@@ -162,3 +162,25 @@
   font-weight: 200;
   font-size: var(--font-h6);
 }
+
+@media screen and (max-width: 600px) {
+  .chat-info__container {
+    width: 100svw;
+
+    margin-left: 0;
+  }
+
+  .chat-info__container--top {
+    border-radius: 0 0 var(--border-16) var(--border-16);
+  }
+  .chat-info__container--bottom {
+    padding-bottom: 0;
+
+    border-radius: var(--border-16) var(--border-16) 0 0;
+  }
+
+  .ci-close {
+    left: 4svw;
+    top: 34px;
+  }
+}

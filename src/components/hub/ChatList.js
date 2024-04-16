@@ -8,6 +8,7 @@ import {
   getConverastionById,
   selectAllConversations,
 } from "@store/values/Conversations.js";
+import { getIsMobileView } from "@src/store/values/IsMobileView";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 import { setSelectedConversation } from "@store/values/SelectedConversation.js";
@@ -17,11 +18,14 @@ import { useSelector, useDispatch } from "react-redux";
 import "@styles/hub/ChatList.css";
 
 import SChatList from "@skeletons/hub/SChatList";
+import AccountInfo from "../info/elements/AccountInfo";
 
 export default function ChatList() {
   const dispatch = useDispatch();
 
   const [inputText, setInputText] = useState(null);
+
+  const isMobileView = useSelector(getIsMobileView);
 
   const conversations = useSelector(selectAllConversations);
   const participants = useSelector(selectParticipantsEntities);
@@ -65,6 +69,7 @@ export default function ChatList() {
 
   return (
     <div className="chat-list__container">
+      {isMobileView ? <AccountInfo /> : null}
       <SearchInput shadowText={"Search"} setState={setInputText} />
       {inputText ? (
         <SearchBlock

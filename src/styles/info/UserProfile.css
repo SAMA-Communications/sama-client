@@ -179,9 +179,31 @@
   margin-bottom: -10px;
 
   text-align: center;
-  font-size: var(--font-h5);
+  font-size: var(--font-h6);
 }
 .status--online {
   color: var(--color-accent-dark);
   font-size: var(--font-h5);
+}
+
+@media screen and (max-width: 600px) {
+  .chat-form__container {
+    padding: 4svw;
+
+    background-color: var(--color-bg-light);
+  }
+
+  .profile__container {
+    width: 100svw;
+    height: 100svh;
+
+    margin-right: 0;
+  }
+
+  .profile__container--top {
+    border-radius: 0 0 var(--border-16) var(--border-16);
+  }
+  .profile__container--bottom {
+    border-radius: var(--border-16) var(--border-16) 0 0;
+  }
 }

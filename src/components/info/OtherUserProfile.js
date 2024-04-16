@@ -6,6 +6,7 @@ import getUserFullName from "@utils/user/get_user_full_name";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
 import { KEY_CODES } from "@helpers/keyCodes";
+import { getIsMobileView } from "@store/values/IsMobileView";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
@@ -16,11 +17,13 @@ import "@styles/info/UserProfile.css";
 
 import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
 import { ReactComponent as LinkTo } from "@icons/options/LinkTo.svg";
+import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
 
 export default function OtherUserProfile() {
   const { pathname, hash, search } = useLocation();
 
+  const isMobileView = useSelector(getIsMobileView);
   const participants = useSelector(selectParticipantsEntities);
 
   const userObject = useMemo(
@@ -43,10 +46,17 @@ export default function OtherUserProfile() {
     <div className="first-window__container">
       <div className="profile__container">
         <div className="profile__container--top fcc">
-          <Close
-            className="profile__close"
-            onClick={() => removeAndNavigateLastSection(pathname + hash)}
-          />
+          {isMobileView ? (
+            <BackBtn
+              className="ci-close"
+              onClick={() => removeAndNavigateLastSection(pathname + hash)}
+            />
+          ) : (
+            <Close
+              className="profile__close"
+              onClick={() => removeAndNavigateLastSection(pathname + hash)}
+            />
+          )}
           <div className="profile__photo fcc">
             <UserIcon />
           </div>

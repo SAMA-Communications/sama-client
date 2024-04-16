@@ -146,3 +146,31 @@
 
   overflow: hidden;
 }
+
+.navigation-account {
+  position: absolute;
+  top: 14px;
+  left: 15px;
+
+  z-index: 100;
+}
+
+@media screen and (max-width: 600px) {
+  .chat-list__container {
+    flex: 1;
+  }
+  .chat-list__container > .scroll-bar__outer-container {
+    border-radius: var(--border-16) var(--border-16) 0 0;
+
+    background-color: var(--color-bg-light);
+  }
+  .chat-list__container > .scroll-bar__outer-container > div:nth-child(1) {
+    margin-top: 2svh;
+    padding: 0 2svw;
+  }
+
+  .chat-list__container > .search-bar {
+    margin-top: 10px;
+    margin-left: 50px;
+  }
+}

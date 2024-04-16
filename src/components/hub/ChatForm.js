@@ -90,7 +90,7 @@ export default function ChatForm() {
     <section className={`chat-form__container ${selectedCID ? "" : "fcc"}`}>
       {selectedCID ? (
         <>
-          <ChatFormHeader />
+          <ChatFormHeader closeFormFunc={closeForm} />
           <ChatFormContent scrollRef={chatMessagesBlock} />
           <ChatFormInputs
             chatMessagesBlockRef={chatMessagesBlock}

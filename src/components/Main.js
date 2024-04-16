@@ -28,6 +28,26 @@ export default function Main() {
   const conversations = useSelector(selectConversationsEntities);
   const conversationsArray = conversations && Object.values(conversations);
 
+  const additionalContainerRight = useMemo(() => {
+    const { pathname, hash } = location;
+
+    const blockMap = {
+      "/info": <ChatInfo />,
+      "/user": <OtherUserProfile />,
+      "/add": <UsersSelectModalHub type={"add_participants"} />,
+      "/create": <UsersSelectModalHub />,
+      "/attach": <AttachHub />,
+      "/media": <MediaHub />,
+      "/edit": <EditModalHub />,
+    };
+
+    const allBlocks = Object.entries(blockMap)
+      .filter(([key, _]) => pathname.includes(key) || hash.includes(key))
+      .map(([key, component]) => cloneElement(component, { key }));
+
+    return isMobileView ? allBlocks.slice(-2) : allBlocks;
+  }, [location, isMobileView]);
+
   const hubContainer = useMemo(() => {
     if (!conversations) {
       return <SHub />;
@@ -42,7 +62,15 @@ export default function Main() {
     }
 
     if (isMobileView) {
-      return !!location.hash ? <ChatForm /> : <ChatList />;
+      const keys = additionalContainerRight.map((el) => el.key);
+
+      return !!location.hash ? (
+        keys.includes("/user") || keys.includes("/info") ? null : (
+          <ChatForm />
+        )
+      ) : location.pathname.includes("/profile") ? null : (
+        <ChatList />
+      );
     }
 
     return (
@@ -57,31 +85,9 @@ export default function Main() {
     return location.pathname.includes("/profile") ? <UserProfile /> : null;
   }, [location]);
 
-  const additionalContainerRight = useMemo(() => {
-    const { pathname, hash } = location;
-
-    const blockMap = {
-      "/add": <UsersSelectModalHub type={"add_participants"} />,
-      "/attach": <AttachHub />,
-      "/media": <MediaHub />,
-      "/create": <UsersSelectModalHub />,
-      "/edit": <EditModalHub />,
-      "/info": <ChatInfo />,
-      "/user": <OtherUserProfile />,
-    };
-
-    const allBlocks = Object.entries(blockMap)
-      .filter(
-        ([key, component]) => pathname.includes(key) || hash.includes(key)
-      )
-      .map(([key, component]) => cloneElement(component, { key }));
-
-    return allBlocks;
-  }, [location]);
-
   return (
     <>
-      <NavigationLine />
+      {isMobileView ? null : <NavigationLine />}
       {additionalContainerLeft}
       {hubContainer}
       {additionalContainerRight}

@@ -45,10 +45,32 @@
 
   cursor: pointer;
 }
+.header-back {
+  align-self: center;
+
+  margin-right: 30px;
+}
 
 .activity--online {
   padding-left: calc(25px * var(--base-scale));
 }
 .activity--online > li {
   color: var(--color-accent-dark);
+}
+
+@media screen and (max-width: 600px) {
+  .header__container {
+    top: 3svw;
+    left: 4svw;
+
+    width: 92svw;
+
+    align-items: center;
+  }
+  .content__name {
+    max-width: 300px;
+    /* optimize width */
+
+    font-size: var(--font-h3);
+  }
 }

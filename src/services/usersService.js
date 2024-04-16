@@ -120,9 +120,13 @@ class UsersService {
       try {
         await api.userDelete();
         store.dispatch({ type: "RESET_STORE" });
+        return true;
       } catch (err) {
         showCustomAlert(err.message, "danger");
+        return false;
       }
+    } else {
+      return false;
     }
   }
 }

@@ -13,6 +13,7 @@
 
   background-color: var(--color-black-50);
   background-blend-mode: darken;
+  background-size: cover;
 }
 .authorization__side--left-login {
   background-image: url(./../../assets/LoginBg.png);
@@ -176,4 +177,70 @@
 
 .login-form__mt-49 {
   margin-top: -49px;
+}
+
+.signup-form__mt-20 {
+  margin-top: 0;
+}
+
+@media screen and (max-width: 600px) {
+  .authorization__container {
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .authorization__side--right-login,
+  .authorization__side--right-signup {
+    display: none;
+  }
+
+  .authorization__side--left-login,
+  .authorization__side--left-signup {
+    width: 100svw;
+    max-height: 300px;
+
+    padding: 6svh 5svw;
+  }
+  .authorization__side--left-login .logo-icon > svg,
+  .authorization__side--left-signup .logo-icon > svg {
+    height: 20svh;
+    width: 92px;
+  }
+  .authorization__side--left-login #logo-text,
+  .authorization__side--left-signup #logo-text {
+    height: 18svh;
+  }
+
+  .authorization__side--main {
+    width: 100svw;
+
+    padding: 5svw;
+
+    justify-content: flex-start;
+
+    border-radius: var(--border-16) var(--border-16) 0 0;
+  }
+
+  .login-form__mt-49 {
+    margin-top: -20px;
+  }
+  .signup-form__mt-20 {
+    margin-top: -20px;
+  }
+
+  .authorization__title > div {
+    font-size: var(--font-58);
+  }
+
+  .authorization__form {
+    width: 100%;
+  }
+
+  .authorization__form > .auth-form__input {
+    width: 100%;
+  }
+
+  .auth-form__input > input {
+    font-size: var(--font-h6);
+  }
 }

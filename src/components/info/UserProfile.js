@@ -1,23 +1,32 @@
 import InfoBox from "@components/info/elements/InfoBox";
 import addSuffix from "@utils/navigation/add_suffix";
+import api from "@src/api/api";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
+import { getIsMobileView } from "@store/values/IsMobileView";
 import { selectCurrentUser } from "@store/values/CurrentUser";
+import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
+import { updateNetworkState } from "@store/values/NetworkState";
+import { useDispatch, useSelector } from "react-redux";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 import "@styles/info/UserProfile.css";
 
+import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as Close } from "@icons/actions/Close.svg";
+import { ReactComponent as LogoutMini } from "@icons/actions/LogoutMini.svg";
 import { ReactComponent as Password } from "@icons/users/Password.svg";
 import { ReactComponent as Trash } from "@icons/actions/Trash.svg";
 import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
 
 export default function UserProfile() {
+  const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
+
+  const isMobileView = useSelector(getIsMobileView);
 
   const currentUser = useSelector(selectCurrentUser);
   const { login, email, phone, first_name, last_name } = currentUser || {};
@@ -27,13 +36,46 @@ export default function UserProfile() {
     removeAndNavigateSubLink(pathname + hash, "/profile")
   );
 
+  const sendLogout = async () => {
+    navigator.serviceWorker.ready
+      .then((reg) =>
+        reg.pushManager.getSubscription().then((sub) =>
+          sub.unsubscribe().then(async () => {
+            await api.pushSubscriptionDelete();
+            await api.userLogout();
+            dispatch({ type: "RESET_STORE" });
+            dispatch(updateNetworkState(true));
+          })
+        )
+      )
+      .catch(async (err) => {
+        console.error(err);
+        await api.userLogout();
+        dispatch({ type: "RESET_STORE" });
+        dispatch(updateNetworkState(true));
+        dispatch(setUserIsLoggedIn(false));
+      });
+    localStorage.removeItem("sessionId");
+  };
+
   return (
     <div className="profile__container">
       <div className="profile__container--top fcc">
-        <Close
-          className="profile__close"
-          onClick={() => removeAndNavigateSubLink(pathname + hash, "/profile")}
-        />
+        {isMobileView ? (
+          <BackBtn
+            className="ci-close"
+            onClick={() =>
+              removeAndNavigateSubLink(pathname + hash, "/profile")
+            }
+          />
+        ) : (
+          <Close
+            className="profile__close"
+            onClick={() =>
+              removeAndNavigateSubLink(pathname + hash, "/profile")
+            }
+          />
+        )}
         <div className="profile__photo fcc">
           <UserIcon />
         </div>
@@ -92,15 +134,27 @@ export default function UserProfile() {
           </p>
         </div>
         <div className="info__link">
-          <Trash />
+          <LogoutMini />
           <p
             className="info__delete"
             onClick={async () => {
-              await usersService.deleteCurrentUser();
+              sendLogout();
               navigateTo("/authorization");
             }}
           >
-            Delete account...
+            Log out
+          </p>
+        </div>
+        <div className="info__link">
+          <Trash />
+          <p
+            className="info__delete"
+            onClick={async () =>
+              (await usersService.deleteCurrentUser()) &&
+              navigateTo("/authorization")
+            }
+          >
+            Delete account
           </p>
         </div>
       </div>
