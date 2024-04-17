@@ -112,7 +112,7 @@ body {
 
 main {
   width: 100svw;
-  height: 100svh;
+  height: 100dvh;
 
   padding: calc(20px * var(--base-scale)) calc(30px * var(--base-scale))
     calc(20px * var(--base-scale)) 0;
