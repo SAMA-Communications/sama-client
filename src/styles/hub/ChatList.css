@@ -150,13 +150,15 @@
 .navigation-account {
   position: absolute;
   top: 14px;
-  left: 15px;
+  left: 20px;
 
   z-index: 100;
 }
 
 @media screen and (max-width: 600px) {
   .chat-list__container {
+    width: 100vw;
+
     flex: 1;
   }
   .chat-list__container > .scroll-bar__outer-container {
@@ -170,7 +172,7 @@
   }
 
   .chat-list__container > .search-bar {
-    max-width: calc(100% - 65px);
+    max-width: calc(100% - 85px);
 
     margin-top: 10px;
     margin-left: 65px;
