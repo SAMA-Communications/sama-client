@@ -149,8 +149,20 @@
 
 .navigation-account {
   position: absolute;
-  top: 14px;
+  top: 19px;
   left: 20px;
+
+  z-index: 100;
+}
+.navigation-create {
+  position: absolute;
+  bottom: 19px;
+  right: 20px;
+
+  padding: 15px 15px 10px 15px;
+
+  border-radius: var(--border-16);
+  background-color: var(--color-accent-light);
 
   z-index: 100;
 }
@@ -179,5 +191,8 @@
   }
   .chat-list__container .search-bar__input {
     max-width: calc(100% - 15px);
+  }
+  .chat-list__container .search-bar__close {
+    right: 25px;
   }
 }

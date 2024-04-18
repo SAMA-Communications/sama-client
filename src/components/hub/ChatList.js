@@ -1,5 +1,6 @@
 import ConversationItem from "@components/hub/elements/ConversationItem.js";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
+import MenuButtons from "@src/components/info/elements/MenuButtons";
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchBar";
 import getUserFullName from "@utils/user/get_user_full_name";
@@ -18,7 +19,6 @@ import { useSelector, useDispatch } from "react-redux";
 import "@styles/hub/ChatList.css";
 
 import SChatList from "@skeletons/hub/SChatList";
-import AccountInfo from "../info/elements/AccountInfo";
 
 export default function ChatList() {
   const dispatch = useDispatch();
@@ -69,7 +69,7 @@ export default function ChatList() {
 
   return (
     <div className="chat-list__container">
-      {isMobileView ? <AccountInfo /> : null}
+      {isMobileView ? <MenuButtons /> : null}
       <SearchInput shadowText={"Search"} setState={setInputText} />
       {inputText ? (
         <SearchBlock

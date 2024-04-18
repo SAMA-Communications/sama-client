@@ -9,13 +9,18 @@
 }
 
 @media screen and (max-width: 600px) {
+  .chat-list__container .search__container {
+    padding: 2svh 2svw 0 2svw;
+  }
   .search__container {
-    width: 100svw;
+    width: 100%;
 
     margin-top: 0;
-    padding: 2svh 2svw 0 2svw;
 
     border-radius: var(--border-16) var(--border-16) 0 0;
     background-color: var(--color-bg-light);
+  }
+  .search__container > .scroll-bar__outer-container {
+    width: 100% !important;
   }
 }

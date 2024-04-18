@@ -110,3 +110,14 @@
 .user-info__container:hover .user-info__photo > svg {
   display: block;
 }
+
+@media screen and (max-width: 600px) {
+  .edit-modal__create {
+    align-items: center;
+
+    flex-direction: column;
+  }
+  .edit-modal__create > div:nth-last-child(1) {
+    width: 100%;
+  }
+}

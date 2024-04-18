@@ -90,5 +90,7 @@
   .edit-modal__content--chat,
   .edit-modal__content--chatname {
     width: 94svw;
+
+    padding: 20px;
   }
 }
