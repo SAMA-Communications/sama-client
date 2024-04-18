@@ -2,6 +2,7 @@ import contextMenuReducer from "@store/values/ContextMenu";
 import conversationsReducer from "@store/values/Conversations";
 import currentUserReducer from "@store/values/CurrentUser";
 import isMobileViewReducer from "@store/values/IsMobileView";
+import isTabletViewReducer from "@store/values/IsTabletView";
 import messageReducer from "@store/values/Messages";
 import networkStateReducer from "@store/values/NetworkState";
 import participantsReducer from "@store/values/Participants";
@@ -14,6 +15,7 @@ const appReducer = combineReducers({
   conversations: conversationsReducer,
   currentUser: currentUserReducer,
   isMobileView: isMobileViewReducer,
+  isTabletView: isTabletViewReducer,
   messages: messageReducer,
   networkState: networkStateReducer,
   participants: participantsReducer,

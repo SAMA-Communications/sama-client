@@ -1,5 +1,6 @@
 import { cloneElement, useMemo } from "react";
 import { getIsMobileView } from "@store/values/IsMobileView";
+import { getIsTabletView } from "@store/values/IsTabletView";
 import { selectConversationsEntities } from "@store/values/Conversations";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -23,6 +24,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 export default function Main() {
   const isMobileView = useSelector(getIsMobileView);
+  const isTabletView = useSelector(getIsTabletView);
   const location = useLocation();
 
   const conversations = useSelector(selectConversationsEntities);
@@ -58,6 +60,10 @@ export default function Main() {
       !conversationsArray?.filter((obj) => obj.type === "g" || obj.last_message)
         .length
     ) {
+      if (isMobileView) {
+        return location.pathname.includes("/profile") ? null : <EmptyHub />;
+      }
+
       return <EmptyHub />;
     }
 
@@ -71,6 +77,10 @@ export default function Main() {
       ) : location.pathname.includes("/profile") ? null : (
         <ChatList />
       );
+    }
+
+    if (isTabletView) {
+      return !!location.hash ? <ChatForm /> : <ChatList />;
     }
 
     return (

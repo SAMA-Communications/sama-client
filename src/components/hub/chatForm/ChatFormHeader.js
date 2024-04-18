@@ -7,7 +7,8 @@ import {
   getConverastionById,
   selectConversationsEntities,
 } from "@store/values/Conversations";
-import { getIsMobileView } from "@src/store/values/IsMobileView";
+import { getIsTabletView } from "@store/values/IsTabletView";
+import { getIsMobileView } from "@store/values/IsMobileView";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setAllParams } from "@store/values/ContextMenu";
@@ -19,11 +20,13 @@ import "@styles/hub/chatForm/ChatFormHeader.css";
 
 import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as More } from "@icons/options/More.svg";
+import removeAndNavigateSubLink from "@src/utils/navigation/remove_prefix";
 
 export default function ChatFormHeader({ closeFormFunc }) {
   const dispatch = useDispatch();
 
   const isMobile = useSelector(getIsMobileView);
+  const isTablet = useSelector(getIsTabletView);
 
   const { pathname, hash } = useLocation();
   const currentPath = pathname + hash;
@@ -96,8 +99,13 @@ export default function ChatFormHeader({ closeFormFunc }) {
       ? "/info"
       : "/user?uid=" + participants[opponentId]._id;
 
-    (currentPath.includes(path) ? removeAndNavigateLastSection : addSuffix)(
-      currentPath,
+    let tmpPath = currentPath;
+    if (isTablet && path === "/info" && pathname.includes("/profile")) {
+      tmpPath = tmpPath.replace("/profile", "");
+    }
+
+    (tmpPath.includes(path) ? removeAndNavigateLastSection : addSuffix)(
+      tmpPath,
       path
     );
   };
@@ -125,7 +133,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
 
   return (
     <div className="header__container" onClick={viewChatOrPaticipantInfo}>
-      {isMobile ? (
+      {isMobile || isTablet ? (
         <BackBtn className="header-back" onClick={closeFormFunc} />
       ) : null}
       <div className="header-content">

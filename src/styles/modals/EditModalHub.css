@@ -85,7 +85,7 @@
   cursor: pointer;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .edit-modal__content--user,
   .edit-modal__content--chat,
   .edit-modal__content--chatname {

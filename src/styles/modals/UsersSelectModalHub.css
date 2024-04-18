@@ -111,7 +111,7 @@
   display: block;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .edit-modal__create {
     align-items: center;
 

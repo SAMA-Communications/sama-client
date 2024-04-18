@@ -1,10 +1,12 @@
 import addPrefix from "@utils/navigation/add_prefix";
 import addSuffix from "@utils/navigation/add_suffix";
 import conversationService from "@services/conversationsService";
+import navigateTo from "@utils/navigation/navigate_to";
 import {
   getConverastionById,
   selectAllConversations,
 } from "@store/values/Conversations";
+import { getIsTabletView } from "@store/values/IsTabletView";
 import {
   selectContextExternalProps,
   selectContextList,
@@ -23,7 +25,6 @@ import InfoUserLink from "@components/context/elements/InfoUserLink";
 import LeaveAndDeleteLink from "@components/context/elements/LeaveAndDeleteLink";
 import RemoveParticipantLink from "@components/context/elements/RemoveParticipantLink";
 import SendMessageLink from "@components/context/elements/SendMessageLink";
-import navigateTo from "@utils/navigation/navigate_to";
 
 export default function ContextMenuHub() {
   const { pathname, hash } = useLocation();
@@ -31,6 +32,8 @@ export default function ContextMenuHub() {
   const currentUser = useSelector(selectAllConversations);
   const currentPath = pathname + hash;
   const isCurrentUserOwner = currentUser._id === owner_id;
+
+  const isTabletView = useSelector(getIsTabletView);
 
   const list = useSelector(selectContextList);
   const { userObject } = useSelector(selectContextExternalProps);
@@ -41,12 +44,16 @@ export default function ContextMenuHub() {
       infoChat: (
         <InfoChatLink
           key={"infoChat"}
-          onClick={() =>
+          onClick={() => {
+            let tmpPath = currentPath;
+            if (isTabletView && currentPath.includes("/profile")) {
+              tmpPath = tmpPath.replace("/profile", "");
+            }
             addSuffix(
-              currentPath,
+              tmpPath,
               type === "g" ? "/info" : `/user?uid=${opponent_id}`
-            )
-          }
+            );
+          }}
         />
       ),
       edit: (

@@ -41,10 +41,19 @@
   gap: 7px;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .chat-form__container {
     padding: 4svw;
 
+    background-color: var(--color-bg-light);
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 1200px) {
+  .chat-form__container {
+    padding: 20px;
+
+    border-radius: var(--border-32);
     background-color: var(--color-bg-light);
   }
 }

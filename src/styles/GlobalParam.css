@@ -61,7 +61,7 @@
   }
 }
 
-/* 1600px*
+/* 1800px*
 @media (min-width: 100em) {
   :root {
     --base-scale: 0.833;
@@ -204,7 +204,7 @@ main {
   border-radius: calc(3px * var(--base-scale)) !important;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   main {
     padding: 0;
   }

@@ -163,7 +163,7 @@
   font-size: var(--font-h6);
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .chat-info__container {
     width: 100svw;
 

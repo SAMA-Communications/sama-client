@@ -183,7 +183,7 @@
   margin-top: 0;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .authorization__container {
     flex-direction: column;
     margin: 0;

@@ -49,6 +49,8 @@
   align-self: center;
 
   margin-right: 30px;
+
+  cursor: pointer;
 }
 
 .activity--online {
@@ -58,7 +60,7 @@
   color: var(--color-accent-dark);
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .header__container {
     top: 3svw;
     left: 4svw;
@@ -72,5 +74,14 @@
     /* optimize width */
 
     font-size: var(--font-h3);
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 1200px) {
+  .header__container {
+    top: 20px;
+    left: 20px;
+
+    width: calc(100% - 40px);
   }
 }

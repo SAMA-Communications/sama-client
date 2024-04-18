@@ -2,9 +2,10 @@ import addPrefix from "@utils/navigation/add_prefix";
 import api from "@api/api";
 import getUserInitials from "@utils/user/get_user_initials";
 import navigateTo from "@utils/navigation/navigate_to";
+import { getIsTabletView } from "@store/values/IsTabletView";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
 
@@ -19,6 +20,8 @@ import { ReactComponent as Logout } from "@icons/actions/Logout.svg";
 export default function NavigationLine() {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
+
+  const isTabletView = useSelector(getIsTabletView);
 
   const sendLogout = async () => {
     navigator.serviceWorker.ready
@@ -59,7 +62,13 @@ export default function NavigationLine() {
       </div>
       <div className="navigation__menu fcc">
         <div
-          onClick={() => addPrefix(pathname + hash, "/profile")}
+          onClick={() => {
+            let currentPath = pathname + hash;
+            if (isTabletView && hash.includes("/info")) {
+              currentPath = currentPath.replace("/info", "");
+            }
+            addPrefix(currentPath, "/profile");
+          }}
           className={`menu__profile fcc ${isProfilePageActive}`}
         >
           <span className="fcc">{getUserInitials()}</span>

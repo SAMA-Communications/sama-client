@@ -87,7 +87,7 @@
   object-fit: cover;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .media-window__container {
     background-color: var(--color-black-75);
   }

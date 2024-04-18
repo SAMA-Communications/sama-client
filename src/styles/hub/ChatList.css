@@ -167,7 +167,7 @@
   z-index: 100;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .chat-list__container {
     width: 100vw;
 
@@ -194,5 +194,21 @@
   }
   .chat-list__container .search-bar__close {
     right: 25px;
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 1200px) {
+  .chat-list__container {
+    width: 100vw;
+
+    flex: 1;
+  }
+  .chat-list__container > .scroll-bar__outer-container {
+    border-radius: var(--border-32);
+
+    background-color: var(--color-bg-light);
+  }
+  .chat-list__container > .scroll-bar__outer-container > div:nth-child(1) {
+    padding: 10px 2svw 20px 2svw;
   }
 }

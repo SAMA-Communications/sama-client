@@ -60,11 +60,22 @@
   right: calc(25px * var(--base-scale));
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 800px) {
   .inputs__container {
     bottom: 4svw;
 
     width: 92svw;
+  }
+  #inputMessage:disabled {
+    padding: calc(9px * var(--base-scale));
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 1200px) {
+  .inputs__container {
+    bottom: 20px;
+
+    width: calc(100% - 40px);
   }
   #inputMessage:disabled {
     padding: calc(9px * var(--base-scale));
