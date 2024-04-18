@@ -41,6 +41,7 @@
 .authorization__side--main {
   flex-basis: 700px;
 
+  flex: 1;
   gap: 60px;
   flex-direction: column;
 
@@ -203,12 +204,13 @@
   }
   .authorization__side--left-login .logo-icon > svg,
   .authorization__side--left-signup .logo-icon > svg {
-    height: 20svh;
-    width: 92px;
+    height: 150px;
+    width: 100px;
   }
   .authorization__side--left-login #logo-text,
   .authorization__side--left-signup #logo-text {
-    height: 18svh;
+    width: max-content;
+    height: 150px;
   }
 
   .authorization__side--main {
@@ -242,5 +244,60 @@
 
   .auth-form__input > input {
     font-size: var(--font-h6);
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 1200px) {
+  .authorization__container {
+    flex-direction: column;
+  }
+  .authorization__side--left-login,
+  .authorization__side--left-signup {
+    max-height: 40dvh;
+  }
+  .authorization__side--left-login .logo-icon > svg,
+  .authorization__side--left-signup .logo-icon > svg {
+    height: 220px;
+    width: 160px;
+  }
+  .authorization__side--left-login #logo-text,
+  .authorization__side--left-signup #logo-text {
+    width: max-content;
+    height: 220px;
+  }
+  .authorization__side--right-login,
+  .authorization__side--right-signup {
+    display: none;
+  }
+
+  .authorization__side--main {
+    width: 100svw;
+
+    padding: 5svw;
+
+    justify-content: flex-start;
+
+    border-radius: var(--border-16) var(--border-16) 0 0;
+  }
+
+  .signup-form__mt-20 {
+    margin-top: -49px;
+  }
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1600px) {
+  .authorization__side--left-login .logo-icon > svg,
+  .authorization__side--left-signup .logo-icon > svg {
+    height: 15svh;
+    width: 160px;
+  }
+  .authorization__side--left-login #logo-text,
+  .authorization__side--left-signup #logo-text {
+    width: max-content;
+    height: 15svh;
+  }
+  .authorization__side--right-login,
+  .authorization__side--right-signup {
+    display: none;
   }
 }
