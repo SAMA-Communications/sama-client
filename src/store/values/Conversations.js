@@ -84,7 +84,7 @@ export const conversations = createSlice({
       if (!conv) {
         return;
       }
-      let mids = [...conv.messagesIds];
+      let mids = [...(conv?.messagesIds || [])];
 
       if (resaveLastMessageId) {
         const msgIndes = mids.indexOf(resaveLastMessageId);
