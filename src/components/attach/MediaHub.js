@@ -1,10 +1,12 @@
 import MessageAttachment from "@components/message/elements/MessageAttachment";
 import getFileType from "@utils/media/get_file_type";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import { KEY_CODES } from "@helpers/keyCodes";
 import { getMessageById } from "@store/values/Messages";
+import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
 import { useSelector } from "react-redux";
+import { useState } from "react";
 
 import "@styles/attach/MediaHub.css";
 
@@ -30,6 +32,15 @@ export default function MediaHub() {
   const closeModal = () => {
     removeAndNavigateLastSection(pathname + hash);
   };
+
+  useKeyDown(
+    KEY_CODES.ARROW_RIGHT,
+    () => !isLastIndex && setCurrentIndex(currentIndex + 1)
+  );
+  useKeyDown(
+    KEY_CODES.ARROW_LEFT,
+    () => !isFirstIndex && setCurrentIndex(currentIndex - 1)
+  );
 
   return (
     <div className="media-window__container fcc" onClick={closeModal}>
