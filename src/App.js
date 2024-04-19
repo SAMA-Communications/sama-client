@@ -79,7 +79,10 @@ export default function App() {
       setIsMobileView(window.innerWidth <= globalConstants.mobileViewWidth)
     );
     dispatch(
-      setIsTabletView(window.innerWidth <= globalConstants.tabletViewWidth)
+      setIsTabletView(
+        window.innerWidth <= globalConstants.tabletViewWidth &&
+          window.innerWidth > globalConstants.mobileViewWidth
+      )
     );
 
     const token = localStorage.getItem("sessionId");

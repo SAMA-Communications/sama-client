@@ -5,6 +5,7 @@
 }
 
 .search__text {
+  text-align: center;
   font-size: var(--font-h6);
 }
 

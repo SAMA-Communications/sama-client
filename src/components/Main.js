@@ -63,7 +63,6 @@ export default function Main() {
       if (isMobileView) {
         return location.pathname.includes("/profile") ? null : <EmptyHub />;
       }
-
       return <EmptyHub />;
     }
 

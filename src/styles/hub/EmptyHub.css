@@ -35,4 +35,7 @@
   .hub--empty > .search__container {
     width: 400px;
   }
+  .hub-title__text {
+    font-size: var(--font-h1);
+  }
 }

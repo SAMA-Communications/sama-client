@@ -128,7 +128,7 @@ main {
   top: 0;
   left: 0;
 
-  padding: 40px;
+  padding: 30px;
 
   width: 100svw;
   height: 100svh;
@@ -175,5 +175,11 @@ main {
     padding: 0;
 
     background-color: var(--color-bg-dark);
+  }
+}
+
+@media screen and (min-width: 800px) and (min-width: 800px) {
+  .first-window__container {
+    padding: 20px;
   }
 }

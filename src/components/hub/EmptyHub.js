@@ -1,7 +1,7 @@
 import MenuButtons from "../info/elements/MenuButtons";
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchBar";
-import { getIsTabletView } from "@store/values/IsTabletView";
+import { getIsMobileView } from "@store/values/IsMobileView";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 
@@ -10,7 +10,7 @@ import "@styles/hub/EmptyHub.css";
 export default function EmptyHub() {
   const [inputText, setInputText] = useState(null);
 
-  const isMobileView = useSelector(getIsTabletView);
+  const isMobileView = useSelector(getIsMobileView);
 
   const viewProperty = {
     display: inputText ? "none" : "block",

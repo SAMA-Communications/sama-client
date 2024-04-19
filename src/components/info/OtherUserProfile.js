@@ -1,3 +1,4 @@
+import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import InfoBox from "@components/info/elements/InfoBox";
 import activityService from "@services/activityService";
 import conversationService from "@services/conversationsService";
@@ -19,7 +20,6 @@ import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
 import { ReactComponent as LinkTo } from "@icons/options/LinkTo.svg";
 import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
-
 export default function OtherUserProfile() {
   const { pathname, hash, search } = useLocation();
 
@@ -67,42 +67,49 @@ export default function OtherUserProfile() {
         </div>
         <div className="profile__container--bottom">
           <p className="info__title">Personal information</p>
-          <InfoBox
-            className="uname__box"
-            modifier={"--not-hover"}
-            iconType={"login"}
-            title={"Username"}
-            value={login}
-            hideIfNull={true}
-          />
-          <InfoBox
-            modifier={"--not-hover"}
-            iconType={"phone"}
-            title={"Mobile phone"}
-            value={phone}
-            hideIfNull={true}
-          />
-          <InfoBox
-            modifier={"--not-hover"}
-            iconType={"email"}
-            title={"Email address"}
-            value={email}
-            hideIfNull={true}
-          />
-          <div className="info__link">
-            <LinkTo />
-            <p
-              className="info__new-conversation"
-              onClick={async () => {
-                const chatId = await conversationService.createPrivateChat(
-                  userId
-                );
-                navigateTo(`/#${chatId}`);
-              }}
-            >
-              Start a conversation
-            </p>
-          </div>
+          <CustomScrollBar
+            customId={"other-user-info-view__container"}
+            autoHide={false}
+            autoHeight={true}
+            autoHeightMax={"calc(87dvh - 400px)"}
+          >
+            <InfoBox
+              className="uname__box"
+              modifier={"--not-hover"}
+              iconType={"login"}
+              title={"Username"}
+              value={login}
+              hideIfNull={true}
+            />
+            <InfoBox
+              modifier={"--not-hover"}
+              iconType={"phone"}
+              title={"Mobile phone"}
+              value={phone}
+              hideIfNull={true}
+            />
+            <InfoBox
+              modifier={"--not-hover"}
+              iconType={"email"}
+              title={"Email address"}
+              value={email}
+              hideIfNull={true}
+            />
+            <div className="info__link">
+              <LinkTo />
+              <p
+                className="info__new-conversation"
+                onClick={async () => {
+                  const chatId = await conversationService.createPrivateChat(
+                    userId
+                  );
+                  navigateTo(`/#${chatId}`);
+                }}
+              >
+                Start a conversation
+              </p>
+            </div>
+          </CustomScrollBar>
         </div>
       </div>
     </div>

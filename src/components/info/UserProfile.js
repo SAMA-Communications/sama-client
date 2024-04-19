@@ -1,3 +1,4 @@
+import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import InfoBox from "@components/info/elements/InfoBox";
 import addSuffix from "@utils/navigation/add_suffix";
 import navigateTo from "@utils/navigation/navigate_to";
@@ -20,7 +21,6 @@ import { ReactComponent as LogoutMini } from "@icons/actions/LogoutMini.svg";
 import { ReactComponent as Password } from "@icons/users/Password.svg";
 import { ReactComponent as Trash } from "@icons/actions/Trash.svg";
 import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
-import CustomScrollBar from "../_helpers/CustomScrollBar";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
