@@ -115,6 +115,25 @@ class UsersService {
     }
   }
 
+  async logout() {
+    navigator.serviceWorker.ready
+      .then((reg) =>
+        reg.pushManager.getSubscription().then((sub) =>
+          sub.unsubscribe().then(async () => {
+            await api.pushSubscriptionDelete();
+            await api.userLogout();
+            localStorage.removeItem("sessionId");
+          })
+        )
+      )
+      .catch(async (err) => {
+        console.error(err);
+        await api.userLogout();
+        localStorage.removeItem("sessionId");
+        throw new Error("User logout error");
+      });
+  }
+
   async deleteCurrentUser() {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {

@@ -1,4 +1,4 @@
-import addPrefix from "@src/utils/navigation/add_prefix";
+import addPrefix from "@utils/navigation/add_prefix";
 import { useLocation } from "react-router-dom";
 
 import { ReactComponent as AccountIcon } from "@icons/Menu.svg";

@@ -1,6 +1,5 @@
 import InfoBox from "@components/info/elements/InfoBox";
 import addSuffix from "@utils/navigation/add_suffix";
-import api from "@src/api/api";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import usersService from "@services/usersService";
@@ -37,25 +36,15 @@ export default function UserProfile() {
   );
 
   const sendLogout = async () => {
-    navigator.serviceWorker.ready
-      .then((reg) =>
-        reg.pushManager.getSubscription().then((sub) =>
-          sub.unsubscribe().then(async () => {
-            await api.pushSubscriptionDelete();
-            await api.userLogout();
-            dispatch({ type: "RESET_STORE" });
-            dispatch(updateNetworkState(true));
-          })
-        )
-      )
-      .catch(async (err) => {
-        console.error(err);
-        await api.userLogout();
-        dispatch({ type: "RESET_STORE" });
-        dispatch(updateNetworkState(true));
-        dispatch(setUserIsLoggedIn(false));
-      });
-    localStorage.removeItem("sessionId");
+    try {
+      await usersService.logout();
+      dispatch({ type: "RESET_STORE" });
+      dispatch(updateNetworkState(true));
+    } catch (err) {
+      dispatch({ type: "RESET_STORE" });
+      dispatch(updateNetworkState(true));
+      dispatch(setUserIsLoggedIn(false));
+    }
   };
 
   return (

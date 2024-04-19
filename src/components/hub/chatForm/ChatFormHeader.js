@@ -20,7 +20,6 @@ import "@styles/hub/chatForm/ChatFormHeader.css";
 
 import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as More } from "@icons/options/More.svg";
-import removeAndNavigateSubLink from "@src/utils/navigation/remove_prefix";
 
 export default function ChatFormHeader({ closeFormFunc }) {
   const dispatch = useDispatch();
@@ -99,10 +98,10 @@ export default function ChatFormHeader({ closeFormFunc }) {
       ? "/info"
       : "/user?uid=" + participants[opponentId]._id;
 
-    let tmpPath = currentPath;
-    if (isTablet && path === "/info" && pathname.includes("/profile")) {
-      tmpPath = tmpPath.replace("/profile", "");
-    }
+    const tmpPath =
+      isTablet && path === "/info" && pathname.includes("/profile")
+        ? currentPath.replace("/profile", "")
+        : currentPath;
 
     (tmpPath.includes(path) ? removeAndNavigateLastSection : addSuffix)(
       tmpPath,

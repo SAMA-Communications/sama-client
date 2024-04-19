@@ -22,6 +22,16 @@ import SHub from "@skeletons/hub/SHub";
 
 import "react-loading-skeleton/dist/skeleton.css";
 
+const blockMap = {
+  "/info": <ChatInfo />,
+  "/user": <OtherUserProfile />,
+  "/add": <UsersSelectModalHub type={"add_participants"} />,
+  "/create": <UsersSelectModalHub />,
+  "/attach": <AttachHub />,
+  "/media": <MediaHub />,
+  "/edit": <EditModalHub />,
+};
+
 export default function Main() {
   const isMobileView = useSelector(getIsMobileView);
   const isTabletView = useSelector(getIsTabletView);
@@ -32,16 +42,6 @@ export default function Main() {
 
   const additionalContainerRight = useMemo(() => {
     const { pathname, hash } = location;
-
-    const blockMap = {
-      "/info": <ChatInfo />,
-      "/user": <OtherUserProfile />,
-      "/add": <UsersSelectModalHub type={"add_participants"} />,
-      "/create": <UsersSelectModalHub />,
-      "/attach": <AttachHub />,
-      "/media": <MediaHub />,
-      "/edit": <EditModalHub />,
-    };
 
     const allBlocks = Object.entries(blockMap)
       .filter(([key, _]) => pathname.includes(key) || hash.includes(key))

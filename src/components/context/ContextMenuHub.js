@@ -45,10 +45,10 @@ export default function ContextMenuHub() {
         <InfoChatLink
           key={"infoChat"}
           onClick={() => {
-            let tmpPath = currentPath;
-            if (isTabletView && currentPath.includes("/profile")) {
-              tmpPath = tmpPath.replace("/profile", "");
-            }
+            const tmpPath =
+              isTabletView && currentPath.includes("/profile")
+                ? currentPath.replace("/profile", "")
+                : currentPath;
             addSuffix(
               tmpPath,
               type === "g" ? "/info" : `/user?uid=${opponent_id}`

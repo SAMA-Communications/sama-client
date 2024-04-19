@@ -1,7 +1,7 @@
 import addPrefix from "@utils/navigation/add_prefix";
-import api from "@api/api";
 import getUserInitials from "@utils/user/get_user_initials";
 import navigateTo from "@utils/navigation/navigate_to";
+import usersService from "@services/usersService";
 import { getIsTabletView } from "@store/values/IsTabletView";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
@@ -24,25 +24,15 @@ export default function NavigationLine() {
   const isTabletView = useSelector(getIsTabletView);
 
   const sendLogout = async () => {
-    navigator.serviceWorker.ready
-      .then((reg) =>
-        reg.pushManager.getSubscription().then((sub) =>
-          sub.unsubscribe().then(async () => {
-            await api.pushSubscriptionDelete();
-            await api.userLogout();
-            dispatch({ type: "RESET_STORE" });
-            dispatch(updateNetworkState(true));
-          })
-        )
-      )
-      .catch(async (err) => {
-        console.error(err);
-        await api.userLogout();
-        dispatch({ type: "RESET_STORE" });
-        dispatch(updateNetworkState(true));
-        dispatch(setUserIsLoggedIn(false));
-      });
-    localStorage.removeItem("sessionId");
+    try {
+      await usersService.logout();
+      dispatch({ type: "RESET_STORE" });
+      dispatch(updateNetworkState(true));
+    } catch (err) {
+      dispatch({ type: "RESET_STORE" });
+      dispatch(updateNetworkState(true));
+      dispatch(setUserIsLoggedIn(false));
+    }
   };
 
   const [isProfilePageActive, isChatListActive, isCreatePageActive] =
@@ -63,10 +53,10 @@ export default function NavigationLine() {
       <div className="navigation__menu fcc">
         <div
           onClick={() => {
-            let currentPath = pathname + hash;
-            if (isTabletView && hash.includes("/info")) {
-              currentPath = currentPath.replace("/info", "");
-            }
+            const currentPath =
+              isTabletView && hash.includes("/info")
+                ? pathname + hash.replace("/info", "")
+                : pathname + hash;
             addPrefix(currentPath, "/profile");
           }}
           className={`menu__profile fcc ${isProfilePageActive}`}

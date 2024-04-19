@@ -1,11 +1,11 @@
 import AttachmentItem from "@components/attach/components/AttachmentItem";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
-import DownloadManager from "@src/adapters/downloadManager";
+import DownloadManager from "@adapters/downloadManager";
 import OvalLoader from "@components/_helpers/OvalLoader";
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
 import api from "@api/api";
 import globalConstants from "@helpers/constants";
-import processFile from "@src/utils/media/process_file";
+import processFile from "@utils/media/process_file";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@helpers/keyCodes";

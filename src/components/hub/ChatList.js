@@ -1,6 +1,6 @@
 import ConversationItem from "@components/hub/elements/ConversationItem.js";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
-import MenuButtons from "@src/components/info/elements/MenuButtons";
+import MenuButtons from "@components/info/elements/MenuButtons";
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchBar";
 import getUserFullName from "@utils/user/get_user_full_name";
@@ -9,7 +9,7 @@ import {
   getConverastionById,
   selectAllConversations,
 } from "@store/values/Conversations.js";
-import { getIsMobileView } from "@src/store/values/IsMobileView";
+import { getIsMobileView } from "@store/values/IsMobileView";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 import { setSelectedConversation } from "@store/values/SelectedConversation.js";
