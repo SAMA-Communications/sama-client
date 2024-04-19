@@ -152,6 +152,8 @@
   top: 19px;
   left: 20px;
 
+  cursor: pointer;
+
   z-index: 100;
 }
 .navigation-create {
@@ -197,7 +199,7 @@
   }
 }
 
-@media screen and (min-width: 800px) and (max-width: 1200px) {
+@media screen and (min-width: 800px) and (max-width: 1400px) {
   .chat-list__container {
     width: 100vw;
 

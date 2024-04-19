@@ -31,7 +31,7 @@
   }
 }
 
-@media screen and (min-width: 800px) and (max-width: 1200px) {
+@media screen and (min-width: 800px) and (max-width: 1400px) {
   .chat-list__container .search__container {
     padding: 2svh 2svw 0 2svw;
   }

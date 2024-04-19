@@ -3,7 +3,7 @@ const globalConstants = {
   //   monthInMs: 2629743830,
   yearInMs: 31556926000,
   mobileViewWidth: 800,
-  tabletViewWidth: 1200,
+  tabletViewWidth: 1400,
   linksRegExp: /https:\/\/\S+/g, ///(((https?:\/\/)|(www\.))[^\s]+)/g
   allowedFileFormats: [
     ".heic",

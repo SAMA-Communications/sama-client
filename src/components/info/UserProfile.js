@@ -20,6 +20,7 @@ import { ReactComponent as LogoutMini } from "@icons/actions/LogoutMini.svg";
 import { ReactComponent as Password } from "@icons/users/Password.svg";
 import { ReactComponent as Trash } from "@icons/actions/Trash.svg";
 import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
+import CustomScrollBar from "../_helpers/CustomScrollBar";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
@@ -79,73 +80,84 @@ export default function UserProfile() {
       </div>
       <div className="profile__container--bottom">
         <p className="info__title">Personal information</p>
-        <InfoBox
-          className="uname__box"
-          iconType={"login"}
-          title={"Username"}
-          value={login}
-        />
-        <InfoBox
-          onClickFunc={() => addSuffix(pathname + hash, "/edit?type=personal")}
-          iconType={"mobile"}
-          title={"Mobile phone"}
-          value={phone}
-          placeholder={"Enter your phone number"}
-        />
-        <InfoBox
-          onClickFunc={() => addSuffix(pathname + hash, "/edit?type=personal")}
-          iconType={"email"}
-          title={"Email address"}
-          value={email}
-          placeholder={"Enter your email address"}
-        />
-        <div className="info__link">
-          <Password />
-          <p
-            className="info__password"
-            onClick={() => {
-              const currentPassword = window.prompt(
-                "Enter your current password:"
-              );
-              if (!currentPassword) {
-                return;
-              }
-
-              const newPassword = window.prompt("Enter a new password:");
-              if (!newPassword || !currentPassword) {
-                return;
-              }
-
-              usersService.changePassword(currentPassword, newPassword);
-            }}
-          >
-            Change password...
-          </p>
-        </div>
-        <div className="info__link">
-          <LogoutMini />
-          <p
-            className="info__delete"
-            onClick={async () => {
-              sendLogout();
-              navigateTo("/authorization");
-            }}
-          >
-            Log out
-          </p>
-        </div>
-        <div className="info__link">
-          <Trash />
-          <p
-            className="info__delete"
-            onClick={async () =>
-              (await usersService.deleteCurrentUser()) &&
-              navigateTo("/authorization")
+        <CustomScrollBar
+          customId={"user-info-view__container"}
+          autoHide={false}
+        >
+          <InfoBox
+            className="uname__box"
+            iconType={"login"}
+            title={"Username"}
+            value={login}
+          />
+          <InfoBox
+            onClickFunc={() =>
+              addSuffix(pathname + hash, "/edit?type=personal")
             }
-          >
-            Delete account
-          </p>
-        </div>
+            iconType={"mobile"}
+            title={"Mobile phone"}
+            value={phone}
+            placeholder={"Enter your phone number"}
+          />
+          <InfoBox
+            onClickFunc={() =>
+              addSuffix(pathname + hash, "/edit?type=personal")
+            }
+            iconType={"email"}
+            title={"Email address"}
+            value={email}
+            placeholder={"Enter your email address"}
+          />
+          <div className="info__link">
+            <Password />
+            <p
+              className="info__password"
+              onClick={() => {
+                const currentPassword = window.prompt(
+                  "Enter your current password:"
+                );
+                if (!currentPassword) {
+                  return;
+                }
+
+                const newPassword = window.prompt("Enter a new password:");
+                if (!newPassword || !currentPassword) {
+                  return;
+                }
+
+                usersService.changePassword(currentPassword, newPassword);
+              }}
+            >
+              Change password...
+            </p>
+          </div>
+          {isMobileView ? (
+            <div className="info__link">
+              <LogoutMini />
+              <p
+                className="info__delete"
+                onClick={async () => {
+                  sendLogout();
+                  navigateTo("/authorization");
+                }}
+              >
+                Log out
+              </p>
+            </div>
+          ) : null}
+          <div className="info__link">
+            <Trash />
+            <p
+              className="info__delete"
+              onClick={async () =>
+                (await usersService.deleteCurrentUser()) &&
+                navigateTo("/authorization")
+              }
+            >
+              Delete account
+            </p>
+          </div>
+        </CustomScrollBar>
       </div>
     </div>
   );

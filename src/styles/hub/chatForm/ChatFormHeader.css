@@ -77,7 +77,7 @@
   }
 }
 
-@media screen and (min-width: 800px) and (max-width: 1200px) {
+@media screen and (min-width: 800px) and (max-width: 1400px) {
   .header__container {
     top: 20px;
     left: 20px;

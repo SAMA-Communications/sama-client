@@ -247,7 +247,7 @@
   }
 }
 
-@media screen and (min-width: 800px) and (max-width: 1200px) {
+@media screen and (min-width: 800px) and (max-width: 1400px) {
   .authorization__container {
     flex-direction: column;
   }
@@ -285,7 +285,7 @@
   }
 }
 
-@media screen and (min-width: 1200px) and (max-width: 1600px) {
+@media screen and (min-width: 1400px) and (max-width: 1600px) {
   .authorization__side--left-login .logo-icon > svg,
   .authorization__side--left-signup .logo-icon > svg {
     height: 15svh;
