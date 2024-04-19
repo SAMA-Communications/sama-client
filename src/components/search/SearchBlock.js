@@ -54,9 +54,7 @@ export default function SearchBlock({
       {isPending ? (
         <OvalLoader width={80} height={80} />
       ) : searchedUsers.length ? (
-        <CustomScrollBar
-          customStyle={{ width: "calc(400px * var(--base-scale))" }}
-        >
+        <CustomScrollBar customStyle={{ width: "400px" }}>
           {searchedUsers.map((u) => (
             <SearchedUser
               key={u._id}

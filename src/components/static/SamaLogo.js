@@ -4,8 +4,8 @@ export default function SamaLogo() {
       <svg
         id="logo-icon-line"
         style={{
-          width: "calc(64px * var(--base-scale))",
-          height: "calc(64px * var(--base-scale))",
+          width: "64px",
+          height: "64px",
         }}
         viewBox="0 0 104 181"
         fill="none"
@@ -22,8 +22,8 @@ export default function SamaLogo() {
       <svg
         id="logo-icon-fill"
         style={{
-          width: "calc(64px * var(--base-scale))",
-          height: "calc(64px * var(--base-scale))",
+          width: "64px",
+          height: "64px",
         }}
         viewBox="0 0 104 181"
         fill="none"

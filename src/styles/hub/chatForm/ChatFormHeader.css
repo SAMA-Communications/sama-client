@@ -4,7 +4,7 @@
   left: 0;
 
   width: 100%;
-  height: calc(75px * var(--base-scale));
+  height: 75px;
 
   display: flex;
   align-items: flex-start;
@@ -22,7 +22,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  gap: calc(5px * var(--base-scale));
+  gap: 5px;
 
   cursor: pointer;
 }
@@ -37,7 +37,7 @@
 }
 
 .header-more {
-  padding-top: calc(20px * var(--base-scale));
+  padding-top: 20px;
   padding-right: 5px;
   padding-left: 5px;
 
@@ -54,7 +54,7 @@
 }
 
 .activity--online {
-  padding-left: calc(25px * var(--base-scale));
+  padding-left: 25px;
 }
 .activity--online > li {
   color: var(--color-accent-dark);

@@ -16,7 +16,7 @@ import { useLocation } from "react-router-dom";
 import "@styles/info/UserProfile.css";
 
 import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
-import { ReactComponent as Close } from "@icons/actions/Close.svg";
+import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
 import { ReactComponent as LogoutMini } from "@icons/actions/LogoutMini.svg";
 import { ReactComponent as Password } from "@icons/users/Password.svg";
 import { ReactComponent as Trash } from "@icons/actions/Trash.svg";

@@ -40,7 +40,7 @@
 .em-create__name-input {
   flex-shrink: 1;
 
-  padding: calc(11px * var(--base-scale)) calc(15px * var(--base-scale));
+  padding: 11px 15px;
 
   color: var(--color-black);
   font-size: var(--font-p);

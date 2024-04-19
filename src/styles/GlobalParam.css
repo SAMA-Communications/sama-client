@@ -76,8 +76,7 @@ main {
   width: 100dvw;
   height: 100dvh;
 
-  padding: calc(20px * var(--base-scale)) calc(30px * var(--base-scale))
-    calc(20px * var(--base-scale)) 0;
+  padding: 20px 30px 20px 0;
 
   display: flex;
 
@@ -101,7 +100,7 @@ main {
 .page-loader {
   flex: 1;
 
-  padding-left: calc(30px * var(--base-scale));
+  padding-left: 30px;
 }
 
 .connect-line {
@@ -157,13 +156,13 @@ main {
 
 /* vertical scroll */
 .scroll-bar__outer-container > div:nth-child(3) {
-  width: calc(6px * var(--base-scale)) !important;
+  width: 6px !important;
 
-  right: calc(4px * var(--base-scale)) !important;
-  bottom: calc(4px * var(--base-scale)) !important;
-  top: calc(4px * var(--base-scale)) !important;
+  right: 4px !important;
+  bottom: 4px !important;
+  top: 4px !important;
 
-  border-radius: calc(3px * var(--base-scale)) !important;
+  border-radius: 3px !important;
 }
 
 @media screen and (max-width: 800px) {

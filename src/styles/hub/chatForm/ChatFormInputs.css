@@ -15,7 +15,7 @@
   width: 100%;
   height: 55px;
 
-  padding: calc(18px * var(--base-scale)) calc(58px * var(--base-scale));
+  padding: 18px 58px;
 
   color: var(--color-black);
   font-size: var(--font-p);
@@ -27,7 +27,7 @@
   resize: none;
 }
 #inputMessage:disabled {
-  padding: calc(18px * var(--base-scale));
+  padding: 18px;
 }
 #inputMessage:focus {
   outline: none;
@@ -47,17 +47,17 @@
 .input-file__button,
 .input-text__button {
   position: absolute;
-  bottom: calc(17px * var(--base-scale));
+  bottom: 17px;
 
   cursor: pointer;
 
   z-index: 1;
 }
 .input-file__button {
-  left: calc(25px * var(--base-scale));
+  left: 25px;
 }
 .input-text__button {
-  right: calc(25px * var(--base-scale));
+  right: 25px;
 }
 
 @media screen and (max-width: 800px) {
@@ -67,7 +67,7 @@
     width: 92svw;
   }
   #inputMessage:disabled {
-    padding: calc(9px * var(--base-scale));
+    padding: 9px;
   }
 }
 
@@ -78,6 +78,6 @@
     width: calc(100% - 40px);
   }
   #inputMessage:disabled {
-    padding: calc(9px * var(--base-scale));
+    padding: 9px;
   }
 }

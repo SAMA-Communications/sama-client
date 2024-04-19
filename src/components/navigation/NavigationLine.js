@@ -3,6 +3,7 @@ import getUserInitials from "@utils/user/get_user_initials";
 import navigateTo from "@utils/navigation/navigate_to";
 import usersService from "@services/usersService";
 import { getIsTabletView } from "@store/values/IsTabletView";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,7 +48,13 @@ export default function NavigationLine() {
 
   return (
     <aside className="navigation__container">
-      <div className="navigation__logo fcc" onClick={() => navigateTo("/")}>
+      <div
+        className="navigation__logo fcc"
+        onClick={() => {
+          dispatch(setSelectedConversation({}));
+          navigateTo("/");
+        }}
+      >
         <SamaLogo />
       </div>
       <div className="navigation__menu fcc">

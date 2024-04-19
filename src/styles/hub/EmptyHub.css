@@ -1,7 +1,7 @@
 .hub--empty {
   flex: 1 1;
   flex-direction: column;
-  gap: calc(20px * var(--base-scale));
+  gap: 20px;
 
   border-radius: var(--border-48);
   background-color: var(--color-bg-light);
@@ -10,7 +10,7 @@
   overflow: hidden;
 }
 .hub-title__text {
-  margin-bottom: calc(20px * var(--base-scale));
+  margin-bottom: 20px;
 
   text-align: center;
   font-size: var(--font-58);

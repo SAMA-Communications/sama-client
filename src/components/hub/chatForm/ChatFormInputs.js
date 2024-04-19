@@ -51,7 +51,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     if (body.length === 0 || isSendMessageDisable) {
       return;
     }
-    console.log(body);
+
     setIsSendMessageDisable(true);
     inputRef.current.value = "";
     const mid = currentUser._id + Date.now();
@@ -85,7 +85,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     setIsSendMessageDisable(false);
     chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
     inputRef.current.focus();
-    inputRef.current.style.height = `calc(55px * var(--base-scale))`;
+    inputRef.current.style.height = `55px`;
   };
 
   window.onresize = function () {
@@ -99,7 +99,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
 
   useEffect(() => {
     inputRef.current.value = "";
-    inputRef.current.style.height = `calc(55px * var(--base-scale))`;
+    inputRef.current.style.height = `55px`;
   }, [selectedCID]);
 
   const isBlockedConv = useMemo(() => {
