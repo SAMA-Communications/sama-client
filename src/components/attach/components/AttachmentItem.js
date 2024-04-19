@@ -1,4 +1,5 @@
 import ItemLoader from "@components/attach/elements/ItemLoader";
+import getFileSize from "@utils/media/get_file_size";
 import getFileType from "@utils/media/get_file_type";
 import { useMemo, useState } from "react";
 
@@ -19,12 +20,16 @@ export default function AttachmentItem({
     size: initFileSize,
   } = file;
 
-  const [size, setSize] = useState(initFileSize);
+  const [size, setSize] = useState(null);
   const fileType = getFileType(name);
   const localUrl = file.file_local_url || file.localUrl;
 
   const pictureView = useMemo(() => {
     if (fileType === "Video") {
+      if (!initFileSize) {
+        getFileSize(url).then((size) => setSize(size));
+      }
+
       if (url || localUrl) {
         return <video src={url || localUrl} alt={name} />;
       }
@@ -33,10 +38,8 @@ export default function AttachmentItem({
 
     if (url) {
       const image = <img src={url} alt={name} />;
-      if (!size) {
-        fetch(url).then((res) =>
-          setSize((res.headers.get("Content-Length") / 1000000).toFixed(2))
-        );
+      if (!initFileSize) {
+        getFileSize(url).then((size) => setSize(size));
       }
       return image;
     }
@@ -56,7 +59,7 @@ export default function AttachmentItem({
       <div className="att-item__photo fcc">{pictureView}</div>
       <div className="att-item__content">
         <p className="att-item__name">{name || "Undefined"}</p>
-        <p className="att-item__size">{size || 0} MB</p>
+        <p className="att-item__size">{initFileSize || size || 0} MB</p>
       </div>
       {removeFileFunc ? (
         <CloseIcon className="att-item__remove" onClick={removeFileFunc} />
