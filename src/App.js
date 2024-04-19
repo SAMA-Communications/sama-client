@@ -40,10 +40,6 @@ export default function App() {
   const isTabletViewRef = useRef(isTabletView);
 
   useEffect(() => {
-    isMobileViewRef.current = isMobileView;
-  }, [isMobileView]);
-
-  useEffect(() => {
     window.addEventListener("offline", () =>
       dispatch(updateNetworkState(false))
     );

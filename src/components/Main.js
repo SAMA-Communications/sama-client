@@ -88,7 +88,7 @@ export default function Main() {
         <ChatForm />
       </section>
     );
-  }, [location, isMobileView, conversations]);
+  }, [location, isMobileView, isTabletView, conversations]);
 
   const additionalContainerLeft = useMemo(() => {
     return location.pathname.includes("/profile") ? <UserProfile /> : null;
