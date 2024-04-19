@@ -39,7 +39,7 @@
   --color-text-light: #b0b0b0;
   --color-text-dark: #6d6d6d;
   --color-hover-light: #e7e7e7;
-  --color-hover-dark: #2a2a2a;
+  --color-hover-dark: #3f3f3f;
   --color-accent-light: #dbdcfc;
   --color-accent-dark: #7678e5;
   --color-indicator: #68174d;
@@ -100,6 +100,8 @@
 
   line-height: normal;
   font-weight: 200;
+
+  user-select: none;
 }
 
 a {
