@@ -155,6 +155,8 @@
   padding: 0 10px;
 
   cursor: pointer;
+
+  z-index: 5;
 }
 #user-info-view__container {
   display: flex;
