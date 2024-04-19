@@ -35,11 +35,19 @@ class Api {
 
         if (message.system_message) {
           const {
-            x: { conversation_created, conversation_kicked },
+            x: {
+              conversation_created,
+              conversation_updated,
+              conversation_kicked,
+            },
           } = message.system_message;
 
           if (conversation_created) {
             this.onConversationCreateListener?.(conversation_created);
+            return;
+          }
+          if (conversation_updated) {
+            this.onConversationCreateListener?.(conversation_updated);
             return;
           }
           if (conversation_kicked) {
