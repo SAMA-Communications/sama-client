@@ -33,17 +33,25 @@ class Api {
         const message = JSON.parse(e.data);
         console.log("[socket.message]", message);
 
-        if (message.event) {
-          if (message.event.conversation_created) {
-            this.onConversationCreateListener?.(
-              message.event.conversation_created
-            );
+        if (message.system_message) {
+          const {
+            x: {
+              conversation_created,
+              conversation_updated,
+              conversation_kicked,
+            },
+          } = message.system_message;
+
+          if (conversation_created) {
+            this.onConversationCreateListener?.(conversation_created);
             return;
           }
-          if (message.event.conversation_kicked) {
-            this.onConversationDeleteListener?.(
-              message.event.conversation_kicked
-            );
+          if (conversation_updated) {
+            this.onConversationCreateListener?.(conversation_updated);
+            return;
+          }
+          if (conversation_kicked) {
+            this.onConversationDeleteListener?.(conversation_kicked);
             return;
           }
           return;
