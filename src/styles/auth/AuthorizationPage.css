@@ -197,7 +197,7 @@
 
   .authorization__side--left-login,
   .authorization__side--left-signup {
-    width: 100svw;
+    width: 100dvw;
     max-height: 300px;
 
     padding: 6svh 5svw;
@@ -214,7 +214,7 @@
   }
 
   .authorization__side--main {
-    width: 100svw;
+    width: 100dvw;
 
     padding: 5svw;
 
@@ -271,7 +271,7 @@
   }
 
   .authorization__side--main {
-    width: 100svw;
+    width: 100dvw;
 
     padding: 5svw;
 

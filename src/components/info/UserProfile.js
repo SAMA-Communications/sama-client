@@ -50,40 +50,37 @@ export default function UserProfile() {
 
   return (
     <div className="profile__container">
-      <div className="profile__container--top fcc">
-        {isMobileView ? (
-          <BackBtn
-            className="ci-close"
-            onClick={() =>
-              removeAndNavigateSubLink(pathname + hash, "/profile")
-            }
-          />
-        ) : (
-          <Close
-            className="profile__close"
-            onClick={() =>
-              removeAndNavigateSubLink(pathname + hash, "/profile")
-            }
-          />
-        )}
-        <div className="profile__photo fcc">
-          <UserIcon />
+      <CustomScrollBar>
+        <div className="profile__container--top fcc">
+          {isMobileView ? (
+            <BackBtn
+              className="ci-close"
+              onClick={() =>
+                removeAndNavigateSubLink(pathname + hash, "/profile")
+              }
+            />
+          ) : (
+            <Close
+              className="profile__close"
+              onClick={() =>
+                removeAndNavigateSubLink(pathname + hash, "/profile")
+              }
+            />
+          )}
+          <div className="profile__photo fcc">
+            <UserIcon />
+          </div>
+          <div onClick={() => addSuffix(pathname + hash, "/edit?type=user")}>
+            <p className="uname__first">
+              {first_name || <span className="text-gray">First name</span>}
+            </p>
+            <p className="uname__last">
+              {last_name || <span className="text-gray">Last name</span>}
+            </p>
+          </div>
         </div>
-        <div onClick={() => addSuffix(pathname + hash, "/edit?type=user")}>
-          <p className="uname__first">
-            {first_name || <span className="text-gray">First name</span>}
-          </p>
-          <p className="uname__last">
-            {last_name || <span className="text-gray">Last name</span>}
-          </p>
-        </div>
-      </div>
-      <div className="profile__container--bottom">
-        <p className="info__title">Personal information</p>
-        <CustomScrollBar
-          customId={"user-info-view__container"}
-          autoHide={false}
-        >
+        <div className="profile__container--bottom">
+          <p className="info__title">Personal information</p>
           <InfoBox
             className="uname__box"
             iconType={"login"}
@@ -157,8 +154,8 @@ export default function UserProfile() {
               Delete account
             </p>
           </div>
-        </CustomScrollBar>
-      </div>
+        </div>
+      </CustomScrollBar>
     </div>
   );
 }

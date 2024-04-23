@@ -69,6 +69,9 @@ a {
 }
 
 body {
+  width: 100dvw;
+  height: 100dvh;
+
   background-color: var(--color-bg-dark);
 }
 
@@ -129,8 +132,8 @@ main {
 
   padding: 30px;
 
-  width: 100svw;
-  height: 100svh;
+  width: 100dvw;
+  height: 100dvh;
 
   display: flex;
   flex-direction: column;

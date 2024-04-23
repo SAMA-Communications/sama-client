@@ -15,7 +15,7 @@
 }
 
 .header-content {
-  max-width: 100%;
+  max-width: calc(100% - 80px);
 
   flex-grow: 1;
 
@@ -37,6 +37,8 @@
 }
 
 .header-more {
+  margin-left: auto;
+
   padding-top: 20px;
   padding-right: 5px;
   padding-left: 5px;
@@ -70,10 +72,10 @@
     align-items: center;
   }
   .content__name {
-    max-width: 300px;
-    /* optimize width */
-
     font-size: var(--font-h3);
+  }
+  .header-content {
+    max-width: calc(100% - 100px);
   }
 }
 
@@ -83,5 +85,8 @@
     left: 20px;
 
     width: calc(100% - 40px);
+  }
+  .header-content {
+    max-width: calc(100% - 100px);
   }
 }

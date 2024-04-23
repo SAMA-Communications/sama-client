@@ -20,6 +20,7 @@ import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
 import { ReactComponent as LinkTo } from "@icons/options/LinkTo.svg";
 import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
+
 export default function OtherUserProfile() {
   const { pathname, hash, search } = useLocation();
 
@@ -45,34 +46,29 @@ export default function OtherUserProfile() {
   return (
     <div className="first-window__container">
       <div className="profile__container">
-        <div className="profile__container--top fcc">
-          {isMobileView ? (
-            <BackBtn
-              className="ci-close"
-              onClick={() => removeAndNavigateLastSection(pathname + hash)}
-            />
-          ) : (
-            <Close
-              className="profile__close"
-              onClick={() => removeAndNavigateLastSection(pathname + hash)}
-            />
-          )}
-          <div className="profile__photo fcc">
-            <UserIcon />
+        <CustomScrollBar>
+          <div className="profile__container--top fcc">
+            {isMobileView ? (
+              <BackBtn
+                className="ci-close"
+                onClick={() => removeAndNavigateLastSection(pathname + hash)}
+              />
+            ) : (
+              <Close
+                className="profile__close"
+                onClick={() => removeAndNavigateLastSection(pathname + hash)}
+              />
+            )}
+            <div className="profile__photo fcc">
+              <UserIcon />
+            </div>
+            <div className="profile__info">
+              <p className="uname__full">{getUserFullName(userObject)}</p>
+              <p className="profile__status">{viewStatusActivity}</p>
+            </div>
           </div>
-          <div className="profile__info">
-            <p className="uname__full">{getUserFullName(userObject)}</p>
-            <p className="profile__status">{viewStatusActivity}</p>
-          </div>
-        </div>
-        <div className="profile__container--bottom">
-          <p className="info__title">Personal information</p>
-          <CustomScrollBar
-            customId={"other-user-info-view__container"}
-            autoHide={false}
-            autoHeight={true}
-            autoHeightMax={"calc(87dvh - 400px)"}
-          >
+          <div className="profile__container--bottom">
+            <p className="info__title">Personal information</p>
             <InfoBox
               className="uname__box"
               modifier={"--not-hover"}
@@ -109,8 +105,8 @@ export default function OtherUserProfile() {
                 Start a conversation
               </p>
             </div>
-          </CustomScrollBar>
-        </div>
+          </div>
+        </CustomScrollBar>
       </div>
     </div>
   );

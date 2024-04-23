@@ -165,7 +165,7 @@
 
 @media screen and (max-width: 800px) {
   .chat-info__container {
-    width: 100svw;
+    width: 100dvw;
 
     margin-left: 0;
   }
