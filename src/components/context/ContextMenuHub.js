@@ -84,12 +84,7 @@ export default function ContextMenuHub() {
         <LeaveAndDeleteLink
           key={"leave"}
           onClick={async () => {
-            try {
-              await conversationService.deleteConversation();
-              navigateTo("/");
-            } catch (err) {
-              return;
-            }
+            (await conversationService.deleteConversation()) && navigateTo("/");
           }}
         />
       ),
