@@ -1,11 +1,13 @@
 .chat-info__container {
   width: 400px;
+  height: 100%;
 
+  margin-left: 15px;
+}
+.chat-info__container > .scroll-bar__outer-container > div:nth-child(1) {
   display: flex;
   flex-direction: column;
   gap: 15px;
-
-  margin-left: 15px;
 }
 
 .chat-info__container--top {
@@ -182,5 +184,15 @@
   .ci-close {
     left: 4svw;
     top: 34px;
+  }
+  .ci-photo {
+    width: 100px;
+    height: 100px;
+  }
+  .ci-photo > svg {
+    width: 60px;
+  }
+  .ci-name {
+    font-size: var(--font-h5);
   }
 }
