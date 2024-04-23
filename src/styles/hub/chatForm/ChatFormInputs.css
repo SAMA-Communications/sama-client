@@ -59,6 +59,12 @@
 .input-text__button {
   right: 25px;
 }
+@media screen and (max-width: 500px) {
+  #inputMessage:disabled {
+    padding: 9px;
+    height: 75px !important;
+  }
+}
 
 @media screen and (max-width: 800px) {
   .inputs__container {
