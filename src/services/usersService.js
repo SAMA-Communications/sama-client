@@ -18,11 +18,13 @@ class UsersService {
     const { login, password } = data;
 
     if (!login?.length || !password?.length) {
-      throw new Error("The login and password fields must not be empty.");
+      throw new Error("The username and password fields must not be empty.");
     }
 
     if (!validateLogin(login)) {
-      throw new Error("The login field must contain from 3 to 20 characters.");
+      throw new Error(
+        "The username field must contain from 3 to 20 characters."
+      );
     }
 
     if (!validatePassword(password)) {
@@ -45,11 +47,13 @@ class UsersService {
     const { login, password } = data;
 
     if (!login?.length || !password?.length) {
-      throw new Error("The login and password fields must not be empty.");
+      throw new Error("The username and password fields must not be empty.");
     }
 
     if (!validateLogin(login)) {
-      throw new Error("The login field must contain from 3 to 20 characters.");
+      throw new Error(
+        "The username field must contain from 3 to 20 characters."
+      );
     }
 
     if (!validatePassword(password)) {
