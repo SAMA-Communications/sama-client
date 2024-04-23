@@ -3,8 +3,6 @@
   height: 100%;
 
   margin-right: 15px;
-
-  background-color: var(--color-bg-dark);
 }
 .profile__container .scroll-bar__outer-container > div:nth-child(1) {
   display: flex;
@@ -95,7 +93,6 @@
 .profile__container--bottom {
   padding: 30px 20px;
 
-  flex: 1;
   display: flex;
   flex-direction: column;
 
@@ -211,12 +208,15 @@
 
     position: absolute;
     z-index: 10;
+    background-color: var(--color-bg-dark);
   }
 
   .profile__container--top {
     border-radius: 0 0 var(--border-16) var(--border-16);
   }
   .profile__container--bottom {
+    flex: 1;
+
     border-radius: var(--border-16) var(--border-16) 0 0;
   }
 

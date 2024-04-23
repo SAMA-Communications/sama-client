@@ -66,6 +66,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
     const mObject = { mid, body, cid: selectedCID, from: currentUser._id };
+    inputRef.current.focus(); //care..
 
     try {
       await messagesService.sendMessage(mObject);
@@ -80,11 +81,8 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
       return;
     }
 
-    // isMobile && inputRef.current.blur();
-
     setIsSendMessageDisable(false);
     chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
-    inputRef.current.focus();
     inputRef.current.style.height = `55px`;
   };
 
