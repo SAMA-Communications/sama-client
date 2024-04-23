@@ -80,7 +80,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
       return;
     }
 
-    isMobile && inputRef.current.blur();
+    // isMobile && inputRef.current.blur();
 
     setIsSendMessageDisable(false);
     chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
