@@ -1,5 +1,4 @@
 import MessageInput from "@components/hub/elements/MessageInput";
-import isMobile from "@utils/get_device_type.js";
 import messagesService from "@services/messagesService";
 import showCustomAlert from "@utils/show_alert";
 import {

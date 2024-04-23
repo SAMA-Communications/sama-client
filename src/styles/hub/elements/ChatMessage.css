@@ -69,7 +69,7 @@
   max-width: 100%;
 
   white-space: pre;
-  text-wrap: wrap;
+  text-wrap: wrap !important;
   color: var(--color-black);
 
   inline-size: auto;

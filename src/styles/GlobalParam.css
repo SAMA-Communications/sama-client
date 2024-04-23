@@ -61,7 +61,7 @@
   line-height: normal;
   font-weight: 200;
 
-  user-select: none;
+  /* user-select: none; */
 }
 
 a {
