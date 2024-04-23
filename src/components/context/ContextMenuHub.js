@@ -28,7 +28,8 @@ import SendMessageLink from "@components/context/elements/SendMessageLink";
 
 export default function ContextMenuHub() {
   const { pathname, hash } = useLocation();
-  const { type, opponent_id, owner_id } = useSelector(getConverastionById);
+  const { type, opponent_id, owner_id } =
+    useSelector(getConverastionById) || {};
   const currentUser = useSelector(selectAllConversations);
   const currentPath = pathname + hash;
   const isCurrentUserOwner = currentUser._id === owner_id;

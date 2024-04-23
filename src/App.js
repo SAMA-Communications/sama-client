@@ -5,12 +5,12 @@ import conversationService from "@services/conversationsService";
 import globalConstants from "@helpers/constants";
 import messagesService from "@services/messagesService";
 import navigateTo from "@utils/navigation/navigate_to";
-import removeAndNavigateSubLink from "./utils/navigation/remove_prefix";
+import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Suspense, lazy, useEffect, useRef } from "react";
 import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
-import { getIsTabletView, setIsTabletView } from "./store/values/IsTabletView";
+import { getIsTabletView, setIsTabletView } from "@store/values/IsTabletView";
 import { history } from "@helpers/history";
 import { selectIsClicked, setClicked } from "@store/values/ContextMenu";
 import { updateNetworkState } from "@store/values/NetworkState";
@@ -95,8 +95,10 @@ export default function App() {
   useEffect(() => {
     const handleClick = () => dispatch(setClicked(false));
     document.addEventListener("click", handleClick);
+    document.addEventListener("popstate", handleClick);
     return () => {
       document.removeEventListener("click", handleClick);
+      document.removeEventListener("popstate", handleClick);
     };
   }, []);
 
