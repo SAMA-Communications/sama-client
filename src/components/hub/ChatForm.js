@@ -16,13 +16,7 @@ import {
 } from "@store/values/SelectedConversation";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { setClicked } from "@store/values/ContextMenu";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
