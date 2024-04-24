@@ -44,17 +44,25 @@
 .content__container,
 .content__container--with-media {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   align-items: flex-end;
   column-gap: 15px;
   row-gap: 8px;
 }
 .content__container--with-media {
+  width: auto;
+
   flex-direction: column;
+  align-items: flex-start;
 }
 .content__container--with-media .content__text {
-  max-width: min(440px, 100%);
+  max-width: 440px;
   align-self: flex-start;
+}
+.content__container--with-media .content__status,
+.content__container--with-media .content__status--darken {
+  align-self: flex-end;
 }
 .br-bl-0 {
   border-bottom-left-radius: 0;
