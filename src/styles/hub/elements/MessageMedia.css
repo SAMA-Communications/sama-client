@@ -1,5 +1,5 @@
 .message-media__container {
-  max-width: min(440px, 100%);
+  max-width: 440px;
 
   display: flex;
   flex-direction: column;
