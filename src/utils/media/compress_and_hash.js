@@ -1,4 +1,4 @@
-import globalConstants from "@src/_helpers/constants";
+import globalConstants from "@helpers/constants";
 import compressFile from "@utils/media/compress_file";
 import encodeImageToBlurhash from "@utils/media/get_blur_hash";
 

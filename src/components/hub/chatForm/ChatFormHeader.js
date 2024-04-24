@@ -7,6 +7,8 @@ import {
   getConverastionById,
   selectConversationsEntities,
 } from "@store/values/Conversations";
+import { getIsTabletView } from "@store/values/IsTabletView";
+import { getIsMobileView } from "@store/values/IsMobileView";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setAllParams } from "@store/values/ContextMenu";
@@ -16,10 +18,14 @@ import { useMemo } from "react";
 
 import "@styles/hub/chatForm/ChatFormHeader.css";
 
+import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as More } from "@icons/options/More.svg";
 
-export default function ChatFormHeader() {
+export default function ChatFormHeader({ closeFormFunc }) {
   const dispatch = useDispatch();
+
+  const isMobile = useSelector(getIsMobileView);
+  const isTablet = useSelector(getIsTabletView);
 
   const { pathname, hash } = useLocation();
   const currentPath = pathname + hash;
@@ -92,8 +98,13 @@ export default function ChatFormHeader() {
       ? "/info"
       : "/user?uid=" + participants[opponentId]._id;
 
-    (currentPath.includes(path) ? removeAndNavigateLastSection : addSuffix)(
-      currentPath,
+    const tmpPath =
+      isTablet && path === "/info" && pathname.includes("/profile")
+        ? currentPath.replace("/profile", "")
+        : currentPath;
+
+    (tmpPath.includes(path) ? removeAndNavigateLastSection : addSuffix)(
+      tmpPath,
       path
     );
   };
@@ -121,7 +132,9 @@ export default function ChatFormHeader() {
 
   return (
     <div className="header__container" onClick={viewChatOrPaticipantInfo}>
-      {/* <div className="header-back"></div> */}
+      {isMobile || isTablet ? (
+        <BackBtn className="header-back" onClick={closeFormFunc} />
+      ) : null}
       <div className="header-content">
         <div className="content__name">{viewChatName}</div>
         <div className="content__activity">{viewStatusActivity}</div>

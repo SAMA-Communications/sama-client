@@ -18,11 +18,13 @@ class UsersService {
     const { login, password } = data;
 
     if (!login?.length || !password?.length) {
-      throw new Error("The login and password fields must not be empty.");
+      throw new Error("The username and password fields must not be empty.");
     }
 
     if (!validateLogin(login)) {
-      throw new Error("The login field must contain from 3 to 20 characters.");
+      throw new Error(
+        "The username field must contain from 3 to 20 characters."
+      );
     }
 
     if (!validatePassword(password)) {
@@ -45,11 +47,13 @@ class UsersService {
     const { login, password } = data;
 
     if (!login?.length || !password?.length) {
-      throw new Error("The login and password fields must not be empty.");
+      throw new Error("The username and password fields must not be empty.");
     }
 
     if (!validateLogin(login)) {
-      throw new Error("The login field must contain from 3 to 20 characters.");
+      throw new Error(
+        "The username field must contain from 3 to 20 characters."
+      );
     }
 
     if (!validatePassword(password)) {
@@ -115,14 +119,37 @@ class UsersService {
     }
   }
 
+  async logout() {
+    navigator.serviceWorker.ready
+      .then((reg) =>
+        reg.pushManager.getSubscription().then((sub) =>
+          sub.unsubscribe().then(async () => {
+            await api.pushSubscriptionDelete();
+            await api.userLogout();
+            localStorage.removeItem("sessionId");
+          })
+        )
+      )
+      .catch(async (err) => {
+        console.error(err);
+        await api.userLogout();
+        localStorage.removeItem("sessionId");
+        throw new Error("User logout error");
+      });
+  }
+
   async deleteCurrentUser() {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         await api.userDelete();
         store.dispatch({ type: "RESET_STORE" });
+        return true;
       } catch (err) {
         showCustomAlert(err.message, "danger");
+        return false;
       }
+    } else {
+      return false;
     }
   }
 }

@@ -4,6 +4,7 @@ import addSuffix from "@utils/navigation/add_suffix";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
+import { getIsMobileView } from "@store/values/IsMobileView";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useKeyDown } from "@hooks/useKeyDown";
@@ -14,11 +15,16 @@ import { useSelector } from "react-redux";
 import "@styles/info/ChatInfo.css";
 
 import { ReactComponent as AddParticipants } from "@icons/AddParticipants.svg";
+import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
 import { ReactComponent as ImageBig } from "@icons/media/ImageBig.svg";
+import { getIsTabletView } from "@src/store/values/IsTabletView";
 
 export default function ChatInfo() {
   const { pathname, hash } = useLocation();
+
+  const isMobileView = useSelector(getIsMobileView);
+  const isTabletView = useSelector(getIsTabletView);
 
   const participants = useSelector(selectParticipantsEntities);
   const currentUser = useSelector(selectCurrentUser);
@@ -65,47 +71,61 @@ export default function ChatInfo() {
 
   return (
     <div className="chat-info__container">
-      <div className="chat-info__container--top fcc">
-        <div className="ci-top__title">Chat info</div>
-        <Close
-          className="ci-close"
-          onClick={() => removeAndNavigateSubLink(pathname + hash, "/info")}
-        />
-        <div className="ci-photo fcc">
-          <ImageBig />
-        </div>
-        <div
-          className={`chat-info__content ${
-            isCurrentUserOwner ? "cursor-pointer" : ""
-          }`}
-          onClick={() => addSuffix(pathname + hash, "/edit?type=chat")}
-        >
-          <p className="ci-name">
-            {selectedConversation?.name || (
-              <span className="ci-name--gray">Group name</span>
-            )}
-          </p>
-          <p className="ci-description">
-            {selectedConversation?.description || (
-              <span className="ci-description--gray">Description</span>
-            )}
-          </p>
-        </div>
-      </div>
-      <div className="chat-info__container--bottom">
-        <div className="ci-bottom__header">
-          <p className="ci-header__text">
-            {participantsCount} member{participantsCount > 1 ? "s" : ""}
-          </p>
-          {isCurrentUserOwner ? (
-            <AddParticipants
-              className="ci-addparticipants"
-              onClick={() => addSuffix(pathname + hash, "/add")}
+      <CustomScrollBar>
+        <div className="chat-info__container--top fcc">
+          <div className="ci-top__title">Chat info</div>
+          {isMobileView ? (
+            <BackBtn
+              className="ci-close"
+              onClick={() => removeAndNavigateSubLink(pathname + hash, "/info")}
             />
-          ) : null}
+          ) : (
+            <Close
+              className="ci-close"
+              onClick={() => removeAndNavigateSubLink(pathname + hash, "/info")}
+            />
+          )}
+          <div className="ci-photo fcc">
+            <ImageBig />
+          </div>
+          <div
+            className={`chat-info__content ${
+              isCurrentUserOwner ? "cursor-pointer" : ""
+            }`}
+            onClick={() => addSuffix(pathname + hash, "/edit?type=chat")}
+          >
+            <p className="ci-name">
+              {selectedConversation?.name || (
+                <span className="ci-name--gray">Group name</span>
+              )}
+            </p>
+            <p className="ci-description">
+              {selectedConversation?.description || (
+                <span className="ci-description--gray">Description</span>
+              )}
+            </p>
+          </div>
         </div>
-        <CustomScrollBar>{participantsList}</CustomScrollBar>
-      </div>
+        <div className="chat-info__container--bottom">
+          <div className="ci-bottom__header">
+            <p className="ci-header__text">
+              {participantsCount} member{participantsCount > 1 ? "s" : ""}
+            </p>
+            {isCurrentUserOwner ? (
+              <AddParticipants
+                className="ci-addparticipants"
+                onClick={() => addSuffix(pathname + hash, "/add")}
+              />
+            ) : null}
+          </div>
+          <CustomScrollBar
+            autoHeight={isMobileView || isTabletView ? true : false}
+            autoHeightMax={isMobileView || isTabletView ? 400 : 0}
+          >
+            {participantsList}
+          </CustomScrollBar>
+        </div>
+      </CustomScrollBar>
     </div>
   );
 }

@@ -14,9 +14,10 @@ import {
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
 import { KEY_CODES } from "@helpers/keyCodes";
+import { setClicked } from "@store/values/ContextMenu";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { useKeyDown } from "@hooks/useKeyDown";
+import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import "@styles/hub/ChatForm.css";
@@ -45,6 +46,7 @@ export default function ChatForm() {
       return;
     }
 
+    dispatch(setClicked(false));
     dispatch(clearSelectedConversation());
     api.unsubscribeFromUserActivity({});
     removeAndNavigateLastSection(pathname + hash);
@@ -90,7 +92,7 @@ export default function ChatForm() {
     <section className={`chat-form__container ${selectedCID ? "" : "fcc"}`}>
       {selectedCID ? (
         <>
-          <ChatFormHeader />
+          <ChatFormHeader closeFormFunc={closeForm} />
           <ChatFormContent scrollRef={chatMessagesBlock} />
           <ChatFormInputs
             chatMessagesBlockRef={chatMessagesBlock}

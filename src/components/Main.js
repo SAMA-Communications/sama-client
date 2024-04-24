@@ -1,5 +1,6 @@
 import { cloneElement, useMemo } from "react";
 import { getIsMobileView } from "@store/values/IsMobileView";
+import { getIsTabletView } from "@store/values/IsTabletView";
 import { selectConversationsEntities } from "@store/values/Conversations";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -21,12 +22,33 @@ import SHub from "@skeletons/hub/SHub";
 
 import "react-loading-skeleton/dist/skeleton.css";
 
+const blockMap = {
+  "/info": <ChatInfo />,
+  "/user": <OtherUserProfile />,
+  "/add": <UsersSelectModalHub type={"add_participants"} />,
+  "/create": <UsersSelectModalHub />,
+  "/attach": <AttachHub />,
+  "/media": <MediaHub />,
+  "/edit": <EditModalHub />,
+};
+
 export default function Main() {
   const isMobileView = useSelector(getIsMobileView);
+  const isTabletView = useSelector(getIsTabletView);
   const location = useLocation();
 
   const conversations = useSelector(selectConversationsEntities);
   const conversationsArray = conversations && Object.values(conversations);
+
+  const additionalContainerRight = useMemo(() => {
+    const { pathname, hash } = location;
+
+    const allBlocks = Object.entries(blockMap)
+      .filter(([key, _]) => pathname.includes(key) || hash.includes(key))
+      .map(([key, component]) => cloneElement(component, { key }));
+
+    return isMobileView ? allBlocks.slice(-2) : allBlocks;
+  }, [location, isMobileView]);
 
   const hubContainer = useMemo(() => {
     if (!conversations) {
@@ -38,10 +60,25 @@ export default function Main() {
       !conversationsArray?.filter((obj) => obj.type === "g" || obj.last_message)
         .length
     ) {
+      if (isMobileView) {
+        return location.pathname.includes("/profile") ? null : <EmptyHub />;
+      }
       return <EmptyHub />;
     }
 
     if (isMobileView) {
+      const keys = additionalContainerRight.map((el) => el.key);
+
+      return !!location.hash ? (
+        keys.includes("/user") || keys.includes("/info") ? null : (
+          <ChatForm />
+        )
+      ) : location.pathname.includes("/profile") ? null : (
+        <ChatList />
+      );
+    }
+
+    if (isTabletView) {
       return !!location.hash ? <ChatForm /> : <ChatList />;
     }
 
@@ -51,37 +88,15 @@ export default function Main() {
         <ChatForm />
       </section>
     );
-  }, [location, isMobileView, conversations]);
+  }, [location, isMobileView, isTabletView, conversations]);
 
   const additionalContainerLeft = useMemo(() => {
     return location.pathname.includes("/profile") ? <UserProfile /> : null;
   }, [location]);
 
-  const additionalContainerRight = useMemo(() => {
-    const { pathname, hash } = location;
-
-    const blockMap = {
-      "/add": <UsersSelectModalHub type={"add_participants"} />,
-      "/attach": <AttachHub />,
-      "/media": <MediaHub />,
-      "/create": <UsersSelectModalHub />,
-      "/edit": <EditModalHub />,
-      "/info": <ChatInfo />,
-      "/user": <OtherUserProfile />,
-    };
-
-    const allBlocks = Object.entries(blockMap)
-      .filter(
-        ([key, component]) => pathname.includes(key) || hash.includes(key)
-      )
-      .map(([key, component]) => cloneElement(component, { key }));
-
-    return allBlocks;
-  }, [location]);
-
   return (
     <>
-      <NavigationLine />
+      {isMobileView ? null : <NavigationLine />}
       {additionalContainerLeft}
       {hubContainer}
       {additionalContainerRight}

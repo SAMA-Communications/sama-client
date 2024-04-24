@@ -22,7 +22,7 @@ export default function ParticipantInChat({
     <div
       className={`participant__box`}
       onClick={() =>
-        isOwner
+        isCurrentUser
           ? addPrefix(pathname + hash, "/profile")
           : addSuffix(pathname + hash, `/user?uid=${userObject._id}`)
       }

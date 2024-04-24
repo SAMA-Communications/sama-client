@@ -1,7 +1,7 @@
 .att-item__container {
   min-width: 240px;
   width: 100%;
-  max-width: 440px;
+  max-width: min(440px, 100%);
 
   padding: 14px;
 

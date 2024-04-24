@@ -1,9 +1,9 @@
 .searched-user {
-  width: calc(400px * var(--base-scale));
+  width: 400px;
 
-  padding: calc(10px * var(--base-scale));
+  padding: 10px;
 
-  gap: calc(15px * var(--base-scale));
+  gap: 15px;
   justify-content: flex-start;
 
   border-radius: var(--border-12);
@@ -15,8 +15,8 @@
 }
 
 .searched-user__photo {
-  width: calc(70px * var(--base-scale));
-  height: calc(70px * var(--base-scale));
+  width: 70px;
+  height: 70px;
 
   font-weight: 300;
   font-size: var(--font-h4);
@@ -49,4 +49,10 @@
   background-color: var(--color-accent-dark);
 
   z-index: 10;
+}
+
+@media screen and (max-width: 800px) {
+  .searched-user {
+    width: 100%;
+  }
 }

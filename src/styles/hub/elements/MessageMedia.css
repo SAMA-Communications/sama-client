@@ -16,3 +16,9 @@
 .media-attachment > video {
   width: 100%;
 }
+
+@media screen and (max-width: 650px) {
+  .message-media__container {
+    max-width: 100%;
+  }
+}

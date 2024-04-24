@@ -33,8 +33,7 @@ self.addEventListener("notificationclick", (e) => {
         type: "window",
       })
       .then((clientList) => {
-        const chatUrl =
-          `${self.location.origin}/` + e.notification.data?.convId;
+        const chatUrl = `${self.location.origin}` + e.notification.data?.convId;
 
         for (const client of clientList) {
           if (client.url.includes(self.location.origin) && "focus" in client) {

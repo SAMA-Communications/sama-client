@@ -1,10 +1,10 @@
 .chat-list__container {
-  width: calc(400px * var(--base-scale));
+  width: 400px;
 
   margin-top: 5px;
 
   display: flex;
-  gap: calc(10px * var(--base-scale));
+  gap: 10px;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
@@ -13,11 +13,11 @@
   border-radius: var(--border-8);
 }
 .chat-list__container > .scroll-bar__outer-container > div:nth-child(1) {
-  margin-top: calc(5px * var(--base-scale));
+  margin-top: 5px;
 
   display: flex;
   flex-direction: column;
-  gap: calc(5px * var(--base-scale));
+  gap: 5px;
 }
 .chat-list__empty {
   margin-top: 10px;
@@ -33,10 +33,10 @@
 
   width: 100%;
 
-  padding: calc(10px * var(--base-scale));
+  padding: 10px;
 
   display: flex;
-  gap: calc(15px * var(--base-scale));
+  gap: 15px;
   align-items: center;
 
   border-radius: var(--border-12);
@@ -44,15 +44,15 @@
   cursor: pointer;
 }
 .chat-box__container--selected {
-  background-color: var(--block-selected);
+  background-color: var(--color-hover-light);
 }
 .chat-box__container:hover {
-  background-color: var(--block-hover);
+  background-color: var(--color-hover-light);
 }
 
 .box__photo {
-  width: calc(70px * var(--base-scale));
-  height: calc(70px * var(--base-scale));
+  width: 70px;
+  height: 70px;
 
   font-weight: 300;
   font-size: var(--font-h4);
@@ -65,13 +65,13 @@
   height: 75px;
 }
 .box__content {
-  max-width: calc(100% - calc(90px * var(--base-scale)));
-  max-height: calc(70px * var(--base-scale));
+  max-width: calc(100% - 90px);
+  max-height: 70px;
 
   flex: 1;
 
   display: flex;
-  gap: calc(7px * var(--base-scale));
+  gap: 7px;
   flex-direction: column;
 
   overflow: hidden;
@@ -80,12 +80,12 @@
 .content-top,
 .content-bottom {
   display: flex;
-  gap: calc(12px * var(--base-scale));
+  gap: 12px;
   align-items: center;
   justify-content: space-between;
 }
 .content-bottom {
-  height: calc(32px * var(--base-scale));
+  height: 32px;
 }
 
 .content-top__name {
@@ -102,7 +102,7 @@
   color: var(--color-text-light);
 }
 .content-bottom__indicator {
-  padding: calc(4px * var(--base-scale)) calc(6px * var(--base-scale));
+  padding: 4px 6px;
 
   font-weight: 300;
   color: var(--color-white);
@@ -117,7 +117,7 @@
 
   display: flex;
   align-items: center;
-  gap: calc(5px * var(--base-scale));
+  gap: 5px;
 
   overflow-y: hidden;
 }
@@ -135,14 +135,82 @@
 .last-message__media {
   width: auto;
   max-width: 24px;
-  height: calc(16px * var(--base-scale));
+  height: 16px;
 }
 
 .image__blur-hash {
-  width: calc(16px * var(--base-scale)) !important;
-  height: calc(16px * var(--base-scale)) !important;
+  width: 16px !important;
+  height: 16px !important;
 
   border-radius: 3px;
 
   overflow: hidden;
+}
+
+.navigation-account {
+  position: absolute;
+  top: 19px;
+  left: 20px;
+
+  cursor: pointer;
+
+  z-index: 100;
+}
+.navigation-create {
+  position: absolute;
+  bottom: 19px;
+  right: 20px;
+
+  padding: 15px 15px 10px 15px;
+
+  border-radius: var(--border-16);
+  background-color: var(--color-accent-light);
+
+  z-index: 100;
+}
+
+@media screen and (max-width: 800px) {
+  .chat-list__container {
+    width: 100vw;
+
+    flex: 1;
+  }
+  .chat-list__container > .scroll-bar__outer-container {
+    border-radius: var(--border-16) var(--border-16) 0 0;
+
+    background-color: var(--color-bg-light);
+  }
+  .chat-list__container > .scroll-bar__outer-container > div:nth-child(1) {
+    margin-top: 2svh;
+    padding: 0 2svw;
+  }
+
+  .chat-list__container > .search-bar {
+    max-width: calc(100% - 85px);
+
+    margin-top: 10px;
+    margin-left: 65px;
+  }
+  .chat-list__container .search-bar__input {
+    max-width: calc(100% - 15px);
+  }
+  .chat-list__container .search-bar__close {
+    right: 25px;
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 1400px) {
+  .chat-list__container {
+    width: 100vw;
+
+    flex: 1;
+  }
+  .chat-list__container > .scroll-bar__outer-container {
+    border-radius: var(--border-32);
+
+    background-color: var(--color-bg-light);
+  }
+  .chat-list__container > .scroll-bar__outer-container > div:nth-child(1) {
+    padding: 10px 2svw 20px 2svw;
+  }
 }

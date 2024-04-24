@@ -20,7 +20,7 @@ export default function AuthorizationHub() {
       </div>
       <div
         className={`authorization__side--main fcc ${
-          isLoginPage ? "login-form__mt-49" : ""
+          isLoginPage ? "login-form__mt-49" : "signup-form__mt-20"
         }`}
       >
         <div className="authorization__title fcc">

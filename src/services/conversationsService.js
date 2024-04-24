@@ -207,9 +207,13 @@ class ConversationsService {
         await api.conversationDelete({ cid: selectedConversation.id });
         store.dispatch(clearSelectedConversation());
         store.dispatch(removeChat(selectedConversation.id));
+        return true;
+      } else {
+        return false;
       }
-    } catch (error) {
-      showCustomAlert(error.message, "warning");
+    } catch (err) {
+      showCustomAlert(err.message, "warning");
+      return false;
     }
   }
 }

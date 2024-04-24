@@ -1,11 +1,13 @@
 .profile__container {
   width: 400px;
+  height: 100%;
 
+  margin-right: 15px;
+}
+.profile__container .scroll-bar__outer-container > div:nth-child(1) {
   display: flex;
   flex-direction: column;
   gap: 15px;
-
-  margin-right: 15px;
 }
 
 .profile__container--top {
@@ -91,7 +93,6 @@
 .profile__container--bottom {
   padding: 30px 20px;
 
-  flex: 1;
   display: flex;
   flex-direction: column;
 
@@ -155,18 +156,28 @@
   padding: 0 10px;
 
   cursor: pointer;
+
+  z-index: 5;
 }
-.info__link:nth-last-child(1) {
-  margin-top: 25px;
+.profile__container--bottom {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.first-window__container .profile__container--bottom {
+  flex: none;
+}
+.profile__container--bottom .info__link:nth-child(4) {
+  margin-bottom: 40px;
+}
+.profile__container--bottom .info__link:nth-child(5) {
+  margin-top: auto;
 }
 .profile__container--bottom .info__link:nth-child(6) {
-  margin-top: auto;
+  margin-top: 20px;
 }
 .info__link:nth-last-child(1) > p {
   color: var(--color-red);
-}
-.info__link:nth-last-child(2) {
-  margin-top: 15px;
 }
 
 .info__new-conversation {
@@ -179,9 +190,59 @@
   margin-bottom: -10px;
 
   text-align: center;
-  font-size: var(--font-h5);
+  font-size: var(--font-h6);
 }
 .status--online {
   color: var(--color-accent-dark);
   font-size: var(--font-h5);
+}
+
+@media screen and (max-width: 800px) {
+  .chat-form__container {
+    padding: 4svw;
+
+    background-color: var(--color-bg-light);
+  }
+
+  .profile__container {
+    width: 100dvw;
+    height: 100dvh;
+
+    margin-right: 0;
+
+    position: absolute;
+    z-index: 10;
+    background-color: var(--color-bg-dark);
+  }
+
+  .profile__container--top {
+    border-radius: 0 0 var(--border-16) var(--border-16);
+  }
+  .first-window__container .profile__container--bottom {
+    flex: 1;
+  }
+  .profile__container--bottom {
+    flex: 1;
+
+    border-radius: var(--border-16) var(--border-16) 0 0;
+  }
+
+  .info__box,
+  .info__box--not-hover {
+    padding: 10px;
+
+    gap: 5px;
+  }
+  .profile__container--bottom .info__link:nth-child(3) {
+    margin-top: 20px;
+  }
+  .profile__container--bottom .info__link:nth-child(5) {
+    margin-top: 25px;
+  }
+  .profile__container--bottom .info__link:nth-child(6) {
+    margin-top: 50px;
+  }
+  .profile__container--bottom .info__link:nth-child(7) {
+    margin-top: 20px;
+  }
 }

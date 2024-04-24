@@ -4,8 +4,8 @@
 
   padding: 10px;
 
-  width: 100svw;
-  height: 100svh;
+  width: 100dvw;
+  height: 100dvh;
 
   background-color: var(--color-black-50);
 
@@ -83,4 +83,14 @@
   font-weight: 300;
 
   cursor: pointer;
+}
+
+@media screen and (max-width: 800px) {
+  .edit-modal__content--user,
+  .edit-modal__content--chat,
+  .edit-modal__content--chatname {
+    width: 94svw;
+
+    padding: 20px;
+  }
 }

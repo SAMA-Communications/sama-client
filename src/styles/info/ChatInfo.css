@@ -1,11 +1,13 @@
 .chat-info__container {
   width: 400px;
+  height: 100%;
 
+  margin-left: 15px;
+}
+.chat-info__container > .scroll-bar__outer-container > div:nth-child(1) {
   display: flex;
   flex-direction: column;
   gap: 15px;
-
-  margin-left: 15px;
 }
 
 .chat-info__container--top {
@@ -14,7 +16,7 @@
   flex-direction: column;
   gap: 20px;
 
-  border-radius: var(--border-48);
+  border-radius: var(--border-32);
   background-color: var(--color-bg-light);
 }
 .ci-top__title {
@@ -161,4 +163,36 @@
 .participant__info > span {
   font-weight: 200;
   font-size: var(--font-h6);
+}
+
+@media screen and (max-width: 800px) {
+  .chat-info__container {
+    width: 100dvw;
+
+    margin-left: 0;
+  }
+
+  .chat-info__container--top {
+    border-radius: 0 0 var(--border-16) var(--border-16);
+  }
+  .chat-info__container--bottom {
+    padding-bottom: 0;
+
+    border-radius: var(--border-16) var(--border-16) 0 0;
+  }
+
+  .ci-close {
+    left: 4svw;
+    top: 34px;
+  }
+  .ci-photo {
+    width: 100px;
+    height: 100px;
+  }
+  .ci-photo > svg {
+    width: 60px;
+  }
+  .ci-name {
+    font-size: var(--font-h5);
+  }
 }

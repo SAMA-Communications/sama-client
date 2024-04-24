@@ -4,13 +4,14 @@ export default function CustomScrollBar({
   children,
   customStyle,
   customId,
+  autoHide = true,
   autoHeight = false,
   autoHeightMax,
 }) {
   return (
     <Scrollbars
       className="scroll-bar__outer-container"
-      autoHide
+      autoHide={autoHide}
       autoHideTimeout={400}
       autoHideDuration={400}
       autoHeight={autoHeight}

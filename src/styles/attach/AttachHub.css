@@ -4,8 +4,8 @@
 
   padding: 10px;
 
-  width: 100svw;
-  height: 100svh;
+  width: 100dvw;
+  height: 100dvh;
 
   background-color: var(--color-black-50);
 
@@ -89,4 +89,10 @@
 #testVideo {
   display: none;
   visibility: hidden;
+}
+
+@media screen and (max-width: 550px) {
+  .attach-modal__content {
+    width: 94dvw;
+  }
 }

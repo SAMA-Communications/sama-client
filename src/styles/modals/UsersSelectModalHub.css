@@ -40,7 +40,7 @@
 .em-create__name-input {
   flex-shrink: 1;
 
-  padding: calc(11px * var(--base-scale)) calc(15px * var(--base-scale));
+  padding: 11px 15px;
 
   color: var(--color-black);
   font-size: var(--font-p);
@@ -109,4 +109,15 @@
 }
 .user-info__container:hover .user-info__photo > svg {
   display: block;
+}
+
+@media screen and (max-width: 800px) {
+  .edit-modal__create {
+    align-items: center;
+
+    flex-direction: column;
+  }
+  .edit-modal__create > div:nth-last-child(1) {
+    width: 100%;
+  }
 }

@@ -30,6 +30,7 @@
   --color-black: #000;
   --color-black-25: rgba(0, 0, 0, 0.25);
   --color-black-50: rgba(0, 0, 0, 0.5);
+  --color-black-75: rgba(0, 0, 0, 0.75);
   --color-grey-50: rgba(26, 26, 26, 0.5);
   --color-red: #df2e38;
   --color-bg-light: #f6f6f6;
@@ -38,51 +39,11 @@
   --color-text-light: #b0b0b0;
   --color-text-dark: #6d6d6d;
   --color-hover-light: #e7e7e7;
-  --color-hover-dark: #2a2a2a;
+  --color-hover-dark: #3f3f3f;
   --color-accent-light: #dbdcfc;
   --color-accent-dark: #7678e5;
   --color-indicator: #68174d;
 }
-
-/* 768px
-@media (min-width: 48em) {
-  :root {
-    --base-scale: 0.6;
-    --base-font: 9.6px;
-  }
-}
-
-/* 1366px
-@media (min-width: 85.375em) {
-  :root {
-    --base-scale: 0.711;
-    --base-font: 11.376px;
-  }
-}
-
-/* 1600px*
-@media (min-width: 100em) {
-  :root {
-    --base-scale: 0.833;
-    --base-font: 13.33px;
-  }
-}
-
-/* 1920px
-@media (min-width: 120em) {
-  :root {
-    --base-scale: 1;
-    --base-font: 16px;
-  }
-}
-
-/* 2560px
-@media (min-width: 160em) {
-  :root {
-    --base-scale: 1.75;
-    --base-font: 28px;
-  }
-} */
 
 * {
   position: relative;
@@ -99,6 +60,8 @@
 
   line-height: normal;
   font-weight: 200;
+
+  /* user-select: none; */
 }
 
 a {
@@ -106,15 +69,17 @@ a {
 }
 
 body {
+  width: 100dvw;
+  height: 100dvh;
+
   background-color: var(--color-bg-dark);
 }
 
 main {
-  width: 100svw;
-  height: 100svh;
+  width: 100dvw;
+  height: 100dvh;
 
-  padding: calc(20px * var(--base-scale)) calc(30px * var(--base-scale))
-    calc(20px * var(--base-scale)) 0;
+  padding: 20px 30px 20px 0;
 
   display: flex;
 
@@ -138,7 +103,7 @@ main {
 .page-loader {
   flex: 1;
 
-  padding-left: calc(30px * var(--base-scale));
+  padding-left: 30px;
 }
 
 .connect-line {
@@ -165,10 +130,10 @@ main {
   top: 0;
   left: 0;
 
-  padding: 40px;
+  padding: 30px;
 
-  width: 100svw;
-  height: 100svh;
+  width: 100dvw;
+  height: 100dvh;
 
   display: flex;
   flex-direction: column;
@@ -194,11 +159,29 @@ main {
 
 /* vertical scroll */
 .scroll-bar__outer-container > div:nth-child(3) {
-  width: calc(6px * var(--base-scale)) !important;
+  width: 6px !important;
 
-  right: calc(4px * var(--base-scale)) !important;
-  bottom: calc(4px * var(--base-scale)) !important;
-  top: calc(4px * var(--base-scale)) !important;
+  right: 4px !important;
+  bottom: 4px !important;
+  top: 4px !important;
 
-  border-radius: calc(3px * var(--base-scale)) !important;
+  border-radius: 3px !important;
+}
+
+@media screen and (max-width: 800px) {
+  main {
+    padding: 0;
+  }
+
+  .first-window__container {
+    padding: 0;
+
+    background-color: var(--color-bg-dark);
+  }
+}
+
+@media screen and (min-width: 800px) and (min-width: 800px) {
+  .first-window__container {
+    padding: 20px;
+  }
 }

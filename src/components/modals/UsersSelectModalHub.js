@@ -28,7 +28,7 @@ export default function UsersSelectModalHub({ type }) {
       participants,
       chatName
     );
-    navigateTo(`/#${chatId}`);
+    chatId && navigateTo(`/#${chatId}`);
   };
 
   const sendEditRequest = async (participants) => {
