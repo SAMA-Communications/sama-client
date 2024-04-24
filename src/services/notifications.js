@@ -49,7 +49,7 @@ async function showLocalNotification(pushMessage) {
     title,
   };
 
-  sw.postMessage({ message: notificationMessage }); /// possible error notificationMessage
+  sw && sw.postMessage({ message: notificationMessage }); /// possible error notificationMessage
 }
 EventEmitter.subscribe("onMessage", showLocalNotification);
 
