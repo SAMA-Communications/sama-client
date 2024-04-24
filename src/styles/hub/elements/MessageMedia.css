@@ -1,0 +1,24 @@
+.message-media__container {
+  max-width: 440px;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 7px;
+}
+
+.media-attachment {
+  border-radius: var(--border-8);
+
+  overflow: hidden;
+}
+
+.media-attachment > img,
+.media-attachment > video {
+  width: 100%;
+}
+
+@media screen and (max-width: 650px) {
+  .message-media__container {
+    max-width: 100%;
+  }
+}

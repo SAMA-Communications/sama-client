@@ -1,0 +1,70 @@
+.att-item__container {
+  min-width: 240px;
+  width: 100%;
+  max-width: min(440px, 100%);
+
+  padding: 14px;
+
+  display: flex;
+  gap: 10px;
+
+  border-radius: var(--border-12);
+  background-color: var(--color-accent-light);
+
+  cursor: pointer;
+}
+.att-item__container[aria-label="disabled"] {
+  cursor: default;
+}
+
+.att-item__photo {
+  width: 70px;
+  height: 70px;
+
+  border-radius: var(--border-8);
+  background-color: var(--color-accent-dark);
+
+  overflow: hidden;
+}
+.att-item__photo .blur-hash-preloader {
+  width: 100%;
+  height: 100%;
+}
+.blur-hash-preloader > .search__pending {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+}
+
+.att-item__photo > img,
+.att-item__photo > video {
+  width: auto;
+  height: 100%;
+  object-fit: cover;
+}
+
+.att-item__content {
+  width: calc(100% - 122px);
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+}
+.att-item__name {
+  font-weight: 300;
+  color: var(--color-black);
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.att-item__container > svg {
+  padding: 0 2px;
+
+  align-self: center;
+  cursor: pointer;
+}

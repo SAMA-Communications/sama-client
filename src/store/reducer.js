@@ -1,15 +1,21 @@
-import conversationsReducer from "@store/Conversations";
-import isMobileViewReducer from "@store/IsMobileView";
-import messageReducer from "@store/Messages";
-import networkStateReducer from "@store/NetworkState";
-import participantsReducer from "@store/Participants";
-import selectedConversationReducer from "@store/SelectedConversation";
-import userIsLoggedInReducer from "@store/UserIsLoggedIn";
+import contextMenuReducer from "@store/values/ContextMenu";
+import conversationsReducer from "@store/values/Conversations";
+import currentUserReducer from "@store/values/CurrentUser";
+import isMobileViewReducer from "@store/values/IsMobileView";
+import isTabletViewReducer from "@store/values/IsTabletView";
+import messageReducer from "@store/values/Messages";
+import networkStateReducer from "@store/values/NetworkState";
+import participantsReducer from "@store/values/Participants";
+import selectedConversationReducer from "@store/values/SelectedConversation";
+import userIsLoggedInReducer from "@store/values/UserIsLoggedIn";
 import { combineReducers } from "@reduxjs/toolkit";
 
 const appReducer = combineReducers({
+  contextMenu: contextMenuReducer,
   conversations: conversationsReducer,
+  currentUser: currentUserReducer,
   isMobileView: isMobileViewReducer,
+  isTabletView: isTabletViewReducer,
   messages: messageReducer,
   networkState: networkStateReducer,
   participants: participantsReducer,
@@ -19,8 +25,8 @@ const appReducer = combineReducers({
 
 const rootReducer = (state, action) => {
   if (action.type === "RESET_STORE") {
-    const { isMobileView, networkState } = state;
-    state = { isMobileView, networkState };
+    const { isMobileView, isTabletView, networkState, currentUser } = state;
+    state = { isMobileView, isTabletView, networkState, currentUser };
   }
 
   return appReducer(state, action);

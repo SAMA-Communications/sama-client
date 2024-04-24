@@ -1,37 +1,43 @@
-import React, { Suspense, useEffect, useRef } from "react";
+import ContextMenuHub from "@components/context/ContextMenuHub";
 import activityService from "@services/activityService";
 import autoLoginService from "@services/autoLoginService.js";
 import conversationService from "@services/conversationsService";
 import globalConstants from "@helpers/constants";
 import messagesService from "@services/messagesService";
+import navigateTo from "@utils/navigation/navigate_to";
+import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { AnimatePresence } from "framer-motion";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { getIsMobileView, setIsMobileView } from "@store/IsMobileView";
+import { Suspense, lazy, useEffect, useRef } from "react";
+import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
+import { getIsTabletView, setIsTabletView } from "@store/values/IsTabletView";
 import { history } from "@helpers/history";
-import { updateNetworkState } from "@store/NetworkState";
+import { selectIsClicked, setClicked } from "@store/values/ContextMenu";
+import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 
-import PageLoader from "@components/PageLoader";
-import SignUp from "@screens/SignUp";
+import SMain from "@skeletons/SMain";
+import SPageLoader from "@skeletons/SPageLoader";
 
 import "@styles/GlobalParam.css";
-import "@styles/themes/DarkTheme.css";
-import "@styles/themes/DefaultTheme.css";
 
-const Main = React.lazy(() => import("@components/Main"));
-const Login = React.lazy(() => import("@screens/Login"));
-const ErrorPage = React.lazy(() => import("@components/ErrorPage"));
+const Main = lazy(() => import("@components/Main"));
+const AuthorizationHub = lazy(() =>
+  import("@components/auth/AuthorizationHub")
+);
 
 export default function App() {
   const dispatch = useDispatch();
   history.location = useLocation();
   history.navigate = useNavigate();
 
+  const isContextClicked = useSelector(selectIsClicked);
+
   const isMobileView = useSelector(getIsMobileView);
   const isMobileViewRef = useRef(isMobileView);
-  useEffect(() => {
-    isMobileViewRef.current = isMobileView;
-  }, [isMobileView]);
+
+  const isTabletView = useSelector(getIsTabletView);
+  const isTabletViewRef = useRef(isTabletView);
 
   useEffect(() => {
     window.addEventListener("offline", () =>
@@ -39,50 +45,74 @@ export default function App() {
     );
     window.addEventListener("online", () => dispatch(updateNetworkState(true)));
     window.addEventListener("resize", () => {
-      const isMobileView =
-        window.innerWidth <= globalConstants.windowChangeWitdh;
+      const isMobileView = window.innerWidth <= globalConstants.mobileViewWidth;
       if (isMobileView !== isMobileViewRef.current) {
+        isMobileView === true &&
+          removeAndNavigateSubLink(
+            history.location.pathname + history.location.hash,
+            "/profile"
+          );
+        isMobileViewRef.current = isMobileView;
         dispatch(setIsMobileView(isMobileView));
       }
+
+      const isTabletView =
+        window.innerWidth <= globalConstants.tabletViewWidth &&
+        window.innerWidth > globalConstants.mobileViewWidth;
+      if (isTabletView !== isTabletViewRef.current) {
+        isTabletView === true &&
+          removeAndNavigateSubLink(
+            history.location.pathname + history.location.hash,
+            "/profile"
+          );
+        isTabletViewRef.current = isTabletView;
+        dispatch(setIsTabletView(isTabletView));
+      }
+      dispatch(setClicked(false));
     });
 
     dispatch(
-      setIsMobileView(window.innerWidth <= globalConstants.windowChangeWitdh)
+      setIsMobileView(window.innerWidth <= globalConstants.mobileViewWidth)
     );
-
-    const userTheme = localStorage.getItem("theme");
-    const prefersDarkMode = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-
-    if (userTheme === "dark" || (!userTheme && prefersDarkMode)) {
-      localStorage.setItem("theme", "dark");
-      document.body.classList.add("dark-theme");
-    } else {
-      localStorage.setItem("theme", "light");
-      document.body.classList.remove("dark-theme");
-    }
+    dispatch(
+      setIsTabletView(
+        window.innerWidth <= globalConstants.tabletViewWidth &&
+          window.innerWidth > globalConstants.mobileViewWidth
+      )
+    );
 
     const token = localStorage.getItem("sessionId");
     if (token && token !== "undefined") {
       const { pathname, hash } = history.location;
-      const path = hash ? pathname + hash : "/main";
-      history.navigate(path);
+      const path = hash ? pathname + hash : "/";
+      navigateTo(path);
     } else {
       localStorage.removeItem("sessionId");
-      history.navigate("/login");
+      navigateTo("/authorization");
     }
   }, []);
 
+  useEffect(() => {
+    const handleClick = () => dispatch(setClicked(false));
+    document.addEventListener("click", handleClick);
+    document.addEventListener("popstate", handleClick);
+    return () => {
+      document.removeEventListener("click", handleClick);
+      document.removeEventListener("popstate", handleClick);
+    };
+  }, []);
+
   return (
-    <Suspense fallback={<PageLoader />}>
+    <Suspense
+      fallback={localStorage.getItem("sessionId") ? <SMain /> : <SPageLoader />}
+    >
+      {isContextClicked ? (
+        <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
+      ) : null}
       <AnimatePresence initial={false} mode="wait">
         <Routes location={history.location}>
-          <Route path="/loading" element={<PageLoader />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/main/*" element={<Main />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/*" element={<ErrorPage />} />
+          <Route path="/authorization" element={<AuthorizationHub />} />
+          <Route path="/*" element={<Main />} />
         </Routes>
       </AnimatePresence>
     </Suspense>

@@ -2,8 +2,8 @@ import getBrowserFingerprint from "get-browser-fingerprint";
 import getUniqueId from "@api/uuid";
 import { default as EventEmitter } from "@event/eventEmitter";
 import { default as reduxStore } from "@store/store";
-import { setUserIsLoggedIn } from "@store/UserIsLoggedIn";
-import { updateNetworkState } from "@store/NetworkState";
+import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
+import { updateNetworkState } from "@store/values/NetworkState";
 
 class Api {
   constructor(baseUrl) {
@@ -34,22 +34,24 @@ class Api {
         console.log("[socket.message]", message);
 
         if (message.system_message) {
-          if (message.system_message.x.conversation_created) {
-            this.onConversationCreateListener?.(
-              message.system_message.x.conversation_created
-            );
+          const {
+            x: {
+              conversation_created,
+              conversation_updated,
+              conversation_kicked,
+            },
+          } = message.system_message;
+
+          if (conversation_created) {
+            this.onConversationCreateListener?.(conversation_created);
             return;
           }
-          if (message.system_message.x.conversation_updated) {
-            this.onConversationCreateListener?.(
-              message.system_message.x.conversation_updated
-            );
+          if (conversation_updated) {
+            this.onConversationCreateListener?.(conversation_updated);
             return;
           }
-          if (message.system_message.x.conversation_kicked) {
-            this.onConversationDeleteListener?.(
-              message.system_message.x.conversation_kicked
-            );
+          if (conversation_kicked) {
+            this.onConversationDeleteListener?.(conversation_kicked);
             return;
           }
           return;
@@ -161,8 +163,8 @@ class Api {
               deviceId: getBrowserFingerprint(true),
             }
           : {
-              login: data.ulogin,
-              password: data.pass,
+              login: data.login,
+              password: data.password,
               deviceId: getBrowserFingerprint(true),
             },
         id: getUniqueId("userLogin"),
@@ -176,8 +178,8 @@ class Api {
     const requestData = {
       request: {
         user_create: {
-          login: data.ulogin,
-          password: data.pass,
+          login: data.login,
+          password: data.password,
         },
         id: getUniqueId("userCreate"),
       },
@@ -225,7 +227,7 @@ class Api {
       request: {
         user_search: {
           login: data.login,
-          ignore_ids: data.ignore_ids,
+          ignore_ids: data.ignore_ids || [],
         },
         id: getUniqueId("userSearch"),
       },
@@ -284,8 +286,8 @@ class Api {
       const requestData = {
         message: {
           id: data.mid,
-          body: data.text,
-          cid: data.chatId,
+          body: data.body,
+          cid: data.cid,
           attachments: data.attachments,
         },
       };

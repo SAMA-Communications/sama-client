@@ -1,12 +1,13 @@
 import api from "@api/api";
+import getLastVisitTime from "@utils/user/get_last_visit_time";
 import jwtDecode from "jwt-decode";
 import store from "@store/store";
-import { upsertUser } from "@store/Participants";
+import { upsertUser } from "@store/values/Participants";
 
 class ActivityService {
   currentChatId;
   activeChat;
-  allUsers;
+  isFirstSync = true;
 
   constructor() {
     api.onUserActivityListener = (user) => {
@@ -15,12 +16,14 @@ class ActivityService {
     };
 
     store.subscribe(() => {
-      const { conversations, participants, selectedConversation } =
-        store.getState();
+      const state = store.getState();
+      const { conversations, participants, selectedConversation } = state;
+      const { entities } = conversations;
       const selectedConversationId = selectedConversation.value.id;
 
       if (
-        !conversations.entities[selectedConversationId]?.created_at ||
+        !entities ||
+        !entities[selectedConversationId]?.created_at ||
         !participants.ids.length ||
         this.currentChatId === selectedConversationId
       ) {
@@ -28,12 +31,12 @@ class ActivityService {
       }
 
       this.currentChatId = selectedConversationId;
-      this.activeChat = conversations.entities[this.currentChatId];
+      this.activeChat = entities[this.currentChatId] || {};
+      this.isFirstSync && (this.isFirstSync = false);
       if (this.activeChat.type !== "u") {
         return;
       }
 
-      this.allUsers = participants.entities;
       this.syncData();
     });
   }
@@ -64,6 +67,16 @@ class ActivityService {
         })
       );
     });
+  }
+
+  getUserLastActivity(userId) {
+    const opponentLastActivity =
+      store.getState().participants.entities[userId]?.recent_activity;
+    return opponentLastActivity === "online" ? (
+      <span className="status--online">online</span>
+    ) : (
+      getLastVisitTime(opponentLastActivity)
+    );
   }
 }
 

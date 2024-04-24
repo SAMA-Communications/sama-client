@@ -2,19 +2,30 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@adapters/*": ["src/adapters/*"],
+      "@src/*": ["src/*"],
       "@api/*": ["src/api/*"],
-      "@components/*": ["src/components/*"],
-      "@event/*": ["src/event/*"],
-      "@generic/*": ["src/components/generic/*"],
+
+      "@adapters/*": ["src/adapters/*"],
       "@helpers/*": ["src/_helpers/*"],
-      "@icons/*": ["src/assets/icons/*"],
+
+      "@components/*": ["src/components/*"],
+      "@generic/*": ["src/components/generic/*"],
       "@screens/*": ["src/components/screens/*"],
-      "@services/*": ["src/services/*"],
       "@static/*": ["src/components/static/*"],
+
       "@store/*": ["src/store/*"],
+      "@event/*": ["src/event/*"],
+      "@services/*": ["src/services/*"],
+
+      "@animations/*": ["src/animations/*"],
+      "@icons/*": ["src/assets/icons/*"],
       "@styles/*": ["src/styles/*"],
-      "@utils/*": ["src/utils/*"]
+
+      "@utils/*": ["src/utils/*"],
+      "@validations": ["src/validations"],
+
+      "@skeletons": ["src/skeletons"],
+      "@hooks": ["src/hooks"]
     }
   }
 }

@@ -1,22 +1,23 @@
 import DownloadManager from "@adapters/downloadManager";
 import api from "@api/api";
 import jwtDecode from "jwt-decode";
+import navigateTo from "@utils/navigation/navigate_to";
 import store from "@store/store";
-import { addUser } from "@store/Participants";
+import { addUser } from "@store/values/Participants";
 import {
   addMessage,
   addMessages,
   markMessagesAsRead,
+  removeMessage,
   upsertMessages,
-} from "@store/Messages";
-import { setSelectedConversation } from "@store/SelectedConversation";
-import { history } from "@helpers/history";
+} from "@store/values/Messages";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
 import {
   markConversationAsRead,
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
-} from "@store/Conversations";
+} from "@store/values/Conversations";
 
 class MessagesService {
   currentChatId;
@@ -93,6 +94,7 @@ class MessagesService {
       }
     });
   }
+
   async syncData() {
     api
       .messageList({
@@ -141,7 +143,6 @@ class MessagesService {
             store.dispatch(upsertMessages(messagesToUpdate));
           });
         }
-
         const conv =
           store.getState().conversations.entities[this.currentChatId];
         if (conv.type !== "u") {
@@ -162,8 +163,21 @@ class MessagesService {
       })
       .catch(() => {
         store.dispatch(setSelectedConversation({}));
-        history.navigate("/main");
+        navigateTo("/");
       });
+  }
+
+  async sendMessage(message) {
+    const { server_mid, t } = await api.messageCreate(message);
+    const { mid, body, cid, from } = message;
+
+    const mObject = { _id: server_mid, body, from, status: "sent", t };
+
+    store.dispatch(addMessage(mObject));
+    store.dispatch(
+      updateLastMessageField({ cid, resaveLastMessageId: mid, msg: mObject })
+    );
+    store.dispatch(removeMessage(mid));
   }
 }
 
