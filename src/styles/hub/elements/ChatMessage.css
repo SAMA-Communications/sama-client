@@ -76,8 +76,8 @@
 .content__text {
   max-width: 100%;
 
-  white-space: pre;
-  text-wrap: wrap !important;
+  white-space: pre-wrap;
+  word-break: break-word;
   color: var(--color-black);
 
   inline-size: auto;
