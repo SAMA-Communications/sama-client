@@ -90,3 +90,9 @@
   display: none;
   visibility: hidden;
 }
+
+@media screen and (max-width: 550px) {
+  .attach-modal__content {
+    width: 94dvw;
+  }
+}
