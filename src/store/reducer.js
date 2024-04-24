@@ -2,6 +2,7 @@ import contextMenuReducer from "@store/values/ContextMenu";
 import conversationsReducer from "@store/values/Conversations";
 import currentUserReducer from "@store/values/CurrentUser";
 import isMobileViewReducer from "@store/values/IsMobileView";
+import isTabInFocusReducer from "@store/values/IsTabInFocus";
 import isTabletViewReducer from "@store/values/IsTabletView";
 import messageReducer from "@store/values/Messages";
 import networkStateReducer from "@store/values/NetworkState";
@@ -15,6 +16,7 @@ const appReducer = combineReducers({
   conversations: conversationsReducer,
   currentUser: currentUserReducer,
   isMobileView: isMobileViewReducer,
+  isTabInFocus: isTabInFocusReducer,
   isTabletView: isTabletViewReducer,
   messages: messageReducer,
   networkState: networkStateReducer,
@@ -25,8 +27,20 @@ const appReducer = combineReducers({
 
 const rootReducer = (state, action) => {
   if (action.type === "RESET_STORE") {
-    const { isMobileView, isTabletView, networkState, currentUser } = state;
-    state = { isMobileView, isTabletView, networkState, currentUser };
+    const {
+      isMobileView,
+      isTabletView,
+      isTabInFocusReducer,
+      networkState,
+      currentUser,
+    } = state;
+    state = {
+      isMobileView,
+      isTabletView,
+      isTabInFocusReducer,
+      networkState,
+      currentUser,
+    };
   }
 
   return appReducer(state, action);
