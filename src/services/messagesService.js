@@ -49,7 +49,7 @@ class MessagesService {
       store.dispatch(addMessage(message));
 
       let countOfNewMessages = 0;
-      message.cid === this.currentChatId
+      message.cid === this.currentChatId && document.hasFocus()
         ? api.markConversationAsRead({ cid: this.currentChatId })
         : (countOfNewMessages = message.from === userInfo._id ? 0 : 1);
       store.dispatch(
