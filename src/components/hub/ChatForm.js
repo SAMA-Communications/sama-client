@@ -55,10 +55,11 @@ export default function ChatForm() {
   };
 
   const readMessage = useCallback(() => {
-    if (
-      conversations[selectedCID].unread_messages_count > 0 &&
-      document.hasFocus()
-    ) {
+    if (!conversations[selectedCID] || !document.hasFocus()) {
+      return;
+    }
+
+    if (conversations[selectedCID].unread_messages_count > 0) {
       dispatch(clearCountOfUnreadMessages(selectedCID));
       api.markConversationAsRead({ cid: selectedCID });
     }
