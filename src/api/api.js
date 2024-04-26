@@ -43,6 +43,7 @@ class Api {
           } = message.system_message;
 
           if (conversation_created) {
+            console.log(conversation_created);
             this.onConversationCreateListener?.(conversation_created);
             return;
           }
@@ -160,12 +161,18 @@ class Api {
         user_login: data.token
           ? {
               token: data.token,
-              deviceId: getBrowserFingerprint({ enableScreen: false }),
+              deviceId: getBrowserFingerprint({
+                enableScreen: false,
+                hardwareOnly: true,
+              }),
             }
           : {
               login: data.login,
               password: data.password,
-              deviceId: getBrowserFingerprint({ enableScreen: false }),
+              deviceId: getBrowserFingerprint({
+                enableScreen: false,
+                hardwareOnly: true,
+              }),
             },
         id: getUniqueId("userLogin"),
       },
@@ -499,6 +506,7 @@ class Api {
           web_key_p256dh: data.web_key_p256dh,
           device_udid: getBrowserFingerprint({
             enableScreen: false,
+            hardwareOnly: true,
           })?.toString(),
         },
         id: getUniqueId("pushSubscriptionCreate"),
@@ -515,6 +523,7 @@ class Api {
         push_subscription_delete: {
           device_udid: getBrowserFingerprint({
             enableScreen: false,
+            hardwareOnly: true,
           })?.toString(),
         },
         id: getUniqueId("pushSubscriptionDelete"),
