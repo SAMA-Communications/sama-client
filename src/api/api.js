@@ -160,12 +160,12 @@ class Api {
         user_login: data.token
           ? {
               token: data.token,
-              deviceId: getBrowserFingerprint(true),
+              deviceId: getBrowserFingerprint({ enableScreen: false }),
             }
           : {
               login: data.login,
               password: data.password,
-              deviceId: getBrowserFingerprint(true),
+              deviceId: getBrowserFingerprint({ enableScreen: false }),
             },
         id: getUniqueId("userLogin"),
       },
@@ -497,7 +497,9 @@ class Api {
           web_endpoint: data.web_endpoint,
           web_key_auth: data.web_key_auth,
           web_key_p256dh: data.web_key_p256dh,
-          device_udid: getBrowserFingerprint(true)?.toString(),
+          device_udid: getBrowserFingerprint({
+            enableScreen: false,
+          })?.toString(),
         },
         id: getUniqueId("pushSubscriptionCreate"),
       },
@@ -511,7 +513,9 @@ class Api {
     const requestData = {
       request: {
         push_subscription_delete: {
-          device_udid: getBrowserFingerprint(true)?.toString(),
+          device_udid: getBrowserFingerprint({
+            enableScreen: false,
+          })?.toString(),
         },
         id: getUniqueId("pushSubscriptionDelete"),
       },
