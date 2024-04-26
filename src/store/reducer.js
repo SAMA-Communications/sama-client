@@ -30,14 +30,14 @@ const rootReducer = (state, action) => {
     const {
       isMobileView,
       isTabletView,
-      isTabInFocusReducer,
+      isTabInFocus,
       networkState,
       currentUser,
     } = state;
     state = {
       isMobileView,
       isTabletView,
-      isTabInFocusReducer,
+      isTabInFocus,
       networkState,
       currentUser,
     };
