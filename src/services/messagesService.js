@@ -67,7 +67,7 @@ class MessagesService {
         store.dispatch(
           upsertChat({
             _id: message.cid,
-            participants: [...conv.participants, user._id],
+            participants: [...(conv.participants || []), user._id],
           })
         );
       }
