@@ -91,11 +91,12 @@ export const conversations = createSlice({
         _id: cid,
         messagesIds: [msg._id],
         last_message: msg,
-        unread_messages_count: countOfNewMessages || 1,
         updated_at: new Date(msg.t * 1000).toISOString(),
       };
 
       if (!conv) {
+        countOfNewMessages &&
+          (updateParams.unread_messages_count = countOfNewMessages);
         conversationsAdapter.upsertOne(state, updateParams);
         return;
       }

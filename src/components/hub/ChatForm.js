@@ -37,11 +37,11 @@ export default function ChatForm() {
   const chatMessagesBlock = useRef();
   const [files, setFiles] = useState([]);
 
-  const closeForm = (event) => {
+  const closeForm = (e) => {
     const { pathname, hash } = location;
 
-    if (event && event.stopPropagation) {
-      event.stopPropagation();
+    if (e && e.stopPropagation) {
+      e.stopPropagation();
     }
 
     if (!selectedCID) {
@@ -60,7 +60,6 @@ export default function ChatForm() {
     }
 
     if (conversations[selectedCID].unread_messages_count > 0) {
-      console.log(conversations[selectedCID]);
       dispatch(clearCountOfUnreadMessages(selectedCID));
       api.markConversationAsRead({ cid: selectedCID });
     }
