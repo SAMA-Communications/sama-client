@@ -74,6 +74,15 @@ export default function App() {
       }
       dispatch(setClicked(false));
     });
+    window.addEventListener("popstate", () => {
+      if (history.location.pathname === "/authorization") {
+        const token = localStorage.getItem("sessionId");
+        autoLoginService.userLogin(token);
+      }
+    });
+
+    const handleClick = () => dispatch(setClicked(false));
+    document.addEventListener("click", handleClick);
 
     dispatch(setIsTabInFocus(true));
     dispatch(
@@ -95,15 +104,9 @@ export default function App() {
       localStorage.removeItem("sessionId");
       navigateTo("/authorization");
     }
-  }, []);
 
-  useEffect(() => {
-    const handleClick = () => dispatch(setClicked(false));
-    document.addEventListener("click", handleClick);
-    document.addEventListener("popstate", handleClick);
     return () => {
       document.removeEventListener("click", handleClick);
-      document.removeEventListener("popstate", handleClick);
     };
   }, []);
 
