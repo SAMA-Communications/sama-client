@@ -73,6 +73,12 @@ export const conversations = createSlice({
       if (!state.entities) {
         state.entities = {};
       }
+
+      const { messagesIds, unread_messages_count } =
+        state.entities[conversation._id] || {};
+      messagesIds && delete conversation.messagesIds;
+      unread_messages_count && delete conversation.unread_messages_count;
+
       conversationsAdapter.upsertOne(state, conversation);
     },
     removeChat: conversationsAdapter.removeOne,
@@ -81,9 +87,20 @@ export const conversations = createSlice({
       const { cid, msg, resaveLastMessageId, countOfNewMessages } = payload;
       const conv = state.entities[cid];
 
+      const updateParams = {
+        _id: cid,
+        messagesIds: [msg._id],
+        last_message: msg,
+        updated_at: new Date(msg.t * 1000).toISOString(),
+      };
+
       if (!conv) {
+        countOfNewMessages &&
+          (updateParams.unread_messages_count = countOfNewMessages);
+        conversationsAdapter.upsertOne(state, updateParams);
         return;
       }
+
       let mids = [...(conv?.messagesIds || [])];
 
       if (resaveLastMessageId) {
@@ -92,12 +109,8 @@ export const conversations = createSlice({
           mids.splice(msgIndes, 1);
         }
       }
-      const updateParams = {
-        _id: cid,
-        messagesIds: [...mids, msg._id],
-        last_message: msg,
-        updated_at: new Date(msg.t * 1000).toISOString(),
-      };
+
+      updateParams.messagesIds = [...mids, msg._id];
       if (countOfNewMessages) {
         updateParams.unread_messages_count =
           conv.unread_messages_count + countOfNewMessages;
@@ -140,7 +153,13 @@ export const conversations = createSlice({
     },
     markConversationAsRead: (state, { payload }) => {
       const { cid, mid } = payload;
-      const lastMessageField = state.entities[cid].last_message;
+
+      const conv = state.entities[cid];
+      if (!conv) {
+        return;
+      }
+
+      const lastMessageField = conv.last_message;
       mid === lastMessageField._id &&
         conversationsAdapter.upsertOne(state, {
           _id: cid,

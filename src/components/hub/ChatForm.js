@@ -37,11 +37,11 @@ export default function ChatForm() {
   const chatMessagesBlock = useRef();
   const [files, setFiles] = useState([]);
 
-  const closeForm = (event) => {
+  const closeForm = (e) => {
     const { pathname, hash } = location;
 
-    if (event && event.stopPropagation) {
-      event.stopPropagation();
+    if (e && e.stopPropagation) {
+      e.stopPropagation();
     }
 
     if (!selectedCID) {
