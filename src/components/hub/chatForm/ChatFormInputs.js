@@ -1,20 +1,21 @@
 import MessageInput from "@components/hub/elements/MessageInput";
 import messagesService from "@services/messagesService";
+import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import {
   addMessage,
-  removeMessage,
   selectActiveConversationMessages,
 } from "@store/values/Messages";
 import {
   getConverastionById,
+  removeChat,
   setLastMessageField,
   updateLastMessageField,
-  upsertChat,
 } from "@store/values/Conversations";
+import { getNetworkState } from "@store/values/NetworkState";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
-import { getNetworkState } from "@store/values/NetworkState";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -82,6 +83,12 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
           msg: messages[messages.length - 1],
         })
       );
+
+      if (e.status === 403) {
+        dispatch(removeChat(selectedCID));
+        dispatch(setSelectedConversation({}));
+        navigateTo("/");
+      }
       return;
     }
 

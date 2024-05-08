@@ -14,6 +14,7 @@ import {
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import {
   markConversationAsRead,
+  removeChat,
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
@@ -96,9 +97,10 @@ class MessagesService {
   }
 
   async syncData() {
+    const cid = this.currentChatId;
     api
       .messageList({
-        cid: this.currentChatId,
+        cid,
         limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
       })
       .then(async (arr) => {
@@ -161,12 +163,11 @@ class MessagesService {
             );
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        store.dispatch(removeChat(cid));
         store.dispatch(setSelectedConversation({}));
         navigateTo("/");
       });
-    console.log("syncData");
   }
 
   async sendMessage(message) {
