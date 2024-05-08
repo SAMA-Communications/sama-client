@@ -114,6 +114,7 @@ export default function MessagesList({ scrollRef }) {
     }, 300);
   }, []);
 
+  console.log(messages);
   return (
     <InfiniteScroll
       ref={scrollRef}

@@ -10,7 +10,8 @@ class Api {
     this.baseUrl = baseUrl;
     this.socket = null;
     this.curerntUserId = null;
-    this.responsesPromises = {};
+    this.responsesPromises = () => {};
+    this.rejectedPromises = {};
     this.onMessageListener = null;
     this.onMessageStatusListener = null;
     this.onUserActivityListener = null;
@@ -72,6 +73,10 @@ class Api {
         }
 
         if (message.message) {
+          if (message.message.error) {
+            this.rejectedPromises(message.message.error);
+            return;
+          }
           if (this.onMessageListener) {
             this.onMessageListener(message.message);
           }
@@ -292,6 +297,7 @@ class Api {
         },
       };
       this.responsesPromises[requestData.message.id] = resolve;
+      this.rejectedPromises = reject;
       this.socket.send(JSON.stringify(requestData));
       console.log("[socket.send]", requestData);
     });

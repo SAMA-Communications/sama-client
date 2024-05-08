@@ -3,12 +3,14 @@ import messagesService from "@services/messagesService";
 import showCustomAlert from "@utils/show_alert";
 import {
   addMessage,
+  removeMessage,
   selectActiveConversationMessages,
 } from "@store/values/Messages";
 import {
   getConverastionById,
   setLastMessageField,
   updateLastMessageField,
+  upsertChat,
 } from "@store/values/Conversations";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
@@ -70,7 +72,10 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     try {
       await messagesService.sendMessage(mObject);
     } catch (e) {
-      showCustomAlert("The server connection is unavailable.", "warning");
+      showCustomAlert(
+        e.message || "The server connection is unavailable.",
+        "warning"
+      );
       dispatch(
         setLastMessageField({
           cid: selectedCID,

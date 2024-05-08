@@ -63,7 +63,7 @@ export default function ChatForm() {
       dispatch(clearCountOfUnreadMessages(selectedCID));
       api.markConversationAsRead({ cid: selectedCID });
     }
-  }, [conversations[selectedCID], selectedCID]);
+  }, [conversations, selectedCID]);
 
   useEffect(() => {
     if (isTabInFocus === true) {
