@@ -32,7 +32,7 @@ export default function UserProfile() {
   const { login, email, phone, first_name, last_name } = currentUser || {};
 
   useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
-  useKeyDown(KEY_CODES.ENTER, () =>
+  useKeyDown(KEY_CODES.ESCAPE, () =>
     removeAndNavigateSubLink(pathname + hash, "/profile")
   );
 
