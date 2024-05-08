@@ -41,7 +41,6 @@ export const messages = createSlice({
 export const selectActiveConversationMessages = createSelector(
   [getConverastionById, selectMessagesEntities],
   (conversation, messages) => {
-    console.log(conversation);
     return conversation?.messagesIds?.map((id) => messages[id]);
   }
 );

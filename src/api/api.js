@@ -10,8 +10,7 @@ class Api {
     this.baseUrl = baseUrl;
     this.socket = null;
     this.curerntUserId = null;
-    this.responsesPromises = () => {};
-    this.rejectedPromises = {};
+    this.responsesPromises = {};
     this.onMessageListener = null;
     this.onMessageStatusListener = null;
     this.onUserActivityListener = null;
@@ -74,7 +73,9 @@ class Api {
 
         if (message.message) {
           if (message.message.error) {
-            this.rejectedPromises(message.message.error);
+            this.responsesPromises[
+              Object.keys(this.responsesPromises).slice(-1)[0]
+            ].reject(message.message.error);
             return;
           }
           if (this.onMessageListener) {
@@ -88,7 +89,7 @@ class Api {
 
         if (message.ask) {
           const mid = message.ask.mid;
-          this.responsesPromises[mid](message.ask);
+          this.responsesPromises[mid].resolve(message.ask);
           delete this.responsesPromises[mid];
           return;
         }
@@ -106,9 +107,10 @@ class Api {
             this.responsesPromises[responseId];
 
           if (response.error) {
-            reject(response.error);
+            response.error.status === 403
+              ? this.responsesPromises[responseId].reject(response.error)
+              : reject(response.error);
           } else {
-            // console.log(response, resObjKey);
             resObjKey
               ? response[resObjKey]
                 ? resolve(response[resObjKey])
@@ -296,8 +298,7 @@ class Api {
           attachments: data.attachments,
         },
       };
-      this.responsesPromises[requestData.message.id] = resolve;
-      this.rejectedPromises = reject;
+      this.responsesPromises[requestData.message.id] = { resolve, reject };
       this.socket.send(JSON.stringify(requestData));
       console.log("[socket.send]", requestData);
     });

@@ -161,10 +161,12 @@ class MessagesService {
             );
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         store.dispatch(setSelectedConversation({}));
         navigateTo("/");
       });
+    console.log("syncData");
   }
 
   async sendMessage(message) {
