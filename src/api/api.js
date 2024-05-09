@@ -43,7 +43,6 @@ class Api {
           } = message.system_message;
 
           if (conversation_created) {
-            console.log(conversation_created);
             this.onConversationCreateListener?.(conversation_created);
             return;
           }
