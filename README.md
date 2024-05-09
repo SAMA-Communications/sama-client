@@ -1,6 +1,6 @@
 # SAMA - Simple but Advanced Messaging Alternative - Client app 
 
-<img width="1282" alt="Screenshot 2023-01-13 at 12 54 16" src="https://user-images.githubusercontent.com/70977170/212303479-06e2169f-a609-4fa2-9ef0-7bf2f8fb68a6.png">
+<img width="1282" alt="ClientImage" src="https://github.com/SAMA-Communications/sama-client/assets/98953475/fe8dfd1c-462d-46d2-aa24-5792b36e23f2">
 
 ## Overview 
 

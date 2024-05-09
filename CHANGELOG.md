@@ -1,5 +1,42 @@
 # Changelog
 
+## 1.0.0
+
+### Improvements
+
+- Brand new UI
+- Added loads in the places of data download
+- Added skeleton for basic client windows
+- Added support for links in the text of messages
+- Added support for automatic login after registration
+- Added a pop-up window for requesting notifications
+- Implemented support for third-party (custom) protocols for the server architecture
+- Improved screen and logic for editing user or chat data
+- Implemented the maximum speed of activity status exchange between users
+- Implemented a list of users in group chat
+- Improved support for heic image format
+- Implemented the ability to add or remove users from the chat
+- Improved chat and user account deletion logic
+- Improved synchronisation of active actions (adding/removing a user from the chat, etc.)
+- Improved optimisation of the interface for different screen sizes
+- Unlocked sending up to 10 files at once
+- Updated icons all over the client
+- Fixed many inaccuracies and offsets of small objects
+
+### Important fixes
+
+- Fixed the display of the size of atchments
+- Fixed distortion of the size of attributes when loading
+- Fixed display of images in chat with different resolutions
+- Fixed a bug with double notifications when the user is logged in
+- Fixed the loss of focus from the input when sending messages and reloading the page
+- Fixed permanent user logout at any screen resizing
+- Fixed the loss of subscription to user activity after the rack reload
+- Fixed incorrect redirect to chat when clicking on a notification
+- Fixed redirect to pages when using the 'Back' and 'Next' system buttons
+- Fixed an incorrect change in the size of the inbox for message text
+- Blocked the ability to create a chat with yourself
+
 ## 0.5.1
 
 ### Updated
