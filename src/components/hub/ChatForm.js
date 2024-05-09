@@ -3,6 +3,7 @@ import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
 import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
 import api from "@api/api";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import { getIsTabInFocus } from "@store/values/IsTabInFocus";
 import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
 import {
   clearCountOfUnreadMessages,
@@ -15,7 +16,7 @@ import {
 } from "@store/values/SelectedConversation";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { setClicked } from "@store/values/ContextMenu";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -27,6 +28,7 @@ export default function ChatForm() {
   const location = useLocation();
 
   const isUserLogin = useSelector(getUserIsLoggedIn);
+  const isTabInFocus = useSelector(getIsTabInFocus);
 
   const conversations = useSelector(selectConversationsEntities);
   const selectedConversation = useSelector(getConverastionById);
@@ -35,11 +37,11 @@ export default function ChatForm() {
   const chatMessagesBlock = useRef();
   const [files, setFiles] = useState([]);
 
-  const closeForm = (event) => {
+  const closeForm = (e) => {
     const { pathname, hash } = location;
 
-    if (event && event.stopPropagation) {
-      event.stopPropagation();
+    if (e && e.stopPropagation) {
+      e.stopPropagation();
     }
 
     if (!selectedCID) {
@@ -52,8 +54,26 @@ export default function ChatForm() {
     removeAndNavigateLastSection(pathname + hash);
   };
 
-  // check on mobile key code of swiped-left action
+  const readMessage = useCallback(() => {
+    if (!conversations[selectedCID] || !document.hasFocus()) {
+      return;
+    }
+
+    if (conversations[selectedCID].unread_messages_count > 0) {
+      dispatch(clearCountOfUnreadMessages(selectedCID));
+      api.markConversationAsRead({ cid: selectedCID });
+    }
+  }, [conversations, selectedCID]);
+
   useEffect(() => {
+    if (isTabInFocus === true) {
+      readMessage();
+    }
+  }, [isTabInFocus, readMessage]);
+
+  useEffect(() => {
+    files.length && setFiles([]);
+
     document.addEventListener("swiped-left", closeForm);
     document.addEventListener("swiped-right", closeForm);
 
@@ -72,19 +92,6 @@ export default function ChatForm() {
 
     dispatch(setSelectedConversation({ id: hash.slice(1).split("/")[0] }));
   }, [location, isUserLogin]);
-
-  useLayoutEffect(() => {
-    if (!selectedCID) {
-      return;
-    }
-
-    if (conversations[selectedCID].unread_messages_count > 0) {
-      dispatch(clearCountOfUnreadMessages(selectedCID));
-      api.markConversationAsRead({ cid: selectedCID });
-    }
-
-    files.length && setFiles([]);
-  }, [selectedCID, conversations]);
 
   useKeyDown(KEY_CODES.ESCAPE, closeForm);
 

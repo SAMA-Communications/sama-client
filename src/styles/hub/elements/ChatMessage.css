@@ -9,6 +9,13 @@
   gap: 16px;
 }
 
+.message__container--my .message-body-link {
+  color: var(--color-accent-light);
+}
+.message-body-link {
+  color: var(--color-accent-dark);
+}
+
 .message-photo {
   min-width: 46px;
 

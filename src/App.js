@@ -13,6 +13,7 @@ import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView, setIsTabletView } from "@store/values/IsTabletView";
 import { history } from "@helpers/history";
 import { selectIsClicked, setClicked } from "@store/values/ContextMenu";
+import { setIsTabInFocus } from "@store/values/IsTabInFocus";
 import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -40,6 +41,9 @@ export default function App() {
   const isTabletViewRef = useRef(isTabletView);
 
   useEffect(() => {
+    window.onfocus = () => dispatch(setIsTabInFocus(true));
+    window.onblur = () => dispatch(setIsTabInFocus(false));
+
     window.addEventListener("offline", () =>
       dispatch(updateNetworkState(false))
     );
@@ -70,7 +74,17 @@ export default function App() {
       }
       dispatch(setClicked(false));
     });
+    window.addEventListener("popstate", () => {
+      if (history.location.pathname === "/authorization") {
+        const token = localStorage.getItem("sessionId");
+        autoLoginService.userLogin(token);
+      }
+    });
 
+    const handleClick = () => dispatch(setClicked(false));
+    document.addEventListener("click", handleClick);
+
+    dispatch(setIsTabInFocus(true));
     dispatch(
       setIsMobileView(window.innerWidth <= globalConstants.mobileViewWidth)
     );
@@ -90,15 +104,9 @@ export default function App() {
       localStorage.removeItem("sessionId");
       navigateTo("/authorization");
     }
-  }, []);
 
-  useEffect(() => {
-    const handleClick = () => dispatch(setClicked(false));
-    document.addEventListener("click", handleClick);
-    document.addEventListener("popstate", handleClick);
     return () => {
       document.removeEventListener("click", handleClick);
-      document.removeEventListener("popstate", handleClick);
     };
   }, []);
 

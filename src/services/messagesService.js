@@ -14,6 +14,7 @@ import {
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import {
   markConversationAsRead,
+  removeChat,
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
@@ -49,7 +50,7 @@ class MessagesService {
       store.dispatch(addMessage(message));
 
       let countOfNewMessages = 0;
-      message.cid === this.currentChatId
+      message.cid === this.currentChatId && document.hasFocus()
         ? api.markConversationAsRead({ cid: this.currentChatId })
         : (countOfNewMessages = message.from === userInfo._id ? 0 : 1);
       store.dispatch(
@@ -67,7 +68,7 @@ class MessagesService {
         store.dispatch(
           upsertChat({
             _id: message.cid,
-            participants: [...conv.participants, user._id],
+            participants: [...(conv.participants || []), user._id],
           })
         );
       }
@@ -96,9 +97,10 @@ class MessagesService {
   }
 
   async syncData() {
+    const cid = this.currentChatId;
     api
       .messageList({
-        cid: this.currentChatId,
+        cid,
         limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
       })
       .then(async (arr) => {
@@ -162,6 +164,7 @@ class MessagesService {
         }
       })
       .catch(() => {
+        store.dispatch(removeChat(cid));
         store.dispatch(setSelectedConversation({}));
         navigateTo("/");
       });

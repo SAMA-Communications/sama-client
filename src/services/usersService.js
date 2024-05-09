@@ -18,7 +18,7 @@ class UsersService {
     const { login, password } = data;
 
     if (!login?.length || !password?.length) {
-      throw new Error("The username and password fields must not be empty.");
+      throw new Error("Username and Password cannot be blank.");
     }
 
     if (!validateLogin(login)) {
@@ -47,7 +47,7 @@ class UsersService {
     const { login, password } = data;
 
     if (!login?.length || !password?.length) {
-      throw new Error("The username and password fields must not be empty.");
+      throw new Error("Username and Password cannot be blank.");
     }
 
     if (!validateLogin(login)) {
