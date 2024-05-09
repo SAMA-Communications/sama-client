@@ -4,6 +4,7 @@
 
 ### Improvements
 
+- Brand new UI
 - Added loads in the places of data download
 - Added skeleton for basic client windows
 - Added support for links in the text of messages
