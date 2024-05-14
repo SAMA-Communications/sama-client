@@ -73,9 +73,14 @@ export default function NavigationLine() {
           <span className="fcc">{getUserInitials()}</span>
         </div>
         <div
-          onClick={() =>
-            navigateTo(`/${isTabletView || isMobileView ? "" : hash || ""}`)
-          }
+          onClick={() => {
+            if (isTabletView || isMobileView) {
+              dispatch(setSelectedConversation({}));
+              navigateTo(`/`);
+            } else {
+              navigateTo(`/${hash || ""}`);
+            }
+          }}
           className={`menu__list fcc ${isChatListActive}`}
         >
           <List />
