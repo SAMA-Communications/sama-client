@@ -157,23 +157,51 @@
 .auth-form__link:hover {
   color: var(--color-accent-light);
 }
+
 .auth-form__checkbox {
   gap: 5px;
 
   cursor: pointer;
 }
 .auth-form__checkbox > input {
-  width: 18px;
-  height: 18px;
+  display: none;
 
-  accent-color: var(--color-hover-light);
+  user-select: none;
+}
 
-  cursor: pointer;
+.auth-form__checkbox > input:checked + label:before {
+  content: "\2713";
+
+  color: var(--color-black);
+
+  text-align: center;
+  font-size: 12px;
+
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 .auth-form__checkbox > label {
+  padding-left: 25px;
+
   color: var(--color-text-hover);
 
   cursor: pointer;
+
+  user-select: none;
+}
+.auth-form__checkbox > label:before {
+  content: "";
+  display: inline-block;
+
+  width: 18px;
+  height: 18px;
+
+  position: absolute;
+  left: 0;
+
+  border-radius: 3px;
+  background-color: var(--color-accent-light);
+
+  box-shadow: inset 0 0 7px -3px var(--color-black-50);
 }
 
 .login-form__mt-49 {

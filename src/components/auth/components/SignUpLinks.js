@@ -70,7 +70,7 @@ export default function SignUpLinks({ changePage, content }) {
           checked={isLogin}
           onChange={() => setIsLogin((prev) => !prev)}
         />
-        <label htmlFor="isLogin">* Sign in automatically as a new user</label>
+        <label htmlFor="isLogin">* Sign in automatically</label>
       </div>
       <div className="authorization__footer">
         Already have an account?&nbsp;
