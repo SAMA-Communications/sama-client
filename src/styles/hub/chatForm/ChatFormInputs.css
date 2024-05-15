@@ -28,6 +28,7 @@
 }
 #inputMessage:disabled {
   padding: 18px;
+  font-weight: 300;
 }
 #inputMessage:focus {
   outline: none;
