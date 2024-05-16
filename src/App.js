@@ -12,6 +12,7 @@ import { Suspense, lazy, useEffect, useRef } from "react";
 import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView, setIsTabletView } from "@store/values/IsTabletView";
 import { history } from "@helpers/history";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { selectIsClicked, setClicked } from "@store/values/ContextMenu";
 import { setIsTabInFocus } from "@store/values/IsTabInFocus";
 import { updateNetworkState } from "@store/values/NetworkState";
@@ -75,6 +76,9 @@ export default function App() {
       dispatch(setClicked(false));
     });
     window.addEventListener("popstate", () => {
+      if (!history.location.hash.includes("#")) {
+        dispatch(setSelectedConversation({}));
+      }
       if (history.location.pathname === "/authorization") {
         const token = localStorage.getItem("sessionId");
         autoLoginService.userLogin(token);
