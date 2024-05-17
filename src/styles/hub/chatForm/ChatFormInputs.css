@@ -28,6 +28,8 @@
 }
 #inputMessage:disabled {
   padding: 18px;
+  -webkit-text-fill-color: var(--color-black);
+  font-weight: 300;
 }
 #inputMessage:focus {
   outline: none;
