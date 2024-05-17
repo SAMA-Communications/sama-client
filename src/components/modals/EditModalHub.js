@@ -71,6 +71,7 @@ export default function EditModalHub() {
       delete updatedChat?.participants;
       dispatch(upsertChat(updatedChat));
     } else {
+      content.email && (content.email = content.email.toLocaleLowerCase());
       const newUserObject = await usersService.edit(content, type);
       if (!validateDataAndShowAlert(newUserObject)) {
         return;
