@@ -89,12 +89,13 @@
 }
 
 .content-top__name {
-  color: var(--color-black);
-  font-weight: 500;
-  font-size: var(--font-h6);
+  color: var(--color-black) !important;
+  font-weight: 500 !important;
+  font-size: var(--font-h6) !important;
 
   overflow: hidden;
   text-overflow: ellipsis;
+  text-decoration: none !important;
   white-space: nowrap;
 }
 .content-top__time {
