@@ -110,7 +110,6 @@ export const conversations = createSlice({
         }
       }
 
-      console.log(conv.unread_messages_count);
       if (countOfNewMessages) {
         updateParams.unread_messages_count =
           (conv.unread_messages_count || 0) + countOfNewMessages;
