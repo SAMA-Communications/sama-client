@@ -110,10 +110,10 @@ export const conversations = createSlice({
         }
       }
 
-      updateParams.messagesIds = [...mids, msg._id];
+      console.log(conv.unread_messages_count);
       if (countOfNewMessages) {
         updateParams.unread_messages_count =
-          conv.unread_messages_count + countOfNewMessages;
+          (conv.unread_messages_count || 0) + countOfNewMessages;
       }
 
       conversationsAdapter.upsertOne(state, updateParams);
