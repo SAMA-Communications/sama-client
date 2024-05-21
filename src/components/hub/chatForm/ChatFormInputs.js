@@ -93,7 +93,8 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     }
 
     setIsSendMessageDisable(false);
-    chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
+    // chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
+    window.scrollTo(0, document.body.scrollHeight);
     inputRef.current.style.height = `55px`;
   };
 
