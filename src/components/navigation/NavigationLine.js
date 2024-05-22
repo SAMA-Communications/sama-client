@@ -3,6 +3,7 @@ import getUserInitials from "@utils/user/get_user_initials";
 import navigateTo from "@utils/navigation/navigate_to";
 import usersService from "@services/usersService";
 import { getIsTabletView } from "@store/values/IsTabletView";
+import { getIsMobileView } from "@store/values/IsMobileView";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
@@ -23,6 +24,7 @@ export default function NavigationLine() {
   const { pathname, hash } = useLocation();
 
   const isTabletView = useSelector(getIsTabletView);
+  const isMobileView = useSelector(getIsMobileView);
 
   const sendLogout = async () => {
     try {
@@ -71,7 +73,14 @@ export default function NavigationLine() {
           <span className="fcc">{getUserInitials()}</span>
         </div>
         <div
-          onClick={() => navigateTo(`/${hash || ""}`)}
+          onClick={() => {
+            if (isTabletView || isMobileView) {
+              dispatch(setSelectedConversation({}));
+              navigateTo(`/`);
+            } else {
+              navigateTo(`/${hash || ""}`);
+            }
+          }}
           className={`menu__list fcc ${isChatListActive}`}
         >
           <List />

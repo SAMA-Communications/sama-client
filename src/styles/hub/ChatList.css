@@ -95,6 +95,7 @@
 
   overflow: hidden;
   text-overflow: ellipsis;
+  text-decoration: none;
   white-space: nowrap;
 }
 .content-top__time {

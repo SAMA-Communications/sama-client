@@ -38,9 +38,9 @@ async function showLocalNotification(pushMessage) {
       : "";
 
   const title =
-    conversation?.type === "u"
-      ? userLogin
-      : `${userLogin} | ${conversation?.name}`;
+    conversation?.name && conversation?.type === "g"
+      ? `${userLogin} | ${conversation?.name}`
+      : userLogin;
 
   const bodyCrop = body.length > 75 ? body.slice(0, 75) + "..." : body;
   const notificationMessage = {

@@ -29,14 +29,18 @@ export default function AuthorizationHub() {
             onClick={() => setPage("login")}
           >
             Login
-            <div className={`title__bottom-line${isLoginPage ? "" : "gray"}`} />
+            <div
+              className={`title__bottom-line${isLoginPage ? "" : "--none"}`}
+            />
           </div>
           <div
             className={isLoginPage ? "gray" : ""}
             onClick={() => setPage("signup")}
           >
             SignUp
-            <div className={`title__bottom-line${isLoginPage ? "gray" : ""}`} />
+            <div
+              className={`title__bottom-line${isLoginPage ? "--none" : ""}`}
+            />
           </div>
         </div>
         <div className="authorization__form">
