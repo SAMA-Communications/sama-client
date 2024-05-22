@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.0
+
+### Improvements
+
+- Added support for '+' to enter mobile phone number
+- Improved keyboard position after sending a chat message
+- Minor improvements to the design and positioning of elements
+
+### Important fixes
+
+- Fixed a bug with counting the count of new notifications after 'swipe' to mobile
+- Fixed erroneous addition of 'undefined' in new chat notification
+- Fixed the new message counter for new chats
+
 ## 1.0.0
 
 ### Improvements
