@@ -136,7 +136,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
         <BackBtn className="header-back" onClick={closeFormFunc} />
       ) : null}
       <div className="header-content">
-        <div className="content__name">{viewChatName}</div>
+        <div className="content__name">6&zwnj;{viewChatName}</div>
         <div className="content__activity">{viewStatusActivity}</div>
       </div>
       <div
