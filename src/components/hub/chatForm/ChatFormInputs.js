@@ -34,14 +34,14 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   const inputRef = useRef(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
-  // window.onresize = function () {
-  //   if (inputRef.current) {
-  //     inputRef.current.scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "end",
-  //     });
-  //   }
-  // };
+  window.onresize = function () {
+    if (inputRef.current) {
+      inputRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+    }
+  };
 
   const createAndSendMessage = async () => {
     if (!connectState) {
@@ -72,7 +72,6 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
 
     try {
       await messagesService.sendMessage(mObject);
-      inputRef.current.focus(); //care..
     } catch (e) {
       showCustomAlert(
         e.message || "The server connection is unavailable.",
@@ -95,6 +94,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
 
     setIsSendMessageDisable(false);
     chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
+    inputRef.current.focus(); //care..
     // window.scrollTo(0, document.body.scrollHeight - 200);
     inputRef.current.style.height = `55px`;
   };
