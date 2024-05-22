@@ -51,7 +51,7 @@ export default function ChatMessage({
         )}
         {prev ? null : (
           <div className="content__uname">
-            {getUserFullName(sender) || "Deleted account"}
+            6&zwnj;{getUserFullName(sender) || "Deleted account"}
           </div>
         )}
         <div
