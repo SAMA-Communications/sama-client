@@ -34,7 +34,7 @@ export default function ConversationItem({
       <div className="box__content">
         <div className="content-top">
           <p className="content-top__name">
-            6&zwnj;{chatName || "Deleted account"}
+            &zwnj;{chatName || "Deleted account"}
           </p>
           <div className="content-top__time">{tView}</div>
         </div>
