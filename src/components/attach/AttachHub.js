@@ -306,7 +306,7 @@ export default function AttachHub() {
           <CustomScrollBar
             customId={"attach-view__container"}
             autoHeight={true}
-            autoHeightMax={460}
+            autoHeightMax={"min(460px, calc(100svh - 300px))"}
           >
             {attachListView}
           </CustomScrollBar>
