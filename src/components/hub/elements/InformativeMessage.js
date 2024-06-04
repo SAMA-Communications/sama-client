@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 export default function InformativeMessage({
   text,
   params,
+  isUserExistInStore,
   isPrevMesssageUsers,
 }) {
   const { pathname, hash } = useLocation();
@@ -11,12 +12,14 @@ export default function InformativeMessage({
   return (
     <div
       className={
-        isPrevMesssageUsers
-          ? "informative-message mt-10"
-          : "informative-message"
+        "informative-message" +
+        (isUserExistInStore ? "" : "--disabled") +
+        (isPrevMesssageUsers ? " mt-10" : "")
       }
       onClick={() =>
-        addSuffix(pathname + hash, `/user?uid=${params?.user?._id}`)
+        isUserExistInStore
+          ? addSuffix(pathname + hash, `/user?uid=${params?.user?._id}`)
+          : {}
       }
     >
       {text}

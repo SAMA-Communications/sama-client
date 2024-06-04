@@ -127,6 +127,7 @@ export default function MessagesList({ scrollRef }) {
         msg.x?.type ? (
           <InformativeMessage
             key={msg._id}
+            isUserExistInStore={!!participants[msg.x.user._id]}
             isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
             text={msg.body}
             params={msg.x}
