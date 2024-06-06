@@ -72,7 +72,11 @@ class MessagesService {
           })
         );
       }
-      if (conv && message.x?.type === "removed_participant") {
+      if (
+        conv &&
+        (message.x?.type === "removed_participant" ||
+          message.x?.type === "left_participants")
+      ) {
         const user = message.x.user;
         store.dispatch(
           upsertChat({
