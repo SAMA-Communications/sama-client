@@ -8,9 +8,12 @@ import {
   selectActiveConversationMessages,
   upsertMessages,
 } from "@store/values/Messages";
+import {
+  addUser,
+  selectParticipantsEntities,
+} from "@store/values/Participants";
 import { getConverastionById, upsertChat } from "@store/values/Conversations";
 import { selectCurrentUser } from "@store/values/CurrentUser";
-import { selectParticipantsEntities } from "@store/values/Participants";
 import { useCallback, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -114,6 +117,21 @@ export default function MessagesList({ scrollRef }) {
     }, 300);
   }, []);
 
+  const checkAndLoadParticipant = async (uid) => {
+    if (participants[uid]) {
+      return true;
+    }
+
+    const users = await api.getUsersByIds({ ids: [uid] });
+    const user = users.at(0);
+    if (user) {
+      dispatch(addUser(user));
+      return true;
+    }
+
+    return !!participants[uid];
+  };
+
   return (
     <InfiniteScroll
       ref={scrollRef}
@@ -127,7 +145,7 @@ export default function MessagesList({ scrollRef }) {
         msg.x?.type ? (
           <InformativeMessage
             key={msg._id}
-            isUserExistInStore={!!participants[msg.x.user._id]}
+            isUserExistInStore={() => checkAndLoadParticipant(msg.x.user._id)}
             isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
             text={msg.body}
             params={msg.x}
