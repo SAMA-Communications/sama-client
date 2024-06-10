@@ -1,7 +1,6 @@
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import InfoBox from "@components/info/elements/InfoBox";
 import activityService from "@services/activityService";
-import api from "@api/api";
 import conversationService from "@services/conversationsService";
 import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
 import getUserFullName from "@utils/user/get_user_full_name";
@@ -9,14 +8,11 @@ import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getIsMobileView } from "@store/values/IsMobileView";
-import {
-  addUser,
-  selectParticipantsEntities,
-} from "@store/values/Participants.js";
-import { useDispatch, useSelector } from "react-redux";
+import { selectParticipantsEntities } from "@store/values/Participants.js";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
+import { useSelector } from "react-redux";
 
 import "@styles/info/UserProfile.css";
 
@@ -26,8 +22,6 @@ import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
 
 export default function OtherUserProfile() {
-  const dispatch = useDispatch();
-
   const { pathname, hash, search } = useLocation();
 
   const isMobileView = useSelector(getIsMobileView);
@@ -35,16 +29,7 @@ export default function OtherUserProfile() {
 
   const userObject = useMemo(() => {
     const uid = extractUserIdFromUrl(pathname + hash + search);
-
-    let userInfoFromStore = participants[uid];
-    if (!userInfoFromStore) {
-      api.getUsersByIds({ ids: [uid] }).then((users) => {
-        const user = users.at(0);
-        user && dispatch(addUser(user));
-      });
-    }
-
-    return userInfoFromStore || {};
+    return participants[uid] || {};
   }, [pathname, hash, search, participants]);
   const { _id: userId, login, email, phone } = userObject;
 

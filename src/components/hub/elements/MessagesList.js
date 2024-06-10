@@ -9,12 +9,12 @@ import {
   upsertMessages,
 } from "@store/values/Messages";
 import {
-  addUser,
+  addUsers,
   selectParticipantsEntities,
 } from "@store/values/Participants";
 import { getConverastionById, upsertChat } from "@store/values/Conversations";
 import { selectCurrentUser } from "@store/values/CurrentUser";
-import { useCallback, useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function MessagesList({ scrollRef }) {
@@ -117,20 +117,24 @@ export default function MessagesList({ scrollRef }) {
     }, 300);
   }, []);
 
-  const checkAndLoadParticipant = async (uid) => {
-    if (participants[uid]) {
-      return true;
-    }
+  useEffect(() => {
+    const usersToUpdate = new Set();
 
-    const users = await api.getUsersByIds({ ids: [uid] });
-    const user = users.at(0);
-    if (user) {
-      dispatch(addUser(user));
-      return true;
-    }
+    messages.forEach((msg) => {
+      if (!participants[msg.from]) {
+        usersToUpdate.add(msg.from);
+      }
+      if (msg.x?.user?._id && !participants[msg.x.user._id]) {
+        usersToUpdate.add(msg.x.user._id);
+      }
+    });
 
-    return !!participants[uid];
-  };
+    if (usersToUpdate.size) {
+      api
+        .getUsersByIds({ ids: [...usersToUpdate] })
+        .then((users) => dispatch(addUsers(users)));
+    }
+  }, []);
 
   return (
     <InfiniteScroll
@@ -145,7 +149,7 @@ export default function MessagesList({ scrollRef }) {
         msg.x?.type ? (
           <InformativeMessage
             key={msg._id}
-            isUserExistInStore={() => checkAndLoadParticipant(msg.x.user._id)}
+            isUserExistInStore={!!participants[msg.x.user._id]}
             isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
             text={msg.body}
             params={msg.x}
@@ -154,7 +158,7 @@ export default function MessagesList({ scrollRef }) {
           <ChatMessage
             key={msg._id}
             message={msg}
-            sender={participants[msg.from] || {}}
+            sender={participants[msg.from]}
             currentUserId={currentUser._id}
             isPrevMesssageYours={
               i > 0
