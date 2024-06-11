@@ -42,6 +42,10 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
+    "sync": "npx cap sync",
+    "prepare:build": "npm install && npm run build && npm run sync",
+    "ios": "npx cap run ios",
+    "android": "npx cap run android",
     "ionic:build": "npm run build",
     "ionic:serve": "npm run start"
   },

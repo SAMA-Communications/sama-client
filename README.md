@@ -14,14 +14,14 @@ The whole SAMA stack can be tested using https://app.samacloud.io public cloud.
 
 ## Development
 
-- Make sure you followed SAMA server Development guide first https://github.com/SAMA-Communications/sama-server/blob/main/README.md#development
-- Copy `.env.example` to `.env`.
-- generate VAPID keys via `npx web-push generate-vapid-keys` and set Public Key to `REACT_APP_PUBLIC_VAPID_KEY` in `.env` file
-- `npm install` to install dependencies 
-- `npm run start` to run server
-- access http://localhost:3000 in your browser
+- In order to develop any application with Capacitor, you will need NodeJS 18 or higher installed
 
-There are also other components. Make sure to check [Deploying SAMA chat server stack: a comprehensive guide](https://medium.com/sama-communications/deploying-sama-chat-server-stack-a-comprehensive-guide-294ddb9a2d78)
+> Follow [this](https://capacitorjs.com/docs/getting-started/environment-setup#ios-requirements) guide to make sure you meet iOS requirements
+> Follow [this](https://capacitorjs.com/docs/getting-started/environment-setup#android-requirements) guide to make sure you meet Android requirements
+
+- switch to the "capacitor" branch
+- run `npm run prepare:build`
+- to run ios: `npm run ios` or to run android: `npm run android`
 
 ## License 
 
