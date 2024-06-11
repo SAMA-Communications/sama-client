@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Sama</string>
+    <string name="title_activity_main">Sama</string>
+    <string name="package_name">sama.client</string>
+    <string name="custom_url_scheme">sama.client</string>
+</resources>

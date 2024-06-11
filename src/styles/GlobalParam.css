@@ -69,15 +69,15 @@ a {
 }
 
 body {
-  width: 100dvw;
-  height: 100dvh;
+  width: 100vw;
+  height: 100vh;
 
   background-color: var(--color-bg-dark);
 }
 
 main {
-  width: 100dvw;
-  height: 100dvh;
+  width: 100vw;
+  height: 100vh;
 
   padding: 20px 30px 20px 0;
 
