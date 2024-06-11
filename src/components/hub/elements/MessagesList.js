@@ -26,6 +26,30 @@ export default function MessagesList({ scrollRef }) {
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
+  const updateParticipantsFromMessages = (messageArray) => {
+    messageArray ??= messages;
+    const usersToUpdate = new Set();
+
+    messageArray.forEach((msg) => {
+      if (!participants[msg.from]) {
+        usersToUpdate.add(msg.from);
+      }
+      if (msg.x?.user?._id && !participants[msg.x.user._id]) {
+        usersToUpdate.add(msg.x.user._id);
+      }
+    });
+
+    if (usersToUpdate.size) {
+      api
+        .getUsersByIds({ ids: [...usersToUpdate] })
+        .then((users) => dispatch(addUsers(users)));
+    }
+  };
+
+  useEffect(() => {
+    updateParticipantsFromMessages();
+  }, []);
+
   const needToGetMoreMessage = useRef(true);
   const lastMessageRef = useCallback(() => {
     if (!selectedCID || messages.length === 0) {
@@ -49,6 +73,7 @@ export default function MessagesList({ scrollRef }) {
           messagesIds.length < +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD
         );
 
+        updateParticipantsFromMessages(arr);
         dispatch(addMessages(arr));
         dispatch(
           upsertChat({
@@ -116,25 +141,6 @@ export default function MessagesList({ scrollRef }) {
       });
     }, 300);
   }, []);
-
-  // useEffect(() => {
-  //   const usersToUpdate = new Set();
-
-  //   messages.forEach((msg) => {
-  //     if (!participants[msg.from]) {
-  //       usersToUpdate.add(msg.from);
-  //     }
-  //     if (msg.x?.user?._id && !participants[msg.x.user._id]) {
-  //       usersToUpdate.add(msg.x.user._id);
-  //     }
-  //   });
-
-  //   if (usersToUpdate.size) {
-  //     api
-  //       .getUsersByIds({ ids: [...usersToUpdate] })
-  //       .then((users) => dispatch(addUsers(users)));
-  //   }
-  // }, []);
 
   return (
     <InfiniteScroll

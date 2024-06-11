@@ -51,7 +51,9 @@ export default function OtherUserProfile() {
         removeAndNavigateLastSection(pathname + hash, "/profile");
         showCustomAlert("This user no longer exists.", "warning");
       });
+      return;
     }
+    setUserObject(user);
   }, [pathname, hash, search, participants]);
 
   useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
