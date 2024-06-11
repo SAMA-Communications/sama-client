@@ -16,9 +16,11 @@ import { getConverastionById, upsertChat } from "@store/values/Conversations";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 export default function MessagesList({ scrollRef }) {
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const messages = useSelector(selectActiveConversationMessages);
   const participants = useSelector(selectParticipantsEntities);
@@ -46,9 +48,7 @@ export default function MessagesList({ scrollRef }) {
     }
   };
 
-  useEffect(() => {
-    updateParticipantsFromMessages();
-  }, []);
+  useEffect(() => updateParticipantsFromMessages(), []);
 
   const needToGetMoreMessage = useRef(true);
   const lastMessageRef = useCallback(() => {
@@ -139,8 +139,9 @@ export default function MessagesList({ scrollRef }) {
         behavior: "smooth",
         block: "end",
       });
+      needToGetMoreMessage.current = true;
     }, 300);
-  }, []);
+  }, [location]);
 
   return (
     <InfiniteScroll
