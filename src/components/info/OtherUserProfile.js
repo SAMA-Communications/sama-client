@@ -1,18 +1,23 @@
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import InfoBox from "@components/info/elements/InfoBox";
 import activityService from "@services/activityService";
+import api from "@api/api";
 import conversationService from "@services/conversationsService";
 import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
 import getUserFullName from "@utils/user/get_user_full_name";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
+import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@helpers/keyCodes";
+import {
+  addUser,
+  selectParticipantsEntities,
+} from "@store/values/Participants.js";
 import { getIsMobileView } from "@store/values/IsMobileView";
-import { selectParticipantsEntities } from "@store/values/Participants.js";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useMemo, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
 
 import "@styles/info/UserProfile.css";
 
@@ -22,16 +27,32 @@ import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
 
 export default function OtherUserProfile() {
+  const dispatch = useDispatch();
   const { pathname, hash, search } = useLocation();
 
   const isMobileView = useSelector(getIsMobileView);
   const participants = useSelector(selectParticipantsEntities);
 
-  const userObject = useMemo(() => {
-    const uid = extractUserIdFromUrl(pathname + hash + search);
-    return participants[uid] || {};
-  }, [pathname, hash, search, participants]);
+  const [userObject, setUserObject] = useState({});
   const { _id: userId, login, email, phone } = userObject;
+
+  useEffect(() => {
+    const uid = extractUserIdFromUrl(pathname + hash + search);
+    let user = participants[uid];
+    if (!user) {
+      api.getUsersByIds({ ids: [uid] }).then((users) => {
+        user = users?.[0];
+        if (user) {
+          setUserObject(user);
+          dispatch(addUser(user));
+          return;
+        }
+
+        removeAndNavigateLastSection(pathname + hash, "/profile");
+        showCustomAlert("This user no longer exists.", "warning");
+      });
+    }
+  }, [pathname, hash, search, participants]);
 
   useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
   useKeyDown(KEY_CODES.ESCAPE, () =>

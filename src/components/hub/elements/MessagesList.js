@@ -117,24 +117,24 @@ export default function MessagesList({ scrollRef }) {
     }, 300);
   }, []);
 
-  useEffect(() => {
-    const usersToUpdate = new Set();
+  // useEffect(() => {
+  //   const usersToUpdate = new Set();
 
-    messages.forEach((msg) => {
-      if (!participants[msg.from]) {
-        usersToUpdate.add(msg.from);
-      }
-      if (msg.x?.user?._id && !participants[msg.x.user._id]) {
-        usersToUpdate.add(msg.x.user._id);
-      }
-    });
+  //   messages.forEach((msg) => {
+  //     if (!participants[msg.from]) {
+  //       usersToUpdate.add(msg.from);
+  //     }
+  //     if (msg.x?.user?._id && !participants[msg.x.user._id]) {
+  //       usersToUpdate.add(msg.x.user._id);
+  //     }
+  //   });
 
-    if (usersToUpdate.size) {
-      api
-        .getUsersByIds({ ids: [...usersToUpdate] })
-        .then((users) => dispatch(addUsers(users)));
-    }
-  }, []);
+  //   if (usersToUpdate.size) {
+  //     api
+  //       .getUsersByIds({ ids: [...usersToUpdate] })
+  //       .then((users) => dispatch(addUsers(users)));
+  //   }
+  // }, []);
 
   return (
     <InfiniteScroll
@@ -149,10 +149,9 @@ export default function MessagesList({ scrollRef }) {
         msg.x?.type ? (
           <InformativeMessage
             key={msg._id}
-            isUserExistInStore={!!participants[msg.x.user._id]}
-            isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
-            text={msg.body}
             params={msg.x}
+            text={msg.body}
+            isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
           />
         ) : (
           <ChatMessage

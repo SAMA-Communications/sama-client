@@ -143,16 +143,14 @@
   color: var(--color-white);
 }
 
-.informative-message,
-.informative-message--disabled {
+.informative-message {
   align-self: center;
 
   padding: 6px 18px;
 
   border-radius: var(--border-16);
   background-color: var(--color-hover-light);
-}
-.informative-message {
+
   cursor: pointer;
 }
 
