@@ -15,10 +15,8 @@ The whole SAMA stack can be tested using https://app.samacloud.io public cloud.
 ## Development
 
 - In order to develop any application with Capacitor, you will need NodeJS 18 or higher installed
-
-> Follow [this](https://capacitorjs.com/docs/getting-started/environment-setup#ios-requirements) guide to make sure you meet iOS requirements
-> Follow [this](https://capacitorjs.com/docs/getting-started/environment-setup#android-requirements) guide to make sure you meet Android requirements
-
+- Copy `.env.example` to `.env`.
+> Follow [this](https://capacitorjs.com/docs/getting-started/environment-setup) guide to make sure you meet iOS and Android requirements
 - switch to the "capacitor" branch
 - run `npm run prepare:build`
 - to run ios: `npm run ios` or to run android: `npm run android`
