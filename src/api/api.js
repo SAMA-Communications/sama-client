@@ -15,6 +15,7 @@ class Api {
     this.onMessageStatusListener = null;
     this.onUserActivityListener = null;
     this.onConversationCreateListener = null;
+    this.onConversationUpdateListener = null;
     this.onConversationDeleteListener = null;
   }
 
@@ -47,7 +48,7 @@ class Api {
             return;
           }
           if (conversation_updated) {
-            this.onConversationCreateListener?.(conversation_updated);
+            this.onConversationUpdateListener?.(conversation_updated);
             return;
           }
           if (conversation_kicked) {
