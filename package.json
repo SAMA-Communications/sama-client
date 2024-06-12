@@ -1,5 +1,5 @@
 {
-  "name": "Sama",
+  "name": "sama",
   "version": "1.1.0",
   "private": true,
   "dependencies": {
@@ -42,8 +42,8 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "sync": "npx cap sync",
-    "prepare:build": "npm install && npm run build && npm run sync",
+    "capacitor:sync": "npx cap sync",
+    "capacitor:build": "npm install && npm run build && npm run capacitor:sync",
     "ios": "npx cap run ios",
     "android": "npx cap run android",
     "ionic:build": "npm run build",
