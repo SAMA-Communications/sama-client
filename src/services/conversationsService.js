@@ -24,6 +24,7 @@ class ConversationsService {
 
   constructor() {
     api.onConversationCreateListener = this.handleConversationCreate;
+    api.onConversationUpdateListener = this.handleConversationUpdate;
     api.onConversationDeleteListener = this.handleConversationDelete;
 
     store.subscribe(this.handleStoreUpdate);
@@ -54,6 +55,18 @@ class ConversationsService {
 
       notificationQueueByCid[chat._id]?.forEach((pushMessage) =>
         eventEmitter.emit("onMessage", pushMessage)
+      );
+    } catch (error) {
+      showCustomAlert(error.message, "danger");
+    }
+  };
+
+  handleConversationUpdate = async (chat) => {
+    try {
+      store.dispatch(
+        upsertChat({
+          ...chat,
+        })
       );
     } catch (error) {
       showCustomAlert(error.message, "danger");
