@@ -10,11 +10,7 @@ export default function InformativeMessage({
 
   return (
     <div
-      className={
-        isPrevMesssageUsers
-          ? "informative-message mt-10"
-          : "informative-message"
-      }
+      className={"informative-message" + (isPrevMesssageUsers ? " mt-10" : "")}
       onClick={() =>
         addSuffix(pathname + hash, `/user?uid=${params?.user?._id}`)
       }

@@ -252,6 +252,19 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
+  async getUsersByIds(data) {
+    const requestData = {
+      request: {
+        get_users_by_ids: {
+          ids: data.ids,
+        },
+        id: getUniqueId("getUsersByIds"),
+      },
+    };
+    const resObjKey = "users";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
   async getParticipantsByCids(data) {
     const requestData = {
       request: {

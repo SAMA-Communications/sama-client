@@ -8,20 +8,47 @@ import {
   selectActiveConversationMessages,
   upsertMessages,
 } from "@store/values/Messages";
+import {
+  addUsers,
+  selectParticipantsEntities,
+} from "@store/values/Participants";
 import { getConverastionById, upsertChat } from "@store/values/Conversations";
 import { selectCurrentUser } from "@store/values/CurrentUser";
-import { selectParticipantsEntities } from "@store/values/Participants";
-import { useCallback, useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 export default function MessagesList({ scrollRef }) {
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const messages = useSelector(selectActiveConversationMessages);
   const participants = useSelector(selectParticipantsEntities);
   const currentUser = useSelector(selectCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
+
+  const updateParticipantsFromMessages = (messageArray) => {
+    messageArray ??= messages;
+    const usersToUpdate = new Set();
+
+    messageArray.forEach((msg) => {
+      if (!participants[msg.from]) {
+        usersToUpdate.add(msg.from);
+      }
+      if (msg.x?.user?._id && !participants[msg.x.user._id]) {
+        usersToUpdate.add(msg.x.user._id);
+      }
+    });
+
+    if (usersToUpdate.size) {
+      api
+        .getUsersByIds({ ids: [...usersToUpdate] })
+        .then((users) => dispatch(addUsers(users)));
+    }
+  };
+
+  useEffect(() => updateParticipantsFromMessages(), []);
 
   const needToGetMoreMessage = useRef(true);
   const lastMessageRef = useCallback(() => {
@@ -46,6 +73,7 @@ export default function MessagesList({ scrollRef }) {
           messagesIds.length < +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD
         );
 
+        updateParticipantsFromMessages(arr);
         dispatch(addMessages(arr));
         dispatch(
           upsertChat({
@@ -111,8 +139,9 @@ export default function MessagesList({ scrollRef }) {
         behavior: "smooth",
         block: "end",
       });
+      needToGetMoreMessage.current = true;
     }, 300);
-  }, []);
+  }, [location]);
 
   return (
     <InfiniteScroll
@@ -127,15 +156,15 @@ export default function MessagesList({ scrollRef }) {
         msg.x?.type ? (
           <InformativeMessage
             key={msg._id}
-            isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
-            text={msg.body}
             params={msg.x}
+            text={msg.body}
+            isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
           />
         ) : (
           <ChatMessage
             key={msg._id}
             message={msg}
-            sender={participants[msg.from] || {}}
+            sender={participants[msg.from]}
             currentUserId={currentUser._id}
             isPrevMesssageYours={
               i > 0
