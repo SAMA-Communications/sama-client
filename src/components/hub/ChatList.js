@@ -31,7 +31,7 @@ export default function ChatList() {
   const participants = useSelector(selectParticipantsEntities);
   const currentUser = useSelector(selectCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
-  const activeConv = selectedConversation?._id;
+  const activeConversationId = selectedConversation?._id;
 
   const chatsList = useMemo(() => {
     if (!conversations) {
@@ -45,27 +45,30 @@ export default function ChatList() {
       return <p className="chat-list__empty">No chats are available.</p>;
     }
 
-    return filteredConversations.map((obj) => (
-      <ConversationItem
-        key={obj._id}
-        isSelected={activeConv === obj._id}
-        onClickFunc={() => {
-          dispatch(setSelectedConversation({ id: obj._id }));
-          navigateTo(`/#${obj._id}`);
-        }}
-        chatName={
-          obj.name ||
-          getUserFullName(
-            participants[
-              obj[obj.owner_id === currentUser._id ? "opponent_id" : "owner_id"]
-            ] || {}
-          )
-        }
-        chatObject={obj}
-        currentUserId={currentUser._id}
-      />
-    ));
-  }, [conversations, participants, activeConv, currentUser]);
+    return filteredConversations.map((obj) => {
+      const isSelected = activeConversationId === obj._id;
+      const chatParticipantId =
+        obj.owner_id === currentUser._id ? obj.opponent_id : obj.owner_id;
+      const chatParticipant = participants[chatParticipantId] || {};
+      const chatName = obj.name || getUserFullName(chatParticipant);
+
+      const onClickFunc = () => {
+        dispatch(setSelectedConversation({ id: obj._id }));
+        navigateTo(`/#${obj._id}`);
+      };
+
+      return (
+        <ConversationItem
+          key={obj._id}
+          isSelected={isSelected}
+          onClickFunc={onClickFunc}
+          chatName={chatName}
+          chatObject={obj}
+          currentUserId={currentUser._id}
+        />
+      );
+    });
+  }, [conversations, participants, activeConversationId, currentUser]);
 
   return (
     <div className="chat-list__container">

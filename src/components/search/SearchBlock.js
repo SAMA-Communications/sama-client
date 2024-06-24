@@ -62,7 +62,13 @@ export default function SearchBlock({
           name: text,
           limit: 10,
         });
-        setSearchedChats(conversations);
+        setSearchedChats(
+          conversations.reduce((chats, obj) => {
+            const chat = conversations[obj._id];
+            if (chat) chats.push(chat);
+            return chats;
+          }, [])
+        );
         setIsChatSearched(
           conversations.length ? null : "We couldn't find the specified chat."
         );
@@ -79,33 +85,33 @@ export default function SearchBlock({
           {isSearchOnlyUsers ? null : (
             <div className="search__list-title">Users</div>
           )}
-          {searchedUsers.map((u) => (
-            <SearchedUser
-              key={u._id}
-              uObject={u}
-              isSelected={selectedUsers?.find((uObj) => uObj._id === u._id)}
-              isClickDisabled={
-                isMaxLimit
-                  ? isClickDisabledFunc(u)
-                    ? true
-                    : !selectedUsers?.find((uObj) => uObj._id === u._id)
-                  : isClickDisabledFunc(u) &&
-                    selectedUsers?.find((uObj) => uObj._id === u._id)
-              }
-              clearInputText={clearInputText}
-              addUserToArray={addUserToArray}
-              removeUserFromArray={removeUserFromArray}
-              isClearInputText={isClearInputText}
-              isSelectUserToArray={isSelectUserToArray}
-              isPreviewUserProfile={isPreviewUserProfile}
-            />
-          ))}
+          {searchedUsers.map((u) => {
+            const isSelected = selectedUsers?.some(
+              (uObj) => uObj._id === u._id
+            );
+            const isClickDisabled = isMaxLimit
+              ? isClickDisabledFunc(u) || !isSelected
+              : isClickDisabledFunc(u) && isSelected;
+
+            return (
+              <SearchedUser
+                key={u._id}
+                uObject={u}
+                isSelected={isSelected}
+                isClickDisabled={isClickDisabled}
+                clearInputText={clearInputText}
+                addUserToArray={addUserToArray}
+                removeUserFromArray={removeUserFromArray}
+                isClearInputText={isClearInputText}
+                isSelectUserToArray={isSelectUserToArray}
+                isPreviewUserProfile={isPreviewUserProfile}
+              />
+            );
+          })}
           <p className="search__text">{isUserSearched}</p>
           {isSearchOnlyUsers ? null : (
             <ChatList
-              conversations={searchedChats
-                .map((obj) => conversations[obj._id])
-                .filter((el) => !!el)}
+              conversations={searchedChats}
               isChatSearched={isChatSearched}
             />
           )}
