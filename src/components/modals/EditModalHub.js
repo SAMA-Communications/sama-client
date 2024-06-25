@@ -44,7 +44,7 @@ export default function EditModalHub() {
   };
 
   const type = (search || hash).split("=")[1];
-  const { component, title, styleName } = types[type];
+  const { component, title, styleName } = types[type] || {};
 
   const closeModal = useCallback(
     () => removeAndNavigateLastSection(pathname + hash),
@@ -85,6 +85,7 @@ export default function EditModalHub() {
   }, [closeModal, content, dispatch, type]);
 
   useKeyDown(KEY_CODES.ENTER, sendRequest);
+  useKeyDown(KEY_CODES.ESCAPE, closeModal);
 
   return (
     <div className="edit-modal__container fcc">
