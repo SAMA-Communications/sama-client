@@ -1,42 +1,23 @@
-import ConversationItem from "@components/hub/elements/ConversationItem.js";
+import ConversationItemList from "@components/hub/elements/ConversationItemList";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import MenuButtons from "@components/info/elements/MenuButtons";
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchBar";
-import getUserFullName from "@utils/user/get_user_full_name";
-import navigateTo from "@utils/navigation/navigate_to";
-import {
-  getConverastionById,
-  getGroupConversationsWithMessages,
-} from "@store/values/Conversations.js";
+import { getGroupConversationsWithMessages } from "@store/values/Conversations.js";
 import { getIsMobileView } from "@store/values/IsMobileView";
-import { selectCurrentUser } from "@store/values/CurrentUser";
-import { selectParticipantsEntities } from "@store/values/Participants.js";
-import { setSelectedConversation } from "@store/values/SelectedConversation.js";
 import { useMemo, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import "@styles/hub/ChatList.css";
 
 import SChatList from "@skeletons/hub/SChatList";
 
 export default function ChatList() {
-  const dispatch = useDispatch();
-
   const [inputText, setInputText] = useState(null);
 
   const isMobileView = useSelector(getIsMobileView);
 
   const filteredConversations = useSelector(getGroupConversationsWithMessages);
-  const participants = useSelector(selectParticipantsEntities);
-  const currentUser = useSelector(selectCurrentUser);
-  const selectedConversation = useSelector(getConverastionById);
-  const activeConversationId = selectedConversation?._id;
-
-  const convItemOnClickFunc = (id) => {
-    dispatch(setSelectedConversation({ id }));
-    navigateTo(`/#${id}`);
-  };
 
   const chatsList = useMemo(() => {
     if (!filteredConversations) {
@@ -47,25 +28,8 @@ export default function ChatList() {
       return <p className="chat-list__empty">No chats are available.</p>;
     }
 
-    return filteredConversations.map((obj) => {
-      const isSelected = activeConversationId === obj._id;
-      const chatParticipantId =
-        obj.owner_id === currentUser._id ? obj.opponent_id : obj.owner_id;
-      const chatParticipant = participants[chatParticipantId] || {};
-      const chatName = obj.name || getUserFullName(chatParticipant);
-
-      return (
-        <ConversationItem
-          key={obj._id}
-          isSelected={isSelected}
-          onClickFunc={() => convItemOnClickFunc(obj._id)}
-          chatName={chatName}
-          chatObject={obj}
-          currentUserId={currentUser._id}
-        />
-      );
-    });
-  }, [filteredConversations, participants, activeConversationId, currentUser]);
+    return <ConversationItemList conversations={filteredConversations} />;
+  }, [filteredConversations]);
 
   return (
     <div className="chat-list__container">
