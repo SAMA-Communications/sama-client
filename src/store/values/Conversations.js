@@ -26,6 +26,12 @@ export const getConverastionById = createSelector(
   }
 );
 
+export const getGroupConversationsWithMessages = createSelector(
+  [selectAllConversations],
+  (conversations) => {
+    return conversations.filter((obj) => obj.type === "g" || obj.last_message);
+  }
+);
 export const conversations = createSlice({
   name: "Conversations",
   initialState: conversationsAdapter.getInitialState({ entities: null }),

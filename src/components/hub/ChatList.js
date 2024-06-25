@@ -7,7 +7,7 @@ import getUserFullName from "@utils/user/get_user_full_name";
 import navigateTo from "@utils/navigation/navigate_to";
 import {
   getConverastionById,
-  selectAllConversations,
+  getGroupConversationsWithMessages,
 } from "@store/values/Conversations.js";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { selectCurrentUser } from "@store/values/CurrentUser";
@@ -27,7 +27,7 @@ export default function ChatList() {
 
   const isMobileView = useSelector(getIsMobileView);
 
-  const conversations = useSelector(selectAllConversations);
+  const filteredConversations = useSelector(getGroupConversationsWithMessages);
   const participants = useSelector(selectParticipantsEntities);
   const currentUser = useSelector(selectCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
@@ -39,13 +39,10 @@ export default function ChatList() {
   };
 
   const chatsList = useMemo(() => {
-    if (!conversations) {
+    if (!filteredConversations) {
       return <SChatList />;
     }
 
-    const filteredConversations = conversations.filter(
-      (obj) => obj.type === "g" || obj.last_message
-    );
     if (!filteredConversations.length) {
       return <p className="chat-list__empty">No chats are available.</p>;
     }
@@ -68,7 +65,7 @@ export default function ChatList() {
         />
       );
     });
-  }, [conversations, participants, activeConversationId, currentUser]);
+  }, [filteredConversations, participants, activeConversationId, currentUser]);
 
   return (
     <div className="chat-list__container">
