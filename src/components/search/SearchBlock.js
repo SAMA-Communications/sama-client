@@ -51,26 +51,28 @@ export default function SearchBlock({
         });
         setSearchedUsers(users);
         setIsUserSearched(
-          users.length ? null : "We couldn't find the specified user."
+          users.length ? null : "We couldn't find the specified users."
         );
 
         if (isSearchOnlyUsers) {
           return;
         }
 
-        const conversations = await conversationService.search({
+        const conversationIds = await conversationService.search({
           name: text,
           limit: 10,
         });
         setSearchedChats(
-          conversations.reduce((chats, obj) => {
+          conversationIds.reduce((chats, obj) => {
             const chat = conversations[obj._id];
             if (chat) chats.push(chat);
             return chats;
           }, [])
         );
         setIsChatSearched(
-          conversations.length ? null : "We couldn't find the specified chat."
+          conversationIds.length
+            ? null
+            : "We couldn't find the specified chats."
         );
       }
     });
