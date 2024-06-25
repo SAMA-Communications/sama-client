@@ -33,6 +33,11 @@ export default function ChatList() {
   const selectedConversation = useSelector(getConverastionById);
   const activeConversationId = selectedConversation?._id;
 
+  const convItemOnClickFunc = (id) => {
+    dispatch(setSelectedConversation({ id }));
+    navigateTo(`/#${id}`);
+  };
+
   const chatsList = useMemo(() => {
     if (!conversations) {
       return <SChatList />;
@@ -52,16 +57,11 @@ export default function ChatList() {
       const chatParticipant = participants[chatParticipantId] || {};
       const chatName = obj.name || getUserFullName(chatParticipant);
 
-      const onClickFunc = () => {
-        dispatch(setSelectedConversation({ id: obj._id }));
-        navigateTo(`/#${obj._id}`);
-      };
-
       return (
         <ConversationItem
           key={obj._id}
           isSelected={isSelected}
-          onClickFunc={onClickFunc}
+          onClickFunc={() => convItemOnClickFunc(obj._id)}
           chatName={chatName}
           chatObject={obj}
           currentUserId={currentUser._id}
