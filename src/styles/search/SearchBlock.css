@@ -3,6 +3,11 @@
 
   margin-top: 5px;
 }
+.search__container > .scroll-bar__outer-container > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
 .search__text {
   text-align: center;
@@ -12,7 +17,7 @@
 .search__list-title {
   padding: 6px 18px;
 
-  margin: 6px 0;
+  margin: 3px 0 3px 0;
 
   color: var(--color-black);
   font-size: var(--font-p);

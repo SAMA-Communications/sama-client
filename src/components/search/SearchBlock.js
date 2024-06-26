@@ -62,15 +62,15 @@ export default function SearchBlock({
           name: text,
           limit: 10,
         });
-        setSearchedChats(
-          conversationIds.reduce((chats, id) => {
-            const chat = conversations[id];
-            if (chat) chats.push(chat);
-            return chats;
-          }, [])
-        );
+        const existingConversations = conversationIds.reduce((chats, id) => {
+          const chat = conversations[id];
+          if (chat) chats.push(chat);
+          return chats;
+        }, []);
+
+        setSearchedChats(existingConversations);
         setIsChatSearched(
-          conversationIds.length
+          existingConversations.length
             ? null
             : "We couldn't find the specified chats."
         );
