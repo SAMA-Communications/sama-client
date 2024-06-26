@@ -63,8 +63,8 @@ export default function SearchBlock({
           limit: 10,
         });
         setSearchedChats(
-          conversationIds.reduce((chats, obj) => {
-            const chat = conversations[obj._id];
+          conversationIds.reduce((chats, id) => {
+            const chat = conversations[id];
             if (chat) chats.push(chat);
             return chats;
           }, [])
