@@ -3,7 +3,7 @@ import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import MenuButtons from "@components/info/elements/MenuButtons";
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchBar";
-import { getGroupConversationsWithMessages } from "@store/values/Conversations.js";
+import { getDisplayableConversations } from "@store/values/Conversations.js";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -17,7 +17,7 @@ export default function ChatList() {
 
   const isMobileView = useSelector(getIsMobileView);
 
-  const filteredConversations = useSelector(getGroupConversationsWithMessages);
+  const filteredConversations = useSelector(getDisplayableConversations);
 
   const chatsList = useMemo(() => {
     if (!filteredConversations) {

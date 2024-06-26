@@ -26,7 +26,7 @@ export const getConverastionById = createSelector(
   }
 );
 
-export const getGroupConversationsWithMessages = createSelector(
+export const getDisplayableConversations = createSelector(
   [selectAllConversations],
   (conversations) => {
     return conversations.filter((obj) => obj.type === "g" || obj.last_message);
