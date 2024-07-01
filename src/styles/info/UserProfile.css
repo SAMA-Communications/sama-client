@@ -35,6 +35,18 @@
 
   border-radius: var(--border-24);
   background-color: var(--color-bg-light);
+
+  overflow: hidden;
+}
+.profile__photo > #inputFile {
+  display: none;
+  visibility: hidden;
+}
+.profile__photo > img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
 }
 .profile__info {
   width: 100%;

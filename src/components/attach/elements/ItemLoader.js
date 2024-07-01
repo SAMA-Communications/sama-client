@@ -1,14 +1,14 @@
 import OvalLoader from "@components/_helpers/OvalLoader";
 import { Blurhash } from "react-blurhash";
 
-export default function ItemLoader({ blurHash }) {
+export default function ItemLoader({ width = 70, height = 70, blurHash }) {
   return (
     <div className="blur-hash-preloader">
       <Blurhash
         className="canvas-preloader"
         hash={blurHash || "LEHLk~WB2yk8pyo0adR*.7kCMdnj"}
-        width={70}
-        height={70}
+        width={width}
+        height={height}
         resolutionX={32}
         resolutionY={32}
       />

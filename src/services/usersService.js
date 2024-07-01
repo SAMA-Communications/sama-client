@@ -1,6 +1,9 @@
+import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
+import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
+import { upsertUser, upsertUsers } from "@src/store/values/Participants";
 
 import validateEmail from "@validations/user/validateEmail";
 import validateFieldLength from "@validations/validateFieldLength";
@@ -10,10 +13,6 @@ import validatePassword from "@validations/user/validatePassword";
 import validatePhone from "@validations/user/validatePhone";
 
 class UsersService {
-  constructor() {
-    this.currentUser = store.getState().currentUser.value;
-  }
-
   async login(data) {
     const { login, password } = data;
 
@@ -136,6 +135,61 @@ class UsersService {
         localStorage.removeItem("sessionId");
         throw new Error("User logout error");
       });
+  }
+
+  async updateUserAvatar(file) {
+    if (!file) {
+      return;
+    }
+
+    const currentUser = store.getState().currentUser.value;
+    store.dispatch(
+      upsertUser({
+        _id: currentUser._id,
+        avatar_url: URL.createObjectURL(file),
+      })
+    );
+
+    const avatarFile = await processFile(file);
+    const requestData = { login: currentUser.login };
+
+    if (!avatarFile) {
+      store.dispatch(
+        upsertUser({ _id: currentUser._id, avatar_url: undefined })
+      );
+      showCustomAlert("An error occured while processing the file.", "warning");
+      return;
+    }
+
+    const avatarObject = (
+      await DownloadManager.getFileObjects([avatarFile])
+    ).at(0);
+    requestData["avatar_object"] = {
+      file_id: avatarObject.file_id,
+      file_name: avatarObject.file_name,
+      file_blur_hash: avatarFile.blurHash,
+    };
+
+    try {
+      const userObject = await api.userEdit(requestData);
+      userObject["avatar_url"] = avatarObject.file_url;
+      store.dispatch(upsertUser(userObject));
+    } catch (err) {
+      showCustomAlert("The server connection is unavailable.", "warning");
+      return;
+    }
+  }
+
+  async uploadAvatarsUrls(objects) {
+    const downloadedFiles = await DownloadManager.getDownloadFileLinks(objects);
+    const updatedUsers = [];
+
+    downloadedFiles.forEach(({ attachments, _id: userId }) => {
+      const file = attachments[0];
+      updatedUsers.push({ _id: userId, avatar_url: file.file_url });
+    });
+    console.log(updatedUsers);
+    store.dispatch(upsertUsers(updatedUsers));
   }
 
   async deleteCurrentUser() {
