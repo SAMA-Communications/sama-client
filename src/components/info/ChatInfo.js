@@ -2,6 +2,7 @@ import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import ParticipantInChat from "@components/info/elements/ParticipantInChat";
 import addSuffix from "@utils/navigation/add_suffix";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
+import updateNeedToUploadAvatar from "@utils/conversation/update_need_to_update_avatar";
 import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
@@ -59,13 +60,7 @@ export default function ChatInfo() {
 
       const isOwner = userObject._id === conversationOwner;
 
-      const { avatar_url, avatar_object, _id: userId } = userObject;
-      if (avatar_object && !avatar_url) {
-        needToUploadAvatar[avatar_object.file_id] = {
-          _id: userId,
-          ...avatar_object,
-        };
-      }
+      updateNeedToUploadAvatar(userObject, needToUploadAvatar);
 
       return (
         <ParticipantInChat

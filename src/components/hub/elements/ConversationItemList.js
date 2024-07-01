@@ -1,6 +1,7 @@
 import ConversationItem from "@components/hub/elements/ConversationItem";
 import getUserFullName from "@utils/user/get_user_full_name";
 import navigateTo from "@utils/navigation/navigate_to";
+import updateNeedToUploadAvatar from "@utils/conversation/update_need_to_update_avatar";
 import usersService from "@services/usersService";
 import { getConverastionById } from "@store/values/Conversations";
 import { selectCurrentUser } from "@store/values/CurrentUser";
@@ -32,13 +33,7 @@ export default function ConversationItemList({ conversations }) {
       const chatParticipant = participants[chatParticipantId] || {};
       const chatName = obj.name || getUserFullName(chatParticipant);
 
-      const { avatar_url, avatar_object, _id: userId } = chatParticipant;
-      if (avatar_object && !avatar_url) {
-        needToUploadAvatar[avatar_object.file_id] = {
-          _id: userId,
-          ...avatar_object,
-        };
-      }
+      updateNeedToUploadAvatar(chatParticipant, needToUploadAvatar);
 
       return (
         <ConversationItem
