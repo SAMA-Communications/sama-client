@@ -188,7 +188,7 @@ class UsersService {
       const file = attachments[0];
       updatedUsers.push({ _id: userId, avatar_url: file.file_url });
     });
-    console.log(updatedUsers);
+    // console.log(updatedUsers);
     store.dispatch(upsertUsers(updatedUsers));
   }
 
