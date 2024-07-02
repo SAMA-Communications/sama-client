@@ -2,9 +2,12 @@ import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import ParticipantInChat from "@components/info/elements/ParticipantInChat";
 import addSuffix from "@utils/navigation/add_suffix";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
+import updateNeedToUploadAvatar from "@utils/conversation/update_need_to_update_avatar";
+import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
 import { getIsMobileView } from "@store/values/IsMobileView";
+import { getIsTabletView } from "@store/values/IsTabletView";
 import { selectCurrentUser } from "@store/values/CurrentUser";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useKeyDown } from "@hooks/useKeyDown";
@@ -18,7 +21,6 @@ import { ReactComponent as AddParticipants } from "@icons/AddParticipants.svg";
 import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
 import { ReactComponent as ImageBig } from "@icons/media/ImageBig.svg";
-import { getIsTabletView } from "@src/store/values/IsTabletView";
 
 export default function ChatInfo() {
   const { pathname, hash } = useLocation();
@@ -48,13 +50,17 @@ export default function ChatInfo() {
       return null;
     }
 
-    return selectedConversation.participants.map((uId) => {
+    const needToUploadAvatar = {};
+
+    const mappedParticipants = selectedConversation.participants.map((uId) => {
       const userObject = participants[uId];
       if (!userObject) {
         return null;
       }
 
       const isOwner = userObject._id === conversationOwner;
+
+      updateNeedToUploadAvatar(userObject, needToUploadAvatar);
 
       return (
         <ParticipantInChat
@@ -65,6 +71,12 @@ export default function ChatInfo() {
         />
       );
     });
+
+    if (Object.keys(needToUploadAvatar).length) {
+      usersService.uploadAvatarsUrls(needToUploadAvatar);
+    }
+
+    return mappedParticipants;
   }, [selectedConversation, participants, currentUser]);
 
   const participantsCount = participantsList?.length;

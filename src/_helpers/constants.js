@@ -16,6 +16,7 @@ const globalConstants = {
     "video/webm",
     "video/quicktime",
   ],
+  allowedAvatarFormats: [".heic", ".HEIC", "image/jpeg", "image/png"],
   defaultBlurHash:
     "|KO2?U%2Tw=wR6cErDEhOD]~RBVZRip0W9ofwxM_};RPxuwH%3s89]t8$%tLOtxZ%gixtQt8IUS#I.ENa0NZIVt6xFM{M{%1j^M_bcRPX9nht7n+j[rrW;ni%Mt7V@W;t7t8%1bbxat7WBIUR*RjRjRjxuRjs.MxbbV@WY",
   weekDays: {
