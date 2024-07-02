@@ -151,8 +151,6 @@ class UsersService {
     );
 
     const avatarFile = await processFile(file);
-    const requestData = { login: currentUser.login };
-
     if (!avatarFile) {
       store.dispatch(
         upsertUser({ _id: currentUser._id, avatar_url: undefined })
@@ -164,10 +162,12 @@ class UsersService {
     const avatarObject = (
       await DownloadManager.getFileObjects([avatarFile])
     ).at(0);
-    requestData["avatar_object"] = {
-      file_id: avatarObject.file_id,
-      file_name: avatarObject.file_name,
-      file_blur_hash: avatarFile.blurHash,
+    const requestData = {
+      avatar_object: {
+        file_id: avatarObject.file_id,
+        file_name: avatarObject.file_name,
+        file_blur_hash: avatarFile.blurHash,
+      },
     };
 
     try {
