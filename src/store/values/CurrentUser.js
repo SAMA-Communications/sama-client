@@ -7,13 +7,13 @@ export const CurrentUser = createSlice({
   },
   reducers: {
     setCurrentUser: (state, action) => void (state.value = action.payload),
-    updateCurrntUser: (state, action) =>
+    updateCurrentUser: (state, action) =>
       void Object.assign(state.value, action.payload),
   },
 });
 
 export const selectCurrentUser = (state) => state.currentUser.value;
 
-export const { setCurrentUser, updateCurrntUser } = CurrentUser.actions;
+export const { setCurrentUser, updateCurrentUser } = CurrentUser.actions;
 
 export default CurrentUser.reducer;

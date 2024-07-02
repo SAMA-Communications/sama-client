@@ -1,6 +1,6 @@
 import usersService from "@services/usersService";
 import { getCurrentUserById } from "@store/values/Participants";
-import { updateCurrntUser } from "@store/values/CurrentUser";
+import { updateCurrentUser } from "@store/values/CurrentUser";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
@@ -17,7 +17,7 @@ export const useUploadAvatarUrl = () => {
           [avatar_object.file_id]: { _id: currentUser._id, ...avatar_object },
         })
         .then(() => {
-          dispatch(updateCurrntUser({ avatar_url: avatar_object.file_url }));
+          dispatch(updateCurrentUser({ avatar_url: avatar_object.file_url }));
         });
     }
   }, [currentUser]);

@@ -32,10 +32,10 @@ const participants = createSlice({
 
 export const getCurrentUserById = createSelector(
   [selectCurrentUser, selectParticipantsEntities],
-  (curretnUser, participants) =>
-    curretnUser._id
-      ? { ...curretnUser, ...participants[curretnUser._id] }
-      : curretnUser || {}
+  (currentUser, participants) =>
+    currentUser._id
+      ? { ...currentUser, ...participants[currentUser._id] }
+      : currentUser || {}
 );
 
 export const { addUser, addUsers, setUsers, upsertUser, upsertUsers } =

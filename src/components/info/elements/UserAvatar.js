@@ -12,7 +12,7 @@ export default function UserAvatar({
   const avatarView = useMemo(
     () =>
       avatarUrl ? (
-        <img src={avatarUrl} alt={"UserAvatra"} />
+        <img src={avatarUrl} alt={"User's Profile"} />
       ) : avatarBlurHash ? (
         <ItemLoader
           width={size * defaultSize}
