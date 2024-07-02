@@ -29,12 +29,12 @@ There are also other components. Make sure to check [Deploying SAMA chat server 
 #### Preparations
 
 - In order to develop any application with Capacitor, you will need NodeJS 18 or higher installed
-- Follow [this](https://capacitorjs.com/docs/getting-started/environment-setup#ios-requirements) guide to make sure you meet iOS requirements
-- Follow [this](https://capacitorjs.com/docs/getting-started/environment-setup#android-requirements) guide to make sure you meet Android requirements
+- Follow https://capacitorjs.com/docs/getting-started/environment-setup#ios-requirements guide to make sure you meet iOS requirements
+- Follow https://capacitorjs.com/docs/getting-started/environment-setup#android-requirements guide to make sure you meet Android requirements
 
 #### How to run
 
-- Copy `.env.example` to `.env`
+- Copy `.env.example` to `.env` (use `REACT_APP_SOCKET_CONNECT=wss://api.samacloud.io/` to connect to PROD live env)
 - Run `npm run capacitor:build`
 - To run ios: `npm run ios` or android: `npm run android`
 
