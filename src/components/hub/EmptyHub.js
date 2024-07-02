@@ -4,8 +4,11 @@ import SearchInput from "@components/static/SearchBar";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { StatusBar } from '@capacitor/status-bar'
 
 import "@styles/hub/EmptyHub.css";
+
+StatusBar.setOverlaysWebView({ overlay: false });
 
 export default function EmptyHub() {
   const [inputText, setInputText] = useState(null);

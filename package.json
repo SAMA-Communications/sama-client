@@ -1,8 +1,16 @@
 {
-  "name": "sama-client",
+  "name": "sama",
   "version": "1.1.0",
   "private": true,
   "dependencies": {
+    "@capacitor/android": "6.0.0",
+    "@capacitor/app": "6.0.0",
+    "@capacitor/cli": "6.0.0",
+    "@capacitor/core": "6.0.0",
+    "@capacitor/haptics": "6.0.0",
+    "@capacitor/ios": "6.0.0",
+    "@capacitor/keyboard": "6.0.0",
+    "@capacitor/status-bar": "6.0.0",
     "@reduxjs/toolkit": "^1.8.6",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -33,7 +41,13 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build"
+    "build": "react-app-rewired build",
+    "capacitor:sync": "npx cap sync",
+    "capacitor:build": "npm install && npm run build && npm run capacitor:sync",
+    "ios": "npx cap run ios",
+    "android": "npx cap run android",
+    "ionic:build": "npm run build",
+    "ionic:serve": "npm run start"
   },
   "eslintConfig": {
     "extends": [
@@ -54,6 +68,7 @@
     ]
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "react-app-alias": "^2.2.2",
     "react-app-rewired": "^2.2.1"
   }
