@@ -4,11 +4,8 @@ import PasswordInput from "@components/auth/elements/PasswordInput";
 import SignUpLinks from "@components/auth/components/SignUpLinks";
 import UserNameInput from "@components/auth/elements/UserNameInput";
 import { useState } from "react";
-import { StatusBar } from '@capacitor/status-bar'
 
 import "@styles/auth/AuthorizationPage.css";
-
-StatusBar.setOverlaysWebView({ overlay: false });
 
 export default function AuthorizationHub() {
   const [page, setPage] = useState("login");
