@@ -142,19 +142,17 @@ class UsersService {
       return;
     }
 
-    const currentUser = store.getState().currentUser.value;
+    const currentUserId = store.getState().currentUserId.value.id;
     store.dispatch(
       upsertUser({
-        _id: currentUser._id,
+        _id: currentUserId,
         avatar_url: URL.createObjectURL(file),
       })
     );
 
     const avatarFile = await processFile(file);
     if (!avatarFile) {
-      store.dispatch(
-        upsertUser({ _id: currentUser._id, avatar_url: undefined })
-      );
+      store.dispatch(upsertUser({ _id: currentUserId, avatar_url: undefined }));
       showCustomAlert("An error occured while processing the file.", "warning");
       return;
     }
@@ -181,6 +179,7 @@ class UsersService {
   }
 
   async uploadAvatarsUrls(objects) {
+    return;
     const downloadedFiles = await DownloadManager.getDownloadFileLinks(objects);
     const updatedUsers = [];
 

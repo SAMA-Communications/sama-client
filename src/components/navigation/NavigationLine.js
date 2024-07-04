@@ -79,7 +79,6 @@ export default function NavigationLine() {
         >
           <span className="fcc">
             <UserAvatar
-              size={2}
               avatarUrl={currentUser.avatar_url}
               avatarBlurHash={currentUser.avatar_object?.file_blur_hash}
               defaultIcon={getUserInitials()}

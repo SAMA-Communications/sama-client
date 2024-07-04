@@ -1,28 +1,17 @@
 import ItemLoader from "@components/attach/elements/ItemLoader";
 import { useMemo } from "react";
 
-export default function UserAvatar({
-  size = 1,
-  avatarUrl,
-  avatarBlurHash,
-  defaultIcon,
-}) {
-  const defaultSize = 80;
-
+export default function UserAvatar({ avatarUrl, avatarBlurHash, defaultIcon }) {
   const avatarView = useMemo(
     () =>
       avatarUrl ? (
         <img src={avatarUrl} alt={"User's Profile"} />
       ) : avatarBlurHash ? (
-        <ItemLoader
-          width={size * defaultSize}
-          height={size * defaultSize}
-          blurHash={avatarBlurHash}
-        />
+        <ItemLoader blurHash={avatarBlurHash} />
       ) : (
         defaultIcon
       ),
-    [avatarBlurHash, avatarUrl, defaultIcon, size]
+    [avatarBlurHash, avatarUrl, defaultIcon]
   );
 
   return avatarView;

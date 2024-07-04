@@ -85,7 +85,6 @@ export default function UserProfile() {
             onClick={pickFileClick}
           >
             <UserAvatar
-              size={2}
               avatarUrl={currentUser.avatar_url}
               avatarBlurHash={currentUser.avatar_object?.file_blur_hash}
               defaultIcon={<UserIcon />}

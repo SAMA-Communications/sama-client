@@ -32,14 +32,14 @@ const rootReducer = (state, action) => {
       isTabletView,
       isTabInFocus,
       networkState,
-      currentUser,
+      currentUserId,
     } = state;
     state = {
       isMobileView,
       isTabletView,
       isTabInFocus,
       networkState,
-      currentUser,
+      currentUserId,
     };
   }
 
