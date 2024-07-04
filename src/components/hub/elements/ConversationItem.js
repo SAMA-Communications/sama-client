@@ -12,7 +12,8 @@ export default function ConversationItem({
   chatName,
   chatObject,
   currentUserId,
-  chatAvatarObject,
+  chatAvatarUrl,
+  chatAvatarBlutHash,
 }) {
   const { updated_at, unread_messages_count, type, last_message } = chatObject;
 
@@ -27,14 +28,14 @@ export default function ConversationItem({
 
     return (
       <UserAvatar
-        avatarUrl={chatAvatarObject.avatar_url}
-        avatarBlurHash={chatAvatarObject.file_blur_hash}
+        avatarUrl={chatAvatarUrl}
+        avatarBlurHash={chatAvatarBlutHash}
         defaultIcon={
           chatName ? chatName.slice(0, 2).toUpperCase() : <UnknownPhoto />
         }
       />
     );
-  }, [type, chatName, chatAvatarObject]);
+  }, [type, chatAvatarUrl, chatAvatarBlutHash, chatName]);
 
   return (
     <div

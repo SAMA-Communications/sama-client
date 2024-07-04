@@ -6,7 +6,6 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { useDispatch, useSelector } from "react-redux";
-import { useMemo } from "react";
 
 export default function ConversationItemList({ conversations }) {
   const dispatch = useDispatch();
@@ -21,32 +20,24 @@ export default function ConversationItemList({ conversations }) {
     navigateTo(`/#${id}`);
   };
 
-  const mappedConversations = useMemo(
-    () =>
-      conversations.map((obj) => {
-        const isSelected = activeConversationId === obj._id;
-        const chatParticipantId =
-          obj.owner_id === currentUserId ? obj.opponent_id : obj.owner_id;
-        const chatParticipant = participants[chatParticipantId] || {};
-        const chatName = obj.name || getUserFullName(chatParticipant);
+  return conversations.map((obj) => {
+    const isSelected = activeConversationId === obj._id;
+    const chatParticipantId =
+      obj.owner_id === currentUserId ? obj.opponent_id : obj.owner_id;
+    const chatParticipant = participants[chatParticipantId] || {};
+    const chatName = obj.name || getUserFullName(chatParticipant);
 
-        return (
-          <ConversationItem
-            key={obj._id}
-            isSelected={isSelected}
-            onClickFunc={() => convItemOnClickFunc(obj._id)}
-            chatName={chatName}
-            chatAvatarObject={{
-              ...chatParticipant.avatar_object,
-              avatar_url: chatParticipant.avatar_url,
-            }}
-            chatObject={obj}
-            currentUserId={currentUserId}
-          />
-        );
-      }),
-    [activeConversationId, conversations, currentUserId, participants]
-  );
-
-  return mappedConversations;
+    return (
+      <ConversationItem
+        key={obj._id}
+        isSelected={isSelected}
+        onClickFunc={() => convItemOnClickFunc(obj._id)}
+        chatName={chatName}
+        chatAvatarUrl={chatParticipant.avatar_url}
+        chatAvatarBlutHash={chatParticipant.avatar_object?.file_blur_hash}
+        chatObject={obj}
+        currentUserId={currentUserId}
+      />
+    );
+  });
 }
