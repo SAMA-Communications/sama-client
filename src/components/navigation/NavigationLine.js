@@ -12,7 +12,6 @@ import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
-import { useBuildAndSetAvatarsUrls } from "@hooks/useBuildAndSetAvatarsUrls";
 
 import "@styles/navigation/NavigationLine.css";
 
@@ -30,8 +29,6 @@ export default function NavigationLine() {
 
   const isTabletView = useSelector(getIsTabletView);
   const isMobileView = useSelector(getIsMobileView);
-
-  useBuildAndSetAvatarsUrls();
 
   const sendLogout = async () => {
     try {

@@ -179,7 +179,6 @@ class UsersService {
   }
 
   async uploadAvatarsUrls(objects) {
-    return;
     const downloadedFiles = await DownloadManager.getDownloadFileLinks(objects);
     const updatedUsers = [];
 

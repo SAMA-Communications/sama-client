@@ -2,8 +2,6 @@ import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import ParticipantInChat from "@components/info/elements/ParticipantInChat";
 import addSuffix from "@utils/navigation/add_suffix";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
-import updateNeedToUploadAvatar from "@utils/conversation/update_need_to_update_avatar";
-import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
 import { getIsMobileView } from "@store/values/IsMobileView";
@@ -50,17 +48,13 @@ export default function ChatInfo() {
       return null;
     }
 
-    const needToUploadAvatar = {};
-
-    const mappedParticipants = selectedConversation.participants.map((uId) => {
+    return selectedConversation.participants.map((uId) => {
       const userObject = participants[uId];
       if (!userObject) {
         return null;
       }
 
       const isOwner = userObject._id === conversationOwner;
-
-      updateNeedToUploadAvatar(userObject, needToUploadAvatar);
 
       return (
         <ParticipantInChat
@@ -71,12 +65,6 @@ export default function ChatInfo() {
         />
       );
     });
-
-    if (Object.keys(needToUploadAvatar).length) {
-      usersService.uploadAvatarsUrls(needToUploadAvatar);
-    }
-
-    return mappedParticipants;
   }, [selectedConversation, participants, currentUserId]);
 
   const participantsCount = participantsList?.length;

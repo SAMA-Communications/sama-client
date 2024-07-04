@@ -15,7 +15,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useRef } from "react";
-import { useBuildAndSetAvatarsUrls } from "@hooks/useBuildAndSetAvatarsUrls";
 
 import "@styles/info/UserProfile.css";
 
@@ -58,8 +57,6 @@ export default function UserProfile() {
 
   const sendChangeAvatarRequest = async (file) =>
     void (await usersService.updateUserAvatar(file));
-
-  useBuildAndSetAvatarsUrls();
 
   return (
     <div className="profile__container">

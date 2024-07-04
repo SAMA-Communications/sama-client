@@ -1,8 +1,6 @@
 import ConversationItem from "@components/hub/elements/ConversationItem";
 import getUserFullName from "@utils/user/get_user_full_name";
 import navigateTo from "@utils/navigation/navigate_to";
-import updateNeedToUploadAvatar from "@utils/conversation/update_need_to_update_avatar";
-import usersService from "@services/usersService";
 import { getConverastionById } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
@@ -18,45 +16,37 @@ export default function ConversationItemList({ conversations }) {
   const selectedConversation = useSelector(getConverastionById);
   const activeConversationId = selectedConversation?._id;
 
-  const mappedConversations = useMemo(() => {
-    const needToUploadAvatar = {};
+  const convItemOnClickFunc = (id) => {
+    dispatch(setSelectedConversation({ id }));
+    navigateTo(`/#${id}`);
+  };
 
-    const convItemOnClickFunc = (id) => {
-      dispatch(setSelectedConversation({ id }));
-      navigateTo(`/#${id}`);
-    };
+  const mappedConversations = useMemo(
+    () =>
+      conversations.map((obj) => {
+        const isSelected = activeConversationId === obj._id;
+        const chatParticipantId =
+          obj.owner_id === currentUserId ? obj.opponent_id : obj.owner_id;
+        const chatParticipant = participants[chatParticipantId] || {};
+        const chatName = obj.name || getUserFullName(chatParticipant);
 
-    const conversationArray = conversations.map((obj) => {
-      const isSelected = activeConversationId === obj._id;
-      const chatParticipantId =
-        obj.owner_id === currentUserId ? obj.opponent_id : obj.owner_id;
-      const chatParticipant = participants[chatParticipantId] || {};
-      const chatName = obj.name || getUserFullName(chatParticipant);
-
-      updateNeedToUploadAvatar(chatParticipant, needToUploadAvatar);
-
-      return (
-        <ConversationItem
-          key={obj._id}
-          isSelected={isSelected}
-          onClickFunc={() => convItemOnClickFunc(obj._id)}
-          chatName={chatName}
-          chatAvatarObject={{
-            ...chatParticipant.avatar_object,
-            avatar_url: chatParticipant.avatar_url,
-          }}
-          chatObject={obj}
-          currentUserId={currentUserId}
-        />
-      );
-    });
-
-    if (Object.keys(needToUploadAvatar).length) {
-      usersService.uploadAvatarsUrls(needToUploadAvatar);
-    }
-
-    return conversationArray;
-  }, [activeConversationId, conversations, currentUserId, participants]);
+        return (
+          <ConversationItem
+            key={obj._id}
+            isSelected={isSelected}
+            onClickFunc={() => convItemOnClickFunc(obj._id)}
+            chatName={chatName}
+            chatAvatarObject={{
+              ...chatParticipant.avatar_object,
+              avatar_url: chatParticipant.avatar_url,
+            }}
+            chatObject={obj}
+            currentUserId={currentUserId}
+          />
+        );
+      }),
+    [activeConversationId, conversations, currentUserId, participants]
+  );
 
   return mappedConversations;
 }
