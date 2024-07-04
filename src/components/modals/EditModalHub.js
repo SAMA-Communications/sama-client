@@ -6,7 +6,6 @@ import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import showCustomAlert from "@utils/show_alert";
 import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
-import { setCurrentUser } from "@store/values/CurrentUser";
 import { upsertChat } from "@store/values/Conversations";
 import { upsertUser } from "@store/values/Participants";
 import { useCallback, useState } from "react";
@@ -78,7 +77,6 @@ export default function EditModalHub() {
       }
 
       dispatch(upsertUser(newUserObject));
-      dispatch(setCurrentUser(newUserObject));
       showCustomAlert("User data has been successfully updated.", "success");
     }
     closeModal();

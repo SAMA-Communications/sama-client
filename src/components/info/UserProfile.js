@@ -7,7 +7,7 @@ import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
-import { getCurrentUserById } from "@store/values/Participants";
+import { getCurrentUserFromParticipants } from "@store/values/Participants";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useRef } from "react";
-import { useUploadAvatarUrl } from "@hooks/useUploadAvatarUrl";
+import { useBuildAndSetAvatarsUrls } from "@hooks/useBuildAndSetAvatarsUrls";
 
 import "@styles/info/UserProfile.css";
 
@@ -32,7 +32,7 @@ export default function UserProfile() {
 
   const isMobileView = useSelector(getIsMobileView);
 
-  const currentUser = useSelector(getCurrentUserById);
+  const currentUser = useSelector(getCurrentUserFromParticipants);
   const { login, email, phone, first_name, last_name } = currentUser || {};
 
   const inputFilesRef = useRef(null);
@@ -59,7 +59,7 @@ export default function UserProfile() {
   const sendChangeAvatarRequest = async (file) =>
     void (await usersService.updateUserAvatar(file));
 
-  useUploadAvatarUrl();
+  useBuildAndSetAvatarsUrls();
 
   return (
     <div className="profile__container">

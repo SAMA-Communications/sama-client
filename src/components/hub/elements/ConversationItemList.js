@@ -4,7 +4,7 @@ import navigateTo from "@utils/navigation/navigate_to";
 import updateNeedToUploadAvatar from "@utils/conversation/update_need_to_update_avatar";
 import usersService from "@services/usersService";
 import { getConverastionById } from "@store/values/Conversations";
-import { selectCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,7 +14,7 @@ export default function ConversationItemList({ conversations }) {
   const dispatch = useDispatch();
 
   const participants = useSelector(selectParticipantsEntities);
-  const currentUser = useSelector(selectCurrentUser);
+  const currentUserId = useSelector(selectCurrentUserId);
   const selectedConversation = useSelector(getConverastionById);
   const activeConversationId = selectedConversation?._id;
 
@@ -29,7 +29,7 @@ export default function ConversationItemList({ conversations }) {
     const conversationArray = conversations.map((obj) => {
       const isSelected = activeConversationId === obj._id;
       const chatParticipantId =
-        obj.owner_id === currentUser._id ? obj.opponent_id : obj.owner_id;
+        obj.owner_id === currentUserId ? obj.opponent_id : obj.owner_id;
       const chatParticipant = participants[chatParticipantId] || {};
       const chatName = obj.name || getUserFullName(chatParticipant);
 
@@ -46,7 +46,7 @@ export default function ConversationItemList({ conversations }) {
             avatar_url: chatParticipant.avatar_url,
           }}
           chatObject={obj}
-          currentUserId={currentUser._id}
+          currentUserId={currentUserId}
         />
       );
     });
@@ -56,7 +56,7 @@ export default function ConversationItemList({ conversations }) {
     }
 
     return conversationArray;
-  }, [activeConversationId, conversations, currentUser, participants]);
+  }, [activeConversationId, conversations, currentUserId, participants]);
 
   return mappedConversations;
 }

@@ -4,7 +4,7 @@ import showCustomAlert from "@utils/show_alert";
 import subscribeForNotifications from "@services/notifications";
 import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
-import { setCurrentUser } from "@store/values/CurrentUser";
+import { setCurrentUserId } from "@store/values/CurrentUserId";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { upsertUser } from "@store/values/Participants";
@@ -25,7 +25,7 @@ export default function LoginLinks({ changePage, content }) {
       subscribeForNotifications();
       dispatch(setSelectedConversation({}));
       dispatch(setUserIsLoggedIn(true));
-      dispatch(setCurrentUser(userData));
+      dispatch(setCurrentUserId(userData._id));
       dispatch(upsertUser(userData));
     } catch (err) {
       localStorage.removeItem("sessionId");

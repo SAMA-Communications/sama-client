@@ -9,7 +9,7 @@ import {
 } from "@store/values/Conversations";
 import { getIsTabletView } from "@store/values/IsTabletView";
 import { getIsMobileView } from "@store/values/IsMobileView";
-import { selectCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setAllParams } from "@store/values/ContextMenu";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,12 +32,12 @@ export default function ChatFormHeader({ closeFormFunc }) {
 
   const participants = useSelector(selectParticipantsEntities);
   const conversations = useSelector(selectConversationsEntities);
-  const currentUser = useSelector(selectCurrentUser);
+  const currentUserId = useSelector(selectCurrentUserId);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
   const isCurrentUserOwner =
-    currentUser._id === selectedConversation.owner_id?.toString();
+    currentUserId === selectedConversation.owner_id?.toString();
   const isGroupChat = selectedConversation.type === "g";
 
   const opponentId = useMemo(() => {
@@ -47,9 +47,9 @@ export default function ChatFormHeader({ closeFormFunc }) {
     }
 
     const { owner_id, opponent_id } = conversation;
-    return participants[owner_id === currentUser._id ? opponent_id : owner_id]
+    return participants[owner_id === currentUserId ? opponent_id : owner_id]
       ?._id;
-  }, [selectedCID, conversations, participants, currentUser]);
+  }, [selectedCID, conversations, participants, currentUserId]);
 
   const isOpponentExist = useMemo(
     () => !!participants[opponentId]?.login,

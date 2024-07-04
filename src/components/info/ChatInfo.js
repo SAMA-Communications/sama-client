@@ -8,7 +8,7 @@ import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView } from "@store/values/IsTabletView";
-import { selectCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
@@ -29,16 +29,16 @@ export default function ChatInfo() {
   const isTabletView = useSelector(getIsTabletView);
 
   const participants = useSelector(selectParticipantsEntities);
-  const currentUser = useSelector(selectCurrentUser);
+  const currentUserId = useSelector(selectCurrentUserId);
   const selectedConversation = useSelector(getConverastionById);
   const conversationOwner = selectedConversation?.owner_id?.toString();
 
   const isCurrentUserOwner = useMemo(() => {
-    if (!currentUser || !selectedConversation) {
+    if (!currentUserId || !selectedConversation) {
       return false;
     }
-    return currentUser._id === selectedConversation.owner_id?.toString();
-  }, [currentUser, selectedConversation]);
+    return currentUserId === selectedConversation.owner_id?.toString();
+  }, [currentUserId, selectedConversation]);
 
   useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
   useKeyDown(KEY_CODES.ESCAPE, () =>
@@ -46,7 +46,7 @@ export default function ChatInfo() {
   );
 
   const participantsList = useMemo(() => {
-    if (!selectedConversation?.participants || !currentUser) {
+    if (!selectedConversation?.participants || !currentUserId) {
       return null;
     }
 
@@ -77,7 +77,7 @@ export default function ChatInfo() {
     }
 
     return mappedParticipants;
-  }, [selectedConversation, participants, currentUser]);
+  }, [selectedConversation, participants, currentUserId]);
 
   const participantsCount = participantsList?.length;
 

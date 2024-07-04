@@ -3,7 +3,7 @@ import addPrefix from "@utils/navigation/add_prefix";
 import getUserInitials from "@utils/user/get_user_initials";
 import navigateTo from "@utils/navigation/navigate_to";
 import usersService from "@services/usersService";
-import { getCurrentUserById } from "@store/values/Participants";
+import { getCurrentUserFromParticipants } from "@store/values/Participants";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView } from "@store/values/IsTabletView";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
@@ -12,7 +12,7 @@ import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
-import { useUploadAvatarUrl } from "@hooks/useUploadAvatarUrl";
+import { useBuildAndSetAvatarsUrls } from "@hooks/useBuildAndSetAvatarsUrls";
 
 import "@styles/navigation/NavigationLine.css";
 
@@ -26,12 +26,12 @@ export default function NavigationLine() {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
-  const currentUser = useSelector(getCurrentUserById);
+  const currentUser = useSelector(getCurrentUserFromParticipants);
 
   const isTabletView = useSelector(getIsTabletView);
   const isMobileView = useSelector(getIsMobileView);
 
-  useUploadAvatarUrl();
+  useBuildAndSetAvatarsUrls();
 
   const sendLogout = async () => {
     try {
