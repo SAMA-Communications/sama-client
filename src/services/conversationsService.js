@@ -103,6 +103,7 @@ class ConversationsService {
   }
 
   async createPrivateChat(userId, userObject) {
+    console.log(userId, userObject);
     if (!userId) {
       return;
     }
