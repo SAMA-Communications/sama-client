@@ -171,7 +171,7 @@ export default function AttachHub() {
 
       inputTextRef.current.value = "";
       const cid = selectedCID;
-      const mid = currentUser.native_id + Date.now();
+      const mid = `${currentUser.native_id}${Date.now()}`
 
       let msg = {
         _id: mid,
