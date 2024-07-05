@@ -33,7 +33,11 @@ export default function EmptyHub() {
           setState={setInputText}
           isLargeSize={true}
         />
-        <SearchBlock searchText={inputText} isPreviewUserProfile={true} />
+        <SearchBlock
+          searchText={inputText}
+          isPreviewUserProfile={true}
+          isSearchOnlyUsers={true}
+        />
       </section>
     </>
   );

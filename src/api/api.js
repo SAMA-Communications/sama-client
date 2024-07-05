@@ -517,6 +517,19 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
+  async conversationSearch(data) {
+    const requestData = {
+      request: {
+        conversation_search: {
+          name: data.name,
+        },
+        id: getUniqueId("conversationSearch"),
+      },
+    };
+    const resObjKey = "conversations";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
   async pushSubscriptionCreate(data) {
     const requestData = {
       request: {

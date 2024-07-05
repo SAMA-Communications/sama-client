@@ -229,6 +229,10 @@ class ConversationsService {
       return false;
     }
   }
+
+  async search(data) {
+    return await api.conversationSearch(data);
+  }
 }
 
 const conversationService = new ConversationsService();

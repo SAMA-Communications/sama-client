@@ -94,6 +94,7 @@ export default function UserSelectorBlock({
         }
         isMaxLimit={counter >= 50}
         isSelectUserToArray={true}
+        isSearchOnlyUsers={true}
       />
       <div className="em-navigation__container fcc">
         <p className="em-navigation__link" onClick={closeWindow}>
