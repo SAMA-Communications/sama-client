@@ -36,8 +36,8 @@ export default function MessagesList({ scrollRef }) {
       if (!participants[msg.from]) {
         usersToUpdate.add(msg.from);
       }
-      if (msg.x?.user?._id && !participants[msg.x.user._id]) {
-        usersToUpdate.add(msg.x.user._id);
+      if (msg.x?.user?.native_id && !participants[msg.x.user.native_id]) {
+        usersToUpdate.add(msg.x.user.native_id);
       }
     });
 
@@ -165,7 +165,7 @@ export default function MessagesList({ scrollRef }) {
             key={msg._id}
             message={msg}
             sender={participants[msg.from]}
-            currentUserId={currentUser._id}
+            currentUserId={currentUser.native_id}
             isPrevMesssageYours={
               i > 0
                 ? messages[i - 1].from === messages[i].from &&

@@ -171,12 +171,12 @@ export default function AttachHub() {
 
       inputTextRef.current.value = "";
       const cid = selectedCID;
-      const mid = currentUser._id + Date.now();
+      const mid = currentUser.native_id + Date.now();
 
       let msg = {
         _id: mid,
         body,
-        from: currentUser._id,
+        from: currentUser.native_id,
         t: Date.now(),
         attachments: files.map((file) => ({
           file_id: file.name,
@@ -215,7 +215,7 @@ export default function AttachHub() {
         msg = {
           _id: response.server_mid,
           body,
-          from: currentUser._id,
+          from: currentUser.native_id,
           status: "sent",
           t: response.t,
           attachments: attachments.map((obj, i) => ({

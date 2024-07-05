@@ -16,7 +16,7 @@ export default function ParticipantInChat({
   const { pathname, hash } = useLocation();
 
   const currentUser = useSelector(selectCurrentUser);
-  const isCurrentUser = currentUser._id === userObject._id;
+  const isCurrentUser = currentUser.native_id === userObject.native_id;
 
   return (
     <div
@@ -24,7 +24,7 @@ export default function ParticipantInChat({
       onClick={() =>
         isCurrentUser
           ? addPrefix(pathname + hash, "/profile")
-          : addSuffix(pathname + hash, `/user?uid=${userObject._id}`)
+          : addSuffix(pathname + hash, `/user?uid=${userObject.native_id}`)
       }
       onContextMenu={(e) => {
         e.preventDefault();

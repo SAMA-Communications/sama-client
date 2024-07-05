@@ -35,7 +35,7 @@ export default function ChatInfo() {
     if (!currentUser || !selectedConversation) {
       return false;
     }
-    return currentUser._id === selectedConversation.owner_id?.toString();
+    return currentUser.native_id === selectedConversation.owner_id?.toString();
   }, [currentUser, selectedConversation]);
 
   useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
@@ -54,7 +54,7 @@ export default function ChatInfo() {
         return null;
       }
 
-      const isOwner = userObject._id === conversationOwner;
+      const isOwner = userObject.native_id === conversationOwner;
 
       return (
         <ParticipantInChat

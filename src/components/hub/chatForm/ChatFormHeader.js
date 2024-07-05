@@ -37,7 +37,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
   const selectedCID = selectedConversation?._id;
 
   const isCurrentUserOwner =
-    currentUser._id === selectedConversation.owner_id?.toString();
+    currentUser.native_id === selectedConversation.owner_id;
   const isGroupChat = selectedConversation.type === "g";
 
   const opponentId = useMemo(() => {
@@ -47,8 +47,8 @@ export default function ChatFormHeader({ closeFormFunc }) {
     }
 
     const { owner_id, opponent_id } = conversation;
-    return participants[owner_id === currentUser._id ? opponent_id : owner_id]
-      ?._id;
+    return participants[owner_id === currentUser.native_id ? opponent_id : owner_id]
+      ?.native_id;
   }, [selectedCID, conversations, participants, currentUser]);
 
   const isOpponentExist = useMemo(
@@ -96,7 +96,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
 
     const path = isGroupChat
       ? "/info"
-      : "/user?uid=" + participants[opponentId]._id;
+      : "/user?uid=" + participants[opponentId].native_id;
 
     const tmpPath =
       isTablet && path === "/info" && pathname.includes("/profile")

@@ -57,16 +57,16 @@ export default function SearchBlock({
         <CustomScrollBar customStyle={{ width: "400px" }}>
           {searchedUsers.map((u) => (
             <SearchedUser
-              key={u._id}
+              key={u.native_id}
               uObject={u}
-              isSelected={selectedUsers?.find((uObj) => uObj._id === u._id)}
+              isSelected={selectedUsers?.find((uObj) => uObj.native_id === u.native_id)}
               isClickDisabled={
                 isMaxLimit
                   ? isClickDisabledFunc(u)
                     ? true
-                    : !selectedUsers?.find((uObj) => uObj._id === u._id)
+                    : !selectedUsers?.find((uObj) => uObj.native_id === u.native_id)
                   : isClickDisabledFunc(u) &&
-                    selectedUsers?.find((uObj) => uObj._id === u._id)
+                    selectedUsers?.find((uObj) => uObj.native_id === u.native_id)
               }
               clearInputText={clearInputText}
               addUserToArray={addUserToArray}

@@ -57,12 +57,12 @@ export default function ChatList() {
           obj.name ||
           getUserFullName(
             participants[
-              obj[obj.owner_id === currentUser._id ? "opponent_id" : "owner_id"]
+              obj[obj.owner_id === currentUser.native_id ? "opponent_id" : "owner_id"]
             ] || {}
           )
         }
         chatObject={obj}
-        currentUserId={currentUser._id}
+        currentUserId={currentUser.native_id}
       />
     ));
   }, [conversations, participants, activeConv, currentUser]);

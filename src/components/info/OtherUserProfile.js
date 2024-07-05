@@ -34,7 +34,7 @@ export default function OtherUserProfile() {
   const participants = useSelector(selectParticipantsEntities);
 
   const [userObject, setUserObject] = useState({});
-  const { _id: userId, login, email, phone } = userObject;
+  const { native_id: userId, login, email, phone } = userObject;
 
   useEffect(() => {
     const uid = extractUserIdFromUrl(pathname + hash + search);

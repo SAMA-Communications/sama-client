@@ -32,7 +32,7 @@ export default function ContextMenuHub() {
     useSelector(getConverastionById) || {};
   const currentUser = useSelector(selectAllConversations);
   const currentPath = pathname + hash;
-  const isCurrentUserOwner = currentUser._id === owner_id;
+  const isCurrentUserOwner = currentUser.native_id === owner_id;
 
   const isTabletView = useSelector(getIsTabletView);
 
@@ -66,11 +66,11 @@ export default function ContextMenuHub() {
       infoUser: (
         <InfoUserLink
           key={"infoUser"}
-          uId={userObject?._id}
+          uId={userObject?.native_id}
           onClick={() => {
             isCurrentUserOwner
               ? addPrefix(currentPath, "/profile")
-              : addSuffix(currentPath, `/user?uid=${userObject?._id}`);
+              : addSuffix(currentPath, `/user?uid=${userObject?.native_id}`);
           }}
         />
       ),
@@ -91,7 +91,7 @@ export default function ContextMenuHub() {
       removeParticipant: (
         <RemoveParticipantLink
           key={"removeParticipant"}
-          onClick={() => conversationService.removeParticipant(userObject?._id)}
+          onClick={() => conversationService.removeParticipant(userObject?.native_id)}
         />
       ),
       newChat: (
@@ -100,7 +100,7 @@ export default function ContextMenuHub() {
           uObject={userObject}
           onClick={async () => {
             const chatId = await conversationService.createPrivateChat(
-              userObject?._id,
+              userObject?.native_id,
               userObject
             );
             navigateTo(`/#${chatId}`);

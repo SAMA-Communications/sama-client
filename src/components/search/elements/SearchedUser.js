@@ -34,7 +34,7 @@ export default function SearchedUser({
 
     if (isPreviewUserProfile) {
       dispatch(addUsers([uObject]));
-      addSuffix(pathname + hash, `/user?uid=${uObject._id}`);
+      addSuffix(pathname + hash, `/user?uid=${uObject.native_id}`);
       return;
     }
 
@@ -44,7 +44,7 @@ export default function SearchedUser({
     }
 
     const chatId = await conversationService.createPrivateChat(
-      uObject._id,
+      uObject.native_id,
       uObject
     );
     navigateTo(`/#${chatId}`);

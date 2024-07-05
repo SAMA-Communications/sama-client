@@ -56,18 +56,18 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
 
     setIsSendMessageDisable(true);
     inputRef.current.value = "";
-    const mid = currentUser._id + Date.now();
+    const mid = `${currentUser.native_id}${Date.now()}`;
     const msg = {
       _id: mid,
       body,
-      from: currentUser._id,
+      from: currentUser.native_id,
       t: Date.now(),
     };
 
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
-    const mObject = { mid, body, cid: selectedCID, from: currentUser._id };
+    const mObject = { mid, body, cid: selectedCID, from: currentUser.native_id };
     inputRef.current.focus(); //care..
 
     try {

@@ -174,6 +174,7 @@ class Api {
               }),
             }
           : {
+              application_id: 6783,
               login: data.login,
               password: data.password,
               deviceId: getBrowserFingerprint({

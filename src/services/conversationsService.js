@@ -48,7 +48,7 @@ class ConversationsService {
           ...chat,
           unread_messages_count: chat.unread_messages_count || 0,
           messagesIds: null,
-          participants: users.map((u) => u._id),
+          participants: users.map((u) => u.native_id),
         })
       );
       store.dispatch(addUsers(users));
@@ -129,7 +129,7 @@ class ConversationsService {
     const chat = await api.conversationCreate({
       type: "g",
       name,
-      participants: participants.map((el) => el._id),
+      participants: participants.map((el) => el.native_id),
     });
 
     store.dispatch(addUsers(participants));
@@ -171,7 +171,7 @@ class ConversationsService {
       return;
     }
 
-    const addUsersArr = participants.map((el) => el._id);
+    const addUsersArr = participants.map((el) => el.native_id);
     const requestData = {
       cid: selectedConversation.id,
       participants: { add: addUsersArr },
