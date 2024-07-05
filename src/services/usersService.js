@@ -178,18 +178,6 @@ class UsersService {
     }
   }
 
-  async uploadAvatarsUrls(objects) {
-    const downloadedFiles = await DownloadManager.getDownloadFileLinks(objects);
-    const updatedUsers = [];
-
-    downloadedFiles.forEach(({ attachments, _id: userId }) => {
-      const file = attachments[0];
-      updatedUsers.push({ _id: userId, avatar_url: file.file_url });
-    });
-
-    store.dispatch(upsertUsers(updatedUsers));
-  }
-
   async deleteCurrentUser() {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
