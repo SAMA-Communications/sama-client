@@ -29,13 +29,13 @@ export default function ChatInfo() {
   const participants = useSelector(selectParticipantsEntities);
   const currentUser = useSelector(selectCurrentUser);
   const selectedConversation = useSelector(getConverastionById);
-  const conversationOwner = selectedConversation?.owner_id?.toString();
+  const conversationOwner = selectedConversation?.owner_id;
 
   const isCurrentUserOwner = useMemo(() => {
     if (!currentUser || !selectedConversation) {
       return false;
     }
-    return currentUser.native_id === selectedConversation.owner_id?.toString();
+    return currentUser.native_id === selectedConversation.owner_id;
   }, [currentUser, selectedConversation]);
 
   useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
