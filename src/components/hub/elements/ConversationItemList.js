@@ -23,7 +23,7 @@ export default function ConversationItemList({ conversations }) {
   return conversations.map((obj) => {
     const isSelected = activeConversationId === obj._id;
     const chatParticipantId =
-      obj.owner_id === currentUser._id ? obj.opponent_id : obj.owner_id;
+      obj.owner_id === currentUser.native_id ? obj.opponent_id : obj.owner_id;
     const chatParticipant = participants[chatParticipantId] || {};
     const chatName = obj.name || getUserFullName(chatParticipant);
 
@@ -34,7 +34,7 @@ export default function ConversationItemList({ conversations }) {
         onClickFunc={() => convItemOnClickFunc(obj._id)}
         chatName={chatName}
         chatObject={obj}
-        currentUserId={currentUser._id}
+        currentUserId={currentUser.native_id}
       />
     );
   });
