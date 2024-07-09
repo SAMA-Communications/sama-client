@@ -33,8 +33,14 @@ export default function ConversationItemList({ conversations }) {
         isSelected={isSelected}
         onClickFunc={() => convItemOnClickFunc(obj._id)}
         chatName={chatName}
-        chatAvatarUrl={chatParticipant.avatar_url}
-        chatAvatarBlutHash={chatParticipant.avatar_object?.file_blur_hash}
+        chatAvatarUrl={
+          obj.type === "g" ? obj.image_url : chatParticipant.avatar_url
+        }
+        chatAvatarBlutHash={
+          obj.type === "g"
+            ? obj.image_object?.file_blur_hash
+            : chatParticipant.avatar_object?.file_blur_hash
+        }
         chatObject={obj}
         currentUserId={currentUserId}
       />

@@ -21,29 +21,27 @@ export default function ConversationItem({
     return getLastUpdateTime(updated_at, last_message);
   }, [updated_at, last_message]);
 
-  const chatPhoto = useMemo(() => {
-    if (type === "g") {
-      return <Group />;
-    }
-
-    return (
-      <DynamicAvatar
-        avatarUrl={chatAvatarUrl}
-        avatarBlurHash={chatAvatarBlutHash}
-        defaultIcon={
-          chatName ? chatName.slice(0, 2).toUpperCase() : <UnknownPhoto />
-        }
-        altText={"User's Profile"}
-      />
-    );
-  }, [type, chatAvatarUrl, chatAvatarBlutHash, chatName]);
-
   return (
     <div
       className={`chat-box__container${isSelected ? "--selected" : ""}`}
       onClick={onClickFunc}
     >
-      <div className="box__photo fcc">{chatPhoto}</div>
+      <div className="box__photo fcc">
+        <DynamicAvatar
+          avatarUrl={chatAvatarUrl}
+          avatarBlurHash={chatAvatarBlutHash}
+          defaultIcon={
+            chatName ? (
+              chatName.slice(0, 2).toUpperCase()
+            ) : type === "g" ? (
+              <Group />
+            ) : (
+              <UnknownPhoto />
+            )
+          }
+          altText={type === "g" ? "Chat Group" : "User's Profile"}
+        />
+      </div>
       <div className="box__content">
         <div className="content-top">
           <p className="content-top__name">
