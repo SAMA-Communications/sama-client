@@ -16,11 +16,15 @@
   color: var(--color-accent-dark);
 }
 
-.message-photo {
+.message-photo,
+.message-photo--hover {
   min-width: 46px;
 
   display: flex;
   align-items: flex-end;
+}
+.message-photo--hover {
+  cursor: pointer;
 }
 
 .photo__container {
@@ -32,6 +36,18 @@
 
   border-radius: var(--border-16);
   background-color: var(--color-hover-light);
+}
+
+.photo__container > img,
+.photo__container > .blur-hash-preloader {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  border-radius: var(--border-8);
+
+  overflow: hidden;
 }
 
 .message-content__container {
@@ -75,9 +91,13 @@
   border-bottom-left-radius: 0;
 }
 
-.content__uname {
+.content__uname,
+.content__uname--hover {
   color: var(--color-accent-dark);
   font-weight: 500;
+}
+.content__uname--hover {
+  cursor: pointer;
 }
 
 .content__text {
@@ -139,6 +159,7 @@
 .message__container--my .photo__container,
 .message__container--my .content__text,
 .message__container--my .content__uname,
+.message__container--my .content__uname--hover,
 .message__container--my .status__time {
   color: var(--color-white);
 }

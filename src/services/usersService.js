@@ -1,6 +1,9 @@
+import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
+import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
+import { upsertUser, upsertUsers } from "@src/store/values/Participants";
 
 import validateEmail from "@validations/user/validateEmail";
 import validateFieldLength from "@validations/validateFieldLength";
@@ -10,10 +13,6 @@ import validatePassword from "@validations/user/validatePassword";
 import validatePhone from "@validations/user/validatePhone";
 
 class UsersService {
-  constructor() {
-    this.currentUser = store.getState().currentUser.value;
-  }
-
   async login(data) {
     const { login, password } = data;
 
@@ -136,6 +135,47 @@ class UsersService {
         localStorage.removeItem("sessionId");
         throw new Error("User logout error");
       });
+  }
+
+  async updateUserAvatar(file) {
+    if (!file) {
+      return;
+    }
+
+    const currentUserId = store.getState().currentUserId.value.id;
+    store.dispatch(
+      upsertUser({
+        _id: currentUserId,
+        avatar_url: URL.createObjectURL(file),
+      })
+    );
+
+    const avatarFile = await processFile(file);
+    if (!avatarFile) {
+      store.dispatch(upsertUser({ _id: currentUserId, avatar_url: undefined }));
+      showCustomAlert("An error occured while processing the file.", "warning");
+      return;
+    }
+
+    const avatarObject = (
+      await DownloadManager.getFileObjects([avatarFile])
+    ).at(0);
+    const requestData = {
+      avatar_object: {
+        file_id: avatarObject.file_id,
+        file_name: avatarObject.file_name,
+        file_blur_hash: avatarFile.blurHash,
+      },
+    };
+
+    try {
+      const userObject = await api.userEdit(requestData);
+      userObject["avatar_url"] = avatarObject.file_url;
+      store.dispatch(upsertUser(userObject));
+    } catch (err) {
+      showCustomAlert("The server connection is unavailable.", "warning");
+      return;
+    }
   }
 
   async deleteCurrentUser() {

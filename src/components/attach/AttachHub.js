@@ -19,9 +19,9 @@ import {
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
+import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getNetworkState } from "@store/values/NetworkState";
-import { selectCurrentUser } from "@store/values/CurrentUser";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useKeyDown } from "@hooks/useKeyDown";
@@ -39,7 +39,7 @@ export default function AttachHub() {
   const messages = useSelector(selectAllMessages);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation._id;
-  const currentUser = useSelector(selectCurrentUser);
+  const currentUserId = useSelector(selectCurrentUserId);
 
   const [isPending, setIsPending] = useState(false);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
@@ -171,12 +171,12 @@ export default function AttachHub() {
 
       inputTextRef.current.value = "";
       const cid = selectedCID;
-      const mid = `${currentUser.native_id}${Date.now()}`
+      const mid = `${currentUserId}${Date.now()}`;
 
       let msg = {
         _id: mid,
         body,
-        from: currentUser.native_id,
+        from: currentUserId,
         t: Date.now(),
         attachments: files.map((file) => ({
           file_id: file.name,
@@ -215,7 +215,7 @@ export default function AttachHub() {
         msg = {
           _id: response.server_mid,
           body,
-          from: currentUser.native_id,
+          from: currentUserId,
           status: "sent",
           t: response.t,
           attachments: attachments.map((obj, i) => ({
@@ -241,7 +241,7 @@ export default function AttachHub() {
     [
       closeModal,
       connectState,
-      currentUser,
+      currentUserId,
       files,
       isSendMessageDisable,
       messages,

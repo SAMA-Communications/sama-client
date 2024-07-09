@@ -1,9 +1,11 @@
+import UserAvatar from "@components/info/elements/UserAvatar";
 import addPrefix from "@utils/navigation/add_prefix";
 import getUserInitials from "@utils/user/get_user_initials";
 import navigateTo from "@utils/navigation/navigate_to";
 import usersService from "@services/usersService";
-import { getIsTabletView } from "@store/values/IsTabletView";
+import { getCurrentUserFromParticipants } from "@store/values/Participants";
 import { getIsMobileView } from "@store/values/IsMobileView";
+import { getIsTabletView } from "@store/values/IsTabletView";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
@@ -22,6 +24,8 @@ import { ReactComponent as Logout } from "@icons/actions/Logout.svg";
 export default function NavigationLine() {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
+
+  const currentUser = useSelector(getCurrentUserFromParticipants);
 
   const isTabletView = useSelector(getIsTabletView);
   const isMobileView = useSelector(getIsMobileView);
@@ -70,7 +74,13 @@ export default function NavigationLine() {
           }}
           className={`menu__profile fcc ${isProfilePageActive}`}
         >
-          <span className="fcc">{getUserInitials()}</span>
+          <span className="fcc">
+            <UserAvatar
+              avatarUrl={currentUser.avatar_url}
+              avatarBlurHash={currentUser.avatar_object?.file_blur_hash}
+              defaultIcon={getUserInitials()}
+            />
+          </span>
         </div>
         <div
           onClick={() => {

@@ -5,6 +5,7 @@ import api from "@api/api";
 import conversationService from "@services/conversationsService";
 import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
 import getUserFullName from "@utils/user/get_user_full_name";
+import UserAvatar from "@components/info/elements/UserAvatar";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
 import showCustomAlert from "@utils/show_alert";
@@ -83,7 +84,11 @@ export default function OtherUserProfile() {
               />
             )}
             <div className="profile__photo fcc">
-              <UserIcon />
+              <UserAvatar
+                avatarUrl={userObject.avatar_url}
+                avatarBlurHash={userObject.avatar_object?.file_blur_hash}
+                defaultIcon={<UserIcon />}
+              />
             </div>
             <div className="profile__info">
               <p className="uname__full">{getUserFullName(userObject)}</p>

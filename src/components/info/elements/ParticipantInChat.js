@@ -1,11 +1,12 @@
+import UserAvatar from "@components/info/elements/UserAvatar";
 import addPrefix from "@utils/navigation/add_prefix";
 import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
 import getUserInitials from "@utils/user/get_user_initials";
-import { selectCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUserId } from "@store/values/CurrentUserId";
+import { setAllParams } from "@store/values/ContextMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { setAllParams } from "@store/values/ContextMenu";
 
 export default function ParticipantInChat({
   userObject,
@@ -15,8 +16,8 @@ export default function ParticipantInChat({
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
-  const currentUser = useSelector(selectCurrentUser);
-  const isCurrentUser = currentUser.native_id === userObject.native_id;
+  const currentUserId = useSelector(selectCurrentUserId);
+  const isCurrentUser = currentUserId === userObject.native_id;
 
   return (
     <div
@@ -43,7 +44,11 @@ export default function ParticipantInChat({
       }}
     >
       <div className="participant__photo fcc">
-        {getUserInitials(userObject)}
+        <UserAvatar
+          avatarUrl={userObject.avatar_url}
+          avatarBlurHash={userObject.avatar_object?.file_blur_hash}
+          defaultIcon={userObject ? getUserInitials(userObject) : null}
+        />
       </div>
       <div className="participant__info">
         <p>{getUserFullName(userObject)}</p>

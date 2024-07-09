@@ -61,6 +61,17 @@
 
   background-color: var(--color-bg-dark);
 }
+.box__photo > img,
+.box__photo > .blur-hash-preloader {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  border-radius: var(--border-8);
+
+  overflow: hidden;
+}
 .box__photo > span {
   height: 75px;
 }

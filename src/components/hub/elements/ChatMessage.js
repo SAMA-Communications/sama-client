@@ -1,8 +1,10 @@
 import MessageAttachments from "@components/message/elements/MessageAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
+import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
 import { urlify } from "@utils/text/urlify";
+import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
 
 import "@styles/hub/elements/ChatMessage.css";
@@ -17,6 +19,8 @@ export default function ChatMessage({
   isPrevMesssageYours: prev,
   isNextMessageYours: next,
 }) {
+  const { pathname, hash } = useLocation();
+
   const { body, from, attachments, status, t } = message;
   const isCurrentUser = from === currentUserId;
 
@@ -27,15 +31,18 @@ export default function ChatMessage({
     }`;
   }, [t]);
 
+  const openUserProfile = () =>
+    sender ? addSuffix(pathname + hash, `/user?uid=${from}`) : {};
+
   return (
     <div
       className={`message__container${isCurrentUser ? "--my" : ""} ${
         prev ? "" : "mt-8"
       }`}
     >
-      <div className="message-photo">
+      <div className={`message-photo${sender ? "--hover" : ""}`}>
         {next ? null : (
-          <div className="photo__container fcc">
+          <div className="photo__container fcc" onClick={openUserProfile}>
             <MessageUserIcon
               userObject={sender}
               isCurrentUser={isCurrentUser}
@@ -50,7 +57,10 @@ export default function ChatMessage({
           <CornerLight className="message-content--corner" />
         )}
         {prev ? null : (
-          <div className="content__uname">
+          <div
+            className={`content__uname${sender ? "--hover" : ""}`}
+            onClick={openUserProfile}
+          >
             &zwnj;{getUserFullName(sender) || "Deleted account"}
           </div>
         )}

@@ -51,4 +51,14 @@
 
   border-radius: var(--border-16);
   background-color: var(--color-bg-light);
+  overflow: hidden;
+}
+.menu__profile span img,
+.menu__profile span .blur-hash-preloader {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  border-radius: var(--border-16);
 }

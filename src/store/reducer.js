@@ -1,6 +1,6 @@
 import contextMenuReducer from "@store/values/ContextMenu";
 import conversationsReducer from "@store/values/Conversations";
-import currentUserReducer from "@store/values/CurrentUser";
+import currentUserIdReducer from "@store/values/CurrentUserId";
 import isMobileViewReducer from "@store/values/IsMobileView";
 import isTabInFocusReducer from "@store/values/IsTabInFocus";
 import isTabletViewReducer from "@store/values/IsTabletView";
@@ -14,7 +14,7 @@ import { combineReducers } from "@reduxjs/toolkit";
 const appReducer = combineReducers({
   contextMenu: contextMenuReducer,
   conversations: conversationsReducer,
-  currentUser: currentUserReducer,
+  currentUserId: currentUserIdReducer,
   isMobileView: isMobileViewReducer,
   isTabInFocus: isTabInFocusReducer,
   isTabletView: isTabletViewReducer,
@@ -32,14 +32,14 @@ const rootReducer = (state, action) => {
       isTabletView,
       isTabInFocus,
       networkState,
-      currentUser,
+      currentUserId,
     } = state;
     state = {
       isMobileView,
       isTabletView,
       isTabInFocus,
       networkState,
-      currentUser,
+      currentUserId,
     };
   }
 

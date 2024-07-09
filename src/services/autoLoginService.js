@@ -5,7 +5,7 @@ import store from "@store/store";
 import subscribeForNotifications from "@services/notifications";
 import { default as EventEmitter } from "@event/eventEmitter";
 import { history } from "@helpers/history";
-import { setCurrentUser } from "@store/values/CurrentUser";
+import { setCurrentUserId } from "@store/values/CurrentUserId";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { upsertUser } from "@store/values/Participants";
@@ -36,7 +36,7 @@ class AutoLoginService {
 
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
-        store.dispatch(setCurrentUser(userData));
+        store.dispatch(setCurrentUserId(userData.native_id));
         api.curerntUserId = userData.native_id;
 
         subscribeForNotifications();
