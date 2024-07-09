@@ -120,25 +120,22 @@ class UsersService {
   }
 
   async logout() {
-    // navigator.serviceWorker.ready
-    //   .then((reg) => {
-    //     console.log('[reg]', reg)
-    //     return reg.pushManager.getSubscription().then((sub) => {
-    //       console.log('[sub]', sub)
-    //       return sub.unsubscribe().then(async () => {
-    //         await api.pushSubscriptionDelete();
-    //         await api.userLogout();
-    //         localStorage.removeItem("sessionId");
-    //       })
-    //     })
-    //   })
-    //   .catch(async (err) => {
-    //     console.error(err);
-    //     await api.userLogout();
-    //     localStorage.removeItem("sessionId");
-    //     throw new Error("User logout error");
-    //   });
-    await api.userLogout();
+    navigator.serviceWorker.ready
+      .then((reg) => {
+        return reg.pushManager.getSubscription().then((sub) => {
+          return sub.unsubscribe().then(async () => {
+            await api.pushSubscriptionDelete();
+            await api.userLogout();
+            localStorage.removeItem("sessionId");
+          })
+        })
+      })
+      .catch(async (err) => {
+        console.error(err);
+        await api.userLogout();
+        localStorage.removeItem("sessionId");
+        throw new Error("User logout error");
+      });
   }
 
   async deleteCurrentUser() {
