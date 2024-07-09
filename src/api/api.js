@@ -480,6 +480,7 @@ class Api {
             add: data.participants?.add,
             remove: data.participants?.remove,
           },
+          image_object: data.image_object,
         },
         id: getUniqueId("conversationUpdate"),
       },

@@ -1,6 +1,9 @@
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
+import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import ParticipantInChat from "@components/info/elements/ParticipantInChat";
 import addSuffix from "@utils/navigation/add_suffix";
+import conversationService from "@services/conversationsService";
+import globalConstants from "@helpers/constants";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
@@ -10,7 +13,7 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 
 import "@styles/info/ChatInfo.css";
@@ -30,6 +33,8 @@ export default function ChatInfo() {
   const currentUserId = useSelector(selectCurrentUserId);
   const selectedConversation = useSelector(getConverastionById);
   const conversationOwner = selectedConversation?.owner_id?.toString();
+
+  const inputFilesRef = useRef(null);
 
   const isCurrentUserOwner = useMemo(() => {
     if (!currentUserId || !selectedConversation) {
@@ -69,6 +74,11 @@ export default function ChatInfo() {
 
   const participantsCount = participantsList?.length;
 
+  const pickFileClick = () => inputFilesRef.current.click();
+
+  const sendChangeAvatarRequest = async (file) =>
+    void (await conversationService.updateChatImage(file));
+
   return (
     <div className="chat-info__container">
       <CustomScrollBar>
@@ -85,8 +95,23 @@ export default function ChatInfo() {
               onClick={() => removeAndNavigateSubLink(pathname + hash, "/info")}
             />
           )}
-          <div className="ci-photo fcc">
-            <ImageBig />
+          <div className="ci-photo fcc" onClick={pickFileClick}>
+            <DynamicAvatar
+              avatarUrl={selectedConversation.image_url}
+              avatarBlurHash={selectedConversation.image_object?.file_blur_hash}
+              defaultIcon={<ImageBig />}
+              altText={"Chat Group"}
+            />
+            <input
+              id="inputFile"
+              ref={inputFilesRef}
+              type="file"
+              onChange={(e) =>
+                sendChangeAvatarRequest(Array.from(e.target.files).at(0))
+              }
+              accept={globalConstants.allowedAvatarFormats}
+              multiple
+            />
           </div>
           <div
             className={`chat-info__content ${

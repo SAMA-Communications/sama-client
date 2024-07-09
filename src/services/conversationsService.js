@@ -18,6 +18,8 @@ import {
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
 import validateFieldLength from "@validations/validateFieldLength";
+import processFile from "@src/utils/media/process_file";
+import DownloadManager from "@src/adapters/downloadManager";
 
 class ConversationsService {
   userIsLoggedIn = false;
@@ -208,6 +210,51 @@ class ConversationsService {
         ),
       })
     );
+  }
+
+  async updateChatImage(file) {
+    if (!file) {
+      return;
+    }
+
+    const selectedConversationId =
+      store.getState().selectedConversation.value.id;
+    store.dispatch(
+      upsertChat({
+        _id: selectedConversationId,
+        image_url: URL.createObjectURL(file),
+      })
+    );
+
+    const imageFile = await processFile(file);
+    if (!imageFile) {
+      store.dispatch(
+        upsertChat({ _id: selectedConversationId, image_url: undefined })
+      );
+      showCustomAlert("An error occured while processing the file.", "warning");
+      return;
+    }
+
+    const imageObject = (await DownloadManager.getFileObjects([imageFile])).at(
+      0
+    );
+    const requestData = {
+      cid: selectedConversationId,
+      image_object: {
+        file_id: imageObject.file_id,
+        file_name: imageObject.file_name,
+        file_blur_hash: imageFile.blurHash,
+      },
+    };
+
+    try {
+      const conversationObject = await api.conversationUpdate(requestData);
+      conversationObject["image_url"] = imageObject.file_url;
+      store.dispatch(upsertChat(conversationObject));
+    } catch (err) {
+      showCustomAlert("The server connection is unavailable.", "warning");
+      return;
+    }
   }
 
   async deleteConversation() {

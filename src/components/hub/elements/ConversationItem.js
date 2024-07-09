@@ -1,5 +1,5 @@
 import LastMessage from "@components/message/LastMessage";
-import UserAvatar from "@components/info/elements/UserAvatar";
+import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import getLastUpdateTime from "@utils/conversation/get_last_update_time";
 import { useMemo } from "react";
 
@@ -27,12 +27,13 @@ export default function ConversationItem({
     }
 
     return (
-      <UserAvatar
+      <DynamicAvatar
         avatarUrl={chatAvatarUrl}
         avatarBlurHash={chatAvatarBlutHash}
         defaultIcon={
           chatName ? chatName.slice(0, 2).toUpperCase() : <UnknownPhoto />
         }
+        altText={"User's Profile"}
       />
     );
   }, [type, chatAvatarUrl, chatAvatarBlutHash, chatName]);

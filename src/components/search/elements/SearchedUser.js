@@ -1,4 +1,4 @@
-import UserAvatar from "@components/info/elements/UserAvatar";
+import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import addSuffix from "@utils/navigation/add_suffix";
 import conversationService from "@services/conversationsService";
 import getUserFullName from "@utils/user/get_user_full_name";
@@ -54,10 +54,11 @@ export default function SearchedUser({
   return (
     <div className="searched-user fcc" onClick={onClickFunc}>
       <div className="searched-user__photo fcc">
-        <UserAvatar
+        <DynamicAvatar
           avatarUrl={uObject.avatar_url}
           avatarBlurHash={uObject.avatar_object?.file_blur_hash}
           defaultIcon={getUserInitials(uObject)}
+          altText={"User's Profile"}
         />
         {isSelected ? (
           <div className="searched-user__indecator fcc">

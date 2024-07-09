@@ -1,11 +1,16 @@
 import ItemLoader from "@components/attach/elements/ItemLoader";
 import { useMemo } from "react";
 
-export default function UserAvatar({ avatarUrl, avatarBlurHash, defaultIcon }) {
+export default function DynamicAvatar({
+  avatarUrl,
+  avatarBlurHash,
+  defaultIcon,
+  altText,
+}) {
   const avatarView = useMemo(
     () =>
       avatarUrl ? (
-        <img src={avatarUrl} alt={"User's Profile"} />
+        <img src={avatarUrl} alt={altText} />
       ) : avatarBlurHash ? (
         <ItemLoader blurHash={avatarBlurHash} />
       ) : (
