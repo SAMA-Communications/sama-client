@@ -26,6 +26,7 @@ export default function SearchedUser({
   const dispatch = useDispatch();
 
   const onClickFunc = async () => {
+    console.log(uObject.native_id, uObject);
     if (isClickDisabled) {
       return;
     }
@@ -42,7 +43,6 @@ export default function SearchedUser({
       (isSelected ? removeUserFromArray : addUserToArray)(uObject);
       return;
     }
-
     const chatId = await conversationService.createPrivateChat(
       uObject.native_id,
       uObject
