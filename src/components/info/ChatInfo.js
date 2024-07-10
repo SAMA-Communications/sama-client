@@ -74,7 +74,8 @@ export default function ChatInfo() {
 
   const participantsCount = participantsList?.length;
 
-  const pickFileClick = () => inputFilesRef.current.click();
+  const pickFileClick = () =>
+    isCurrentUserOwner ? inputFilesRef.current.click() : {};
 
   const sendChangeAvatarRequest = async (file) =>
     void (await conversationService.updateChatImage(file));
