@@ -36,6 +36,26 @@
   border-radius: var(--border-24);
   background-color: var(--color-bg-light);
 }
+
+.profile__photo:after {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  opacity: 0;
+
+  border-radius: var(--border-24);
+  background: var(--color-black-25);
+
+  transition: opacity 0.4s linear;
+}
+.profile__photo:hover:after {
+  opacity: 1;
+}
 .profile__photo > #inputFile {
   display: none;
   visibility: hidden;
