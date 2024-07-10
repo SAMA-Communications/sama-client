@@ -29,7 +29,8 @@
 
   cursor: pointer;
 }
-.profile__photo {
+.profile__photo,
+.profile__photo--current {
   width: 160px;
   height: 160px;
 
@@ -37,7 +38,7 @@
   background-color: var(--color-bg-light);
 }
 
-.profile__photo:after {
+.profile__photo--current:after {
   content: "";
 
   position: absolute;
@@ -53,15 +54,19 @@
 
   transition: opacity 0.4s linear;
 }
-.profile__photo:hover:after {
+
+.profile__photo--current:hover:after {
   opacity: 1;
 }
-.profile__photo > #inputFile {
+.profile__photo > #inputFile,
+.profile__photo--current > #inputFile {
   display: none;
   visibility: hidden;
 }
 .profile__photo > img,
-.profile__photo > .blur-hash-preloader {
+.profile__photo--current > img,
+.profile__photo > .blur-hash-preloader,
+.profile__photo--current > .blur-hash-preloader {
   width: 100%;
   height: 100%;
 

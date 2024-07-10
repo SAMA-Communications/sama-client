@@ -78,7 +78,7 @@ export default function UserProfile() {
             />
           )}
           <div
-            className="profile__photo fcc cursor-pointer"
+            className="profile__photo--current fcc cursor-pointer"
             onClick={pickFileClick}
           >
             <UserAvatar
