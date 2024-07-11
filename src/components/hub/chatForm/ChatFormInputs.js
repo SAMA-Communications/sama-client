@@ -13,7 +13,7 @@ import {
   updateLastMessageField,
 } from "@store/values/Conversations";
 import { getNetworkState } from "@store/values/NetworkState";
-import { selectCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   const dispatch = useDispatch();
 
   const connectState = useSelector(getNetworkState);
-  const currentUser = useSelector(selectCurrentUser);
+  const currentUserId = useSelector(selectCurrentUserId);
   const messages = useSelector(selectActiveConversationMessages);
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
@@ -56,18 +56,18 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
 
     setIsSendMessageDisable(true);
     inputRef.current.value = "";
-    const mid = currentUser._id + Date.now();
+    const mid = currentUserId + Date.now();
     const msg = {
       _id: mid,
       body,
-      from: currentUser._id,
+      from: currentUserId,
       t: Date.now(),
     };
 
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
-    const mObject = { mid, body, cid: selectedCID, from: currentUser._id };
+    const mObject = { mid, body, cid: selectedCID, from: currentUserId };
     inputRef.current.focus(); //care..
 
     try {

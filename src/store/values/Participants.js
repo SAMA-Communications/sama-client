@@ -1,4 +1,9 @@
-import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
+import {
+  createEntityAdapter,
+  createSelector,
+  createSlice,
+} from "@reduxjs/toolkit";
+import { selectCurrentUserId } from "./CurrentUserId";
 
 export const participantsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
@@ -24,6 +29,11 @@ const participants = createSlice({
     setUsers: participantsAdapter.setAll,
   },
 });
+
+export const getCurrentUserFromParticipants = createSelector(
+  [selectCurrentUserId, selectParticipantsEntities],
+  (id, participants) => participants[id] || {}
+);
 
 export const { addUser, addUsers, setUsers, upsertUser, upsertUsers } =
   participants.actions;

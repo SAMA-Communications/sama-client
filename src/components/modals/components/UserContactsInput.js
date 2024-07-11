@@ -1,21 +1,21 @@
 import EditModalInput from "@components/modals/elements/EditModalInput";
-import { selectCurrentUser } from "@store/values/CurrentUser";
+import { getCurrentUserFromParticipants } from "@store/values/Participants";
 import { useSelector } from "react-redux";
 
 export default function UserContactsInput({ setState }) {
-  const currentUser = useSelector(selectCurrentUser);
+  const { email, phone } = useSelector(getCurrentUserFromParticipants);
 
   return (
     <>
       <EditModalInput
         title={"Mobile phone"}
-        value={currentUser.phone}
+        value={phone}
         systemTitle={"phone"}
         onChageFunc={setState}
       />
       <EditModalInput
         title={"Email address"}
-        value={currentUser.email}
+        value={email}
         systemTitle={"email"}
         onChageFunc={setState}
       />

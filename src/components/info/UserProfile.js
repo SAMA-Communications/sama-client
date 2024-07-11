@@ -1,17 +1,20 @@
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import InfoBox from "@components/info/elements/InfoBox";
+import UserAvatar from "@components/info/elements//UserAvatar";
 import addSuffix from "@utils/navigation/add_suffix";
+import globalConstants from "@src/_helpers/constants";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
+import { getCurrentUserFromParticipants } from "@store/values/Participants";
 import { getIsMobileView } from "@store/values/IsMobileView";
-import { selectCurrentUser } from "@store/values/CurrentUser";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
+import { useRef } from "react";
 
 import "@styles/info/UserProfile.css";
 
@@ -20,7 +23,7 @@ import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
 import { ReactComponent as LogoutMini } from "@icons/actions/LogoutMini.svg";
 import { ReactComponent as Password } from "@icons/users/Password.svg";
 import { ReactComponent as Trash } from "@icons/actions/Trash.svg";
-import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
+import { ReactComponent as UserIcon } from "@icons/users/AddAvatar.svg";
 
 export default function UserProfile() {
   const dispatch = useDispatch();
@@ -28,8 +31,10 @@ export default function UserProfile() {
 
   const isMobileView = useSelector(getIsMobileView);
 
-  const currentUser = useSelector(selectCurrentUser);
+  const currentUser = useSelector(getCurrentUserFromParticipants);
   const { login, email, phone, first_name, last_name } = currentUser || {};
+
+  const inputFilesRef = useRef(null);
 
   useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
   useKeyDown(KEY_CODES.ESCAPE, () =>
@@ -47,6 +52,11 @@ export default function UserProfile() {
       dispatch(setUserIsLoggedIn(false));
     }
   };
+
+  const pickFileClick = () => inputFilesRef.current.click();
+
+  const sendChangeAvatarRequest = async (file) =>
+    void (await usersService.updateUserAvatar(file));
 
   return (
     <div className="profile__container">
@@ -67,8 +77,25 @@ export default function UserProfile() {
               }
             />
           )}
-          <div className="profile__photo fcc">
-            <UserIcon />
+          <div
+            className="profile__photo--current fcc cursor-pointer"
+            onClick={pickFileClick}
+          >
+            <UserAvatar
+              avatarUrl={currentUser.avatar_url}
+              avatarBlurHash={currentUser.avatar_object?.file_blur_hash}
+              defaultIcon={<UserIcon />}
+            />
+            <input
+              id="inputFile"
+              ref={inputFilesRef}
+              type="file"
+              onChange={(e) =>
+                sendChangeAvatarRequest(Array.from(e.target.files).at(0))
+              }
+              accept={globalConstants.allowedAvatarFormats}
+              multiple
+            />
           </div>
           <div onClick={() => addSuffix(pathname + hash, "/edit?type=user")}>
             <p className="uname__first">

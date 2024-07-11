@@ -1,4 +1,5 @@
 import LastMessage from "@components/message/LastMessage";
+import UserAvatar from "@components/info/elements/UserAvatar";
 import getLastUpdateTime from "@utils/conversation/get_last_update_time";
 import { useMemo } from "react";
 
@@ -11,6 +12,8 @@ export default function ConversationItem({
   chatName,
   chatObject,
   currentUserId,
+  chatAvatarUrl,
+  chatAvatarBlutHash,
 }) {
   const { updated_at, unread_messages_count, type, last_message } = chatObject;
 
@@ -22,8 +25,17 @@ export default function ConversationItem({
     if (type === "g") {
       return <Group />;
     }
-    return chatName ? chatName.slice(0, 2).toUpperCase() : <UnknownPhoto />;
-  }, [type, chatName]);
+
+    return (
+      <UserAvatar
+        avatarUrl={chatAvatarUrl}
+        avatarBlurHash={chatAvatarBlutHash}
+        defaultIcon={
+          chatName ? chatName.slice(0, 2).toUpperCase() : <UnknownPhoto />
+        }
+      />
+    );
+  }, [type, chatAvatarUrl, chatAvatarBlutHash, chatName]);
 
   return (
     <div

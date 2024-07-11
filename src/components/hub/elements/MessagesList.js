@@ -13,7 +13,7 @@ import {
   selectParticipantsEntities,
 } from "@store/values/Participants";
 import { getConverastionById, upsertChat } from "@store/values/Conversations";
-import { selectCurrentUser } from "@store/values/CurrentUser";
+import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -24,7 +24,7 @@ export default function MessagesList({ scrollRef }) {
 
   const messages = useSelector(selectActiveConversationMessages);
   const participants = useSelector(selectParticipantsEntities);
-  const currentUser = useSelector(selectCurrentUser);
+  const currentUserId = useSelector(selectCurrentUserId);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
 
@@ -165,7 +165,7 @@ export default function MessagesList({ scrollRef }) {
             key={msg._id}
             message={msg}
             sender={participants[msg.from]}
-            currentUserId={currentUser._id}
+            currentUserId={currentUserId}
             isPrevMesssageYours={
               i > 0
                 ? messages[i - 1].from === messages[i].from &&
