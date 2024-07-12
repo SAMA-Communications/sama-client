@@ -23,7 +23,7 @@ import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
 import { ReactComponent as LogoutMini } from "@icons/actions/LogoutMini.svg";
 import { ReactComponent as Password } from "@icons/users/Password.svg";
 import { ReactComponent as Trash } from "@icons/actions/Trash.svg";
-import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
+import { ReactComponent as UserIcon } from "@icons/users/AddAvatar.svg";
 
 export default function UserProfile() {
   const dispatch = useDispatch();

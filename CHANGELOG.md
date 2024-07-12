@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.0
+
+### Features
+
+- Implement local search for group chats + search by user
+- Added: [user_name] has left the chat.
+- Notify all participants when admin changes group name or description
+
+### Important fixes
+
+- User became `deleted account` when removed by admin without common chats
+- Removed the error when a user was stayed alone in the group chat
+- Black screen appears after pressing on `ESC` when modal popup is active
+
 ## 1.1.0
 
 ### Improvements
