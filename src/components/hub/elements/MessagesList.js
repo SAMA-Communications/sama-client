@@ -36,8 +36,8 @@ export default function MessagesList({ scrollRef }) {
       if (!participants[msg.from]) {
         usersToUpdate.add(msg.from);
       }
-      if (msg.x?.user?._id && !participants[msg.x.user._id]) {
-        usersToUpdate.add(msg.x.user._id);
+      if (msg.x?.user?.native_id && !participants[msg.x.user.native_id]) {
+        usersToUpdate.add(msg.x.user.native_id);
       }
     });
 

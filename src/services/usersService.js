@@ -37,7 +37,7 @@ class UsersService {
       password: password.trim(),
     });
     localStorage.setItem("sessionId", userToken);
-    api.curerntUserId = userData._id;
+    api.curerntUserId = userData.native_id;
 
     return userData;
   }
@@ -120,15 +120,15 @@ class UsersService {
 
   async logout() {
     navigator.serviceWorker.ready
-      .then((reg) =>
-        reg.pushManager.getSubscription().then((sub) =>
-          sub.unsubscribe().then(async () => {
+      .then((reg) => {
+        return reg.pushManager.getSubscription().then((sub) => {
+          return sub.unsubscribe().then(async () => {
             await api.pushSubscriptionDelete();
             await api.userLogout();
             localStorage.removeItem("sessionId");
           })
-        )
-      )
+        })
+      })
       .catch(async (err) => {
         console.error(err);
         await api.userLogout();

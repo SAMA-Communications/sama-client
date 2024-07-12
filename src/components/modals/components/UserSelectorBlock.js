@@ -32,7 +32,7 @@ export default function UserSelectorBlock({
 
     const filteredUsers = initSelectedUsers?.length
       ? selectedUsers.filter(
-          (u) => !initSelectedUsers.find((uObj) => uObj._id === u._id)
+          (u) => !initSelectedUsers.find((uObj) => uObj.native_id === u.native_id)
         )
       : selectedUsers;
 
@@ -42,11 +42,11 @@ export default function UserSelectorBlock({
           <CustomScrollBar>
             {filteredUsers.map((u) => (
               <UserInfo
-                key={u._id}
+                key={u.native_id}
                 uObject={u}
                 onClickFunc={() =>
                   setSelectedUsers((prev) =>
-                    prev.filter((uObj) => uObj._id !== u._id)
+                    prev.filter((uObj) => uObj.native_id !== u.native_id)
                   )
                 }
               />
@@ -63,7 +63,7 @@ export default function UserSelectorBlock({
     onClickCreateFunc(
       initSelectedUsers
         ? selectedUsers.filter(
-            (u) => !initSelectedUsers.find((uObj) => u._id === uObj._id)
+            (u) => !initSelectedUsers.find((uObj) => u.native_id === uObj.native_id)
           )
         : selectedUsers
     )
@@ -82,15 +82,15 @@ export default function UserSelectorBlock({
         selectedUsers={selectedUsers}
         addUserToArray={(uObj) =>
           setSelectedUsers((prev) => {
-            const isInclude = prev.find((u) => u._id === uObj._id);
+            const isInclude = prev.find((u) => u.native_id === uObj.native_id);
             return isInclude ? prev : [...prev, uObj];
           })
         }
         removeUserFromArray={(uObj) =>
-          setSelectedUsers((prev) => prev.filter((u) => u._id !== uObj._id))
+          setSelectedUsers((prev) => prev.filter((u) => u.native_id !== uObj.native_id))
         }
         isClickDisabledFunc={(uObj) =>
-          initSelectedUsers?.find((u) => u._id === uObj._id)
+          initSelectedUsers?.find((u) => u.native_id === uObj.native_id)
         }
         isMaxLimit={counter >= 50}
         isSelectUserToArray={true}
@@ -106,7 +106,7 @@ export default function UserSelectorBlock({
             onClickCreateFunc(
               initSelectedUsers
                 ? selectedUsers.filter(
-                    (u) => !initSelectedUsers.find((uObj) => u._id === uObj._id)
+                    (u) => !initSelectedUsers.find((uObj) => u.native_id === uObj.native_id)
                   )
                 : selectedUsers
             )

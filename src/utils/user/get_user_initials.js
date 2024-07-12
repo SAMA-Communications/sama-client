@@ -13,7 +13,7 @@ export default function getUserInitials(user) {
   }
 
   const userObject =
-    store.getState().participants.entities[userInfo._id] || user;
+    store.getState().participants.entities[userInfo.native_id] || user;
   if (!userObject || !Object.keys(userObject).length || !userObject.login) {
     return "AA";
   }

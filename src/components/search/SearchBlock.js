@@ -89,7 +89,7 @@ export default function SearchBlock({
           )}
           {searchedUsers.map((u) => {
             const isSelected = selectedUsers?.some(
-              (uObj) => uObj._id === u._id
+              (uObj) => uObj.native_id === u.native_id
             );
             const isClickDisabled = isMaxLimit
               ? isClickDisabledFunc(u) || !isSelected
@@ -97,7 +97,7 @@ export default function SearchBlock({
 
             return (
               <SearchedUser
-                key={u._id}
+                key={u.native_id}
                 uObject={u}
                 isSelected={isSelected}
                 isClickDisabled={isClickDisabled}

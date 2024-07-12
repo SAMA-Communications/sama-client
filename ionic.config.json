@@ -1,0 +1,7 @@
+{
+  "name": "Sama",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}

@@ -56,7 +56,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
 
     setIsSendMessageDisable(true);
     inputRef.current.value = "";
-    const mid = currentUserId + Date.now();
+    const mid = `${currentUserId}${Date.now()}`;
     const msg = {
       _id: mid,
       body,
