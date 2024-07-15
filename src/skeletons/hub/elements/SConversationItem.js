@@ -1,8 +1,17 @@
+import { animateSConversationItem } from "@src/animations/animateSkeletons";
+import { motion as m } from "framer-motion";
+
 import Skeleton from "react-loading-skeleton";
 
-export default function SConversationItem() {
+export default function SConversationItem({ index }) {
   return (
-    <div className="chat-box__container">
+    <m.div
+      className="chat-box__container"
+      variants={animateSConversationItem(index)}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <div className="box__photo fcc">
         <Skeleton height={70} width={70} />
       </div>
@@ -19,6 +28,6 @@ export default function SConversationItem() {
           <Skeleton containerClassName="flex-grow-1" />
         </div>
       </div>
-    </div>
+    </m.div>
   );
 }

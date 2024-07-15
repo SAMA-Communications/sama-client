@@ -20,9 +20,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { motion as m } from "framer-motion";
+import { animateFormTitle } from "@src/animations/animateMainComponents";
 
 import "@styles/hub/ChatForm.css";
-import { AnimatePresence, LayoutGroup } from "framer-motion";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -109,9 +110,15 @@ export default function ChatForm() {
           />
         </>
       ) : (
-        <p className="chat-form__title">
+        <m.p
+          className="chat-form__title"
+          variants={animateFormTitle}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+        >
           Select a conversation to start chatting
-        </p>
+        </m.p>
       )}
     </section>
   );
