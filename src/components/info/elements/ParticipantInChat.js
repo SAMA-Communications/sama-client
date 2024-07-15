@@ -7,11 +7,15 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { setAllParams } from "@store/values/ContextMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { motion as m } from "framer-motion";
+import { animateParticipantsInChat } from "@src/animations/animateUserProfile";
 
 export default function ParticipantInChat({
+  index,
   userObject,
   isOwner,
   isCurrentUserOwner,
+  isAnimate = false,
 }) {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
@@ -20,7 +24,7 @@ export default function ParticipantInChat({
   const isCurrentUser = currentUserId === userObject._id;
 
   return (
-    <div
+    <m.div
       className={`participant__box`}
       onClick={() =>
         isCurrentUser
@@ -42,6 +46,11 @@ export default function ParticipantInChat({
           })
         );
       }}
+      variants={isAnimate ? animateParticipantsInChat(index) : {}}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      whileTap={{ scale: 0.97 }}
     >
       <div className="participant__photo fcc">
         <UserAvatar
@@ -54,6 +63,6 @@ export default function ParticipantInChat({
         <p>{getUserFullName(userObject)}</p>
         {isOwner ? <span>admin</span> : null}
       </div>
-    </div>
+    </m.div>
   );
 }

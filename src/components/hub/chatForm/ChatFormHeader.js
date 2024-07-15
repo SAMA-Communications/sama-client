@@ -14,7 +14,8 @@ import { selectParticipantsEntities } from "@store/values/Participants";
 import { setAllParams } from "@store/values/ContextMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { animate, motion } from "framer-motion";
 
 import "@styles/hub/chatForm/ChatFormHeader.css";
 
@@ -131,7 +132,14 @@ export default function ChatFormHeader({ closeFormFunc }) {
   };
 
   return (
-    <div className="header__container" onClick={viewChatOrPaticipantInfo}>
+    <motion.div
+      initial={{ opacity: 0, y: -30 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -30 }}
+      transition={{ duration: 0.3 }}
+      className="header__container"
+      onClick={viewChatOrPaticipantInfo}
+    >
       {isMobile || isTablet ? (
         <BackBtn className="header-back" onClick={closeFormFunc} />
       ) : null}
@@ -146,6 +154,6 @@ export default function ChatFormHeader({ closeFormFunc }) {
       >
         <More />
       </div>
-    </div>
+    </motion.div>
   );
 }

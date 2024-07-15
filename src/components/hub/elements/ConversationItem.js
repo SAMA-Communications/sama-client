@@ -2,11 +2,14 @@ import LastMessage from "@components/message/LastMessage";
 import UserAvatar from "@components/info/elements/UserAvatar";
 import getLastUpdateTime from "@utils/conversation/get_last_update_time";
 import { useMemo } from "react";
+import { motion as m } from "framer-motion";
+import { animateConversationItem } from "@src/animations/animateConversationIList";
 
 import { ReactComponent as Group } from "@icons/users/Group.svg";
 import { ReactComponent as UnknownPhoto } from "@icons/users/UnknownPhoto.svg";
 
 export default function ConversationItem({
+  index,
   isSelected,
   onClickFunc,
   chatName,
@@ -38,9 +41,14 @@ export default function ConversationItem({
   }, [type, chatAvatarUrl, chatAvatarBlutHash, chatName]);
 
   return (
-    <div
+    <m.div
       className={`chat-box__container${isSelected ? "--selected" : ""}`}
       onClick={onClickFunc}
+      variants={animateConversationItem(index)}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      whileTap={{ scale: 0.97 }}
     >
       <div className="box__photo fcc">{chatPhoto}</div>
       <div className="box__content">
@@ -58,6 +66,6 @@ export default function ConversationItem({
           />
         </div>
       </div>
-    </div>
+    </m.div>
   );
 }

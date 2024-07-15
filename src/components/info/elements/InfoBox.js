@@ -1,3 +1,6 @@
+import { motion } from "framer-motion";
+import { animateUserProfileContent } from "@src/animations/animateUserProfile";
+
 import { ReactComponent as Email } from "@icons/media/Email.svg";
 import { ReactComponent as Phone } from "@icons/media/Phone.svg";
 import { ReactComponent as User } from "@icons/users/User.svg";
@@ -10,6 +13,7 @@ export default function InfoBox({
   placeholder = "",
   value,
   hideIfNull = false,
+  isAnimate = false,
   onClickFunc,
 }) {
   if (!value && hideIfNull) {
@@ -22,7 +26,14 @@ export default function InfoBox({
   };
 
   return (
-    <div className={`info__box${modifier} ${className}`} onClick={onClickFunc}>
+    <motion.div
+      className={`info__box${modifier} ${className}`}
+      onClick={onClickFunc}
+      variants={isAnimate ? animateUserProfileContent : {}}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <div>
         {infoIcons[iconType]}
         <p>{title}</p>
@@ -30,6 +41,6 @@ export default function InfoBox({
       <p className={`info__${iconType}`}>
         {value || <span className="text-gray">{placeholder}</span>}
       </p>
-    </div>
+    </motion.div>
   );
 }

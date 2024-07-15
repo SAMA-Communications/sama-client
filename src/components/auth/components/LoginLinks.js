@@ -11,6 +11,7 @@ import { upsertUser } from "@store/values/Participants";
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useKeyDown } from "@hooks/useKeyDown";
+import { animate } from "framer-motion";
 
 export default function LoginLinks({ changePage, content }) {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ export default function LoginLinks({ changePage, content }) {
   const sendRequest = useCallback(async () => {
     setIsLoader(true);
     try {
+      animate(".authorization__side--main", { opacity: 0 }, { duration: 0.5 });
       const userData = await usersService.login(content);
       navigateTo("/");
       subscribeForNotifications();

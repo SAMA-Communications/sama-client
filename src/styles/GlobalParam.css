@@ -142,6 +142,8 @@ main {
 
   background-color: var(--color-black-50);
 
+  transition: background-color 0.5s;
+
   z-index: 200;
 }
 

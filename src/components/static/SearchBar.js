@@ -1,11 +1,18 @@
 import { useRef, useState } from "react";
+import { motion as m } from "framer-motion";
+import { animateSearchBar } from "@src/animations/animateSearch";
 
 import "@styles/static/SearchBar.css";
 
 import { ReactComponent as Search } from "@icons/actions/Search.svg";
 import { ReactComponent as Close } from "@icons/options/Close.svg";
 
-export default function SearchInput({ shadowText, setState, isLargeSize }) {
+export default function SearchInput({
+  shadowText,
+  setState,
+  isLargeSize,
+  isAnimate = false,
+}) {
   const inputRef = useRef(null);
   const [isTextInInput, setIsTextInInput] = useState(false);
 
@@ -20,12 +27,22 @@ export default function SearchInput({ shadowText, setState, isLargeSize }) {
   };
 
   return (
-    <div className="search-bar">
+    <m.div
+      className="search-bar"
+      variants={isAnimate ? animateSearchBar : {}}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <Search
         className={`search-bar__icon${isLargeSize ? "--large" : ""}`}
         style={viewProperty(!isTextInInput)}
       />
-      <input
+      <m.input
+        variants={isAnimate ? animateSearchBar : {}}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
         ref={inputRef}
         className={`search-bar__input${isLargeSize ? "--large" : ""}`}
         placeholder={shadowText}
@@ -44,6 +61,6 @@ export default function SearchInput({ shadowText, setState, isLargeSize }) {
         style={viewProperty(isTextInInput)}
         onClick={onClear}
       />
-    </div>
+    </m.div>
   );
 }

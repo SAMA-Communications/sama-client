@@ -8,4 +8,6 @@
 
   border-radius: var(--border-48);
   background-color: var(--color-bg-light);
+
+  transition: gap 0.7s ease-in-out;
 }

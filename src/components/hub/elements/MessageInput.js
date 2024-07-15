@@ -4,6 +4,7 @@ import isMobile from "@utils/get_device_type";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 
 import { ReactComponent as Attach } from "@icons/options/Attach.svg";
 import { ReactComponent as Send } from "@icons/options/Send.svg";
@@ -106,5 +107,14 @@ export default function MessageInput({
     );
   }, [location, isBlockedConv, onSubmitFunc]);
 
-  return <div className="inputs__container">{inputsView}</div>;
+  return (
+    <motion.div
+      className="inputs__container"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      {inputsView}
+    </motion.div>
+  );
 }

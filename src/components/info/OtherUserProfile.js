@@ -19,6 +19,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
+import { motion as m } from "framer-motion";
+import {
+  animateOtherUserContainer,
+  animateOtherUserContet,
+  animateOtherUserWindow,
+} from "@src/animations/animateOtherUser";
 
 import "@styles/info/UserProfile.css";
 
@@ -38,6 +44,10 @@ export default function OtherUserProfile() {
   const { _id: userId, login, email, phone } = userObject;
 
   useEffect(() => {
+    if (!hash.includes("/user")) {
+      return;
+    }
+
     const uid = extractUserIdFromUrl(pathname + hash + search);
     let user = participants[uid];
     if (!user) {
@@ -68,10 +78,22 @@ export default function OtherUserProfile() {
   );
 
   return (
-    <div className="first-window__container">
+    <m.div
+      className="first-window__container"
+      variants={animateOtherUserWindow}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <div className="profile__container">
         <CustomScrollBar>
-          <div className="profile__container--top fcc">
+          <m.div
+            className="profile__container--top fcc"
+            variants={animateOtherUserContainer(1)}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
             {isMobileView ? (
               <BackBtn
                 className="ci-close"
@@ -83,20 +105,46 @@ export default function OtherUserProfile() {
                 onClick={() => removeAndNavigateLastSection(pathname + hash)}
               />
             )}
-            <div className="profile__photo fcc">
+            <m.div
+              className="profile__photo fcc"
+              variants={animateOtherUserContet}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
               <UserAvatar
                 avatarUrl={userObject.avatar_url}
                 avatarBlurHash={userObject.avatar_object?.file_blur_hash}
                 defaultIcon={<UserIcon />}
               />
-            </div>
-            <div className="profile__info">
+            </m.div>
+            <m.div
+              className="profile__info"
+              variants={animateOtherUserContet}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
               <p className="uname__full">{getUserFullName(userObject)}</p>
               <p className="profile__status">{viewStatusActivity}</p>
-            </div>
-          </div>
-          <div className="profile__container--bottom">
-            <p className="info__title">Personal information</p>
+            </m.div>
+          </m.div>
+          <m.div
+            className="profile__container--bottom"
+            variants={animateOtherUserContainer(2)}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <m.p
+              className="info__title"
+              variants={animateOtherUserContet}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              Personal information
+            </m.p>
             <InfoBox
               className="uname__box"
               modifier={"--not-hover"}
@@ -104,6 +152,7 @@ export default function OtherUserProfile() {
               title={"Username"}
               value={login}
               hideIfNull={true}
+              isAnimate={true}
             />
             <InfoBox
               modifier={"--not-hover"}
@@ -111,6 +160,7 @@ export default function OtherUserProfile() {
               title={"Mobile phone"}
               value={phone}
               hideIfNull={true}
+              isAnimate={true}
             />
             <InfoBox
               modifier={"--not-hover"}
@@ -118,8 +168,15 @@ export default function OtherUserProfile() {
               title={"Email address"}
               value={email}
               hideIfNull={true}
+              isAnimate={true}
             />
-            <div className="info__link">
+            <m.div
+              className="info__link"
+              variants={animateOtherUserContet}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
               <LinkTo />
               <p
                 className="info__new-conversation"
@@ -132,10 +189,10 @@ export default function OtherUserProfile() {
               >
                 Start a conversation
               </p>
-            </div>
-          </div>
+            </m.div>
+          </m.div>
         </CustomScrollBar>
       </div>
-    </div>
+    </m.div>
   );
 }

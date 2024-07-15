@@ -6,6 +6,7 @@ import getUserFullName from "@utils/user/get_user_full_name";
 import { urlify } from "@utils/text/urlify";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
+import { motion } from "framer-motion";
 
 import "@styles/hub/elements/ChatMessage.css";
 
@@ -35,7 +36,10 @@ export default function ChatMessage({
     sender ? addSuffix(pathname + hash, `/user?uid=${from}`) : {};
 
   return (
-    <div
+    <motion.div
+      whileInView={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0, x: -15 }}
+      transition={{ duration: 0.3, delay: 0.03 }}
       className={`message__container${isCurrentUser ? "--my" : ""} ${
         prev ? "" : "mt-8"
       }`}
@@ -91,6 +95,6 @@ export default function ChatMessage({
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

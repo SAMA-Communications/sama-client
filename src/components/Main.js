@@ -4,6 +4,7 @@ import { getIsTabletView } from "@store/values/IsTabletView";
 import { selectConversationsEntities } from "@store/values/Conversations";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { AnimatePresence } from "framer-motion";
 
 import ChatForm from "@components/hub/ChatForm";
 import ChatInfo from "@components/info/ChatInfo";
@@ -55,13 +56,14 @@ export default function Main() {
       return <SHub />;
     }
 
+    const isProfilePage = location.pathname.includes("/profile");
     if (
       !location.hash &&
       !conversationsArray?.filter((obj) => obj.type === "g" || obj.last_message)
         .length
     ) {
       if (isMobileView) {
-        return location.pathname.includes("/profile") ? null : <EmptyHub />;
+        return isProfilePage ? null : <EmptyHub />;
       }
       return <EmptyHub />;
     }
@@ -73,7 +75,7 @@ export default function Main() {
         keys.includes("/user") || keys.includes("/info") ? null : (
           <ChatForm />
         )
-      ) : location.pathname.includes("/profile") ? null : (
+      ) : isProfilePage ? null : (
         <ChatList />
       );
     }
@@ -83,15 +85,22 @@ export default function Main() {
     }
 
     return (
-      <section className="hub">
-        {location.pathname.includes("/profile") ? null : <ChatList />}
+      <section
+        className="hub"
+        style={{ gap: `${isProfilePage ? "0px" : "15px"}` }}
+      >
+        <AnimatePresence>{!isProfilePage && <ChatList />}</AnimatePresence>
         <ChatForm />
       </section>
     );
   }, [location, isMobileView, isTabletView, conversations]);
 
   const additionalContainerLeft = useMemo(() => {
-    return location.pathname.includes("/profile") ? <UserProfile /> : null;
+    return (
+      <AnimatePresence>
+        {location.pathname.includes("/profile") ? <UserProfile /> : null}
+      </AnimatePresence>
+    );
   }, [location]);
 
   return (
@@ -99,7 +108,7 @@ export default function Main() {
       {isMobileView ? null : <NavigationLine />}
       {additionalContainerLeft}
       {hubContainer}
-      {additionalContainerRight}
+      <AnimatePresence>{additionalContainerRight}</AnimatePresence>
     </>
   );
 }

@@ -7,6 +7,8 @@ import { getDisplayableConversations } from "@store/values/Conversations.js";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { motion as m } from "framer-motion";
+import { animateConversationList } from "@src/animations/animateConversationIList";
 
 import "@styles/hub/ChatList.css";
 
@@ -32,9 +34,19 @@ export default function ChatList() {
   }, [filteredConversations]);
 
   return (
-    <div className="chat-list__container">
+    <m.div
+      className="chat-list__container"
+      variants={animateConversationList}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       {isMobileView ? <MenuButtons /> : null}
-      <SearchInput shadowText={"Search"} setState={setInputText} />
+      <SearchInput
+        shadowText={"Search"}
+        setState={setInputText}
+        isAnimate={true}
+      />
       {inputText ? (
         <SearchBlock
           searchText={inputText}
@@ -44,6 +56,6 @@ export default function ChatList() {
       ) : (
         <CustomScrollBar>{chatsList}</CustomScrollBar>
       )}
-    </div>
+    </m.div>
   );
 }

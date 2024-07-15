@@ -12,6 +12,11 @@ import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
+import { motion as m } from "framer-motion";
+import {
+  animateUserProfilecontainer,
+  animateUserProfileContent,
+} from "@src/animations/animateUserProfile";
 
 import "@styles/info/ChatInfo.css";
 
@@ -48,7 +53,7 @@ export default function ChatInfo() {
       return null;
     }
 
-    return selectedConversation.participants.map((uId) => {
+    return selectedConversation.participants.map((uId, i) => {
       const userObject = participants[uId];
       if (!userObject) {
         return null;
@@ -59,9 +64,11 @@ export default function ChatInfo() {
       return (
         <ParticipantInChat
           key={uId}
+          index={i}
           userObject={userObject}
           isOwner={isOwner}
           isCurrentUserOwner={isCurrentUserOwner}
+          isAnimate={true}
         />
       );
     });
@@ -70,10 +77,24 @@ export default function ChatInfo() {
   const participantsCount = participantsList?.length;
 
   return (
-    <div className="chat-info__container">
+    <m.div
+      className="chat-info__container"
+      variants={animateUserProfilecontainer}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <CustomScrollBar>
         <div className="chat-info__container--top fcc">
-          <div className="ci-top__title">Chat info</div>
+          <m.div
+            className="ci-top__title"
+            variants={animateUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            Chat info
+          </m.div>
           {isMobileView ? (
             <BackBtn
               className="ci-close"
@@ -85,10 +106,20 @@ export default function ChatInfo() {
               onClick={() => removeAndNavigateSubLink(pathname + hash, "/info")}
             />
           )}
-          <div className="ci-photo fcc">
+          <m.div
+            className="ci-photo fcc"
+            variants={animateUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
             <ImageBig />
-          </div>
-          <div
+          </m.div>
+          <m.div
+            variants={animateUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             className={`chat-info__content ${
               isCurrentUserOwner ? "cursor-pointer" : ""
             }`}
@@ -104,10 +135,16 @@ export default function ChatInfo() {
                 <span className="ci-description--gray">Description</span>
               )}
             </p>
-          </div>
+          </m.div>
         </div>
         <div className="chat-info__container--bottom">
-          <div className="ci-bottom__header">
+          <m.div
+            className="ci-bottom__header"
+            variants={animateUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
             <p className="ci-header__text">
               {participantsCount} member{participantsCount > 1 ? "s" : ""}
             </p>
@@ -117,7 +154,7 @@ export default function ChatInfo() {
                 onClick={() => addSuffix(pathname + hash, "/add")}
               />
             ) : null}
-          </div>
+          </m.div>
           <CustomScrollBar
             autoHeight={isMobileView || isTabletView ? true : false}
             autoHeightMax={isMobileView || isTabletView ? 400 : 0}
@@ -126,6 +163,6 @@ export default function ChatInfo() {
           </CustomScrollBar>
         </div>
       </CustomScrollBar>
-    </div>
+    </m.div>
   );
 }

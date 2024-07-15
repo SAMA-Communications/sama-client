@@ -4,6 +4,7 @@ import PasswordInput from "@components/auth/elements/PasswordInput";
 import SignUpLinks from "@components/auth/components/SignUpLinks";
 import UserNameInput from "@components/auth/elements/UserNameInput";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 import "@styles/auth/AuthorizationPage.css";
 
@@ -18,7 +19,7 @@ export default function AuthorizationHub() {
       <div className={`authorization__side--left-${page}  fcc`}>
         <AnimationSamaLogo />
       </div>
-      <div
+      <motion.div
         className={`authorization__side--main fcc ${
           isLoginPage ? "login-form__mt-49" : "signup-form__mt-20"
         }`}
@@ -58,7 +59,7 @@ export default function AuthorizationHub() {
             />
           )}
         </div>
-      </div>
+      </motion.div>
       <div className={`authorization__side--right-${page}`} />
     </section>
   );

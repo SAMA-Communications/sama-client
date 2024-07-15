@@ -20,7 +20,7 @@ export default function ConversationItemList({ conversations }) {
     navigateTo(`/#${id}`);
   };
 
-  return conversations.map((obj) => {
+  return conversations.map((obj, i) => {
     const isSelected = activeConversationId === obj._id;
     const chatParticipantId =
       obj.owner_id === currentUserId ? obj.opponent_id : obj.owner_id;
@@ -30,6 +30,7 @@ export default function ConversationItemList({ conversations }) {
     return (
       <ConversationItem
         key={obj._id}
+        index={i}
         isSelected={isSelected}
         onClickFunc={() => convItemOnClickFunc(obj._id)}
         chatName={chatName}

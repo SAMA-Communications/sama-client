@@ -15,6 +15,8 @@ import {
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
+import { motion as m } from "framer-motion";
+import { animateContextMenu } from "@src/animations/animateContextMenu";
 
 import "@styles/context/ContextMenuHub.css";
 
@@ -113,8 +115,15 @@ export default function ContextMenuHub() {
   }, [list, userObject, currentPath, type, opponent_id, isCurrentUserOwner]);
 
   return (
-    <div className="context-menu__container" style={{ top, left }}>
+    <m.div
+      className="context-menu__container"
+      style={{ top, left }}
+      variants={animateContextMenu}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       {listView}
-    </div>
+    </m.div>
   );
 }

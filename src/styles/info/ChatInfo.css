@@ -119,6 +119,8 @@
   border-radius: var(--border-12);
 
   transition: background-color 0.2s;
+
+  cursor: pointer;
 }
 .participant__box:hover {
   background-color: var(--color-accent-dark);

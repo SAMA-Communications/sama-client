@@ -118,9 +118,11 @@ export default function App() {
     <Suspense
       fallback={localStorage.getItem("sessionId") ? <SMain /> : <SPageLoader />}
     >
-      {isContextClicked ? (
-        <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
-      ) : null}
+      <AnimatePresence>
+        {isContextClicked ? (
+          <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
+        ) : null}
+      </AnimatePresence>
       <AnimatePresence initial={false} mode="wait">
         <Routes location={history.location}>
           <Route path="/authorization" element={<AuthorizationHub />} />

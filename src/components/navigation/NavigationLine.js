@@ -12,6 +12,8 @@ import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
+import { motion as m } from "framer-motion";
+import { animateMenu } from "@src/animations/animateMenu";
 
 import "@styles/navigation/NavigationLine.css";
 
@@ -53,7 +55,13 @@ export default function NavigationLine() {
     }, [pathname]);
 
   return (
-    <aside className="navigation__container">
+    <m.aside
+      className="navigation__container"
+      variants={animateMenu}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <div
         className="navigation__logo fcc"
         onClick={() => {
@@ -64,7 +72,7 @@ export default function NavigationLine() {
         <SamaLogo />
       </div>
       <div className="navigation__menu fcc">
-        <div
+        <m.div
           onClick={() => {
             const currentPath =
               isTabletView && hash.includes("/info")
@@ -73,6 +81,7 @@ export default function NavigationLine() {
             addPrefix(currentPath, "/profile");
           }}
           className={`menu__profile fcc ${isProfilePageActive}`}
+          whileTap={{ scale: 0.9 }}
         >
           <span className="fcc">
             <UserAvatar
@@ -81,8 +90,8 @@ export default function NavigationLine() {
               defaultIcon={getUserInitials()}
             />
           </span>
-        </div>
-        <div
+        </m.div>
+        <m.div
           onClick={() => {
             if (isTabletView || isMobileView) {
               dispatch(setSelectedConversation({}));
@@ -92,25 +101,28 @@ export default function NavigationLine() {
             }
           }}
           className={`menu__list fcc ${isChatListActive}`}
+          whileTap={{ scale: 0.9 }}
         >
           <List />
-        </div>
-        <div
+        </m.div>
+        <m.div
           onClick={() => addPrefix(pathname + hash, "/create")}
           className={`menu__create fcc ${isCreatePageActive}`}
+          whileTap={{ scale: 0.9 }}
         >
           <Create />
-        </div>
+        </m.div>
       </div>
-      <div
+      <m.div
         onClick={() => {
           sendLogout();
           navigateTo("/authorization");
         }} //authorization
         className="menu__logout fcc"
+        whileTap={{ scale: 0.9 }}
       >
         <Logout />
-      </div>
-    </aside>
+      </m.div>
+    </m.aside>
   );
 }

@@ -15,6 +15,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useRef } from "react";
+import { motion as m } from "framer-motion";
+import {
+  animateUserProfilecontainer,
+  animateUserProfileContent,
+} from "@src/animations/animateUserProfile";
 
 import "@styles/info/UserProfile.css";
 
@@ -59,7 +64,13 @@ export default function UserProfile() {
     void (await usersService.updateUserAvatar(file));
 
   return (
-    <div className="profile__container">
+    <m.div
+      className="profile__container"
+      variants={animateUserProfilecontainer}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <CustomScrollBar>
         <div className="profile__container--top fcc">
           {isMobileView ? (
@@ -77,9 +88,13 @@ export default function UserProfile() {
               }
             />
           )}
-          <div
+          <m.div
             className="profile__photo--current fcc cursor-pointer"
             onClick={pickFileClick}
+            variants={animateUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
           >
             <UserAvatar
               avatarUrl={currentUser.avatar_url}
@@ -96,23 +111,38 @@ export default function UserProfile() {
               accept={globalConstants.allowedAvatarFormats}
               multiple
             />
-          </div>
-          <div onClick={() => addSuffix(pathname + hash, "/edit?type=user")}>
+          </m.div>
+          <m.div
+            onClick={() => addSuffix(pathname + hash, "/edit?type=user")}
+            variants={animateUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
             <p className="uname__first">
               {first_name || <span className="text-gray">First name</span>}
             </p>
             <p className="uname__last">
               {last_name || <span className="text-gray">Last name</span>}
             </p>
-          </div>
+          </m.div>
         </div>
         <div className="profile__container--bottom">
-          <p className="info__title">Personal information</p>
+          <m.p
+            className="info__title"
+            variants={animateUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            Personal information
+          </m.p>
           <InfoBox
             className="uname__box"
             iconType={"login"}
             title={"Username"}
             value={login}
+            isAnimate={true}
           />
           <InfoBox
             onClickFunc={() =>
@@ -122,6 +152,7 @@ export default function UserProfile() {
             title={"Mobile phone"}
             value={phone}
             placeholder={"Enter your phone number"}
+            isAnimate={true}
           />
           <InfoBox
             onClickFunc={() =>
@@ -131,8 +162,15 @@ export default function UserProfile() {
             title={"Email address"}
             value={email}
             placeholder={"Enter your email address"}
+            isAnimate={true}
           />
-          <div className="info__link">
+          <m.div
+            className="info__link"
+            variants={animateUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
             <Password />
             <p
               className="info__password"
@@ -154,9 +192,15 @@ export default function UserProfile() {
             >
               Change password...
             </p>
-          </div>
+          </m.div>
           {isMobileView ? (
-            <div className="info__link">
+            <m.div
+              className="info__link"
+              variants={animateUserProfileContent}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
               <LogoutMini />
               <p
                 className="info__delete"
@@ -167,9 +211,15 @@ export default function UserProfile() {
               >
                 Log out
               </p>
-            </div>
+            </m.div>
           ) : null}
-          <div className="info__link">
+          <m.div
+            className="info__link"
+            variants={animateUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
             <Trash />
             <p
               className="info__delete"
@@ -180,9 +230,9 @@ export default function UserProfile() {
             >
               Delete account
             </p>
-          </div>
+          </m.div>
         </div>
       </CustomScrollBar>
-    </div>
+    </m.div>
   );
 }
