@@ -155,7 +155,6 @@ class MessagesService {
           api
             .getParticipantsByCids({
               cids: [this.currentChatId],
-              includes: ["id"],
             })
             .then((arr) =>
               store.dispatch(

@@ -276,10 +276,6 @@ class Api {
       },
     };
 
-    if (data.includes) {
-      requestData.request.get_participants_by_cids.includes = data.includes;
-    }
-
     const resObjKey = "users";
     return this.sendPromise(requestData, resObjKey);
   }
