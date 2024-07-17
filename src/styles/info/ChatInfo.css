@@ -34,7 +34,8 @@
 
   cursor: pointer;
 }
-.ci-photo {
+.ci-photo,
+.ci-photo--owner {
   width: 160px;
   height: 160px;
 
@@ -42,7 +43,9 @@
   background-color: var(--color-bg-dark);
 }
 .ci-photo > img,
-.ci-photo > .blur-hash-preloader {
+.ci-photo--owner > img,
+.ci-photo > .blur-hash-preloader,
+.ci-photo--owner > .blur-hash-preloader {
   width: 100%;
   height: 100%;
 
@@ -51,6 +54,27 @@
   border-radius: var(--border-24);
 
   overflow: hidden;
+}
+
+.ci-photo--owner:after {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  opacity: 0;
+
+  border-radius: var(--border-24);
+  background: var(--color-black-25);
+
+  transition: opacity 0.3s linear;
+}
+
+.ci-photo--owner:hover:after {
+  opacity: 1;
 }
 
 .chat-info__content {
@@ -206,11 +230,13 @@
     left: 4svw;
     top: 34px;
   }
-  .ci-photo {
+  .ci-photo,
+  .ci-photo--owner {
     width: 120px;
     height: 120px;
   }
-  .ci-photo > svg {
+  .ci-photo > svg,
+  .ci-photo--owner > svg {
     width: 80px !important;
     height: 80px !important;
   }

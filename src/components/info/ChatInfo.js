@@ -98,8 +98,8 @@ export default function ChatInfo() {
             />
           )}
           <div
-            className={`ci-photo ${
-              isCurrentUserOwner ? "cursor-pointer" : ""
+            className={`ci-photo${
+              isCurrentUserOwner ? "--owner cursor-pointer" : ""
             } fcc`}
             onClick={pickFileClick}
           >

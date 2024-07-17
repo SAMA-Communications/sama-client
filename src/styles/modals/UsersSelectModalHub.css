@@ -27,6 +27,10 @@
 
   cursor: pointer;
 }
+.em-create__photo > svg {
+  width: 80px;
+  height: 80px;
+}
 .em-create__photo > #inputFile {
   display: none;
   visibility: hidden;
@@ -40,6 +44,26 @@
   border-radius: var(--border-24);
 
   overflow: hidden;
+}
+
+.em-create__photo:after {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  opacity: 0;
+
+  border-radius: var(--border-24);
+  background: var(--color-bg-light-25);
+
+  transition: opacity 0.3s linear;
+}
+.em-create__photo:hover:after {
+  opacity: 1;
 }
 
 .em__header {
