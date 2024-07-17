@@ -186,7 +186,6 @@
   font-weight: 200;
   font-size: var(--font-h6);
 }
-
 @media screen and (max-width: 800px) {
   .chat-info__container {
     width: 100dvw;
@@ -208,9 +207,14 @@
     top: 34px;
   }
   .ci-photo {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
   }
+  .ci-photo > svg {
+    width: 80px !important;
+    height: 80px !important;
+  }
+
   .ci-name {
     font-size: var(--font-h5);
   }
