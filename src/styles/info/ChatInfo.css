@@ -40,6 +40,8 @@
 
   border-radius: var(--border-24);
   background-color: var(--color-bg-dark);
+
+  cursor: pointer;
 }
 .ci-photo > img,
 .ci-photo > .blur-hash-preloader {

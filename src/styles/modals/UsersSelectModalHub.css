@@ -24,6 +24,22 @@
 
   border-radius: var(--border-24);
   background-color: var(--color-bg-dark);
+
+  cursor: pointer;
+}
+.em-create__photo > #inputFile {
+  display: none;
+  visibility: hidden;
+}
+.em-create__photo > img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  border-radius: var(--border-24);
+
+  overflow: hidden;
 }
 
 .em__header {

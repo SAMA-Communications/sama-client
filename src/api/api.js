@@ -457,6 +457,7 @@ class Api {
           type: data.type,
           opponent_id: data.opponent_id,
           participants: data.participants,
+          image_object: data.image_object,
         },
         id: getUniqueId("conversationCreate"),
       },

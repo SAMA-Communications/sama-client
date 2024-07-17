@@ -122,15 +122,29 @@ class ConversationsService {
     return chat._id;
   }
 
-  async createGroupChat(participants, name) {
+  async createGroupChat(participants, name, imageFile) {
     if (!participants.length || !name) {
       showCustomAlert("Choose participants.", "warning");
       return;
     }
 
+    let imageFileProcessed, image_object;
+    if (imageFile) {
+      imageFileProcessed = await processFile(imageFile);
+      const imageObject = (
+        await DownloadManager.getFileObjects([imageFileProcessed])
+      ).at(0);
+      image_object = {
+        file_id: imageObject.file_id,
+        file_name: imageObject.file_name,
+        file_blur_hash: imageFileProcessed.blurHash,
+      };
+    }
+
     const chat = await api.conversationCreate({
       type: "g",
       name,
+      image_object,
       participants: participants.map((el) => el._id),
     });
 

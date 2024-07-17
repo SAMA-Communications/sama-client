@@ -59,15 +59,16 @@ export default function UserSelectorBlock({
     );
   }, [counter, initSelectedUsers, meInArray, selectedUsers]);
 
-  useKeyDown(KEY_CODES.ENTER, () =>
+  useKeyDown(KEY_CODES.ENTER, () => validateClick());
+
+  const validateClick = () =>
     onClickCreateFunc(
       initSelectedUsers
         ? selectedUsers.filter(
             (u) => !initSelectedUsers.find((uObj) => u._id === uObj._id)
           )
         : selectedUsers
-    )
-  );
+    );
 
   return (
     <>
@@ -100,18 +101,7 @@ export default function UserSelectorBlock({
         <p className="em-navigation__link" onClick={closeWindow}>
           Cancel
         </p>
-        <p
-          className="em-navigation__link"
-          onClick={() =>
-            onClickCreateFunc(
-              initSelectedUsers
-                ? selectedUsers.filter(
-                    (u) => !initSelectedUsers.find((uObj) => u._id === uObj._id)
-                  )
-                : selectedUsers
-            )
-          }
-        >
+        <p className="em-navigation__link" onClick={() => validateClick()}>
           {initSelectedUsers ? "Add" : "Create"}
         </p>
       </div>
