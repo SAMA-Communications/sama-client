@@ -21,7 +21,8 @@ import "@styles/info/ChatInfo.css";
 import { ReactComponent as AddParticipants } from "@icons/AddParticipants.svg";
 import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
-import { ReactComponent as ImageBig } from "@icons/media/ImageBig.svg";
+import { ReactComponent as ImageBig } from "@icons/media/ImageBig_latest.svg";
+import { ReactComponent as ImageOwnerBig } from "@icons/media/ImageBig.svg";
 
 export default function ChatInfo() {
   const { pathname, hash } = useLocation();
@@ -100,7 +101,9 @@ export default function ChatInfo() {
             <DynamicAvatar
               avatarUrl={selectedConversation.image_url}
               avatarBlurHash={selectedConversation.image_object?.file_blur_hash}
-              defaultIcon={<ImageBig />}
+              defaultIcon={
+                isCurrentUserOwner ? <ImageOwnerBig /> : <ImageBig />
+              }
               altText={"Chat Group"}
             />
             <input
