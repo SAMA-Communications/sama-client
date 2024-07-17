@@ -97,7 +97,12 @@ export default function ChatInfo() {
               onClick={() => removeAndNavigateSubLink(pathname + hash, "/info")}
             />
           )}
-          <div className="ci-photo fcc" onClick={pickFileClick}>
+          <div
+            className={`ci-photo ${
+              isCurrentUserOwner ? "cursor-pointer" : ""
+            } fcc`}
+            onClick={pickFileClick}
+          >
             <DynamicAvatar
               avatarUrl={selectedConversation.image_url}
               avatarBlurHash={selectedConversation.image_object?.file_blur_hash}
