@@ -31,10 +31,10 @@ export default function ConversationItem({
           avatarUrl={chatAvatarUrl}
           avatarBlurHash={chatAvatarBlutHash}
           defaultIcon={
-            chatName ? (
-              chatName.slice(0, 2).toUpperCase()
-            ) : type === "g" ? (
+            type === "g" ? (
               <Group />
+            ) : chatName ? (
+              chatName.slice(0, 2).toUpperCase()
             ) : (
               <UnknownPhoto />
             )
