@@ -104,7 +104,7 @@ export default function ChatInfo() {
             onClick={pickFileClick}
           >
             <DynamicAvatar
-              avatarUrl={selectedConversation.image_url}
+              avatarUrl={selectedConversation?.image_url}
               avatarBlurHash={selectedConversation.image_object?.file_blur_hash}
               defaultIcon={
                 isCurrentUserOwner ? <ImageOwnerBig /> : <ImageBig />
