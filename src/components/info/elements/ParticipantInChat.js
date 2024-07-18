@@ -1,4 +1,4 @@
-import UserAvatar from "@components/info/elements/UserAvatar";
+import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import addPrefix from "@utils/navigation/add_prefix";
 import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
@@ -44,7 +44,7 @@ export default function ParticipantInChat({
       }}
     >
       <div className="participant__photo fcc">
-        <UserAvatar
+        <DynamicAvatar
           avatarUrl={userObject.avatar_url}
           avatarBlurHash={userObject.avatar_object?.file_blur_hash}
           defaultIcon={userObject ? getUserInitials(userObject) : null}

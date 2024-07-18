@@ -20,13 +20,15 @@ export default function UsersSelectModalHub({ type }) {
 
   const { pathname, hash } = useLocation();
   const [chatName, setChatName] = useState(null);
+  const [chatImage, setChatImage] = useState(null);
 
   const closeModal = () => removeAndNavigateSubLink(pathname + hash, "/create");
 
   const sendCreateRequest = async (participants) => {
     const chatId = await conversationService.createGroupChat(
       participants,
-      chatName
+      chatName,
+      chatImage
     );
     chatId && navigateTo(`/#${chatId}`);
   };
@@ -61,7 +63,11 @@ export default function UsersSelectModalHub({ type }) {
         onClickCreateFunc={sendCreateRequest}
       />
     ) : (
-      <ChatNameInput setState={setChatName} closeWindow={closeModal} />
+      <ChatNameInput
+        setState={setChatName}
+        setImage={setChatImage}
+        closeWindow={closeModal}
+      />
     );
   }, [type, chatName, selectedConversation, participants]);
 
