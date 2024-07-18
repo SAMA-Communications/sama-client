@@ -50,7 +50,7 @@ export default function ChatInfo() {
   );
 
   const participantsList = useMemo(() => {
-    if (!selectedConversation?.participants || !currentUserId) {
+    if (!selectedConversation.participants || !currentUserId) {
       return null;
     }
 
@@ -104,7 +104,7 @@ export default function ChatInfo() {
             onClick={pickFileClick}
           >
             <DynamicAvatar
-              avatarUrl={selectedConversation?.image_url}
+              avatarUrl={selectedConversation.image_url}
               avatarBlurHash={selectedConversation.image_object?.file_blur_hash}
               defaultIcon={
                 isCurrentUserOwner ? <ImageOwnerBig /> : <ImageBig />
@@ -129,12 +129,12 @@ export default function ChatInfo() {
             onClick={() => addSuffix(pathname + hash, "/edit?type=chat")}
           >
             <p className="ci-name">
-              {selectedConversation?.name || (
+              {selectedConversation.name || (
                 <span className="ci-name--gray">Group name</span>
               )}
             </p>
             <p className="ci-description">
-              {selectedConversation?.description || (
+              {selectedConversation.description || (
                 <span className="ci-description--gray">Description</span>
               )}
             </p>
