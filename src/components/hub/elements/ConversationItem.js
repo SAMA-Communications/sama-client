@@ -1,4 +1,5 @@
 import LastMessage from "@components/message/LastMessage";
+import TypingLine from "@components/_helpers/TypingLine";
 import UserAvatar from "@components/info/elements/UserAvatar";
 import getLastUpdateTime from "@utils/conversation/get_last_update_time";
 import { useMemo } from "react";
@@ -15,7 +16,13 @@ export default function ConversationItem({
   chatAvatarUrl,
   chatAvatarBlutHash,
 }) {
-  const { updated_at, unread_messages_count, type, last_message } = chatObject;
+  const {
+    updated_at,
+    unread_messages_count,
+    type,
+    last_message,
+    typing_users,
+  } = chatObject;
 
   const tView = useMemo(() => {
     return getLastUpdateTime(updated_at, last_message);
@@ -51,11 +58,15 @@ export default function ConversationItem({
           <div className="content-top__time">{tView}</div>
         </div>
         <div className="content-bottom">
-          <LastMessage
-            message={last_message}
-            count={unread_messages_count}
-            userId={currentUserId}
-          />
+          {typing_users && !isSelected ? (
+            <TypingLine isViewUserNames={type === "g"} />
+          ) : (
+            <LastMessage
+              message={last_message}
+              count={unread_messages_count}
+              userId={currentUserId}
+            />
+          )}
         </div>
       </div>
     </div>

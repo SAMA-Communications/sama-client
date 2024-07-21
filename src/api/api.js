@@ -14,6 +14,7 @@ class Api {
     this.onMessageListener = null;
     this.onMessageStatusListener = null;
     this.onUserActivityListener = null;
+    this.onUserTypingListener = null;
     this.onConversationCreateListener = null;
     this.onConversationUpdateListener = null;
     this.onConversationDeleteListener = null;
@@ -33,6 +34,13 @@ class Api {
       this.socket.onmessage = (e) => {
         const message = JSON.parse(e.data);
         console.log("[socket.message]", message);
+
+        if (message.typing) {
+          if (this.onUserTypingListener) {
+            this.onUserTypingListener(message.typing);
+          }
+          return;
+        }
 
         if (message.system_message) {
           const {
@@ -435,17 +443,18 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
-  async statusTyping(data) {
-    //===============to do
-    const requestData = {
-      typing: {
-        id: "xyz",
-        type: "start",
-        cid: "currentConversationId",
-      },
-    };
-    const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+  async sendTypingStatus(data) {
+    return new Promise((resolve, reject) => {
+      const requestData = {
+        typing: {
+          cid: data.cid,
+        },
+      };
+
+      this.responsesPromises[requestData.typing.id] = { resolve, reject };
+      this.socket.send(JSON.stringify(requestData));
+      console.log("[socket.send]", requestData);
+    });
   }
 
   async conversationCreate(data) {

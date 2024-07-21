@@ -22,6 +22,7 @@ import {
 
 class MessagesService {
   currentChatId;
+  typingTimers = {};
 
   constructor() {
     api.onMessageStatusListener = (message) => {
@@ -48,6 +49,7 @@ class MessagesService {
       const userInfo = jwtDecode(localStorage.getItem("sessionId"));
       message.from === userInfo._id && (message["status"] = "sent");
       store.dispatch(addMessage(message));
+      store.dispatch(upsertChat({ _id: message.cid, typing_users: null }));
 
       let countOfNewMessages = 0;
       message.cid === this.currentChatId && document.hasFocus()
@@ -85,6 +87,42 @@ class MessagesService {
           })
         );
       }
+    };
+
+    api.onUserTypingListener = (data) => {
+      const { cid, from } = data;
+
+      const conversation = store.getState().conversations.entities[cid];
+      const newTypingUsersArray = [...(conversation.typing_users || [])];
+      !newTypingUsersArray.includes(from) && newTypingUsersArray.push(from);
+      store.dispatch(
+        upsertChat({
+          _id: cid,
+          typing_users: newTypingUsersArray,
+        })
+      );
+
+      const { clearTypingStatus, lastRequestTime } =
+        this.typingTimers[cid] || {};
+
+      if (new Date() - lastRequestTime > 3000 && clearTypingStatus) {
+        clearTimeout(clearTypingStatus);
+      }
+
+      this.typingTimers[cid] = {
+        clearTypingStatus: setTimeout(() => {
+          const conversation = store.getState().conversations.entities[cid];
+          store.dispatch(
+            upsertChat({
+              _id: cid,
+              typing_users: conversation.typing_users.filter(
+                (id) => id !== from
+              ),
+            })
+          );
+        }, 4000),
+        lastRequestTime: new Date(),
+      };
     };
 
     store.subscribe(() => {
