@@ -41,7 +41,9 @@ export default function ConversationItemList({ conversations }) {
         isSelected={isSelected}
         onClickFunc={() => convItemOnClickFunc(obj._id)}
         chatName={chatName}
-        lastMessageUserName={obj.type === "g" ? lastMessageUserName : null}
+        lastMessageUserName={
+          obj.type === "g" && !obj.last_message?.x ? lastMessageUserName : null
+        }
         chatAvatarUrl={chatParticipant.avatar_url}
         chatAvatarBlutHash={chatParticipant.avatar_object?.file_blur_hash}
         chatObject={obj}
