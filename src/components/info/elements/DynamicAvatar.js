@@ -7,17 +7,17 @@ export default function DynamicAvatar({
   defaultIcon,
   altText,
 }) {
-  const avatarView = useMemo(
-    () =>
-      avatarUrl ? (
-        <img src={avatarUrl} alt={altText} />
-      ) : avatarBlurHash ? (
-        <ItemLoader blurHash={avatarBlurHash} />
-      ) : (
-        defaultIcon
-      ),
-    [avatarBlurHash, avatarUrl, defaultIcon]
-  );
+  const avatarView = useMemo(() => {
+    if (avatarUrl) {
+      return <img src={avatarUrl} alt={altText} />;
+    }
+
+    return avatarBlurHash ? (
+      <ItemLoader blurHash={avatarBlurHash} />
+    ) : (
+      defaultIcon
+    );
+  }, [avatarBlurHash, avatarUrl, defaultIcon]);
 
   return avatarView;
 }
