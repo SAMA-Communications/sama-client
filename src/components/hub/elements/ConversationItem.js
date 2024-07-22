@@ -59,7 +59,7 @@ export default function ConversationItem({
         </div>
         <div className="content-bottom">
           {typing_users && !isSelected ? (
-            <TypingLine isViewUserNames={type === "g"} />
+            <TypingLine displayUserNames={type === "g"} />
           ) : (
             <LastMessage
               message={last_message}

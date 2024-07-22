@@ -1,9 +1,9 @@
+const cut = (text) => (text.length > 10 ? text.slice(0, 7) + "..." : text);
+
 export default function getLastMessageUserName(userObject) {
   if (!userObject) {
     return null;
   }
-
-  const cut = (text) => (text.length > 10 ? text.slice(0, 7) + "..." : text);
 
   const { first_name, last_name, login } = userObject;
 

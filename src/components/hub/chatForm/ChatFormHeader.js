@@ -75,7 +75,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
       return (
         <TypingLine
           userIds={selectedConversation.typing_users}
-          isViewUserNames={selectedConversation.type === "g"}
+          displayUserNames={selectedConversation.type === "g"}
         />
       );
     }
