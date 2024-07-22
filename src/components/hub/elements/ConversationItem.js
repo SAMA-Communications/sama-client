@@ -1,6 +1,6 @@
 import LastMessage from "@components/message/LastMessage";
 import TypingLine from "@components/_helpers/TypingLine";
-import UserAvatar from "@components/info/elements/UserAvatar";
+import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import getLastUpdateTime from "@utils/conversation/get_last_update_time";
 import { useMemo } from "react";
 
@@ -29,28 +29,27 @@ export default function ConversationItem({
     return getLastUpdateTime(updated_at, last_message);
   }, [updated_at, last_message]);
 
-  const chatPhoto = useMemo(() => {
-    if (type === "g") {
-      return <Group />;
-    }
-
-    return (
-      <UserAvatar
-        avatarUrl={chatAvatarUrl}
-        avatarBlurHash={chatAvatarBlutHash}
-        defaultIcon={
-          chatName ? chatName.slice(0, 2).toUpperCase() : <UnknownPhoto />
-        }
-      />
-    );
-  }, [type, chatAvatarUrl, chatAvatarBlutHash, chatName]);
-
   return (
     <div
       className={`chat-box__container${isSelected ? "--selected" : ""}`}
       onClick={onClickFunc}
     >
-      <div className="box__photo fcc">{chatPhoto}</div>
+      <div className="box__photo fcc">
+        <DynamicAvatar
+          avatarUrl={chatAvatarUrl}
+          avatarBlurHash={chatAvatarBlutHash}
+          defaultIcon={
+            type === "g" ? (
+              <Group />
+            ) : chatName ? (
+              chatName.slice(0, 2).toUpperCase()
+            ) : (
+              <UnknownPhoto />
+            )
+          }
+          altText={type === "g" ? "Chat Group" : "User's Profile"}
+        />
+      </div>
       <div className="box__content">
         <div className="content-top">
           <p className="content-top__name">

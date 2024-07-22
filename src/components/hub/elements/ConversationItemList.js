@@ -44,8 +44,13 @@ export default function ConversationItemList({ conversations }) {
         lastMessageUserName={
           obj.type === "g" && !obj.last_message?.x ? lastMessageUserName : null
         }
-        chatAvatarUrl={chatParticipant.avatar_url}
-        chatAvatarBlutHash={chatParticipant.avatar_object?.file_blur_hash}
+        chatAvatarUrl={
+          obj.type === "g" ? obj.image_url : chatParticipant.avatar_url
+        }
+        chatAvatarBlutHash={
+          obj.type === "g"
+            ? obj.image_object?.file_blur_hash
+            : chatParticipant.avatar_object?.file_blur_hash
         chatObject={obj}
         currentUserId={currentUserId}
       />

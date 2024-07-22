@@ -18,6 +18,8 @@ import {
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
 import validateFieldLength from "@validations/validateFieldLength";
+import processFile from "@src/utils/media/process_file";
+import DownloadManager from "@src/adapters/downloadManager";
 
 class ConversationsService {
   userIsLoggedIn = false;
@@ -120,15 +122,29 @@ class ConversationsService {
     return chat._id;
   }
 
-  async createGroupChat(participants, name) {
+  async createGroupChat(participants, name, imageFile) {
     if (!participants.length || !name) {
       showCustomAlert("Choose participants.", "warning");
       return;
     }
 
+    let imageFileProcessed, image_object;
+    if (imageFile) {
+      imageFileProcessed = await processFile(imageFile);
+      const imageObject = (
+        await DownloadManager.getFileObjects([imageFileProcessed])
+      ).at(0);
+      image_object = {
+        file_id: imageObject.file_id,
+        file_name: imageObject.file_name,
+        file_blur_hash: imageFileProcessed.blurHash,
+      };
+    }
+
     const chat = await api.conversationCreate({
       type: "g",
       name,
+      image_object,
       participants: participants.map((el) => el._id),
     });
 
@@ -210,6 +226,51 @@ class ConversationsService {
     );
   }
 
+  async updateChatImage(file) {
+    if (!file) {
+      return;
+    }
+
+    const selectedConversationId =
+      store.getState().selectedConversation.value.id;
+    store.dispatch(
+      upsertChat({
+        _id: selectedConversationId,
+        image_url: URL.createObjectURL(file),
+      })
+    );
+
+    const imageFile = await processFile(file);
+    if (!imageFile) {
+      store.dispatch(
+        upsertChat({ _id: selectedConversationId, image_url: undefined })
+      );
+      showCustomAlert("An error occured while processing the file.", "warning");
+      return;
+    }
+
+    const imageObject = (await DownloadManager.getFileObjects([imageFile])).at(
+      0
+    );
+    const requestData = {
+      cid: selectedConversationId,
+      image_object: {
+        file_id: imageObject.file_id,
+        file_name: imageObject.file_name,
+        file_blur_hash: imageFile.blurHash,
+      },
+    };
+
+    try {
+      const conversationObject = await api.conversationUpdate(requestData);
+      conversationObject["image_url"] = imageObject.file_url;
+      store.dispatch(upsertChat(conversationObject));
+    } catch (err) {
+      showCustomAlert("The server connection is unavailable.", "warning");
+      return;
+    }
+  }
+
   async deleteConversation() {
     try {
       const isConfirm = window.confirm(`Do you want to delete this chat?`);
@@ -220,13 +281,9 @@ class ConversationsService {
         await api.conversationDelete({ cid: selectedConversation.id });
         store.dispatch(clearSelectedConversation());
         store.dispatch(removeChat(selectedConversation.id));
-        return true;
-      } else {
-        return false;
       }
     } catch (err) {
       showCustomAlert(err.message, "warning");
-      return false;
     }
   }
 
