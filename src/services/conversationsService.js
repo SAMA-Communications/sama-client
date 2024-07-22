@@ -130,7 +130,7 @@ class ConversationsService {
 
     let imageFileProcessed, image_object;
     if (imageFile) {
-      imageFileProcessed = await processFile(imageFile);
+      imageFileProcessed = await processFile(imageFile, 0.2, 300);
       const imageObject = (
         await DownloadManager.getFileObjects([imageFileProcessed])
       ).at(0);
@@ -240,7 +240,7 @@ class ConversationsService {
       })
     );
 
-    const imageFile = await processFile(file);
+    const imageFile = await processFile(file, 0.2, 300);
     if (!imageFile) {
       store.dispatch(
         upsertChat({ _id: selectedConversationId, image_url: undefined })

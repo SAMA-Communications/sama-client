@@ -2,7 +2,11 @@ import globalConstants from "@helpers/constants";
 import heicToPng from "@utils/media/heic_to_png";
 import compressAndHashFile from "@utils/media/compress_and_hash";
 
-export default async function processFile(fileObj) {
+export default async function processFile(
+  fileObj,
+  maxSizeMB,
+  maxWidthOrHeight
+) {
   const formData = new FormData();
   formData.append("file", fileObj, fileObj.name.toLocaleLowerCase());
   let file = formData.get("file");
@@ -29,13 +33,13 @@ export default async function processFile(fileObj) {
     });
   } else if (["heic", "HEIC"].includes(fileExtension)) {
     const tmp = await heicToPng(file);
-    const pngFile = await compressAndHashFile(tmp);
+    const pngFile = await compressAndHashFile(tmp, maxSizeMB, maxWidthOrHeight);
 
     return pngFile;
   }
 
   if (file.type.startsWith("image/")) {
-    file = await compressAndHashFile(file);
+    file = await compressAndHashFile(file, maxSizeMB, maxWidthOrHeight);
   }
 
   if (file.type.startsWith("video/")) {
