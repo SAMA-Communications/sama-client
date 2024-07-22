@@ -15,6 +15,7 @@ export default function ConversationItem({
   currentUserId,
   chatAvatarUrl,
   chatAvatarBlutHash,
+  lastMessageUserName,
 }) {
   const {
     updated_at,
@@ -63,6 +64,7 @@ export default function ConversationItem({
           ) : (
             <LastMessage
               message={last_message}
+              viewName={lastMessageUserName}
               count={unread_messages_count}
               userId={currentUserId}
             />
