@@ -10,29 +10,23 @@ export default function LastMessage({ message, count, userId, viewName }) {
   const { attachments, body } = message;
   const lastAtt = attachments?.slice(-1)[0];
 
-  const lastMessageText = (text, att, name) => {
+  const lastMessageText = (text, att) => {
     if (!text && !att) {
       return "";
     }
     const fileType = att && getFileType(att.file_name);
 
-    const textWithName = (
-      <>
-        {name ? <span>{name}: </span> : null}
-        {text}
-      </>
-    );
-
-    return textWithName || fileType || "";
+    return text || fileType || "";
   };
 
   return (
     <>
       <div className="content-bottom__last-message">
-        {lastAtt ? <LastMessageMedia attachment={lastAtt} /> : null}
-        <p className="last-message__text">
-          {lastMessageText(body, lastAtt, viewName)}
+        <p className="last-message__uname">
+          {viewName ? `${viewName}:` : null}
         </p>
+        {lastAtt ? <LastMessageMedia attachment={lastAtt} /> : null}
+        <p className="last-message__text">{lastMessageText(body, lastAtt)}</p>
       </div>
       {count > 0 ? (
         <div className="content-bottom__indicator">{count}</div>

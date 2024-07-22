@@ -51,6 +51,7 @@ export default function ConversationItemList({ conversations }) {
           obj.type === "g"
             ? obj.image_object?.file_blur_hash
             : chatParticipant.avatar_object?.file_blur_hash
+        }
         chatObject={obj}
         currentUserId={currentUserId}
       />
