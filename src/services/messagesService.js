@@ -115,7 +115,7 @@ class MessagesService {
           store.dispatch(
             upsertChat({
               _id: cid,
-              typing_users: conversation.typing_users.filter(
+              typing_users: conversation.typing_users?.filter(
                 (id) => id !== from
               ),
             })

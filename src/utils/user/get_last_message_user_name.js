@@ -1,4 +1,4 @@
-const cut = (text) => (text.length > 10 ? text.slice(0, 7) + "..." : text);
+const cut = (text) => (text.length > 8 ? text.slice(0, 6) + "..." : text);
 
 export default function getLastMessageUserName(userObject) {
   if (!userObject) {

@@ -3,6 +3,7 @@ import getUserFullName from "@utils/user/get_user_full_name";
 import { selectParticipantsEntities } from "@src/store/values/Participants";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
+import getLastMessageUserName from "@src/utils/user/get_last_message_user_name";
 
 export default function TypingLine({ userIds, displayUserNames = false }) {
   const participants = useSelector(selectParticipantsEntities);
@@ -16,14 +17,16 @@ export default function TypingLine({ userIds, displayUserNames = false }) {
     const typingUsersLength = typingUsers?.length;
 
     if (typingUsersLength > 2) {
-      return `${getUserFullName(typingUsers[0])} and ${
+      return `${getLastMessageUserName(typingUsers[0])} and ${
         typingUsersLength - 1
       } more `;
     }
 
     return typingUsers?.map(
       (user, i) =>
-        `${getUserFullName(user)}${i !== typingUsersLength - 1 ? ", " : " "}`
+        `${getLastMessageUserName(user)}${
+          i !== typingUsersLength - 1 ? ", " : " "
+        }`
     );
   }, [participants, userIds, displayUserNames]);
 

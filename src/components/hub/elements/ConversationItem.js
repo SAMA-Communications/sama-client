@@ -58,8 +58,11 @@ export default function ConversationItem({
           <div className="content-top__time">{tView}</div>
         </div>
         <div className="content-bottom">
-          {typing_users && !isSelected ? (
-            <TypingLine displayUserNames={type === "g"} />
+          {typing_users?.length && !isSelected ? (
+            <TypingLine
+              userIds={typing_users}
+              displayUserNames={type === "g"}
+            />
           ) : (
             <LastMessage
               message={last_message}
