@@ -1,11 +1,11 @@
 import DotsLoader from "./DotsLoader";
-import getUserFullName from "@utils/user/get_user_full_name";
+import getLastMessageUserName from "@utils/user/get_last_message_user_name";
 import { selectParticipantsEntities } from "@src/store/values/Participants";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
-import getLastMessageUserName from "@src/utils/user/get_last_message_user_name";
 
 export default function TypingLine({ userIds, displayUserNames = false }) {
+  console.log(userIds);
   const participants = useSelector(selectParticipantsEntities);
 
   const usersNameView = useMemo(() => {
