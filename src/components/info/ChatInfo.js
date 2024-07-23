@@ -50,7 +50,7 @@ export default function ChatInfo() {
   );
 
   const participantsList = useMemo(() => {
-    if (!selectedConversation.participants || !currentUserId) {
+    if (!selectedConversation?.participants || !currentUserId) {
       return null;
     }
 

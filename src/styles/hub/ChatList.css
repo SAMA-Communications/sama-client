@@ -143,6 +143,11 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.last-message__uname {
+  text-wrap: nowrap;
+  color: var(--color-accent-dark);
+  font-weight: 300;
+}
 
 .last-message__media {
   width: auto;

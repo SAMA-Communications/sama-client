@@ -1,3 +1,4 @@
+import TypingLine from "@components/_helpers/TypingLine";
 import addSuffix from "@utils/navigation/add_suffix";
 import getLastVisitTime from "@utils/user/get_last_visit_time";
 import getUserFullName from "@utils/user/get_user_full_name";
@@ -70,6 +71,15 @@ export default function ChatFormHeader({ closeFormFunc }) {
   }, [selectedConversation, participants, opponentId]);
 
   const viewStatusActivity = useMemo(() => {
+    if (selectedConversation.typing_users?.length) {
+      return (
+        <TypingLine
+          userIds={selectedConversation.typing_users}
+          displayUserNames={selectedConversation.type === "g"}
+        />
+      );
+    }
+
     if (selectedConversation.type === "u") {
       if (!isOpponentExist) {
         return null;
