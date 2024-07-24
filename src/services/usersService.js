@@ -151,7 +151,7 @@ class UsersService {
       })
     );
 
-    const avatarFile = await processFile(file, 0.2, 1024);
+    const avatarFile = await processFile(file, 0.2, 300);
     if (!avatarFile) {
       store.dispatch(upsertUser({ _id: currentUserId, avatar_url: undefined }));
       showCustomAlert("An error occured while processing the file.", "warning");
