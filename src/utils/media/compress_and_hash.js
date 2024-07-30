@@ -2,8 +2,12 @@ import globalConstants from "@helpers/constants";
 import compressFile from "@utils/media/compress_file";
 import encodeImageToBlurhash from "@utils/media/get_blur_hash";
 
-export default async function compressAndHashFile(file) {
-  file = await compressFile(file);
+export default async function compressAndHashFile(
+  file,
+  maxSizeMB,
+  maxWidthOrHeight
+) {
+  file = await compressFile(file, maxSizeMB, maxWidthOrHeight);
   const localFileUrl = URL.createObjectURL(file);
   file.localUrl = localFileUrl;
 

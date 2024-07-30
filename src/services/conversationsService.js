@@ -1,6 +1,9 @@
+import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
 import eventEmitter from "@event/eventEmitter";
+import isHeic from "@utils/media/is_heic";
 import navigateTo from "@utils/navigation/navigate_to";
+import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
 import { addUsers, upsertUsers } from "@store/values/Participants";
@@ -17,9 +20,8 @@ import {
   clearSelectedConversation,
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
+
 import validateFieldLength from "@validations/validateFieldLength";
-import processFile from "@src/utils/media/process_file";
-import DownloadManager from "@src/adapters/downloadManager";
 
 class ConversationsService {
   userIsLoggedIn = false;
@@ -130,7 +132,7 @@ class ConversationsService {
 
     let imageFileProcessed, image_object;
     if (imageFile) {
-      imageFileProcessed = await processFile(imageFile);
+      imageFileProcessed = await processFile(imageFile, 0.2, 1024);
       const imageObject = (
         await DownloadManager.getFileObjects([imageFileProcessed])
       ).at(0);
@@ -236,11 +238,11 @@ class ConversationsService {
     store.dispatch(
       upsertChat({
         _id: selectedConversationId,
-        image_url: URL.createObjectURL(file),
+        image_url: isHeic(file.name) ? null : URL.createObjectURL(file),
       })
     );
 
-    const imageFile = await processFile(file);
+    const imageFile = await processFile(file, 0.2, 300);
     if (!imageFile) {
       store.dispatch(
         upsertChat({ _id: selectedConversationId, image_url: undefined })
