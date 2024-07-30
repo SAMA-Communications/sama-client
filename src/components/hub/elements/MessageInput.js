@@ -1,9 +1,12 @@
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
 import addSuffix from "@utils/navigation/add_suffix";
+import api from "@api/api";
 import isMobile from "@utils/get_device_type";
 import { KEY_CODES } from "@helpers/keyCodes";
+import { getSelectedConversationId } from "@store/values/SelectedConversation";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import { ReactComponent as Attach } from "@icons/options/Attach.svg";
 import { ReactComponent as Send } from "@icons/options/Send.svg";
@@ -16,9 +19,19 @@ export default function MessageInput({
 }) {
   const location = useLocation();
 
+  const selectedConversationId = useSelector(getSelectedConversationId);
+
   const [isPrevLocationAttach, setIsPrevLocationAttach] = useState(false);
 
+  let lastTypingRequestTime = null;
   const handleInput = (e) => {
+    if (e.target.value.length > 0) {
+      if (new Date() - lastTypingRequestTime > 3000 || !lastTypingRequestTime) {
+        api.sendTypingStatus({ cid: selectedConversationId });
+        lastTypingRequestTime = new Date();
+      }
+    }
+
     if (inputTextRef.current) {
       const countOfLines = e.target.value.split("\n").length - 1;
       inputTextRef.current.style.height = `${

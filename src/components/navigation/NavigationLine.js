@@ -1,4 +1,4 @@
-import UserAvatar from "@components/info/elements/UserAvatar";
+import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import addPrefix from "@utils/navigation/add_prefix";
 import getUserInitials from "@utils/user/get_user_initials";
 import navigateTo from "@utils/navigation/navigate_to";
@@ -75,10 +75,11 @@ export default function NavigationLine() {
           className={`menu__profile fcc ${isProfilePageActive}`}
         >
           <span className="fcc">
-            <UserAvatar
+            <DynamicAvatar
               avatarUrl={currentUser.avatar_url}
               avatarBlurHash={currentUser.avatar_object?.file_blur_hash}
               defaultIcon={getUserInitials()}
+              altText={"User's Profile"}
             />
           </span>
         </div>

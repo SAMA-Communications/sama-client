@@ -1,9 +1,10 @@
 import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
+import isHeic from "@utils/media/is_heic";
 import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
-import { upsertUser, upsertUsers } from "@src/store/values/Participants";
+import { upsertUser } from "@store/values/Participants";
 
 import validateEmail from "@validations/user/validateEmail";
 import validateFieldLength from "@validations/validateFieldLength";
@@ -146,11 +147,11 @@ class UsersService {
     store.dispatch(
       upsertUser({
         _id: currentUserId,
-        avatar_url: URL.createObjectURL(file),
+        avatar_url: isHeic(file.name) ? null : URL.createObjectURL(file),
       })
     );
 
-    const avatarFile = await processFile(file);
+    const avatarFile = await processFile(file, 0.2, 300);
     if (!avatarFile) {
       store.dispatch(upsertUser({ _id: currentUserId, avatar_url: undefined }));
       showCustomAlert("An error occured while processing the file.", "warning");

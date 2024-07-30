@@ -1,9 +1,18 @@
-import * as imageConversion from "image-conversion";
+import imageCompression from "browser-image-compression";
 
-export default async function compressFile(file) {
-  const compressedfile = await imageConversion.compress(file, 0.9);
-  const formData = new FormData();
-  formData.append("file", compressedfile, file.name);
+export default async function compressFile(file, maxSizeMB, maxWidthOrHeight) {
+  const options = {
+    maxSizeMB: maxSizeMB || 0.3,
+    maxWidthOrHeight: maxWidthOrHeight || 1920,
+    useWebWorker: true,
+  };
 
-  return formData.get("file");
+  try {
+    const compressedFile = await imageCompression(file, options);
+    const formData = new FormData();
+    formData.append("file", compressedFile, file.name);
+    return formData.get("file");
+  } catch (error) {
+    console.error(error);
+  }
 }

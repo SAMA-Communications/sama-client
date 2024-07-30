@@ -1,6 +1,9 @@
+import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
 import eventEmitter from "@event/eventEmitter";
+import isHeic from "@utils/media/is_heic";
 import navigateTo from "@utils/navigation/navigate_to";
+import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
 import { addUsers, upsertUsers } from "@store/values/Participants";
@@ -17,6 +20,7 @@ import {
   clearSelectedConversation,
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
+
 import validateFieldLength from "@validations/validateFieldLength";
 
 class ConversationsService {
@@ -120,15 +124,29 @@ class ConversationsService {
     return chat._id;
   }
 
-  async createGroupChat(participants, name) {
+  async createGroupChat(participants, name, imageFile) {
     if (!participants.length || !name) {
       showCustomAlert("Choose participants.", "warning");
       return;
     }
 
+    let imageFileProcessed, image_object;
+    if (imageFile) {
+      imageFileProcessed = await processFile(imageFile, 0.2, 1024);
+      const imageObject = (
+        await DownloadManager.getFileObjects([imageFileProcessed])
+      ).at(0);
+      image_object = {
+        file_id: imageObject.file_id,
+        file_name: imageObject.file_name,
+        file_blur_hash: imageFileProcessed.blurHash,
+      };
+    }
+
     const chat = await api.conversationCreate({
       type: "g",
       name,
+      image_object,
       participants: participants.map((el) => el._id),
     });
 
@@ -210,6 +228,51 @@ class ConversationsService {
     );
   }
 
+  async updateChatImage(file) {
+    if (!file) {
+      return;
+    }
+
+    const selectedConversationId =
+      store.getState().selectedConversation.value.id;
+    store.dispatch(
+      upsertChat({
+        _id: selectedConversationId,
+        image_url: isHeic(file.name) ? null : URL.createObjectURL(file),
+      })
+    );
+
+    const imageFile = await processFile(file, 0.2, 300);
+    if (!imageFile) {
+      store.dispatch(
+        upsertChat({ _id: selectedConversationId, image_url: undefined })
+      );
+      showCustomAlert("An error occured while processing the file.", "warning");
+      return;
+    }
+
+    const imageObject = (await DownloadManager.getFileObjects([imageFile])).at(
+      0
+    );
+    const requestData = {
+      cid: selectedConversationId,
+      image_object: {
+        file_id: imageObject.file_id,
+        file_name: imageObject.file_name,
+        file_blur_hash: imageFile.blurHash,
+      },
+    };
+
+    try {
+      const conversationObject = await api.conversationUpdate(requestData);
+      conversationObject["image_url"] = imageObject.file_url;
+      store.dispatch(upsertChat(conversationObject));
+    } catch (err) {
+      showCustomAlert("The server connection is unavailable.", "warning");
+      return;
+    }
+  }
+
   async deleteConversation() {
     try {
       const isConfirm = window.confirm(`Do you want to delete this chat?`);
@@ -220,13 +283,9 @@ class ConversationsService {
         await api.conversationDelete({ cid: selectedConversation.id });
         store.dispatch(clearSelectedConversation());
         store.dispatch(removeChat(selectedConversation.id));
-        return true;
-      } else {
-        return false;
       }
     } catch (err) {
       showCustomAlert(err.message, "warning");
-      return false;
     }
   }
 

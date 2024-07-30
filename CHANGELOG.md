@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.3.0
+
+### Features
+
+- Implemented user avatar support
+- Implemented group chat avatar support
+- Added ‘typing’ indicator for one-to-one and group chats
+
+### Improvements
+
+- Enhanced and optimized compression algorithms for user and group avatars
+
 ## 1.2.0
 
 ### Features

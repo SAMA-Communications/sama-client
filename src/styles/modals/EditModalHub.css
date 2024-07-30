@@ -77,6 +77,10 @@
   justify-content: flex-end;
   gap: 30px;
 }
+.em-navigation__container > .search__pending {
+  padding: 0 !important;
+}
+
 .em-navigation__link {
   font-size: var(--font-h6);
   color: var(--color-accent-dark);

@@ -1,6 +1,9 @@
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
+import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import ParticipantInChat from "@components/info/elements/ParticipantInChat";
 import addSuffix from "@utils/navigation/add_suffix";
+import conversationService from "@services/conversationsService";
+import globalConstants from "@helpers/constants";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
@@ -10,7 +13,7 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 
 import "@styles/info/ChatInfo.css";
@@ -18,7 +21,8 @@ import "@styles/info/ChatInfo.css";
 import { ReactComponent as AddParticipants } from "@icons/AddParticipants.svg";
 import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
-import { ReactComponent as ImageBig } from "@icons/media/ImageBig.svg";
+import { ReactComponent as ImageBig } from "@icons/media/ImageBig_latest.svg";
+import { ReactComponent as ImageOwnerBig } from "@icons/media/ImageBig.svg";
 
 export default function ChatInfo() {
   const { pathname, hash } = useLocation();
@@ -30,6 +34,8 @@ export default function ChatInfo() {
   const currentUserId = useSelector(selectCurrentUserId);
   const selectedConversation = useSelector(getConverastionById);
   const conversationOwner = selectedConversation?.owner_id?.toString();
+
+  const inputFilesRef = useRef(null);
 
   const isCurrentUserOwner = useMemo(() => {
     if (!currentUserId || !selectedConversation) {
@@ -69,6 +75,12 @@ export default function ChatInfo() {
 
   const participantsCount = participantsList?.length;
 
+  const pickFileClick = () =>
+    isCurrentUserOwner ? inputFilesRef.current.click() : {};
+
+  const sendChangeAvatarRequest = async (file) =>
+    void (await conversationService.updateChatImage(file));
+
   return (
     <div className="chat-info__container">
       <CustomScrollBar>
@@ -85,8 +97,30 @@ export default function ChatInfo() {
               onClick={() => removeAndNavigateSubLink(pathname + hash, "/info")}
             />
           )}
-          <div className="ci-photo fcc">
-            <ImageBig />
+          <div
+            className={`ci-photo${
+              isCurrentUserOwner ? "--owner cursor-pointer" : ""
+            } fcc`}
+            onClick={pickFileClick}
+          >
+            <DynamicAvatar
+              avatarUrl={selectedConversation.image_url}
+              avatarBlurHash={selectedConversation.image_object?.file_blur_hash}
+              defaultIcon={
+                isCurrentUserOwner ? <ImageOwnerBig /> : <ImageBig />
+              }
+              altText={"Chat Group"}
+            />
+            <input
+              id="inputFile"
+              ref={inputFilesRef}
+              type="file"
+              onChange={(e) =>
+                sendChangeAvatarRequest(Array.from(e.target.files).at(0))
+              }
+              accept={globalConstants.allowedAvatarFormats}
+              multiple
+            />
           </div>
           <div
             className={`chat-info__content ${
@@ -95,12 +129,12 @@ export default function ChatInfo() {
             onClick={() => addSuffix(pathname + hash, "/edit?type=chat")}
           >
             <p className="ci-name">
-              {selectedConversation?.name || (
+              {selectedConversation.name || (
                 <span className="ci-name--gray">Group name</span>
               )}
             </p>
             <p className="ci-description">
-              {selectedConversation?.description || (
+              {selectedConversation.description || (
                 <span className="ci-description--gray">Description</span>
               )}
             </p>

@@ -1,4 +1,5 @@
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
+import OvalLoader from "@components/_helpers/OvalLoader";
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchBar";
 import UserInfo from "@components/modals/elements/UserInfo";
@@ -14,6 +15,8 @@ export default function UserSelectorBlock({
   const [inputText, setInputText] = useState(null);
   const [counter, setCounter] = useState(initSelectedUsers?.length || 1);
   const [selectedUsers, setSelectedUsers] = useState(initSelectedUsers || []);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const meInArray = initSelectedUsers ? 0 : 1;
 
@@ -59,15 +62,18 @@ export default function UserSelectorBlock({
     );
   }, [counter, initSelectedUsers, meInArray, selectedUsers]);
 
-  useKeyDown(KEY_CODES.ENTER, () =>
+  useKeyDown(KEY_CODES.ENTER, () => validateClick());
+
+  const validateClick = () => {
+    setIsLoading(true);
     onClickCreateFunc(
       initSelectedUsers
         ? selectedUsers.filter(
             (u) => !initSelectedUsers.find((uObj) => u._id === uObj._id)
           )
         : selectedUsers
-    )
-  );
+    );
+  };
 
   return (
     <>
@@ -100,20 +106,13 @@ export default function UserSelectorBlock({
         <p className="em-navigation__link" onClick={closeWindow}>
           Cancel
         </p>
-        <p
-          className="em-navigation__link"
-          onClick={() =>
-            onClickCreateFunc(
-              initSelectedUsers
-                ? selectedUsers.filter(
-                    (u) => !initSelectedUsers.find((uObj) => u._id === uObj._id)
-                  )
-                : selectedUsers
-            )
-          }
-        >
-          {initSelectedUsers ? "Add" : "Create"}
-        </p>
+        {isLoading ? (
+          <OvalLoader height={60} width={23} />
+        ) : (
+          <p className="em-navigation__link" onClick={() => validateClick()}>
+            {initSelectedUsers ? "Add" : "Create"}
+          </p>
+        )}
       </div>
     </>
   );

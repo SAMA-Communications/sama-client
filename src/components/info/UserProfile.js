@@ -1,6 +1,6 @@
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import InfoBox from "@components/info/elements/InfoBox";
-import UserAvatar from "@components/info/elements//UserAvatar";
+import DynamicAvatar from "@components/info/elements//DynamicAvatar";
 import addSuffix from "@utils/navigation/add_suffix";
 import globalConstants from "@src/_helpers/constants";
 import navigateTo from "@utils/navigation/navigate_to";
@@ -81,10 +81,11 @@ export default function UserProfile() {
             className="profile__photo--current fcc cursor-pointer"
             onClick={pickFileClick}
           >
-            <UserAvatar
+            <DynamicAvatar
               avatarUrl={currentUser.avatar_url}
               avatarBlurHash={currentUser.avatar_object?.file_blur_hash}
               defaultIcon={<UserIcon />}
+              altText={"User's Profile"}
             />
             <input
               id="inputFile"
