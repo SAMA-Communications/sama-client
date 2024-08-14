@@ -41,12 +41,12 @@ There are also other components. Make sure to check [Deploying SAMA chat server 
 
 ### To run with encryption capability
 
-## License
-
 - Go to [matrix-org/vodozemac-bindings](https://github.com/matrix-org/vodozemac-bindings) and run the following command `wasm-pack build --target web --dev`
 - Move the generated files from the `pkg` folder to the `vendors/vodozemac` folder in the project
 - Declare the folder in package.json as a built-in library: `"vodozemac-javascript": "file:vendors/vodozemac"`
 - Import everything from the library, call it to initialize it in the project, and now you can use it anywhere in the project
+
+## License
 
 [MIT](LICENSE)
 
