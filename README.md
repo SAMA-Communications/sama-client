@@ -1,8 +1,8 @@
-# SAMA - Simple but Advanced Messaging Alternative - Client app 
+# SAMA - Simple but Advanced Messaging Alternative - Client app
 
 <img width="1282" alt="ClientImage" src="https://github.com/SAMA-Communications/sama-client/assets/98953475/fe8dfd1c-462d-46d2-aa24-5792b36e23f2">
 
-## Overview 
+## Overview
 
 This is a frontend demo app for the SAMA server https://github.com/SAMA-Communications/sama-server
 
@@ -13,14 +13,15 @@ Read a complete medium post **Introducing SAMA** about what is SAMA and what pro
 The whole SAMA stack can be tested using https://app.samacloud.io public cloud.
 
 ## Development
+
 ### To run Web
 
 - Make sure you followed SAMA server Development guide first https://github.com/SAMA-Communications/sama-server/blob/main/README.md#development
 - Copy `.env.example` to `.env`.
-- generate VAPID keys via `npx web-push generate-vapid-keys` and set Public Key to `REACT_APP_PUBLIC_VAPID_KEY` in `.env` file
-- `npm install` to install dependencies 
+- Generate VAPID keys via `npx web-push generate-vapid-keys` and set Public Key to `REACT_APP_PUBLIC_VAPID_KEY` in `.env` file
+- `npm install` to install dependencies
 - `npm run start` to run server
-- access http://localhost:3000 in your browser
+- Access http://localhost:3000 in your browser
 
 There are also other components. Make sure to check [Deploying SAMA chat server stack: a comprehensive guide](https://medium.com/sama-communications/deploying-sama-chat-server-stack-a-comprehensive-guide-294ddb9a2d78)
 
@@ -38,7 +39,14 @@ There are also other components. Make sure to check [Deploying SAMA chat server 
 - Run `npm run capacitor:build`
 - To run ios: `npm run ios` or android: `npm run android`
 
-## License 
+### To run with encryption capability
+
+## License
+
+- Go to [matrix-org/vodozemac-bindings](https://github.com/matrix-org/vodozemac-bindings) and run the following command `wasm-pack build --target web --dev`
+- Move the generated files from the `pkg` folder to the `vendors/vodozemac` folder in the project
+- Declare the folder in package.json as a built-in library: `"vodozemac-javascript": "file:vendors/vodozemac"`
+- Import everything from the library, call it to initialize it in the project, and now you can use it anywhere in the project
 
 [MIT](LICENSE)
 
@@ -46,5 +54,4 @@ There are also other components. Make sure to check [Deploying SAMA chat server 
 
 Any thoughts, feedback is welcome! Please create a GitHub issue for any feedback you have.
 
-Want to support us with [some coffee?](https://www.buymeacoffee.com/khomenkoigor). Will be much appreciated! 
-
+Want to support us with [some coffee?](https://www.buymeacoffee.com/khomenkoigor). Will be much appreciated!
