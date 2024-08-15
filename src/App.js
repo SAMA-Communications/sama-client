@@ -23,12 +23,19 @@ import SPageLoader from "@skeletons/SPageLoader";
 
 import "@styles/GlobalParam.css";
 
+// import initVodozemac, { Account } from "vodozemac-javascript";
+
 const Main = lazy(() => import("@components/Main"));
 const AuthorizationHub = lazy(() =>
   import("@components/auth/AuthorizationHub")
 );
 
 export default function App() {
+  // initVodozemac().then((res) => {
+  //   const a = new Account();
+  //   console.log(a);
+  // });
+
   const dispatch = useDispatch();
   history.location = useLocation();
   history.navigate = useNavigate();
