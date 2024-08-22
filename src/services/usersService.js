@@ -1,5 +1,6 @@
 import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
+import encryptionService from "./encryptionService";
 import isHeic from "@utils/media/is_heic";
 import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
@@ -39,6 +40,7 @@ class UsersService {
     });
     localStorage.setItem("sessionId", userToken);
     api.curerntUserId = userData._id;
+    await encryptionService.registerDevice();
 
     return userData;
   }
