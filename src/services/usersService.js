@@ -13,6 +13,7 @@ import validateIsEmptyObject from "@validations/validateIsEmtpyObject";
 import validateLogin from "@validations/user/validateLogin";
 import validatePassword from "@validations/user/validatePassword";
 import validatePhone from "@validations/user/validatePhone";
+import { setEncryptedUser } from "@src/store/values/EncryptedUser";
 
 class UsersService {
   async login(data) {
@@ -128,6 +129,7 @@ class UsersService {
           sub.unsubscribe().then(async () => {
             await api.pushSubscriptionDelete();
             await api.userLogout();
+            setEncryptedUser({});
             localStorage.removeItem("sessionId");
           })
         )

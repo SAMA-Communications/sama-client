@@ -23,7 +23,6 @@ class EncryptionService {
     user.generate_one_time_keys(50);
 
     setEncryptedUser(user);
-    console.log(user);
 
     const data = {
       identity_key: user.curve25519_key,
