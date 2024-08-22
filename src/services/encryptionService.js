@@ -1,10 +1,13 @@
 import api from "@api/api";
 import initVodozemac, { Account } from "vodozemac-javascript";
-import { setEncryptedUser } from "@src/store/values/EncryptedUser";
+import { setEncryptedUser } from "@store/values/EncryptedUser";
 
 class EncryptionService {
   constructor() {
-    this.vodozemac = initVodozemac();
+    initVodozemac().then(() => {
+      console.log("[encryption] Vodozemac init Ok");
+    });
+
     this.account = null;
   }
 
