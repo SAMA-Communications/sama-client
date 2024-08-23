@@ -210,6 +210,21 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
+  async encryptedDeviceCreate(data) {
+    const requestData = {
+      request: {
+        device_register: {
+          identity_key: data.identity_key,
+          signed_key: data.signed_key,
+          one_time_pre_keys: data.one_time_pre_keys,
+        },
+        id: getUniqueId("encryptedDeviceCreate"),
+      },
+    };
+    const resObjKey = "success";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
   async userEdit(data) {
     const requestData = {
       request: {

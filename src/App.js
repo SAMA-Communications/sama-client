@@ -2,6 +2,7 @@ import ContextMenuHub from "@components/context/ContextMenuHub";
 import activityService from "@services/activityService";
 import autoLoginService from "@services/autoLoginService.js";
 import conversationService from "@services/conversationsService";
+import encryptionService from "@services/encryptionService";
 import globalConstants from "@helpers/constants";
 import messagesService from "@services/messagesService";
 import navigateTo from "@utils/navigation/navigate_to";
@@ -12,9 +13,9 @@ import { Suspense, lazy, useEffect, useRef } from "react";
 import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView, setIsTabletView } from "@store/values/IsTabletView";
 import { history } from "@helpers/history";
-import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { selectIsClicked, setClicked } from "@store/values/ContextMenu";
 import { setIsTabInFocus } from "@store/values/IsTabInFocus";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -23,19 +24,12 @@ import SPageLoader from "@skeletons/SPageLoader";
 
 import "@styles/GlobalParam.css";
 
-// import initVodozemac, { Account } from "vodozemac-javascript";
-
 const Main = lazy(() => import("@components/Main"));
 const AuthorizationHub = lazy(() =>
   import("@components/auth/AuthorizationHub")
 );
 
 export default function App() {
-  // initVodozemac().then((res) => {
-  //   const a = new Account();
-  //   console.log(a);
-  // });
-
   const dispatch = useDispatch();
   history.location = useLocation();
   history.navigate = useNavigate();
