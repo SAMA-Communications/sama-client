@@ -1,4 +1,5 @@
 import MessageInput from "@components/hub/elements/MessageInput";
+import encryptionService from "@services/encryptionService";
 import messagesService from "@services/messagesService";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
@@ -122,9 +123,18 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     );
   }, [selectedConversation, participants]);
 
+  const isOpponentOffline = useMemo(() => {
+    if (!selectedConversation.is_encrypted) {
+      return false;
+    }
+
+    return !encryptionService.encryptionSession;
+  }, [selectedConversation]);
+
   return (
     <MessageInput
       inputTextRef={inputRef}
+      isOpponentOffline={isOpponentOffline}
       isBlockedConv={isBlockedConv}
       onSubmitFunc={createAndSendMessage}
       chatMessagesBlockRef={chatMessagesBlockRef}

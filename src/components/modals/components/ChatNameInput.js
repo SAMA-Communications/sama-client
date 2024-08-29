@@ -1,3 +1,4 @@
+import ToggleButton from "@components/_helpers/ToggleButton";
 import globalConstants from "@helpers/constants";
 import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@helpers/keyCodes";
@@ -6,7 +7,12 @@ import { useKeyDown } from "@hooks/useKeyDown";
 
 import { ReactComponent as ImageMedium } from "@icons/media/ImageBig.svg";
 
-export default function ChatNameInput({ setState, setImage, closeWindow }) {
+export default function ChatNameInput({
+  setState,
+  setImage,
+  setIsEncrypted,
+  closeWindow,
+}) {
   const [name, setName] = useState(null);
   const [localUrlImage, setLcalUrlImage] = useState(null);
 
@@ -64,6 +70,7 @@ export default function ChatNameInput({ setState, setImage, closeWindow }) {
         </div>
       </div>
       <div className="em-navigation__container fcc">
+        <ToggleButton onChangeFunc={setIsEncrypted} text={"encrypted"} />
         <p className="em-navigation__link" onClick={closeWindow}>
           Cancel
         </p>

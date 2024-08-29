@@ -13,6 +13,7 @@ import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import "@styles/modals/UsersSelectModalHub.css";
+import encryptionService from "@src/services/encryptionService";
 
 export default function UsersSelectModalHub({ type }) {
   const selectedConversation = useSelector(getConverastionById);
@@ -21,10 +22,19 @@ export default function UsersSelectModalHub({ type }) {
   const { pathname, hash } = useLocation();
   const [chatName, setChatName] = useState(null);
   const [chatImage, setChatImage] = useState(null);
+  const [isEncrypted, setIsEncrypted] = useState(false);
 
   const closeModal = () => removeAndNavigateSubLink(pathname + hash, "/create");
 
   const sendCreateRequest = async (participants) => {
+    if (isEncrypted) {
+      const chatId = await encryptionService.createEncryptedChat(
+        participants[0].native_id
+      );
+      chatId && navigateTo(`/#${chatId}`);
+      return;
+    }
+
     const chatId = await conversationService.createGroupChat(
       participants,
       chatName,
@@ -60,12 +70,14 @@ export default function UsersSelectModalHub({ type }) {
     return chatName ? (
       <UserSelectorBlock
         closeWindow={closeModal}
+        isEncrypted={isEncrypted}
         onClickCreateFunc={sendCreateRequest}
       />
     ) : (
       <ChatNameInput
         setState={setChatName}
         setImage={setChatImage}
+        setIsEncrypted={setIsEncrypted}
         closeWindow={closeModal}
       />
     );

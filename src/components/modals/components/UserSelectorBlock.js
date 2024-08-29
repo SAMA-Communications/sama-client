@@ -10,6 +10,7 @@ import { useKeyDown } from "@hooks/useKeyDown";
 export default function UserSelectorBlock({
   initSelectedUsers,
   closeWindow,
+  isEncrypted,
   onClickCreateFunc,
 }) {
   const [inputText, setInputText] = useState(null);
@@ -98,7 +99,7 @@ export default function UserSelectorBlock({
         isClickDisabledFunc={(uObj) =>
           initSelectedUsers?.find((u) => u._id === uObj._id)
         }
-        isMaxLimit={counter >= 50}
+        isMaxLimit={counter >= (isEncrypted ? 2 : 50)}
         isSelectUserToArray={true}
         isSearchOnlyUsers={true}
       />

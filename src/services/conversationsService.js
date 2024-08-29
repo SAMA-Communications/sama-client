@@ -113,7 +113,7 @@ class ConversationsService {
 
     const requestData = {
       type: "u",
-      participants: [userId],
+      isEncrypted: true,
     };
 
     const chat = await api.conversationCreate(requestData);

@@ -29,7 +29,9 @@ export const getConverastionById = createSelector(
 export const getDisplayableConversations = createSelector(
   [selectAllConversations],
   (conversations) => {
-    return conversations.filter((obj) => obj.type === "g" || obj.last_message);
+    return conversations.filter(
+      (obj) => obj.type === "g" || obj.last_message || obj.is_encrypted
+    );
   }
 );
 export const conversations = createSlice({
