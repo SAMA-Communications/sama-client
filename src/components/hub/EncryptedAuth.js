@@ -12,7 +12,7 @@ export default function EncryptedAuth() {
   const registerDeviceFunc = async () => {
     await encryptionService.registerDevice(inputRef.current.value);
 
-    if (encryptionService.validateIsAuthEncrypted()) {
+    if (encryptionService.validateIsUserAuth()) {
       showCustomAlert("Authorization was successful.", "success");
     }
   };

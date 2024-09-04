@@ -5,6 +5,7 @@ import encryptionService from "@services/encryptionService";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
+import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
 import { selectParticipantsEntities } from "@store/values/Participants";
@@ -28,10 +29,18 @@ export default function UsersSelectModalHub({ type }) {
 
   const sendCreateRequest = async (participants) => {
     if (isEncrypted) {
+      const opponent = participants?.[0];
       const chatId = await encryptionService.createEncryptedChat(
-        participants[0].native_id
+        opponent.native_id,
+        opponent
       );
-      chatId && navigateTo(`/#${chatId}`);
+
+      if (encryptionService.validateIsUserAuth()) {
+        chatId && navigateTo(`/#${chatId}`);
+      } else {
+        navigateTo(`/auth_encrypted`);
+      }
+      encryptionService.setChatIdAfterRegister(chatId);
       return;
     }
 

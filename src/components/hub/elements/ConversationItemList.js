@@ -18,8 +18,10 @@ export default function ConversationItemList({ conversations }) {
   const activeConversationId = selectedConversation?._id;
 
   const convItemOnClickFunc = (id, isEncrypted) => {
+    console.log(id, isEncrypted);
+
     if (isEncrypted) {
-      if (!encryptionService.validateIsAuthEncrypted()) {
+      if (!encryptionService.validateIsUserAuth()) {
         encryptionService.setChatIdAfterRegister(id);
         navigateTo(`/auth_encrypted`);
         return;

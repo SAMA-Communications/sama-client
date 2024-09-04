@@ -189,7 +189,7 @@ class MessagesService {
         }
         const conv =
           store.getState().conversations.entities[this.currentChatId];
-        if (conv.type !== "u") {
+        if (conv.type !== "u" && this.currentChatId) {
           api
             .getParticipantsByCids({
               cids: [this.currentChatId],
