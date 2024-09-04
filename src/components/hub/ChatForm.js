@@ -32,13 +32,16 @@ export default function ChatForm() {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const isUserLogin = useSelector(getUserIsLoggedIn);
-  const isTabInFocus = useSelector(getIsTabInFocus);
-
   const currentUserId = useSelector(selectCurrentUserId);
   const conversations = useSelector(selectConversationsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
+
+  const isUserLogin = useSelector(getUserIsLoggedIn);
+  const isTabInFocus = useSelector(getIsTabInFocus);
+  const [isSuccesESession, setIsSuccesESession] = useState(
+    selectedConversation?.is_encrypted
+  );
 
   const chatMessagesBlock = useRef();
   const [files, setFiles] = useState([]);
@@ -89,11 +92,13 @@ export default function ChatForm() {
         return;
       }
 
-      encryptionService.createEncryptionSession(
-        selectedConversation.owner_id === currentUserId
-          ? selectedConversation.opponent_id
-          : selectedConversation.owner_id
-      );
+      encryptionService
+        .createEncryptionSession(
+          selectedConversation.owner_id === currentUserId
+            ? selectedConversation.opponent_id
+            : selectedConversation.owner_id
+        )
+        .then((session) => setIsSuccesESession(!!session));
     }
 
     files.length && setFiles([]);
@@ -119,18 +124,6 @@ export default function ChatForm() {
 
   useKeyDown(KEY_CODES.ESCAPE, closeForm);
 
-  const isOpponentOffline = useMemo(() => {
-    return false;
-    // !!!** We need logic to update this state
-
-    // if (!selectedConversation.is_encrypted) {
-    //   return false;
-    // }
-
-    // console.log("session", encryptionService.encryptionSession);
-    // return !encryptionService.encryptionSession;
-  }, [selectedConversation]);
-
   return (
     <section className={`chat-form__container ${selectedCID ? "" : "fcc"}`}>
       {location.pathname.includes("auth_encrypted") ? (
@@ -141,7 +134,7 @@ export default function ChatForm() {
           <ChatFormContent scrollRef={chatMessagesBlock} />
           <ChatFormInputs
             chatMessagesBlockRef={chatMessagesBlock}
-            isOpponentOffline={isOpponentOffline}
+            isEncryptedSessionActive={isSuccesESession}
             files={files}
             setFiles={setFiles}
           />

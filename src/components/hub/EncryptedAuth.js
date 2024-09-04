@@ -24,6 +24,7 @@ export default function EncryptedAuth() {
         Encrypted authorization
       </p>
       <input
+        autoFocus
         type="password"
         ref={inputRef}
         placeholder="Enter the authorization key"

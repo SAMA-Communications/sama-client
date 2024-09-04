@@ -5,7 +5,7 @@ import localforage from "localforage";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
-import { insertChat, upsertChat } from "@store/values/Conversations";
+import { insertChat } from "@store/values/Conversations";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { upsertUser } from "@store/values/Participants";
 
@@ -115,8 +115,7 @@ class EncryptionService {
     console.log("Ecnrypted opponet keys: ", userKeys);
     if (!userKeys) {
       console.log("Encryption: opponent offline");
-
-      return;
+      return null;
     }
 
     const session = this.account.create_outbound_session(
@@ -126,6 +125,8 @@ class EncryptionService {
     this.encryptionSession = session;
 
     console.log("Ecnrypted session: ", session);
+
+    return this.encryptionSession;
   }
 }
 

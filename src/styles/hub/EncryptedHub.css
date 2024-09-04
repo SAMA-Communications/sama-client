@@ -1,0 +1,48 @@
+.encrypted--container {
+  width: 350px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  flex: 1 1;
+  align-self: center;
+  justify-content: center;
+}
+
+.encrypted--container > input {
+  padding: 15px 10px;
+
+  color: var(--color-black);
+  font-size: var(--font-p);
+
+  border: 0;
+  border-radius: var(--border-12);
+  background-color: var(--color-hover-light);
+}
+
+.encrypted--container > input:focus {
+  outline: none;
+}
+.encrypted--container > button {
+  padding: 15px 10px;
+
+  font-size: var(--font-p);
+  color: var(--color-white);
+
+  border: 0;
+  border-radius: var(--border-12);
+  background-color: var(--color-accent-dark);
+
+  cursor: pointer;
+}
+
+.encrypted--container > p {
+  margin-bottom: 10px;
+
+  font-size: var(--font-h4);
+  text-align: center;
+
+  display: flex;
+  align-items: center;
+}

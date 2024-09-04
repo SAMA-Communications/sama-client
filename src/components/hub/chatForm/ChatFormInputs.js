@@ -24,7 +24,7 @@ import "@styles/hub/chatForm/ChatFormInputs.css";
 
 export default function ChatFormInputs({
   chatMessagesBlockRef,
-  isOpponentOffline,
+  isEncryptedSessionActive,
 }) {
   const dispatch = useDispatch();
 
@@ -129,7 +129,7 @@ export default function ChatFormInputs({
   return (
     <MessageInput
       inputTextRef={inputRef}
-      isOpponentOffline={isOpponentOffline}
+      isEncryptedSessionActive={isEncryptedSessionActive}
       isBlockedConv={isBlockedConv}
       onSubmitFunc={createAndSendMessage}
       chatMessagesBlockRef={chatMessagesBlockRef}

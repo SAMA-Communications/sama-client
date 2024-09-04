@@ -15,7 +15,7 @@ export default function MessageInput({
   inputTextRef,
   onSubmitFunc,
   isBlockedConv,
-  isOpponentOffline,
+  isEncryptedSessionActive,
   chatMessagesBlockRef,
 }) {
   const location = useLocation();
@@ -83,7 +83,7 @@ export default function MessageInput({
   }, [location]);
 
   const inputsView = useMemo(() => {
-    if (isBlockedConv || isOpponentOffline) {
+    if (isBlockedConv || isEncryptedSessionActive === false) {
       return (
         <TextAreaInput
           inputRef={inputTextRef}
@@ -92,7 +92,7 @@ export default function MessageInput({
           isDisabled={true}
           isMobile={isMobile}
           placeholder={
-            isOpponentOffline
+            !isBlockedConv
               ? "Your opponent is offline."
               : "The user you are currently chatting with has deleted their account. You can no longer continue the chat."
           }
