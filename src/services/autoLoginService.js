@@ -1,5 +1,4 @@
 import api from "@api/api";
-import encryptionService from "./encryptionService";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
@@ -42,8 +41,6 @@ class AutoLoginService {
 
         subscribeForNotifications();
         store.dispatch(upsertUser(userData));
-
-        await encryptionService.registerDevice();
 
         store.dispatch(setUserIsLoggedIn(true));
 

@@ -1,14 +1,18 @@
+import EncodeText from "@utils/user/encode_text";
 import api from "@api/api";
-import initVodozemac, { Account, Session } from "vodozemac-javascript";
-import store from "@src/store/store";
-import { insertChat } from "@src/store/values/Conversations";
-import { setEncryptedUser } from "@store/values/EncryptedUser";
-import { setSelectedConversation } from "@src/store/values/SelectedConversation";
-import { upsertUser } from "@src/store/values/Participants";
+import initVodozemac, { Account } from "vodozemac-javascript";
+import localforage from "localforage";
+import navigateTo from "@utils/navigation/navigate_to";
+import showCustomAlert from "@utils/show_alert";
+import store from "@store/store";
+import { insertChat, upsertChat } from "@store/values/Conversations";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
+import { upsertUser } from "@store/values/Participants";
 
 class EncryptionService {
   encryptionSession = null;
   account = null;
+  chatIdAfterRegister = null;
 
   constructor() {
     initVodozemac().then(() => {
@@ -16,21 +20,46 @@ class EncryptionService {
     });
   }
 
-  #getAccount() {
+  setChatIdAfterRegister(id) {
+    this.chatIdAfterRegister = id;
+  }
+
+  validateIsAuthEncrypted() {
+    return !!this.account;
+  }
+
+  async #getAccount(password) {
     if (this.account) {
       return this.account;
     }
 
+    const key = (await EncodeText(password)).slice(0, 32);
+
+    const encAuthKey = await localforage.getItem("account");
+
+    if (encAuthKey) {
+      try {
+        this.account = Account.from_pickle(encAuthKey, key);
+      } catch (error) {
+        localforage.removeItem("account");
+        showCustomAlert("Account session has expired. Try again.");
+        return null;
+      }
+      return this.account;
+    }
+
     this.account = new Account();
+    const encryptedKey = this.account.pickle(key);
+    localforage.setItem("account", encryptedKey);
 
     return this.account;
   }
 
-  async registerDevice() {
-    const user = this.#getAccount();
+  async registerDevice(password) {
+    const user = await this.#getAccount(password);
     user.generate_one_time_keys(50);
 
-    setEncryptedUser(user);
+    console.log("Encryption: ", user);
 
     const data = {
       identity_key: user.curve25519_key,
@@ -38,6 +67,11 @@ class EncryptionService {
       one_time_pre_keys: Object.fromEntries(user.one_time_keys.entries()),
     };
     await api.encryptedDeviceCreate(data);
+
+    if (this.chatIdAfterRegister) {
+      navigateTo(`/#${this.chatIdAfterRegister}`);
+      store.dispatch(setSelectedConversation(this.chatIdAfterRegister));
+    }
   }
 
   async createEncryptedChat(userId) {
@@ -78,7 +112,7 @@ class EncryptionService {
     console.log(userId, this.account);
 
     const userKeys = await this.#getParticipantsKeys(userId);
-    console.log(userKeys);
+    console.log("Ecnrypted opponet keys: ", userKeys);
     if (!userKeys) {
       console.log("Encryption: opponent offline");
 
@@ -90,7 +124,8 @@ class EncryptionService {
       userKeys.one_time_pre_keys
     );
     this.encryptionSession = session;
-    console.log(session);
+
+    console.log("Ecnrypted session: ", session);
   }
 }
 

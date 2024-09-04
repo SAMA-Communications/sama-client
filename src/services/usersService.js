@@ -1,6 +1,5 @@
 import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
-import encryptionService from "./encryptionService";
 import isHeic from "@utils/media/is_heic";
 import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
@@ -13,7 +12,6 @@ import validateIsEmptyObject from "@validations/validateIsEmtpyObject";
 import validateLogin from "@validations/user/validateLogin";
 import validatePassword from "@validations/user/validatePassword";
 import validatePhone from "@validations/user/validatePhone";
-import { setEncryptedUser } from "@src/store/values/EncryptedUser";
 
 class UsersService {
   async login(data) {
@@ -41,7 +39,6 @@ class UsersService {
     });
     localStorage.setItem("sessionId", userToken);
     api.curerntUserId = userData._id;
-    await encryptionService.registerDevice();
 
     return userData;
   }
@@ -129,7 +126,6 @@ class UsersService {
           sub.unsubscribe().then(async () => {
             await api.pushSubscriptionDelete();
             await api.userLogout();
-            setEncryptedUser({});
             localStorage.removeItem("sessionId");
           })
         )

@@ -1,7 +1,6 @@
 import contextMenuReducer from "@store/values/ContextMenu";
 import conversationsReducer from "@store/values/Conversations";
 import currentUserIdReducer from "@store/values/CurrentUserId";
-import encryptedUserReducer from "@store/values/EncryptedUser";
 import isMobileViewReducer from "@store/values/IsMobileView";
 import isTabInFocusReducer from "@store/values/IsTabInFocus";
 import isTabletViewReducer from "@store/values/IsTabletView";
@@ -16,7 +15,6 @@ const appReducer = combineReducers({
   contextMenu: contextMenuReducer,
   conversations: conversationsReducer,
   currentUserId: currentUserIdReducer,
-  encryptedUser: encryptedUserReducer,
   isMobileView: isMobileViewReducer,
   isTabInFocus: isTabInFocusReducer,
   isTabletView: isTabletViewReducer,
@@ -35,7 +33,6 @@ const rootReducer = (state, action) => {
       isTabInFocus,
       networkState,
       currentUserId,
-      encryptedUser,
     } = state;
     state = {
       isMobileView,
@@ -43,7 +40,6 @@ const rootReducer = (state, action) => {
       isTabInFocus,
       networkState,
       currentUserId,
-      encryptedUser,
     };
   }
 

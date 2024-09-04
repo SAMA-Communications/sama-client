@@ -22,7 +22,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import "@styles/hub/chatForm/ChatFormInputs.css";
 
-export default function ChatFormInputs({ chatMessagesBlockRef }) {
+export default function ChatFormInputs({
+  chatMessagesBlockRef,
+  isOpponentOffline,
+}) {
   const dispatch = useDispatch();
 
   const connectState = useSelector(getNetworkState);
@@ -122,14 +125,6 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
       (!participants[opponent_id]?.login || !participants[owner_id]?.login)
     );
   }, [selectedConversation, participants]);
-
-  const isOpponentOffline = useMemo(() => {
-    if (!selectedConversation.is_encrypted) {
-      return false;
-    }
-
-    return !encryptionService.encryptionSession;
-  }, [selectedConversation]);
 
   return (
     <MessageInput

@@ -17,12 +17,16 @@ export default function ConversationItemList({ conversations }) {
   const selectedConversation = useSelector(getConverastionById);
   const activeConversationId = selectedConversation?._id;
 
-  const convItemOnClickFunc = (id, isEncrypted, encryptedOpponentId) => {
+  const convItemOnClickFunc = (id, isEncrypted) => {
+    if (isEncrypted) {
+      if (!encryptionService.validateIsAuthEncrypted()) {
+        encryptionService.setChatIdAfterRegister(id);
+        navigateTo(`/auth_encrypted`);
+        return;
+      }
+    }
     dispatch(setSelectedConversation({ id }));
     navigateTo(`/#${id}`);
-
-    isEncrypted &&
-      encryptionService.createEncryptionSession(encryptedOpponentId);
   };
 
   return conversations.map((obj) => {
@@ -43,9 +47,7 @@ export default function ConversationItemList({ conversations }) {
       <ConversationItem
         key={obj._id}
         isSelected={isSelected}
-        onClickFunc={() =>
-          convItemOnClickFunc(obj._id, obj.is_encrypted, chatParticipantId)
-        }
+        onClickFunc={() => convItemOnClickFunc(obj._id, obj.is_encrypted)}
         chatName={chatName}
         lastMessageUserName={
           obj.type === "g" && !obj.last_message?.x ? lastMessageUserName : null

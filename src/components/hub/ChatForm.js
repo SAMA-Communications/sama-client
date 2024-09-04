@@ -1,8 +1,8 @@
-import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
-import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
-import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
 import api from "@api/api";
+import encryptionService from "@services/encryptionService";
+import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
 import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
 import {
@@ -16,12 +16,17 @@ import {
 } from "@store/values/SelectedConversation";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { setClicked } from "@store/values/ContextMenu";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import "@styles/hub/ChatForm.css";
+
+import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
+import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
+import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
+import EncryptedAuth from "@components/hub/EncryptedAuth";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -30,6 +35,7 @@ export default function ChatForm() {
   const isUserLogin = useSelector(getUserIsLoggedIn);
   const isTabInFocus = useSelector(getIsTabInFocus);
 
+  const currentUserId = useSelector(selectCurrentUserId);
   const conversations = useSelector(selectConversationsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
@@ -72,6 +78,24 @@ export default function ChatForm() {
   }, [isTabInFocus, readMessage]);
 
   useEffect(() => {
+    if (selectedConversation?.is_encrypted) {
+      if (
+        !encryptionService.validateIsAuthEncrypted() &&
+        !location.hash.includes("/auth_encrypted")
+      ) {
+        dispatch(clearSelectedConversation());
+        encryptionService.setChatIdAfterRegister(selectedConversation._id);
+        navigateTo(`/auth_encrypted`);
+        return;
+      }
+
+      encryptionService.createEncryptionSession(
+        selectedConversation.owner_id === currentUserId
+          ? selectedConversation.opponent_id
+          : selectedConversation.owner_id
+      );
+    }
+
     files.length && setFiles([]);
 
     document.addEventListener("swiped-left", closeForm);
@@ -95,14 +119,29 @@ export default function ChatForm() {
 
   useKeyDown(KEY_CODES.ESCAPE, closeForm);
 
+  const isOpponentOffline = useMemo(() => {
+    return false;
+    // !!!** We need logic to update this state
+
+    // if (!selectedConversation.is_encrypted) {
+    //   return false;
+    // }
+
+    // console.log("session", encryptionService.encryptionSession);
+    // return !encryptionService.encryptionSession;
+  }, [selectedConversation]);
+
   return (
     <section className={`chat-form__container ${selectedCID ? "" : "fcc"}`}>
-      {selectedCID ? (
+      {location.pathname.includes("auth_encrypted") ? (
+        <EncryptedAuth />
+      ) : selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />
           <ChatFormContent scrollRef={chatMessagesBlock} />
           <ChatFormInputs
             chatMessagesBlockRef={chatMessagesBlock}
+            isOpponentOffline={isOpponentOffline}
             files={files}
             setFiles={setFiles}
           />
