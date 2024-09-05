@@ -6,7 +6,7 @@ import { useMemo } from "react";
 
 import { ReactComponent as Group } from "@icons/users/Group.svg";
 import { ReactComponent as UnknownPhoto } from "@icons/users/UnknownPhoto.svg";
-import { ReactComponent as EncryptedConversation } from "@icons/EncryptedConversation.svg";
+import { ReactComponent as EncryptedConversationIcon } from "@icons/EncryptedConversation.svg";
 
 export default function ConversationItem({
   isSelected,
@@ -32,7 +32,7 @@ export default function ConversationItem({
   }, [updated_at, last_message]);
 
   const iconView = useMemo(() => {
-    if (is_encrypted) return <EncryptedConversation />;
+    if (is_encrypted) return <EncryptedConversationIcon />;
     if (type === "g") return <Group />;
     return chatName ? chatName.slice(0, 2).toUpperCase() : <UnknownPhoto />;
   }, [chatName, is_encrypted, type]);

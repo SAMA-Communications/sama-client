@@ -16,7 +16,7 @@ import {
 } from "@store/values/SelectedConversation";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { setClicked } from "@store/values/ContextMenu";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -26,9 +26,9 @@ import "@styles/hub/ChatForm.css";
 import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
 import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
 import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
-import EncryptedAuth from "@components/hub/EncryptedAuth";
+import LockScreen from "@components/hub/LockScreen";
 
-export default function ChatForm() {
+export default function ChatForm({ onClickCid }) {
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -83,11 +83,10 @@ export default function ChatForm() {
   useEffect(() => {
     if (selectedConversation?.is_encrypted) {
       if (
-        !encryptionService.validateIsUserAuth() &&
+        !encryptionService.hasEncryptedAccount() &&
         !location.hash.includes("/auth_encrypted")
       ) {
         dispatch(clearSelectedConversation());
-        encryptionService.setChatIdAfterRegister(selectedConversation._id);
         navigateTo(`/auth_encrypted`);
         return;
       }
@@ -98,7 +97,10 @@ export default function ChatForm() {
             ? selectedConversation.opponent_id
             : selectedConversation.owner_id
         )
-        .then((session) => setIsSuccesESession(!!session));
+        .then(({ session }) => {
+          setIsSuccesESession(!!session);
+          onClickCid && dispatch(setSelectedConversation({ id: onClickCid }));
+        });
     }
 
     files.length && setFiles([]);
@@ -127,7 +129,7 @@ export default function ChatForm() {
   return (
     <section className={`chat-form__container ${selectedCID ? "" : "fcc"}`}>
       {location.pathname.includes("auth_encrypted") ? (
-        <EncryptedAuth />
+        <LockScreen activeConvId={onClickCid} />
       ) : selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />

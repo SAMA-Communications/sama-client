@@ -106,20 +106,18 @@ class ConversationsService {
     }
   }
 
-  async createPrivateChat(userId, userObject) {
+  async createPrivateChat(userId, userObject, isEncrypted = false) {
     if (!userId) {
       return;
     }
 
-    const requestData = {
-      type: "u",
-      isEncrypted: true,
-    };
+    const requestData = { type: "u", participants: [userId] };
+    isEncrypted && (requestData["is_encrypted"] = true);
 
     const chat = await api.conversationCreate(requestData);
     userObject && store.dispatch(addUsers([userObject]));
     store.dispatch(insertChat({ ...chat, messagesIds: null }));
-    store.dispatch(setSelectedConversation({ id: chat._id }));
+    isEncrypted && store.dispatch(setSelectedConversation({ id: chat._id }));
 
     return chat._id;
   }

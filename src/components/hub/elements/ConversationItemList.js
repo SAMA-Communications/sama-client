@@ -9,7 +9,7 @@ import { selectParticipantsEntities } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function ConversationItemList({ conversations }) {
+export default function ConversationItemList({ conversations, setOnClickCid }) {
   const dispatch = useDispatch();
 
   const participants = useSelector(selectParticipantsEntities);
@@ -18,11 +18,9 @@ export default function ConversationItemList({ conversations }) {
   const activeConversationId = selectedConversation?._id;
 
   const convItemOnClickFunc = (id, isEncrypted) => {
-    console.log(id, isEncrypted);
-
+    setOnClickCid(id);
     if (isEncrypted) {
-      if (!encryptionService.validateIsUserAuth()) {
-        encryptionService.setChatIdAfterRegister(id);
+      if (!encryptionService.hasEncryptedAccount()) {
         navigateTo(`/auth_encrypted`);
         return;
       }

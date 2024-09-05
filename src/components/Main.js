@@ -1,4 +1,4 @@
-import { cloneElement, useMemo } from "react";
+import { cloneElement, useMemo, useState } from "react";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView } from "@store/values/IsTabletView";
 import { selectConversationsEntities } from "@store/values/Conversations";
@@ -40,6 +40,8 @@ export default function Main() {
   const conversations = useSelector(selectConversationsEntities);
   const conversationsArray = conversations && Object.values(conversations);
 
+  const [onClickCid, setOnClickCid] = useState(null);
+
   const additionalContainerRight = useMemo(() => {
     const { pathname, hash } = location;
 
@@ -71,21 +73,27 @@ export default function Main() {
 
       return !!location.hash ? (
         keys.includes("/user") || keys.includes("/info") ? null : (
-          <ChatForm />
+          <ChatForm onClickCid={onClickCid} />
         )
       ) : location.pathname.includes("/profile") ? null : (
-        <ChatList />
+        <ChatList setOnClickCid={setOnClickCid} />
       );
     }
 
     if (isTabletView) {
-      return !!location.hash ? <ChatForm /> : <ChatList />;
+      return !!location.hash ? (
+        <ChatForm onClickCid={onClickCid} />
+      ) : (
+        <ChatList setOnClickCid={setOnClickCid} />
+      );
     }
 
     return (
       <section className="hub">
-        {location.pathname.includes("/profile") ? null : <ChatList />}
-        <ChatForm />
+        {location.pathname.includes("/profile") ? null : (
+          <ChatList setOnClickCid={setOnClickCid} />
+        )}
+        <ChatForm onClickCid={onClickCid} />
       </section>
     );
   }, [location, isMobileView, isTabletView, conversations]);
