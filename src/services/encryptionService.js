@@ -37,6 +37,7 @@ class EncryptionService {
     const key = (await createHash(password)).slice(0, 32);
     const encAuthKey = await localforage.getItem("account");
 
+    let isNewAccount = false;
     if (encAuthKey) {
       try {
         this.#account = Account.from_pickle(encAuthKey, key);
@@ -47,10 +48,11 @@ class EncryptionService {
       }
     } else {
       this.#account = new Account();
+      isNewAccount = true;
       const encryptedKey = this.#account.pickle(key);
       localforage.setItem("account", encryptedKey);
     }
-    return this.#account;
+    return { account: this.#account, isNewAccount };
   }
 
   async logout() {
@@ -58,8 +60,10 @@ class EncryptionService {
   }
 
   async lockPassword(password) {
-    const account = await this.#getAccount(password);
+    const { account, isNewAccount } = await this.#getAccount(password);
+
     if (!account) return;
+    if (!isNewAccount) return { isSuccessAuth: true };
 
     account.generate_one_time_keys(50);
     console.log("Encryption: User account generated", account);
