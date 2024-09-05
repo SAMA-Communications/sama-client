@@ -21,7 +21,7 @@ export default function LockScreen({ activeConvId }) {
   const inputRef = useRef(null);
 
   const unlock = async () => {
-    const { isSuccessAuth } = await encryptionService.lockPassword(
+    const { isSuccessAuth } = await encryptionService.registerDevice(
       inputRef.current.value
     );
 

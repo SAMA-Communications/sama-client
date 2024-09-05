@@ -29,12 +29,12 @@ class EncryptionService {
     return !!this.#account;
   }
 
-  async #getAccount(password) {
+  async #getAccount(lockPassword) {
     if (this.#account) {
       return this.#account;
     }
 
-    const key = (await createHash(password)).slice(0, 32);
+    const key = (await createHash(lockPassword)).slice(0, 32);
     const encAuthKey = await localforage.getItem("account");
 
     let isNewAccount = false;
@@ -59,8 +59,8 @@ class EncryptionService {
     this.#account = null;
   }
 
-  async lockPassword(password) {
-    const { account, isNewAccount } = await this.#getAccount(password);
+  async registerDevice(lockPassword) {
+    const { account, isNewAccount } = await this.#getAccount(lockPassword);
 
     if (!account) return;
     if (!isNewAccount) return { isSuccessAuth: true };
