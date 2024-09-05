@@ -28,6 +28,8 @@ export default function LockScreen({ activeConvId }) {
     if (isSuccessAuth && activeConvId) {
       navigateTo(`/#${activeConvId}`);
       dispatch(setSelectedConversation({ id: activeConvId }));
+    } else if (!activeConvId) {
+      navigateTo(`/`);
     }
 
     isSuccessAuth &&
