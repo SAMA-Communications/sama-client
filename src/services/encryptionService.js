@@ -79,6 +79,7 @@ class EncryptionService {
       return { isSuccessAuth: true };
     } catch (error) {
       console.error("[encryption] Failed to register device", error);
+      return { isSuccessAuth: false };
     }
   }
 

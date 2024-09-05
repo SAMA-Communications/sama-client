@@ -25,14 +25,13 @@ export default function LockScreen({ activeConvId }) {
       inputRef.current.value
     );
 
-    if (activeConvId) {
+    if (isSuccessAuth && activeConvId) {
       navigateTo(`/#${activeConvId}`);
       dispatch(setSelectedConversation({ id: activeConvId }));
     }
 
-    if (isSuccessAuth) {
+    isSuccessAuth &&
       showCustomAlert("Authorization was successful.", "success");
-    }
   };
 
   useKeyDown(KEY_CODES.ESCAPE, () =>
