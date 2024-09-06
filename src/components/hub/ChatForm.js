@@ -28,7 +28,7 @@ import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
 import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
 import LockScreen from "@components/hub/LockScreen";
 
-export default function ChatForm({ onClickCid }) {
+export default function ChatForm() {
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -87,7 +87,7 @@ export default function ChatForm({ onClickCid }) {
         !location.hash.includes("/auth_encrypted")
       ) {
         dispatch(clearSelectedConversation());
-        navigateTo(`/auth_encrypted`);
+        navigateTo(`/auth_encrypted?convId=${selectedConversation._id}`);
         return;
       }
 
@@ -99,7 +99,6 @@ export default function ChatForm({ onClickCid }) {
         )
         .then(({ session }) => {
           setIsSuccesESession(!!session);
-          onClickCid && dispatch(setSelectedConversation({ id: onClickCid }));
         });
     }
 
@@ -129,7 +128,7 @@ export default function ChatForm({ onClickCid }) {
   return (
     <section className={`chat-form__container ${selectedCID ? "" : "fcc"}`}>
       {location.pathname.includes("auth_encrypted") ? (
-        <LockScreen activeConvId={onClickCid} />
+        <LockScreen />
       ) : selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />

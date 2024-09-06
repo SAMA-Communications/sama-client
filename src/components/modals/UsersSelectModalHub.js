@@ -44,11 +44,11 @@ export default function UsersSelectModalHub({ type }) {
       true
     );
 
-    if (encryptionService.hasEncryptedAccount()) {
-      chatId && navigateTo(`/#${chatId}`);
-    } else {
-      navigateTo(`/auth_encrypted`);
-    }
+    navigateTo(
+      encryptionService.hasEncryptedAccount()
+        ? `/#${chatId}`
+        : `/auth_encrypted?convId=${chatId}`
+    );
   };
 
   const sendEditRequest = async (participants) => {
@@ -86,10 +86,11 @@ export default function UsersSelectModalHub({ type }) {
         setState={setChatName}
         setImage={setChatImage}
         setIsEncrypted={setIsEncrypted}
+        isEncrypted={isEncrypted}
         closeWindow={closeModal}
       />
     );
-  }, [type, chatName, selectedConversation, participants]);
+  }, [type, chatName, isEncrypted, selectedConversation, participants]);
 
   return (
     <div className="edit-modal__container fcc">

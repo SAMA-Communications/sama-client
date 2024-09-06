@@ -9,7 +9,7 @@ import { selectParticipantsEntities } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function ConversationItemList({ conversations, setOnClickCid }) {
+export default function ConversationItemList({ conversations }) {
   const dispatch = useDispatch();
 
   const participants = useSelector(selectParticipantsEntities);
@@ -18,10 +18,9 @@ export default function ConversationItemList({ conversations, setOnClickCid }) {
   const activeConversationId = selectedConversation?._id;
 
   const convItemOnClickFunc = (id, isEncrypted) => {
-    setOnClickCid(id);
     if (isEncrypted) {
       if (!encryptionService.hasEncryptedAccount()) {
-        navigateTo(`/auth_encrypted`);
+        navigateTo(`/auth_encrypted?convId=${id}`);
         return;
       }
     }
@@ -53,11 +52,17 @@ export default function ConversationItemList({ conversations, setOnClickCid }) {
           obj.type === "g" && !obj.last_message?.x ? lastMessageUserName : null
         }
         chatAvatarUrl={
-          obj.type === "g" ? obj.image_url : chatParticipant.avatar_url
+          obj.type === "g"
+            ? obj.image_url
+            : obj.is_encrypted
+            ? null
+            : chatParticipant.avatar_url
         }
         chatAvatarBlutHash={
           obj.type === "g"
             ? obj.image_object?.file_blur_hash
+            : obj.is_encrypted
+            ? null
             : chatParticipant.avatar_object?.file_blur_hash
         }
         chatObject={obj}

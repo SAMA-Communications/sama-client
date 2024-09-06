@@ -12,7 +12,7 @@ import "@styles/hub/ChatList.css";
 
 import SChatList from "@skeletons/hub/SChatList";
 
-export default function ChatList({ setOnClickCid }) {
+export default function ChatList() {
   const [inputText, setInputText] = useState(null);
 
   const isMobileView = useSelector(getIsMobileView);
@@ -28,12 +28,7 @@ export default function ChatList({ setOnClickCid }) {
       return <p className="chat-list__empty">No chats are available.</p>;
     }
 
-    return (
-      <ConversationItemList
-        conversations={filteredConversations}
-        setOnClickCid={setOnClickCid}
-      />
-    );
+    return <ConversationItemList conversations={filteredConversations} />;
   }, [filteredConversations]);
 
   return (

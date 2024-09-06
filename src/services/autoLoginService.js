@@ -1,4 +1,5 @@
 import api from "@api/api";
+import encryptionService from "./encryptionService";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
@@ -24,6 +25,7 @@ class AutoLoginService {
   async userLogin(token) {
     const currentPath = history.location?.hash;
     const handleLoginFailure = () => {
+      encryptionService.clearAccountHash();
       localStorage.removeItem("sessionId");
       navigateTo("/authorization");
       store.dispatch(setUserIsLoggedIn(false));

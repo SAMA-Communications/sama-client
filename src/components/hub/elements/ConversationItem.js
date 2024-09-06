@@ -6,7 +6,7 @@ import { useMemo } from "react";
 
 import { ReactComponent as Group } from "@icons/users/Group.svg";
 import { ReactComponent as UnknownPhoto } from "@icons/users/UnknownPhoto.svg";
-import { ReactComponent as EncryptedConversationIcon } from "@icons/EncryptedConversation.svg";
+import { ReactComponent as EncryptedConversationIcon } from "@icons/encryption/EncryptedConversation.svg";
 
 export default function ConversationItem({
   isSelected,

@@ -29,6 +29,14 @@ class EncryptionService {
     return !!this.#account;
   }
 
+  async hasPreAccountToAuth() {
+    return !!(await localforage.getItem("account"));
+  }
+
+  async clearAccountHash() {
+    await localforage.removeItem("account");
+  }
+
   async #getAccount(lockPassword) {
     if (this.#account) {
       return this.#account;
@@ -42,9 +50,8 @@ class EncryptionService {
       try {
         this.#account = Account.from_pickle(encAuthKey, key);
       } catch (error) {
-        await localforage.removeItem("account");
-        showCustomAlert("Account session has expired. Please log in again.");
-        throw new Error("[encryption] Account session expired");
+        showCustomAlert("Incorrect key. Please try again.");
+        throw new Error("[encryption] Incorrect key.");
       }
     } else {
       this.#account = new Account();

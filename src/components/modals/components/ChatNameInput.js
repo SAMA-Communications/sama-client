@@ -11,6 +11,7 @@ export default function ChatNameInput({
   setState,
   setImage,
   setIsEncrypted,
+  isEncrypted,
   closeWindow,
 }) {
   const [name, setName] = useState(null);
@@ -19,6 +20,11 @@ export default function ChatNameInput({
   const inputFilesRef = useRef(null);
 
   const confirmChatName = useCallback(() => {
+    if (isEncrypted) {
+      setState("encrypted");
+      return;
+    }
+
     if (!name?.length) {
       showCustomAlert("Enter a name for the group chat.", "warning");
       return;
@@ -31,7 +37,7 @@ export default function ChatNameInput({
       return;
     }
     setState(name);
-  }, [name, setState]);
+  }, [name, setState, isEncrypted]);
 
   useKeyDown(KEY_CODES.ENTER, confirmChatName);
 
@@ -56,6 +62,7 @@ export default function ChatNameInput({
               setLcalUrlImage(URL.createObjectURL(file));
             }}
             accept={globalConstants.allowedAvatarFormats}
+            disabled={isEncrypted}
             multiple
           />
         </div>
@@ -65,6 +72,7 @@ export default function ChatNameInput({
             className="em-create__name-input"
             placeholder="Enter group name"
             onChange={(e) => setName(e.target.value)}
+            disabled={isEncrypted}
             autoFocus
           />
         </div>
