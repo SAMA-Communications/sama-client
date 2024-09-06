@@ -82,24 +82,24 @@ export default function ChatForm() {
 
   useEffect(() => {
     if (selectedConversation?.is_encrypted) {
-      if (
-        !encryptionService.hasEncryptedAccount() &&
-        !location.hash.includes("/auth_encrypted")
-      ) {
+      const isEncryptedUrlAuth = location.pathname.includes("/auth_encrypted");
+
+      if (!encryptionService.hasEncryptedAccount() && !isEncryptedUrlAuth) {
         dispatch(clearSelectedConversation());
         navigateTo(`/auth_encrypted?convId=${selectedConversation._id}`);
         return;
       }
 
-      encryptionService
-        .createEncryptionSession(
-          selectedConversation.owner_id === currentUserId
-            ? selectedConversation.opponent_id
-            : selectedConversation.owner_id
-        )
-        .then(({ session }) => {
-          setIsSuccesESession(!!session);
-        });
+      !isEncryptedUrlAuth &&
+        encryptionService
+          .createEncryptionSession(
+            selectedConversation.owner_id === currentUserId
+              ? selectedConversation.opponent_id
+              : selectedConversation.owner_id
+          )
+          .then(({ session }) => {
+            setIsSuccesESession(!!session);
+          });
     }
 
     files.length && setFiles([]);
