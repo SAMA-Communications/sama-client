@@ -97,9 +97,7 @@ export default function ChatForm() {
               ? selectedConversation.opponent_id
               : selectedConversation.owner_id
           )
-          .then(({ session }) => {
-            setIsSuccesESession(!!session);
-          });
+          .then(({ session }) => setIsSuccesESession(!!session));
     }
 
     files.length && setFiles([]);
