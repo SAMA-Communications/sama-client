@@ -27,6 +27,7 @@ const blockMap = {
   "/user": <OtherUserProfile />,
   "/add": <UsersSelectModalHub type={"add_participants"} />,
   "/create": <UsersSelectModalHub />,
+  "/create_encrypted": <UsersSelectModalHub isEncrypted={true} />,
   "/attach": <AttachHub />,
   "/media": <MediaHub />,
   "/edit": <EditModalHub />,

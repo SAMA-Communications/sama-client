@@ -15,16 +15,13 @@ import { useSelector } from "react-redux";
 
 import "@styles/modals/UsersSelectModalHub.css";
 
-export default function UsersSelectModalHub({ type }) {
+export default function UsersSelectModalHub({ type, isEncrypted = false }) {
   const selectedConversation = useSelector(getConverastionById);
   const participants = useSelector(selectParticipantsEntities);
 
   const { pathname, hash } = useLocation();
   const [chatName, setChatName] = useState(null);
   const [chatImage, setChatImage] = useState(null);
-  const [isEncrypted, setIsEncrypted] = useState(false);
-
-  const closeModal = () => removeAndNavigateSubLink(pathname + hash, "/create");
 
   const sendCreateRequest = async (participants) => {
     if (!isEncrypted) {
@@ -58,9 +55,13 @@ export default function UsersSelectModalHub({ type }) {
     removeAndNavigateLastSection(pathname + hash);
   };
 
-  useKeyDown(KEY_CODES.ESCAPE, () =>
-    removeAndNavigateSubLink(pathname + hash, "/create")
-  );
+  const closeModal = () =>
+    removeAndNavigateSubLink(
+      pathname + hash,
+      isEncrypted ? "/create_encrypted" : "/create"
+    );
+
+  useKeyDown(KEY_CODES.ESCAPE, closeModal);
 
   const typeOfFunc = useMemo(() => {
     if (type === "add_participants") {
@@ -75,7 +76,7 @@ export default function UsersSelectModalHub({ type }) {
       );
     }
 
-    return chatName ? (
+    return chatName || isEncrypted ? (
       <UserSelectorBlock
         closeWindow={closeModal}
         isEncrypted={isEncrypted}
@@ -85,8 +86,6 @@ export default function UsersSelectModalHub({ type }) {
       <ChatNameInput
         setState={setChatName}
         setImage={setChatImage}
-        setIsEncrypted={setIsEncrypted}
-        isEncrypted={isEncrypted}
         closeWindow={closeModal}
       />
     );
@@ -95,7 +94,9 @@ export default function UsersSelectModalHub({ type }) {
   return (
     <div className="edit-modal__container fcc">
       <div
-        className={`edit-modal__content--chat${chatName || type ? "" : "name"}`}
+        className={`edit-modal__content--chat${
+          chatName || type || isEncrypted ? "" : "name"
+        }`}
       >
         {typeOfFunc}
       </div>

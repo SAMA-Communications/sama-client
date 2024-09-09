@@ -1,4 +1,3 @@
-import ToggleButton from "@components/_helpers/ToggleButton";
 import globalConstants from "@helpers/constants";
 import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@helpers/keyCodes";
@@ -7,24 +6,13 @@ import { useKeyDown } from "@hooks/useKeyDown";
 
 import { ReactComponent as ImageMedium } from "@icons/media/ImageBig.svg";
 
-export default function ChatNameInput({
-  setState,
-  setImage,
-  setIsEncrypted,
-  isEncrypted,
-  closeWindow,
-}) {
+export default function ChatNameInput({ setState, setImage, closeWindow }) {
   const [name, setName] = useState(null);
   const [localUrlImage, setLcalUrlImage] = useState(null);
 
   const inputFilesRef = useRef(null);
 
   const confirmChatName = useCallback(() => {
-    if (isEncrypted) {
-      setState("encrypted");
-      return;
-    }
-
     if (!name?.length) {
       showCustomAlert("Enter a name for the group chat.", "warning");
       return;
@@ -37,7 +25,7 @@ export default function ChatNameInput({
       return;
     }
     setState(name);
-  }, [name, setState, isEncrypted]);
+  }, [name, setState]);
 
   useKeyDown(KEY_CODES.ENTER, confirmChatName);
 
@@ -62,7 +50,6 @@ export default function ChatNameInput({
               setLcalUrlImage(URL.createObjectURL(file));
             }}
             accept={globalConstants.allowedAvatarFormats}
-            disabled={isEncrypted}
             multiple
           />
         </div>
@@ -72,13 +59,11 @@ export default function ChatNameInput({
             className="em-create__name-input"
             placeholder="Enter group name"
             onChange={(e) => setName(e.target.value)}
-            disabled={isEncrypted}
             autoFocus
           />
         </div>
       </div>
       <div className="em-navigation__container fcc">
-        <ToggleButton onChangeFunc={setIsEncrypted} text={"encrypted"} />
         <p className="em-navigation__link" onClick={closeWindow}>
           Cancel
         </p>

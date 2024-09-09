@@ -6,6 +6,7 @@ import usersService from "@services/usersService";
 import { getCurrentUserFromParticipants } from "@store/values/Participants";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView } from "@store/values/IsTabletView";
+import { setAllParams } from "@store/values/ContextMenu";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
@@ -17,8 +18,8 @@ import "@styles/navigation/NavigationLine.css";
 
 import SamaLogo from "@components/static/SamaLogo";
 
-import { ReactComponent as List } from "@icons/Conversations.svg";
 import { ReactComponent as Create } from "@icons/AddConversation.svg";
+import { ReactComponent as List } from "@icons/Conversations.svg";
 import { ReactComponent as Logout } from "@icons/actions/Logout.svg";
 
 export default function NavigationLine() {
@@ -48,9 +49,23 @@ export default function NavigationLine() {
       return [
         isProfilePage ? "active" : "",
         !isProfilePage ? "active" : "",
-        pathname.includes("/create") ? "active" : "",
+        pathname.includes("/create") || pathname.includes("/create_encrypted")
+          ? "active"
+          : "",
       ];
     }, [pathname]);
+
+  const openContextMenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(
+      setAllParams({
+        list: ["createGroupChat", "createEncryptedChat"],
+        coords: { x: e.pageX, y: e.pageY },
+        clicked: true,
+      })
+    );
+  };
 
   return (
     <aside className="navigation__container">
@@ -97,8 +112,9 @@ export default function NavigationLine() {
           <List />
         </div>
         <div
-          onClick={() => addPrefix(pathname + hash, "/create")}
           className={`menu__create fcc ${isCreatePageActive}`}
+          onContextMenu={openContextMenu}
+          onClick={openContextMenu}
         >
           <Create />
         </div>
@@ -107,7 +123,7 @@ export default function NavigationLine() {
         onClick={() => {
           sendLogout();
           navigateTo("/authorization");
-        }} //authorization
+        }}
         className="menu__logout fcc"
       >
         <Logout />

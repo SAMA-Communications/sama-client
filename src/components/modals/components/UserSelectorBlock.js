@@ -57,7 +57,9 @@ export default function UserSelectorBlock({
             ))}
           </CustomScrollBar>
         ) : (
-          <p className="em-selected__text">Select users to add...</p>
+          <p className="em-selected__text">
+            Select user{isEncrypted ? " to create..." : "s to add..."}
+          </p>
         )}
       </div>
     );
@@ -79,8 +81,12 @@ export default function UserSelectorBlock({
   return (
     <>
       <div className="em__header">
-        <p className="edit-modal__title">Add participants</p>
-        <p className="edit-modal__counter">{counter}/50</p>
+        <p className="edit-modal__title">
+          {isEncrypted ? "Create encrypted chat" : "Add participants"}
+        </p>
+        <p className="edit-modal__counter">
+          {counter}/{isEncrypted ? "2" : "50"}
+        </p>
       </div>
       <SearchInput shadowText={"Enter a username"} setState={setInputText} />
       {selectedUsersBlock}
