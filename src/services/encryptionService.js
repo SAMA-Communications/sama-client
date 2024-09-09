@@ -7,7 +7,7 @@ import store from "@store/store";
 import { upsertUser } from "@store/values/Participants";
 
 class EncryptionService {
-  #encryptionSession = null;
+  #encryptionSessions = {};
   #account = null;
   #vodozemacInitialized = false;
 
@@ -111,7 +111,14 @@ class EncryptionService {
 
     const userKeys = await this.#getUserKeys(userId);
     if (!userKeys) {
+      delete this.#encryptionSessions[userId];
       throw new Error("[encryption] Could not retrieve opponent's keys");
+    }
+
+    const existSession = this.#encryptionSessions[userId];
+    if (existSession) {
+      console.log("Encrypted session from store:", existSession);
+      return { session: existSession };
     }
 
     try {
@@ -119,9 +126,9 @@ class EncryptionService {
         userKeys.identity_key,
         userKeys.one_time_pre_keys
       );
-      this.#encryptionSession = session;
+      this.#encryptionSessions[userId] = session;
       console.log("Encrypted session created:", session);
-      return { session: this.#encryptionSession };
+      return { session: this.#encryptionSessions[userId] };
     } catch (error) {
       throw new Error("[encryption] Failed to create encryption session");
     }
