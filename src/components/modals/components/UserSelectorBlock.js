@@ -58,7 +58,7 @@ export default function UserSelectorBlock({
           </CustomScrollBar>
         ) : (
           <p className="em-selected__text">
-            Select user{isEncrypted ? " to create..." : "s to add..."}
+            Select user{isEncrypted ? "" : "s to add"}...
           </p>
         )}
       </div>

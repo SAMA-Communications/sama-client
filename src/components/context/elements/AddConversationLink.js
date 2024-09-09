@@ -1,6 +1,6 @@
 import ContextLink from "./ContextLink";
 
-import { ReactComponent as AddConversation } from "@icons/AddConversation1.svg";
+import { ReactComponent as AddConversation } from "@icons/AddConversationBlackSmall.svg";
 
 export default function AddConversationLink({ onClick }) {
   return (
