@@ -117,7 +117,7 @@ class ConversationsService {
     const chat = await api.conversationCreate(requestData);
     userObject && store.dispatch(addUsers([userObject]));
     store.dispatch(insertChat({ ...chat, messagesIds: null }));
-    isEncrypted && store.dispatch(setSelectedConversation({ id: chat._id }));
+    !isEncrypted && store.dispatch(setSelectedConversation({ id: chat._id }));
 
     return chat._id;
   }

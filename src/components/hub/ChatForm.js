@@ -32,6 +32,8 @@ export default function ChatForm() {
   const dispatch = useDispatch();
   const location = useLocation();
 
+  const isLockScreenPath = location.pathname.includes("/auth_encrypted");
+
   const currentUserId = useSelector(selectCurrentUserId);
   const conversations = useSelector(selectConversationsEntities);
   const selectedConversation = useSelector(getConverastionById);
@@ -39,9 +41,8 @@ export default function ChatForm() {
 
   const isUserLogin = useSelector(getUserIsLoggedIn);
   const isTabInFocus = useSelector(getIsTabInFocus);
-  const [isSuccesESession, setIsSuccesESession] = useState(
-    selectedConversation?.is_encrypted
-  );
+  const [successfulEncryptedSession, setSuccessfulEncryptedSession] =
+    useState(null);
 
   const chatMessagesBlock = useRef();
   const [files, setFiles] = useState([]);
@@ -82,22 +83,21 @@ export default function ChatForm() {
 
   useEffect(() => {
     if (selectedConversation?.is_encrypted) {
-      const isEncryptedUrlAuth = location.pathname.includes("/auth_encrypted");
-
-      if (!encryptionService.hasAccount() && !isEncryptedUrlAuth) {
+      if (!encryptionService.hasAccount() && !isLockScreenPath) {
         dispatch(clearSelectedConversation());
         navigateTo(`/auth_encrypted?convId=${selectedConversation._id}`);
         return;
       }
 
-      !isEncryptedUrlAuth &&
+      !isLockScreenPath &&
         encryptionService
           .createEncryptionSession(
             selectedConversation.owner_id === currentUserId
               ? selectedConversation.opponent_id
               : selectedConversation.owner_id
           )
-          .then(({ session }) => setIsSuccesESession(!!session));
+          .then(({ session }) => setSuccessfulEncryptedSession(!!session))
+          .catch(() => setSuccessfulEncryptedSession(false));
     }
 
     files.length && setFiles([]);
@@ -125,7 +125,7 @@ export default function ChatForm() {
 
   return (
     <section className={`chat-form__container ${selectedCID ? "" : "fcc"}`}>
-      {location.pathname.includes("auth_encrypted") ? (
+      {isLockScreenPath ? (
         <LockScreen />
       ) : selectedCID ? (
         <>
@@ -133,7 +133,7 @@ export default function ChatForm() {
           <ChatFormContent scrollRef={chatMessagesBlock} />
           <ChatFormInputs
             chatMessagesBlockRef={chatMessagesBlock}
-            isEncryptedSessionActive={isSuccesESession}
+            isEncryptedSessionActive={successfulEncryptedSession}
             files={files}
             setFiles={setFiles}
           />

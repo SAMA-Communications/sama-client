@@ -93,7 +93,7 @@ export default function MessageInput({
           isMobile={isMobile}
           placeholder={
             !isBlockedConv
-              ? "Your opponent is offline."
+              ? "Your opponent does not currently have the ability to create an encrypted session with you."
               : "The user you are currently chatting with has deleted their account. You can no longer continue the chat."
           }
         />
