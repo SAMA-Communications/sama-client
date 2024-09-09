@@ -19,7 +19,7 @@ export default function ConversationItemList({ conversations }) {
 
   const convItemOnClickFunc = (id, isEncrypted) => {
     if (isEncrypted) {
-      if (!encryptionService.hasEncryptedAccount()) {
+      if (!encryptionService.hasAccount()) {
         navigateTo(`/auth_encrypted?convId=${id}`);
         return;
       }

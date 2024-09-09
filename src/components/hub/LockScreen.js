@@ -44,13 +44,13 @@ export default function LockScreen() {
   };
 
   const resetAccoutnHash = async () => {
-    await encryptionService.clearAccountHash();
+    await encryptionService.clearStoredAccount();
     setIsPreAccountToAuth(false);
   };
 
   useEffect(() => {
     encryptionService
-      .hasPreAccountToAuth()
+      .hasStoredAccount()
       .then((value) => setIsPreAccountToAuth(value));
   }, []);
 
@@ -71,6 +71,8 @@ export default function LockScreen() {
           placeholder="password"
           type={passwordType}
           autoComplete="off"
+          readOnly
+          onFocus={(e) => e.target.removeAttribute("readOnly")}
           autoFocus
         />
         {passwordType === "password" ? (

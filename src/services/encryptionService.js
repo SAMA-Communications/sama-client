@@ -25,15 +25,15 @@ class EncryptionService {
     }
   }
 
-  hasEncryptedAccount() {
+  hasAccount() {
     return !!this.#account;
   }
 
-  async hasPreAccountToAuth() {
+  async hasStoredAccount() {
     return !!(await localforage.getItem("account"));
   }
 
-  async clearAccountHash() {
+  async clearStoredAccount() {
     await localforage.removeItem("account");
   }
 

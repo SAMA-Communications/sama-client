@@ -84,7 +84,7 @@ export default function ChatForm() {
     if (selectedConversation?.is_encrypted) {
       const isEncryptedUrlAuth = location.pathname.includes("/auth_encrypted");
 
-      if (!encryptionService.hasEncryptedAccount() && !isEncryptedUrlAuth) {
+      if (!encryptionService.hasAccount() && !isEncryptedUrlAuth) {
         dispatch(clearSelectedConversation());
         navigateTo(`/auth_encrypted?convId=${selectedConversation._id}`);
         return;

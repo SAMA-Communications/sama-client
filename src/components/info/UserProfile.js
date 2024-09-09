@@ -45,11 +45,11 @@ export default function UserProfile() {
   const sendLogout = async () => {
     try {
       await usersService.logout();
-      await encryptionService.clearAccountHash();
+      await encryptionService.clearStoredAccount();
       dispatch({ type: "RESET_STORE" });
       dispatch(updateNetworkState(true));
     } catch (err) {
-      await encryptionService.clearAccountHash();
+      await encryptionService.clearStoredAccount();
       dispatch({ type: "RESET_STORE" });
       dispatch(updateNetworkState(true));
       dispatch(setUserIsLoggedIn(false));

@@ -45,7 +45,7 @@ export default function UsersSelectModalHub({ type }) {
     );
 
     navigateTo(
-      encryptionService.hasEncryptedAccount()
+      encryptionService.hasAccount()
         ? `/#${chatId}`
         : `/auth_encrypted?convId=${chatId}`
     );
