@@ -64,6 +64,7 @@ class EncryptionService {
 
   async logout() {
     this.#account = null;
+    localforage.removeItem("account");
   }
 
   async registerDevice(lockPassword) {
