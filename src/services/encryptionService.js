@@ -34,6 +34,7 @@ class EncryptionService {
   }
 
   async clearStoredAccount() {
+    this.#account = null;
     await localforage.removeItem("account");
   }
 
@@ -60,11 +61,6 @@ class EncryptionService {
       localforage.setItem("account", encryptedKey);
     }
     return { account: this.#account, isNewAccount };
-  }
-
-  async logout() {
-    this.#account = null;
-    localforage.removeItem("account");
   }
 
   async registerDevice(lockPassword) {

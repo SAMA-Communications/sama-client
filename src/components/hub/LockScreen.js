@@ -23,7 +23,7 @@ export default function LockScreen() {
 
   const inputRef = useRef(null);
   const [passwordType, setPasswordType] = useState("password");
-  const [isPreAccountToAuth, setIsPreAccountToAuth] = useState(null);
+  const [accountExists, setAccountExists] = useState(false);
 
   const activeConvId = useMemo(() => search.split("=")[1], [search]);
 
@@ -43,15 +43,15 @@ export default function LockScreen() {
       showCustomAlert("Authorization was successful.", "success");
   };
 
-  const resetAccoutnHash = async () => {
+  const resetAccount = async () => {
     await encryptionService.clearStoredAccount();
-    setIsPreAccountToAuth(false);
+    setAccountExists(false);
   };
 
   useEffect(() => {
     encryptionService
       .hasStoredAccount()
-      .then((value) => setIsPreAccountToAuth(value));
+      .then((value) => setAccountExists(value));
   }, []);
 
   useKeyDown(KEY_CODES.ESCAPE, () =>
@@ -62,9 +62,9 @@ export default function LockScreen() {
     <div className="encrypted--container">
       <p className="encrypted--container__header">
         <EncryptedConversationIcon />
-        {isPreAccountToAuth ? "Unlock with password" : "Pick a password"}
+        {accountExists ? "Unlock with password" : "Pick a password"}
       </p>
-      {!isPreAccountToAuth && <p>This will be used to unlock your wallet.</p>}
+      {!accountExists && <p>This will be used to unlock your wallet.</p>}
       <div className="encrypted--container__password">
         <input
           ref={inputRef}
@@ -81,9 +81,9 @@ export default function LockScreen() {
           <ShowPassword onClick={() => setPasswordType("password")} />
         )}
       </div>
-      <button onClick={unlock}>{isPreAccountToAuth ? "Unlock" : "Pick"}</button>
-      {isPreAccountToAuth && (
-        <p className="encrypted--container__span" onClick={resetAccoutnHash}>
+      <button onClick={unlock}>{accountExists ? "Unlock" : "Pick"}</button>
+      {accountExists && (
+        <p className="encrypted--container__span" onClick={resetAccount}>
           <ResetAccountIcon />
           Reset your account
         </p>

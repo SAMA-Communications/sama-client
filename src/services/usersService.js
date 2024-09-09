@@ -127,7 +127,7 @@ class UsersService {
           sub.unsubscribe().then(async () => {
             await api.pushSubscriptionDelete();
             await api.userLogout();
-            await encryptionService.logout();
+            await encryptionService.clearStoredAccount();
             localStorage.removeItem("sessionId");
           })
         )
@@ -135,7 +135,7 @@ class UsersService {
       .catch(async (err) => {
         console.error(err);
         await api.userLogout();
-        await encryptionService.logout();
+        await encryptionService.clearStoredAccount();
         localStorage.removeItem("sessionId");
         throw new Error("User logout error");
       });
