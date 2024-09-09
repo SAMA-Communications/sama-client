@@ -70,6 +70,7 @@ export default function LockScreen() {
           ref={inputRef}
           placeholder="password"
           type={passwordType}
+          autocomplete="off"
           autoFocus
         />
         {passwordType === "password" ? (

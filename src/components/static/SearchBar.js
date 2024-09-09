@@ -38,6 +38,7 @@ export default function SearchInput({ shadowText, setState, isLargeSize }) {
             isLargeSize ? `60px` : `48px`
           }`,
         }}
+        autocomplete="off"
       />
       <Close
         className={`search-bar__close${isLargeSize ? "--large" : ""}`}
