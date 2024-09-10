@@ -1,4 +1,5 @@
 import ConversationItem from "@components/hub/elements/ConversationItem";
+import encryptionService from "@services/encryptionService";
 import getLastMessageUserName from "@utils/user/get_last_message_user_name";
 import getUserFullName from "@utils/user/get_user_full_name";
 import navigateTo from "@utils/navigation/navigate_to";
@@ -16,7 +17,13 @@ export default function ConversationItemList({ conversations }) {
   const selectedConversation = useSelector(getConverastionById);
   const activeConversationId = selectedConversation?._id;
 
-  const convItemOnClickFunc = (id) => {
+  const convItemOnClickFunc = (id, isEncrypted) => {
+    if (isEncrypted) {
+      if (!encryptionService.hasAccount()) {
+        navigateTo(`/auth_encrypted?convId=${id}`);
+        return;
+      }
+    }
     dispatch(setSelectedConversation({ id }));
     navigateTo(`/#${id}`);
   };
@@ -39,17 +46,23 @@ export default function ConversationItemList({ conversations }) {
       <ConversationItem
         key={obj._id}
         isSelected={isSelected}
-        onClickFunc={() => convItemOnClickFunc(obj._id)}
+        onClickFunc={() => convItemOnClickFunc(obj._id, obj.is_encrypted)}
         chatName={chatName}
         lastMessageUserName={
           obj.type === "g" && !obj.last_message?.x ? lastMessageUserName : null
         }
         chatAvatarUrl={
-          obj.type === "g" ? obj.image_url : chatParticipant.avatar_url
+          obj.type === "g"
+            ? obj.image_url
+            : obj.is_encrypted
+            ? null
+            : chatParticipant.avatar_url
         }
         chatAvatarBlutHash={
           obj.type === "g"
             ? obj.image_object?.file_blur_hash
+            : obj.is_encrypted
+            ? null
             : chatParticipant.avatar_object?.file_blur_hash
         }
         chatObject={obj}

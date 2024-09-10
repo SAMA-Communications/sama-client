@@ -15,6 +15,7 @@ export default function MessageInput({
   inputTextRef,
   onSubmitFunc,
   isBlockedConv,
+  isEncryptedSessionActive,
   chatMessagesBlockRef,
 }) {
   const location = useLocation();
@@ -82,7 +83,7 @@ export default function MessageInput({
   }, [location]);
 
   const inputsView = useMemo(() => {
-    if (isBlockedConv) {
+    if (isBlockedConv || isEncryptedSessionActive === false) {
       return (
         <TextAreaInput
           inputRef={inputTextRef}
@@ -91,7 +92,9 @@ export default function MessageInput({
           isDisabled={true}
           isMobile={isMobile}
           placeholder={
-            "The user you are currently chatting with has deleted their account. You can no longer continue the chat."
+            !isBlockedConv
+              ? "Your opponent does not currently have the ability to create an encrypted session with you."
+              : "The user you are currently chatting with has deleted their account. You can no longer continue the chat."
           }
         />
       );

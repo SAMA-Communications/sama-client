@@ -25,6 +25,7 @@ class AutoLoginService {
   async userLogin(token) {
     const currentPath = history.location?.hash;
     const handleLoginFailure = () => {
+      encryptionService.clearStoredAccount();
       localStorage.removeItem("sessionId");
       navigateTo("/authorization");
       store.dispatch(setUserIsLoggedIn(false));
@@ -42,8 +43,6 @@ class AutoLoginService {
 
         subscribeForNotifications();
         store.dispatch(upsertUser(userData));
-
-        await encryptionService.registerDevice();
 
         store.dispatch(setUserIsLoggedIn(true));
 

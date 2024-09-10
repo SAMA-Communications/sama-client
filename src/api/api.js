@@ -225,6 +225,19 @@ class Api {
     return this.sendPromise(requestData, resObjKey);
   }
 
+  async getEncryptedKeys(data) {
+    const requestData = {
+      request: {
+        request_keys: {
+          user_ids: data.user_ids,
+        },
+        id: getUniqueId("getEncryptedKeys"),
+      },
+    };
+    const resObjKey = "devices";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
   async userEdit(data) {
     const requestData = {
       request: {
@@ -482,6 +495,7 @@ class Api {
           opponent_id: data.opponent_id,
           participants: data.participants,
           image_object: data.image_object,
+          is_encrypted: data.is_encrypted,
         },
         id: getUniqueId("conversationCreate"),
       },

@@ -1,4 +1,5 @@
 import MessageInput from "@components/hub/elements/MessageInput";
+import encryptionService from "@services/encryptionService";
 import messagesService from "@services/messagesService";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
@@ -21,7 +22,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import "@styles/hub/chatForm/ChatFormInputs.css";
 
-export default function ChatFormInputs({ chatMessagesBlockRef }) {
+export default function ChatFormInputs({
+  chatMessagesBlockRef,
+  isEncryptedSessionActive,
+}) {
   const dispatch = useDispatch();
 
   const connectState = useSelector(getNetworkState);
@@ -125,6 +129,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   return (
     <MessageInput
       inputTextRef={inputRef}
+      isEncryptedSessionActive={isEncryptedSessionActive}
       isBlockedConv={isBlockedConv}
       onSubmitFunc={createAndSendMessage}
       chatMessagesBlockRef={chatMessagesBlockRef}
