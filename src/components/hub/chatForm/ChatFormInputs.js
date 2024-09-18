@@ -24,6 +24,7 @@ import "@styles/hub/chatForm/ChatFormInputs.css";
 
 export default function ChatFormInputs({
   chatMessagesBlockRef,
+  isConversationEncrypted,
   isEncryptedSessionActive,
 }) {
   const dispatch = useDispatch();
@@ -73,6 +74,19 @@ export default function ChatFormInputs({
 
     const mObject = { mid, body, cid: selectedCID, from: currentUserId };
     inputRef.current.focus(); //care..
+
+    if (isConversationEncrypted) {
+      const opponentId =
+        selectedConversation.opponent_id === currentUserId
+          ? selectedConversation.owner_id
+          : selectedConversation.opponent_id;
+
+      const { ciphertext, message_type } =
+        await encryptionService.encryptMessage(mObject.body, opponentId);
+
+      mObject.body = ciphertext;
+      mObject.encrypted_message_type = message_type;
+    }
 
     try {
       await messagesService.sendMessage(mObject);

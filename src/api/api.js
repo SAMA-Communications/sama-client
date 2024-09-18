@@ -348,6 +348,7 @@ class Api {
           body: data.body,
           cid: data.cid,
           attachments: data.attachments,
+          encrypted_message_type: data.encrypted_message_type,
         },
       };
       this.responsesPromises[requestData.message.id] = { resolve, reject };

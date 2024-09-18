@@ -19,6 +19,7 @@ import {
   upsertChat,
   upsertParticipants,
 } from "@store/values/Conversations";
+import encryptionService from "./encryptionService";
 
 class MessagesService {
   currentChatId;
@@ -213,9 +214,9 @@ class MessagesService {
 
   async sendMessage(message) {
     const { server_mid, t } = await api.messageCreate(message);
-    const { mid, body, cid, from } = message;
+    const { mid, body, cid, from, olm } = message;
 
-    const mObject = { _id: server_mid, body, from, status: "sent", t };
+    const mObject = { _id: server_mid, body, from, status: "sent", t, olm };
 
     store.dispatch(addMessage(mObject));
     store.dispatch(
