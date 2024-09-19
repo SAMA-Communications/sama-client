@@ -131,7 +131,7 @@ class EncryptionService {
     if (!account) return;
     if (!isNewAccount) return { isSuccessAuth: true };
 
-    account.generate_one_time_keys(1);
+    account.generate_one_time_keys(10);
     console.log("Encryption: User account generated", account);
 
     const data = {
@@ -143,7 +143,7 @@ class EncryptionService {
 
     try {
       await api.encryptedDeviceCreate(data);
-      // account.mark_keys_as_published();
+      account.mark_keys_as_published();
       return { isSuccessAuth: true };
     } catch (error) {
       console.error("[encryption] Failed to register device", error);
