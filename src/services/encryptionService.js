@@ -117,6 +117,7 @@ class EncryptionService {
       }
     } else {
       this.#account = new Account();
+      this.#account.generate_one_time_keys(10);
       console.log("newAccount: ", this.#account);
       isNewAccount = true;
       const encryptedKey = this.#account.pickle(key);
@@ -130,8 +131,6 @@ class EncryptionService {
 
     if (!account) return;
     if (!isNewAccount) return { isSuccessAuth: true };
-
-    account.generate_one_time_keys(10);
 
     const data = {
       identity_key: account.curve25519_key,
