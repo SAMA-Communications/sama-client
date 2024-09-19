@@ -23,7 +23,7 @@ class EncryptionService {
     } catch (error) {
       console.error("[encryption] Failed to initialize Vodozemac", error);
     }
-    this.testVodozemac();
+    // this.testVodozemac();
   }
 
   testVodozemac() {
@@ -76,29 +76,27 @@ class EncryptionService {
 
   async encryptMessage(text, userId) {
     const session = this.#encryptionSessions[userId];
-    console.log(session);
 
     const olmMessage = session.encrypt(text);
 
-    console.log(olmMessage);
-    console.log(JSON.stringify(olmMessage));
+    console.log("encryptMessage to send: ", olmMessage);
 
     return olmMessage;
   }
 
-  async decryptMessage(text, type = 0, userId) {
-    console.log(text, type, userId);
+  // async decryptMessage(text, type = 0, userId) {
+  //   console.log(text, type, userId);
 
-    const session = this.#encryptionSessions[userId];
-    console.log(type, text);
+  //   const session = this.#encryptionSessions[userId];
+  //   console.log(type, text);
 
-    const olmMessage = new OlmMessage(type, text);
+  //   const olmMessage = new OlmMessage(type, text);
 
-    const dencryptedMessage = session.decrypt(olmMessage);
-    console.log(dencryptedMessage);
+  //   const dencryptedMessage = session.decrypt(olmMessage);
+  //   console.log(dencryptedMessage);
 
-    return dencryptedMessage;
-  }
+  //   return dencryptedMessage;
+  // }
 
   async #getAccount(lockPassword) {
     if (this.#account) {
@@ -112,12 +110,14 @@ class EncryptionService {
     if (encAuthKey) {
       try {
         this.#account = Account.from_pickle(encAuthKey, key);
+        console.log("fromPickle: ", this.#account);
       } catch (error) {
         showCustomAlert("Incorrect key. Please try again.");
         throw new Error("[encryption] Incorrect key.");
       }
     } else {
       this.#account = new Account();
+      console.log("newAccount: ", this.#account);
       isNewAccount = true;
       const encryptedKey = this.#account.pickle(key);
       localforage.setItem("account", encryptedKey);
@@ -132,18 +132,17 @@ class EncryptionService {
     if (!isNewAccount) return { isSuccessAuth: true };
 
     account.generate_one_time_keys(10);
-    console.log("Encryption: User account generated", account);
 
     const data = {
       identity_key: account.curve25519_key,
       signed_key: account.ed25519_key,
       one_time_pre_keys: Object.fromEntries(account.one_time_keys.entries()),
     };
-    console.log(account, data);
 
     try {
       await api.encryptedDeviceCreate(data);
       account.mark_keys_as_published();
+      console.log("registerDevice: ", data);
       return { isSuccessAuth: true };
     } catch (error) {
       console.error("[encryption] Failed to register device", error);
@@ -154,7 +153,7 @@ class EncryptionService {
   async #getUserKeys(userId) {
     try {
       const usersKeys = await api.getEncryptedKeys({ user_ids: [userId] });
-      console.log(usersKeys);
+      console.log(userId, ": ", usersKeys);
       const keys = usersKeys[userId]?.[0];
 
       if (keys) {
@@ -193,8 +192,14 @@ class EncryptionService {
         )
       : null;
 
-    console.log("olmMessage:", olmMessage, userKeys.identity_key);
-    console.log("one_time_pre_keys for session:", userKeys.one_time_pre_keys);
+    olmMessage &&
+      console.log("Try to create session with olmMessage: ", olmMessage);
+    !olmMessage &&
+      console.log(
+        "Create outbound session with keys: ",
+        userKeys.identity_key,
+        userKeys.one_time_pre_keys
+      );
     try {
       const session = olmMessage
         ? this.#account.create_inbound_session(
@@ -205,8 +210,6 @@ class EncryptionService {
             userKeys.identity_key,
             userKeys.one_time_pre_keys
           );
-      console.log("session", session);
-
       this.#encryptionSessions[userId] = session;
       console.log("Encrypted session created:", session);
       return { session: this.#encryptionSessions[userId] };
