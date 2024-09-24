@@ -2,6 +2,7 @@ import MessageAttachments from "@components/message/elements/MessageAttachments"
 import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
 import addSuffix from "@utils/navigation/add_suffix";
+import encryptionService from "@services/encryptionService";
 import getUserFullName from "@utils/user/get_user_full_name";
 import { urlify } from "@utils/text/urlify";
 import { useLocation } from "react-router-dom";
@@ -16,12 +17,14 @@ export default function ChatMessage({
   sender,
   message,
   currentUserId,
+  isEncryptedChat,
   isPrevMesssageYours: prev,
   isNextMessageYours: next,
 }) {
   const { pathname, hash } = useLocation();
 
-  const { body, from, attachments, status, t } = message;
+  const { body, from, attachments, status, t, encrypted_message_type } =
+    message;
   const isCurrentUser = from === currentUserId;
 
   const timeSend = useMemo(() => {
@@ -30,6 +33,24 @@ export default function ChatMessage({
       time.getMinutes() > 9 ? time.getMinutes() : "0" + time.getMinutes()
     }`;
   }, [t]);
+
+  const messageText = useMemo(() => {
+    if (!isEncryptedChat || isCurrentUser) {
+      return body;
+    }
+
+    try {
+      //update when session connect
+      return encryptionService.decryptMessage(
+        body,
+        encrypted_message_type,
+        from
+      );
+    } catch (error) {
+      console.log(error);
+      return "#Encrypted message";
+    }
+  }, [body, encrypted_message_type, from]);
 
   const openUserProfile = () =>
     sender ? addSuffix(pathname + hash, `/user?uid=${from}`) : {};
@@ -72,7 +93,9 @@ export default function ChatMessage({
           {attachments?.length ? (
             <MessageAttachments attachments={attachments} mid={message._id} />
           ) : null}
-          {body ? <div className="content__text">{urlify(body)}</div> : null}
+          {messageText ? (
+            <div className="content__text">{urlify(messageText)}</div>
+          ) : null}
 
           <div
             className={`content__status${

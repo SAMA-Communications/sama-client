@@ -5,6 +5,7 @@ import localforage from "localforage";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
 import { upsertUser } from "@store/values/Participants";
+import { Session } from "vodozemac-javascript";
 
 class EncryptionService {
   #encryptionSessions = {};
@@ -23,42 +24,6 @@ class EncryptionService {
     } catch (error) {
       console.error("[encryption] Failed to initialize Vodozemac", error);
     }
-    // this.testVodozemac();
-  }
-
-  testVodozemac() {
-    const a1 = new Account();
-    a1.generate_one_time_keys(1);
-
-    const b1 = new Account();
-    b1.generate_one_time_keys(1);
-
-    console.log(a1, b1);
-
-    const a1_session = a1.create_outbound_session(
-      b1.curve25519_key,
-      b1.one_time_keys.get("AAAAAAAAAAA")
-    );
-
-    console.log(a1_session);
-
-    const olmMessage = a1_session.encrypt("test_message");
-
-    console.log(olmMessage);
-
-    const newOlmMessage = new OlmMessage(
-      olmMessage.message_type,
-      olmMessage.ciphertext
-    );
-
-    console.log(newOlmMessage);
-
-    const b1_session = b1.create_inbound_session(
-      a1.curve25519_key,
-      newOlmMessage
-    );
-
-    console.log(b1_session);
   }
 
   hasAccount() {
@@ -74,29 +39,27 @@ class EncryptionService {
     await localforage.removeItem("account");
   }
 
-  async encryptMessage(text, userId) {
+  encryptMessage(text, userId) {
     const session = this.#encryptionSessions[userId];
-
-    const olmMessage = session.encrypt(text);
-
-    console.log("encryptMessage to send: ", olmMessage);
-
-    return olmMessage;
+    return session.encrypt(text);
   }
 
-  // async decryptMessage(text, type = 0, userId) {
-  //   console.log(text, type, userId);
+  decryptMessage(text, type = 0, userId) {
+    const session = this.#encryptionSessions[userId];
+    const olmMessage = new OlmMessage(type, text);
 
-  //   const session = this.#encryptionSessions[userId];
-  //   console.log(type, text);
+    if (!session) {
+      throw new Error(
+        "[encryption] Encrypted session with the opponent is missing"
+      );
+    }
 
-  //   const olmMessage = new OlmMessage(type, text);
-
-  //   const dencryptedMessage = session.decrypt(olmMessage);
-  //   console.log(dencryptedMessage);
-
-  //   return dencryptedMessage;
-  // }
+    try {
+      return session.decrypt(olmMessage);
+    } catch (err) {
+      throw new Error("[encryption] Failed to decrypt an encrypted message");
+    }
+  }
 
   async #getAccount(lockPassword) {
     if (this.#account) {
@@ -172,18 +135,11 @@ class EncryptionService {
       throw new Error("[encryption] Service or account not initialized");
     }
 
-    const userKeys = await this.#getUserKeys(userId);
-    if (!userKeys) {
-      delete this.#encryptionSessions[userId];
-      throw new Error("[encryption] Could not retrieve opponent's keys");
-    }
-
     const existSession = this.#encryptionSessions[userId];
     if (existSession) {
       console.log("Encrypted session from store:", existSession);
       return { session: existSession };
     }
-
     const olmMessage = olmMessageParams
       ? new OlmMessage(
           olmMessageParams.encrypted_message_type,
@@ -191,26 +147,54 @@ class EncryptionService {
         )
       : null;
 
+    const existSessionPickle = await localforage.getItem(`session_${userId}`);
+    if (existSessionPickle && !olmMessage) {
+      try {
+        const pickleSession = Session.from_pickle(
+          existSessionPickle,
+          `${api.curerntUserId}e14d23c4`
+        );
+        console.log("Encrypted session from pickle:", pickleSession);
+        this.#encryptionSessions[userId] = pickleSession;
+        return { session: pickleSession };
+      } catch (error) {
+        console.log("Failed create encryption session from pickle");
+        localforage.removeItem(`session_${userId}`);
+      }
+    }
+
+    const userKeys = await this.#getUserKeys(userId);
+    if (!userKeys) {
+      delete this.#encryptionSessions[userId];
+      throw new Error("[encryption] Could not retrieve opponent's keys");
+    }
+
     olmMessage &&
       console.log("Try to create session with olmMessage: ", olmMessage);
     !olmMessage &&
       console.log(
         "Create outbound session with keys: ",
         userKeys.identity_key,
-        userKeys.one_time_pre_keys
+        userKeys.one_time_pre_key
       );
+
     try {
       const session = olmMessage
         ? this.#account.create_inbound_session(
             userKeys.identity_key,
             olmMessage
-          )
+          ).session
         : this.#account.create_outbound_session(
             userKeys.identity_key,
-            userKeys.one_time_pre_keys
+            userKeys.one_time_pre_key
           );
       this.#encryptionSessions[userId] = session;
+      localforage.setItem(
+        `session_${userId}`,
+        session.pickle(`${api.curerntUserId}e14d23c4`)
+      );
       console.log("Encrypted session created:", session);
+      //if from olmeMessage, need to update last message from session object
       return { session: this.#encryptionSessions[userId] };
     } catch (error) {
       console.log(error);

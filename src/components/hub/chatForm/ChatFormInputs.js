@@ -81,9 +81,12 @@ export default function ChatFormInputs({
           ? selectedConversation.owner_id
           : selectedConversation.opponent_id;
 
-      const { ciphertext, message_type } =
-        await encryptionService.encryptMessage(mObject.body, opponentId);
+      const { ciphertext, message_type } = encryptionService.encryptMessage(
+        mObject.body,
+        opponentId
+      );
 
+      mObject.visibleBody = mObject.body;
       mObject.body = ciphertext;
       mObject.encrypted_message_type = message_type;
     }

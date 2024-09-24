@@ -88,6 +88,10 @@ class MessagesService {
           })
         );
       }
+      if (conv.is_encrypted && message.encrypted_message_type === 0) {
+        console.log("[ecnryption] Try to connect from new message");
+        await encryptionService.createEncryptionSession(message.from, message);
+      }
     };
 
     api.onUserTypingListener = (data) => {
@@ -214,9 +218,17 @@ class MessagesService {
 
   async sendMessage(message) {
     const { server_mid, t } = await api.messageCreate(message);
-    const { mid, body, cid, from, olm } = message;
+    const { mid, body, visibleBody, cid, from, encrypted_message_type } =
+      message;
 
-    const mObject = { _id: server_mid, body, from, status: "sent", t, olm };
+    const mObject = {
+      _id: server_mid,
+      body: visibleBody || body,
+      from,
+      status: "sent",
+      t,
+      encrypted_message_type,
+    };
 
     store.dispatch(addMessage(mObject));
     store.dispatch(
