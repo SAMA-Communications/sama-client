@@ -1,11 +1,11 @@
 import api from "@api/api";
-import createHash from "@utils/user/create_hash";
+import getBrowserFingerprint from "get-browser-fingerprint";
 import initVodozemac, { Account, OlmMessage } from "vodozemac-javascript";
 import localforage from "localforage";
-import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
-import { upsertUser } from "@store/values/Participants";
 import { Session } from "vodozemac-javascript";
+import { decodeBase64, encodeUnpaddedBase64 } from "@utils/base64/base64";
+import { upsertUser } from "@store/values/Participants";
 
 class EncryptionService {
   #encryptionSessions = {};
@@ -36,7 +36,7 @@ class EncryptionService {
 
   async clearStoredAccount() {
     this.#account = null;
-    await localforage.removeItem("account");
+    await localforage.clear();
   }
 
   encryptMessage(text, userId) {
@@ -61,21 +61,110 @@ class EncryptionService {
     }
   }
 
-  async #getAccount(lockPassword) {
+  #getPickleAdditionalData(userId, deviceId) {
+    const additionalData = new Uint8Array(userId.length + deviceId.length + 1);
+    for (let i = 0; i < userId.length; i++) {
+      additionalData[i] = userId.charCodeAt(i);
+    }
+    additionalData[userId.length] = 124; // "|"
+    for (let i = 0; i < deviceId.length; i++) {
+      additionalData[userId.length + 1 + i] = deviceId.charCodeAt(i);
+    }
+    return additionalData;
+  }
+
+  async #encryptPickleKey(pickleKey, userId, deviceId) {
+    if (!crypto?.subtle) {
+      return undefined;
+    }
+    const cryptoKey = await crypto.subtle.generateKey(
+      { name: "AES-GCM", length: 256 },
+      false,
+      ["encrypt", "decrypt"]
+    );
+    const iv = new Uint8Array(32);
+    crypto.getRandomValues(iv);
+
+    const additionalData = this.#getPickleAdditionalData(userId, deviceId);
+    const encrypted = await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv, additionalData },
+      cryptoKey,
+      pickleKey
+    );
+    return { encrypted, iv, cryptoKey };
+  }
+
+  async #createPickleKey(userId, deviceId) {
+    const randomArray = new Uint8Array(32);
+    crypto.getRandomValues(randomArray);
+    const data = await this.#encryptPickleKey(randomArray, userId, deviceId);
+    if (data === undefined) {
+      return null;
+    }
+
+    try {
+      await localforage.setItem("pickleKey", data); // userId, deviceId ???
+    } catch (e) {
+      return null;
+    }
+
+    return encodeUnpaddedBase64(randomArray);
+  }
+
+  async #buildAndEncodePickleKey(data, userId, deviceId) {
+    if (!crypto?.subtle) {
+      return undefined;
+    }
+    if (!data || !data.encrypted || !data.iv || !data.cryptoKey) {
+      return undefined;
+    }
+
+    try {
+      const additionalData = this.#getPickleAdditionalData(userId, deviceId);
+      const pickleKeyBuf = await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: data.iv, additionalData },
+        data.cryptoKey,
+        data.encrypted
+      );
+      if (pickleKeyBuf) {
+        return encodeUnpaddedBase64(pickleKeyBuf);
+      }
+    } catch (e) {
+      console.log("[encryption] Error decrypting the pickle key", e);
+    }
+
+    return undefined;
+  }
+
+  async #getPickleKey(userId, deviceId) {
+    let data;
+    try {
+      data = await localforage.getItem("pickleKey"); // userId, deviceId ???
+    } catch (e) {
+      console.log("[encryption] PickleKey could not be loaded", e);
+    }
+
+    return (
+      (await this.#buildAndEncodePickleKey(data, userId, deviceId)) ?? null
+    );
+  }
+  async #getAccount(userId, deviceId) {
     if (this.#account) {
       return this.#account;
     }
 
-    const key = (await createHash(lockPassword)).slice(0, 32);
-    const encAuthKey = await localforage.getItem("account");
+    const pickleKey = await this.#getPickleKey(userId, deviceId);
+    const encAuthAccount = await localforage.getItem("account");
 
     let isNewAccount = false;
-    if (encAuthKey) {
+    if (encAuthAccount && pickleKey) {
       try {
-        this.#account = Account.from_pickle(encAuthKey, key);
+        this.#account = Account.from_pickle(
+          encAuthAccount,
+          pickleKey.length === 43 ? decodeBase64(pickleKey) : pickleKey
+        );
         console.log("fromPickle: ", this.#account);
       } catch (error) {
-        showCustomAlert("Incorrect key. Please try again.");
         throw new Error("[encryption] Incorrect key.");
       }
     } else {
@@ -83,25 +172,40 @@ class EncryptionService {
       this.#account.generate_one_time_keys(10);
       console.log("newAccount: ", this.#account);
       isNewAccount = true;
-      const encryptedKey = this.#account.pickle(key);
-      localforage.setItem("account", encryptedKey);
+
+      const createdPickleKey = await this.#createPickleKey(userId, deviceId);
+      const encryptedAccount = this.#account.pickle(
+        createdPickleKey.length === 43
+          ? decodeBase64(createdPickleKey)
+          : createdPickleKey
+      );
+
+      localforage.setItem("account", encryptedAccount);
     }
     return { account: this.#account, isNewAccount };
   }
 
-  async registerDevice(lockPassword) {
-    const { account, isNewAccount } = await this.#getAccount(lockPassword);
-
-    if (!account) return;
-    if (!isNewAccount) return { isSuccessAuth: true };
-
-    const data = {
-      identity_key: account.curve25519_key,
-      signed_key: account.ed25519_key,
-      one_time_pre_keys: Object.fromEntries(account.one_time_keys.entries()),
-    };
-
+  async registerDevice(userId) {
     try {
+      const stringDeviceId = getBrowserFingerprint({
+        enableScreen: false,
+        hardwareOnly: true,
+      }).toString();
+
+      const { account, isNewAccount } = await this.#getAccount(
+        userId,
+        stringDeviceId
+      );
+
+      if (!account) return;
+      if (!isNewAccount) return { isSuccessAuth: true };
+
+      const data = {
+        identity_key: account.curve25519_key,
+        signed_key: account.ed25519_key,
+        one_time_pre_keys: Object.fromEntries(account.one_time_keys.entries()),
+      };
+
       await api.encryptedDeviceCreate(data);
       account.mark_keys_as_published();
       console.log("registerDevice: ", data);

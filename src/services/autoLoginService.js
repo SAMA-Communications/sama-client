@@ -41,6 +41,8 @@ class AutoLoginService {
         store.dispatch(setCurrentUserId(userData._id));
         api.curerntUserId = userData._id;
 
+        await encryptionService.registerDevice(userData._id);
+
         subscribeForNotifications();
         store.dispatch(upsertUser(userData));
 

@@ -133,7 +133,10 @@ export default function ChatForm() {
       ) : selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />
-          <ChatFormContent scrollRef={chatMessagesBlock} />
+          <ChatFormContent
+            scrollRef={chatMessagesBlock}
+            isEncryptedConversation={selectedConversation?.is_encrypted}
+          />
           <ChatFormInputs
             chatMessagesBlockRef={chatMessagesBlock}
             isConversationEncrypted={selectedConversation?.is_encrypted}

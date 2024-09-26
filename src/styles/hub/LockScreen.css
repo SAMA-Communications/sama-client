@@ -10,34 +10,8 @@
   justify-content: center;
 }
 
-.encrypted--container__password {
-  position: relative;
-}
-.encrypted--container__password > input {
-  width: 100%;
-
-  padding: 15px 30px 15px 10px;
-
-  color: var(--color-black);
-  font-size: var(--font-p);
-
-  border: 0;
-  border-radius: var(--border-12);
-  background-color: var(--color-hover-light);
-}
-.encrypted--container__password > input:focus {
-  outline: none;
-}
-
-.encrypted--container__password > svg {
-  position: absolute;
-  right: 15px;
-  top: 53%;
-
-  transform: translateY(-50%);
-}
-
 .encrypted--container > button {
+  margin-top: 5px;
   padding: 15px;
 
   font-size: var(--font-p);
@@ -51,26 +25,16 @@
 }
 
 .encrypted--container__header {
-  margin-bottom: 5px;
-  margin-left: -5px;
-
-  /* color: var(--color-black); */
-  font-size: var(--font-h4);
-  font-weight: 400;
-  text-align: center;
+  margin-bottom: -5px;
+  margin-left: -10px;
 
   display: flex;
   align-items: center;
 }
-
-.encrypted--container__span {
-  margin-top: 5px;
-
-  color: var(--color-accent-dark);
-
-  display: flex;
-  align-items: center;
-  gap: 5px;
-
-  cursor: pointer;
+.encrypted--container__header > p {
+  /* color: var(--color-black); */
+  font-size: var(--font-h4);
+  font-weight: 400;
+  text-align: center;
+  text-wrap: nowrap;
 }
