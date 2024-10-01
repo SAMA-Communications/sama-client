@@ -5,6 +5,7 @@ import store from "@store/store";
 import { Session } from "vodozemac-javascript";
 import { decodeBase64, encodeUnpaddedBase64 } from "@utils/base64/base64";
 import { upsertUser } from "@store/values/Participants";
+import { upsertMessage } from "@src/store/values/Messages";
 
 class EncryptionService {
   #encryptionSessions = {};
@@ -59,7 +60,7 @@ class EncryptionService {
     try {
       return session.decrypt(olmMessage);
     } catch (error) {
-      console.log("[encryption] Failed to decrypt an encrypted message");
+      console.log("[encryption] Failed to decrypt an encrypted message", error);
       return "Can`t decrypt this message, not for this device";
     }
   }
@@ -260,25 +261,30 @@ class EncryptionService {
         )
       : null;
 
-    const existSession = this.#encryptionSessions[userId];
-    if (existSession) {
-      if (olmMessage) {
-        const isMatchSession = existSession.session_matches(olmMessage);
-        console.log("isMatchSession:", isMatchSession);
-        if (isMatchSession) {
-          console.log("Encrypted session from local store:", existSession);
-          return { session: existSession };
-        }
-      } else {
-        console.log("Encrypted session from local store:", existSession);
-        return { session: existSession };
+    let session = this.#encryptionSessions[userId];
+    if (session) {
+      if (olmMessage && session.session_matches(olmMessage)) {
+        console.log("Encrypted session from local store:", session);
+        const decryptMessage = this.decryptMessage(
+          olmMessageParams.body,
+          olmMessageParams.encrypted_message_type,
+          userId
+        );
+
+        store.dispatch(
+          upsertMessage({ _id: olmMessageParams._id, body: decryptMessage })
+        );
+        return { session };
+      } else if (!olmMessage) {
+        console.log("Encrypted session from local store:", session);
+        return { session };
       }
     }
 
-    const existSessionFromPickle = await localforage.getItem(
+    const sessionFromPickle = await localforage.getItem(
       `encryptedSession${userId}`
     );
-    if (existSessionFromPickle && !olmMessage) {
+    if (sessionFromPickle && !olmMessage) {
       //Any ideas on how to filter the NEW message, not the one from the database?
       try {
         const sessionPickleKey = await this.#getPickleKey(
@@ -286,15 +292,15 @@ class EncryptionService {
           userId,
           api.currentDeviceId
         );
-        const pickleSession = Session.from_pickle(
-          existSessionFromPickle,
+        session = Session.from_pickle(
+          sessionFromPickle,
           decodeBase64(sessionPickleKey)
         );
 
-        this.#encryptionSessions[userId] = pickleSession;
-        console.log("Encrypted session from pickle:", pickleSession);
+        this.#encryptionSessions[userId] = session;
+        console.log("Encrypted session from pickle:", session);
 
-        return { session: pickleSession };
+        return { session };
       } catch (error) {
         console.log("Failed create encryption session from pickle");
         localforage.removeItem(`encryptedSession${userId}`);
@@ -308,18 +314,20 @@ class EncryptionService {
     }
 
     try {
-      let session;
       if (olmMessage) {
         console.log("Create session with olmMessage: ", olmMessage);
 
         try {
-          session = this.#account.create_inbound_session(
+          const inboundSession = this.#account.create_inbound_session(
             userKeys.identity_key,
             olmMessage
-          ).session; // session & messageText
-          //  Attention: when you try to destruct this object, all other fields are lost
-          //  In addition, we cannot decode this message a second time, so it is lost
-          //  Error: Attempt to use a moved value
+          );
+          const decryptMessage = `${inboundSession.plaintext}`;
+          session = inboundSession.session;
+
+          store.dispatch(
+            upsertMessage({ _id: olmMessageParams._id, body: decryptMessage })
+          );
         } catch (error) {
           console.error("Failed to create inbound session:", error);
         }
