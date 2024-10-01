@@ -23,6 +23,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import "@styles/hub/chatForm/ChatFormInputs.css";
 
 export default function ChatFormInputs({
+  opponentId,
   chatMessagesBlockRef,
   isConversationEncrypted,
   isEncryptedSessionActive,
@@ -75,24 +76,10 @@ export default function ChatFormInputs({
     const mObject = { mid, body, cid: selectedCID, from: currentUserId };
     inputRef.current.focus(); //care..
 
-    if (isConversationEncrypted) {
-      const opponentId =
-        selectedConversation.opponent_id === currentUserId
-          ? selectedConversation.owner_id
-          : selectedConversation.opponent_id;
-
-      const { ciphertext, message_type } = encryptionService.encryptMessage(
-        mObject.body,
-        opponentId
-      );
-
-      mObject.visibleBody = mObject.body;
-      mObject.body = ciphertext;
-      mObject.encrypted_message_type = message_type;
-    }
-
     try {
-      await messagesService.sendMessage(mObject);
+      await messagesService[
+        isConversationEncrypted ? "sendEncryptedMessage" : "sendMessage"
+      ](mObject, opponentId);
     } catch (e) {
       showCustomAlert(
         e.message || "The server connection is unavailable.",

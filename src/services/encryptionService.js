@@ -1,5 +1,4 @@
 import api from "@api/api";
-import getBrowserFingerprint from "get-browser-fingerprint";
 import initVodozemac, { Account, OlmMessage } from "vodozemac-javascript";
 import localforage from "localforage";
 import store from "@store/store";
@@ -36,6 +35,7 @@ class EncryptionService {
 
   async clearStoredAccount() {
     this.#account = null;
+    this.#encryptionSessions = {};
     await localforage.clear();
   }
 
@@ -46,18 +46,21 @@ class EncryptionService {
 
   decryptMessage(text, type = 0, userId) {
     const session = this.#encryptionSessions[userId];
+
     const olmMessage = new OlmMessage(type, text);
 
     if (!session) {
-      throw new Error(
+      console.log(
         "[encryption] Encrypted session with the opponent is missing"
       );
+      return "Can`t decrypt this message, not for this device";
     }
 
     try {
       return session.decrypt(olmMessage);
-    } catch (err) {
-      throw new Error("[encryption] Failed to decrypt an encrypted message");
+    } catch (error) {
+      console.log("[encryption] Failed to decrypt an encrypted message");
+      return "Can`t decrypt this message, not for this device";
     }
   }
 
@@ -94,7 +97,7 @@ class EncryptionService {
     return { encrypted, iv, cryptoKey };
   }
 
-  async #createPickleKey(userId, deviceId) {
+  async #createPickleKey(dbName, userId, deviceId) {
     const randomArray = new Uint8Array(32);
     crypto.getRandomValues(randomArray);
     const data = await this.#encryptPickleKey(randomArray, userId, deviceId);
@@ -103,7 +106,7 @@ class EncryptionService {
     }
 
     try {
-      await localforage.setItem("pickleKey", data); // userId, deviceId ???
+      await localforage.setItem(dbName, data); // userId, deviceId ???
     } catch (e) {
       return null;
     }
@@ -136,10 +139,10 @@ class EncryptionService {
     return undefined;
   }
 
-  async #getPickleKey(userId, deviceId) {
+  async #getPickleKey(dbName, userId, deviceId) {
     let data;
     try {
-      data = await localforage.getItem("pickleKey"); // userId, deviceId ???
+      data = await localforage.getItem(dbName); // userId, deviceId ???
     } catch (e) {
       console.log("[encryption] PickleKey could not be loaded", e);
     }
@@ -148,12 +151,13 @@ class EncryptionService {
       (await this.#buildAndEncodePickleKey(data, userId, deviceId)) ?? null
     );
   }
+
   async #getAccount(userId, deviceId) {
     if (this.#account) {
       return this.#account;
     }
 
-    const pickleKey = await this.#getPickleKey(userId, deviceId);
+    const pickleKey = await this.#getPickleKey("pickleKey", userId, deviceId);
     const encAuthAccount = await localforage.getItem("account");
 
     let isNewAccount = false;
@@ -161,7 +165,7 @@ class EncryptionService {
       try {
         this.#account = Account.from_pickle(
           encAuthAccount,
-          pickleKey.length === 43 ? decodeBase64(pickleKey) : pickleKey
+          decodeBase64(pickleKey)
         );
         console.log("fromPickle: ", this.#account);
       } catch (error) {
@@ -173,11 +177,13 @@ class EncryptionService {
       console.log("newAccount: ", this.#account);
       isNewAccount = true;
 
-      const createdPickleKey = await this.#createPickleKey(userId, deviceId);
+      const createdPickleKey = await this.#createPickleKey(
+        "pickleKey",
+        userId,
+        deviceId
+      );
       const encryptedAccount = this.#account.pickle(
-        createdPickleKey.length === 43
-          ? decodeBase64(createdPickleKey)
-          : createdPickleKey
+        decodeBase64(createdPickleKey)
       );
 
       localforage.setItem("account", encryptedAccount);
@@ -187,14 +193,9 @@ class EncryptionService {
 
   async registerDevice(userId) {
     try {
-      const stringDeviceId = getBrowserFingerprint({
-        enableScreen: false,
-        hardwareOnly: true,
-      }).toString();
-
       const { account, isNewAccount } = await this.#getAccount(
         userId,
-        stringDeviceId
+        api.currentDeviceId
       );
 
       if (!account) return;
@@ -234,16 +235,24 @@ class EncryptionService {
     }
   }
 
+  async #storeSessionLocally(opponentId, session) {
+    this.#encryptionSessions[opponentId] = session;
+    const sessionPickleKey = await this.#createPickleKey(
+      "sessionPickleKey",
+      opponentId,
+      api.currentDeviceId
+    );
+    localforage.setItem(
+      `encryptedSession${opponentId}`,
+      session.pickle(decodeBase64(sessionPickleKey))
+    );
+  }
+
   async createEncryptionSession(userId, olmMessageParams) {
     if (!this.#vodozemacInitialized || !this.#account) {
       throw new Error("[encryption] Service or account not initialized");
     }
 
-    const existSession = this.#encryptionSessions[userId];
-    if (existSession) {
-      console.log("Encrypted session from store:", existSession);
-      return { session: existSession };
-    }
     const olmMessage = olmMessageParams
       ? new OlmMessage(
           olmMessageParams.encrypted_message_type,
@@ -251,19 +260,44 @@ class EncryptionService {
         )
       : null;
 
-    const existSessionPickle = await localforage.getItem(`session_${userId}`);
-    if (existSessionPickle && !olmMessage) {
+    const existSession = this.#encryptionSessions[userId];
+    if (existSession) {
+      if (olmMessage) {
+        const isMatchSession = existSession.session_matches(olmMessage);
+        console.log("isMatchSession:", isMatchSession);
+        if (isMatchSession) {
+          console.log("Encrypted session from local store:", existSession);
+          return { session: existSession };
+        }
+      } else {
+        console.log("Encrypted session from local store:", existSession);
+        return { session: existSession };
+      }
+    }
+
+    const existSessionFromPickle = await localforage.getItem(
+      `encryptedSession${userId}`
+    );
+    if (existSessionFromPickle && !olmMessage) {
+      //Any ideas on how to filter the NEW message, not the one from the database?
       try {
-        const pickleSession = Session.from_pickle(
-          existSessionPickle,
-          `${api.curerntUserId}e14d23c4`
+        const sessionPickleKey = await this.#getPickleKey(
+          "sessionPickleKey",
+          userId,
+          api.currentDeviceId
         );
-        console.log("Encrypted session from pickle:", pickleSession);
+        const pickleSession = Session.from_pickle(
+          existSessionFromPickle,
+          decodeBase64(sessionPickleKey)
+        );
+
         this.#encryptionSessions[userId] = pickleSession;
+        console.log("Encrypted session from pickle:", pickleSession);
+
         return { session: pickleSession };
       } catch (error) {
         console.log("Failed create encryption session from pickle");
-        localforage.removeItem(`session_${userId}`);
+        localforage.removeItem(`encryptedSession${userId}`);
       }
     }
 
@@ -273,36 +307,45 @@ class EncryptionService {
       throw new Error("[encryption] Could not retrieve opponent's keys");
     }
 
-    olmMessage &&
-      console.log("Try to create session with olmMessage: ", olmMessage);
-    !olmMessage &&
+    try {
+      let session;
+      if (olmMessage) {
+        console.log("Create session with olmMessage: ", olmMessage);
+
+        try {
+          session = this.#account.create_inbound_session(
+            userKeys.identity_key,
+            olmMessage
+          ).session; // session & messageText
+          //  Attention: when you try to destruct this object, all other fields are lost
+          //  In addition, we cannot decode this message a second time, so it is lost
+          //  Error: Attempt to use a moved value
+        } catch (error) {
+          console.error("Failed to create inbound session:", error);
+        }
+
+        if (session) {
+          await this.#storeSessionLocally(userId, session);
+          console.log("Encrypted session created:", session);
+          return { session };
+        }
+      }
       console.log(
         "Create outbound session with keys: ",
         userKeys.identity_key,
         userKeys.one_time_pre_key
       );
 
-    try {
-      const session = olmMessage
-        ? this.#account.create_inbound_session(
-            userKeys.identity_key,
-            olmMessage
-          ).session
-        : this.#account.create_outbound_session(
-            userKeys.identity_key,
-            userKeys.one_time_pre_key
-          );
-      this.#encryptionSessions[userId] = session;
-      localforage.setItem(
-        `session_${userId}`,
-        session.pickle(`${api.curerntUserId}e14d23c4`)
+      session = this.#account.create_outbound_session(
+        userKeys.identity_key,
+        userKeys.one_time_pre_key
       );
+
+      await this.#storeSessionLocally(userId, session);
       console.log("Encrypted session created:", session);
-      //if from olmeMessage, need to update last message from session object
-      return { session: this.#encryptionSessions[userId] };
+      return { session };
     } catch (error) {
       console.log(error);
-
       throw new Error("[encryption] Failed to create encryption session");
     }
   }

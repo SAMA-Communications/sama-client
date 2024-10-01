@@ -101,7 +101,7 @@ export default function ChatForm() {
       document.removeEventListener("swiped-left", closeForm);
       document.removeEventListener("swiped-right", closeForm);
     };
-  }, [location, selectedCID]);
+  }, [location, selectedConversation?.is_encrypted]);
 
   useEffect(() => {
     const { hash } = location;
@@ -127,6 +127,11 @@ export default function ChatForm() {
           <ChatFormInputs
             chatMessagesBlockRef={chatMessagesBlock}
             isConversationEncrypted={selectedConversation?.is_encrypted}
+            opponentId={
+              selectedConversation.opponent_id === currentUserId
+                ? selectedConversation.owner_id
+                : selectedConversation.opponent_id
+            }
             isEncryptedSessionActive={successfulEncryptedSession}
             files={files}
             setFiles={setFiles}

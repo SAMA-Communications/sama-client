@@ -178,7 +178,6 @@ export default function MessagesList({ scrollRef }) {
                   !messages[i + 1].x?.type
                 : false
             }
-            isEncryptedChat={!!selectedConversation.is_encrypted}
           />
         )
       )}

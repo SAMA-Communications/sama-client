@@ -10,6 +10,7 @@ class Api {
     this.baseUrl = baseUrl;
     this.socket = null;
     this.curerntUserId = null;
+    this.currentDeviceId = null;
     this.responsesPromises = {};
     this.onMessageListener = null;
     this.onMessageStatusListener = null;
@@ -171,27 +172,23 @@ class Api {
   }
 
   async userLogin(data) {
+    const deviceId = getBrowserFingerprint({
+      enableScreen: false,
+      hardwareOnly: true,
+    });
     const requestData = {
       request: {
         user_login: data.token
-          ? {
-              token: data.token,
-              deviceId: getBrowserFingerprint({
-                enableScreen: false,
-                hardwareOnly: true,
-              }),
-            }
+          ? { token: data.token, deviceId }
           : {
               login: data.login,
               password: data.password,
-              deviceId: getBrowserFingerprint({
-                enableScreen: false,
-                hardwareOnly: true,
-              }),
+              deviceId,
             },
         id: getUniqueId("userLogin"),
       },
     };
+    api.currentDeviceId = deviceId.toString();
     const resObjKey = null;
     return this.sendPromise(requestData, resObjKey);
   }
