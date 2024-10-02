@@ -16,7 +16,7 @@ export default function ConversationItemList({ conversations }) {
   const selectedConversation = useSelector(getConverastionById);
   const activeConversationId = selectedConversation?._id;
 
-  const convItemOnClickFunc = (id, isEncrypted) => {
+  const convItemOnClickFunc = (id) => {
     dispatch(setSelectedConversation({ id }));
     navigateTo(`/#${id}`);
   };
@@ -39,7 +39,7 @@ export default function ConversationItemList({ conversations }) {
       <ConversationItem
         key={obj._id}
         isSelected={isSelected}
-        onClickFunc={() => convItemOnClickFunc(obj._id, obj.is_encrypted)}
+        onClickFunc={() => convItemOnClickFunc(obj._id)}
         chatName={chatName}
         lastMessageUserName={
           obj.type === "g" && !obj.last_message?.x ? lastMessageUserName : null

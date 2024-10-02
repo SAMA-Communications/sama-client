@@ -14,7 +14,6 @@ import {
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
 import { KEY_CODES } from "@helpers/keyCodes";
-import { getFirstEncryptedMessage } from "@store/values/Messages";
 import { setClicked } from "@store/values/ContextMenu";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
@@ -35,7 +34,6 @@ export default function ChatForm() {
   const conversations = useSelector(selectConversationsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
-  const firstEncryptedMessage = useSelector(getFirstEncryptedMessage);
 
   const isUserLogin = useSelector(getUserIsLoggedIn);
   const isTabInFocus = useSelector(getIsTabInFocus);
@@ -85,8 +83,7 @@ export default function ChatForm() {
         .createEncryptionSession(
           selectedConversation.owner_id === currentUserId
             ? selectedConversation.opponent_id
-            : selectedConversation.owner_id,
-          firstEncryptedMessage
+            : selectedConversation.owner_id
         )
         .then(({ session }) => setSuccessfulEncryptedSession(!!session))
         .catch(() => setSuccessfulEncryptedSession(false));
@@ -126,12 +123,6 @@ export default function ChatForm() {
           />
           <ChatFormInputs
             chatMessagesBlockRef={chatMessagesBlock}
-            isConversationEncrypted={selectedConversation?.is_encrypted}
-            opponentId={
-              selectedConversation.opponent_id === currentUserId
-                ? selectedConversation.owner_id
-                : selectedConversation.opponent_id
-            }
             isEncryptedSessionActive={successfulEncryptedSession}
             files={files}
             setFiles={setFiles}

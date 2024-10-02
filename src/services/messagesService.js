@@ -97,15 +97,14 @@ class MessagesService {
             message
           );
         } else {
-          const decryptMessage = await encryptionService.decryptMessage(
-            message.body,
-            message.encrypted_message_type,
+          const decryptedMessage = encryptionService.decryptMessage(
+            message,
             message.from
           );
           store.dispatch(
             upsertMessage({
               _id: message._id,
-              body: decryptMessage,
+              body: decryptedMessage,
             })
           );
         }
@@ -169,27 +168,9 @@ class MessagesService {
         limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
       })
       .then(async (arr) => {
-        store.dispatch(
-          upsertChat({ _id: this.currentChatId, activated: true })
-        ); // pre init conversation object in redux
-        const conv =
-          store.getState().conversations?.entities?.[this.currentChatId];
-        const isEncrypted = conv?.is_encrypted;
-
         const messagesIds = arr.map((el) => el._id).reverse();
-        const messages = arr.map((msg) => {
-          if (isEncrypted) {
-            const decryptedBody = encryptionService.decryptMessage(
-              msg.body,
-              msg.encrypted_message_type,
-              msg.from
-            );
-            return { ...msg, body: decryptedBody };
-          }
-          return msg;
-        });
 
-        store.dispatch(addMessages(messages));
+        store.dispatch(addMessages(arr));
         store.dispatch(
           upsertChat({ _id: this.currentChatId, messagesIds, activated: true })
         );
@@ -221,6 +202,8 @@ class MessagesService {
           store.dispatch(upsertMessages(messagesToUpdate));
         }
 
+        const conv =
+          store.getState().conversations?.entities?.[this.currentChatId];
         if (conv.type !== "u" && this.currentChatId) {
           const participants = await api.getParticipantsByCids({
             cids: [this.currentChatId],

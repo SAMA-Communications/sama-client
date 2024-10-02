@@ -45,16 +45,6 @@ export const selectActiveConversationMessages = createSelector(
   }
 );
 
-export const getFirstEncryptedMessage = createSelector(
-  [selectActiveConversationMessages],
-  (messages) => {
-    return messages
-      ?.sort((a, b) => b.created_at - a.created_at)
-      ?.filter((m) => m.encrypted_message_type === 0)
-      ?.slice(0, 1)[0];
-  }
-);
-
 const getId = (_, id) => id;
 
 export const getMessageById = createSelector(

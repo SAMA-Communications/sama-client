@@ -45,10 +45,13 @@ class EncryptionService {
     return session.encrypt(text);
   }
 
-  decryptMessage(text, type = 0, userId) {
-    const session = this.#encryptionSessions[userId];
+  decryptMessage(olmMessageParams, userId) {
+    let session = this.#encryptionSessions[userId];
 
-    const olmMessage = new OlmMessage(type, text);
+    const olmMessage = new OlmMessage(
+      olmMessageParams.encrypted_message_type,
+      olmMessageParams.body
+    );
 
     if (!session) {
       console.log(
@@ -265,11 +268,7 @@ class EncryptionService {
     if (session) {
       if (olmMessage && session.session_matches(olmMessage)) {
         console.log("Encrypted session from local store:", session);
-        const decryptMessage = this.decryptMessage(
-          olmMessageParams.body,
-          olmMessageParams.encrypted_message_type,
-          userId
-        );
+        const decryptMessage = this.decryptMessage(olmMessageParams, userId);
 
         store.dispatch(
           upsertMessage({ _id: olmMessageParams._id, body: decryptMessage })
@@ -285,7 +284,6 @@ class EncryptionService {
       `encryptedSession${userId}`
     );
     if (sessionFromPickle && !olmMessage) {
-      //Any ideas on how to filter the NEW message, not the one from the database?
       try {
         const sessionPickleKey = await this.#getPickleKey(
           "sessionPickleKey",
@@ -332,6 +330,7 @@ class EncryptionService {
           console.error("Failed to create inbound session:", error);
         }
 
+        //check if the top block worked successfully -> mb need to clear the session param
         if (session) {
           await this.#storeSessionLocally(userId, session);
           console.log("Encrypted session created:", session);

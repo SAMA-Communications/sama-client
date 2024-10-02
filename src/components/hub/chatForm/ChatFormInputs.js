@@ -1,5 +1,4 @@
 import MessageInput from "@components/hub/elements/MessageInput";
-import encryptionService from "@services/encryptionService";
 import messagesService from "@services/messagesService";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
@@ -23,9 +22,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import "@styles/hub/chatForm/ChatFormInputs.css";
 
 export default function ChatFormInputs({
-  opponentId,
   chatMessagesBlockRef,
-  isConversationEncrypted,
   isEncryptedSessionActive,
 }) {
   const dispatch = useDispatch();
@@ -36,6 +33,10 @@ export default function ChatFormInputs({
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
+  const opponentId =
+    selectedConversation.opponent_id === currentUserId
+      ? selectedConversation.owner_id
+      : selectedConversation.opponent_id;
 
   const inputRef = useRef(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
@@ -78,7 +79,9 @@ export default function ChatFormInputs({
 
     try {
       await messagesService[
-        isConversationEncrypted ? "sendEncryptedMessage" : "sendMessage"
+        selectedConversation?.is_encrypted
+          ? "sendEncryptedMessage"
+          : "sendMessage"
       ](mObject, opponentId);
     } catch (e) {
       showCustomAlert(
