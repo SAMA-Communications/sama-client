@@ -128,7 +128,6 @@ class UsersService {
             await api.pushSubscriptionDelete();
             await api.userLogout();
             await encryptionService.clearStoredAccount();
-            localStorage.removeItem("sessionId");
           })
         )
       )
@@ -136,7 +135,6 @@ class UsersService {
         console.error(err);
         await api.userLogout();
         await encryptionService.clearStoredAccount();
-        localStorage.removeItem("sessionId");
         throw new Error("User logout error");
       });
   }

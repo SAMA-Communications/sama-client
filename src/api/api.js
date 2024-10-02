@@ -254,6 +254,7 @@ class Api {
       },
     };
     const resObjKey = "success";
+    localStorage.removeItem("sessionId");
     return this.sendPromise(requestData, resObjKey);
   }
 
