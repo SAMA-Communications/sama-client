@@ -1,4 +1,5 @@
 import MessageInput from "@components/hub/elements/MessageInput";
+import getOpponentId from "@utils/user/get_opponent_id";
 import messagesService from "@services/messagesService";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
@@ -33,10 +34,7 @@ export default function ChatFormInputs({
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
-  const opponentId =
-    selectedConversation.opponent_id === currentUserId
-      ? selectedConversation.owner_id
-      : selectedConversation.opponent_id;
+  const opponentId = getOpponentId(selectedConversation, currentUserId);
 
   const inputRef = useRef(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
