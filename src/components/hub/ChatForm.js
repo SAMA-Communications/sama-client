@@ -1,6 +1,5 @@
 import api from "@api/api";
 import encryptionService from "@services/encryptionService";
-import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
@@ -26,13 +25,10 @@ import "@styles/hub/ChatForm.css";
 import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
 import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
 import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
-import LockScreen from "@components/hub/LockScreen";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
   const location = useLocation();
-
-  const isLockScreenPath = location.pathname.includes("/auth_encrypted");
 
   const currentUserId = useSelector(selectCurrentUserId);
   const conversations = useSelector(selectConversationsEntities);
@@ -83,21 +79,14 @@ export default function ChatForm() {
 
   useEffect(() => {
     if (selectedConversation?.is_encrypted) {
-      if (!encryptionService.hasAccount() && !isLockScreenPath) {
-        dispatch(clearSelectedConversation());
-        navigateTo(`/auth_encrypted?convId=${selectedConversation._id}`);
-        return;
-      }
-
-      !isLockScreenPath &&
-        encryptionService
-          .createEncryptionSession(
-            selectedConversation.owner_id === currentUserId
-              ? selectedConversation.opponent_id
-              : selectedConversation.owner_id
-          )
-          .then(({ session }) => setSuccessfulEncryptedSession(!!session))
-          .catch(() => setSuccessfulEncryptedSession(false));
+      encryptionService
+        .createEncryptionSession(
+          selectedConversation.owner_id === currentUserId
+            ? selectedConversation.opponent_id
+            : selectedConversation.owner_id
+        )
+        .then(({ session }) => setSuccessfulEncryptedSession(!!session))
+        .catch(() => setSuccessfulEncryptedSession(false));
     }
 
     files.length && setFiles([]);
@@ -109,7 +98,7 @@ export default function ChatForm() {
       document.removeEventListener("swiped-left", closeForm);
       document.removeEventListener("swiped-right", closeForm);
     };
-  }, [location, selectedCID]);
+  }, [location, selectedConversation?.is_encrypted]);
 
   useEffect(() => {
     const { hash } = location;
@@ -125,12 +114,13 @@ export default function ChatForm() {
 
   return (
     <section className={`chat-form__container ${selectedCID ? "" : "fcc"}`}>
-      {isLockScreenPath ? (
-        <LockScreen />
-      ) : selectedCID ? (
+      {selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />
-          <ChatFormContent scrollRef={chatMessagesBlock} />
+          <ChatFormContent
+            scrollRef={chatMessagesBlock}
+            isEncryptedConversation={selectedConversation?.is_encrypted}
+          />
           <ChatFormInputs
             chatMessagesBlockRef={chatMessagesBlock}
             isEncryptedSessionActive={successfulEncryptedSession}

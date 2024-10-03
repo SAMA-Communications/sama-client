@@ -1,7 +1,6 @@
 import ChatNameInput from "@components/modals/components/ChatNameInput";
 import UserSelectorBlock from "@components/modals/components/UserSelectorBlock";
 import conversationService from "@services/conversationsService";
-import encryptionService from "@services/encryptionService";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
@@ -41,11 +40,7 @@ export default function UsersSelectModalHub({ type, isEncrypted = false }) {
       true
     );
 
-    navigateTo(
-      encryptionService.hasAccount()
-        ? `/#${chatId}`
-        : `/auth_encrypted?convId=${chatId}`
-    );
+    navigateTo(`/#${chatId}`);
   };
 
   const sendEditRequest = async (participants) => {
