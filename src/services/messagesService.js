@@ -26,6 +26,24 @@ class MessagesService {
   currentChatId;
   typingTimers = {};
 
+  async #tryToCreateESession(message) {
+    if (message.encrypted_message_type === 0) {
+      console.log("[ecnryption] Try to connect from new message");
+      await encryptionService.createEncryptionSession(message.from, message);
+    } else {
+      const decryptedMessage = encryptionService.decryptMessage(
+        message,
+        message.from
+      );
+      store.dispatch(
+        upsertMessage({
+          _id: message._id,
+          body: decryptedMessage,
+        })
+      );
+    }
+  }
+
   constructor() {
     api.onMessageStatusListener = (message) => {
       store.dispatch(markMessagesAsRead(message.ids));
@@ -90,24 +108,7 @@ class MessagesService {
         );
       }
       if (conv.is_encrypted) {
-        if (message.encrypted_message_type === 0) {
-          console.log("[ecnryption] Try to connect from new message");
-          await encryptionService.createEncryptionSession(
-            message.from,
-            message
-          );
-        } else {
-          const decryptedMessage = encryptionService.decryptMessage(
-            message,
-            message.from
-          );
-          store.dispatch(
-            upsertMessage({
-              _id: message._id,
-              body: decryptedMessage,
-            })
-          );
-        }
+        await this.#tryToCreateESession(message);
       }
     };
 
@@ -201,9 +202,9 @@ class MessagesService {
           );
           store.dispatch(upsertMessages(messagesToUpdate));
         }
-
         const conv =
           store.getState().conversations?.entities?.[this.currentChatId];
+
         if (conv.type !== "u" && this.currentChatId) {
           const participants = await api.getParticipantsByCids({
             cids: [this.currentChatId],
@@ -214,6 +215,14 @@ class MessagesService {
               participants: participants.map((p) => p._id),
             })
           );
+        }
+
+        if (conv.is_encrypted) {
+          setTimeout(() => {
+            arr.forEach(
+              async (message) => await this.#tryToCreateESession(message)
+            );
+          }, 500);
         }
       })
       .catch((err) => {
