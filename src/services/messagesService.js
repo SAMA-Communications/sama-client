@@ -219,6 +219,7 @@ class MessagesService {
 
         if (conv.is_encrypted) {
           setTimeout(() => {
+            //replace in the future, should be called after the session is created
             arr.forEach(
               async (message) => await this.#tryToCreateESession(message)
             );
