@@ -2,7 +2,7 @@
   position: absolute;
   left: 10px;
 
-  width: 240px;
+  width: max(240px, max-content);
 
   padding: 10px 4px;
 

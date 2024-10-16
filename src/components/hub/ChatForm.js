@@ -1,8 +1,7 @@
-import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
-import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
-import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
 import api from "@api/api";
+import encryptionService from "@services/encryptionService";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
 import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
 import {
@@ -23,16 +22,23 @@ import { useSelector, useDispatch } from "react-redux";
 
 import "@styles/hub/ChatForm.css";
 
+import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
+import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
+import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
+
 export default function ChatForm() {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const isUserLogin = useSelector(getUserIsLoggedIn);
-  const isTabInFocus = useSelector(getIsTabInFocus);
-
+  const currentUserId = useSelector(selectCurrentUserId);
   const conversations = useSelector(selectConversationsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
+
+  const isUserLogin = useSelector(getUserIsLoggedIn);
+  const isTabInFocus = useSelector(getIsTabInFocus);
+  const [successfulEncryptedSession, setSuccessfulEncryptedSession] =
+    useState(null);
 
   const chatMessagesBlock = useRef();
   const [files, setFiles] = useState([]);
@@ -55,7 +61,7 @@ export default function ChatForm() {
   };
 
   const readMessage = useCallback(() => {
-    if (!conversations[selectedCID] || !document.hasFocus()) {
+    if (!conversations?.[selectedCID] || !document.hasFocus()) {
       return;
     }
 
@@ -72,6 +78,17 @@ export default function ChatForm() {
   }, [isTabInFocus, readMessage]);
 
   useEffect(() => {
+    if (selectedConversation?.is_encrypted) {
+      encryptionService
+        .createEncryptionSession(
+          selectedConversation.owner_id === currentUserId
+            ? selectedConversation.opponent_id
+            : selectedConversation.owner_id
+        )
+        .then(({ session }) => setSuccessfulEncryptedSession(!!session))
+        .catch(() => setSuccessfulEncryptedSession(false));
+    }
+
     files.length && setFiles([]);
 
     document.addEventListener("swiped-left", closeForm);
@@ -81,7 +98,7 @@ export default function ChatForm() {
       document.removeEventListener("swiped-left", closeForm);
       document.removeEventListener("swiped-right", closeForm);
     };
-  }, [location, selectedCID]);
+  }, [location, selectedConversation?.is_encrypted]);
 
   useEffect(() => {
     const { hash } = location;
@@ -100,9 +117,13 @@ export default function ChatForm() {
       {selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />
-          <ChatFormContent scrollRef={chatMessagesBlock} />
+          <ChatFormContent
+            scrollRef={chatMessagesBlock}
+            isEncryptedConversation={selectedConversation?.is_encrypted}
+          />
           <ChatFormInputs
             chatMessagesBlockRef={chatMessagesBlock}
+            isEncryptedSessionActive={successfulEncryptedSession}
             files={files}
             setFiles={setFiles}
           />

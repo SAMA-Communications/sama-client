@@ -2,7 +2,21 @@ import LastMessageMedia from "@components/message/lastMessage/LastMessageMedia";
 import LastMessageStatus from "@components/message/lastMessage/LastMessageStatus";
 import getFileType from "@utils/media/get_file_type";
 
-export default function LastMessage({ message, count, userId, viewName }) {
+export default function LastMessage({
+  message,
+  count,
+  userId,
+  viewName,
+  isEncrypted,
+}) {
+  if (isEncrypted) {
+    return (
+      <div className="content-bottom__last-message">
+        <p className="last-message__text">Enncrypted message</p>
+      </div>
+    );
+  }
+
   if (!message) {
     return null;
   }

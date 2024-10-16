@@ -18,6 +18,8 @@ import { useSelector } from "react-redux";
 
 import "@styles/context/ContextMenuHub.css";
 
+import AddConversationLink from "@components/context/elements/AddConversationLink";
+import AddEncryptedConversationLink from "@components/context/elements/AddEncryptedConversationLink";
 import AddParticipantsLink from "@components/context/elements/AddParticipantsLink";
 import EditLink from "@components/context/elements/EditLink";
 import InfoChatLink from "@components/context/elements/InfoChatLink";
@@ -78,6 +80,18 @@ export default function ContextMenuHub() {
         <AddParticipantsLink
           key={"addParticipants"}
           onClick={() => addSuffix(currentPath, "/add")}
+        />
+      ),
+      createGroupChat: (
+        <AddConversationLink
+          key={"createGroupChat"}
+          onClick={() => addPrefix(pathname + hash, "/create")}
+        />
+      ),
+      createEncryptedChat: (
+        <AddEncryptedConversationLink
+          key={"addEncryptedConversationLink"}
+          onClick={() => addPrefix(pathname + hash, "/create_encrypted")}
         />
       ),
       leave: (

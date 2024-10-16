@@ -9,6 +9,7 @@ import {
   addMessages,
   markMessagesAsRead,
   removeMessage,
+  upsertMessage,
   upsertMessages,
 } from "@store/values/Messages";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
@@ -19,10 +20,29 @@ import {
   upsertChat,
   upsertParticipants,
 } from "@store/values/Conversations";
+import encryptionService from "./encryptionService";
 
 class MessagesService {
   currentChatId;
   typingTimers = {};
+
+  async #tryToCreateESession(message) {
+    if (message.encrypted_message_type === 0) {
+      console.log("[ecnryption] Try to connect from new message");
+      await encryptionService.createEncryptionSession(message.from, message);
+    } else {
+      const decryptedMessage = encryptionService.decryptMessage(
+        message,
+        message.from
+      );
+      store.dispatch(
+        upsertMessage({
+          _id: message._id,
+          body: decryptedMessage,
+        })
+      );
+    }
+  }
 
   constructor() {
     api.onMessageStatusListener = (message) => {
@@ -87,6 +107,9 @@ class MessagesService {
           })
         );
       }
+      if (conv.is_encrypted) {
+        await this.#tryToCreateESession(message);
+      }
     };
 
     api.onUserTypingListener = (data) => {
@@ -147,64 +170,65 @@ class MessagesService {
       })
       .then(async (arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
+
         store.dispatch(addMessages(arr));
         store.dispatch(
-          upsertChat({
-            _id: this.currentChatId,
-            messagesIds,
-            activated: true,
-          })
+          upsertChat({ _id: this.currentChatId, messagesIds, activated: true })
         );
-        const mAttachments = {};
-        for (let i = 0; i < arr.length; i++) {
-          const attachments = arr[i].attachments;
-          if (!attachments) {
-            continue;
-          }
-          attachments.forEach((obj) => {
-            const mAttachmentsObject = mAttachments[obj.file_id];
-            if (!mAttachmentsObject) {
-              mAttachments[obj.file_id] = {
-                _id: arr[i]._id,
-                ...obj,
-              };
-              return;
-            }
 
-            const mids = mAttachmentsObject._id;
-            mAttachments[obj.file_id]._id = Array.isArray(mids)
-              ? [arr[i]._id, ...mids]
-              : [arr[i]._id, mids];
-          });
-        }
+        const mAttachments = arr.reduce((acc, msg) => {
+          if (msg.attachments) {
+            msg.attachments.forEach((obj) => {
+              if (!acc[obj.file_id]) {
+                acc[obj.file_id] = { _id: msg._id, ...obj };
+              } else {
+                const existingId = acc[obj.file_id]._id;
+                acc[obj.file_id]._id = Array.isArray(existingId)
+                  ? [msg._id, ...existingId]
+                  : [msg._id, existingId];
+              }
+            });
+          }
+          return acc;
+        }, {});
 
         if (Object.keys(mAttachments).length > 0) {
-          DownloadManager.getDownloadFileLinks(mAttachments).then((msgs) => {
-            const messagesToUpdate = msgs.flatMap((msg) => {
-              const mids = Array.isArray(msg._id) ? msg._id : [msg._id];
-              return mids.map((mid) => ({ ...msg, _id: mid }));
-            });
-            store.dispatch(upsertMessages(messagesToUpdate));
-          });
+          const msgs = await DownloadManager.getDownloadFileLinks(mAttachments);
+          const messagesToUpdate = msgs.flatMap((msg) =>
+            (Array.isArray(msg._id) ? msg._id : [msg._id]).map((mid) => ({
+              ...msg,
+              _id: mid,
+            }))
+          );
+          store.dispatch(upsertMessages(messagesToUpdate));
         }
         const conv =
-          store.getState().conversations.entities[this.currentChatId];
-        if (conv.type !== "u") {
-          api
-            .getParticipantsByCids({
-              cids: [this.currentChatId],
+          store.getState().conversations?.entities?.[this.currentChatId];
+
+        if (conv.type !== "u" && this.currentChatId) {
+          const participants = await api.getParticipantsByCids({
+            cids: [this.currentChatId],
+          });
+          store.dispatch(
+            upsertParticipants({
+              cid: this.currentChatId,
+              participants: participants.map((p) => p._id),
             })
-            .then((arr) =>
-              store.dispatch(
-                upsertParticipants({
-                  cid: this.currentChatId,
-                  participants: arr.map((obj) => obj._id),
-                })
-              )
+          );
+        }
+
+        if (conv.is_encrypted) {
+          setTimeout(() => {
+            //replace in the future, should be called after the session is created
+            arr.forEach(
+              async (message) => await this.#tryToCreateESession(message)
             );
+          }, 500);
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
+
         store.dispatch(removeChat(cid));
         store.dispatch(setSelectedConversation({}));
         navigateTo("/");
@@ -213,15 +237,36 @@ class MessagesService {
 
   async sendMessage(message) {
     const { server_mid, t } = await api.messageCreate(message);
-    const { mid, body, cid, from } = message;
+    const { mid, body, visibleBody, cid, from, encrypted_message_type } =
+      message;
 
-    const mObject = { _id: server_mid, body, from, status: "sent", t };
+    const mObject = {
+      _id: server_mid,
+      body: visibleBody || body,
+      from,
+      status: "sent",
+      t,
+      encrypted_message_type,
+    };
 
     store.dispatch(addMessage(mObject));
     store.dispatch(
       updateLastMessageField({ cid, resaveLastMessageId: mid, msg: mObject })
     );
     store.dispatch(removeMessage(mid));
+  }
+
+  async sendEncryptedMessage(message, opponentId) {
+    const { ciphertext, message_type } = encryptionService.encryptMessage(
+      message.body,
+      opponentId
+    );
+
+    message.visibleBody = message.body;
+    message.body = ciphertext;
+    message.encrypted_message_type = message_type;
+
+    await this.sendMessage(message);
   }
 }
 

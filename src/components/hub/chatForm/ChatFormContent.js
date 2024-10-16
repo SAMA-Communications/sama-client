@@ -5,7 +5,10 @@ import { selectActiveConversationMessages } from "@store/values/Messages";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
-export default function ChatFormContent({ scrollRef }) {
+export default function ChatFormContent({
+  scrollRef,
+  isEncryptedConversation,
+}) {
   const messages = useSelector(selectActiveConversationMessages);
 
   const chatContentView = useMemo(() => {
@@ -27,7 +30,11 @@ export default function ChatFormContent({ scrollRef }) {
 
     return (
       <div className="chat-content__container">
-        <p className="chat-emty__text">Write the first message...</p>
+        <p className="chat-emty__text">
+          {isEncryptedConversation
+            ? "Start an encrypted conversation by sending a message to the chat..."
+            : "Write the first message..."}
+        </p>
       </div>
     );
   }, [messages, scrollRef]);

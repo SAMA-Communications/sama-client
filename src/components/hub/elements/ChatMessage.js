@@ -73,7 +73,6 @@ export default function ChatMessage({
             <MessageAttachments attachments={attachments} mid={message._id} />
           ) : null}
           {body ? <div className="content__text">{urlify(body)}</div> : null}
-
           <div
             className={`content__status${
               attachments?.length && !body ? "--darken" : ""

@@ -1,0 +1,15 @@
+{
+  "name": "vodozemac-javascript",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "vodozemac_bg.wasm",
+    "vodozemac.js",
+    "vodozemac.d.ts"
+  ],
+  "main": "vodozemac.js",
+  "types": "vodozemac.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

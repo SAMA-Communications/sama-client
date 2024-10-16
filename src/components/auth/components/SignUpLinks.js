@@ -1,4 +1,5 @@
 import OvalLoader from "@components/_helpers/OvalLoader";
+import encryptionService from "@services/encryptionService";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import subscribeForNotifications from "@services/notifications";
@@ -25,7 +26,8 @@ export default function SignUpLinks({ changePage, content }) {
 
       if (isLogin) {
         const userData = await usersService.login(content);
-
+        await encryptionService.clearStoredAccount();
+        await encryptionService.registerDevice(userData._id);
         subscribeForNotifications();
         dispatch(setSelectedConversation({}));
         dispatch(setUserIsLoggedIn(true));

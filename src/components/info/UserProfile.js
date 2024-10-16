@@ -1,7 +1,8 @@
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
-import InfoBox from "@components/info/elements/InfoBox";
 import DynamicAvatar from "@components/info/elements//DynamicAvatar";
+import InfoBox from "@components/info/elements/InfoBox";
 import addSuffix from "@utils/navigation/add_suffix";
+import encryptionService from "@services/encryptionService";
 import globalConstants from "@src/_helpers/constants";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
@@ -44,9 +45,11 @@ export default function UserProfile() {
   const sendLogout = async () => {
     try {
       await usersService.logout();
+      await encryptionService.clearStoredAccount();
       dispatch({ type: "RESET_STORE" });
       dispatch(updateNetworkState(true));
     } catch (err) {
+      await encryptionService.clearStoredAccount();
       dispatch({ type: "RESET_STORE" });
       dispatch(updateNetworkState(true));
       dispatch(setUserIsLoggedIn(false));

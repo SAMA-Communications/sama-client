@@ -10,6 +10,7 @@ class Api {
     this.baseUrl = baseUrl;
     this.socket = null;
     this.curerntUserId = null;
+    this.currentDeviceId = null;
     this.responsesPromises = {};
     this.onMessageListener = null;
     this.onMessageStatusListener = null;
@@ -171,27 +172,23 @@ class Api {
   }
 
   async userLogin(data) {
+    const deviceId = getBrowserFingerprint({
+      enableScreen: false,
+      hardwareOnly: true,
+    });
     const requestData = {
       request: {
         user_login: data.token
-          ? {
-              token: data.token,
-              deviceId: getBrowserFingerprint({
-                enableScreen: false,
-                hardwareOnly: true,
-              }),
-            }
+          ? { token: data.token, deviceId }
           : {
               login: data.login,
               password: data.password,
-              deviceId: getBrowserFingerprint({
-                enableScreen: false,
-                hardwareOnly: true,
-              }),
+              deviceId,
             },
         id: getUniqueId("userLogin"),
       },
     };
+    api.currentDeviceId = deviceId.toString();
     const resObjKey = null;
     return this.sendPromise(requestData, resObjKey);
   }
@@ -207,6 +204,34 @@ class Api {
       },
     };
     const resObjKey = "user";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
+  async encryptedDeviceCreate(data) {
+    const requestData = {
+      request: {
+        device_register: {
+          identity_key: data.identity_key,
+          signed_key: data.signed_key,
+          one_time_pre_keys: data.one_time_pre_keys,
+        },
+        id: getUniqueId("encryptedDeviceCreate"),
+      },
+    };
+    const resObjKey = "success";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
+  async getEncryptedKeys(data) {
+    const requestData = {
+      request: {
+        request_keys: {
+          user_ids: data.user_ids,
+        },
+        id: getUniqueId("getEncryptedKeys"),
+      },
+    };
+    const resObjKey = "devices";
     return this.sendPromise(requestData, resObjKey);
   }
 
@@ -229,6 +254,7 @@ class Api {
       },
     };
     const resObjKey = "success";
+    localStorage.removeItem("sessionId");
     return this.sendPromise(requestData, resObjKey);
   }
 
@@ -320,6 +346,7 @@ class Api {
           body: data.body,
           cid: data.cid,
           attachments: data.attachments,
+          encrypted_message_type: data.encrypted_message_type,
         },
       };
       this.responsesPromises[requestData.message.id] = { resolve, reject };
@@ -467,6 +494,7 @@ class Api {
           opponent_id: data.opponent_id,
           participants: data.participants,
           image_object: data.image_object,
+          is_encrypted: data.is_encrypted,
         },
         id: getUniqueId("conversationCreate"),
       },

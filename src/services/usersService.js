@@ -12,6 +12,7 @@ import validateIsEmptyObject from "@validations/validateIsEmtpyObject";
 import validateLogin from "@validations/user/validateLogin";
 import validatePassword from "@validations/user/validatePassword";
 import validatePhone from "@validations/user/validatePhone";
+import encryptionService from "./encryptionService";
 
 class UsersService {
   async login(data) {
@@ -126,14 +127,14 @@ class UsersService {
           sub.unsubscribe().then(async () => {
             await api.pushSubscriptionDelete();
             await api.userLogout();
-            localStorage.removeItem("sessionId");
+            await encryptionService.clearStoredAccount();
           })
         )
       )
       .catch(async (err) => {
         console.error(err);
         await api.userLogout();
-        localStorage.removeItem("sessionId");
+        await encryptionService.clearStoredAccount();
         throw new Error("User logout error");
       });
   }
