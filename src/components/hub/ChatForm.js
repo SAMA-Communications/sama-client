@@ -61,7 +61,7 @@ export default function ChatForm() {
   };
 
   const readMessage = useCallback(() => {
-    if (!conversations[selectedCID] || !document.hasFocus()) {
+    if (!conversations?.[selectedCID] || !document.hasFocus()) {
       return;
     }
 

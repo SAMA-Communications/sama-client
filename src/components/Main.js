@@ -1,7 +1,7 @@
 import { cloneElement, useMemo } from "react";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView } from "@store/values/IsTabletView";
-import { selectConversationsEntities } from "@store/values/Conversations";
+import { getDisplayableConversations } from "@store/values/Conversations";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -38,8 +38,7 @@ export default function Main() {
   const isTabletView = useSelector(getIsTabletView);
   const location = useLocation();
 
-  const conversations = useSelector(selectConversationsEntities);
-  const conversationsArray = conversations && Object.values(conversations);
+  const conversations = useSelector(getDisplayableConversations);
 
   const additionalContainerRight = useMemo(() => {
     const { pathname, hash } = location;
@@ -56,11 +55,7 @@ export default function Main() {
       return <SHub />;
     }
 
-    if (
-      !location.hash &&
-      !conversationsArray?.filter((obj) => obj.type === "g" || obj.last_message)
-        .length
-    ) {
+    if (!location.hash && !conversations.length) {
       if (isMobileView) {
         return location.pathname.includes("/profile") ? null : <EmptyHub />;
       }
