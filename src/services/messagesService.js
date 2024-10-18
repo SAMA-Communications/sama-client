@@ -1,6 +1,8 @@
 import DownloadManager from "@adapters/downloadManager";
 import api from "@api/api";
+import encryptionService from "./encryptionService";
 import jwtDecode from "jwt-decode";
+import localforage from "localforage";
 import navigateTo from "@utils/navigation/navigate_to";
 import store from "@store/store";
 import { addUser } from "@store/values/Participants";
@@ -14,13 +16,13 @@ import {
 } from "@store/values/Messages";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import {
+  insertChats,
   markConversationAsRead,
   removeChat,
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
 } from "@store/values/Conversations";
-import encryptionService from "./encryptionService";
 
 class MessagesService {
   currentChatId;
@@ -163,11 +165,25 @@ class MessagesService {
 
   async syncData() {
     const cid = this.currentChatId;
+    const params = {
+      cid,
+      limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
+    };
+
+    const lastMessage = Object.values(
+      store.getState().messages.entities
+    ).findLast((el) => el.cid === cid);
+
+    if (lastMessage) {
+      params.updated_at = {
+        gt:
+          lastMessage.created_at ||
+          new Date(lastMessage.t * 1000).toISOString(),
+      };
+    }
+
     api
-      .messageList({
-        cid,
-        limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
-      })
+      .messageList(params)
       .then(async (arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();
 
@@ -243,6 +259,7 @@ class MessagesService {
     const mObject = {
       _id: server_mid,
       body: visibleBody || body,
+      cid,
       from,
       status: "sent",
       t,
@@ -268,8 +285,44 @@ class MessagesService {
 
     await this.sendMessage(message);
   }
+
+  saveMessagesToLocalStorage() {
+    const messages = Object.values(store.getState().messages.entities);
+
+    encryptionService
+      .encrypteDataForLocalStore(messages)
+      .then((encryptedData) => localforage.setItem("messages", encryptedData));
+
+    return undefined;
+  }
+
+  async restoreMessagesFromLocalStorage() {
+    const messagesCipheratext = await localforage.getItem("messages");
+
+    const decryptedMessages = await encryptionService.decryptDataFromLocalStore(
+      messagesCipheratext
+    );
+
+    const conversations = Object.values(
+      decryptedMessages.reduce((acc, message) => {
+        if (!message.cid) {
+          return acc;
+        }
+        if (!acc[message.cid]) {
+          acc[message.cid] = { _id: message.cid, messagesIds: [] };
+        }
+        acc[message.cid].messagesIds.push(message._id);
+        return acc;
+      }, {})
+    );
+
+    store.dispatch(addMessages(decryptedMessages));
+    store.dispatch(insertChats(conversations));
+  }
 }
 
 const messagesService = new MessagesService();
+
+window.onbeforeunload = messagesService.saveMessagesToLocalStorage;
 
 export default messagesService;
