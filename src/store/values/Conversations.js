@@ -84,13 +84,11 @@ export const conversations = createSlice({
 
       const { messagesIds, unread_messages_count } =
         state.entities[conversation._id] || {};
-      messagesIds &&
-        (conversation.messagesIds = [
-          ...(Array.isArray(conversation.messagesIds)
-            ? conversation.messagesIds
-            : []),
-          ...messagesIds,
-        ]);
+      if (messagesIds) {
+        conversation.messagesIds = (conversation.messagesIds ?? []).concat(
+          messagesIds
+        );
+      }
       unread_messages_count && delete conversation.unread_messages_count;
 
       conversationsAdapter.upsertOne(state, conversation);
