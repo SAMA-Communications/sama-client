@@ -1,14 +1,15 @@
 import DownloadManager from "@adapters/downloadManager";
 import api from "@api/api";
 import encryptionService from "./encryptionService";
+import indexedDB from "@store/indexedDB";
 import jwtDecode from "jwt-decode";
-import localforage from "localforage";
 import navigateTo from "@utils/navigation/navigate_to";
 import store from "@store/store";
 import { addUser } from "@store/values/Participants";
 import {
   addMessage,
   addMessages,
+  clearMessagesToLocalLimit,
   markMessagesAsRead,
   removeMessage,
   upsertMessage,
@@ -16,7 +17,7 @@ import {
 } from "@store/values/Messages";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import {
-  insertChats,
+  clearMessageIdsToLocalLimit,
   markConversationAsRead,
   removeChat,
   updateLastMessageField,
@@ -48,6 +49,7 @@ class MessagesService {
 
   constructor() {
     api.onMessageStatusListener = (message) => {
+      indexedDB.markMessagesAsRead(message.ids);
       store.dispatch(markMessagesAsRead(message.ids));
       store.dispatch(
         markConversationAsRead({
@@ -70,6 +72,7 @@ class MessagesService {
 
       const userInfo = jwtDecode(localStorage.getItem("sessionId"));
       message.from === userInfo._id && (message["status"] = "sent");
+      await indexedDB.addMessage(message);
       store.dispatch(addMessage(message));
       store.dispatch(upsertChat({ _id: message.cid, typing_users: null }));
 
@@ -159,6 +162,7 @@ class MessagesService {
         (!previousValue || previousValue !== this.currentChatId)
       ) {
         this.syncData();
+        this.clearPrevConvMessagesToLocalLimit(previousValue);
       }
     });
   }
@@ -170,9 +174,10 @@ class MessagesService {
       limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
     };
 
-    const lastMessage = Object.values(
+    const allConversationMessages = Object.values(
       store.getState().messages.entities
-    ).findLast((el) => el.cid === cid);
+    );
+    const lastMessage = allConversationMessages.splice(-1)[0];
 
     if (lastMessage) {
       params.updated_at = {
@@ -182,73 +187,81 @@ class MessagesService {
       };
     }
 
-    api
-      .messageList(params)
-      .then(async (arr) => {
-        const messagesIds = arr.map((el) => el._id).reverse();
+    try {
+      if (allConversationMessages.length === params.limit) return;
 
-        store.dispatch(addMessages(arr));
-        store.dispatch(
-          upsertChat({ _id: this.currentChatId, messagesIds, activated: true })
-        );
+      const existLocalMessages = await indexedDB.getMessages(params);
+      let messages = [...existLocalMessages];
 
-        const mAttachments = arr.reduce((acc, msg) => {
-          if (msg.attachments) {
-            msg.attachments.forEach((obj) => {
-              if (!acc[obj.file_id]) {
-                acc[obj.file_id] = { _id: msg._id, ...obj };
-              } else {
-                const existingId = acc[obj.file_id]._id;
-                acc[obj.file_id]._id = Array.isArray(existingId)
-                  ? [msg._id, ...existingId]
-                  : [msg._id, existingId];
-              }
-            });
-          }
-          return acc;
-        }, {});
+      if (existLocalMessages.length < params.limit) {
+        const messagesFromApi = await api.messageList(params);
+        await indexedDB.insertManyMessages(messagesFromApi);
+        messages = [...messages, ...messagesFromApi];
+      }
 
-        if (Object.keys(mAttachments).length > 0) {
-          const msgs = await DownloadManager.getDownloadFileLinks(mAttachments);
-          const messagesToUpdate = msgs.flatMap((msg) =>
-            (Array.isArray(msg._id) ? msg._id : [msg._id]).map((mid) => ({
-              ...msg,
-              _id: mid,
-            }))
-          );
-          store.dispatch(upsertMessages(messagesToUpdate));
-        }
-        const conv =
-          store.getState().conversations?.entities?.[this.currentChatId];
+      const messagesIds = messages.map((el) => el._id).reverse();
 
-        if (conv.type !== "u" && this.currentChatId) {
-          const participants = await api.getParticipantsByCids({
-            cids: [this.currentChatId],
+      store.dispatch(addMessages(messages));
+      store.dispatch(
+        upsertChat({ _id: this.currentChatId, messagesIds, activated: true })
+      );
+
+      const mAttachments = messages.reduce((acc, msg) => {
+        if (msg.attachments) {
+          msg.attachments.forEach((obj) => {
+            if (!acc[obj.file_id]) {
+              acc[obj.file_id] = { _id: msg._id, ...obj };
+            } else {
+              const existingId = acc[obj.file_id]._id;
+              acc[obj.file_id]._id = Array.isArray(existingId)
+                ? [msg._id, ...existingId]
+                : [msg._id, existingId];
+            }
           });
-          store.dispatch(
-            upsertParticipants({
-              cid: this.currentChatId,
-              participants: participants.map((p) => p._id),
-            })
+        }
+        return acc;
+      }, {});
+
+      if (Object.keys(mAttachments).length > 0) {
+        const msgs = await DownloadManager.getDownloadFileLinks(mAttachments);
+        const messagesToUpdate = msgs.flatMap((msg) =>
+          (Array.isArray(msg._id) ? msg._id : [msg._id]).map((mid) => ({
+            ...msg,
+            _id: mid,
+          }))
+        );
+        store.dispatch(upsertMessages(messagesToUpdate));
+      }
+      const conv =
+        store.getState().conversations?.entities?.[this.currentChatId];
+
+      if (conv.type !== "u" && this.currentChatId) {
+        const participants = await api.getParticipantsByCids({
+          cids: [this.currentChatId],
+        });
+        store.dispatch(
+          upsertParticipants({
+            cid: this.currentChatId,
+            participants: participants.map((p) => p._id),
+          })
+        );
+      }
+
+      if (conv.is_encrypted) {
+        setTimeout(() => {
+          //replace in the future, should be called after the session is created
+          messages.forEach(
+            async (message) => await this.#tryToCreateESession(message)
           );
-        }
+        }, 500);
+      }
+    } catch (error) {
+      console.log(error);
 
-        if (conv.is_encrypted) {
-          setTimeout(() => {
-            //replace in the future, should be called after the session is created
-            arr.forEach(
-              async (message) => await this.#tryToCreateESession(message)
-            );
-          }, 500);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-
-        store.dispatch(removeChat(cid));
-        store.dispatch(setSelectedConversation({}));
-        navigateTo("/");
-      });
+      store.dispatch(removeChat(cid));
+      store.dispatch(setSelectedConversation({}));
+      navigateTo("/");
+    }
   }
 
   async sendMessage(message) {
@@ -264,8 +277,10 @@ class MessagesService {
       status: "sent",
       t,
       encrypted_message_type,
+      created_at: new Date(t).toISOString(),
     };
 
+    await indexedDB.addMessage(mObject);
     store.dispatch(addMessage(mObject));
     store.dispatch(
       updateLastMessageField({ cid, resaveLastMessageId: mid, msg: mObject })
@@ -286,43 +301,17 @@ class MessagesService {
     await this.sendMessage(message);
   }
 
-  saveMessagesToLocalStorage() {
-    const messages = Object.values(store.getState().messages.entities);
-
-    encryptionService
-      .encrypteDataForLocalStore(messages)
-      .then((encryptedData) => localforage.setItem("messages", encryptedData));
-
-    return undefined;
+  async clearLocalMessages() {
+    await indexedDB.removeAllMessages();
   }
 
-  async restoreMessagesFromLocalStorage() {
-    const messagesCipheratext = await localforage.getItem("messages");
-
-    const decryptedMessages = await encryptionService.decryptDataFromLocalStore(
-      messagesCipheratext
-    );
-
-    const conversations = Object.values(
-      decryptedMessages.reduce((acc, message) => {
-        if (!message.cid) {
-          return acc;
-        }
-        if (!acc[message.cid]) {
-          acc[message.cid] = { _id: message.cid, messagesIds: [] };
-        }
-        acc[message.cid].messagesIds.push(message._id);
-        return acc;
-      }, {})
-    );
-
-    store.dispatch(addMessages(decryptedMessages));
-    store.dispatch(insertChats(conversations));
+  async clearPrevConvMessagesToLocalLimit(cid) {
+    if (!cid) return;
+    store.dispatch(clearMessageIdsToLocalLimit(cid));
+    store.dispatch(clearMessagesToLocalLimit(cid));
   }
 }
 
 const messagesService = new MessagesService();
-
-window.onbeforeunload = messagesService.saveMessagesToLocalStorage;
 
 export default messagesService;

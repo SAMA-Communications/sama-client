@@ -1,6 +1,8 @@
 import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
+import encryptionService from "./encryptionService";
 import isHeic from "@utils/media/is_heic";
+import messagesService from "./messagesService";
 import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
@@ -12,7 +14,6 @@ import validateIsEmptyObject from "@validations/validateIsEmtpyObject";
 import validateLogin from "@validations/user/validateLogin";
 import validatePassword from "@validations/user/validatePassword";
 import validatePhone from "@validations/user/validatePhone";
-import encryptionService from "./encryptionService";
 
 class UsersService {
   async login(data) {
@@ -128,6 +129,7 @@ class UsersService {
             await api.pushSubscriptionDelete();
             await api.userLogout();
             await encryptionService.clearStoredAccount();
+            await messagesService.clearLocalMessages();
           })
         )
       )
@@ -135,6 +137,7 @@ class UsersService {
         console.error(err);
         await api.userLogout();
         await encryptionService.clearStoredAccount();
+        await messagesService.clearLocalMessages();
         throw new Error("User logout error");
       });
   }

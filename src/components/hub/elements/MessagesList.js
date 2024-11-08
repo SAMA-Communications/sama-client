@@ -3,6 +3,7 @@ import DownloadManager from "@adapters/downloadManager";
 import InfiniteScroll from "react-infinite-scroll-component";
 import InformativeMessage from "@components/hub/elements/InformativeMessage";
 import api from "@api/api";
+import indexedDB from "@store/indexedDB";
 import {
   addMessages,
   selectActiveConversationMessages,
@@ -56,74 +57,85 @@ export default function MessagesList({ scrollRef }) {
       return;
     }
 
-    api
-      .messageList({
-        cid: selectedCID,
-        limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
-        updated_at: { lt: messages[0].created_at },
-      })
-      .then((arr) => {
-        if (!arr.length) {
-          needToGetMoreMessage.current = false;
-          return;
+    const processMessages = (arr) => {
+      indexedDB.insertManyMessages(arr);
+
+      if (!arr.length) {
+        needToGetMoreMessage.current = false;
+        return;
+      }
+
+      const messagesIds = arr.map((el) => el._id).reverse();
+      needToGetMoreMessage.current = !(
+        messagesIds.length < +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD
+      );
+
+      updateParticipantsFromMessages(arr);
+      dispatch(addMessages(arr));
+      dispatch(
+        upsertChat({
+          _id: selectedCID,
+          messagesIds: [
+            ...new Set([...messagesIds, ...messages.map((el) => el._id)]),
+          ],
+          activated: true,
+        })
+      );
+      const mAttachments = {};
+      for (let i = 0; i < arr.length; i++) {
+        const attachments = arr[i].attachments;
+        if (!attachments) {
+          continue;
         }
-
-        const messagesIds = arr.map((el) => el._id).reverse();
-        needToGetMoreMessage.current = !(
-          messagesIds.length < +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD
-        );
-
-        updateParticipantsFromMessages(arr);
-        dispatch(addMessages(arr));
-        dispatch(
-          upsertChat({
-            _id: selectedCID,
-            messagesIds: [
-              ...new Set([...messagesIds, ...messages.map((el) => el._id)]),
-            ],
-            activated: true,
-          })
-        );
-        const mAttachments = {};
-        for (let i = 0; i < arr.length; i++) {
-          const attachments = arr[i].attachments;
-          if (!attachments) {
-            continue;
+        attachments.forEach((obj) => {
+          const mAttachmentsObject = mAttachments[obj.file_id];
+          if (!mAttachmentsObject) {
+            mAttachments[obj.file_id] = {
+              _id: arr[i]._id,
+              ...obj,
+            };
+            return;
           }
-          attachments.forEach((obj) => {
-            const mAttachmentsObject = mAttachments[obj.file_id];
-            if (!mAttachmentsObject) {
-              mAttachments[obj.file_id] = {
-                _id: arr[i]._id,
-                ...obj,
-              };
-              return;
-            }
 
-            const mids = mAttachmentsObject._id;
-            mAttachments[obj.file_id]._id = Array.isArray(mids)
-              ? [arr[i]._id, ...mids]
-              : [arr[i]._id, mids];
+          const mids = mAttachmentsObject._id;
+          mAttachments[obj.file_id]._id = Array.isArray(mids)
+            ? [arr[i]._id, ...mids]
+            : [arr[i]._id, mids];
+        });
+      }
+
+      if (Object.keys(mAttachments).length > 0) {
+        DownloadManager.getDownloadFileLinks(mAttachments).then((msgs) =>
+          dispatch(upsertMessages(msgs))
+        );
+      }
+
+      if (Object.keys(mAttachments).length > 0) {
+        DownloadManager.getDownloadFileLinks(mAttachments).then((msgs) => {
+          const messagesToUpdate = msgs.flatMap((msg) => {
+            const mids = Array.isArray(msg._id) ? msg._id : [msg._id];
+            return mids.map((mid) => ({ ...msg, _id: mid }));
           });
-        }
 
-        if (Object.keys(mAttachments).length > 0) {
-          DownloadManager.getDownloadFileLinks(mAttachments).then((msgs) =>
-            dispatch(upsertMessages(msgs))
-          );
-        }
+          dispatch(upsertMessages(messagesToUpdate));
+        });
+      }
+    };
 
-        if (Object.keys(mAttachments).length > 0) {
-          DownloadManager.getDownloadFileLinks(mAttachments).then((msgs) => {
-            const messagesToUpdate = msgs.flatMap((msg) => {
-              const mids = Array.isArray(msg._id) ? msg._id : [msg._id];
-              return mids.map((mid) => ({ ...msg, _id: mid }));
-            });
+    const params = {
+      cid: selectedCID,
+      limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
+      updated_at: { lt: messages[0].created_at },
+    };
 
-            dispatch(upsertMessages(messagesToUpdate));
-          });
-        }
-      });
+    indexedDB.getMessages(params).then((arr) => {
+      if (arr.length >= params.limit) return processMessages(arr);
+      api
+        .messageList(params)
+        .then((messagesFromApi) =>
+          processMessages([...arr, ...messagesFromApi])
+        );
+    });
   }, [selectedCID, messages, needToGetMoreMessage]);
 
   useLayoutEffect(() => {

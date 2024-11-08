@@ -1,5 +1,6 @@
 import OvalLoader from "@components/_helpers/OvalLoader";
 import encryptionService from "@services/encryptionService";
+import messagesService from "@services/messagesService";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import subscribeForNotifications from "@services/notifications";
@@ -23,6 +24,7 @@ export default function LoginLinks({ changePage, content }) {
     try {
       const userData = await usersService.login(content);
       await encryptionService.clearStoredAccount();
+      await messagesService.clearLocalMessages();
       await encryptionService.registerDevice(userData._id);
       navigateTo("/");
       subscribeForNotifications();

@@ -4,6 +4,7 @@ import InfoBox from "@components/info/elements/InfoBox";
 import addSuffix from "@utils/navigation/add_suffix";
 import encryptionService from "@services/encryptionService";
 import globalConstants from "@src/_helpers/constants";
+import messagesService from "@services/messagesService";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import usersService from "@services/usersService";
@@ -46,10 +47,12 @@ export default function UserProfile() {
     try {
       await usersService.logout();
       await encryptionService.clearStoredAccount();
+      await messagesService.clearLocalMessages();
       dispatch({ type: "RESET_STORE" });
       dispatch(updateNetworkState(true));
     } catch (err) {
       await encryptionService.clearStoredAccount();
+      await messagesService.clearLocalMessages();
       dispatch({ type: "RESET_STORE" });
       dispatch(updateNetworkState(true));
       dispatch(setUserIsLoggedIn(false));
