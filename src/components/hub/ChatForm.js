@@ -1,6 +1,6 @@
 import api from "@api/api";
 import encryptionService from "@services/encryptionService";
-import messagesService from "@services/messagesService";
+import garbageCleaningService from "@services/garbageCleaningService";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
@@ -58,7 +58,7 @@ export default function ChatForm() {
     dispatch(setClicked(false));
     dispatch(clearSelectedConversation());
     api.unsubscribeFromUserActivity({});
-    messagesService.clearPrevConvMessagesToLocalLimit(selectedCID);
+    garbageCleaningService.clearConversationMessages(selectedCID);
     removeAndNavigateLastSection(pathname + hash);
   };
 

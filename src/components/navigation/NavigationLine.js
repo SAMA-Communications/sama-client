@@ -9,7 +9,6 @@ import { getIsTabletView } from "@store/values/IsTabletView";
 import { setAllParams } from "@store/values/ContextMenu";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
-import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
@@ -34,11 +33,7 @@ export default function NavigationLine() {
   const sendLogout = async () => {
     try {
       await usersService.logout();
-      dispatch({ type: "RESET_STORE" });
-      dispatch(updateNetworkState(true));
     } catch (err) {
-      dispatch({ type: "RESET_STORE" });
-      dispatch(updateNetworkState(true));
       dispatch(setUserIsLoggedIn(false));
     }
   };

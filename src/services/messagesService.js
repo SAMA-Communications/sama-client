@@ -1,6 +1,7 @@
 import DownloadManager from "@adapters/downloadManager";
 import api from "@api/api";
 import encryptionService from "./encryptionService";
+import garbageCleaningService from "./garbageCleaningService";
 import indexedDB from "@store/indexedDB";
 import jwtDecode from "jwt-decode";
 import navigateTo from "@utils/navigation/navigate_to";
@@ -9,7 +10,6 @@ import { addUser } from "@store/values/Participants";
 import {
   addMessage,
   addMessages,
-  clearMessagesToLocalLimit,
   markMessagesAsRead,
   removeMessage,
   upsertMessage,
@@ -17,7 +17,6 @@ import {
 } from "@store/values/Messages";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import {
-  clearMessageIdsToLocalLimit,
   markConversationAsRead,
   removeChat,
   updateLastMessageField,
@@ -162,9 +161,41 @@ class MessagesService {
         (!previousValue || previousValue !== this.currentChatId)
       ) {
         this.syncData();
-        this.clearPrevConvMessagesToLocalLimit(previousValue);
+        garbageCleaningService.clearConversationMessages(previousValue);
       }
     });
+  }
+
+  async processAttachments(messages) {
+    const attachments = messages.reduce((acc, msg) => {
+      if (msg.attachments) {
+        msg.attachments.forEach((obj) => {
+          if (!acc[obj.file_id]) {
+            acc[obj.file_id] = { _id: msg._id, ...obj };
+          } else {
+            const existingId = acc[obj.file_id]._id;
+            acc[obj.file_id]._id = Array.isArray(existingId)
+              ? [msg._id, ...existingId]
+              : [msg._id, existingId];
+          }
+        });
+      }
+      return acc;
+    }, {});
+    return attachments;
+  }
+
+  async updateMessages(attachments) {
+    if (Object.keys(attachments).length > 0) {
+      const msgs = await DownloadManager.getDownloadFileLinks(attachments);
+      const messagesToUpdate = msgs.flatMap((msg) =>
+        (Array.isArray(msg._id) ? msg._id : [msg._id]).map((mid) => ({
+          ...msg,
+          _id: mid,
+        }))
+      );
+      store.dispatch(upsertMessages(messagesToUpdate));
+    }
   }
 
   async syncData() {
@@ -206,32 +237,9 @@ class MessagesService {
         upsertChat({ _id: this.currentChatId, messagesIds, activated: true })
       );
 
-      const mAttachments = messages.reduce((acc, msg) => {
-        if (msg.attachments) {
-          msg.attachments.forEach((obj) => {
-            if (!acc[obj.file_id]) {
-              acc[obj.file_id] = { _id: msg._id, ...obj };
-            } else {
-              const existingId = acc[obj.file_id]._id;
-              acc[obj.file_id]._id = Array.isArray(existingId)
-                ? [msg._id, ...existingId]
-                : [msg._id, existingId];
-            }
-          });
-        }
-        return acc;
-      }, {});
+      const mAttachments = this.processAttachments(messages);
+      await this.updateMessages(mAttachments);
 
-      if (Object.keys(mAttachments).length > 0) {
-        const msgs = await DownloadManager.getDownloadFileLinks(mAttachments);
-        const messagesToUpdate = msgs.flatMap((msg) =>
-          (Array.isArray(msg._id) ? msg._id : [msg._id]).map((mid) => ({
-            ...msg,
-            _id: mid,
-          }))
-        );
-        store.dispatch(upsertMessages(messagesToUpdate));
-      }
       const conv =
         store.getState().conversations?.entities?.[this.currentChatId];
 
@@ -257,7 +265,6 @@ class MessagesService {
       }
     } catch (error) {
       console.log(error);
-
       store.dispatch(removeChat(cid));
       store.dispatch(setSelectedConversation({}));
       navigateTo("/");
@@ -299,16 +306,6 @@ class MessagesService {
     message.encrypted_message_type = message_type;
 
     await this.sendMessage(message);
-  }
-
-  async clearLocalMessages() {
-    await indexedDB.removeAllMessages();
-  }
-
-  async clearPrevConvMessagesToLocalLimit(cid) {
-    if (!cid) return;
-    store.dispatch(clearMessageIdsToLocalLimit(cid));
-    store.dispatch(clearMessagesToLocalLimit(cid));
   }
 }
 

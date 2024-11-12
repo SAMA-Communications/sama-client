@@ -17,19 +17,21 @@ class IndexedDB {
   }
 
   async addMessage(message) {
-    const encryptedBody = encryptionService.encrypteDataForLocalStore(
-      message.body
-    );
-    this.db.messages.add({ ...message, body: encryptedBody });
+    const isMessageEncrypted = message.encrypted_message_type !== undefined;
+    const modifiedBody = isMessageEncrypted
+      ? await encryptionService.encrypteDataForLocalStore(message.body)
+      : message.body;
+    this.db.messages.add({ ...message, body: modifiedBody });
   }
 
   async insertManyMessages(messages) {
     const encryptedMessages = await Promise.all(
       messages.map(async (message) => {
-        const encryptedBody = await encryptionService.encrypteDataForLocalStore(
-          message.body
-        );
-        return { ...message, body: encryptedBody };
+        const isMessageEncrypted = message.encrypted_message_type !== undefined;
+        const modifiedBody = isMessageEncrypted
+          ? await encryptionService.encrypteDataForLocalStore(message.body)
+          : message.body;
+        return { ...message, body: modifiedBody };
       })
     );
     this.db.messages.bulkPut(encryptedMessages);
@@ -51,10 +53,11 @@ class IndexedDB {
 
     return await Promise.all(
       messages.map(async (message) => {
-        const encryptedBody = await encryptionService.decryptDataFromLocalStore(
-          message.body
-        );
-        return { ...message, body: encryptedBody };
+        const isMessageEncrypted = message.encrypted_message_type !== undefined;
+        const modifiedBody = isMessageEncrypted
+          ? await encryptionService.decryptDataFromLocalStore(message.body)
+          : message.body;
+        return { ...message, body: modifiedBody };
       })
     );
   }

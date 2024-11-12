@@ -1,8 +1,7 @@
 import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
-import encryptionService from "./encryptionService";
+import garbageCleaningService from "./garbageCleaningService";
 import isHeic from "@utils/media/is_heic";
-import messagesService from "./messagesService";
 import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
@@ -127,17 +126,13 @@ class UsersService {
         reg.pushManager.getSubscription().then((sub) =>
           sub.unsubscribe().then(async () => {
             await api.pushSubscriptionDelete();
-            await api.userLogout();
-            await encryptionService.clearStoredAccount();
-            await messagesService.clearLocalMessages();
+            await garbageCleaningService.handleLogout();
           })
         )
       )
       .catch(async (err) => {
         console.error(err);
-        await api.userLogout();
-        await encryptionService.clearStoredAccount();
-        await messagesService.clearLocalMessages();
+        await garbageCleaningService.handleLogout();
         throw new Error("User logout error");
       });
   }
