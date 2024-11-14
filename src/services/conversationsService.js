@@ -287,8 +287,12 @@ class ConversationsService {
     }
   }
 
-  async search(data) {
-    return await api.conversationSearch(data);
+  async search(params) {
+    return await api.conversationSearch(params);
+  }
+
+  async getParticipantsByIds(params) {
+    return await api.getUsersByIds(params);
   }
 }
 

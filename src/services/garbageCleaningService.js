@@ -10,51 +10,33 @@ import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 
 class GarbageCleaningService {
-  async #clearAccountData() {
-    await encryptionService.clearStoredAccount();
-  }
-
-  #clearAccountDataSync() {
-    encryptionService.clearStoredAccount();
-  }
-
-  #clearLocalMessageIds(cid) {
+  async clearConversationMessages(cid) {
+    if (!cid) return;
+    store.dispatch(clearMessagesToLocalLimit(cid));
     store.dispatch(clearMessageIdsToLocalLimit(cid));
   }
 
-  #clearLocalMessages(cid) {
-    store.dispatch(clearMessagesToLocalLimit(cid));
-  }
-
-  async clearConversationMessages(cid) {
-    if (!cid) return;
-    this.#clearLocalMessageIds(cid);
-    this.#clearLocalMessages(cid);
-  }
-
   async resetDataOnAuth() {
-    await this.#clearAccountData();
-    await this.clearAllLocalData();
+    await this.clearStorage();
     store.dispatch(setSelectedConversation({}));
     store.dispatch(setUserIsLoggedIn(true));
   }
 
   async handleLogout() {
     await api.userLogout();
-    await this.#clearAccountData();
-    await this.clearAllLocalData();
+    await this.clearStorage();
     store.dispatch({ type: "RESET_STORE" });
     store.dispatch(updateNetworkState(true));
   }
 
   handleLoginFailure() {
-    this.#clearAccountDataSync();
-    this.clearAllLocalData();
+    this.clearStorage();
     localStorage.removeItem("sessionId");
   }
 
-  async clearAllLocalData() {
+  async clearStorage() {
     await Promise.all([localforage.clear(), indexedDB.removeAllMessages()]);
+    await encryptionService.clearStoredAccount();
   }
 }
 

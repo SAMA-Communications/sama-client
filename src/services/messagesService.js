@@ -185,7 +185,7 @@ class MessagesService {
     return attachments;
   }
 
-  async updateMessages(attachments) {
+  async retrieveAttachmentsLinks(attachments) {
     if (Object.keys(attachments).length > 0) {
       const msgs = await DownloadManager.getDownloadFileLinks(attachments);
       const messagesToUpdate = msgs.flatMap((msg) =>
@@ -221,14 +221,7 @@ class MessagesService {
     try {
       if (allConversationMessages.length === params.limit) return;
 
-      const existLocalMessages = await indexedDB.getMessages(params);
-      let messages = [...existLocalMessages];
-
-      if (existLocalMessages.length < params.limit) {
-        const messagesFromApi = await api.messageList(params);
-        await indexedDB.insertManyMessages(messagesFromApi);
-        messages = [...messages, ...messagesFromApi];
-      }
+      let messages = await this.retrieveMessages(params);
 
       const messagesIds = messages.map((el) => el._id).reverse();
 
@@ -238,7 +231,7 @@ class MessagesService {
       );
 
       const mAttachments = this.processAttachments(messages);
-      await this.updateMessages(mAttachments);
+      await this.retrieveAttachmentsLinks(mAttachments);
 
       const conv =
         store.getState().conversations?.entities?.[this.currentChatId];
@@ -306,6 +299,16 @@ class MessagesService {
     message.encrypted_message_type = message_type;
 
     await this.sendMessage(message);
+  }
+
+  async retrieveMessages(params) {
+    const arr = await indexedDB.getMessages(params);
+
+    if (arr.length >= params.limit) return arr;
+    const messagesFromApi = await api.messageList(params);
+    await indexedDB.insertManyMessages(messagesFromApi);
+
+    return [...arr, ...messagesFromApi];
   }
 }
 

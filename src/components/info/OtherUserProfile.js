@@ -1,7 +1,6 @@
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import InfoBox from "@components/info/elements/InfoBox";
 import activityService from "@services/activityService";
-import api from "@api/api";
 import conversationService from "@services/conversationsService";
 import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
 import getUserFullName from "@utils/user/get_user_full_name";
@@ -41,7 +40,7 @@ export default function OtherUserProfile() {
     const uid = extractUserIdFromUrl(pathname + hash + search);
     let user = participants[uid];
     if (!user) {
-      api.getUsersByIds({ ids: [uid] }).then((users) => {
+      conversationService.getParticipantsByIds({ ids: [uid] }).then((users) => {
         user = users?.[0];
         if (user) {
           setUserObject(user);

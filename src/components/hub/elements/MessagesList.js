@@ -1,8 +1,7 @@
 import ChatMessage from "@components/hub/elements/ChatMessage";
 import InfiniteScroll from "react-infinite-scroll-component";
 import InformativeMessage from "@components/hub/elements/InformativeMessage";
-import api from "@api/api";
-import indexedDB from "@store/indexedDB";
+import conversationService from "@services/conversationsService";
 import messagesService from "@services/messagesService";
 import {
   addMessages,
@@ -42,8 +41,8 @@ export default function MessagesList({ scrollRef }) {
     });
 
     if (usersToUpdate.size) {
-      api
-        .getUsersByIds({ ids: [...usersToUpdate] })
+      conversationService
+        .getParticipantsByIds({ ids: [...usersToUpdate] })
         .then((users) => dispatch(addUsers(users)));
     }
   };
@@ -57,8 +56,6 @@ export default function MessagesList({ scrollRef }) {
     }
 
     const processMessages = (arr) => {
-      indexedDB.insertManyMessages(arr);
-
       if (!arr.length) {
         needToGetMoreMessage.current = false;
         return;
@@ -82,7 +79,7 @@ export default function MessagesList({ scrollRef }) {
       );
 
       const mAttachments = messagesService.processAttachments(arr);
-      messagesService.updateMessages(mAttachments);
+      messagesService.retrieveAttachmentsLinks(mAttachments);
     };
 
     const params = {
@@ -91,14 +88,9 @@ export default function MessagesList({ scrollRef }) {
       updated_at: { lt: messages[0].created_at },
     };
 
-    indexedDB.getMessages(params).then((arr) => {
-      if (arr.length >= params.limit) return processMessages(arr);
-      api
-        .messageList(params)
-        .then((messagesFromApi) =>
-          processMessages([...arr, ...messagesFromApi])
-        );
-    });
+    messagesService
+      .retrieveMessages(params)
+      .then((messages) => processMessages(messages));
   }, [selectedCID, messages, needToGetMoreMessage]);
 
   useLayoutEffect(() => {

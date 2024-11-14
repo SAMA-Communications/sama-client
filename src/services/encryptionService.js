@@ -1,6 +1,5 @@
 import CryptoJS from "crypto-js";
 import api from "@api/api";
-import garbageCleaningService from "./garbageCleaningService";
 import initVodozemac, { Account, OlmMessage } from "vodozemac-javascript";
 import localforage from "localforage";
 import store from "@store/store";
@@ -39,7 +38,7 @@ class EncryptionService {
   async clearStoredAccount() {
     this.#account = null;
     this.#encryptionSessions = {};
-    await garbageCleaningService.clearAllLocalData();
+    await localforage.clear();
   }
 
   encryptMessage(text, userId) {
