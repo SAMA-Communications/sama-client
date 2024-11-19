@@ -84,7 +84,11 @@ export const conversations = createSlice({
 
       const { messagesIds, unread_messages_count } =
         state.entities[conversation._id] || {};
-      // messagesIds && delete conversation.messagesIds;
+      if (messagesIds) {
+        conversation.messagesIds = [
+          ...new Set([...(conversation.messagesIds ?? []), ...messagesIds]),
+        ];
+      }
       unread_messages_count && delete conversation.unread_messages_count;
 
       conversationsAdapter.upsertOne(state, conversation);
@@ -174,6 +178,12 @@ export const conversations = createSlice({
           last_message: { ...lastMessageField, status: "read" },
         });
     },
+    clearMessageIdsToLocalLimit: (state, { payload }) => {
+      conversationsAdapter.upsertOne(state, {
+        _id: payload,
+        messagesIds: state.entities[payload].messagesIds.slice(-30),
+      });
+    },
   },
 });
 
@@ -189,6 +199,7 @@ export const {
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
+  clearMessageIdsToLocalLimit,
 } = conversations.actions;
 
 export default conversations.reducer;

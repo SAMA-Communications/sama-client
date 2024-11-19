@@ -1,5 +1,6 @@
 import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
+import garbageCleaningService from "./garbageCleaningService";
 import isHeic from "@utils/media/is_heic";
 import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
@@ -12,7 +13,6 @@ import validateIsEmptyObject from "@validations/validateIsEmtpyObject";
 import validateLogin from "@validations/user/validateLogin";
 import validatePassword from "@validations/user/validatePassword";
 import validatePhone from "@validations/user/validatePhone";
-import encryptionService from "./encryptionService";
 
 class UsersService {
   async login(data) {
@@ -126,15 +126,13 @@ class UsersService {
         reg.pushManager.getSubscription().then((sub) =>
           sub.unsubscribe().then(async () => {
             await api.pushSubscriptionDelete();
-            await api.userLogout();
-            await encryptionService.clearStoredAccount();
+            await garbageCleaningService.handleLogout();
           })
         )
       )
       .catch(async (err) => {
         console.error(err);
-        await api.userLogout();
-        await encryptionService.clearStoredAccount();
+        await garbageCleaningService.handleLogout();
         throw new Error("User logout error");
       });
   }

@@ -1,11 +1,15 @@
+import CryptoJS from "crypto-js";
 import api from "@api/api";
-import initVodozemac, { Account, OlmMessage } from "vodozemac-javascript";
+import initVodozemac, {
+  Account,
+  OlmMessage,
+  Session,
+} from "vodozemac-javascript";
 import localforage from "localforage";
 import store from "@store/store";
-import { Session } from "vodozemac-javascript";
 import { decodeBase64, encodeUnpaddedBase64 } from "@utils/base64/base64";
+import { upsertMessage } from "@store/values/Messages";
 import { upsertUser } from "@store/values/Participants";
-import { upsertMessage } from "@src/store/values/Messages";
 
 class EncryptionService {
   #encryptionSessions = {};
@@ -355,6 +359,34 @@ class EncryptionService {
       console.log(error);
       throw new Error("[encryption] Failed to create encryption session");
     }
+  }
+
+  async encrypteDataForLocalStore(data) {
+    const secretKey = await this.#getPickleKey(
+      "pickleKey",
+      api.curerntUserId,
+      api.currentDeviceId
+    );
+
+    const ciphertext = CryptoJS.AES.encrypt(
+      JSON.stringify(data),
+      secretKey
+    ).toString();
+
+    return ciphertext;
+  }
+
+  async decryptDataFromLocalStore(ciphertext) {
+    const secretKey = await this.#getPickleKey(
+      "pickleKey",
+      api.curerntUserId,
+      api.currentDeviceId
+    );
+
+    const bytes = CryptoJS.AES.decrypt(ciphertext, secretKey);
+    const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
+    return decryptedData;
   }
 }
 

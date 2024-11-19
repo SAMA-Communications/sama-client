@@ -1,13 +1,12 @@
 import OvalLoader from "@components/_helpers/OvalLoader";
 import encryptionService from "@services/encryptionService";
+import garbageCleaningService from "@services/garbageCleaningService";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import subscribeForNotifications from "@services/notifications";
 import usersService from "@services/usersService";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { setCurrentUserId } from "@store/values/CurrentUserId";
-import { setSelectedConversation } from "@store/values/SelectedConversation";
-import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { upsertUser } from "@store/values/Participants";
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -22,12 +21,10 @@ export default function LoginLinks({ changePage, content }) {
     setIsLoader(true);
     try {
       const userData = await usersService.login(content);
-      await encryptionService.clearStoredAccount();
       await encryptionService.registerDevice(userData._id);
       navigateTo("/");
       subscribeForNotifications();
-      dispatch(setSelectedConversation({}));
-      dispatch(setUserIsLoggedIn(true));
+      await garbageCleaningService.resetDataOnAuth();
       dispatch(setCurrentUserId(userData._id));
       dispatch(upsertUser(userData));
     } catch (err) {

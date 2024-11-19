@@ -2,7 +2,6 @@ import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import DynamicAvatar from "@components/info/elements//DynamicAvatar";
 import InfoBox from "@components/info/elements/InfoBox";
 import addSuffix from "@utils/navigation/add_suffix";
-import encryptionService from "@services/encryptionService";
 import globalConstants from "@src/_helpers/constants";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
@@ -11,7 +10,6 @@ import { KEY_CODES } from "@helpers/keyCodes";
 import { getCurrentUserFromParticipants } from "@store/values/Participants";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
-import { updateNetworkState } from "@store/values/NetworkState";
 import { useDispatch, useSelector } from "react-redux";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
@@ -45,13 +43,7 @@ export default function UserProfile() {
   const sendLogout = async () => {
     try {
       await usersService.logout();
-      await encryptionService.clearStoredAccount();
-      dispatch({ type: "RESET_STORE" });
-      dispatch(updateNetworkState(true));
     } catch (err) {
-      await encryptionService.clearStoredAccount();
-      dispatch({ type: "RESET_STORE" });
-      dispatch(updateNetworkState(true));
       dispatch(setUserIsLoggedIn(false));
     }
   };

@@ -34,6 +34,14 @@ export const messages = createSlice({
         });
       messagesAdapter.upsertMany(state, mids);
     },
+    clearMessagesToLocalLimit: (state, { payload }) => {
+      const messageIds = Object.values(state.entities)
+        .filter((message) => message.cid === payload)
+        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+        .slice(0, 30)
+        .map((message) => message._id);
+      messagesAdapter.removeMany(state, messageIds);
+    },
     removeMessage: messagesAdapter.removeOne,
   },
 });
@@ -59,6 +67,7 @@ export const {
   upsertMessages,
   markMessagesAsRead,
   removeMessage,
+  clearMessagesToLocalLimit,
 } = messages.actions;
 
 export default messages.reducer;
