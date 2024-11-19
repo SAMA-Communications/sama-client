@@ -67,19 +67,6 @@ export default function MessagesList({ scrollRef }) {
       );
 
       updateParticipantsFromMessages(arr);
-      dispatch(addMessages(arr));
-      dispatch(
-        upsertChat({
-          _id: selectedCID,
-          messagesIds: [
-            ...new Set([...messagesIds, ...messages.map((el) => el._id)]),
-          ],
-          activated: true,
-        })
-      );
-
-      const mAttachments = messagesService.processAttachments(arr);
-      messagesService.retrieveAttachmentsLinks(mAttachments);
     };
 
     const params = {

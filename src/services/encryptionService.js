@@ -1,9 +1,12 @@
 import CryptoJS from "crypto-js";
 import api from "@api/api";
-import initVodozemac, { Account, OlmMessage } from "vodozemac-javascript";
+import initVodozemac, {
+  Account,
+  OlmMessage,
+  Session,
+} from "vodozemac-javascript";
 import localforage from "localforage";
 import store from "@store/store";
-import { Session } from "vodozemac-javascript";
 import { decodeBase64, encodeUnpaddedBase64 } from "@utils/base64/base64";
 import { upsertMessage } from "@store/values/Messages";
 import { upsertUser } from "@store/values/Participants";

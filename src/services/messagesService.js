@@ -12,6 +12,7 @@ import {
   addMessages,
   markMessagesAsRead,
   removeMessage,
+  selectActiveConversationMessages,
   upsertMessage,
   upsertMessages,
 } from "@store/values/Messages";
@@ -166,7 +167,7 @@ class MessagesService {
     });
   }
 
-  async processAttachments(messages) {
+  processAttachments(messages) {
     const attachments = messages.reduce((acc, msg) => {
       if (msg.attachments) {
         msg.attachments.forEach((obj) => {
@@ -198,6 +199,44 @@ class MessagesService {
     }
   }
 
+  handleRetrievedMessages(messages) {
+    const messagesIds = messages.map((el) => el._id).reverse();
+    const messagesRedux =
+      selectActiveConversationMessages(store.getState()) || [];
+
+    const uniqueMessageIds = [
+      ...new Set([...messagesIds, ...messagesRedux.map((el) => el._id)]),
+    ];
+
+    store.dispatch(addMessages(messages));
+    store.dispatch(
+      upsertChat({
+        _id: this.currentChatId,
+        messagesIds: uniqueMessageIds,
+        activated: true,
+      })
+    );
+
+    const mAttachments = this.processAttachments(messages);
+    this.retrieveAttachmentsLinks(mAttachments);
+
+    return messages;
+  }
+
+  async retrieveMessages(params) {
+    const messagesDB = await indexedDB.getMessages(params);
+
+    if (messagesDB.length >= params.limit) {
+      return this.handleRetrievedMessages(messagesDB);
+    }
+
+    const messagesAPI = await api.messageList(params);
+    await indexedDB.insertManyMessages(messagesAPI);
+
+    const jointMessages = [...messagesDB, ...messagesAPI];
+    return this.handleRetrievedMessages(jointMessages);
+  }
+
   async syncData() {
     const cid = this.currentChatId;
     const params = {
@@ -222,16 +261,6 @@ class MessagesService {
       if (allConversationMessages.length === params.limit) return;
 
       let messages = await this.retrieveMessages(params);
-
-      const messagesIds = messages.map((el) => el._id).reverse();
-
-      store.dispatch(addMessages(messages));
-      store.dispatch(
-        upsertChat({ _id: this.currentChatId, messagesIds, activated: true })
-      );
-
-      const mAttachments = this.processAttachments(messages);
-      await this.retrieveAttachmentsLinks(mAttachments);
 
       const conv =
         store.getState().conversations?.entities?.[this.currentChatId];
@@ -299,16 +328,6 @@ class MessagesService {
     message.encrypted_message_type = message_type;
 
     await this.sendMessage(message);
-  }
-
-  async retrieveMessages(params) {
-    const arr = await indexedDB.getMessages(params);
-
-    if (arr.length >= params.limit) return arr;
-    const messagesFromApi = await api.messageList(params);
-    await indexedDB.insertManyMessages(messagesFromApi);
-
-    return [...arr, ...messagesFromApi];
   }
 }
 
