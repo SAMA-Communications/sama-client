@@ -244,6 +244,15 @@ class MessagesService {
       return this.handleRetrievedMessages(messagesDB);
     }
 
+    const lastExistMessage = messagesDB[0];
+    if (lastExistMessage) {
+      params.updated_at = {
+        gt:
+          lastExistMessage.created_at ||
+          new Date(lastExistMessage.t * 1000).toISOString(),
+      };
+    }
+
     const messagesAPI = await api.messageList(params);
     console.log("messagesAPI", messagesAPI);
     await indexedDB.insertManyMessages(messagesAPI);
