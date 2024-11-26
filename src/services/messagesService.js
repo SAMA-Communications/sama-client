@@ -236,13 +236,16 @@ class MessagesService {
   }
 
   async retrieveMessages(params) {
+    console.log("params", params);
     const messagesDB = await indexedDB.getMessages(params);
+    console.log("messagesDB", messagesDB);
 
     if (messagesDB.length >= params.limit) {
       return this.handleRetrievedMessages(messagesDB);
     }
 
     const messagesAPI = await api.messageList(params);
+    console.log("messagesAPI", messagesAPI);
     await indexedDB.insertManyMessages(messagesAPI);
 
     const jointMessages = [...messagesDB, ...messagesAPI];
