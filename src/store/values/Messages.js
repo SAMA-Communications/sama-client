@@ -27,19 +27,23 @@ export const messages = createSlice({
     upsertMessage: messagesAdapter.upsertOne,
     upsertMessages: messagesAdapter.upsertMany,
     markMessagesAsRead: (state, action) => {
-      const mids = action.payload
+      const upsertParams = action.payload
         .filter((id) => !!state.entities[id])
-        .map((id) => {
-          return { _id: id, status: "read" };
-        });
-      messagesAdapter.upsertMany(state, mids);
+        .map((id) => ({ _id: id, status: "read" }));
+      messagesAdapter.upsertMany(state, upsertParams);
+    },
+    markDecryptionFailedMessages: (state, action) => {
+      const upsertParams = action.payload
+        .filter((id) => !!state.entities[id])
+        .map((id) => ({ _id: id, status: "decryption_failed" }));
+      messagesAdapter.upsertMany(state, upsertParams);
     },
     clearMessagesToLocalLimit: (state, { payload }) => {
       const messageIds = Object.values(state.entities)
         .filter((message) => message.cid === payload)
-        .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
-        .slice(0, 30)
+        .splice(30)
         .map((message) => message._id);
+
       messagesAdapter.removeMany(state, messageIds);
     },
     removeMessage: messagesAdapter.removeOne,
@@ -65,7 +69,9 @@ export const {
   addMessages,
   upsertMessage,
   upsertMessages,
+  upsertMessageStatuses,
   markMessagesAsRead,
+  markDecryptionFailedMessages,
   removeMessage,
   clearMessagesToLocalLimit,
 } = messages.actions;

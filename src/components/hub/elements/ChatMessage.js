@@ -2,6 +2,7 @@ import MessageAttachments from "@components/message/elements/MessageAttachments"
 import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
 import addSuffix from "@utils/navigation/add_suffix";
+import encryptionService from "@services/encryptionService";
 import getUserFullName from "@utils/user/get_user_full_name";
 import { urlify } from "@utils/text/urlify";
 import { useLocation } from "react-router-dom";
@@ -11,6 +12,7 @@ import "@styles/hub/elements/ChatMessage.css";
 
 import { ReactComponent as CornerLight } from "@icons/_helpers/CornerLight.svg";
 import { ReactComponent as CornerAccent } from "@icons/_helpers/CornerAccent.svg";
+import { ReactComponent as CornerDanger } from "@icons/_helpers/CornerDanger.svg";
 
 export default function ChatMessage({
   sender,
@@ -23,6 +25,7 @@ export default function ChatMessage({
 
   const { body, from, attachments, status, t } = message;
   const isCurrentUser = from === currentUserId;
+  const isError = status === "decryption_failed";
 
   const timeSend = useMemo(() => {
     const time = new Date(t * 1000);
@@ -36,9 +39,14 @@ export default function ChatMessage({
 
   return (
     <div
-      className={`message__container${isCurrentUser ? "--my" : ""} ${
-        prev ? "" : "mt-8"
-      }`}
+      className={`message__container${isCurrentUser ? "--my" : ""}${
+        isError ? " danger" : ""
+      }${prev ? "" : " mt-8"}`}
+      onClick={
+        isError
+          ? () => encryptionService.createNewSessionAndSendMessage(message)
+          : undefined
+      }
     >
       <div className={`message-photo${sender ? "--hover" : ""}`}>
         {next ? null : (
@@ -50,12 +58,17 @@ export default function ChatMessage({
           </div>
         )}
       </div>
-      <div className={`message-content__container ${next ? "" : "br-bl-0"}`}>
-        {next ? null : isCurrentUser ? (
-          <CornerAccent className="message-content--corner" />
-        ) : (
-          <CornerLight className="message-content--corner" />
-        )}
+      <div className={`message-content__container${next ? "" : " br-bl-0"}`}>
+        {!next &&
+          (isCurrentUser ? (
+            isError ? (
+              <CornerDanger className="message-content--corner" />
+            ) : (
+              <CornerAccent className="message-content--corner" />
+            )
+          ) : (
+            <CornerLight className="message-content--corner" />
+          ))}
         {prev ? null : (
           <div
             className={`content__uname${sender ? "--hover" : ""}`}

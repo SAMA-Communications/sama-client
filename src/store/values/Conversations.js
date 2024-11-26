@@ -181,7 +181,15 @@ export const conversations = createSlice({
     clearMessageIdsToLocalLimit: (state, { payload }) => {
       conversationsAdapter.upsertOne(state, {
         _id: payload,
-        messagesIds: state.entities[payload].messagesIds.slice(-30),
+        messagesIds: state.entities[payload].messagesIds?.slice(-30),
+      });
+    },
+    removeMessageFromConversation: (state, { payload }) => {
+      conversationsAdapter.upsertOne(state, {
+        _id: payload.cid,
+        messagesIds: state.entities[payload.cid].messagesIds.filter(
+          (mid) => mid !== payload.mid
+        ),
       });
     },
   },
@@ -200,6 +208,7 @@ export const {
   upsertChat,
   upsertParticipants,
   clearMessageIdsToLocalLimit,
+  removeMessageFromConversation,
 } = conversations.actions;
 
 export default conversations.reducer;

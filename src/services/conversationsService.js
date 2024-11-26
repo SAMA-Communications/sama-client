@@ -1,6 +1,7 @@
 import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
 import eventEmitter from "@event/eventEmitter";
+import isEqualsNativeIds from "@utils/user/isEqualsNativeIds";
 import isHeic from "@utils/media/is_heic";
 import navigateTo from "@utils/navigation/navigate_to";
 import processFile from "@utils/media/process_file";
@@ -293,6 +294,14 @@ class ConversationsService {
 
   async getParticipantsByIds(params) {
     return await api.getUsersByIds(params);
+  }
+
+  findOpponentIdForPrivateConversationByCid(cid, currentUserId) {
+    const conversation = store.getState().conversations.entities[cid];
+
+    return isEqualsNativeIds(conversation.owner_id, currentUserId)
+      ? conversation.opponent_id
+      : conversation.owner_id;
   }
 }
 

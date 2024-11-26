@@ -10,6 +10,7 @@ import { addUser } from "@store/values/Participants";
 import {
   addMessage,
   addMessages,
+  markDecryptionFailedMessages,
   markMessagesAsRead,
   removeMessage,
   selectActiveConversationMessages,
@@ -20,6 +21,7 @@ import { setSelectedConversation } from "@store/values/SelectedConversation";
 import {
   markConversationAsRead,
   removeChat,
+  removeMessageFromConversation,
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
@@ -38,6 +40,7 @@ class MessagesService {
         message,
         message.from
       );
+      indexedDB.upsertEncryptionMessage(message._id, decryptedMessage);
       store.dispatch(
         upsertMessage({
           _id: message._id,
@@ -57,6 +60,11 @@ class MessagesService {
           mid: Array.isArray(message.ids) ? message.ids[0] : message.ids,
         })
       );
+    };
+
+    api.onMessageDecryptionFailedListener = (message) => {
+      indexedDB.markDecryptionFailedMessages(message.ids);
+      store.dispatch(markDecryptionFailedMessages(message.ids));
     };
 
     api.onMessageListener = async (message) => {
@@ -201,11 +209,15 @@ class MessagesService {
 
   handleRetrievedMessages(messages) {
     const messagesIds = messages.map((el) => el._id).reverse();
-    const messagesRedux =
-      selectActiveConversationMessages(store.getState()) || [];
+    const messagesReduxIds = (
+      selectActiveConversationMessages(store.getState()) || []
+    ).map((el) => el._id);
 
     const uniqueMessageIds = [
-      ...new Set([...messagesIds, ...messagesRedux.map((el) => el._id)]),
+      ...new Set([
+        ...messagesIds.filter((el) => !messagesReduxIds.includes(el)),
+        ...messagesReduxIds,
+      ]),
     ];
 
     store.dispatch(addMessages(messages));
@@ -245,7 +257,7 @@ class MessagesService {
     };
 
     const allConversationMessages = Object.values(
-      store.getState().messages.entities
+      selectActiveConversationMessages(store.getState()) || {}
     );
     const lastMessage = allConversationMessages.splice(-1)[0];
 
@@ -258,9 +270,9 @@ class MessagesService {
     }
 
     try {
-      if (allConversationMessages.length === params.limit) return;
+      if (allConversationMessages.length >= params.limit) return;
 
-      let messages = await this.retrieveMessages(params);
+      await this.retrieveMessages(params);
 
       const conv =
         store.getState().conversations?.entities?.[this.currentChatId];
@@ -275,15 +287,6 @@ class MessagesService {
             participants: participants.map((p) => p._id),
           })
         );
-      }
-
-      if (conv.is_encrypted) {
-        setTimeout(() => {
-          //replace in the future, should be called after the session is created
-          messages.forEach(
-            async (message) => await this.#tryToCreateESession(message)
-          );
-        }, 500);
       }
     } catch (error) {
       console.log(error);
@@ -328,6 +331,12 @@ class MessagesService {
     message.encrypted_message_type = message_type;
 
     await this.sendMessage(message);
+  }
+
+  async removeMessageFromLocalStore(mid, cid) {
+    store.dispatch(removeMessageFromConversation({ mid, cid }));
+    store.dispatch(removeMessage(mid));
+    await indexedDB.removeMessage(mid);
   }
 }
 

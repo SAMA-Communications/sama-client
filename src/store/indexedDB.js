@@ -16,6 +16,12 @@ class IndexedDB {
     );
   }
 
+  markDecryptionFailedMessages(mids) {
+    this.db.messages.bulkUpdate(
+      mids.map((id) => ({ key: id, changes: { status: "decryption_failed" } }))
+    );
+  }
+
   async addMessage(message) {
     const isMessageEncrypted = message.encrypted_message_type !== undefined;
     const modifiedBody = isMessageEncrypted
@@ -62,8 +68,18 @@ class IndexedDB {
     );
   }
 
+  async upsertEncryptionMessage(mid, body) {
+    await this.db.messages.update(mid, {
+      body: await encryptionService.encrypteDataForLocalStore(body),
+    });
+  }
+
   async removeAllMessages() {
     await this.db.messages.clear();
+  }
+
+  async removeMessage(mid) {
+    await this.db.messages.delete(mid);
   }
 }
 

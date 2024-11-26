@@ -1,5 +1,6 @@
 import CryptoJS from "crypto-js";
 import api from "@api/api";
+import indexedDB from "@store/indexedDB";
 import initVodozemac, {
   Account,
   OlmMessage,
@@ -10,11 +11,14 @@ import store from "@store/store";
 import { decodeBase64, encodeUnpaddedBase64 } from "@utils/base64/base64";
 import { upsertMessage } from "@store/values/Messages";
 import { upsertUser } from "@store/values/Participants";
+import conversationService from "./conversationsService";
+import messagesService from "./messagesService";
 
 class EncryptionService {
   #encryptionSessions = {};
   #account = null;
   #vodozemacInitialized = false;
+  visibleBody = "Can`t decrypt this message, not for this device";
 
   constructor() {
     this.#initializeVodozemac();
@@ -30,6 +34,10 @@ class EncryptionService {
     }
   }
 
+  markDecrypionFailedMessages(cid, mids) {
+    api.markDecrypionFailedMessages({ cid, mids });
+  }
+
   hasAccount() {
     return !!this.#account;
   }
@@ -42,6 +50,11 @@ class EncryptionService {
     this.#account = null;
     this.#encryptionSessions = {};
     await localforage.clear();
+  }
+
+  async clearStoredSessionWithUser(userId) {
+    delete this.#encryptionSessions[userId];
+    await localforage.removeItem(`encryptedSession${userId}`);
   }
 
   encryptMessage(text, userId) {
@@ -61,14 +74,18 @@ class EncryptionService {
       console.log(
         "[encryption] Encrypted session with the opponent is missing"
       );
-      return "Can`t decrypt this message, not for this device";
+      return this.visibleBody;
     }
 
     try {
       return session.decrypt(olmMessage);
     } catch (error) {
       console.log("[encryption] Failed to decrypt an encrypted message", error);
-      return "Can`t decrypt this message, not for this device";
+      this.markDecrypionFailedMessages(olmMessageParams.cid, [
+        olmMessageParams._id,
+      ]);
+
+      return this.visibleBody;
     }
   }
 
@@ -274,6 +291,7 @@ class EncryptionService {
         console.log("Encrypted session from local store:", session);
         const decryptMessage = this.decryptMessage(olmMessageParams, userId);
 
+        indexedDB.upsertEncryptionMessage(olmMessageParams._id, decryptMessage);
         store.dispatch(
           upsertMessage({ _id: olmMessageParams._id, body: decryptMessage })
         );
@@ -319,20 +337,26 @@ class EncryptionService {
       if (olmMessage) {
         console.log("Create session with olmMessage: ", olmMessage);
 
+        let decryptMessage = this.visibleBody;
         try {
           const inboundSession = this.#account.create_inbound_session(
             userKeys.identity_key,
             olmMessage
           );
-          const decryptMessage = `${inboundSession.plaintext}`;
+          decryptMessage = `${inboundSession.plaintext}`;
           session = inboundSession.session;
 
           store.dispatch(
             upsertMessage({ _id: olmMessageParams._id, body: decryptMessage })
           );
         } catch (error) {
+          this.markDecrypionFailedMessages(olmMessageParams.cid, [
+            olmMessageParams._id,
+          ]);
+
           console.error("Failed to create inbound session:", error);
         }
+        indexedDB.upsertEncryptionMessage(olmMessageParams._id, decryptMessage);
 
         //check if the top block worked successfully -> mb need to clear the session param
         if (session) {
@@ -359,6 +383,21 @@ class EncryptionService {
       console.log(error);
       throw new Error("[encryption] Failed to create encryption session");
     }
+  }
+
+  async createNewSessionAndSendMessage(message) {
+    console.log("[encryption] Recreate a new encrypted session");
+    const messageParams = Object.assign({}, message);
+    const { _id: mid, cid, from } = messageParams;
+    const opponentId =
+      conversationService.findOpponentIdForPrivateConversationByCid(cid, from);
+
+    await this.clearStoredSessionWithUser(opponentId);
+    await this.createEncryptionSession(opponentId);
+
+    await messagesService.removeMessageFromLocalStore(mid, cid);
+
+    await messagesService.sendEncryptedMessage(messageParams, opponentId);
   }
 
   async encrypteDataForLocalStore(data) {
