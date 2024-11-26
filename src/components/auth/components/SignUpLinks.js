@@ -25,9 +25,9 @@ export default function SignUpLinks({ changePage, content }) {
 
       if (isLogin) {
         const userData = await usersService.login(content);
+        await garbageCleaningService.resetDataOnAuth();
         await encryptionService.registerDevice(userData._id);
         subscribeForNotifications();
-        await garbageCleaningService.resetDataOnAuth();
         dispatch(upsertUser(userData));
         dispatch(setCurrentUserId(userData._id));
       }
