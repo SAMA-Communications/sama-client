@@ -1,6 +1,8 @@
 import CryptoJS from "crypto-js";
 import api from "@api/api";
+import getOpponentId from "@utils/user/get_opponent_id";
 import indexedDB from "@store/indexedDB";
+import messagesService from "./messagesService";
 import initVodozemac, {
   Account,
   OlmMessage,
@@ -11,8 +13,6 @@ import store from "@store/store";
 import { decodeBase64, encodeUnpaddedBase64 } from "@utils/base64/base64";
 import { upsertMessage } from "@store/values/Messages";
 import { upsertUser } from "@store/values/Participants";
-import conversationService from "./conversationsService";
-import messagesService from "./messagesService";
 
 class EncryptionService {
   #encryptionSessions = {};
@@ -389,8 +389,9 @@ class EncryptionService {
     console.log("[encryption] Recreate a new encrypted session");
     const messageParams = Object.assign({}, message);
     const { _id: mid, cid, from } = messageParams;
-    const opponentId =
-      conversationService.findOpponentIdForPrivateConversationByCid(cid, from);
+
+    const conversation = store.getState().conversations.entities[cid];
+    const opponentId = getOpponentId(conversation, from);
 
     await this.clearStoredSessionWithUser(opponentId);
     await this.createEncryptionSession(opponentId);

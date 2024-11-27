@@ -26,16 +26,10 @@ export const messages = createSlice({
     addMessages: messagesAdapter.addMany,
     upsertMessage: messagesAdapter.upsertOne,
     upsertMessages: messagesAdapter.upsertMany,
-    markMessagesAsRead: (state, action) => {
-      const upsertParams = action.payload
+    updateMessagesStatus: (state, { payload: { mids, status } }) => {
+      const upsertParams = mids
         .filter((id) => !!state.entities[id])
-        .map((id) => ({ _id: id, status: "read" }));
-      messagesAdapter.upsertMany(state, upsertParams);
-    },
-    markDecryptionFailedMessages: (state, action) => {
-      const upsertParams = action.payload
-        .filter((id) => !!state.entities[id])
-        .map((id) => ({ _id: id, status: "decryption_failed" }));
+        .map((id) => ({ _id: id, status }));
       messagesAdapter.upsertMany(state, upsertParams);
     },
     clearMessagesToLocalLimit: (state, { payload }) => {
@@ -69,7 +63,7 @@ export const {
   addMessages,
   upsertMessage,
   upsertMessages,
-  upsertMessageStatuses,
+  updateMessagesStatus,
   markMessagesAsRead,
   markDecryptionFailedMessages,
   removeMessage,

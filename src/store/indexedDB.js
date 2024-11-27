@@ -10,15 +10,9 @@ class IndexedDB {
     this.db = db;
   }
 
-  markMessagesAsRead(mids) {
+  updateMessagesStatus(mids, status) {
     this.db.messages.bulkUpdate(
-      mids.map((id) => ({ key: id, changes: { status: "read" } }))
-    );
-  }
-
-  markDecryptionFailedMessages(mids) {
-    this.db.messages.bulkUpdate(
-      mids.map((id) => ({ key: id, changes: { status: "decryption_failed" } }))
+      mids.map((id) => ({ key: id, changes: { status } }))
     );
   }
 

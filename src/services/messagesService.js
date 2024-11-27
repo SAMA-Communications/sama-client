@@ -10,10 +10,9 @@ import { addUser } from "@store/values/Participants";
 import {
   addMessage,
   addMessages,
-  markDecryptionFailedMessages,
-  markMessagesAsRead,
   removeMessage,
   selectActiveConversationMessages,
+  updateMessagesStatus,
   upsertMessage,
   upsertMessages,
 } from "@store/values/Messages";
@@ -52,8 +51,10 @@ class MessagesService {
 
   constructor() {
     api.onMessageStatusListener = (message) => {
-      indexedDB.markMessagesAsRead(message.ids);
-      store.dispatch(markMessagesAsRead(message.ids));
+      indexedDB.updateMessagesStatus(message.ids, "read");
+      store.dispatch(
+        updateMessagesStatus({ mids: message.ids, status: "read" })
+      );
       store.dispatch(
         markConversationAsRead({
           cid: message.cid,
@@ -63,8 +64,10 @@ class MessagesService {
     };
 
     api.onMessageDecryptionFailedListener = (message) => {
-      indexedDB.markDecryptionFailedMessages(message.ids);
-      store.dispatch(markDecryptionFailedMessages(message.ids));
+      indexedDB.updateMessagesStatus(message.ids, "decryption_failed");
+      store.dispatch(
+        updateMessagesStatus({ mids: message.ids, status: "decryption_failed" })
+      );
     };
 
     api.onMessageListener = async (message) => {

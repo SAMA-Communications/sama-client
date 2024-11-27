@@ -295,14 +295,6 @@ class ConversationsService {
   async getParticipantsByIds(params) {
     return await api.getUsersByIds(params);
   }
-
-  findOpponentIdForPrivateConversationByCid(cid, currentUserId) {
-    const conversation = store.getState().conversations.entities[cid];
-
-    return isEqualsNativeIds(conversation.owner_id, currentUserId)
-      ? conversation.opponent_id
-      : conversation.owner_id;
-  }
 }
 
 const conversationService = new ConversationsService();
