@@ -156,6 +156,12 @@
   background-color: var(--color-accent-dark);
 }
 
+.message__container--my.danger .message-content__container {
+  background-color: var(--color-red-light);
+
+  cursor: pointer;
+}
+
 .message__container--my .photo__container,
 .message__container--my .content__text,
 .message__container--my .content__uname,

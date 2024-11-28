@@ -10,9 +10,9 @@ class IndexedDB {
     this.db = db;
   }
 
-  markMessagesAsRead(mids) {
+  updateMessagesStatus(mids, status) {
     this.db.messages.bulkUpdate(
-      mids.map((id) => ({ key: id, changes: { status: "read" } }))
+      mids.map((id) => ({ key: id, changes: { status } }))
     );
   }
 
@@ -62,8 +62,18 @@ class IndexedDB {
     );
   }
 
+  async upsertEncryptionMessage(mid, body) {
+    await this.db.messages.update(mid, {
+      body: await encryptionService.encrypteDataForLocalStore(body),
+    });
+  }
+
   async removeAllMessages() {
     await this.db.messages.clear();
+  }
+
+  async removeMessage(mid) {
+    await this.db.messages.delete(mid);
   }
 }
 

@@ -21,10 +21,10 @@ export default function LoginLinks({ changePage, content }) {
     setIsLoader(true);
     try {
       const userData = await usersService.login(content);
+      await garbageCleaningService.resetDataOnAuth();
       await encryptionService.registerDevice(userData._id);
       navigateTo("/");
       subscribeForNotifications();
-      await garbageCleaningService.resetDataOnAuth();
       dispatch(setCurrentUserId(userData._id));
       dispatch(upsertUser(userData));
     } catch (err) {

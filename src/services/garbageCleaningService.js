@@ -12,8 +12,8 @@ import { updateNetworkState } from "@store/values/NetworkState";
 class GarbageCleaningService {
   async clearConversationMessages(cid) {
     if (!cid) return;
-    store.dispatch(clearMessagesToLocalLimit(cid));
     store.dispatch(clearMessageIdsToLocalLimit(cid));
+    store.dispatch(clearMessagesToLocalLimit(cid));
   }
 
   async resetDataOnAuth() {

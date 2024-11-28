@@ -81,6 +81,15 @@ class Api {
           return;
         }
 
+        if (message.message_decryption_failed) {
+          if (this.onMessageDecryptionFailedListener) {
+            this.onMessageDecryptionFailedListener(
+              message.message_decryption_failed
+            );
+          }
+          return;
+        }
+
         if (message.message) {
           if (message.message.error) {
             this.responsesPromises[
@@ -394,6 +403,21 @@ class Api {
           cid: data.cid,
         },
         id: getUniqueId("markConversationAsRead"),
+      },
+    };
+
+    const resObjKey = "success";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
+  async markDecrypionFailedMessages(data) {
+    const requestData = {
+      request: {
+        message_decryption_failed: {
+          cid: data.cid,
+          ids: data.mids,
+        },
+        id: getUniqueId("markDecrypionFailedMessages"),
       },
     };
 
