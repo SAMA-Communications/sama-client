@@ -46,12 +46,21 @@ export default function SearchBlock({
     startTransition(async () => {
       if (text?.length > 1) {
         const users = await usersService.search({
-          login: text,
+          keyword: text,
           limit: 5,
         });
-        setSearchedUsers(users);
+
+        const sortedUsers = users.sort((a, b) => {
+          const lenDiff = a.login.length - b.login.length;
+
+          if (lenDiff !== 0) return lenDiff;
+
+          return a.login.localeCompare(b.login);
+        });
+
+        setSearchedUsers(sortedUsers);
         setIsUserSearched(
-          users.length ? null : "We couldn't find the specified users."
+          sortedUsers.length ? null : "We couldn't find the specified users."
         );
 
         if (isSearchOnlyUsers) {

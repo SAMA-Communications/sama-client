@@ -18,7 +18,7 @@ export default function getLastUpdateTime(updatedAt, lastMessageObject) {
     return (
       `${t.getDate() < 10 ? "0" : ""}${t.getDate()}` +
       "." +
-      `${t.getMonth() < 10 ? "0" : ""}${t.getMonth() + 1}` +
+      `${t.getMonth() < 9 ? "0" : ""}${t.getMonth() + 1}` +
       "." +
       t.getFullYear().toString().slice(2)
     );

@@ -10,7 +10,7 @@
 }
 
 .message__container--my .message-body-link {
-  color: var(--color-accent-light);
+  color: var(--color-link-accent);
 }
 .message-body-link {
   color: var(--color-accent-dark);
