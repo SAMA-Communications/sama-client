@@ -1,4 +1,5 @@
 import api from "@api/api";
+import buildHttpUrl from "@utils/navigation/build_http_url";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
@@ -17,25 +18,76 @@ class AutoLoginService {
       if (!token || token === "undefined") {
         return;
       }
-      this.userLogin(token);
+      this.userLoginByToken(token);
     });
   }
 
-  async userLogin(token) {
+  async #sendLoginRequest(endpoint, data) {
+    console.log("[http.request]", { request: data });
+
+    const response = await fetch(`${buildHttpUrl()}/${endpoint}`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    const responseData = await response.json();
+    console.log("[http.response]", { response: responseData });
+
+    if (responseData.access_token) {
+      await api.connectSocket({ token: responseData.access_token });
+    }
+
+    return responseData;
+  }
+
+  async userLoginWithHttp(data) {
+    const { login, password, accessToken } = data;
+
+    const requestData = { device_id: api.deviceId };
+    if (login && password) {
+      requestData.login = login;
+      requestData.password = password;
+    } else if (accessToken) {
+      requestData.access_token = accessToken;
+    }
+
+    return await this.#sendLoginRequest("login", requestData);
+  }
+
+  async userRefreshToken() {
+    const requestData = { device_id: api.deviceId };
+    return await this.#sendLoginRequest("login", requestData);
+  }
+
+  async userLoginByToken() {
+    const token = localStorage.getItem("sessionId");
+    const currentTime = Date.now();
+    const tokenExpiredAt =
+      localStorage.getItem("sessionExpiredAt") || currentTime;
+
     const currentPath = history.location?.hash;
     const handleLoginFailure = () => {
       localStorage.removeItem("sessionId");
+      localStorage.removeItem("sessionExpiredAt");
       navigateTo("/authorization");
       store.dispatch(setUserIsLoggedIn(false));
     };
 
     try {
-      const { token: userToken, user: userData } = await api.userLogin({
-        token,
-      });
+      const {
+        access_token: userToken,
+        expired_at: accessTokenExpiredAt,
+        user: userData,
+      } = await (tokenExpiredAt - currentTime < 30000
+        ? this.userRefreshToken()
+        : this.userLoginWithHttp({ accessToken: token }));
 
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);
+        localStorage.setItem("sessionExpiredAt", accessTokenExpiredAt);
+
         store.dispatch(setCurrentUserId(userData._id));
         api.curerntUserId = userData._id;
 

@@ -1,5 +1,6 @@
 import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
+import autoLoginService from "./autoLoginService";
 import isHeic from "@utils/media/is_heic";
 import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
@@ -33,11 +34,16 @@ class UsersService {
       );
     }
 
-    const { token: userToken, user: userData } = await api.userLogin({
+    const {
+      access_token: userToken,
+      expired_at: accessTokenExpiredAt,
+      user: userData,
+    } = await autoLoginService.userLoginWithHttp({
       login: login.trim().toLowerCase(),
       password: password.trim(),
     });
     localStorage.setItem("sessionId", userToken);
+    localStorage.setItem("sessionExpiredAt", accessTokenExpiredAt);
     api.curerntUserId = userData._id;
 
     return userData;

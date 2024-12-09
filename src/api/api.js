@@ -18,6 +18,10 @@ class Api {
     this.onConversationCreateListener = null;
     this.onConversationUpdateListener = null;
     this.onConversationDeleteListener = null;
+    this.deviceId = getBrowserFingerprint({
+      enableScreen: false,
+      hardwareOnly: true,
+    }).toString();
   }
 
   async connect() {
@@ -170,24 +174,32 @@ class Api {
     });
   }
 
+  async connectSocket(data) {
+    const requestData = {
+      request: {
+        connect_socket: {
+          token: data.token,
+          device_id: this.deviceId,
+        },
+        id: getUniqueId("connectSocket"),
+      },
+    };
+    const resObjKey = "success";
+    return this.sendPromise(requestData, resObjKey);
+  }
+
   async userLogin(data) {
     const requestData = {
       request: {
         user_login: data.token
           ? {
               token: data.token,
-              deviceId: getBrowserFingerprint({
-                enableScreen: false,
-                hardwareOnly: true,
-              }),
+              device_id: this.deviceId,
             }
           : {
               login: data.login,
               password: data.password,
-              deviceId: getBrowserFingerprint({
-                enableScreen: false,
-                hardwareOnly: true,
-              }),
+              device_id: this.deviceId,
             },
         id: getUniqueId("userLogin"),
       },
@@ -544,10 +556,7 @@ class Api {
           web_endpoint: data.web_endpoint,
           web_key_auth: data.web_key_auth,
           web_key_p256dh: data.web_key_p256dh,
-          device_udid: getBrowserFingerprint({
-            enableScreen: false,
-            hardwareOnly: true,
-          })?.toString(),
+          device_udid: this.deviceId,
         },
         id: getUniqueId("pushSubscriptionCreate"),
       },
@@ -561,10 +570,7 @@ class Api {
     const requestData = {
       request: {
         push_subscription_delete: {
-          device_udid: getBrowserFingerprint({
-            enableScreen: false,
-            hardwareOnly: true,
-          })?.toString(),
+          device_udid: this.deviceId,
         },
         id: getUniqueId("pushSubscriptionDelete"),
       },
