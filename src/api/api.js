@@ -177,7 +177,7 @@ class Api {
   async connectSocket(data) {
     const requestData = {
       request: {
-        connect_socket: {
+        connect: {
           token: data.token,
           device_id: this.deviceId,
         },
