@@ -22,23 +22,11 @@ class AutoLoginService {
     });
   }
 
-  async #sendLoginRequest(endpoint, data) {
-    console.log("[http.request]", { request: data });
-
-    const response = await fetch(`${buildHttpUrl()}/${endpoint}`, {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-
-    const responseData = await response.json();
-    console.log("[http.response]", { response: responseData });
-
+  async #sendLoginRequest(data) {
+    const responseData = await api.sendHttpPromise("POST", "login", data);
     if (responseData.access_token) {
       await api.connectSocket({ token: responseData.access_token });
     }
-
     return responseData;
   }
 
@@ -53,12 +41,12 @@ class AutoLoginService {
       requestData.access_token = accessToken;
     }
 
-    return await this.#sendLoginRequest("login", requestData);
+    return await this.#sendLoginRequest(requestData);
   }
 
   async userRefreshToken() {
     const requestData = { device_id: api.deviceId };
-    return await this.#sendLoginRequest("login", requestData);
+    return await this.#sendLoginRequest(requestData);
   }
 
   async userLoginByToken() {

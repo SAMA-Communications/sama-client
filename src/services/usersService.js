@@ -126,22 +126,33 @@ class UsersService {
   }
 
   async logout() {
-    navigator.serviceWorker.ready
-      .then((reg) =>
-        reg.pushManager.getSubscription().then((sub) =>
-          sub.unsubscribe().then(async () => {
-            await api.pushSubscriptionDelete();
-            await api.userLogout();
-            localStorage.removeItem("sessionId");
-          })
-        )
-      )
-      .catch(async (err) => {
-        console.error(err);
-        await api.userLogout();
-        localStorage.removeItem("sessionId");
-        throw new Error("User logout error");
+    const performLogoutRequest = async () => {
+      const res = await api.sendHttpPromise("POST", "logout", {
+        device_id: api.deviceId,
       });
+
+      if (!res.success) {
+        await api.userLogout();
+      }
+    };
+
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.getSubscription();
+      if (sub) {
+        await sub.unsubscribe();
+        await api.pushSubscriptionDelete();
+      }
+
+      await performLogoutRequest();
+    } catch (err) {
+      console.error(err);
+      await performLogoutRequest();
+      throw new Error("User logout error");
+    } finally {
+      localStorage.removeItem("sessionId");
+      localStorage.removeItem("sessionExpiredAt");
+    }
   }
 
   async updateUserAvatar(file) {

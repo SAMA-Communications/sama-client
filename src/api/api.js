@@ -1,3 +1,4 @@
+import buildHttpUrl from "@utils/navigation/build_http_url";
 import getBrowserFingerprint from "get-browser-fingerprint";
 import getUniqueId from "@api/uuid";
 import { default as EventEmitter } from "@event/eventEmitter";
@@ -174,6 +175,24 @@ class Api {
     });
   }
 
+  async sendHttpPromise(method, endpoint, data) {
+    console.log("[http.request]", { request: data });
+
+    const params = {
+      method,
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    };
+    data && (params["body"] = JSON.stringify(data));
+
+    const response = await fetch(`${buildHttpUrl()}/${endpoint}`, params);
+
+    const responseData = await response.json();
+    console.log("[http.response]", { response: responseData });
+
+    return responseData;
+  }
+
   async connectSocket(data) {
     const requestData = {
       request: {
@@ -185,26 +204,6 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
-  }
-
-  async userLogin(data) {
-    const requestData = {
-      request: {
-        user_login: data.token
-          ? {
-              token: data.token,
-              device_id: this.deviceId,
-            }
-          : {
-              login: data.login,
-              password: data.password,
-              device_id: this.deviceId,
-            },
-        id: getUniqueId("userLogin"),
-      },
-    };
-    const resObjKey = null;
     return this.sendPromise(requestData, resObjKey);
   }
 
