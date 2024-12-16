@@ -51,7 +51,7 @@ class AutoLoginService {
         ? this.userRefreshToken()
         : api.userLogin());
 
-      await api.connectSocket({ token: userToken });
+      if (userToken) await api.connectSocket({ token: userToken });
 
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);

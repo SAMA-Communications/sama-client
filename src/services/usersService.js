@@ -41,7 +41,7 @@ class UsersService {
       login: login.trim().toLowerCase(),
       password: password.trim(),
     });
-    await api.connectSocket({ token: userToken });
+    if (userToken) await api.connectSocket({ token: userToken });
     localStorage.setItem("sessionId", userToken);
     localStorage.setItem("sessionExpiredAt", accessTokenExpiredAt);
     api.curerntUserId = userData._id;
