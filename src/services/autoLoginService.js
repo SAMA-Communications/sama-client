@@ -1,5 +1,4 @@
 import api from "@api/api";
-import buildHttpUrl from "@utils/navigation/build_http_url";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
@@ -22,35 +21,15 @@ class AutoLoginService {
     });
   }
 
-  async #sendLoginRequest(data) {
-    const responseData = await api.sendHttpPromise("POST", "login", data);
+  async userRefreshToken() {
+    const responseData = await api.userLogin();
     if (responseData.access_token) {
       await api.connectSocket({ token: responseData.access_token });
     }
     return responseData;
   }
 
-  async userLoginWithHttp(data) {
-    const { login, password, accessToken } = data;
-
-    const requestData = { device_id: api.deviceId };
-    if (login && password) {
-      requestData.login = login;
-      requestData.password = password;
-    } else if (accessToken) {
-      requestData.access_token = accessToken;
-    }
-
-    return await this.#sendLoginRequest(requestData);
-  }
-
-  async userRefreshToken() {
-    const requestData = { device_id: api.deviceId };
-    return await this.#sendLoginRequest(requestData);
-  }
-
   async userLoginByToken() {
-    const token = localStorage.getItem("sessionId");
     const currentTime = Date.now();
     const tokenExpiredAt =
       localStorage.getItem("sessionExpiredAt") || currentTime;
@@ -70,7 +49,9 @@ class AutoLoginService {
         user: userData,
       } = await (tokenExpiredAt - currentTime < 30000
         ? this.userRefreshToken()
-        : this.userLoginWithHttp({ accessToken: token }));
+        : api.userLogin());
+
+      await api.connectSocket({ token: userToken });
 
       if (userToken && userToken !== "undefined") {
         localStorage.setItem("sessionId", userToken);

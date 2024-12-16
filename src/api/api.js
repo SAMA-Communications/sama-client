@@ -163,7 +163,7 @@ class Api {
     });
   }
 
-  async sendPromise(req, key) {
+  async #sendPromise(req, key) {
     return new Promise((resolve, reject) => {
       this.socket.send(JSON.stringify(req));
       console.log("[socket.send]", req);
@@ -175,13 +175,17 @@ class Api {
     });
   }
 
-  async sendHttpPromise(method, endpoint, data) {
+  async #sendHttpPromise(method, endpoint, data) {
     console.log("[http.request]", { request: data });
+    const accessToken = localStorage.getItem("sessionId");
 
     const params = {
       method,
       credentials: "include",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
     };
     data && (params["body"] = JSON.stringify(data));
 
@@ -204,7 +208,18 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
+  }
+
+  async disconnectSocket() {
+    const requestData = {
+      request: {
+        user_logout: {},
+        id: getUniqueId("disconnectSocket"),
+      },
+    };
+    const resObjKey = "success";
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async userCreate(data) {
@@ -218,7 +233,7 @@ class Api {
       },
     };
     const resObjKey = "user";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async userEdit(data) {
@@ -229,18 +244,25 @@ class Api {
       },
     };
     const resObjKey = "user";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
+  }
+
+  async userLogin(data) {
+    const { login, password, accessToken } = data || {};
+
+    const requestData = { device_id: this.deviceId };
+    if (login && password) {
+      requestData.login = login;
+      requestData.password = password;
+    } else if (accessToken) {
+      requestData.access_token = accessToken;
+    }
+
+    return await this.#sendHttpPromise("POST", "login", requestData);
   }
 
   async userLogout() {
-    const requestData = {
-      request: {
-        user_logout: {},
-        id: getUniqueId("userLogout"),
-      },
-    };
-    const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return await this.#sendHttpPromise("POST", "logout", null);
   }
 
   async userDelete() {
@@ -252,7 +274,7 @@ class Api {
     };
     const resObjKey = "success";
     localStorage.removeItem("sessionId");
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async userSearch(data) {
@@ -269,7 +291,7 @@ class Api {
     if (data.updated_at)
       requestData.request.user_search["updated_at"] = data.updated_at;
     const resObjKey = "users";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async getUsersByIds(data) {
@@ -282,7 +304,7 @@ class Api {
       },
     };
     const resObjKey = "users";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async getParticipantsByCids(data) {
@@ -296,7 +318,7 @@ class Api {
     };
 
     const resObjKey = "users";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async createUploadUrlForFiles(data) {
@@ -307,7 +329,7 @@ class Api {
       },
     };
     const resObjKey = "files";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async getDownloadUrlForFiles(data) {
@@ -320,7 +342,7 @@ class Api {
       },
     };
     const resObjKey = "file_urls";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async messageCreate(data) {
@@ -351,7 +373,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async messageList(data) {
@@ -368,7 +390,7 @@ class Api {
       (requestData.request.message_list["updated_at"] = data.updated_at);
 
     const resObjKey = "messages";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async markConversationAsRead(data) {
@@ -382,7 +404,7 @@ class Api {
     };
 
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async messageDelete(data) {
@@ -399,7 +421,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async subscribeToUserActivity(data) {
@@ -412,7 +434,7 @@ class Api {
       },
     };
     const resObjKey = "last_activity";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async unsubscribeFromUserActivity(data) {
@@ -423,7 +445,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async statusRead(data) {
@@ -437,7 +459,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async statusDelivered(data) {
@@ -451,7 +473,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async sendTypingStatus(data) {
@@ -483,7 +505,7 @@ class Api {
       },
     };
     const resObjKey = "conversation";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async conversationUpdate(data) {
@@ -503,7 +525,7 @@ class Api {
       },
     };
     const resObjKey = "conversation";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async conversationList(data) {
@@ -518,7 +540,7 @@ class Api {
       requestData.request.conversation_list["updated_at"]["gt"] =
         data.updated_at;
     const resObjKey = "conversations";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async conversationDelete(data) {
@@ -531,7 +553,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async conversationSearch(data) {
@@ -544,7 +566,7 @@ class Api {
       },
     };
     const resObjKey = "conversations";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async pushSubscriptionCreate(data) {
@@ -562,7 +584,7 @@ class Api {
     };
 
     const resObjKey = "subscription";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async pushSubscriptionDelete(data) {
@@ -576,7 +598,7 @@ class Api {
     };
 
     const resObjKey = "";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 }
 
