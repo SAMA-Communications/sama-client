@@ -248,14 +248,12 @@ class Api {
   }
 
   async userLogin(data) {
-    const { login, password, accessToken } = data || {};
+    const { login, password } = data || {};
 
     const requestData = { device_id: this.deviceId };
     if (login && password) {
       requestData.login = login;
       requestData.password = password;
-    } else if (accessToken) {
-      requestData.access_token = accessToken;
     }
 
     return await this.#sendHttpPromise("POST", "login", requestData);
