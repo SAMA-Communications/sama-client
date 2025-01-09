@@ -140,7 +140,7 @@ class UsersService {
         new Promise((_, reject) =>
           setTimeout(
             () => reject(new Error("Service Worker ready timed out")),
-            5000
+            500
           )
         ),
       ]);
