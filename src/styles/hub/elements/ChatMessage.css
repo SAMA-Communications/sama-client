@@ -10,10 +10,12 @@
 }
 
 .message__container--my .message-body-link {
-  color: var(--color-link-accent);
+  color: var(--color-white);
+  text-decoration: underline;
 }
 .message-body-link {
-  color: var(--color-accent-dark);
+  color: var(--color-black);
+  text-decoration: underline;
 }
 
 .message-photo,
