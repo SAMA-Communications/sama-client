@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { ReactComponent as UserIcon } from "@icons/users/User.svg";
 
 export default function AvatarWithFallback({ avatarUrl, altText }) {
-  const [component, setComponent] = useState(avatarUrl);
+  const [component, setComponent] = useState("");
 
   useEffect(() => {
     const img = new Image();
