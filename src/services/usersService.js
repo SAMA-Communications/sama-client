@@ -135,13 +135,19 @@ class UsersService {
     };
 
     try {
-      if ("serviceWorker" in navigator) {
-        const reg = await navigator.serviceWorker.ready;
-        const sub = await reg.pushManager.getSubscription();
-        if (sub) {
-          await sub.unsubscribe();
-          await api.pushSubscriptionDelete();
-        }
+      const reg = await Promise.race([
+        navigator.serviceWorker.ready,
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error("Service Worker ready timed out")),
+            5000
+          )
+        ),
+      ]);
+      const sub = await reg.pushManager.getSubscription();
+      if (sub) {
+        await sub.unsubscribe();
+        await api.pushSubscriptionDelete();
       }
       await performLogoutRequest();
     } catch (err) {
