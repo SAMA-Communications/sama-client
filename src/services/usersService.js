@@ -135,13 +135,14 @@ class UsersService {
     };
 
     try {
-      const reg = await navigator.serviceWorker.ready;
-      const sub = await reg.pushManager.getSubscription();
-      if (sub) {
-        await sub.unsubscribe();
-        await api.pushSubscriptionDelete();
+      if ("serviceWorker" in navigator) {
+        const reg = await navigator.serviceWorker.ready;
+        const sub = await reg.pushManager.getSubscription();
+        if (sub) {
+          await sub.unsubscribe();
+          await api.pushSubscriptionDelete();
+        }
       }
-
       await performLogoutRequest();
     } catch (err) {
       console.error(err);
