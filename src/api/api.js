@@ -182,11 +182,9 @@ class Api {
     const params = {
       method,
       credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { "Content-Type": "application/json" },
     };
+    accessToken && (params.headers["Authorization"] = `Bearer ${accessToken}`);
     data && (params["body"] = JSON.stringify(data));
 
     const response = await fetch(`${buildHttpUrl()}/${endpoint}`, params);
@@ -249,6 +247,11 @@ class Api {
 
   async userLogin(data) {
     const { login, password } = data || {};
+
+    const currentTime = Date.now();
+    const tokenExpiredAt =
+      localStorage.getItem("sessionExpiredAt") || currentTime;
+    if (tokenExpiredAt - currentTime <= 0) localStorage.removeItem("sessionId");
 
     const requestData = { device_id: this.deviceId };
     if (login && password) {
