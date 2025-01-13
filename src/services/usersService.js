@@ -44,6 +44,11 @@ class UsersService {
     if (userToken) await api.connectSocket({ token: userToken });
     localStorage.setItem("sessionId", userToken);
     localStorage.setItem("sessionExpiredAt", accessTokenExpiredAt);
+
+    delete userData.password_salt;
+    delete userData.encrypted_password;
+    localStorage.setItem("userData", JSON.stringify(userData));
+
     api.curerntUserId = userData._id;
 
     return userData;
@@ -157,6 +162,7 @@ class UsersService {
     } finally {
       localStorage.removeItem("sessionId");
       localStorage.removeItem("sessionExpiredAt");
+      localStorage.removeItem("userData");
     }
   }
 
