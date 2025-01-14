@@ -50,29 +50,29 @@ class AutoLoginService {
         access_token: userToken,
         expired_at: accessTokenExpiredAt,
         user: userData,
-      } = await (tokenExpiredAt - currentTime > 0
+        message: errorMessage,
+      } = await (tokenExpiredAt - currentTime > 500
         ? this.useAccessToken()
         : api.userLogin());
 
+      if (errorMessage) {
+        throw new Error(errorMessage);
+      }
+
       if ((!userToken || userToken === "undefined") && !userData) {
-        handleLoginFailure();
-        showCustomAlert("Invalid session token.", "warning");
+        throw new Error("Invalid session token.");
       }
 
-      if (userToken && userToken !== "undefined") {
-        await api.connectSocket({ token: userToken });
-        localStorage.setItem("sessionId", userToken);
-        localStorage.setItem("sessionExpiredAt", accessTokenExpiredAt);
-      }
+      await api.connectSocket({ token: userToken });
+      localStorage.setItem("sessionId", userToken);
+      localStorage.setItem("sessionExpiredAt", accessTokenExpiredAt);
 
-      if (userData) {
-        localStorage.setItem("userData", JSON.stringify(userData));
-        store.dispatch(setCurrentUserId(userData._id));
-        api.curerntUserId = userData._id;
+      localStorage.setItem("userData", JSON.stringify(userData));
+      store.dispatch(setCurrentUserId(userData._id));
+      api.curerntUserId = userData._id;
 
-        subscribeForNotifications();
-        store.dispatch(upsertUser(userData));
-      }
+      subscribeForNotifications();
+      store.dispatch(upsertUser(userData));
 
       store.dispatch(setUserIsLoggedIn(true));
 
