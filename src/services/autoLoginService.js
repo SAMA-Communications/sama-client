@@ -23,6 +23,7 @@ class AutoLoginService {
 
   async useAccessToken() {
     const accessToken = localStorage.getItem("sessionId");
+    console.log(1);
 
     const responseData = await api.connectSocket({ token: accessToken });
     if (responseData.error) return api.userLogin();
@@ -63,16 +64,20 @@ class AutoLoginService {
         throw new Error("Invalid session token.");
       }
 
-      await api.connectSocket({ token: userToken });
-      localStorage.setItem("sessionId", userToken);
-      localStorage.setItem("sessionExpiredAt", accessTokenExpiredAt);
+      if (userToken && userToken !== "undefined") {
+        await api.connectSocket({ token: userToken });
+        localStorage.setItem("sessionId", userToken);
+        localStorage.setItem("sessionExpiredAt", accessTokenExpiredAt);
+      }
 
-      localStorage.setItem("userData", JSON.stringify(userData));
-      store.dispatch(setCurrentUserId(userData._id));
-      api.curerntUserId = userData._id;
+      if (userData) {
+        localStorage.setItem("userData", JSON.stringify(userData));
+        store.dispatch(setCurrentUserId(userData._id));
+        api.curerntUserId = userData._id;
 
-      subscribeForNotifications();
-      store.dispatch(upsertUser(userData));
+        subscribeForNotifications();
+        store.dispatch(upsertUser(userData));
+      }
 
       store.dispatch(setUserIsLoggedIn(true));
 
