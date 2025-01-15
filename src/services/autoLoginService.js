@@ -23,7 +23,6 @@ class AutoLoginService {
 
   async useAccessToken() {
     const accessToken = localStorage.getItem("sessionId");
-    console.log(1);
 
     const responseData = await api.connectSocket({ token: accessToken });
     if (responseData.error) return api.userLogin();
@@ -57,7 +56,13 @@ class AutoLoginService {
         : api.userLogin());
 
       if (errorMessage) {
-        throw new Error(errorMessage);
+        console.log(errorMessage);
+
+        throw new Error(
+          errorMessage === "Missing authentication credentials."
+            ? "Your session has ended. Please log in again to continue."
+            : errorMessage
+        );
       }
 
       if ((!userToken || userToken === "undefined") && !userData) {
