@@ -80,8 +80,7 @@ export default function App() {
         dispatch(setSelectedConversation({}));
       }
       if (history.location.pathname === "/authorization") {
-        const token = localStorage.getItem("sessionId");
-        autoLoginService.userLogin(token);
+        autoLoginService.userLoginByToken();
       }
     });
 

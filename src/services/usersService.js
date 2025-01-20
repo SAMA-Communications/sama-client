@@ -33,11 +33,22 @@ class UsersService {
       );
     }
 
-    const { token: userToken, user: userData } = await api.userLogin({
+    const {
+      access_token: userToken,
+      expired_at: accessTokenExpiredAt,
+      user: userData,
+    } = await api.userLogin({
       login: login.trim().toLowerCase(),
       password: password.trim(),
     });
+    if (userToken) await api.connectSocket({ token: userToken });
     localStorage.setItem("sessionId", userToken);
+    localStorage.setItem("sessionExpiredAt", accessTokenExpiredAt);
+
+    delete userData.password_salt;
+    delete userData.encrypted_password;
+    localStorage.setItem("userData", JSON.stringify(userData));
+
     api.curerntUserId = userData._id;
 
     return userData;
@@ -120,22 +131,39 @@ class UsersService {
   }
 
   async logout() {
-    navigator.serviceWorker.ready
-      .then((reg) =>
-        reg.pushManager.getSubscription().then((sub) =>
-          sub.unsubscribe().then(async () => {
-            await api.pushSubscriptionDelete();
-            await api.userLogout();
-            localStorage.removeItem("sessionId");
-          })
-        )
-      )
-      .catch(async (err) => {
-        console.error(err);
-        await api.userLogout();
-        localStorage.removeItem("sessionId");
-        throw new Error("User logout error");
-      });
+    const performLogoutRequest = async () => {
+      const response = await api.userLogout();
+
+      if (!response.success) {
+        await api.disconnectSocket();
+      }
+    };
+
+    try {
+      const reg = await Promise.race([
+        navigator.serviceWorker.ready,
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error("Service Worker ready timed out")),
+            500
+          )
+        ),
+      ]);
+      const sub = await reg.pushManager.getSubscription();
+      if (sub) {
+        await sub.unsubscribe();
+        await api.pushSubscriptionDelete();
+      }
+      await performLogoutRequest();
+    } catch (err) {
+      console.error(err);
+      await performLogoutRequest();
+      throw new Error("User logout error");
+    } finally {
+      localStorage.removeItem("sessionId");
+      localStorage.removeItem("sessionExpiredAt");
+      localStorage.removeItem("userData");
+    }
   }
 
   async updateUserAvatar(file) {
