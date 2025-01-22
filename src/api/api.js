@@ -47,14 +47,14 @@ class Api {
           return;
         }
 
-        if (message.system_message) {
+        if (message.system_message || message.message?.system_message) {
           const {
             x: {
               conversation_created,
               conversation_updated,
               conversation_kicked,
             },
-          } = message.system_message;
+          } = message.system_message || message.message?.system_message;
 
           if (conversation_created) {
             this.onConversationCreateListener?.(conversation_created);
