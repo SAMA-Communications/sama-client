@@ -282,7 +282,7 @@ class Api {
     const requestData = {
       request: {
         user_search: {
-          login: data.login,
+          keyword: data.keyword,
           ignore_ids: data.ignore_ids || [],
         },
         id: getUniqueId("userSearch"),

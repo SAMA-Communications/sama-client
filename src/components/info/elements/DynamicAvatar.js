@@ -1,3 +1,4 @@
+import ImageWithFallback from "./AvatarWithFallback";
 import ItemLoader from "@components/attach/elements/ItemLoader";
 import { useMemo } from "react";
 
@@ -8,9 +9,8 @@ export default function DynamicAvatar({
   altText,
 }) {
   const avatarView = useMemo(() => {
-    if (avatarUrl) {
-      return <img src={avatarUrl} alt={altText} />;
-    }
+    if (avatarUrl)
+      return <ImageWithFallback avatarUrl={avatarUrl} altText={altText} />;
 
     return avatarBlurHash ? (
       <ItemLoader blurHash={avatarBlurHash} />
