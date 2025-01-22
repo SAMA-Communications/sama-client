@@ -12,7 +12,6 @@ export default function DynamicAvatar({
     if (avatarUrl)
       return <ImageWithFallback avatarUrl={avatarUrl} altText={altText} />;
 
-
     return avatarBlurHash ? (
       <ItemLoader blurHash={avatarBlurHash} />
     ) : (

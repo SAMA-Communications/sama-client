@@ -37,8 +37,6 @@ export default function ChatInfo() {
 
   const inputFilesRef = useRef(null);
 
-  const inputFilesRef = useRef(null);
-
   const isCurrentUserOwner = useMemo(() => {
     if (!currentUserId || !selectedConversation) {
       return false;
