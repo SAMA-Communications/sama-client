@@ -38,6 +38,12 @@ There are also other components. Make sure to check [Deploying SAMA chat server 
 - Run `npm run capacitor:build`
 - To run ios: `npm run ios` or android: `npm run android`
 
+## Community and Support
+Join our community for support and discussions:
+- [GitHub Issues - SAMA server](https://github.com/SAMA-Communications/sama-server/issues), [GitHub Issues - SAMA client](https://github.com/SAMA-Communications/sama-client/issues)
+- [SAMA on Medium](https://medium.com/sama-communications)
+- Get help - [Discord 💬](https://discord.gg/bHSm9a7DpC)
+
 ## License 
 
 [MIT](LICENSE)
@@ -46,5 +52,7 @@ There are also other components. Make sure to check [Deploying SAMA chat server 
 
 Any thoughts, feedback is welcome! Please create a GitHub issue for any feedback you have.
 
-Want to support us with [some coffee?](https://www.buymeacoffee.com/khomenkoigor). Will be much appreciated! 
+Want to support us?
+
+<a href="https://www.buymeacoffee.com/khomenkoigor" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
