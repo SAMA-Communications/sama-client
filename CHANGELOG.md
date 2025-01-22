@@ -9,7 +9,7 @@
 ### Improvements
 
 - Updated the color for user message links
-- Updated user_search request fields
+- Updated `user_search` request fields
 - Added sorting for the list of users from the search
 
 ## 1.3.0
