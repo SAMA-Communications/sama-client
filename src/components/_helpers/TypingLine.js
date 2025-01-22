@@ -5,7 +5,6 @@ import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 export default function TypingLine({ userIds, displayUserNames = false }) {
-  console.log(userIds);
   const participants = useSelector(selectParticipantsEntities);
 
   const usersNameView = useMemo(() => {
