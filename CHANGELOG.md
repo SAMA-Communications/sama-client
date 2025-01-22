@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.4.0
+
+### Features
+
+- Implemented a progressive authentication flow to enhance security
+
+### Improvements
+
+- Updated the color for user message links
+- Updated user_search request fields
+- Added sorting for the list of users from the search
+
 ## 1.3.0
 
 ### Features
