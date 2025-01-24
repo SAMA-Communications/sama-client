@@ -212,6 +212,28 @@
   margin-top: 0;
 }
 
+.authorization__demo-message {
+  padding: 10px 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+
+  border-radius: var(--border-8);
+  background-color: var(--color-accent-dark);
+}
+.authorization__demo-message > p,
+.authorization__demo-message > p > b {
+  text-align: center;
+
+  font-size: var(--font-h6);
+  color: var(--color-white);
+}
+.authorization__demo-message > p > b {
+  font-weight: 500;
+}
+
 @media screen and (max-width: 800px) {
   .authorization__container {
     flex-direction: column;
