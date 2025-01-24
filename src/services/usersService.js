@@ -37,10 +37,14 @@ class UsersService {
       access_token: userToken,
       expired_at: accessTokenExpiredAt,
       user: userData,
+      message: errorMessage,
     } = await api.userLogin({
       login: login.trim().toLowerCase(),
       password: password.trim(),
     });
+
+    if (errorMessage) throw new Error(errorMessage);
+
     if (userToken) await api.connectSocket({ token: userToken });
     localStorage.setItem("sessionId", userToken);
     localStorage.setItem("sessionExpiredAt", accessTokenExpiredAt);
