@@ -1,3 +1,4 @@
+import buildHttpUrl from "@utils/navigation/build_http_url";
 import getBrowserFingerprint from "get-browser-fingerprint";
 import getUniqueId from "@api/uuid";
 import { default as EventEmitter } from "@event/eventEmitter";
@@ -19,6 +20,10 @@ class Api {
     this.onConversationCreateListener = null;
     this.onConversationUpdateListener = null;
     this.onConversationDeleteListener = null;
+    this.deviceId = getBrowserFingerprint({
+      enableScreen: false,
+      hardwareOnly: true,
+    }).toString();
   }
 
   async connect() {
@@ -43,14 +48,14 @@ class Api {
           return;
         }
 
-        if (message.system_message) {
+        if (message.system_message || message.message?.system_message) {
           const {
             x: {
               conversation_created,
               conversation_updated,
               conversation_kicked,
             },
-          } = message.system_message;
+          } = message.system_message || message.message?.system_message;
 
           if (conversation_created) {
             this.onConversationCreateListener?.(conversation_created);
@@ -168,7 +173,7 @@ class Api {
     });
   }
 
-  async sendPromise(req, key) {
+  async #sendPromise(req, key) {
     return new Promise((resolve, reject) => {
       this.socket.send(JSON.stringify(req));
       console.log("[socket.send]", req);
@@ -180,26 +185,49 @@ class Api {
     });
   }
 
-  async userLogin(data) {
-    const deviceId = getBrowserFingerprint({
-      enableScreen: false,
-      hardwareOnly: true,
-    });
+  async #sendHttpPromise(method, endpoint, data) {
+    console.log("[http.request]", { request: data });
+    const accessToken = localStorage.getItem("sessionId");
+
+    const params = {
+      method,
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    };
+    accessToken && (params.headers["Authorization"] = `Bearer ${accessToken}`);
+    data && (params["body"] = JSON.stringify(data));
+
+    const response = await fetch(`${buildHttpUrl()}/${endpoint}`, params);
+
+    const responseData = await response.json();
+    console.log("[http.response]", { response: responseData });
+
+    return responseData;
+  }
+
+  async connectSocket(data) {
     const requestData = {
       request: {
-        user_login: data.token
-          ? { token: data.token, deviceId }
-          : {
-              login: data.login,
-              password: data.password,
-              deviceId,
-            },
-        id: getUniqueId("userLogin"),
+        connect: {
+          token: data.token,
+          device_id: this.deviceId,
+        },
+        id: getUniqueId("connectSocket"),
       },
     };
-    api.currentDeviceId = deviceId.toString();
-    const resObjKey = null;
-    return this.sendPromise(requestData, resObjKey);
+    const resObjKey = "success";
+    return this.#sendPromise(requestData, resObjKey);
+  }
+
+  async disconnectSocket() {
+    const requestData = {
+      request: {
+        user_logout: {},
+        id: getUniqueId("disconnectSocket"),
+      },
+    };
+    const resObjKey = "success";
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async userCreate(data) {
@@ -213,7 +241,7 @@ class Api {
       },
     };
     const resObjKey = "user";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async encryptedDeviceCreate(data) {
@@ -252,19 +280,28 @@ class Api {
       },
     };
     const resObjKey = "user";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
+  }
+
+  async userLogin(data) {
+    const { login, password } = data || {};
+
+    const currentTime = Date.now();
+    const tokenExpiredAt =
+      localStorage.getItem("sessionExpiredAt") || currentTime;
+    if (tokenExpiredAt - currentTime <= 0) localStorage.removeItem("sessionId");
+
+    const requestData = { device_id: this.deviceId };
+    if (login && password) {
+      requestData.login = login;
+      requestData.password = password;
+    }
+
+    return await this.#sendHttpPromise("POST", "login", requestData);
   }
 
   async userLogout() {
-    const requestData = {
-      request: {
-        user_logout: {},
-        id: getUniqueId("userLogout"),
-      },
-    };
-    const resObjKey = "success";
-    localStorage.removeItem("sessionId");
-    return this.sendPromise(requestData, resObjKey);
+    return await this.#sendHttpPromise("POST", "logout", null);
   }
 
   async userDelete() {
@@ -276,14 +313,14 @@ class Api {
     };
     const resObjKey = "success";
     localStorage.removeItem("sessionId");
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async userSearch(data) {
     const requestData = {
       request: {
         user_search: {
-          login: data.login,
+          keyword: data.keyword,
           ignore_ids: data.ignore_ids || [],
         },
         id: getUniqueId("userSearch"),
@@ -293,7 +330,7 @@ class Api {
     if (data.updated_at)
       requestData.request.user_search["updated_at"] = data.updated_at;
     const resObjKey = "users";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async getUsersByIds(data) {
@@ -306,7 +343,7 @@ class Api {
       },
     };
     const resObjKey = "users";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async getParticipantsByCids(data) {
@@ -320,7 +357,7 @@ class Api {
     };
 
     const resObjKey = "users";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async createUploadUrlForFiles(data) {
@@ -331,7 +368,7 @@ class Api {
       },
     };
     const resObjKey = "files";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async getDownloadUrlForFiles(data) {
@@ -344,7 +381,7 @@ class Api {
       },
     };
     const resObjKey = "file_urls";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async messageCreate(data) {
@@ -376,7 +413,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async messageList(data) {
@@ -393,7 +430,7 @@ class Api {
       (requestData.request.message_list["updated_at"] = data.updated_at);
 
     const resObjKey = "messages";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async markConversationAsRead(data) {
@@ -407,7 +444,7 @@ class Api {
     };
 
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async markDecrypionFailedMessages(data) {
@@ -439,7 +476,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async subscribeToUserActivity(data) {
@@ -452,7 +489,7 @@ class Api {
       },
     };
     const resObjKey = "last_activity";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async unsubscribeFromUserActivity(data) {
@@ -463,7 +500,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async statusRead(data) {
@@ -477,7 +514,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async statusDelivered(data) {
@@ -491,7 +528,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async sendTypingStatus(data) {
@@ -524,7 +561,7 @@ class Api {
       },
     };
     const resObjKey = "conversation";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async conversationUpdate(data) {
@@ -544,7 +581,7 @@ class Api {
       },
     };
     const resObjKey = "conversation";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async conversationList(data) {
@@ -559,7 +596,7 @@ class Api {
       requestData.request.conversation_list["updated_at"]["gt"] =
         data.updated_at;
     const resObjKey = "conversations";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async conversationDelete(data) {
@@ -572,7 +609,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async conversationSearch(data) {
@@ -585,7 +622,7 @@ class Api {
       },
     };
     const resObjKey = "conversations";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async pushSubscriptionCreate(data) {
@@ -596,34 +633,28 @@ class Api {
           web_endpoint: data.web_endpoint,
           web_key_auth: data.web_key_auth,
           web_key_p256dh: data.web_key_p256dh,
-          device_udid: getBrowserFingerprint({
-            enableScreen: false,
-            hardwareOnly: true,
-          })?.toString(),
+          device_udid: this.deviceId,
         },
         id: getUniqueId("pushSubscriptionCreate"),
       },
     };
 
     const resObjKey = "subscription";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async pushSubscriptionDelete(data) {
     const requestData = {
       request: {
         push_subscription_delete: {
-          device_udid: getBrowserFingerprint({
-            enableScreen: false,
-            hardwareOnly: true,
-          })?.toString(),
+          device_udid: this.deviceId,
         },
         id: getUniqueId("pushSubscriptionDelete"),
       },
     };
 
     const resObjKey = "";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 }
 

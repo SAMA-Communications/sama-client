@@ -83,7 +83,6 @@ export default function EditModalHub() {
   }, [closeModal, content, dispatch, type]);
 
   useKeyDown(KEY_CODES.ENTER, sendRequest);
-  useKeyDown(KEY_CODES.ESCAPE, closeModal);
 
   return (
     <div className="edit-modal__container fcc">

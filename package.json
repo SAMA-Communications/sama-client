@@ -1,6 +1,6 @@
 {
   "name": "sama",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": true,
   "dependencies": {
     "@capacitor/android": "6.0.0",
