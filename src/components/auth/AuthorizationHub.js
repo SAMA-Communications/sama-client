@@ -7,7 +7,7 @@ import { useState } from "react";
 
 import "@styles/auth/AuthorizationPage.css";
 
-export default function AuthorizationHub() {
+export default function AuthorizationHub({ showDemoMessage = false }) {
   const [page, setPage] = useState("login");
   const [content, setContent] = useState({});
 
@@ -23,6 +23,18 @@ export default function AuthorizationHub() {
           isLoginPage ? "login-form__mt-49" : "signup-form__mt-20"
         }`}
       >
+        {showDemoMessage ? (
+          <div className="authorization__demo-message">
+            <p>Welcome to the SAMA demo.</p>
+            <p>
+              You can connect using the following credentials:
+              <br></br>
+              <b>sama-user-1</b> or <b>sama-user-2</b>
+              <br></br>
+              and <b>demo-password</b>
+            </p>
+          </div>
+        ) : null}
         <div className="authorization__title fcc">
           <div
             className={!isLoginPage ? "gray" : ""}

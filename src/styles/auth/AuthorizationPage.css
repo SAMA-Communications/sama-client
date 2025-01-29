@@ -212,6 +212,28 @@
   margin-top: 0;
 }
 
+.authorization__demo-message {
+  padding: min(20px, 4svh) min(50px, 4svw);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+
+  border-radius: var(--border-8);
+  background-color: var(--color-accent-dark);
+}
+.authorization__demo-message > p,
+.authorization__demo-message > p > b {
+  text-align: center;
+
+  font-size: var(--font-h6);
+  color: var(--color-white);
+}
+.authorization__demo-message > p > b {
+  font-weight: 500;
+}
+
 @media screen and (max-width: 800px) {
   .authorization__container {
     flex-direction: column;
@@ -272,6 +294,11 @@
 
   .auth-form__input > input {
     font-size: var(--font-h6);
+  }
+
+  .authorization__demo-message > p,
+  .authorization__demo-message > p > b {
+    font-size: var(--font-p);
   }
 }
 

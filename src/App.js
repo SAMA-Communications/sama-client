@@ -80,8 +80,7 @@ export default function App() {
         dispatch(setSelectedConversation({}));
       }
       if (history.location.pathname === "/authorization") {
-        const token = localStorage.getItem("sessionId");
-        autoLoginService.userLogin(token);
+        autoLoginService.userLoginByToken();
       }
     });
 
@@ -99,14 +98,14 @@ export default function App() {
       )
     );
 
+    const { pathname, hash } = history.location;
     const token = localStorage.getItem("sessionId");
     if (token && token !== "undefined") {
-      const { pathname, hash } = history.location;
       const path = hash ? pathname + hash : "/";
       navigateTo(path);
     } else {
       localStorage.removeItem("sessionId");
-      navigateTo("/authorization");
+      navigateTo(pathname === "/demo" ? "/demo" : "/authorization");
     }
 
     return () => {
@@ -124,6 +123,10 @@ export default function App() {
       <AnimatePresence initial={false} mode="wait">
         <Routes location={history.location}>
           <Route path="/authorization" element={<AuthorizationHub />} />
+          <Route
+            path="/demo"
+            element={<AuthorizationHub showDemoMessage={true} />}
+          />
           <Route path="/*" element={<Main />} />
         </Routes>
       </AnimatePresence>

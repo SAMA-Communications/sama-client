@@ -33,7 +33,7 @@ export default function ChatInfo() {
   const participants = useSelector(selectParticipantsEntities);
   const currentUserId = useSelector(selectCurrentUserId);
   const selectedConversation = useSelector(getConverastionById);
-  const conversationOwner = selectedConversation?.owner_id?.toString();
+  const conversationOwner = selectedConversation.owner_id?.toString();
 
   const inputFilesRef = useRef(null);
 
@@ -45,12 +45,9 @@ export default function ChatInfo() {
   }, [currentUserId, selectedConversation]);
 
   useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
-  useKeyDown(KEY_CODES.ESCAPE, () =>
-    removeAndNavigateSubLink(pathname + hash, "/info")
-  );
 
   const participantsList = useMemo(() => {
-    if (!selectedConversation?.participants || !currentUserId) {
+    if (!selectedConversation.participants || !currentUserId) {
       return null;
     }
 
@@ -126,7 +123,11 @@ export default function ChatInfo() {
             className={`chat-info__content ${
               isCurrentUserOwner ? "cursor-pointer" : ""
             }`}
-            onClick={() => addSuffix(pathname + hash, "/edit?type=chat")}
+            onClick={() =>
+              isCurrentUserOwner
+                ? addSuffix(pathname + hash, "/edit?type=chat")
+                : null
+            }
           >
             <p className="ci-name">
               {selectedConversation.name || (

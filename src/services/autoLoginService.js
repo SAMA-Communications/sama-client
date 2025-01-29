@@ -17,54 +17,92 @@ class AutoLoginService {
       if (!token || token === "undefined") {
         return;
       }
-      this.userLogin(token);
+      this.userLoginByToken(token);
     });
   }
 
-  async userLogin(token) {
+  async useAccessToken() {
+    const accessToken = localStorage.getItem("sessionId");
+
+    const responseData = await api.connectSocket({ token: accessToken });
+    if (responseData.error) return api.userLogin();
+
+    const user = JSON.parse(localStorage.getItem("userData") || null);
+    return { user };
+  }
+
+  async userLoginByToken() {
+    const currentTime = Date.now();
+    const tokenExpiredAt =
+      localStorage.getItem("sessionExpiredAt") || currentTime;
+
     const currentPath = history.location?.hash;
     const handleLoginFailure = () => {
       localStorage.removeItem("sessionId");
+      localStorage.removeItem("sessionExpiredAt");
+      localStorage.removeItem("userData");
       navigateTo("/authorization");
       store.dispatch(setUserIsLoggedIn(false));
     };
 
     try {
-      const { token: userToken, user: userData } = await api.userLogin({
-        token,
-      });
+      const {
+        access_token: userToken,
+        expired_at: accessTokenExpiredAt,
+        user: userData,
+        message: errorMessage,
+      } = await (tokenExpiredAt - currentTime > 500
+        ? this.useAccessToken()
+        : api.userLogin());
+
+      if (errorMessage) {
+        console.log(errorMessage);
+
+        throw new Error(
+          errorMessage === "Missing authentication credentials."
+            ? "Your session has ended. Please log in again to continue."
+            : errorMessage
+        );
+      }
+
+      if ((!userToken || userToken === "undefined") && !userData) {
+        throw new Error("Invalid session token.");
+      }
 
       if (userToken && userToken !== "undefined") {
+        await api.connectSocket({ token: userToken });
         localStorage.setItem("sessionId", userToken);
+        localStorage.setItem("sessionExpiredAt", accessTokenExpiredAt);
+      }
+
+      if (userData) {
+        localStorage.setItem("userData", JSON.stringify(userData));
         store.dispatch(setCurrentUserId(userData._id));
         api.curerntUserId = userData._id;
 
         subscribeForNotifications();
         store.dispatch(upsertUser(userData));
-
-        store.dispatch(setUserIsLoggedIn(true));
-
-        const { pathname, hash } = history.location;
-        const path = hash ? pathname + hash : "/";
-        setTimeout(() => {
-          navigateTo(
-            path.includes("/attach")
-              ? path.replace("/attach", "")
-              : path.includes("/media")
-              ? path.replace(/\/media.*/, "")
-              : path
-          );
-          currentPath &&
-            store.dispatch(
-              setSelectedConversation({
-                id: currentPath.split("/")[0].slice(1),
-              })
-            );
-        }, 20);
-      } else {
-        handleLoginFailure();
-        showCustomAlert("Invalid session token.", "warning");
       }
+
+      store.dispatch(setUserIsLoggedIn(true));
+
+      const { pathname, hash } = history.location;
+      const path = hash ? pathname + hash : "/";
+      setTimeout(() => {
+        navigateTo(
+          path.includes("/attach")
+            ? path.replace("/attach", "")
+            : path.includes("/media")
+            ? path.replace(/\/media.*/, "")
+            : path
+        );
+        currentPath &&
+          store.dispatch(
+            setSelectedConversation({
+              id: currentPath.split("/")[0].slice(1),
+            })
+          );
+      }, 20);
     } catch (error) {
       handleLoginFailure();
       showCustomAlert(error.message, "warning");

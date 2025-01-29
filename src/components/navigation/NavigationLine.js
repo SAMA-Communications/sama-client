@@ -107,7 +107,7 @@ export default function NavigationLine() {
         onClick={() => {
           sendLogout();
           navigateTo("/authorization");
-        }} //authorization
+        }}
         className="menu__logout fcc"
       >
         <Logout />
