@@ -220,7 +220,7 @@ class EncryptionService {
     try {
       const { account, isNewAccount } = await this.#getAccount(
         userId,
-        api.currentDeviceId
+        api.deviceId
       );
 
       if (!account) return;
@@ -265,7 +265,7 @@ class EncryptionService {
     const sessionPickleKey = await this.#createPickleKey(
       "sessionPickleKey",
       opponentId,
-      api.currentDeviceId
+      api.deviceId
     );
     localforage.setItem(
       `encryptedSession${opponentId}`,
@@ -310,7 +310,7 @@ class EncryptionService {
         const sessionPickleKey = await this.#getPickleKey(
           "sessionPickleKey",
           userId,
-          api.currentDeviceId
+          api.deviceId
         );
         session = Session.from_pickle(
           sessionFromPickle,
@@ -405,7 +405,7 @@ class EncryptionService {
     const secretKey = await this.#getPickleKey(
       "pickleKey",
       api.curerntUserId,
-      api.currentDeviceId
+      api.deviceId
     );
 
     const ciphertext = CryptoJS.AES.encrypt(
@@ -420,7 +420,7 @@ class EncryptionService {
     const secretKey = await this.#getPickleKey(
       "pickleKey",
       api.curerntUserId,
-      api.currentDeviceId
+      api.deviceId
     );
 
     const bytes = CryptoJS.AES.decrypt(ciphertext, secretKey);

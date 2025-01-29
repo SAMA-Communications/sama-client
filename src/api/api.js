@@ -11,7 +11,6 @@ class Api {
     this.baseUrl = baseUrl;
     this.socket = null;
     this.curerntUserId = null;
-    this.currentDeviceId = null;
     this.responsesPromises = {};
     this.onMessageListener = null;
     this.onMessageStatusListener = null;
@@ -256,7 +255,7 @@ class Api {
       },
     };
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async getEncryptedKeys(data) {
@@ -269,7 +268,7 @@ class Api {
       },
     };
     const resObjKey = "devices";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async userEdit(data) {
