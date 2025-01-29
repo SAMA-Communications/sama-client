@@ -458,7 +458,7 @@ class Api {
     };
 
     const resObjKey = "success";
-    return this.sendPromise(requestData, resObjKey);
+    return this.#sendPromise(requestData, resObjKey);
   }
 
   async messageDelete(data) {
