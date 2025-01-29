@@ -12,7 +12,7 @@ export default function LastMessage({
   if (isEncrypted) {
     return (
       <div className="content-bottom__last-message">
-        <p className="last-message__text">Enncrypted message</p>
+        <p className="last-message__text">Encrypted chat</p>
       </div>
     );
   }
