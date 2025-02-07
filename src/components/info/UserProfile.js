@@ -165,7 +165,7 @@ export default function UserProfile() {
               </p>
             </div>
           ) : null}
-          <div className="info__link">
+          <div className="info__link info__link--delete">
             <Trash />
             <p
               className="info__delete"

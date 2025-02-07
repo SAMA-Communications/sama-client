@@ -25,6 +25,7 @@ import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
 import { ReactComponent as LinkTo } from "@icons/options/LinkTo.svg";
 import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
+import { ReactComponent as AddEncryptedConversationMini } from "@icons/encryption/AddEncryptedConversationMini.svg";
 
 export default function OtherUserProfile() {
   const dispatch = useDispatch();
@@ -131,6 +132,22 @@ export default function OtherUserProfile() {
                 }}
               >
                 Start a conversation
+              </p>
+            </div>
+            <div className="info__link info__link--encrypted">
+              <AddEncryptedConversationMini />
+              <p
+                className="info__new-conversation"
+                onClick={async () => {
+                  const chatId = await conversationService.createPrivateChat(
+                    userId,
+                    null,
+                    true
+                  );
+                  navigateTo(`/#${chatId}`);
+                }}
+              >
+                Start an encrypted chat
               </p>
             </div>
           </div>
