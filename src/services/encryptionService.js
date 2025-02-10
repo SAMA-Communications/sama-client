@@ -140,6 +140,9 @@ class EncryptionService {
   }
 
   async #buildAndEncodePickleKey(data, userId, deviceId) {
+    console.log("buildAndEncodePickleKey");
+    console.log("crypto", crypto);
+    console.log("subtle", crypto?.subtle);
     if (!crypto?.subtle) {
       return undefined;
     }
@@ -188,6 +191,8 @@ class EncryptionService {
     let isNewAccount = false;
     if (encAuthAccount && pickleKey) {
       try {
+        console.log(encAuthAccount, pickleKey);
+
         this.#account = Account.from_pickle(
           encAuthAccount,
           decodeBase64(pickleKey)
