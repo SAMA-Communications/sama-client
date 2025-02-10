@@ -120,7 +120,7 @@ export default function MessageInput({
         <Send className="input-text__button" onClick={onSubmitFunc} />
       </>
     );
-  }, [location, isBlockedConv, onSubmitFunc]);
+  }, [location, isBlockedConv, onSubmitFunc, isEncryptedSessionActive]);
 
   return <div className="inputs__container">{inputsView}</div>;
 }

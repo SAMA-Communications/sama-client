@@ -1,6 +1,7 @@
 import api from "@api/api";
 import encryptionService from "@services/encryptionService";
 import garbageCleaningService from "@services/garbageCleaningService";
+import getOpponentId from "@utils/user/get_opponent_id";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
@@ -38,6 +39,7 @@ export default function ChatForm() {
 
   const isUserLogin = useSelector(getUserIsLoggedIn);
   const isTabInFocus = useSelector(getIsTabInFocus);
+  const [isConnectingSession, setIsConnectingSession] = useState(false);
   const [successfulEncryptedSession, setSuccessfulEncryptedSession] =
     useState(null);
 
@@ -80,15 +82,17 @@ export default function ChatForm() {
   }, [isTabInFocus, readMessage]);
 
   useEffect(() => {
-    if (selectedConversation?.is_encrypted) {
+    setSuccessfulEncryptedSession(null);
+
+    if (selectedConversation?.is_encrypted && !isConnectingSession) {
+      setIsConnectingSession(true);
       encryptionService
         .createEncryptionSession(
-          selectedConversation.owner_id === currentUserId
-            ? selectedConversation.opponent_id
-            : selectedConversation.owner_id
+          getOpponentId(selectedConversation, currentUserId)
         )
         .then(({ session }) => setSuccessfulEncryptedSession(!!session))
-        .catch(() => setSuccessfulEncryptedSession(false));
+        .catch(() => setSuccessfulEncryptedSession(false))
+        .finally(() => setIsConnectingSession(false));
     }
 
     files.length && setFiles([]);

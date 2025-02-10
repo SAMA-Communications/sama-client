@@ -123,7 +123,7 @@ class MessagesService {
           })
         );
       }
-      if (conv.is_encrypted) {
+      if (conv.is_encrypted && !message.x) {
         await this.#tryToCreateESession(message);
       }
     };
