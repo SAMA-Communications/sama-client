@@ -188,6 +188,8 @@ class EncryptionService {
     let isNewAccount = false;
     if (encAuthAccount && pickleKey) {
       try {
+        console.log(encAuthAccount, pickleKey);
+
         this.#account = Account.from_pickle(
           encAuthAccount,
           decodeBase64(pickleKey)

@@ -4,6 +4,7 @@ import conversationService from "@services/conversationsService";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
+import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
 import { selectParticipantsEntities } from "@store/values/Participants";
@@ -23,6 +24,14 @@ export default function UsersSelectModalHub({ type, isEncrypted = false }) {
   const [chatImage, setChatImage] = useState(null);
 
   const sendCreateRequest = async (participants) => {
+    if (!participants?.length) {
+      showCustomAlert(
+        "Select a participant before creating a chat.",
+        "warning"
+      );
+      return;
+    }
+
     if (!isEncrypted) {
       const chatId = await conversationService.createGroupChat(
         participants,

@@ -6,10 +6,12 @@ export default function TextAreaInput({
   isMobile,
   placeholder,
   isDisabled = false,
+  isEncryptedSessionActive,
 }) {
   return (
     <textarea
       id={customId || "inputMessage"}
+      style={isEncryptedSessionActive ? { paddingLeft: 15 } : {}}
       ref={inputRef}
       onInput={handleInput}
       onKeyDown={handeOnKeyDown}

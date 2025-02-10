@@ -102,15 +102,18 @@ export default function MessageInput({
 
     return (
       <>
-        <Attach
-          className="input-file__button"
-          onClick={() => {
-            addSuffix(location.pathname + location.hash, "/attach");
-            storeInputText();
-          }}
-        />
+        {isEncryptedSessionActive ? null : (
+          <Attach
+            className="input-file__button"
+            onClick={() => {
+              addSuffix(location.pathname + location.hash, "/attach");
+              storeInputText();
+            }}
+          />
+        )}
         <TextAreaInput
           inputRef={inputTextRef}
+          isEncryptedSessionActive={isEncryptedSessionActive}
           handleInput={handleInput}
           handeOnKeyDown={handeOnKeyDown}
           isDisabled={false}
