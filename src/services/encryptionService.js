@@ -140,6 +140,10 @@ class EncryptionService {
   }
 
   async #buildAndEncodePickleKey(data, userId, deviceId) {
+    console.log("buildAndEncodePickleKey");
+    console.log("crypto", crypto);
+    console.log("subtle", crypto?.subtle);
+
     if (!crypto?.subtle) {
       return undefined;
     }
