@@ -3,15 +3,12 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import InformativeMessage from "@components/hub/elements/InformativeMessage";
 import conversationService from "@services/conversationsService";
 import messagesService from "@services/messagesService";
-import {
-  addMessages,
-  selectActiveConversationMessages,
-} from "@store/values/Messages";
+import { selectActiveConversationMessages } from "@store/values/Messages";
 import {
   addUsers,
   selectParticipantsEntities,
 } from "@store/values/Participants";
-import { getConverastionById, upsertChat } from "@store/values/Conversations";
+import { getConverastionById } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";

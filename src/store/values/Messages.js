@@ -35,7 +35,8 @@ export const messages = createSlice({
     clearMessagesToLocalLimit: (state, { payload }) => {
       const messageIds = Object.values(state.entities)
         .filter((message) => message.cid === payload)
-        .splice(30)
+        .sort((a, b) => a.t - b.t)
+        .slice(0, -30)
         .map((message) => message._id);
 
       messagesAdapter.removeMany(state, messageIds);
