@@ -3,7 +3,7 @@ import encryptionService from "./encryptionService";
 import indexedDB from "@store/indexedDB";
 import localforage from "localforage";
 import store from "@store/store";
-import { clearMessageIdsToLocalLimit } from "@store/values/Conversations";
+import { removeMessagesFromConversation } from "@store/values/Conversations";
 import { clearMessagesToLocalLimit } from "@store/values/Messages";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
@@ -12,8 +12,9 @@ import { updateNetworkState } from "@store/values/NetworkState";
 class GarbageCleaningService {
   async clearConversationMessages(cid) {
     if (!cid) return;
-    store.dispatch(clearMessageIdsToLocalLimit(cid));
-    store.dispatch(clearMessagesToLocalLimit(cid));
+    const deletedMids = (await store.dispatch(clearMessagesToLocalLimit(cid)))
+      .payload;
+    store.dispatch(removeMessagesFromConversation({ cid, mids: deletedMids }));
   }
 
   async resetDataOnAuth() {

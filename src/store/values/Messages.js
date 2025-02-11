@@ -1,4 +1,5 @@
 import {
+  createAsyncThunk,
   createEntityAdapter,
   createSelector,
   createSlice,
@@ -32,18 +33,29 @@ export const messages = createSlice({
         .map((id) => ({ _id: id, status }));
       messagesAdapter.upsertMany(state, upsertParams);
     },
-    clearMessagesToLocalLimit: (state, { payload }) => {
-      const messageIds = Object.values(state.entities)
-        .filter((message) => message.cid === payload)
-        .sort((a, b) => a.t - b.t)
-        .slice(0, -30)
-        .map((message) => message._id);
-
-      messagesAdapter.removeMany(state, messageIds);
-    },
     removeMessage: messagesAdapter.removeOne,
+    removeMessages: messagesAdapter.removeMany,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(clearMessagesToLocalLimit.fulfilled, () => {});
   },
 });
+
+export const clearMessagesToLocalLimit = createAsyncThunk(
+  "messages/clearMessagesToLocalLimit",
+  async (cid, { getState, dispatch }) => {
+    const state = getState();
+    const messages = Object.values(state.messages.entities)
+      .filter((message) => message.cid === cid)
+      .sort((a, b) => a.t - b.t)
+      .slice(0, -30)
+      .map((message) => message._id);
+
+    dispatch(removeMessages(messages));
+
+    return messages;
+  }
+);
 
 export const selectActiveConversationMessages = createSelector(
   [getConverastionById, selectMessagesEntities],
@@ -68,7 +80,7 @@ export const {
   markMessagesAsRead,
   markDecryptionFailedMessages,
   removeMessage,
-  clearMessagesToLocalLimit,
+  removeMessages,
 } = messages.actions;
 
 export default messages.reducer;

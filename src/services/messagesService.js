@@ -20,7 +20,7 @@ import { setSelectedConversation } from "@store/values/SelectedConversation";
 import {
   markConversationAsRead,
   removeChat,
-  removeMessageFromConversation,
+  removeMessagesFromConversation,
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
@@ -346,7 +346,7 @@ class MessagesService {
   }
 
   async removeMessageFromLocalStore(mid, cid) {
-    store.dispatch(removeMessageFromConversation({ mid, cid }));
+    store.dispatch(removeMessagesFromConversation({ mid, cid }));
     store.dispatch(removeMessage(mid));
     await indexedDB.removeMessage(mid);
   }
