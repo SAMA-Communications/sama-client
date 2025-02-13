@@ -241,10 +241,6 @@ class MessagesService {
   async retrieveMessages(params) {
     const messagesDB = await indexedDB.getMessages(params);
 
-    if (messagesDB.length >= params.limit) {
-      return this.handleRetrievedMessages(messagesDB);
-    }
-
     const lastExistMessage = messagesDB[0];
     if (lastExistMessage) {
       params.updated_at = {
@@ -257,8 +253,15 @@ class MessagesService {
     const messagesAPI = await api.messageList(params);
     await indexedDB.insertManyMessages(messagesAPI);
 
-    const jointMessages = [...messagesDB, ...messagesAPI];
-    return this.handleRetrievedMessages(jointMessages);
+    const jointMessages = [...messagesAPI, ...messagesDB];
+    const returnedMessages = this.handleRetrievedMessages(jointMessages);
+
+    for (const message of messagesAPI.reverse()) {
+      if (message.encrypted_message_type !== undefined)
+        await this.#tryToCreateESession(message);
+    }
+
+    return returnedMessages;
   }
 
   async syncData() {
