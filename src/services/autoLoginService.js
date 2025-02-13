@@ -1,4 +1,6 @@
 import api from "@api/api";
+import encryptionService from "./encryptionService";
+import garbageCleaningService from "./garbageCleaningService";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
@@ -38,9 +40,7 @@ class AutoLoginService {
 
     const currentPath = history.location?.hash;
     const handleLoginFailure = () => {
-      localStorage.removeItem("sessionId");
-      localStorage.removeItem("sessionExpiredAt");
-      localStorage.removeItem("userData");
+      garbageCleaningService.handleLoginFailure();
       navigateTo("/authorization");
       store.dispatch(setUserIsLoggedIn(false));
     };
@@ -79,6 +79,8 @@ class AutoLoginService {
         localStorage.setItem("userData", JSON.stringify(userData));
         store.dispatch(setCurrentUserId(userData._id));
         api.curerntUserId = userData._id;
+
+        await encryptionService.registerDevice(userData._id);
 
         subscribeForNotifications();
         store.dispatch(upsertUser(userData));

@@ -35,6 +35,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.content__name > svg {
+  margin-right: 7px;
+  padding-top: 5px;
+}
 
 .header-more {
   margin-left: auto;
@@ -73,6 +77,9 @@
   }
   .content__name {
     font-size: var(--font-h3);
+  }
+  .content__name > svg {
+    padding-top: 10px;
   }
   .header-content {
     max-width: calc(100% - 100px);

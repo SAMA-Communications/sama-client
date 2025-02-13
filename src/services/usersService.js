@@ -1,5 +1,6 @@
 import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
+import garbageCleaningService from "./garbageCleaningService";
 import isHeic from "@utils/media/is_heic";
 import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
@@ -164,9 +165,7 @@ class UsersService {
       await performLogoutRequest();
       throw new Error("User logout error");
     } finally {
-      localStorage.removeItem("sessionId");
-      localStorage.removeItem("sessionExpiredAt");
-      localStorage.removeItem("userData");
+        await garbageCleaningService.handleLogout();
     }
   }
 

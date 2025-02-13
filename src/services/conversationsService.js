@@ -1,6 +1,7 @@
 import DownloadManager from "@src/adapters/downloadManager";
 import api from "@api/api";
 import eventEmitter from "@event/eventEmitter";
+import getOpponentId from "@utils/user/get_opponent_id";
 import isHeic from "@utils/media/is_heic";
 import navigateTo from "@utils/navigation/navigate_to";
 import processFile from "@utils/media/process_file";
@@ -100,26 +101,38 @@ class ConversationsService {
           cids: chats.map((el) => el._id),
         });
         store.dispatch(upsertUsers(users));
+
+        const additionalUsersIds = [];
+        chats.forEach((chat) => {
+          if (!chat.is_encrypted) return false;
+          const opponentId = getOpponentId(chat, api.curerntUserId);
+          !users.find((u) => u.native_id === opponentId) &&
+            additionalUsersIds.push(opponentId);
+        });
+        if (additionalUsersIds.length) {
+          const additionalUsers = await api.getUsersByIds({
+            ids: additionalUsersIds,
+          });
+          store.dispatch(upsertUsers(additionalUsers));
+        }
       }
     } catch (error) {
       showCustomAlert(error.message, "danger");
     }
   }
 
-  async createPrivateChat(userId, userObject) {
+  async createPrivateChat(userId, userObject, isEncrypted = false) {
     if (!userId) {
       return;
     }
 
-    const requestData = {
-      type: "u",
-      participants: [userId],
-    };
+    const requestData = { type: "u", participants: [userId] };
+    isEncrypted && (requestData["is_encrypted"] = true);
 
     const chat = await api.conversationCreate(requestData);
     userObject && store.dispatch(addUsers([userObject]));
     store.dispatch(insertChat({ ...chat, messagesIds: null }));
-    store.dispatch(setSelectedConversation({ id: chat._id }));
+    !isEncrypted && store.dispatch(setSelectedConversation({ id: chat._id }));
 
     return chat._id;
   }
@@ -289,8 +302,12 @@ class ConversationsService {
     }
   }
 
-  async search(data) {
-    return await api.conversationSearch(data);
+  async search(params) {
+    return await api.conversationSearch(params);
+  }
+
+  async getParticipantsByIds(params) {
+    return await api.getUsersByIds(params);
   }
 }
 

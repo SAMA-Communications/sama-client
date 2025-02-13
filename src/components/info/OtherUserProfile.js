@@ -1,7 +1,6 @@
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import InfoBox from "@components/info/elements/InfoBox";
 import activityService from "@services/activityService";
-import api from "@api/api";
 import conversationService from "@services/conversationsService";
 import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
 import getUserFullName from "@utils/user/get_user_full_name";
@@ -26,6 +25,7 @@ import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
 import { ReactComponent as LinkTo } from "@icons/options/LinkTo.svg";
 import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
+import { ReactComponent as AddEncryptedConversationMini } from "@icons/encryption/AddEncryptedConversationMini.svg";
 
 export default function OtherUserProfile() {
   const dispatch = useDispatch();
@@ -41,7 +41,7 @@ export default function OtherUserProfile() {
     const uid = extractUserIdFromUrl(pathname + hash + search);
     let user = participants[uid];
     if (!user) {
-      api.getUsersByIds({ ids: [uid] }).then((users) => {
+      conversationService.getParticipantsByIds({ ids: [uid] }).then((users) => {
         user = users?.[0];
         if (user) {
           setUserObject(user);
@@ -132,6 +132,22 @@ export default function OtherUserProfile() {
                 }}
               >
                 Start a conversation
+              </p>
+            </div>
+            <div className="info__link info__link--encrypted">
+              <AddEncryptedConversationMini />
+              <p
+                className="info__new-conversation"
+                onClick={async () => {
+                  const chatId = await conversationService.createPrivateChat(
+                    userId,
+                    null,
+                    true
+                  );
+                  navigateTo(`/#${chatId}`);
+                }}
+              >
+                Start an encrypted chat
               </p>
             </div>
           </div>

@@ -29,7 +29,9 @@ export const getConverastionById = createSelector(
 export const getDisplayableConversations = createSelector(
   [selectAllConversations],
   (conversations) => {
-    return conversations.filter((obj) => obj.type === "g" || obj.last_message);
+    return conversations.filter(
+      (obj) => obj.type === "g" || obj.last_message || obj.is_encrypted
+    );
   }
 );
 export const conversations = createSlice({
@@ -82,7 +84,11 @@ export const conversations = createSlice({
 
       const { messagesIds, unread_messages_count } =
         state.entities[conversation._id] || {};
-      // messagesIds && delete conversation.messagesIds;
+      if (messagesIds) {
+        conversation.messagesIds = [
+          ...new Set([...(conversation.messagesIds ?? []), ...messagesIds]),
+        ];
+      }
       unread_messages_count && delete conversation.unread_messages_count;
 
       conversationsAdapter.upsertOne(state, conversation);
@@ -172,6 +178,17 @@ export const conversations = createSlice({
           last_message: { ...lastMessageField, status: "read" },
         });
     },
+    removeMessagesFromConversation: (state, { payload }) => {
+      const { cid, mid, mids } = payload;
+      const messagesIds = state.entities[cid]?.messagesIds || [];
+
+      conversationsAdapter.upsertOne(state, {
+        _id: cid,
+        messagesIds: mid
+          ? messagesIds.filter((id) => id !== mid)
+          : messagesIds.filter((id) => !mids.includes(id)),
+      });
+    },
   },
 });
 
@@ -187,6 +204,7 @@ export const {
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
+  removeMessagesFromConversation,
 } = conversations.actions;
 
 export default conversations.reducer;

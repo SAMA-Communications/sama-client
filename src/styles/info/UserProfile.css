@@ -216,6 +216,7 @@
 .profile__container--bottom .info__link:nth-child(6) {
   margin-top: 20px;
 }
+
 .info__link:nth-last-child(1) > p {
   color: var(--color-red);
 }
@@ -223,6 +224,10 @@
 .info__new-conversation {
   color: var(--color-accent-dark) !important;
   font-size: var(--font-h6);
+}
+.info__link--encrypted {
+  margin-top: 20px;
+  margin-bottom: 0 !important;
 }
 
 .profile__status {
@@ -280,9 +285,12 @@
     margin-top: 25px;
   }
   .profile__container--bottom .info__link:nth-child(6) {
-    margin-top: 50px;
+    margin-top: 45px;
   }
   .profile__container--bottom .info__link:nth-child(7) {
     margin-top: 20px;
+  }
+  .profile__container--bottom .info__link--delete {
+    margin-top: auto !important;
   }
 }

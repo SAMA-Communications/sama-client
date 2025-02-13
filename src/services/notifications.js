@@ -45,7 +45,9 @@ async function showLocalNotification(pushMessage) {
   const bodyCrop = body.length > 75 ? body.slice(0, 75) + "..." : body;
   const notificationMessage = {
     ...pushMessage,
-    body: `${bodyCrop}${attachmentText}`,
+    body: conversation.is_encrypted
+      ? "New message"
+      : `${bodyCrop}${attachmentText}`,
     title,
   };
 

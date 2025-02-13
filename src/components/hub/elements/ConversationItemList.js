@@ -45,11 +45,17 @@ export default function ConversationItemList({ conversations }) {
           obj.type === "g" && !obj.last_message?.x ? lastMessageUserName : null
         }
         chatAvatarUrl={
-          obj.type === "g" ? obj.image_url : chatParticipant.avatar_url
+          obj.type === "g"
+            ? obj.image_url
+            : obj.is_encrypted
+            ? null
+            : chatParticipant.avatar_url
         }
         chatAvatarBlutHash={
           obj.type === "g"
             ? obj.image_object?.file_blur_hash
+            : obj.is_encrypted
+            ? null
             : chatParticipant.avatar_object?.file_blur_hash
         }
         chatObject={obj}

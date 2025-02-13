@@ -1,4 +1,5 @@
 import {
+  createAsyncThunk,
   createEntityAdapter,
   createSelector,
   createSlice,
@@ -26,17 +27,35 @@ export const messages = createSlice({
     addMessages: messagesAdapter.addMany,
     upsertMessage: messagesAdapter.upsertOne,
     upsertMessages: messagesAdapter.upsertMany,
-    markMessagesAsRead: (state, action) => {
-      const mids = action.payload
+    updateMessagesStatus: (state, { payload: { mids, status } }) => {
+      const upsertParams = mids
         .filter((id) => !!state.entities[id])
-        .map((id) => {
-          return { _id: id, status: "read" };
-        });
-      messagesAdapter.upsertMany(state, mids);
+        .map((id) => ({ _id: id, status }));
+      messagesAdapter.upsertMany(state, upsertParams);
     },
     removeMessage: messagesAdapter.removeOne,
+    removeMessages: messagesAdapter.removeMany,
+  },
+  extraReducers: (builder) => {
+    builder.addCase(clearMessagesToLocalLimit.fulfilled, () => {});
   },
 });
+
+export const clearMessagesToLocalLimit = createAsyncThunk(
+  "messages/clearMessagesToLocalLimit",
+  async (cid, { getState, dispatch }) => {
+    const state = getState();
+    const messages = Object.values(state.messages.entities)
+      .filter((message) => message.cid === cid)
+      .sort((a, b) => a.t - b.t)
+      .slice(0, -30)
+      .map((message) => message._id);
+
+    dispatch(removeMessages(messages));
+
+    return messages;
+  }
+);
 
 export const selectActiveConversationMessages = createSelector(
   [getConverastionById, selectMessagesEntities],
@@ -57,8 +76,11 @@ export const {
   addMessages,
   upsertMessage,
   upsertMessages,
+  updateMessagesStatus,
   markMessagesAsRead,
+  markDecryptionFailedMessages,
   removeMessage,
+  removeMessages,
 } = messages.actions;
 
 export default messages.reducer;

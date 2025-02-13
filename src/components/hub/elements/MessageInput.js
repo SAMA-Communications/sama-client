@@ -15,6 +15,7 @@ export default function MessageInput({
   inputTextRef,
   onSubmitFunc,
   isBlockedConv,
+  isEncryptedSessionActive,
   chatMessagesBlockRef,
 }) {
   const location = useLocation();
@@ -82,7 +83,7 @@ export default function MessageInput({
   }, [location]);
 
   const inputsView = useMemo(() => {
-    if (isBlockedConv) {
+    if (isBlockedConv || isEncryptedSessionActive === false) {
       return (
         <TextAreaInput
           inputRef={inputTextRef}
@@ -91,7 +92,9 @@ export default function MessageInput({
           isDisabled={true}
           isMobile={isMobile}
           placeholder={
-            "The user you are currently chatting with has deleted their account. You can no longer continue the chat."
+            !isBlockedConv
+              ? "Your opponent does not have a registered encrypted device."
+              : "The user you are currently chatting with has deleted their account. You can no longer continue the chat."
           }
         />
       );
@@ -99,15 +102,18 @@ export default function MessageInput({
 
     return (
       <>
-        <Attach
-          className="input-file__button"
-          onClick={() => {
-            addSuffix(location.pathname + location.hash, "/attach");
-            storeInputText();
-          }}
-        />
+        {isEncryptedSessionActive ? null : (
+          <Attach
+            className="input-file__button"
+            onClick={() => {
+              addSuffix(location.pathname + location.hash, "/attach");
+              storeInputText();
+            }}
+          />
+        )}
         <TextAreaInput
           inputRef={inputTextRef}
+          isEncryptedSessionActive={isEncryptedSessionActive}
           handleInput={handleInput}
           handeOnKeyDown={handeOnKeyDown}
           isDisabled={false}
@@ -117,7 +123,7 @@ export default function MessageInput({
         <Send className="input-text__button" onClick={onSubmitFunc} />
       </>
     );
-  }, [location, isBlockedConv, onSubmitFunc]);
+  }, [location, isBlockedConv, onSubmitFunc, isEncryptedSessionActive]);
 
   return <div className="inputs__container">{inputsView}</div>;
 }

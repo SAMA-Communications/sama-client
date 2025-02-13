@@ -1,0 +1,29 @@
+.em-toggle_container {
+  margin-right: auto;
+
+  display: flex;
+  gap: 7px;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.em-toggle_button-on,
+.em-toggle_button-off {
+  width: 50px;
+
+  padding: 5px 10px;
+
+  font-size: var(--font-p);
+  color: var(--color-white);
+
+  border: none;
+  border-radius: var(--border-12);
+  background-color: var(--color-accent-light);
+
+  cursor: pointer;
+}
+
+.em-toggle_button-on {
+  background-color: var(--color-accent-dark);
+}

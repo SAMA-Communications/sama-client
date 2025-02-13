@@ -1,4 +1,5 @@
 import MessageInput from "@components/hub/elements/MessageInput";
+import getOpponentId from "@utils/user/get_opponent_id";
 import messagesService from "@services/messagesService";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
@@ -21,7 +22,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import "@styles/hub/chatForm/ChatFormInputs.css";
 
-export default function ChatFormInputs({ chatMessagesBlockRef }) {
+export default function ChatFormInputs({
+  chatMessagesBlockRef,
+  isEncryptedSessionActive,
+}) {
   const dispatch = useDispatch();
 
   const connectState = useSelector(getNetworkState);
@@ -30,6 +34,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
+  const opponentId = getOpponentId(selectedConversation, currentUserId);
 
   const inputRef = useRef(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
@@ -71,7 +76,11 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     inputRef.current.focus(); //care..
 
     try {
-      await messagesService.sendMessage(mObject);
+      await messagesService[
+        selectedConversation?.is_encrypted
+          ? "sendEncryptedMessage"
+          : "sendMessage"
+      ](mObject, opponentId);
     } catch (e) {
       showCustomAlert(
         e.message || "The server connection is unavailable.",
@@ -125,6 +134,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   return (
     <MessageInput
       inputTextRef={inputRef}
+      isEncryptedSessionActive={isEncryptedSessionActive}
       isBlockedConv={isBlockedConv}
       onSubmitFunc={createAndSendMessage}
       chatMessagesBlockRef={chatMessagesBlockRef}

@@ -1,8 +1,25 @@
 import LastMessageMedia from "@components/message/lastMessage/LastMessageMedia";
-import LastMessageStatus from "@components/message/lastMessage/LastMessageStatus";
 import getFileType from "@utils/media/get_file_type";
+import MessageIndicator from "./elements/MessageIndicator";
 
-export default function LastMessage({ message, count, userId, viewName }) {
+export default function LastMessage({
+  message,
+  count,
+  userId,
+  viewName,
+  isEncrypted,
+}) {
+  if (isEncrypted) {
+    return (
+      <>
+        <div className="content-bottom__last-message">
+          <p className="last-message__text">Encrypted chat</p>
+        </div>
+        <MessageIndicator message={message} userId={userId} count={count} />
+      </>
+    );
+  }
+
   if (!message) {
     return null;
   }
@@ -28,11 +45,7 @@ export default function LastMessage({ message, count, userId, viewName }) {
         {lastAtt ? <LastMessageMedia attachment={lastAtt} /> : null}
         <p className="last-message__text">{lastMessageText(body, lastAtt)}</p>
       </div>
-      {count > 0 ? (
-        <div className="content-bottom__indicator">{count}</div>
-      ) : (
-        <LastMessageStatus message={message} userId={userId} />
-      )}
+      <MessageIndicator message={message} userId={userId} count={count} />
     </>
   );
 }

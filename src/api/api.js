@@ -85,6 +85,15 @@ class Api {
           return;
         }
 
+        if (message.message_decryption_failed) {
+          if (this.onMessageDecryptionFailedListener) {
+            this.onMessageDecryptionFailedListener(
+              message.message_decryption_failed
+            );
+          }
+          return;
+        }
+
         if (message.message) {
           if (message.message.error) {
             this.responsesPromises[
@@ -234,6 +243,34 @@ class Api {
     return this.#sendPromise(requestData, resObjKey);
   }
 
+  async encryptedDeviceCreate(data) {
+    const requestData = {
+      request: {
+        device_register: {
+          identity_key: data.identity_key,
+          signed_key: data.signed_key,
+          one_time_pre_keys: data.one_time_pre_keys,
+        },
+        id: getUniqueId("encryptedDeviceCreate"),
+      },
+    };
+    const resObjKey = "success";
+    return this.#sendPromise(requestData, resObjKey);
+  }
+
+  async getEncryptedKeys(data) {
+    const requestData = {
+      request: {
+        request_keys: {
+          user_ids: data.user_ids,
+        },
+        id: getUniqueId("getEncryptedKeys"),
+      },
+    };
+    const resObjKey = "devices";
+    return this.#sendPromise(requestData, resObjKey);
+  }
+
   async userEdit(data) {
     const requestData = {
       request: {
@@ -354,6 +391,7 @@ class Api {
           body: data.body,
           cid: data.cid,
           attachments: data.attachments,
+          encrypted_message_type: data.encrypted_message_type,
         },
       };
       this.responsesPromises[requestData.message.id] = { resolve, reject };
@@ -401,6 +439,21 @@ class Api {
           cid: data.cid,
         },
         id: getUniqueId("markConversationAsRead"),
+      },
+    };
+
+    const resObjKey = "success";
+    return this.#sendPromise(requestData, resObjKey);
+  }
+
+  async markDecrypionFailedMessages(data) {
+    const requestData = {
+      request: {
+        message_decryption_failed: {
+          cid: data.cid,
+          ids: data.mids,
+        },
+        id: getUniqueId("markDecrypionFailedMessages"),
       },
     };
 
@@ -501,6 +554,7 @@ class Api {
           opponent_id: data.opponent_id,
           participants: data.participants,
           image_object: data.image_object,
+          is_encrypted: data.is_encrypted,
         },
         id: getUniqueId("conversationCreate"),
       },

@@ -4,6 +4,7 @@ import conversationService from "@services/conversationsService";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
+import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@helpers/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
 import { selectParticipantsEntities } from "@store/values/Participants";
@@ -14,7 +15,7 @@ import { useSelector } from "react-redux";
 
 import "@styles/modals/UsersSelectModalHub.css";
 
-export default function UsersSelectModalHub({ type }) {
+export default function UsersSelectModalHub({ type, isEncrypted = false }) {
   const selectedConversation = useSelector(getConverastionById);
   const participants = useSelector(selectParticipantsEntities);
 
@@ -22,15 +23,33 @@ export default function UsersSelectModalHub({ type }) {
   const [chatName, setChatName] = useState(null);
   const [chatImage, setChatImage] = useState(null);
 
-  const closeModal = () => removeAndNavigateSubLink(pathname + hash, "/create");
-
   const sendCreateRequest = async (participants) => {
-    const chatId = await conversationService.createGroupChat(
-      participants,
-      chatName,
-      chatImage
+    if (!participants?.length) {
+      showCustomAlert(
+        "Select a participant before creating a chat.",
+        "warning"
+      );
+      return;
+    }
+
+    if (!isEncrypted) {
+      const chatId = await conversationService.createGroupChat(
+        participants,
+        chatName,
+        chatImage
+      );
+      chatId && navigateTo(`/#${chatId}`);
+      return;
+    }
+
+    const opponent = participants?.[0];
+    const chatId = await conversationService.createPrivateChat(
+      opponent.native_id,
+      opponent,
+      true
     );
-    chatId && navigateTo(`/#${chatId}`);
+
+    navigateTo(`/#${chatId}`);
   };
 
   const sendEditRequest = async (participants) => {
@@ -40,9 +59,13 @@ export default function UsersSelectModalHub({ type }) {
     removeAndNavigateLastSection(pathname + hash);
   };
 
-  useKeyDown(KEY_CODES.ESCAPE, () =>
-    removeAndNavigateSubLink(pathname + hash, "/create")
-  );
+  const closeModal = () =>
+    removeAndNavigateSubLink(
+      pathname + hash,
+      isEncrypted ? "/create_encrypted" : "/create"
+    );
+
+  useKeyDown(KEY_CODES.ESCAPE, closeModal);
 
   const typeOfFunc = useMemo(() => {
     if (type === "add_participants") {
@@ -57,9 +80,10 @@ export default function UsersSelectModalHub({ type }) {
       );
     }
 
-    return chatName ? (
+    return chatName || isEncrypted ? (
       <UserSelectorBlock
         closeWindow={closeModal}
+        isEncrypted={isEncrypted}
         onClickCreateFunc={sendCreateRequest}
       />
     ) : (
@@ -69,12 +93,14 @@ export default function UsersSelectModalHub({ type }) {
         closeWindow={closeModal}
       />
     );
-  }, [type, chatName, selectedConversation, participants]);
+  }, [type, chatName, isEncrypted, selectedConversation, participants]);
 
   return (
     <div className="edit-modal__container fcc">
       <div
-        className={`edit-modal__content--chat${chatName || type ? "" : "name"}`}
+        className={`edit-modal__content--chat${
+          chatName || type || isEncrypted ? "" : "name"
+        }`}
       >
         {typeOfFunc}
       </div>

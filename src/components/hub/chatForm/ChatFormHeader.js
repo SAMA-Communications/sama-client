@@ -21,6 +21,7 @@ import "@styles/hub/chatForm/ChatFormHeader.css";
 
 import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
 import { ReactComponent as More } from "@icons/options/More.svg";
+import { ReactComponent as EncryptedConversation } from "@icons/encryption/MiniEncryptedConversation.svg";
 
 export default function ChatFormHeader({ closeFormFunc }) {
   const dispatch = useDispatch();
@@ -146,7 +147,11 @@ export default function ChatFormHeader({ closeFormFunc }) {
         <BackBtn className="header-back" onClick={closeFormFunc} />
       ) : null}
       <div className="header-content">
-        <div className="content__name">&zwnj;{viewChatName}</div>
+        <div className="content__name">
+          &zwnj;
+          {selectedConversation.is_encrypted ? <EncryptedConversation /> : ""}
+          {viewChatName}
+        </div>
         <div className="content__activity">{viewStatusActivity}</div>
       </div>
       <div

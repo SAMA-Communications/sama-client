@@ -30,9 +30,12 @@ export const contextMenu = createSlice({
         const { x, y } = coords;
         const { innerHeight, innerWidth } = window;
         const popUpHeight = 25 + state.list.filter((el) => !!el).length * 40;
+        const popUpWidth = state.list.includes("createEncryptedChat")
+          ? 355
+          : 245;
 
         state.coords = {
-          x: x + 240 > innerWidth ? innerWidth - 245 : x,
+          x: x + popUpWidth > innerWidth ? innerWidth - popUpWidth : x,
           y: y + popUpHeight > innerHeight ? innerHeight - popUpHeight : y,
         };
       }
