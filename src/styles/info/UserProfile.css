@@ -216,7 +216,7 @@
 .profile__container--bottom .info__link:nth-child(6) {
   margin-top: 20px;
 }
-.info__link:nth-last-child(1) > p {
+.info__link + .leave > p {
   color: var(--color-red);
 }
 

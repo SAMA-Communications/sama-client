@@ -29,10 +29,11 @@ export default function UserProfile() {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
-  const isMobileView = useSelector(getIsMobileView);
-
   const currentUser = useSelector(getCurrentUserFromParticipants);
   const { login, email, phone, first_name, last_name } = currentUser || {};
+
+  const isMobileView = useSelector(getIsMobileView);
+  const isCurrentUserCantLeave = login.startsWith("sama-user-");
 
   const inputFilesRef = useRef(null);
 
@@ -170,18 +171,20 @@ export default function UserProfile() {
               </p>
             </div>
           ) : null}
-          <div className="info__link">
-            <Trash />
-            <p
-              className="info__delete"
-              onClick={async () =>
-                (await usersService.deleteCurrentUser()) &&
-                navigateTo("/authorization")
-              }
-            >
-              Delete account
-            </p>
-          </div>
+          {isCurrentUserCantLeave ? null : (
+            <div className="info__link leave">
+              <Trash />
+              <p
+                className="info__delete"
+                onClick={async () =>
+                  (await usersService.deleteCurrentUser()) &&
+                  navigateTo("/authorization")
+                }
+              >
+                Delete account
+              </p>
+            </div>
+          )}
         </div>
       </CustomScrollBar>
     </div>
