@@ -134,29 +134,31 @@ export default function UserProfile() {
             value={email}
             placeholder={"Enter your email address"}
           />
-          <div className="info__link">
-            <Password />
-            <p
-              className="info__password"
-              onClick={() => {
-                const currentPassword = window.prompt(
-                  "Enter your current password:"
-                );
-                if (!currentPassword) {
-                  return;
-                }
+          {isCurrentUserCantLeave ? null : (
+            <div className="info__link">
+              <Password />
+              <p
+                className="info__password"
+                onClick={() => {
+                  const currentPassword = window.prompt(
+                    "Enter your current password:"
+                  );
+                  if (!currentPassword) {
+                    return;
+                  }
 
-                const newPassword = window.prompt("Enter a new password:");
-                if (!newPassword || !currentPassword) {
-                  return;
-                }
+                  const newPassword = window.prompt("Enter a new password:");
+                  if (!newPassword || !currentPassword) {
+                    return;
+                  }
 
-                usersService.changePassword(currentPassword, newPassword);
-              }}
-            >
-              Change password...
-            </p>
-          </div>
+                  usersService.changePassword(currentPassword, newPassword);
+                }}
+              >
+                Change password...
+              </p>
+            </div>
+          )}
           {isMobileView ? (
             <div className="info__link">
               <LogoutMini />
