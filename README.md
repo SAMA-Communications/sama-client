@@ -25,20 +25,6 @@ The whole SAMA stack can be tested using https://app.samacloud.io public cloud.
 
 There are also other components. Make sure to check [Deploying SAMA chat server stack: a comprehensive guide](https://medium.com/sama-communications/deploying-sama-chat-server-stack-a-comprehensive-guide-294ddb9a2d78)
 
-### To run iOS and Android
-
-#### Preparations
-
-- In order to develop any application with Capacitor, you will need NodeJS 18 or higher installed
-- Follow https://capacitorjs.com/docs/getting-started/environment-setup#ios-requirements guide to make sure you meet iOS requirements
-- Follow https://capacitorjs.com/docs/getting-started/environment-setup#android-requirements guide to make sure you meet Android requirements
-
-#### How to run
-
-- Copy `.env.example` to `.env` (use `REACT_APP_SOCKET_CONNECT=wss://api.samacloud.io/` to connect to PROD live env)
-- Run `npm run capacitor:build`
-- To run ios: `npm run ios` or android: `npm run android`
-
 ## Community and Support
 
 Join our community for support and discussions:
