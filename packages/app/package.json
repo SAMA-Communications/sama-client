@@ -1,0 +1,60 @@
+{
+  "name": "sama",
+  "version": "1.4.0",
+  "private": true,
+  "type": "module",
+  "licaense": "MIT",
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.8.6",
+    "@tailwindcss/vite": "^4.0.8",
+    "@vitejs/plugin-react": "^4.3.4",
+    "blurhash": "^2.0.5",
+    "browser-image-compression": "^2.0.2",
+    "framer-motion": "^8.0.2",
+    "get-browser-fingerprint": "^3.2.0",
+    "heic2any": "^0.0.4",
+    "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^3.1.2",
+    "react": "^18.2.0",
+    "react-blurhash": "^0.3.0",
+    "react-custom-scrollbars-2": "^4.5.0",
+    "react-dom": "^18.2.0",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-loader-spinner": "^5.3.4",
+    "react-loading-skeleton": "^3.4.0",
+    "react-redux": "^8.0.4",
+    "react-router-dom": "^6.4.2",
+    "tailwindcss": "^4.0.8",
+    "vite": "^6.1.1"
+  },
+  "devDependencies": {
+    "vite-plugin-svgr": "^4.3.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
