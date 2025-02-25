@@ -143,7 +143,7 @@ class MessagesService {
     api
       .messageList({
         cid,
-        limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
+        limit: +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD,
       })
       .then(async (arr) => {
         const messagesIds = arr.map((el) => el._id).reverse();

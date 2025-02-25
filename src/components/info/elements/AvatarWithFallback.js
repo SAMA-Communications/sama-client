@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { ReactComponent as UserIcon } from "@icons/users/User.svg";
+import UserIcon from "@icons/users/User.svg?react";
 
 export default function AvatarWithFallback({ avatarUrl, altText }) {
   const [component, setComponent] = useState("");

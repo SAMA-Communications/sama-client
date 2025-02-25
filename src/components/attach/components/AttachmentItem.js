@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 
 import "@styles/attach/AttachmentItem.css";
 
-import { ReactComponent as CloseIcon } from "@icons/actions/CloseGray.svg";
+import CloseIcon from "@icons/actions/CloseGray.svg?react";
 
 export default function AttachmentItem({
   file = {},

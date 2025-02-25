@@ -1,8 +1,8 @@
 import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import getUserInitials from "@utils/user/get_user_initials";
 
-import { ReactComponent as UserIconBlack } from "@icons/users/UserIconBlack.svg";
-import { ReactComponent as UserIconWhite } from "@icons/users/UserIconWhite.svg";
+import UserIconBlack from "@icons/users/UserIconBlack.svg?react";
+import UserIconWhite from "@icons/users/UserIconWhite.svg?react";
 
 export default function MessageUserIcon({ userObject, isCurrentUser }) {
   return userObject && !!Object.keys(userObject).length ? (

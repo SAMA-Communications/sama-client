@@ -1,5 +1,5 @@
 import ContextLink from "@components/context/elements/ContextLink";
-import { ReactComponent as SendMessage } from "@icons/context/SendMessage.svg";
+import SendMessage from "@icons/context/SendMessage.svg?react";
 
 export default function SendMessageLink({ onClick }) {
   return (

@@ -10,8 +10,8 @@ import { useState } from "react";
 
 import "@styles/attach/MediaHub.css";
 
-import { ReactComponent as Prev } from "@icons/options/Prev.svg";
-import { ReactComponent as Next } from "@icons/options/Next.svg";
+import Prev from "@icons/options/Prev.svg?react";
+import Next from "@icons/options/Next.svg?react";
 
 export default function MediaHub() {
   const { pathname, hash } = useLocation();

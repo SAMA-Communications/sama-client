@@ -4,8 +4,8 @@ import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import getLastUpdateTime from "@utils/conversation/get_last_update_time";
 import { useMemo } from "react";
 
-import { ReactComponent as Group } from "@icons/users/Group.svg";
-import { ReactComponent as UnknownPhoto } from "@icons/users/UnknownPhoto.svg";
+import Group from "@icons/users/Group.svg?react";
+import UnknownPhoto from "@icons/users/UnknownPhoto.svg?react";
 
 export default function ConversationItem({
   isSelected,

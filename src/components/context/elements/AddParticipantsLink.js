@@ -1,6 +1,6 @@
 import ContextLink from "@components/context/elements/ContextLink";
 
-import { ReactComponent as AddParticipants } from "@icons/context/AddParticipants.svg";
+import AddParticipants from "@icons/context/AddParticipants.svg?react";
 
 export default function AddParticipantsLink({ onClick }) {
   return (

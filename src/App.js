@@ -1,6 +1,6 @@
 import ContextMenuHub from "@components/context/ContextMenuHub";
 import activityService from "@services/activityService";
-import autoLoginService from "@services/autoLoginService.js";
+import autoLoginService from "@services/autoLoginService";
 import conversationService from "@services/conversationsService";
 import globalConstants from "@helpers/constants";
 import messagesService from "@services/messagesService";
@@ -20,8 +20,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import SMain from "@skeletons/SMain";
 import SPageLoader from "@skeletons/SPageLoader";
-
-import "@styles/GlobalParam.css";
 
 const Main = lazy(() => import("@components/Main"));
 const AuthorizationHub = lazy(() =>

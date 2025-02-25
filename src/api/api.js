@@ -609,7 +609,7 @@ function getUserLogin() {
   return token ? token.split(0, 6) : token;
 }
 
-const api = new Api(process.env.REACT_APP_SOCKET_CONNECT);
+const api = new Api(import.meta.env.VITE_SOCKET_CONNECT);
 api.connect();
 
 export { getUserLogin };

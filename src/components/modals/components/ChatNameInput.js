@@ -4,7 +4,7 @@ import { KEY_CODES } from "@helpers/keyCodes";
 import { useCallback, useRef, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 
-import { ReactComponent as ImageMedium } from "@icons/media/ImageBig.svg";
+import ImageMedium from "@icons/media/ImageBig.svg?react";
 
 export default function ChatNameInput({ setState, setImage, closeWindow }) {
   const [name, setName] = useState(null);

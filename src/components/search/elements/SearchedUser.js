@@ -10,7 +10,7 @@ import { useLocation } from "react-router-dom";
 
 import "@styles/search/elements/SearchedUser.css";
 
-import { ReactComponent as Selected } from "@icons/status/Selected.svg";
+import Selected from "@icons/status/Selected.svg?react";
 
 export default function SearchedUser({
   uObject,

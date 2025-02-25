@@ -1,6 +1,6 @@
 import ContextLink from "@components/context/elements/ContextLink";
 
-import { ReactComponent as Remove } from "@icons/context/Remove.svg";
+import Remove from "@icons/context/Remove.svg?react";
 
 export default function RemoveParticipantLink({ onClick }) {
   return (

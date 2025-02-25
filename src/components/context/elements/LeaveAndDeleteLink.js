@@ -1,6 +1,6 @@
 import ContextLink from "@components/context/elements/ContextLink";
 
-import { ReactComponent as Leave } from "@icons/context/Leave.svg";
+import Leave from "@icons/context/Leave.svg?react";
 
 export default function LeaveAndDeleteLink({ onClick }) {
   return (

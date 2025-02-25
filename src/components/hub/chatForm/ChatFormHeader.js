@@ -19,8 +19,8 @@ import { useMemo } from "react";
 
 import "@styles/hub/chatForm/ChatFormHeader.css";
 
-import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
-import { ReactComponent as More } from "@icons/options/More.svg";
+import BackBtn from "@icons/options/Back.svg?react";
+import More from "@icons/options/More.svg?react";
 
 export default function ChatFormHeader({ closeFormFunc }) {
   const dispatch = useDispatch();

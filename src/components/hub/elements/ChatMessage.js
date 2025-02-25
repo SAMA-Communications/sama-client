@@ -9,8 +9,8 @@ import { useMemo } from "react";
 
 import "@styles/hub/elements/ChatMessage.css";
 
-import { ReactComponent as CornerLight } from "@icons/_helpers/CornerLight.svg";
-import { ReactComponent as CornerAccent } from "@icons/_helpers/CornerAccent.svg";
+import CornerLight from "@icons/_helpers/CornerLight.svg?react";
+import CornerAccent from "@icons/_helpers/CornerAccent.svg?react";
 
 export default function ChatMessage({
   sender,

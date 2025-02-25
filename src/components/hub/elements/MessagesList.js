@@ -59,7 +59,7 @@ export default function MessagesList({ scrollRef }) {
     api
       .messageList({
         cid: selectedCID,
-        limit: +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD,
+        limit: +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD,
         updated_at: { lt: messages[0].created_at },
       })
       .then((arr) => {
@@ -70,7 +70,7 @@ export default function MessagesList({ scrollRef }) {
 
         const messagesIds = arr.map((el) => el._id).reverse();
         needToGetMoreMessage.current = !(
-          messagesIds.length < +process.env.REACT_APP_MESSAGES_COUNT_TO_PRELOAD
+          messagesIds.length < +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD
         );
 
         updateParticipantsFromMessages(arr);

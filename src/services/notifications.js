@@ -73,7 +73,7 @@ export default function subscribeForNotifications() {
             .subscribe({
               userVisibleOnly: true,
               applicationServerKey: urlBase64ToUint8Array(
-                process.env.REACT_APP_PUBLIC_VAPID_KEY
+                import.meta.env.VITE_PUBLIC_VAPID_KEY
               ),
             })
             .then((sub) =>

@@ -2,8 +2,8 @@ import { useRef, useState } from "react";
 
 import "@styles/static/SearchBar.css";
 
-import { ReactComponent as Search } from "@icons/actions/Search.svg";
-import { ReactComponent as Close } from "@icons/options/Close.svg";
+import Search from "@icons/actions/Search.svg?react";
+import Close from "@icons/options/Close.svg?react";
 
 export default function SearchInput({ shadowText, setState, isLargeSize }) {
   const inputRef = useRef(null);

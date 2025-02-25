@@ -18,11 +18,11 @@ import { useSelector } from "react-redux";
 
 import "@styles/info/ChatInfo.css";
 
-import { ReactComponent as AddParticipants } from "@icons/AddParticipants.svg";
-import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
-import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
-import { ReactComponent as ImageBig } from "@icons/media/ImageBig_latest.svg";
-import { ReactComponent as ImageOwnerBig } from "@icons/media/ImageBig.svg";
+import AddParticipants from "@icons/AddParticipants.svg?react";
+import BackBtn from "@icons/options/Back.svg?react";
+import Close from "@icons/actions/CloseGray.svg?react";
+import ImageBig from "@icons/media/ImageBig_latest.svg?react";
+import ImageOwnerBig from "@icons/media/ImageBig.svg?react";
 
 export default function ChatInfo() {
   const { pathname, hash } = useLocation();

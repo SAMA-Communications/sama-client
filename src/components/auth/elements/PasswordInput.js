@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { ReactComponent as HidePassword } from "@icons/actions/HidePassword.svg";
-import { ReactComponent as ShowPassword } from "@icons/actions/ShowPassword.svg";
-import { ReactComponent as Password } from "@icons/auth/Password.svg";
+import HidePassword from "@icons/actions/HidePassword.svg?react";
+import ShowPassword from "@icons/actions/ShowPassword.svg?react";
+import Password from "@icons/auth/Password.svg?react";
 
 export default function PasswordInput({ setState }) {
   const [passwordType, setPasswordType] = useState("password");

@@ -1,6 +1,6 @@
 export default function buildHttpUrl() {
-  const isSSL = process.env.NODE_ENV === "production";
+  const isSSL = import.meta.env.PROD === true;
   return `http${isSSL ? "s" : ""}://${
-    process.env.REACT_APP_SOCKET_CONNECT.split("//")[1]
+    import.meta.env.VITE_SOCKET_CONNECT.split("//")[1]
   }`;
 }

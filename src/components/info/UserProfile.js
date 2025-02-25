@@ -18,12 +18,12 @@ import { useRef } from "react";
 
 import "@styles/info/UserProfile.css";
 
-import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
-import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
-import { ReactComponent as LogoutMini } from "@icons/actions/LogoutMini.svg";
-import { ReactComponent as Password } from "@icons/users/Password.svg";
-import { ReactComponent as Trash } from "@icons/actions/Trash.svg";
-import { ReactComponent as UserIcon } from "@icons/users/AddAvatar.svg";
+import BackBtn from "@icons/options/Back.svg?react";
+import Close from "@icons/actions/CloseGray.svg?react";
+import LogoutMini from "@icons/actions/LogoutMini.svg?react";
+import Password from "@icons/users/Password.svg?react";
+import Trash from "@icons/actions/Trash.svg?react";
+import UserIcon from "@icons/users/AddAvatar.svg?react";
 
 export default function UserProfile() {
   const dispatch = useDispatch();

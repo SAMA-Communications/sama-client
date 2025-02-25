@@ -1,4 +1,4 @@
-import { ReactComponent as Username } from "@icons/auth/Username.svg";
+import Username from "@icons/auth/Username.svg?react";
 
 export default function UserNameInput({ setState }) {
   return (

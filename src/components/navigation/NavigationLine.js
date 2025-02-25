@@ -17,9 +17,9 @@ import "@styles/navigation/NavigationLine.css";
 
 import SamaLogo from "@components/static/SamaLogo";
 
-import { ReactComponent as List } from "@icons/Conversations.svg";
-import { ReactComponent as Create } from "@icons/AddConversation.svg";
-import { ReactComponent as Logout } from "@icons/actions/Logout.svg";
+import List from "@icons/Conversations.svg?react";
+import Create from "@icons/AddConversation.svg?react";
+import Logout from "@icons/actions/Logout.svg?react";
 
 export default function NavigationLine() {
   const dispatch = useDispatch();

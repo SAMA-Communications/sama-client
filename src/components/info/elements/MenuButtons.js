@@ -1,8 +1,8 @@
 import addPrefix from "@utils/navigation/add_prefix";
 import { useLocation } from "react-router-dom";
 
-import { ReactComponent as AccountIcon } from "@icons/Menu.svg";
-import { ReactComponent as CreateChat } from "@icons/AddConversationBlack.svg";
+import AccountIcon from "@icons/Menu.svg?react";
+import CreateChat from "@icons/AddConversationBlack.svg?react";
 
 export default function MenuButtons() {
   const { pathname, hash } = useLocation();

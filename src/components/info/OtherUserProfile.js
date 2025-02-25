@@ -22,10 +22,10 @@ import { useLocation } from "react-router-dom";
 
 import "@styles/info/UserProfile.css";
 
-import { ReactComponent as Close } from "@icons/actions/CloseGray.svg";
-import { ReactComponent as LinkTo } from "@icons/options/LinkTo.svg";
-import { ReactComponent as BackBtn } from "@icons/options/Back.svg";
-import { ReactComponent as UserIcon } from "@icons/users/ProfileIcon.svg";
+import Close from "@icons/actions/CloseGray.svg?react";
+import LinkTo from "@icons/options/LinkTo.svg?react";
+import BackBtn from "@icons/options/Back.svg?react";
+import UserIcon from "@icons/users/ProfileIcon.svg?react";
 
 export default function OtherUserProfile() {
   const dispatch = useDispatch();

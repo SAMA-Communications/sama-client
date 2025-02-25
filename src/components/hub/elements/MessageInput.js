@@ -8,8 +8,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { ReactComponent as Attach } from "@icons/options/Attach.svg";
-import { ReactComponent as Send } from "@icons/options/Send.svg";
+import Attach from "@icons/options/Attach.svg?react";
+import Send from "@icons/options/Send.svg?react";
 
 export default function MessageInput({
   inputTextRef,

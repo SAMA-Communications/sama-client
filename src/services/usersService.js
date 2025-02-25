@@ -1,4 +1,4 @@
-import DownloadManager from "@src/adapters/downloadManager";
+import DownloadManager from "@adapters/downloadManager";
 import api from "@api/api";
 import isHeic from "@utils/media/is_heic";
 import processFile from "@utils/media/process_file";
