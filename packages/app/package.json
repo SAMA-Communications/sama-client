@@ -1,9 +1,20 @@
 {
   "name": "sama",
   "version": "1.4.0",
+  "homepage": "https://github.com/SAMA-Communications/sama-client#readme",
+  "keywords": [
+    "react",
+    "message",
+    "messaging",
+    "chat",
+    "chat-application",
+    "client",
+    "client-app"
+  ],
+  "licaense": "MIT",
+  "author": "Igor Khomenko",
   "private": true,
   "type": "module",
-  "licaense": "MIT",
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build"
@@ -52,9 +63,9 @@
       "last 1 safari version"
     ]
   },
-  "description": "",
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SAMA-Communications/sama-client.git",
+    "directory": "packages/app"
+  }
 }

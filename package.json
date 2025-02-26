@@ -1,9 +1,28 @@
 {
   "name": "sama",
   "version": "1.4.0",
+  "homepage": "https://github.com/SAMA-Communications/sama-client#readme",
+  "keywords": [
+    "react",
+    "message",
+    "messaging",
+    "chat",
+    "chat-application",
+    "client",
+    "client-app",
+    "sdk",
+    "sama",
+    "sama-sdk"
+  ],
   "license": "MIT",
+  "author": "Igor Khomenko",
   "private": true,
   "workspaces": [
-    "packages/app"
-  ]
+    "packages/app",
+    "packages/sdk"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SAMA-Communications/sama-client.git"
+  }
 }
