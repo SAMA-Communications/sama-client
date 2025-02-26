@@ -1,4 +1,3 @@
-import buildHttpUrl from "../utils/build_http_url";
 import getBrowserFingerprint from "get-browser-fingerprint";
 import getUniqueId from "../utils/uuid";
 import { ISocketRequest, IMessage, IConversation, IUser, IFile, ISubscription } from "../types";
@@ -11,7 +10,8 @@ interface IResponsePromise {
 
 class SAMAClient {
   private socket: WebSocket | null = null;
-  private baseUrl: string;
+  private wsEndpoint: string;
+  private httpEndpoint: string;
   private curerntUserId: string | null = null;
   private responsesPromises: Record<string, IResponsePromise> = {};
   private deviceId: string;
@@ -24,14 +24,15 @@ class SAMAClient {
   public onConversationUpdateListener: ((conversation: IConversation) => void) | null = null;
   public onConversationDeleteListener: ((conversationId: string) => void) | null = null;
 
-  constructor(baseUrl: string) {
-    this.baseUrl = baseUrl;
+  constructor({ ws, http }: { ws: string; http: string }) {
+    this.wsEndpoint = ws;
+    this.httpEndpoint = http;
     this.deviceId = getBrowserFingerprint({ hardwareOnly: true }).toString();
   }
 
   async connect(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.socket = new WebSocket(this.baseUrl);
+      this.socket = new WebSocket(this.wsEndpoint);
 
       this.socket.onopen = () => {
         console.log("[socket.open]");
@@ -184,7 +185,7 @@ class SAMAClient {
     };
     if (data) params.body = JSON.stringify(data);
 
-    const response = await fetch(`${buildHttpUrl(this.baseUrl)}/${endpoint}`, params);
+    const response = await fetch(`${this.httpEndpoint}/${endpoint}`, params);
     const responseData = await response.json();
     console.log("[http.response]", { response: responseData });
 
