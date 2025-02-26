@@ -13,7 +13,14 @@ npm install sama-sdk
 ```js
 import { SAMAClient } from "sama-sdk";
 
-const client = new SAMAClient("wss://your-websocket-url");
+const config = {
+  endpoint: {
+    ws: "wss://your-websocket-url"
+    http: "https://your-websocket-url.com"
+  }
+}
+
+const client = new SAMAClient(config);
 
 client
   .connect()

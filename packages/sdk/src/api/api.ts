@@ -24,7 +24,7 @@ class SAMAClient {
   public onConversationUpdateListener: ((conversation: IConversation) => void) | null = null;
   public onConversationDeleteListener: ((conversationId: string) => void) | null = null;
 
-  constructor({ ws, http }: { ws: string; http: string }) {
+  constructor({ endpoint: { ws, http } }: { endpoint: { ws: string; http: string } }) {
     this.wsEndpoint = ws;
     this.httpEndpoint = http;
     this.deviceId = getBrowserFingerprint({ hardwareOnly: true }).toString();
