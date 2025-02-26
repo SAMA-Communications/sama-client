@@ -18,7 +18,7 @@
   "author": "Igor Khomenko",
   "private": true,
   "workspaces": [
-    "packages/app",
+    "apps/client",
     "packages/sdk"
   ],
   "repository": {

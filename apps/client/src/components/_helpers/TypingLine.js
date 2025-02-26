@@ -1,4 +1,4 @@
-import DotsLoader from "./DotsLoader";
+import DotsLoader from "./DotsLoader.js";
 import getLastMessageUserName from "@utils/user/get_last_message_user_name";
 import { selectParticipantsEntities } from "@src/store/values/Participants";
 import { useMemo } from "react";

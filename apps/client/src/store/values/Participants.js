@@ -3,7 +3,7 @@ import {
   createSelector,
   createSlice,
 } from "@reduxjs/toolkit";
-import { selectCurrentUserId } from "./CurrentUserId";
+import { selectCurrentUserId } from "./CurrentUserId.js";
 
 export const participantsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,

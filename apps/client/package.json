@@ -66,6 +66,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SAMA-Communications/sama-client.git",
-    "directory": "packages/app"
+    "directory": "apps/client"
   }
 }

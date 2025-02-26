@@ -1,4 +1,4 @@
-import ImageWithFallback from "./AvatarWithFallback";
+import ImageWithFallback from "./AvatarWithFallback.js";
 import ItemLoader from "@components/attach/elements/ItemLoader";
 import { useMemo } from "react";
 

@@ -1,4 +1,4 @@
-import MenuButtons from "../info/elements/MenuButtons";
+import MenuButtons from "../info/elements/MenuButtons.js";
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchBar";
 import { getIsMobileView } from "@store/values/IsMobileView";
