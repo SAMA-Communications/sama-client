@@ -1,4 +1,4 @@
-import DownloadManager from "@adapters/downloadManager";
+import DownloadManager from "@lib/downloadManager";
 import api from "@api/api";
 import jwtDecode from "jwt-decode";
 import navigateTo from "@utils/navigation/navigate_to";

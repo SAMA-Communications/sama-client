@@ -1,4 +1,4 @@
-import globalConstants from "@helpers/constants";
+import globalConstants from "@utils/global/constants";
 
 export default function getLastUpdateTime(updatedAt, lastMessageObject) {
   const t = new Date(

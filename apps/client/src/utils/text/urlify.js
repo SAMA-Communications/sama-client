@@ -1,4 +1,4 @@
-import globalConstants from "@helpers/constants";
+import globalConstants from "@utils/global/constants";
 
 export function urlify(inputText) {
   const matches = inputText.match(globalConstants.linksRegExp) || [];

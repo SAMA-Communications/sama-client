@@ -1,4 +1,4 @@
-import { history } from "@helpers/history";
+import { history } from "@utils/global/history";
 
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 

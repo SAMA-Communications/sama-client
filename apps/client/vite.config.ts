@@ -16,26 +16,22 @@ export default defineConfig({
       "@src": createPath("src"),
       "@api": createPath("src/api"),
 
-      "@adapters": createPath("src/adapters"),
-      "@helpers": createPath("src/_helpers"),
-
       "@components": createPath("src/components"),
       "@generic": createPath("src/components/generic"),
       "@screens": createPath("src/components/screens"),
       "@static": createPath("src/components/static"),
+      "@skeletons": createPath("src/components/skeletons"),
 
       "@store": createPath("src/store"),
-      "@event": createPath("src/event"),
       "@services": createPath("src/services"),
 
-      "@animations": createPath("src/animations"),
       "@icons": createPath("src/assets/icons"),
       "@styles": createPath("src/styles"),
 
+      "@lib": createPath("src/lib"),
       "@utils": createPath("src/utils"),
-      "@validations": createPath("src/validations"),
+      "@validations": createPath("src/lib/validations"),
 
-      "@skeletons": createPath("src/skeletons"),
       "@hooks": createPath("src/hooks"),
     },
   },

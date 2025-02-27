@@ -1,4 +1,4 @@
-import { animateSVG } from "@animations/animationSVG.js";
+import { animateSVG } from "@lib/animationSVG.js";
 import { motion as m } from "framer-motion";
 
 export default function AnimationSamaLogo() {

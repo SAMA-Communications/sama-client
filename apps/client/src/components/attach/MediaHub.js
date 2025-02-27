@@ -1,7 +1,7 @@
 import MessageAttachment from "@components/message/elements/MessageAttachment";
 import getFileType from "@utils/media/get_file_type";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import { KEY_CODES } from "@helpers/keyCodes";
+import { KEY_CODES } from "@utils/global/keyCodes";
 import { getMessageById } from "@store/values/Messages";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";

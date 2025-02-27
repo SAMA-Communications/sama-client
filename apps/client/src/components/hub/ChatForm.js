@@ -14,7 +14,7 @@ import {
   clearSelectedConversation,
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
-import { KEY_CODES } from "@helpers/keyCodes";
+import { KEY_CODES } from "@utils/global/keyCodes";
 import { setClicked } from "@store/values/ContextMenu";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";

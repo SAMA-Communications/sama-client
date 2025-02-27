@@ -9,7 +9,7 @@ import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
 import showCustomAlert from "@utils/show_alert";
-import { KEY_CODES } from "@helpers/keyCodes";
+import { KEY_CODES } from "@utils/global/keyCodes";
 import {
   addUser,
   selectParticipantsEntities,

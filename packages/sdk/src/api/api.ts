@@ -1,12 +1,6 @@
 import getBrowserFingerprint from "get-browser-fingerprint";
 import getUniqueId from "../utils/uuid";
-import { ISocketRequest, IMessage, IConversation, IUser, IFile, ISubscription } from "../types";
-
-interface IResponsePromise {
-  resolve: (value?: any) => void;
-  reject: (reason?: any) => void;
-  resObjKey?: string;
-}
+import { ISocketRequest, IMessage, IConversation, IUser, IFile, ISubscription, IResponsePromise } from "../types"
 
 class SAMAClient {
   private socket: WebSocket | null = null;
@@ -24,6 +18,10 @@ class SAMAClient {
   public onConversationUpdateListener: ((conversation: IConversation) => void) | null = null;
   public onConversationDeleteListener: ((conversationId: string) => void) | null = null;
 
+  public onConnectEvent: (() => void) | null = null;
+  public onMessageEvent: ((message: IMessage) => void) | null = null;
+  public onDisconnectEvent: (() => void) | null = null;
+
   constructor({ endpoint: { ws, http } }: { endpoint: { ws: string; http: string } }) {
     this.wsEndpoint = ws;
     this.httpEndpoint = http;
@@ -36,7 +34,7 @@ class SAMAClient {
 
       this.socket.onopen = () => {
         console.log("[socket.open]");
-        // EventEmitter.emit("onConnect"); //auth on connect
+        this.onConnectEvent?.();
         resolve();
       };
 
@@ -85,7 +83,7 @@ class SAMAClient {
           }
           this.onMessageListener?.(message.message);
           if (message.message.from.toString() !== this.curerntUserId) {
-            // EventEmitter.emit("onMessage", message.message); //notification
+            this.onMessageEvent?.(message.message);
           }
           return;
         }
@@ -124,6 +122,7 @@ class SAMAClient {
 
       this.socket.onclose = () => {
         console.log("[socket.close]");
+        this.onDisconnectEvent?.();
         this.reconnect();
 
       };

@@ -2,7 +2,7 @@ import TextAreaInput from "@components/hub/elements/TextAreaInput";
 import addSuffix from "@utils/navigation/add_suffix";
 import api from "@api/api";
 import isMobile from "@utils/get_device_type";
-import { KEY_CODES } from "@helpers/keyCodes";
+import { KEY_CODES } from "@utils/global/keyCodes";
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";

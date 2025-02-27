@@ -54,3 +54,9 @@ export interface ISubscription {
   created_at?: string;
   updated_at?: string;
 }
+
+export interface IResponsePromise {
+  resolve: (value?: any) => void;
+  reject: (reason?: any) => void;
+  resObjKey?: string;
+}

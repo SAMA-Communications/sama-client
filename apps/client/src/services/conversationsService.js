@@ -1,13 +1,13 @@
-import DownloadManager from "@adapters/downloadManager";
+import DownloadManager from "@lib/downloadManager";
 import api from "@api/api";
-import eventEmitter from "@event/eventEmitter";
+import eventEmitter from "@lib/eventEmitter";
 import isHeic from "@utils/media/is_heic";
 import navigateTo from "@utils/navigation/navigate_to";
 import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
 import { addUsers, upsertUsers } from "@store/values/Participants";
-import { history } from "@helpers/history";
+import { history } from "@utils/global/history";
 import {
   insertChat,
   insertChats,

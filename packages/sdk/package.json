@@ -13,9 +13,18 @@
   "license": "Apache-2.0",
   "author": "Igor Khomenko",
   "type": "module",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/sama-sdk.cjs.js",
+  "module": "./dist/sama-sdk.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/sama-sdk.es.js",
+      "require": "./dist/sama-sdk.cjs.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "vite build"
   },

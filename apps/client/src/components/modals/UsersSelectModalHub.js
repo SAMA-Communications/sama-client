@@ -4,7 +4,7 @@ import conversationService from "@services/conversationsService";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
-import { KEY_CODES } from "@helpers/keyCodes";
+import { KEY_CODES } from "@utils/global/keyCodes";
 import { getConverastionById } from "@store/values/Conversations";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { useKeyDown } from "@hooks/useKeyDown";

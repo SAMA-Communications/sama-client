@@ -1,6 +1,6 @@
-import globalConstants from "@helpers/constants";
+import globalConstants from "@utils/global/constants";
 import showCustomAlert from "@utils/show_alert";
-import { KEY_CODES } from "@helpers/keyCodes";
+import { KEY_CODES } from "@utils/global/keyCodes";
 import { useCallback, useRef, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 

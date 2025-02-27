@@ -3,7 +3,7 @@ import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import subscribeForNotifications from "@services/notifications";
 import usersService from "@services/usersService";
-import { KEY_CODES } from "@helpers/keyCodes";
+import { KEY_CODES } from "@utils/global/keyCodes";
 import { setCurrentUserId } from "@store/values/CurrentUserId";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";

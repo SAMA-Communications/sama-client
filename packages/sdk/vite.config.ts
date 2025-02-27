@@ -6,7 +6,16 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "SAMAClient",
-      fileName: (format) => `sama-client.${format}.js`,
+      fileName: (format) => `sama-sdk.${format}.js`,
+      formats: ["es", "cjs", "umd"],
+    },
+    rollupOptions: {
+      external: ['get-browser-fingerprint'],
+      output: {
+        globals: {
+          'get-browser-fingerprint': 'getBrowserFingerprint'
+        }
+      },
     },
   },
 });

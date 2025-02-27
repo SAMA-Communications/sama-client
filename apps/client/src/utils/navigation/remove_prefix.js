@@ -1,4 +1,4 @@
-import { history } from "@helpers/history";
+import { history } from "@utils/global/history";
 
 export default function removeAndNavigateSubLink(currentPath, pathname) {
   const escapedSubstring = pathname.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

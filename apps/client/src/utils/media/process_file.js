@@ -1,4 +1,4 @@
-import globalConstants from "@helpers/constants";
+import globalConstants from "@utils/global/constants";
 import heicToPng from "@utils/media/heic_to_png";
 import compressAndHashFile from "@utils/media/compress_and_hash";
 

@@ -1,5 +1,5 @@
 import ChatMessage from "@components/hub/elements/ChatMessage";
-import DownloadManager from "@adapters/downloadManager";
+import DownloadManager from "@lib/downloadManager";
 import InfiniteScroll from "react-infinite-scroll-component";
 import InformativeMessage from "@components/hub/elements/InformativeMessage";
 import api from "@api/api";

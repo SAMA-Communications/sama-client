@@ -5,7 +5,7 @@ import conversationService from "@services/conversationsService";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import showCustomAlert from "@utils/show_alert";
 import usersService from "@services/usersService";
-import { KEY_CODES } from "@helpers/keyCodes";
+import { KEY_CODES } from "@utils/global/keyCodes";
 import { upsertChat } from "@store/values/Conversations";
 import { upsertUser } from "@store/values/Participants";
 import { useCallback, useState } from "react";
