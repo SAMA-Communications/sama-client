@@ -33,7 +33,7 @@ export default function UserProfile() {
   const { login, email, phone, first_name, last_name } = currentUser || {};
 
   const isMobileView = useSelector(getIsMobileView);
-  const isCurrentUserCantLeave = login.startsWith("sama-user-");
+  const isCurrentUserCantLeave = login?.startsWith("sama-user-");
 
   const inputFilesRef = useRef(null);
 
