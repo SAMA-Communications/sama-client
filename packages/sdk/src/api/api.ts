@@ -8,7 +8,7 @@ class SAMAClient {
   private httpEndpoint: string;
   private curerntUserId: string | null = null;
   private responsesPromises: Record<string, IResponsePromise> = {};
-  private deviceId: string;
+  private deviceId: string | null = null;
 
   public onMessageListener: ((message: IMessage) => void) | null = null;
   public onMessageStatusListener: ((status: any) => void) | null = null;
@@ -25,7 +25,7 @@ class SAMAClient {
   constructor({ endpoint: { ws, http } }: { endpoint: { ws: string; http: string } }) {
     this.wsEndpoint = ws;
     this.httpEndpoint = http;
-    this.deviceId = getBrowserFingerprint({ hardwareOnly: true }).toString();
+    getBrowserFingerprint({ hardwareOnly: true }).then((device_id) => (this.deviceId = device_id.toString()));
   }
 
   async connect(): Promise<void> {
