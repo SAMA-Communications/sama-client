@@ -1,7 +1,0 @@
-{
-  "extends": "./jsconfig.paths.json",
-  "compilerOptions": {
-    "module": "CommonJS",
-    "target": "ES6"
-  }
-}

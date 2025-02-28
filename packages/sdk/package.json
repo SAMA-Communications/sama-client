@@ -1,0 +1,38 @@
+{
+  "name": "sama-sdk",
+  "version": "0.1.0",
+  "keywords": [
+    "chat",
+    "chat-application",
+    "client",
+    "client-app",
+    "sdk",
+    "sama-sdk",
+    "SAMAClient"
+  ],
+  "license": "Apache-2.0",
+  "author": "Igor Khomenko",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/sama-sdk.cjs.js",
+  "module": "./dist/sama-sdk.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/sama-sdk.es.js",
+      "require": "./dist/sama-sdk.cjs.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "get-browser-fingerprint": "^4.1.0"
+  }
+}

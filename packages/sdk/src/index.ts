@@ -1,0 +1,1 @@
+export { default as SAMAClient } from './api/api';
