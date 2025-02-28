@@ -1,6 +1,7 @@
 import DownloadManager from "@lib/downloadManager";
 import api from "@api/api";
 import eventEmitter from "@lib/eventEmitter";
+import getOpponentId from "@utils/user/get_opponent_id";
 import isHeic from "@utils/media/is_heic";
 import navigateTo from "@utils/navigation/navigate_to";
 import processFile from "@utils/media/process_file";
@@ -100,6 +101,20 @@ class ConversationsService {
           cids: chats.map((el) => el._id),
         });
         store.dispatch(upsertUsers(users));
+
+        const additionalUsersIds = [];
+        chats.forEach((chat) => {
+          if (chat.type === "g") return;
+          const opponentId = getOpponentId(chat, api.curerntUserId);
+          !users.find((u) => u.native_id === opponentId) &&
+            additionalUsersIds.push(opponentId);
+        });
+        if (additionalUsersIds.length) {
+          const additionalUsers = await api.getUsersByIds({
+            ids: additionalUsersIds,
+          });
+          store.dispatch(upsertUsers(additionalUsers));
+        }
       }
     } catch (error) {
       showCustomAlert(error.message, "danger");
