@@ -17,7 +17,8 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.6",
@@ -26,7 +27,6 @@
     "blurhash": "^2.0.5",
     "browser-image-compression": "^2.0.2",
     "framer-motion": "^8.0.2",
-    "get-browser-fingerprint": "^3.2.0",
     "heic2any": "^0.0.4",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",

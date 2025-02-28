@@ -25,7 +25,7 @@ class SAMAClient {
   constructor({ endpoint: { ws, http } }: { endpoint: { ws: string; http: string } }) {
     this.wsEndpoint = ws;
     this.httpEndpoint = http;
-    this.deviceId = getBrowserFingerprint({ hardwareOnly: true }).toString();
+    getBrowserFingerprint({ hardwareOnly: true }).then((device_id) => (this.deviceId = device_id.toString()));
   }
 
   async connect(): Promise<void> {
