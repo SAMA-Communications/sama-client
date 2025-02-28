@@ -23,7 +23,7 @@ const config = {
     http: import.meta.env.VITE_HTTP_CONNECT,
   },
 };
-console.log(config);
+console.log(config, import.meta.env);
 
 const api = new SAMAClient(config);
 

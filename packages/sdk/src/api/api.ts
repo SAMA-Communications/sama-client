@@ -8,7 +8,7 @@ class SAMAClient {
   private httpEndpoint: string;
   private curerntUserId: string | null = null;
   private responsesPromises: Record<string, IResponsePromise> = {};
-  private deviceId: string;
+  private deviceId: string | null = null;
 
   public onMessageListener: ((message: IMessage) => void) | null = null;
   public onMessageStatusListener: ((status: any) => void) | null = null;
