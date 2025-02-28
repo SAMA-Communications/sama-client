@@ -23,15 +23,11 @@ const config = {
     http: import.meta.env.VITE_HTTP_CONNECT,
   },
 };
-console.log(config, import.meta.env);
-
 const api = new SAMAClient(config);
 
 api.onConnectEvent = onConnect;
 api.onDisconnectEvent = onDisconnect;
 api.onMessageEvent = onMessage;
 api.connect();
-
-console.log(api);
 
 export default api;
