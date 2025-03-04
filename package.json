@@ -1,75 +1,28 @@
 {
   "name": "sama",
-  "version": "1.4.0",
+  "version": "1.5.0",
+  "homepage": "https://github.com/SAMA-Communications/sama-client#readme",
+  "keywords": [
+    "react",
+    "message",
+    "messaging",
+    "chat",
+    "chat-application",
+    "client",
+    "client-app",
+    "sdk",
+    "sama",
+    "sama-sdk"
+  ],
+  "license": "MIT",
+  "author": "Igor Khomenko",
   "private": true,
-  "dependencies": {
-    "@capacitor/android": "6.0.0",
-    "@capacitor/app": "6.0.0",
-    "@capacitor/cli": "6.0.0",
-    "@capacitor/core": "6.0.0",
-    "@capacitor/haptics": "6.0.0",
-    "@capacitor/ios": "6.0.0",
-    "@capacitor/keyboard": "6.0.0",
-    "@capacitor/status-bar": "6.0.0",
-    "@reduxjs/toolkit": "^1.8.6",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "blurhash": "^2.0.5",
-    "browser-image-compression": "^2.0.2",
-    "dotenv": "^16.0.3",
-    "framer-motion": "^8.0.2",
-    "get-browser-fingerprint": "^3.2.0",
-    "heic2any": "^0.0.4",
-    "jsonwebtoken": "^8.5.1",
-    "jwt-decode": "^3.1.2",
-    "react": "^18.2.0",
-    "react-blurhash": "^0.3.0",
-    "react-custom-scrollbars-2": "^4.5.0",
-    "react-dom": "^18.2.0",
-    "react-icons": "^4.4.0",
-    "react-infinite-scroll-component": "^6.1.0",
-    "react-loader-spinner": "^5.3.4",
-    "react-loading-skeleton": "^3.4.0",
-    "react-redux": "^8.0.4",
-    "react-router-dom": "^6.4.2",
-    "react-scripts": "5.0.1",
-    "react-scroll-to-bottom": "^4.2.0",
-    "react-virtualized": "^9.22.5",
-    "recyclerlistview": "^4.2.0",
-    "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "capacitor:sync": "npx cap sync",
-    "capacitor:build": "npm install && npm run build && npm run capacitor:sync",
-    "ios": "npx cap run ios",
-    "android": "npx cap run android",
-    "ionic:build": "npm run build",
-    "ionic:serve": "npm run start"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "@capacitor/assets": "^3.0.5",
-    "react-app-alias": "^2.2.2",
-    "react-app-rewired": "^2.2.1"
+  "workspaces": [
+    "apps/client",
+    "packages/sdk"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SAMA-Communications/sama-client.git"
   }
 }
