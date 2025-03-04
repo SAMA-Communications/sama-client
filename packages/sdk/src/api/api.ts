@@ -251,7 +251,7 @@ class SAMAClient {
   }
 
   async createUploadUrlForFiles(data: { files: any[] }): Promise<IFile[]> {
-    return this.sendRequest("create_files", { files: data.files }, "files");
+    return this.sendRequest("create_files", data.files, "files");
   }
 
   async getDownloadUrlForFiles(data: { file_ids: string[] }): Promise<string[]> {
