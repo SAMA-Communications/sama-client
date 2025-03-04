@@ -1,6 +1,6 @@
 # SAMA SDK
 
-A client SDK for interacting with the SAMA chat application.
+A SDK client for interacting with the SAMA chat server from Web/Node.js apps
 
 ## Installation
 
