@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.5.0
+
+### Features
+
+- Improved repository structure to a Monorepo with Vite
+- Connected Tailwind to improve component styles
+
+### Improvements
+
+- Moved api logic to the sama-sdk package
+
+### Important fixes
+
+- Fixed issue where a chat was marked as “deleted” when a user left a 1-1 chat
+
 ## 1.4.0
 
 ### Features
