@@ -5,13 +5,13 @@ A client SDK for interacting with the SAMA chat application.
 ## Installation
 
 ```sh
-npm install sama-sdk
+npm install @sama-communications/sdk
 ```
 
 ## Usage
 
 ```js
-import { SAMAClient } from "sama-sdk";
+import { SAMAClient } from "@sama-communications/sdk";
 
 const config = {
   endpoint: {
