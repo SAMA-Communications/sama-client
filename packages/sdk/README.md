@@ -10,7 +10,7 @@ This is a demo app to test all these methods https://app.samacloud.io/demo
 
 ## API documentation
 
-See all available methods https://github.com/SAMA-Communications/sama-client/blob/main/packages/sdk/src/api/api.ts
+See all available methods [api/api.ts](https://github.com/SAMA-Communications/sama-client/blob/main/packages/sdk/src/api/api.ts)
 
 ## Installation
 
@@ -67,8 +67,8 @@ Join our community for support and discussions:
 
 ## License
 
-[Apache 2.0](LICENSE)
+[Apache 2.0](https://github.com/SAMA-Communications/sama-client/blob/main/packages/sdk/LICENSE)
 
 ## Changelog
 
-https://github.com/SAMA-Communications/sama-client/blob/main/packages/sdk/CHANGELOG.md
+[CHANGELOG](https://github.com/SAMA-Communications/sama-client/blob/main/packages/sdk/CHANGELOG.md)
