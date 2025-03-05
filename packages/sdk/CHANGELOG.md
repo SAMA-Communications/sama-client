@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.1.0
+## 0.12.0
+
+### Improvements
+
+- Updated README.md
+
+## 0.11.0
 
 ### Features
 
