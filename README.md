@@ -20,7 +20,7 @@ The whole SAMA stack can be tested using https://app.samacloud.io public cloud.
 - In `packages/app`: copy `.env.example` to `.env`.
 - Generate VAPID keys via `npx web-push generate-vapid-keys` and set Public Key to `VITE_PUBLIC_VAPID_KEY` in `.env` file
 - `npm install` to install dependencies
-- `npm run build --workspace=sama-sdk` to install SAMA api
+- `npm run build --workspace=@sama-communications/sdk` to install SAMA api
 - `npm run start --workspace=sama` to run server
 - Access http://localhost:3000 in your browser
 
