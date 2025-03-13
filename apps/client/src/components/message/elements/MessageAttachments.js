@@ -1,6 +1,6 @@
-import ImageView from "@components/attach/components/ImageView.js";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import addSuffix from "@utils/navigation/add_suffix";
+import getFileType from "@utils/media/get_file_type.js";
 import { useLocation } from "react-router-dom";
 
 import "@styles/hub/elements/MessageMedia.css";
@@ -24,16 +24,27 @@ export default function MessageAttachments({ attachments, mid }) {
         {attachments.map((att, index) => (
           <div
             key={att.file_id}
-            className="masonry-item w-full max-h-[200px] h-full overflow-hidden rounded-lg"
+            className="masonry-item w-full max-h-[200px] h-full overflow-hidden rounded-lg cursor-pointer"
           >
-            <ImageView
-              url={att.file_url}
-              blurHash={att.file_blur_hash}
-              altName={att.file_name}
-              onClickFunc={() =>
-                addSuffix(pathname + hash, `/media?mid=${mid}=${index}`)
-              }
-            />
+            {getFileType(att.file_name) === "Video" ? (
+              <video
+                src={att.file_url}
+                alt={att.file_name}
+                className="w-full h-full object-cover"
+                onClick={() =>
+                  addSuffix(pathname + hash, `/media?mid=${mid}=${index}`)
+                }
+              />
+            ) : (
+              <img
+                src={att.file_url}
+                alt={att.file_name}
+                className="w-full h-full object-cover "
+                onClick={() =>
+                  addSuffix(pathname + hash, `/media?mid=${mid}=${index}`)
+                }
+              />
+            )}
           </div>
         ))}
       </Masonry>

@@ -2,13 +2,7 @@ import { Blurhash } from "react-blurhash";
 import { Oval } from "react-loader-spinner";
 import { useMemo, useState } from "react";
 
-export default function ImageView({
-  url,
-  localUrl,
-  blurHash,
-  altName,
-  onClickFunc,
-}) {
+export default function ImageView({ url, localUrl, blurHash, altName }) {
   const [loaded, setLoaded] = useState(false);
 
   const preloaderView = useMemo(() => {
@@ -46,13 +40,10 @@ export default function ImageView({
   return (
     <>
       <img
-        className={`${
-          onClickFunc ? "cursor-pointer w-full h-full object-cover" : ""
-        } ${loaded ? "block" : "hidden"} `}
+        className={`${loaded ? "block" : "hidden"}`}
         onLoad={() => setLoaded(true)}
         src={url}
         alt={altName}
-        onClick={onClickFunc}
       />
       {preloaderView}
     </>
