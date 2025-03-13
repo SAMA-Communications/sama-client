@@ -39,6 +39,7 @@
     "react-loader-spinner": "^5.3.4",
     "react-loading-skeleton": "^3.4.0",
     "react-redux": "^8.0.4",
+    "react-responsive-masonry": "^2.7.1",
     "react-router-dom": "^6.4.2",
     "sama-sdk": "file:../../packages/sdk",
     "tailwindcss": "^4.0.8",

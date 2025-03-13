@@ -52,6 +52,9 @@
   left: 0;
 }
 
+.media-gallery > div > div:nth-last-child(1) {
+  height: 100%;
+}
 .media-modal__list {
   position: absolute;
   bottom: 10px;
