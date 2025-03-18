@@ -58,17 +58,25 @@ export default function ConversationItemList({ conversations }) {
     >
       {conversations.map((obj) => {
         const isSelected = activeConversationId === obj._id;
+        const isGroup = obj.type === "g";
         const chatParticipantId =
           obj.owner_id === currentUserId ? obj.opponent_id : obj.owner_id;
         const chatParticipant = participants[chatParticipantId] || {};
         const chatName = obj.name || getUserFullName(chatParticipant);
 
+        const showLastMsgUser = isGroup && !obj.last_message?.x;
         const lastMessageUserId = obj?.last_message?.from;
         const lastMessageUser = participants[lastMessageUserId] || {};
-        const lastMessageUserName =
-          currentUserId === lastMessageUserId
+        const lastMessageUserName = showLastMsgUser
+          ? currentUserId === lastMessageUserId
             ? "You"
-            : getLastMessageUserName(lastMessageUser);
+            : getLastMessageUserName(lastMessageUser)
+          : null;
+
+        const avatarUrl = isGroup ? obj.image_url : chatParticipant.avatar_url;
+        const avatarBlurHash = isGroup
+          ? obj.image_object?.file_blur_hash
+          : chatParticipant.avatar_object?.file_blur_hash;
 
         return (
           <ConversationItem
@@ -76,19 +84,9 @@ export default function ConversationItemList({ conversations }) {
             isSelected={isSelected}
             onClickFunc={() => convItemOnClickFunc(obj._id)}
             chatName={chatName}
-            lastMessageUserName={
-              obj.type === "g" && !obj.last_message?.x
-                ? lastMessageUserName
-                : null
-            }
-            chatAvatarUrl={
-              obj.type === "g" ? obj.image_url : chatParticipant.avatar_url
-            }
-            chatAvatarBlutHash={
-              obj.type === "g"
-                ? obj.image_object?.file_blur_hash
-                : chatParticipant.avatar_object?.file_blur_hash
-            }
+            lastMessageUserName={lastMessageUserName}
+            chatAvatarUrl={avatarUrl}
+            chatAvatarBlutHash={avatarBlurHash}
             chatObject={obj}
             currentUserId={currentUserId}
           />
