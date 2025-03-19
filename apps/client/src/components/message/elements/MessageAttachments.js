@@ -1,4 +1,5 @@
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import PlayButton from "@components/_helpers/PlayButton.js";
 import addSuffix from "@utils/navigation/add_suffix";
 import getFileType from "@utils/media/get_file_type.js";
 import { useLocation } from "react-router-dom";
@@ -27,14 +28,17 @@ export default function MessageAttachments({ attachments, mid }) {
             className="masonry-item w-full max-h-[200px] h-full overflow-hidden rounded-lg cursor-pointer"
           >
             {getFileType(att.file_name) === "Video" ? (
-              <video
-                src={att.file_url}
-                alt={att.file_name}
-                className="w-full h-full object-cover"
-                onClick={() =>
-                  addSuffix(pathname + hash, `/media?mid=${mid}=${index}`)
-                }
-              />
+              <>
+                <video
+                  src={att.file_url}
+                  alt={att.file_name}
+                  className="w-full h-full object-cover"
+                  onClick={() =>
+                    addSuffix(pathname + hash, `/media?mid=${mid}=${index}`)
+                  }
+                />
+                <PlayButton />
+              </>
             ) : (
               <img
                 src={att.file_url}
