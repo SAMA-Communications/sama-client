@@ -321,10 +321,10 @@ class SAMAClient {
     }, "conversation");
   }
 
-  async conversationList(data: { limit?: number; updated_at?: string }): Promise<IConversation[]> {
+  async conversationList(data: { limit?: number; updated_at?: { gt?: string, lt?: string } }): Promise<IConversation[]> {
     const listParams = {
       ...(data.limit && { limit: data.limit }),
-      ...(data.updated_at && { updated_at: { gt: data.updated_at } }),
+      ...(data.updated_at && { updated_at: { gt: data.updated_at.gt, lt: data.updated_at.lt } }),
     };
     return this.sendRequest("conversation_list", listParams, "conversations");
   }
