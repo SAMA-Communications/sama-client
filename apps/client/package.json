@@ -21,8 +21,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@jitl/quickjs-ng-wasmfile-release-sync": "^0.31.0",
     "@reduxjs/toolkit": "^1.8.6",
-    "@sama-communications/sdk": "^0.10.0",
+    "@sama-communications/sdk": "^0.12.1",
+    "@sebastianwessel/quickjs": "^2.1.1",
     "@tailwindcss/vite": "^4.0.8",
     "@vitejs/plugin-react": "^4.3.4",
     "blurhash": "^2.0.5",
