@@ -7,7 +7,7 @@ import { getMessageById } from "@store/values/Messages";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTouchScreen } from "@hooks/useTouchScreen";
 
 import Prev from "@icons/options/Prev.svg?react";
@@ -17,6 +17,7 @@ import Close from "@icons/actions/CloseGray.svg?react";
 export default function MediaHub() {
   const { pathname, hash } = useLocation();
   const isMobile = useSelector(getIsMobileView);
+  const swipedBlockRef = useRef(null);
 
   const [currentIndex, setCurrentIndex] = useState(() => {
     const [, , index] = hash.split("=");
@@ -43,7 +44,7 @@ export default function MediaHub() {
     () => !isFirstIndex && setCurrentIndex(currentIndex - 1)
   );
 
-  useTouchScreen({
+  useTouchScreen(swipedBlockRef, {
     left: () => !isFirstIndex && setCurrentIndex(currentIndex - 1),
     right: () => !isLastIndex && setCurrentIndex(currentIndex + 1),
     down: closeModal,
@@ -53,11 +54,11 @@ export default function MediaHub() {
   //!!!!!!!!!! remove all `!` into development branch
   return (
     <div
-      className="!absolute top-0 w-screen h-screen flex flex-col bg-[var(--color-black-90)] z-10"
+      className="!absolute top-0 w-dvw h-dvh flex flex-col bg-[var(--color-black-90)] z-10"
       onClick={!isMobile ? closeModal : undefined}
     >
       {isMobile && (
-        <button className="absolute top-10 left-10 z-11" onClick={closeModal}>
+        <button className="!absolute top-10 left-10 z-11" onClick={closeModal}>
           <Close />
         </button>
       )}
@@ -66,7 +67,10 @@ export default function MediaHub() {
           {currentIndex + 1 + " / " + attachments.length}
         </p>
       </div>
-      <div className="!px-[30px] md:!px-[max(10%,90px)] flex-1 flex justify-center items-center">
+      <div
+        ref={swipedBlockRef}
+        className="!px-[30px] md:!px-[max(10%,90px)] flex-1 flex justify-center items-center"
+      >
         <MessageAttachment
           url={attachments[currentIndex]?.file_url}
           name={attachments[currentIndex]?.file_name}

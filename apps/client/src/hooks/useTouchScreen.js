@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export const useTouchScreen = (callbacks) => {
+export const useTouchScreen = (targetRef, callbacks) => {
   const callbackRef = useRef(callbacks);
 
   const minDistance = 100;
@@ -13,6 +13,8 @@ export const useTouchScreen = (callbacks) => {
     let startCoords = { x: null, y: null };
 
     const handleTouchStart = (e) => {
+      if (targetRef.current && !targetRef.current.contains(e.target)) return;
+
       const { clientX, clientY } = e.touches[0];
       startCoords = { x: clientX, y: clientY };
     };
@@ -46,5 +48,5 @@ export const useTouchScreen = (callbacks) => {
       document.removeEventListener("touchstart", handleTouchStart, false);
       document.removeEventListener("touchmove", handleTouchMove, false);
     };
-  }, []);
+  }, [targetRef]);
 };
