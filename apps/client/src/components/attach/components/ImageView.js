@@ -40,7 +40,7 @@ export default function ImageView({ url, localUrl, blurHash, altName }) {
   return (
     <>
       <img
-        className={`${loaded ? "block" : "hidden"}`}
+        className={`max-w-full max-h-full ${loaded ? "block" : "hidden"}`}
         onLoad={() => setLoaded(true)}
         src={url}
         alt={altName}

@@ -31,9 +31,7 @@ export default function MediaHub() {
   const isLastIndex = currentIndex === attachments.length - 1;
   const isFirstIndex = currentIndex === 0;
 
-  const closeModal = () => {
-    removeAndNavigateLastSection(pathname + hash);
-  };
+  const closeModal = () => removeAndNavigateLastSection(pathname + hash);
 
   useKeyDown(
     KEY_CODES.ARROW_RIGHT,
@@ -69,7 +67,7 @@ export default function MediaHub() {
       </div>
       <div
         ref={swipedBlockRef}
-        className="!px-[30px] md:!px-[max(10%,90px)] flex-1 flex justify-center items-center"
+        className="max-h-[calc(100dvh-250px)] !px-[30px] md:!px-[max(10%,90px)] flex-1 flex justify-center items-center"
       >
         <MessageAttachment
           url={attachments[currentIndex]?.file_url}
@@ -104,7 +102,7 @@ export default function MediaHub() {
             key={i}
             className={`${
               i === currentIndex ? "h-full w-[10%]" : "h-[85%] w-[8%]"
-            } overflow-hidden cursor-pointer`}
+            } overflow-hidden cursor-pointer rounded-xl`}
             onClick={(e) => {
               e.stopPropagation();
               setCurrentIndex(i);
