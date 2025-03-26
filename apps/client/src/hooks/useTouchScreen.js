@@ -3,6 +3,8 @@ import { useEffect, useRef } from "react";
 export const useTouchScreen = (callbacks) => {
   const callbackRef = useRef(callbacks);
 
+  const minDistance = 100;
+
   useEffect(() => {
     callbackRef.current = callbacks;
   }, [callbacks]);
@@ -22,13 +24,20 @@ export const useTouchScreen = (callbacks) => {
       const xDiff = startCoords.x - xUp;
       const yDiff = startCoords.y - yUp;
 
-      if (Math.abs(xDiff) > Math.abs(yDiff)) {
-        callbackRef.current[xDiff > 200 ? "right" : "left"]?.();
-      } else {
-        callbackRef.current[yDiff > 200 ? "down" : "up"]?.();
-      }
+      const isHorizontal = Math.abs(xDiff) > Math.abs(yDiff);
+      const swipeDistance = Math.max(Math.abs(xDiff), Math.abs(yDiff));
 
-      startCoords = { x: null, y: null };
+      if (swipeDistance > minDistance) {
+        if (isHorizontal) {
+          xDiff > 0
+            ? callbackRef.current.right?.()
+            : callbackRef.current.left?.();
+        } else {
+          yDiff > 0 ? callbackRef.current.down?.() : callbackRef.current.up?.();
+        }
+
+        startCoords = { x: null, y: null };
+      }
     };
 
     document.addEventListener("touchstart", handleTouchStart, false);
@@ -37,5 +46,5 @@ export const useTouchScreen = (callbacks) => {
       document.removeEventListener("touchstart", handleTouchStart, false);
       document.removeEventListener("touchmove", handleTouchMove, false);
     };
-  }, [callbacks]);
+  }, []);
 };

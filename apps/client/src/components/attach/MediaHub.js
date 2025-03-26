@@ -2,6 +2,7 @@ import MessageAttachment from "@components/message/elements/MessageAttachment";
 import getFileType from "@utils/media/get_file_type";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import { KEY_CODES } from "@utils/global/keyCodes";
+import { getIsMobileView } from "@store/values/IsMobileView";
 import { getMessageById } from "@store/values/Messages";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
@@ -11,9 +12,11 @@ import { useTouchScreen } from "@hooks/useTouchScreen";
 
 import Prev from "@icons/options/Prev.svg?react";
 import Next from "@icons/options/Next.svg?react";
+import Close from "@icons/actions/CloseGray.svg?react";
 
 export default function MediaHub() {
   const { pathname, hash } = useLocation();
+  const isMobile = useSelector(getIsMobileView);
 
   const [currentIndex, setCurrentIndex] = useState(() => {
     const [, , index] = hash.split("=");
@@ -51,8 +54,13 @@ export default function MediaHub() {
   return (
     <div
       className="!absolute top-0 w-screen h-screen flex flex-col bg-[var(--color-black-90)] z-10"
-      onClick={closeModal}
+      onClick={!isMobile ? closeModal : undefined}
     >
+      {isMobile && (
+        <button className="absolute top-10 left-10 z-11" onClick={closeModal}>
+          <Close />
+        </button>
+      )}
       <div className="flex justify-center flex-shrink !pt-8 !pb-2">
         <p className="!text-lg !text-gray-300">
           {currentIndex + 1 + " / " + attachments.length}
