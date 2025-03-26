@@ -102,10 +102,6 @@
     opacity: 0;
   }
 
-  .media-modal__content {
-    max-width: 90svw;
-  }
-
   .media-modal__list {
     max-width: 100dvw;
   }
