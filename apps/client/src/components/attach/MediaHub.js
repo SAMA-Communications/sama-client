@@ -8,8 +8,6 @@ import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 
-import "@styles/attach/MediaHub.css";
-
 import Prev from "@icons/options/Prev.svg?react";
 import Next from "@icons/options/Next.svg?react";
 
@@ -41,9 +39,18 @@ export default function MediaHub() {
     () => !isFirstIndex && setCurrentIndex(currentIndex - 1)
   );
 
+  //!!!!!!!!!! remove all `!` into development branch
   return (
-    <div className="media-window__container fcc" onClick={closeModal}>
-      <div className="media-modal__content fcc">
+    <div
+      className="!absolute top-0 w-screen h-screen flex flex-col bg-[var(--color-black-90)] z-10"
+      onClick={closeModal}
+    >
+      <div className="flex justify-center flex-shrink !pt-8 !pb-2">
+        <p className="!text-lg !text-gray-300">
+          {currentIndex + 1 + " / " + attachments.length}
+        </p>
+      </div>
+      <div className="!px-[30px] md:!px-[max(10%,90px)] flex-1 flex justify-center items-center">
         <MessageAttachment
           url={attachments[currentIndex]?.file_url}
           name={attachments[currentIndex]?.file_name}
@@ -51,7 +58,7 @@ export default function MediaHub() {
       </div>
       {!isFirstIndex && (
         <div
-          className="media-modal__prev fcc"
+          className="!absolute top-0 left-0 w-[max(8%,80px)] h-full flex justify-center items-center cursor-pointer duration-200 select-none hover:bg-[var(--color-bg-light-25)] opacity-0 md:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
             setCurrentIndex(currentIndex - 1);
@@ -62,7 +69,7 @@ export default function MediaHub() {
       )}
       {!isLastIndex && (
         <div
-          className="media-modal__next fcc"
+          className="!absolute top-0 right-0 w-[max(8%,80px)] h-full flex justify-center items-center cursor-pointer duration-200 select-none hover:bg-[var(--color-bg-light-25)] opacity-0 md:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
             setCurrentIndex(currentIndex + 1);
@@ -71,22 +78,30 @@ export default function MediaHub() {
           <Next />
         </div>
       )}
-      <div className="media-modal__list">
+      <div className="h-[min(175px,20%)] flex-shrink !pt-3 !pb-3 flex justify-center items-center gap-2.5">
         {attachments.map((file, i) => (
           <div
             key={i}
-            className={`mm-list__item${
-              i === currentIndex ? "--active" : ""
-            } fcc`}
+            className={`${
+              i === currentIndex ? "h-full w-[10%]" : "h-[85%] w-[8%]"
+            } overflow-hidden cursor-pointer`}
             onClick={(e) => {
               e.stopPropagation();
               setCurrentIndex(i);
             }}
           >
             {getFileType(file.file_name) === "Video" ? (
-              <video src={file.file_url} alt={file.file_name} />
+              <video
+                className="w-auto h-full object-cover"
+                src={file.file_url}
+                alt={file.file_name}
+              />
             ) : (
-              <img src={file.file_url} alt={file.file_name} />
+              <img
+                className="w-auto h-full object-cover"
+                src={file.file_url}
+                alt={file.file_name}
+              />
             )}
           </div>
         ))}
