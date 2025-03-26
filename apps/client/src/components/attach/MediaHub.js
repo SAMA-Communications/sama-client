@@ -58,7 +58,7 @@ export default function MediaHub() {
       onClick={!isMobile ? closeModal : undefined}
     >
       {isMobile && (
-        <button className="!absolute top-10 left-10 z-11" onClick={closeModal}>
+        <button className="!absolute top-10 right-10 z-11" onClick={closeModal}>
           <Close />
         </button>
       )}
