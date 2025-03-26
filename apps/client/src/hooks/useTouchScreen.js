@@ -23,9 +23,9 @@ export const useTouchScreen = (callbacks) => {
       const yDiff = startCoords.y - yUp;
 
       if (Math.abs(xDiff) > Math.abs(yDiff)) {
-        callbackRef.current[xDiff > 0 ? "right" : "left"]?.();
+        callbackRef.current[xDiff > 200 ? "right" : "left"]?.();
       } else {
-        callbackRef.current[yDiff > 0 ? "down" : "up"]?.();
+        callbackRef.current[yDiff > 200 ? "down" : "up"]?.();
       }
 
       startCoords = { x: null, y: null };
