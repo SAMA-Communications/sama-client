@@ -7,6 +7,7 @@ import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { useTouchScreen } from "@hooks/useTouchScreen";
 
 import Prev from "@icons/options/Prev.svg?react";
 import Next from "@icons/options/Next.svg?react";
@@ -38,6 +39,13 @@ export default function MediaHub() {
     KEY_CODES.ARROW_LEFT,
     () => !isFirstIndex && setCurrentIndex(currentIndex - 1)
   );
+
+  useTouchScreen({
+    left: () => !isFirstIndex && setCurrentIndex(currentIndex - 1),
+    right: () => !isLastIndex && setCurrentIndex(currentIndex + 1),
+    down: closeModal,
+    up: closeModal,
+  });
 
   //!!!!!!!!!! remove all `!` into development branch
   return (
