@@ -22,9 +22,8 @@ export default function MediaHub() {
   });
 
   const mid = hash.split("=")[1];
-  const { attachments = [] } = useSelector((state) =>
-    getMessageById(state, mid)
-  );
+  const { attachments = [] } =
+    useSelector((state) => getMessageById(state, mid)) || {};
 
   const isLastIndex = currentIndex === attachments.length - 1;
   const isFirstIndex = currentIndex === 0;
