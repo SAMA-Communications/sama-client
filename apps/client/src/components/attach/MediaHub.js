@@ -110,13 +110,13 @@ export default function MediaHub() {
           >
             {getFileType(file.file_name) === "Video" ? (
               <video
-                className="w-auto h-full object-cover"
+                className="w-full h-full object-cover"
                 src={file.file_url}
                 alt={file.file_name}
               />
             ) : (
               <img
-                className="w-auto h-full object-cover"
+                className="w-full h-full object-cover"
                 src={file.file_url}
                 alt={file.file_name}
               />
