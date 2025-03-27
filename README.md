@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is a frontend web app for the SAMA server https://github.com/SAMA-Communications/sama-server
+This is a frontend web app for the SAMA chat server https://github.com/SAMA-Communications/sama-server
 
 Read a complete medium post **Introducing SAMA** about what is SAMA and what problems we are trying to solve with it https://medium.com/sama-communications/introducing-sama-simple-but-advanced-messaging-alternative-chat-server-524a532e2040
 
