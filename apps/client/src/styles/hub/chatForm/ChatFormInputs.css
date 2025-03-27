@@ -7,8 +7,6 @@
   padding-top: 10px;
 
   background-color: var(--color-bg-light-90);
-
-  z-index: 50;
 }
 
 #inputMessage {
