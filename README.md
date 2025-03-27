@@ -36,7 +36,7 @@ Join our community for support and discussions:
 
 ## License
 
-[MIT](LICENSE)
+[Apache 2.0](LICENSE)
 
 ## Help us!
 
