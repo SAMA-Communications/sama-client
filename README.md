@@ -1,4 +1,4 @@
-# SAMA - Simple but Advanced Messaging Alternative - Client app
+# React client for SAMA chat server
 
 <img width="1282" alt="ClientImage" src="https://github.com/SAMA-Communications/sama-client/assets/98953475/fe8dfd1c-462d-46d2-aa24-5792b36e23f2">
 
