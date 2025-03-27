@@ -28,7 +28,14 @@ export default function ChatList() {
       return <p className="chat-list__empty">No chats are available.</p>;
     }
 
-    return <ConversationItemList conversations={filteredConversations} />;
+    return (
+      <CustomScrollBar customId={"conversationItemsScrollable"}>
+        <ConversationItemList
+          id="conversationItemsScrollable"
+          conversations={filteredConversations}
+        />
+      </CustomScrollBar>
+    );
   }, [filteredConversations]);
 
   return (

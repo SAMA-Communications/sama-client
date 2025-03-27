@@ -52,10 +52,7 @@ export default function MessagesList({ scrollRef }) {
 
   const needToGetMoreMessage = useRef(true);
   const lastMessageRef = useCallback(() => {
-    if (!selectedCID || messages.length === 0) {
-      return;
-    }
-
+    if (!selectedCID || messages.length === 0) return;
     api
       .messageList({
         cid: selectedCID,

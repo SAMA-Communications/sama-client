@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.1
+
+### Important fixes
+
+- Fixed handling `lt` and `gt` parameters in `converssation_list` request
+
 ## 0.12.0
 
 ### Improvements

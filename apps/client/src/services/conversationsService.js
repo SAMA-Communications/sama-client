@@ -96,28 +96,30 @@ class ConversationsService {
       store.dispatch(
         insertChats(chats.map((obj) => ({ ...obj, participants: [] })))
       );
-      if (chats.length > 0) {
-        const users = await api.getParticipantsByCids({
-          cids: chats.map((el) => el._id),
-        });
-        store.dispatch(upsertUsers(users));
-
-        const additionalUsersIds = [];
-        chats.forEach((chat) => {
-          if (chat.type === "g") return;
-          const opponentId = getOpponentId(chat, api.curerntUserId);
-          !users.find((u) => u.native_id === opponentId) &&
-            additionalUsersIds.push(opponentId);
-        });
-        if (additionalUsersIds.length) {
-          const additionalUsers = await api.getUsersByIds({
-            ids: additionalUsersIds,
-          });
-          store.dispatch(upsertUsers(additionalUsers));
-        }
-      }
+      if (chats.length > 0) await this.getAndStoreParticipantsFromChats(chats);
     } catch (error) {
       showCustomAlert(error.message, "danger");
+    }
+  }
+
+  async getAndStoreParticipantsFromChats(conversations) {
+    const users = await api.getParticipantsByCids({
+      cids: conversations.map((el) => el._id),
+    });
+    store.dispatch(upsertUsers(users));
+
+    const additionalUsersIds = [];
+    conversations.forEach((chat) => {
+      if (chat.type === "g") return;
+      const opponentId = getOpponentId(chat, api.curerntUserId);
+      !users.find((u) => u.native_id === opponentId) &&
+        additionalUsersIds.push(opponentId);
+    });
+    if (additionalUsersIds.length) {
+      const additionalUsers = await api.getUsersByIds({
+        ids: additionalUsersIds,
+      });
+      store.dispatch(upsertUsers(additionalUsers));
     }
   }
 
