@@ -26,8 +26,17 @@ export default function ChatFormContent({ scrollRef }) {
     }
 
     return (
-      <div className="chat-content__container">
-        <p className="chat-emty__text">Write the first message...</p>
+      <div
+        style={{
+          flexGrow: 1,
+          display: "flex",
+          alignItems: "flex-end",
+          paddingBottom: 15,
+        }}
+      >
+        <p style={{ fontWeight: 200, fontSize: "var(--font-h5)" }}>
+          Write the first message...
+        </p>
       </div>
     );
   }, [messages, scrollRef]);

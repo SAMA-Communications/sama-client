@@ -1,6 +1,8 @@
 import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
+import ChatFormEditor from "@components/hub/chatForm/ChatFormEditor.js";
 import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
 import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
+import ChatFormNavigation from "@components/hub/chatForm/ChatFormNavigation.js";
 import api from "@api/api";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
@@ -33,6 +35,9 @@ export default function ChatForm() {
   const conversations = useSelector(selectConversationsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
+  const isGroup = selectedConversation?.type === "g";
+
+  const [tab, setTab] = useState("apps");
 
   const chatMessagesBlock = useRef();
   const [files, setFiles] = useState([]);
@@ -96,19 +101,30 @@ export default function ChatForm() {
   useKeyDown(KEY_CODES.ESCAPE, closeForm);
 
   return (
-    <section className={`chat-form__container ${selectedCID ? "" : "fcc"}`}>
+    <section className="flex flex-col flex-grow">
       {selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />
-          <ChatFormContent scrollRef={chatMessagesBlock} />
-          <ChatFormInputs
-            chatMessagesBlockRef={chatMessagesBlock}
-            files={files}
-            setFiles={setFiles}
-          />
+          {isGroup ? <ChatFormNavigation changeTabFunc={setTab} /> : null}
+          {tab === "chat" ? (
+            <>
+              <ChatFormContent
+                chatMessagesBlockRef={chatMessagesBlock}
+                files={files}
+                setFiles={setFiles}
+              />
+              <ChatFormInputs
+                chatMessagesBlockRef={chatMessagesBlock}
+                files={files}
+                setFiles={setFiles}
+              />
+            </>
+          ) : (
+            <ChatFormEditor />
+          )}
         </>
       ) : (
-        <p className="chat-form__title">
+        <p className="mt-auto mb-auto text-center font-light text-[58px] !text-[#b0b0b0]">
           Select a conversation to start chatting
         </p>
       )}

@@ -1,6 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
+@theme {
+  --font-inter: "Inter", sans-serif;
+}
+
 :root {
   --base-scale: 1;
   --base-font: 16px;
@@ -47,41 +51,9 @@
   --color-indicator: #68174d;
 }
 
-* {
-  position: relative;
-
-  padding: 0;
-  margin: 0;
-
-  box-sizing: border-box;
-
-  font-variant-numeric: tabular-nums;
-  font-family: var(--font-family);
-  font-size: var(--font-p);
-  color: var(--color-text-dark);
-
-  line-height: normal;
-  font-weight: 200;
-
-  /* user-select: none; */
-}
-
-a {
-  text-decoration: none;
-}
-
-body {
-  width: 100dvw;
-  height: 100dvh;
-
-  background-color: var(--color-bg-dark);
-}
-
 main {
   width: 100dvw;
   height: 100dvh;
-
-  padding: 20px 30px 20px 0;
 
   display: flex;
 

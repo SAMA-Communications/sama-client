@@ -109,8 +109,10 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   };
 
   useEffect(() => {
-    inputRef.current.value = "";
-    inputRef.current.style.height = `55px`;
+    if (inputRef.current) {
+      inputRef.current.value = "";
+      inputRef.current.style.height = `55px`;
+    }
   }, [selectedCID]);
 
   const isBlockedConv = useMemo(() => {

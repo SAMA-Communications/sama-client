@@ -84,23 +84,23 @@ export default function MessageInput({
   const inputsView = useMemo(() => {
     if (isBlockedConv) {
       return (
-        <TextAreaInput
-          inputRef={inputTextRef}
-          handleInput={handleInput}
-          handeOnKeyDown={handeOnKeyDown}
-          isDisabled={true}
-          isMobile={isMobile}
-          placeholder={
-            "The user you are currently chatting with has deleted their account. You can no longer continue the chat."
-          }
-        />
+        <p style={{ alignSelf: "center", marginLeft: 15, marginRight: 15 }}>
+          The user you are currently chatting with has deleted their account.
+          You can no longer continue the chat.
+        </p>
       );
     }
 
     return (
       <>
         <Attach
-          className="input-file__button"
+          style={{
+            width: 55,
+            height: 45,
+            paddingLeft: 10,
+            paddingBottom: 12,
+            cursor: "pointer",
+          }}
           onClick={() => {
             addSuffix(location.pathname + location.hash, "/attach");
             storeInputText();
@@ -114,10 +114,36 @@ export default function MessageInput({
           isMobile={isMobile}
           placeholder={"Type your message..."}
         />
-        <Send className="input-text__button" onClick={onSubmitFunc} />
+        <Send
+          style={{
+            width: 55,
+            height: 55,
+            marginRight: 10,
+            paddingLeft: 8,
+            paddingRight: 8,
+            cursor: "pointer",
+          }}
+          onClick={onSubmitFunc}
+        />
       </>
     );
   }, [location, isBlockedConv, onSubmitFunc]);
 
-  return <div className="inputs__container">{inputsView}</div>;
+  return (
+    <div
+      style={{
+        minHeight: 60,
+        paddingTop: 3,
+        paddingBottom: 3,
+        flexShrink: 1,
+        display: "flex",
+        alignItems: "flex-end",
+        gap: 5,
+        borderRadius: 16,
+        backgroundColor: "var(--color-hover-light)",
+      }}
+    >
+      {inputsView}
+    </div>
+  );
 }

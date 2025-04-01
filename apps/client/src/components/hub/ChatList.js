@@ -39,7 +39,7 @@ export default function ChatList() {
   }, [filteredConversations]);
 
   return (
-    <div className="chat-list__container">
+    <section className="chat-list__container">
       {isMobileView ? <MenuButtons /> : null}
       <SearchInput shadowText={"Search"} setState={setInputText} />
       {inputText ? (
@@ -51,6 +51,6 @@ export default function ChatList() {
       ) : (
         <CustomScrollBar>{chatsList}</CustomScrollBar>
       )}
-    </div>
+    </section>
   );
 }

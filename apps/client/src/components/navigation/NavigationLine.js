@@ -53,7 +53,10 @@ export default function NavigationLine() {
     }, [pathname]);
 
   return (
-    <aside className="navigation__container">
+    <aside
+      className="navigation__container"
+      style={{ paddingTop: 20, paddingBottom: 20 }}
+    >
       <div
         className="navigation__logo fcc"
         onClick={() => {

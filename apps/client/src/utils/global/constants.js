@@ -28,6 +28,23 @@ const globalConstants = {
     5: "Fr",
     6: "Sa",
   },
+  defaultEditorCode: `/*  
+ * Processes every message in a chat with moderation capabilities.
+ */
+const handler = async (chatMessage, user, resolve, reject) => {
+    const body = chatMessage.body;
+
+    // Reject the message if it contains any prohibited words
+    const prohibitedWords = ["asshole", "fuck", "bullshit"];
+    if (prohibitedWords.some(word => body.includes(word))) {
+        return reject("Message blocked by moderation.");
+    }
+
+    return resolve();
+};
+
+export default await handler(env.MESSAGE, env.USER, env.RESOLVE, env.REJECT);
+`,
 };
 
 export default globalConstants;
