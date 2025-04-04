@@ -1,6 +1,6 @@
 {
   "name": "sama",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "homepage": "https://github.com/SAMA-Communications/sama-client#readme",
   "keywords": [
     "react",
@@ -16,13 +16,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "vite",
+    "start": "vite --host",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.6",
-    "@sama-communications/sdk": "^0.10.0",
+    "@sama-communications/sdk": "^0.12.1",
     "@tailwindcss/vite": "^4.0.8",
     "@vitejs/plugin-react": "^4.3.4",
     "blurhash": "^2.0.5",
@@ -39,6 +39,7 @@
     "react-loader-spinner": "^5.3.4",
     "react-loading-skeleton": "^3.4.0",
     "react-redux": "^8.0.4",
+    "react-responsive-masonry": "^2.7.1",
     "react-router-dom": "^6.4.2",
     "sama-sdk": "file:../../packages/sdk",
     "tailwindcss": "^4.0.8",
