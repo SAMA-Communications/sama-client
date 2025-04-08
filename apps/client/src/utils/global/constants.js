@@ -37,7 +37,7 @@ const handler = async (chatMessage, user, resolve, reject) => {
     // Reject the message if it contains any prohibited words
     const prohibitedWords = ["asshole", "fuck", "bullshit"];
     if (prohibitedWords.some(word => body.includes(word))) {
-        return reject("Message blocked by moderation.");
+        return reject({ message: "Message blocked by moderation."});
     }
 
     return resolve();

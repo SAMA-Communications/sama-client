@@ -10,6 +10,7 @@ export default function ChatFormNavigation({ changeTabFunc }) {
       <button className={buttonStyle} onClick={() => changeTabFunc("apps")}>
         <p>Apps</p>
       </button>
+      //temporary buttons
     </div>
   );
 }

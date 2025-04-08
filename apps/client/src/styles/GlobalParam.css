@@ -129,6 +129,18 @@ main {
 
   z-index: 200;
 }
+.edito-validation .editor-tooltip-style {
+  padding: 15px 30px !important;
+  color: black;
+
+  border-radius: 8px;
+  background-color: var(--color-white);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+}
+
+.edito-validation .editor-tooltip-arrow {
+  background-color: var(--color-accent-dark);
+}
 
 .navigation__logo {
   font-weight: 300;

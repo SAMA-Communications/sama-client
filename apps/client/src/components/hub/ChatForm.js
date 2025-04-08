@@ -37,7 +37,7 @@ export default function ChatForm() {
   const selectedCID = selectedConversation?._id;
   const isGroup = selectedConversation?.type === "g";
 
-  const [tab, setTab] = useState("apps");
+  const [tab, setTab] = useState("chat");
 
   const chatMessagesBlock = useRef();
   const [files, setFiles] = useState([]);

@@ -4,11 +4,13 @@ import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import {
   addMessage,
+  removeMessage,
   selectActiveConversationMessages,
 } from "@store/values/Messages";
 import {
   getConverastionById,
   removeChat,
+  removeLastMessage,
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
@@ -73,6 +75,8 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     try {
       await messagesService.sendMessage(mObject);
     } catch (e) {
+      console.log(e);
+
       showCustomAlert(
         e.message || "The server connection is unavailable.",
         "warning"
@@ -83,6 +87,10 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
           msg: messages[messages.length - 1],
         })
       );
+      dispatch(removeLastMessage({ cid: selectedCID }));
+      dispatch(removeMessage(mObject.mid));
+      inputRef.current.value = body;
+      setIsSendMessageDisable(false);
 
       if (e.status === 403) {
         dispatch(removeChat(selectedCID));

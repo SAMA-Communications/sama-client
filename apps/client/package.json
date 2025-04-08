@@ -43,6 +43,7 @@
     "react-loading-skeleton": "^3.4.0",
     "react-redux": "^8.0.4",
     "react-router-dom": "^6.4.2",
+    "react-tooltip": "^5.28.0",
     "sama-sdk": "file:../../packages/sdk",
     "tailwindcss": "^4.0.8",
     "vite": "^6.1.1"

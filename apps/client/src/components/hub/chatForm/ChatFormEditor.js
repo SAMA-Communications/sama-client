@@ -1,12 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useMonaco } from "@monaco-editor/react";
 
-import ChatEditorCode from "@components/hub/elements/ChatEditorCode.js";
-import ChatEditorHelper from "@components/hub/elements/ChatEditorHelper";
-import ChatEditorLogs from "@components/hub/elements/ChatEditorLogs.js";
-import ChatEditorValidation from "@components/hub/elements/ChatEditorValidation.js";
+import ChatEditorCode from "@components/hub/editor/ChatEditorCode.js";
+import ChatEditorHelper from "@components/hub/editor/ChatEditorHelper";
+import ChatEditorLogs from "@components/hub/editor/ChatEditorLogs.js";
+import ChatEditorValidation from "@components/hub/editor/ChatEditorValidation.js";
 
 export default function ChatFormEditor() {
+  const monaco = useMonaco();
   const [compilerLogs, setCompilerLogs] = useState(null);
+
+  useEffect(() => {
+    if (!monaco) return;
+    monaco.editor.defineTheme("custom", {
+      base: "vs",
+      inherit: true,
+      rules: [],
+      colors: { "editor.background": "#f6f6f6" },
+    });
+    monaco.editor.setTheme("custom");
+  }, [monaco]);
 
   return (
     <>

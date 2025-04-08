@@ -212,10 +212,16 @@ class MessagesService {
   }
 
   async sendMessage(message) {
-    const { server_mid, t } = await api.messageCreate(message);
+    const { server_mid, t, modified } = await api.messageCreate(message);
     const { mid, body, cid, from } = message;
 
-    const mObject = { _id: server_mid, body, from, status: "sent", t };
+    const mObject = {
+      _id: server_mid,
+      body: modified?.body || body,
+      from,
+      status: "sent",
+      t,
+    };
 
     store.dispatch(addMessage(mObject));
     store.dispatch(
