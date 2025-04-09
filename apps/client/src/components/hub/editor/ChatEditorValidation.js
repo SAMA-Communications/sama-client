@@ -24,6 +24,7 @@ export default function ChatEditorValidation({ setLogs }) {
 
   const getEditorCode = useCallback(
     () => monaco.editor.getModels()[0]?.getValue(),
+    //check correct editor
     [monaco]
   );
 

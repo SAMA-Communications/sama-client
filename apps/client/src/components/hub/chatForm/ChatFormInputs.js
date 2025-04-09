@@ -75,8 +75,6 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     try {
       await messagesService.sendMessage(mObject);
     } catch (e) {
-      console.log(e);
-
       showCustomAlert(
         e.message || "The server connection is unavailable.",
         "warning"

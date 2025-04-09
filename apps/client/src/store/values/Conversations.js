@@ -166,7 +166,9 @@ export const conversations = createSlice({
       const updateParams = {
         _id: cid,
         last_message: msg,
-        updated_at: new Date(msg.t * 1000).toISOString(),
+        updated_at: msg
+          ? new Date(msg.t * 1000).toISOString()
+          : conv.created_at,
       };
       conversationsAdapter.upsertOne(state, updateParams);
     },
