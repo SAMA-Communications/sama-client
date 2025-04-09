@@ -5,7 +5,7 @@ import { updateScheme, upsertChat } from "@store/values/Conversations.js";
 import api from "@api/api.js";
 
 class ConversationSchemeService {
-  #options = { allowFetch: false, allowFs: false };
+  #options = { allowFetch: true, allowFs: true };
   #sandBox = null;
 
   constructor() {
