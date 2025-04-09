@@ -7,6 +7,7 @@ import api from "@api/api";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
 import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
+import { selectCurrentUserId } from "@store/values/CurrentUserId.js";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
@@ -36,6 +37,10 @@ export default function ChatForm() {
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
   const isGroup = selectedConversation?.type === "g";
+
+  const currentUserId = useSelector(selectCurrentUserId);
+  const conversationOwner = selectedConversation.owner_id?.toString();
+  const isOwner = currentUserId === conversationOwner;
 
   const [tab, setTab] = useState("chat");
 
@@ -105,7 +110,9 @@ export default function ChatForm() {
       {selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />
-          {isGroup ? <ChatFormNavigation changeTabFunc={setTab} /> : null}
+          {isGroup && isOwner ? (
+            <ChatFormNavigation changeTabFunc={setTab} />
+          ) : null}
           {tab === "chat" ? (
             <>
               <ChatFormContent
