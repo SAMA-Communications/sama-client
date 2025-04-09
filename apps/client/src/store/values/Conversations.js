@@ -32,6 +32,14 @@ export const getDisplayableConversations = createSelector(
     return conversations.filter((obj) => obj.type === "g" || obj.last_message);
   }
 );
+
+export const getConversationScheme = createSelector(
+  [getSelectedConversationId, selectConversationsEntities],
+  (id, conversations) => {
+    return conversations && id ? conversations[id].scheme_options : null;
+  }
+);
+
 export const conversations = createSlice({
   name: "Conversations",
   initialState: conversationsAdapter.getInitialState({ entities: null }),
@@ -124,6 +132,18 @@ export const conversations = createSlice({
 
       conversationsAdapter.upsertOne(state, updateParams);
     },
+    removeLastMessage: (state, { payload }) => {
+      const { cid } = payload;
+      const conv = state.entities[cid];
+
+      if (!conv) return;
+
+      const updateParams = {
+        _id: cid,
+        messagesIds: conv.messagesIds.slice(0, -1),
+      };
+      conversationsAdapter.upsertOne(state, updateParams);
+    },
 
     upsertParticipants: (state, { payload }) => {
       const { cid, participants } = payload;
@@ -146,7 +166,9 @@ export const conversations = createSlice({
       const updateParams = {
         _id: cid,
         last_message: msg,
-        updated_at: new Date(msg.t * 1000).toISOString(),
+        updated_at: msg
+          ? new Date(msg.t * 1000).toISOString()
+          : conv.created_at,
       };
       conversationsAdapter.upsertOne(state, updateParams);
     },
@@ -172,6 +194,25 @@ export const conversations = createSlice({
           last_message: { ...lastMessageField, status: "read" },
         });
     },
+
+    updateScheme: (state, action) => {
+      const { _id, scheme, updated_at, updated_by, not_saved } = action.payload;
+      const conv = state.entities[_id];
+
+      const existingSchemeOptions = conv?.scheme_options || {};
+      const updatedSchemeOptions = {
+        ...existingSchemeOptions,
+        scheme,
+        updated_at,
+        updated_by,
+        not_saved,
+      };
+
+      conversationsAdapter.upsertOne(state, {
+        _id: _id,
+        scheme_options: updatedSchemeOptions,
+      });
+    },
   },
 });
 
@@ -181,12 +222,15 @@ export const {
   insertChat,
   markConversationAsRead,
   removeChat,
+  removeLastMessage,
   setChats,
   setLastMessageField,
   updateChatIndicator,
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
+  updateScheme,
+  deleteScheme,
 } = conversations.actions;
 
 export default conversations.reducer;

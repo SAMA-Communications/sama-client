@@ -6,7 +6,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "SAMAClient",
-      fileName: (format) => `sama-sdk.${format}.js`,
+      fileName: (format) => `@sama-communications.sdk.${format}.js`,
       formats: ["es", "cjs", "umd"],
     },
     rollupOptions: {

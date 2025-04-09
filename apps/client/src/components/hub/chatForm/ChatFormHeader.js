@@ -88,8 +88,8 @@ export default function ChatFormHeader({ closeFormFunc }) {
       }
       const opponentLastActivity = participants[opponentId]?.recent_activity;
       return opponentLastActivity === "online" ? (
-        <ul className="activity--online">
-          <li>online</li>
+        <ul style={{ paddingLeft: 25 }}>
+          <li style={{ color: "var(--color-accent-dark)" }}>online</li>
         </ul>
       ) : (
         getLastVisitTime(opponentLastActivity)
@@ -143,16 +143,49 @@ export default function ChatFormHeader({ closeFormFunc }) {
   };
 
   return (
-    <div className="header__container" onClick={viewChatOrPaticipantInfo}>
+    <div
+      style={{
+        flexShrink: 1,
+        height: "max-content",
+        display: "flex",
+        paddingBottom: 10,
+      }}
+      onClick={viewChatOrPaticipantInfo}
+    >
       {isMobile || isTablet ? (
         <BackBtn className="header-back" onClick={closeFormFunc} />
       ) : null}
-      <div className="header-content">
-        <div className="content__name">&zwnj;{viewChatName}</div>
-        <div className="content__activity">{viewStatusActivity}</div>
+      <div
+        style={{
+          height: "max-content",
+          marginTop: -10,
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <p
+          style={{
+            fontWeight: 500,
+            fontSize: "var(--font-h2)",
+            color: "black",
+            lineHeight: "1.5",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          &zwnj;{viewChatName}
+        </p>
+        <p>{viewStatusActivity}</p>
       </div>
       <div
-        className="header-more"
+        style={{
+          width: 5,
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+        }}
         onContextMenu={openContextMenu}
         onClick={openContextMenu}
       >

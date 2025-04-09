@@ -4,11 +4,13 @@ import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import {
   addMessage,
+  removeMessage,
   selectActiveConversationMessages,
 } from "@store/values/Messages";
 import {
   getConverastionById,
   removeChat,
+  removeLastMessage,
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
@@ -83,6 +85,10 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
           msg: messages[messages.length - 1],
         })
       );
+      dispatch(removeLastMessage({ cid: selectedCID }));
+      dispatch(removeMessage(mObject.mid));
+      inputRef.current.value = body;
+      setIsSendMessageDisable(false);
 
       if (e.status === 403) {
         dispatch(removeChat(selectedCID));
@@ -109,8 +115,10 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   };
 
   useEffect(() => {
-    inputRef.current.value = "";
-    inputRef.current.style.height = `55px`;
+    if (inputRef.current) {
+      inputRef.current.value = "";
+      inputRef.current.style.height = `55px`;
+    }
   }, [selectedCID]);
 
   const isBlockedConv = useMemo(() => {
