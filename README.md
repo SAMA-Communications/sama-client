@@ -17,7 +17,7 @@ The whole SAMA stack can be tested using https://app.samacloud.io public cloud.
 ### To run Web
 
 - Make sure you followed SAMA server Development guide first https://github.com/SAMA-Communications/sama-server/blob/main/README.md#development
-- In `packages/app`: copy `.env.example` to `.env`.
+- In `apps/client`: copy `.env.example` to `.env`.
 - Generate VAPID keys via `npx web-push generate-vapid-keys` and set Public Key to `VITE_PUBLIC_VAPID_KEY` in `.env` file
 - `npm install` to install dependencies
 - `npm run build --workspace=@sama-communications/sdk` to install SAMA api
