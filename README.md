@@ -1,10 +1,10 @@
-# SAMA - Simple but Advanced Messaging Alternative - Client app
+# React client for SAMA chat server
 
 <img width="1282" alt="ClientImage" src="https://github.com/SAMA-Communications/sama-client/assets/98953475/fe8dfd1c-462d-46d2-aa24-5792b36e23f2">
 
 ## Overview
 
-This is a frontend demo app for the SAMA server https://github.com/SAMA-Communications/sama-server
+This is a frontend web app for the SAMA chat server https://github.com/SAMA-Communications/sama-server
 
 Read a complete medium post **Introducing SAMA** about what is SAMA and what problems we are trying to solve with it https://medium.com/sama-communications/introducing-sama-simple-but-advanced-messaging-alternative-chat-server-524a532e2040
 
@@ -17,7 +17,7 @@ The whole SAMA stack can be tested using https://app.samacloud.io public cloud.
 ### To run Web
 
 - Make sure you followed SAMA server Development guide first https://github.com/SAMA-Communications/sama-server/blob/main/README.md#development
-- In `packages/app`: copy `.env.example` to `.env`.
+- In `apps/client`: copy `.env.example` to `.env`.
 - Generate VAPID keys via `npx web-push generate-vapid-keys` and set Public Key to `VITE_PUBLIC_VAPID_KEY` in `.env` file
 - `npm install` to install dependencies
 - `npm run build --workspace=@sama-communications/sdk` to install SAMA api
@@ -36,7 +36,7 @@ Join our community for support and discussions:
 
 ## License
 
-[MIT](LICENSE)
+[Apache 2.0](LICENSE)
 
 ## Help us!
 
