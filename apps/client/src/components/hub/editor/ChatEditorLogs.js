@@ -21,6 +21,7 @@ export default function ChatEditorLogs({ logs, setLogs }) {
           theme="custom"
           defaultLanguage="json"
           value={logs}
+          path={"logs"}
           options={{
             fontSize: 16,
             scrollBeyondLastLine: false,

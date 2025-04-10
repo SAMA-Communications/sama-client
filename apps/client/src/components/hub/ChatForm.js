@@ -1,8 +1,3 @@
-import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
-import ChatFormEditor from "@components/hub/chatForm/ChatFormEditor.js";
-import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
-import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
-import ChatFormNavigation from "@components/hub/chatForm/ChatFormNavigation.js";
 import api from "@api/api";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
@@ -19,10 +14,22 @@ import {
 } from "@store/values/SelectedConversation";
 import { KEY_CODES } from "@utils/global/keyCodes";
 import { setClicked } from "@store/values/ContextMenu";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+
+import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
+import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
+import ChatFormNavigation from "@components/hub/chatForm/ChatFormNavigation.js";
+import ChatFormEditor from "@components/hub/chatForm/ChatFormEditor.js";
 
 import "@styles/hub/ChatForm.css";
 
@@ -42,10 +49,9 @@ export default function ChatForm() {
   const conversationOwner = selectedConversation.owner_id?.toString();
   const isOwner = currentUserId === conversationOwner;
 
-  const [tab, setTab] = useState("chat");
+  const [currentTab, setCurrentTab] = useState("messages");
 
   const chatMessagesBlock = useRef();
-  const [files, setFiles] = useState([]);
 
   const closeForm = (e) => {
     const { pathname, hash } = location;
@@ -82,8 +88,7 @@ export default function ChatForm() {
   }, [isTabInFocus, readMessage]);
 
   useEffect(() => {
-    files.length && setFiles([]);
-
+    setCurrentTab("messages");
     document.addEventListener("swiped-left", closeForm);
     document.addEventListener("swiped-right", closeForm);
 
@@ -105,30 +110,33 @@ export default function ChatForm() {
 
   useKeyDown(KEY_CODES.ESCAPE, closeForm);
 
+  useLayoutEffect(() => setCurrentTab("messages"), [selectedCID]);
+
+  const formComponent = useMemo(() => {
+    if (!selectedCID) return null;
+
+    switch (currentTab) {
+      case "messages":
+        return <ChatFormContent chatMessagesBlock={chatMessagesBlock} />;
+      case "apps":
+        return <ChatFormEditor />;
+      default:
+        return null;
+    }
+  }, [selectedCID, currentTab, chatMessagesBlock]);
+
   return (
     <section className="flex flex-col flex-grow">
       {selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />
           {isGroup && isOwner ? (
-            <ChatFormNavigation changeTabFunc={setTab} />
+            <ChatFormNavigation
+              currentTab={currentTab}
+              changeTabFunc={setCurrentTab}
+            />
           ) : null}
-          {tab === "chat" ? (
-            <>
-              <ChatFormContent
-                chatMessagesBlockRef={chatMessagesBlock}
-                files={files}
-                setFiles={setFiles}
-              />
-              <ChatFormInputs
-                chatMessagesBlockRef={chatMessagesBlock}
-                files={files}
-                setFiles={setFiles}
-              />
-            </>
-          ) : (
-            <ChatFormEditor />
-          )}
+          {formComponent}
         </>
       ) : (
         <p className="mt-auto mb-auto text-center font-light text-[58px] !text-[#b0b0b0]">

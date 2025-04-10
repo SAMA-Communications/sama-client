@@ -16,8 +16,9 @@ export default function ChatEditorHelper() {
   const selectedConversationScheme = useSelector(getConversationScheme);
 
   const resetEditorContent = (content) => {
-    const editor = monaco?.editor.getModels()?.[0];
-    if (editor) editor.setValue(content);
+    const uri = monaco?.Uri.parse(`file://${selectedCid}`);
+    const model = monaco?.editor.getModel(uri);
+    if (model) model.setValue(content);
     localStorage.removeItem(`conversation_scheme_${selectedCid}`);
   };
 
@@ -33,7 +34,7 @@ export default function ChatEditorHelper() {
     resetEditorContent(
       selectedConversationScheme?.scheme || globalConstants.defaultEditorCode
     );
-    dispatch(updateScheme({ _id: selectedCid, not_saved: undefined }));
+    dispatch(updateScheme({ _id: selectedCid, not_saved: null }));
   };
 
   return (

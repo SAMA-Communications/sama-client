@@ -5,7 +5,9 @@ import { selectActiveConversationMessages } from "@store/values/Messages";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
-export default function ChatFormContent({ scrollRef }) {
+import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
+
+export default function ChatFormContent({ chatMessagesBlock }) {
   const messages = useSelector(selectActiveConversationMessages);
 
   const chatContentView = useMemo(() => {
@@ -20,26 +22,22 @@ export default function ChatFormContent({ scrollRef }) {
     if (messages.length) {
       return (
         <CustomScrollBar customId={"chatMessagesScrollable"}>
-          <MessagesList scrollRef={scrollRef} />
+          <MessagesList />
         </CustomScrollBar>
       );
     }
 
     return (
-      <div
-        style={{
-          flexGrow: 1,
-          display: "flex",
-          alignItems: "flex-end",
-          paddingBottom: 15,
-        }}
-      >
-        <p style={{ fontWeight: 200, fontSize: "var(--font-h5)" }}>
-          Write the first message...
-        </p>
+      <div className="flex flex-grow items-end pb-[15px]">
+        <p className="font-light text-[23px]">Write the first message...</p>
       </div>
     );
-  }, [messages, scrollRef]);
+  }, [messages]);
 
-  return chatContentView;
+  return (
+    <>
+      {chatContentView}
+      <ChatFormInputs chatMessagesBlockRef={chatMessagesBlock} />
+    </>
+  );
 }

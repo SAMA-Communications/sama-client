@@ -1,3 +1,4 @@
+import showCustomAlert from "@utils/show_alert.js";
 import store from "@store/store.js";
 import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@latest";
 import { updateScheme, upsertChat } from "@store/values/Conversations.js";
@@ -66,8 +67,10 @@ class ConversationSchemeService {
         })
       );
       localStorage.removeItem(`conversation_scheme_${cid}`);
+      showCustomAlert("The scheme was successfully saved.", "success");
     } catch (error) {
       console.error("Failed to save scheme:", error);
+      showCustomAlert("Failed to save the scheme. Please try again.", "error");
     }
   }
 
@@ -81,12 +84,12 @@ class ConversationSchemeService {
   }
 
   async syncConversationScheme(cid) {
-    const localStoredScheme = await this.getSchemeFromLocalStorage(cid);
-    if (localStoredScheme) return;
+    // const localStoredScheme = await this.getSchemeFromLocalStorage(cid);
+    // if (localStoredScheme) return;
 
     const reduxStoredScheme =
       store.getState().conversations.entities[cid]?.scheme_options;
-    if (reduxStoredScheme) {
+    if (reduxStoredScheme?.scheme) {
       store.dispatch(updateScheme({ _id: cid, ...reduxStoredScheme }));
       return;
     }

@@ -18,7 +18,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
-export default function MessagesList({ scrollRef }) {
+export default function MessagesList() {
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -142,7 +142,6 @@ export default function MessagesList({ scrollRef }) {
 
   return (
     <InfiniteScroll
-      ref={scrollRef}
       dataLength={messages.length}
       next={lastMessageRef}
       inverse={true}

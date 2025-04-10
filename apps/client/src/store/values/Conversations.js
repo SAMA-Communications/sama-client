@@ -202,9 +202,9 @@ export const conversations = createSlice({
       const existingSchemeOptions = conv?.scheme_options || {};
       const updatedSchemeOptions = {
         ...existingSchemeOptions,
-        scheme,
-        updated_at,
-        updated_by,
+        ...(scheme && { scheme }),
+        ...(updated_at && { updated_at }),
+        ...(updated_by && { updated_by }),
         not_saved,
       };
 

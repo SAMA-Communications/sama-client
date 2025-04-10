@@ -1,4 +1,4 @@
-import Editor from "@monaco-editor/react";
+import Editor, { useMonaco } from "@monaco-editor/react";
 import conversationSchemeService from "@services/conversationSchemeService.js";
 import getFromatedTime from "@utils/time/get_fromated_time.js";
 import getUserFullName from "@utils/user/get_user_full_name.js";
@@ -10,6 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function ChatEditorCode() {
+  const monaco = useMonaco();
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCid = selectedConversation._id;
@@ -18,23 +19,23 @@ export default function ChatEditorCode() {
       globalConstants.defaultEditorCode
   );
 
-  const editorCodeMemo = useMemo(() => {
-    if (selectedConversation.scheme_options?.scheme)
-      return selectedConversation.scheme_options?.scheme;
-    return editorCode;
-  }, [editorCode, selectedConversation]);
-
   useEffect(() => {
     conversationSchemeService
       .getSchemeFromLocalStorage(selectedCid)
       .then((localStorageCode) => {
         if (localStorageCode) {
           setEditorCode(localStorageCode);
-          return;
+          // return;
         }
         conversationSchemeService.syncConversationScheme(selectedCid);
       });
   }, [selectedCid]);
+
+  useEffect(() => {
+    if (selectedConversation.scheme_options) {
+      setEditorCode(selectedConversation.scheme_options?.scheme);
+    }
+  }, [selectedConversation]);
 
   const codeStatusView = useMemo(() => {
     const schemeOptions = selectedConversation?.scheme_options;
@@ -48,9 +49,16 @@ export default function ChatEditorCode() {
     return `${date} by ${getUserFullName(user)}`;
   }, [selectedConversation]);
 
-  function handleEditorDidMount(editor, monaco) {
+  const handleEditorDidMount = (editor, monaco) => {
     const constrainedInstance = constrainedEditor(monaco);
-    const model = editor.getModel();
+    const uri = monaco.Uri.parse(`file://${selectedCid}`);
+
+    let model = monaco.editor.getModel(uri);
+    if (!model) {
+      model = monaco.editor.createModel(editorCode, "javascript", uri);
+    }
+    editor.setModel(model);
+
     constrainedInstance.initializeIn(editor);
 
     const restrictions = [];
@@ -62,7 +70,18 @@ export default function ChatEditorCode() {
       allowMultiline: true,
     });
     constrainedInstance.addRestrictionsTo(model, restrictions);
-  }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      const uri = monaco?.Uri.parse(`file://${selectedCid}`);
+      const model = monaco?.editor.getModel(uri);
+
+      if (model && editorCode && typeof editorCode === "string") {
+        model.setValue(editorCode);
+      }
+    }, 300);
+  }, [monaco, editorCode]);
 
   return (
     <div className="relative flex grow-3 items-end">
@@ -71,9 +90,10 @@ export default function ChatEditorCode() {
           height="100%"
           theme="custom"
           wrapperProps={{ className: `pb-[35px]` }}
-          onMount={handleEditorDidMount}
           defaultLanguage="javascript"
-          value={editorCodeMemo}
+          value={editorCode}
+          path={selectedCid}
+          onMount={handleEditorDidMount}
           options={{
             fontSize: 16,
             scrollBeyondLastLine: false,

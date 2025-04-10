@@ -22,14 +22,14 @@ export default function ChatEditorValidation({ setLogs }) {
   const [validationSatus, setValidationStatus] = useState(null);
   const [validationChecks, setValidationChecks] = useState({});
 
-  const getEditorCode = useCallback(
-    () => monaco.editor.getModels()[0]?.getValue(),
-    //check correct editor
-    [monaco]
-  );
+  const getEditorCode = useCallback(() => {
+    const uri = monaco?.Uri.parse(`file://${selectedCid}`);
+    const model = monaco?.editor.getModel(uri);
+    return model?.getValue();
+  }, [monaco, selectedCid]);
 
   const saveSchemeCode = async () => {
-    conversationSchemeService.saveSchemeByConversation(
+    await conversationSchemeService.saveSchemeByConversation(
       selectedCid,
       getEditorCode()
     );
@@ -86,16 +86,22 @@ export default function ChatEditorValidation({ setLogs }) {
       localStorage.setItem(`conversation_scheme_${selectedCid}`, editorCode);
       dispatch(updateScheme({ _id: selectedCid, not_saved: true }));
       validateCode();
-    }, 1500);
-  }, [validateCode, selectedCid, getEditorCode, dispatch]);
+    }, 1000);
+  }, [validateCode, selectedCid, getEditorCode]);
 
   useEffect(() => {
-    const editor = monaco?.editor.getModels()[0];
-    if (editor) {
-      const disposable = editor.onDidChangeContent(handleEditorChange);
-      return () => disposable.dispose();
-    }
-  }, [monaco, handleEditorChange]);
+    setTimeout(() => {
+      if (!monaco || !selectedCid) return;
+
+      const uri = monaco.Uri.parse(`file://${selectedCid}`);
+      const model = monaco.editor.getModel(uri);
+
+      if (model) {
+        const disposable = model.onDidChangeContent(handleEditorChange);
+        // return () => disposable.dispose();
+      }
+    }, 200);
+  }, [monaco, selectedCid, handleEditorChange]);
 
   const statusView = useMemo(() => {
     const style = "w-[25px] h-[25px]";
