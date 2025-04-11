@@ -93,19 +93,10 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     }
 
     setIsSendMessageDisable(false);
-    // chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
+    chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
     // inputRef.current.focus(); //care..
     window.scrollTo(0, document.body.scrollHeight - 200);
     inputRef.current.style.height = `55px`;
-  };
-
-  window.onresize = function () {
-    if (inputRef.current) {
-      inputRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    }
   };
 
   useEffect(() => {
