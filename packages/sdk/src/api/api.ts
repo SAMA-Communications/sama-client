@@ -337,16 +337,16 @@ class SAMAClient {
     return this.sendRequest("conversation_search", { name: data.name }, "conversations");
   }
 
-  async conversationSchemeCreate(data: { cid: string, scheme: string }): Promise<any> {
-    return this.sendRequest("conversation_scheme_create", { cid: data.cid, scheme: data.scheme });
+  async conversationHandlerCreate(data: { cid: string, content: string }): Promise<any> {
+    return this.sendRequest("conversation_handler_create", { cid: data.cid, content: data.content });
   }
 
-  async getConversationScheme(data: { cid: string }): Promise<any> {
-    return this.sendRequest("get_conversation_scheme", { cid: data.cid }, "conversation_scheme");
+  async getConversationHandler(data: { cid: string }): Promise<any> {
+    return this.sendRequest("get_conversation_handler", { cid: data.cid }, "conversation_handler");
   }
 
-  async conversationSchemeDelete(data: { cid: string }): Promise<any> {
-    return this.sendRequest("conversation_scheme_delete", { cid: data.cid });
+  async conversationHandlerDelete(data: { cid: string }): Promise<any> {
+    return this.sendRequest("conversation_handler_delete", { cid: data.cid });
   }
 
   async pushSubscriptionCreate(data: { web_endpoint: string; web_key_auth: string; web_key_p256dh: string }): Promise<ISubscription> {

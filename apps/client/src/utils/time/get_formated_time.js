@@ -1,4 +1,4 @@
-export default function getFromatedTime(dateParams) {
+export default function getFormatedTime(dateParams) {
   const date = new Date(dateParams);
   const formattedDate = `${date.getHours().toString().padStart(2, "0")}:${date
     .getMinutes()

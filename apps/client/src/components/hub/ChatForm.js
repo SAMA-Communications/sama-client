@@ -1,5 +1,6 @@
 import api from "@api/api";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import { CHAT_CONTENT_TABS } from "@utils/global/chatContentTabs.js";
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
 import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
 import { selectCurrentUserId } from "@store/values/CurrentUserId.js";
@@ -49,7 +50,9 @@ export default function ChatForm() {
   const conversationOwner = selectedConversation.owner_id?.toString();
   const isOwner = currentUserId === conversationOwner;
 
-  const [currentTab, setCurrentTab] = useState("messages");
+  const [currentTab, setCurrentTab] = useState(CHAT_CONTENT_TABS.MESSAGES);
+  const isEnableProgrammableChat =
+    import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true";
 
   const chatMessagesBlock = useRef();
 
@@ -88,7 +91,7 @@ export default function ChatForm() {
   }, [isTabInFocus, readMessage]);
 
   useEffect(() => {
-    setCurrentTab("messages");
+    setCurrentTab(CHAT_CONTENT_TABS.MESSAGES);
     document.addEventListener("swiped-left", closeForm);
     document.addEventListener("swiped-right", closeForm);
 
@@ -110,15 +113,18 @@ export default function ChatForm() {
 
   useKeyDown(KEY_CODES.ESCAPE, closeForm);
 
-  useLayoutEffect(() => setCurrentTab("messages"), [selectedCID]);
+  useLayoutEffect(
+    () => setCurrentTab(CHAT_CONTENT_TABS.MESSAGES),
+    [selectedCID]
+  );
 
   const formComponent = useMemo(() => {
     if (!selectedCID) return null;
 
     switch (currentTab) {
-      case "messages":
+      case CHAT_CONTENT_TABS.MESSAGES:
         return <ChatFormContent chatMessagesBlock={chatMessagesBlock} />;
-      case "apps":
+      case CHAT_CONTENT_TABS.APPS:
         return <ChatFormEditor />;
       default:
         return null;
@@ -130,7 +136,7 @@ export default function ChatForm() {
       {selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />
-          {isGroup && isOwner ? (
+          {isGroup && isOwner && isEnableProgrammableChat ? (
             <ChatFormNavigation
               currentTab={currentTab}
               changeTabFunc={setCurrentTab}

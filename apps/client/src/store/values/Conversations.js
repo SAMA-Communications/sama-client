@@ -33,10 +33,10 @@ export const getDisplayableConversations = createSelector(
   }
 );
 
-export const getConversationScheme = createSelector(
+export const getConversationHandler = createSelector(
   [getSelectedConversationId, selectConversationsEntities],
   (id, conversations) => {
-    return conversations && id ? conversations[id].scheme_options : null;
+    return conversations && id ? conversations[id].handler_options : null;
   }
 );
 
@@ -195,14 +195,15 @@ export const conversations = createSlice({
         });
     },
 
-    updateScheme: (state, action) => {
-      const { _id, scheme, updated_at, updated_by, not_saved } = action.payload;
+    updateHandler: (state, action) => {
+      const { _id, content, updated_at, updated_by, not_saved } =
+        action.payload;
       const conv = state.entities[_id];
 
-      const existingSchemeOptions = conv?.scheme_options || {};
-      const updatedSchemeOptions = {
-        ...existingSchemeOptions,
-        ...(scheme && { scheme }),
+      const existingHandlerOptions = conv?.handler_options || {};
+      const updatedHandlerOptions = {
+        ...existingHandlerOptions,
+        ...(content && { content }),
         ...(updated_at && { updated_at }),
         ...(updated_by && { updated_by }),
         not_saved,
@@ -210,7 +211,7 @@ export const conversations = createSlice({
 
       conversationsAdapter.upsertOne(state, {
         _id: _id,
-        scheme_options: updatedSchemeOptions,
+        handler_options: updatedHandlerOptions,
       });
     },
   },
@@ -229,7 +230,7 @@ export const {
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
-  updateScheme,
+  updateHandler,
   deleteScheme,
 } = conversations.actions;
 

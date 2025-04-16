@@ -1,6 +1,6 @@
 import Editor, { useMonaco } from "@monaco-editor/react";
-import conversationSchemeService from "@services/conversationSchemeService.js";
-import getFromatedTime from "@utils/time/get_fromated_time.js";
+import conversationHandlerService from "@services/conversationHandlerService.js";
+import getFormatedTime from "@utils/time/get_formated_time.js";
 import getUserFullName from "@utils/user/get_user_full_name.js";
 import globalConstants from "@utils/global/constants.js";
 import { constrainedEditor } from "constrained-editor-plugin";
@@ -15,36 +15,37 @@ export default function ChatEditorCode() {
   const selectedConversation = useSelector(getConverastionById);
   const selectedCid = selectedConversation._id;
   const [editorCode, setEditorCode] = useState(
-    selectedConversation.scheme_options?.scheme ||
+    selectedConversation.handler_options?.content ||
       globalConstants.defaultEditorCode
   );
 
   useEffect(() => {
-    conversationSchemeService
-      .getSchemeFromLocalStorage(selectedCid)
+    conversationHandlerService
+      .getHandlerFromLocalStorage(selectedCid)
       .then((localStorageCode) => {
         if (localStorageCode) {
           setEditorCode(localStorageCode);
           // return;
         }
-        conversationSchemeService.syncConversationScheme(selectedCid);
+        conversationHandlerService.syncConversationHandler(selectedCid);
       });
   }, [selectedCid]);
 
   useEffect(() => {
-    if (selectedConversation.scheme_options) {
-      setEditorCode(selectedConversation.scheme_options?.scheme);
+    if (selectedConversation.handler_options) {
+      setEditorCode(selectedConversation.handler_options?.content);
     }
   }, [selectedConversation]);
 
   const codeStatusView = useMemo(() => {
-    const schemeOptions = selectedConversation?.scheme_options;
-    if (!schemeOptions) return "none";
+    const handlerOptions = selectedConversation?.handler_options;
+    if (!handlerOptions) return "none";
 
-    const { updated_by, updated_at, not_saved } = schemeOptions;
-    if (not_saved || !updated_at) return "Not saved";
+    const { updated_by, updated_at, not_saved } = handlerOptions;
+    // if (not_saved || !updated_at) return "Not saved";
+    if (!updated_at) return "Not saved";
 
-    const date = getFromatedTime(updated_at);
+    const date = getFormatedTime(updated_at);
     const user = participants[updated_by] || { first_name: "Unknown" };
     return `${date} by ${getUserFullName(user)}`;
   }, [selectedConversation]);
@@ -62,13 +63,28 @@ export default function ChatEditorCode() {
     constrainedInstance.initializeIn(editor);
 
     const restrictions = [];
-    const totalLines = model.getLineCount();
-    const validLine = Math.max(1, totalLines - 4);
-    const restrictedColumn = model.getLineMaxColumn(validLine);
-    restrictions.push({
-      range: [5, 1, totalLines - 4, restrictedColumn],
-      allowMultiline: true,
-    });
+    const updateRestrictions = () => {
+      const totalLines = model.getLineCount();
+      const validLine = Math.max(1, totalLines - 4);
+      const restrictedColumn = model.getLineMaxColumn(validLine);
+
+      restrictions.length = 0;
+      restrictions.push({
+        range: [5, 1, totalLines - 4, restrictedColumn],
+        allowMultiline: true,
+      });
+
+      editor.onDidChangeCursorPosition(({ position }) => {
+        if (position.lineNumber < 5 || position.lineNumber > totalLines - 4) {
+          editor.setPosition({ lineNumber: 5, column: 1 });
+        }
+      });
+
+      constrainedInstance.addRestrictionsTo(model, restrictions);
+    };
+    updateRestrictions();
+
+    model.onDidChangeContent(() => updateRestrictions());
     constrainedInstance.addRestrictionsTo(model, restrictions);
   };
 

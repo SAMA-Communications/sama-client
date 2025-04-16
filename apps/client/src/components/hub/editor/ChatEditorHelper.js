@@ -1,9 +1,9 @@
-import conversationSchemeService from "@services/conversationSchemeService.js";
+import conversationHandlerService from "@services/conversationHandlerService.js";
 import globalConstants from "@utils/global/constants.js";
 import { Tooltip } from "react-tooltip";
-import { getConversationScheme } from "@store/values/Conversations.js";
+import { getConversationHandler } from "@store/values/Conversations.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
-import { updateScheme, upsertChat } from "@store/values/Conversations.js";
+import { updateHandler, upsertChat } from "@store/values/Conversations.js";
 import { useMonaco } from "@monaco-editor/react";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -13,28 +13,30 @@ export default function ChatEditorHelper() {
   const monaco = useMonaco();
   const dispatch = useDispatch();
   const selectedCid = useSelector(getSelectedConversationId);
-  const selectedConversationScheme = useSelector(getConversationScheme);
+  const selectedConversationScheme = useSelector(getConversationHandler);
 
   const resetEditorContent = (content) => {
-    const uri = monaco?.Uri.parse(`file://${selectedCid}`);
-    const model = monaco?.editor.getModel(uri);
+    const model = conversationHandlerService.getHandlerModelByCid(
+      monaco,
+      selectedCid
+    );
     if (model) model.setValue(content);
-    localStorage.removeItem(`conversation_scheme_${selectedCid}`);
+    localStorage.removeItem(`conversation_handler_${selectedCid}`);
   };
 
-  const deleteConversationScheme = async () => {
-    if (window.confirm("Are you sure you want to delete the scheme?")) {
+  const deleteConversationHandler = async () => {
+    if (window.confirm("Are you sure you want to delete the handler?")) {
       resetEditorContent(globalConstants.defaultEditorCode);
-      dispatch(upsertChat({ _id: selectedCid, scheme_options: null }));
-      await conversationSchemeService.deleteConversationScheme(selectedCid);
+      dispatch(upsertChat({ _id: selectedCid, handler_options: null }));
+      await conversationHandlerService.deleteConversationHandler(selectedCid);
     }
   };
 
-  const undoSchemeChanges = () => {
+  const undoHandlerChanges = () => {
     resetEditorContent(
-      selectedConversationScheme?.scheme || globalConstants.defaultEditorCode
+      selectedConversationScheme?.content || globalConstants.defaultEditorCode
     );
-    dispatch(updateScheme({ _id: selectedCid, not_saved: null }));
+    dispatch(updateHandler({ _id: selectedCid, not_saved: null }));
   };
 
   return (
@@ -45,9 +47,10 @@ export default function ChatEditorHelper() {
         className="mr-auto h-[30px] w-[30px]"
       />
       <Tooltip id="editor-help-tooltip">
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div className="flex flex-col">
           <span>
-            Right here is a description of how to use the editor and some tips
+            Below is a walkthrough on how to use the editor, plus some useful
+            tips.
           </span>
           <span>-</span>
           <span>
@@ -63,13 +66,13 @@ export default function ChatEditorHelper() {
       <span className="w-[1px] h-full bg-gray-400"></span>
       <button
         className="text-gray-400 underline cursor-pointer"
-        onClick={deleteConversationScheme}
+        onClick={deleteConversationHandler}
       >
-        Delete scheme
+        Delete content
       </button>
       <button
         className="text-gray-400 underline cursor-pointer"
-        onClick={undoSchemeChanges}
+        onClick={undoHandlerChanges}
       >
         Undo
       </button>

@@ -1,9 +1,10 @@
 import OvalLoader from "@components/_helpers/OvalLoader.js";
-import conversationSchemeService from "@services/conversationSchemeService.js";
+import conversationHandlerService from "@services/conversationHandlerService.js";
 import { Tooltip } from "react-tooltip";
+import { debounce } from "@hooks/debounce.js";
 import { getCurrentUserFromParticipants } from "@store/values/Participants.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
-import { updateScheme } from "@store/values/Conversations.js";
+import { updateHandler } from "@store/values/Conversations.js";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMonaco } from "@monaco-editor/react";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,17 +20,19 @@ export default function ChatEditorValidation({ setLogs }) {
   const testMessage = useRef(null);
   const currentUser = useSelector(getCurrentUserFromParticipants);
   const selectedCid = useSelector(getSelectedConversationId);
-  const [validationSatus, setValidationStatus] = useState(null);
+  const [validationStatus, setValidationStatus] = useState(null);
   const [validationChecks, setValidationChecks] = useState({});
 
   const getEditorCode = useCallback(() => {
-    const uri = monaco?.Uri.parse(`file://${selectedCid}`);
-    const model = monaco?.editor.getModel(uri);
+    const model = conversationHandlerService.getHandlerModelByCid(
+      monaco,
+      selectedCid
+    );
     return model?.getValue();
   }, [monaco, selectedCid]);
 
   const saveSchemeCode = async () => {
-    await conversationSchemeService.saveSchemeByConversation(
+    await conversationHandlerService.saveHandlerByConversation(
       selectedCid,
       getEditorCode()
     );
@@ -41,12 +44,12 @@ export default function ChatEditorValidation({ setLogs }) {
     const editorCodeSplit = editorCode?.split("\n").slice(0, -3).join("\n");
 
     try {
-      const validationResult = await conversationSchemeService.validateScheme(
+      const validationResult = await conversationHandlerService.validateHandler(
         editorCodeSplit
       );
       setValidationChecks(validationResult);
 
-      const compilationResult = await conversationSchemeService.runScheme(
+      const compilationResult = await conversationHandlerService.runHandler(
         editorCode,
         { body: testMessage.current.value || "message" },
         currentUser
@@ -76,19 +79,6 @@ export default function ChatEditorValidation({ setLogs }) {
     }
   }, [getEditorCode, currentUser, testMessage, setLogs]);
 
-  const debounceValidation = useRef(null);
-
-  const handleEditorChange = useCallback(() => {
-    clearTimeout(debounceValidation.current);
-    debounceValidation.current = setTimeout(() => {
-      const editorCode = getEditorCode();
-      setValidationStatus(null);
-      localStorage.setItem(`conversation_scheme_${selectedCid}`, editorCode);
-      dispatch(updateScheme({ _id: selectedCid, not_saved: true }));
-      validateCode();
-    }, 1000);
-  }, [validateCode, selectedCid, getEditorCode]);
-
   useEffect(() => {
     setTimeout(() => {
       if (!monaco || !selectedCid) return;
@@ -97,15 +87,27 @@ export default function ChatEditorValidation({ setLogs }) {
       const model = monaco.editor.getModel(uri);
 
       if (model) {
+        const timeout = 1000;
+        const handleEditorChange = debounce(() => {
+          const editorCode = getEditorCode();
+          setValidationStatus(null);
+          localStorage.setItem(
+            `conversation_handler_${selectedCid}`,
+            editorCode
+          );
+          dispatch(updateHandler({ _id: selectedCid, not_saved: true }));
+          validateCode();
+        }, timeout);
+
         const disposable = model.onDidChangeContent(handleEditorChange);
-        // return () => disposable.dispose();
+        return () => disposable.dispose();
       }
     }, 200);
-  }, [monaco, selectedCid, handleEditorChange]);
+  }, [monaco, selectedCid, validateCode, getEditorCode]);
 
   const statusView = useMemo(() => {
     const style = "w-[25px] h-[25px]";
-    switch (validationSatus) {
+    switch (validationStatus) {
       case "pending":
         return <OvalLoader width={20} height={20} />;
       case true:
@@ -115,7 +117,7 @@ export default function ChatEditorValidation({ setLogs }) {
       default:
         return <Debug className={style} />;
     }
-  }, [validationSatus]);
+  }, [validationStatus]);
 
   const tooltipView = useMemo(() => {
     if (!validationChecks) return null;
@@ -173,9 +175,9 @@ export default function ChatEditorValidation({ setLogs }) {
       </button>
       <button
         className={`h-full px-5 rounded-lg text-white cursor-pointer ${
-          validationSatus ? "bg-[var(--color-accent-dark)]" : "bg-gray-500"
+          validationStatus ? "bg-[var(--color-accent-dark)]" : "bg-gray-500"
         } flex items-center gap-2`}
-        disabled={validationSatus !== true}
+        disabled={validationStatus !== true}
         onClick={saveSchemeCode}
       >
         <Save />
