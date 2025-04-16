@@ -124,20 +124,7 @@ export default function MessagesList() {
   }, [selectedCID, messages, needToGetMoreMessage]);
 
   useLayoutEffect(() => {
-    const scrollComponent = document.querySelector(
-      ".infinite-scroll-component"
-    );
-    scrollComponent.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-    });
-    setTimeout(() => {
-      scrollComponent.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-      needToGetMoreMessage.current = true;
-    }, 300);
+    setTimeout(() => (needToGetMoreMessage.current = true), 300);
   }, [location]);
 
   return (

@@ -68,3 +68,20 @@
   align-self: center;
   cursor: pointer;
 }
+
+.play-button {
+  position: absolute;
+  top: calc(50% - 15px);
+  left: calc(50% - 15px);
+
+  width: 30px;
+  height: 30px;
+
+  border-radius: 50%;
+
+  background-color: var(--color-bg-light-25);
+
+  color: var(--color-black-75);
+
+  z-index: 1;
+}

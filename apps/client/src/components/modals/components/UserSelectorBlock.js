@@ -73,6 +73,7 @@ export default function UserSelectorBlock({
           )
         : selectedUsers
     );
+    setIsLoading(false);
   };
 
   return (

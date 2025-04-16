@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.6.0
+
+### Features
+
+- Implemented pagination for chats
+- Enhance the media display as a gallery
+
 ## 1.5.0
 
 ### Features

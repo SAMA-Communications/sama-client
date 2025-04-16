@@ -49,7 +49,7 @@ export default function ChatList() {
           clearInputText={() => setInputText(null)}
         />
       ) : (
-        <CustomScrollBar>{chatsList}</CustomScrollBar>
+        chatsList
       )}
     </section>
   );
