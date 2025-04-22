@@ -51,7 +51,7 @@ export default function ChatEditorCode() {
   }, [selectedConversation]);
 
   const handleEditorDidMount = (editor, monaco) => {
-    const constrainedInstance = constrainedEditor(monaco);
+    // const constrainedInstance = constrainedEditor(monaco);
     const uri = monaco.Uri.parse(`file://${selectedCid}`);
 
     let model = monaco.editor.getModel(uri);
@@ -60,32 +60,32 @@ export default function ChatEditorCode() {
     }
     editor.setModel(model);
 
-    constrainedInstance.initializeIn(editor);
+    // constrainedInstance.initializeIn(editor);
 
-    const restrictions = [];
-    const updateRestrictions = () => {
-      const totalLines = model.getLineCount();
-      const validLine = Math.max(1, totalLines - 4);
-      const restrictedColumn = model.getLineMaxColumn(validLine);
+    // const restrictions = [];
+    // const updateRestrictions = () => {
+    //   const totalLines = model.getLineCount();
+    //   const validLine = Math.max(1, totalLines - 4);
+    //   const restrictedColumn = model.getLineMaxColumn(validLine);
 
-      restrictions.length = 0;
-      restrictions.push({
-        range: [5, 1, totalLines - 4, restrictedColumn],
-        allowMultiline: true,
-      });
+    //   restrictions.length = 0;
+    //   restrictions.push({
+    //     range: [5, 1, totalLines - 4, restrictedColumn],
+    //     allowMultiline: true,
+    //   });
 
-      editor.onDidChangeCursorPosition(({ position }) => {
-        if (position.lineNumber < 5 || position.lineNumber > totalLines - 4) {
-          editor.setPosition({ lineNumber: 5, column: 1 });
-        }
-      });
+    //   editor.onDidChangeCursorPosition(({ position }) => {
+    //     if (position.lineNumber < 5 || position.lineNumber > totalLines - 4) {
+    //       editor.setPosition({ lineNumber: 5, column: 1 });
+    //     }
+    //   });
 
-      constrainedInstance.addRestrictionsTo(model, restrictions);
-    };
-    updateRestrictions();
+    //   constrainedInstance.addRestrictionsTo(model, restrictions);
+    // };
+    // updateRestrictions();
 
-    model.onDidChangeContent(() => updateRestrictions());
-    constrainedInstance.addRestrictionsTo(model, restrictions);
+    // model.onDidChangeContent(() => updateRestrictions());
+    // constrainedInstance.addRestrictionsTo(model, restrictions);
   };
 
   useEffect(() => {
