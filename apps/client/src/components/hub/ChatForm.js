@@ -1,6 +1,23 @@
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
 import api from "@api/api";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import { CHAT_CONTENT_TABS } from "@utils/global/chatContentTabs.js";
+
+import { useKeyDown } from "@hooks/useKeyDown";
+
+import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
+import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
+import ChatFormNavigation from "@components/hub/chatForm/ChatFormNavigation.js";
+import ChatFormEditor from "@components/hub/chatForm/ChatFormEditor.js";
+
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
 import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
 import { selectCurrentUserId } from "@store/values/CurrentUserId.js";
@@ -13,26 +30,11 @@ import {
   clearSelectedConversation,
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
-import { KEY_CODES } from "@utils/global/keyCodes";
 import { setClicked } from "@store/values/ContextMenu";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { useKeyDown } from "@hooks/useKeyDown";
-import { useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 
-import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
-import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
-import ChatFormNavigation from "@components/hub/chatForm/ChatFormNavigation.js";
-import ChatFormEditor from "@components/hub/chatForm/ChatFormEditor.js";
-
-import "@styles/hub/ChatForm.css";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import { CHAT_CONTENT_TABS } from "@utils/global/chatContentTabs.js";
+import { KEY_CODES } from "@utils/global/keyCodes";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -91,7 +93,6 @@ export default function ChatForm() {
   }, [isTabInFocus, readMessage]);
 
   useEffect(() => {
-    setCurrentTab(CHAT_CONTENT_TABS.MESSAGES);
     document.addEventListener("swiped-left", closeForm);
     document.addEventListener("swiped-right", closeForm);
 
@@ -132,7 +133,7 @@ export default function ChatForm() {
   }, [selectedCID, currentTab, chatMessagesBlock]);
 
   return (
-    <section className="flex flex-col flex-grow">
+    <section className="flex flex-col flex-grow max-md:p-[4svw] md:max-xl:my-[20px] md:max-xl:mr-[20px] max-xl:p-[20px] md:rounded-[32px] bg-(--color-bg-light)">
       {selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />
@@ -145,7 +146,7 @@ export default function ChatForm() {
           {formComponent}
         </>
       ) : (
-        <p className="mt-auto mb-auto text-center font-light text-[58px] !text-[#b0b0b0]">
+        <p className="mt-auto mb-auto text-center font-light text-[58px] !text-(--color-text-light)">
           Select a conversation to start chatting
         </p>
       )}

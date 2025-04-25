@@ -1,8 +1,10 @@
+import { useMemo } from "react";
+
 import LastMessage from "@components/message/LastMessage";
 import TypingLine from "@components/_helpers/TypingLine";
 import DynamicAvatar from "@components/info/elements/DynamicAvatar";
+
 import getLastUpdateTime from "@utils/conversation/get_last_update_time";
-import { useMemo } from "react";
 
 import Group from "@icons/users/Group.svg?react";
 import UnknownPhoto from "@icons/users/UnknownPhoto.svg?react";
@@ -31,10 +33,12 @@ export default function ConversationItem({
 
   return (
     <div
-      className={`chat-box__container${isSelected ? "--selected" : ""}`}
+      className={`relative w-full p-[10px] flex gap-[15px] items-center rounded-[12px] cursor-pointer ${
+        isSelected ? "bg-(--color-hover-light)" : ""
+      } hover:bg-(--color-hover-light)`}
       onClick={onClickFunc}
     >
-      <div className="box__photo fcc">
+      <div className="w-[70px] h-[70px] !font-light text-h4 rounded-[8px] bg-(--color-bg-dark) flex items-center justify-center text-(--color-text-dark) overflow-hidden">
         <DynamicAvatar
           avatarUrl={chatAvatarUrl}
           avatarBlurHash={chatAvatarBlutHash}
@@ -50,14 +54,14 @@ export default function ConversationItem({
           altText={type === "g" ? "Chat Group" : "User's Profile"}
         />
       </div>
-      <div className="box__content">
-        <div className="content-top">
-          <p className="content-top__name">
+      <div className="max-w-[calc(100%-90px)] max-h-[70px] flex-1 flex gap-[7px] flex-col overflow-hidden">
+        <div className="flex gap-[12px] items-center justify-between">
+          <p className="!font-medium text-black text-h6 overflow-hidden text-ellipsis whitespace-nowrap no-underline">
             &zwnj;{chatName || "Deleted account"}
           </p>
-          <div className="content-top__time">{tView}</div>
+          <div className="!font-light text-(--color-text-light)">{tView}</div>
         </div>
-        <div className="content-bottom">
+        <div className="flex gap-[12px] items-center justify-between h-[32px]">
           {typing_users?.length && !isSelected ? (
             <TypingLine
               userIds={typing_users}

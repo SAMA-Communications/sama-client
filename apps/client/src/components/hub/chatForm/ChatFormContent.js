@@ -1,11 +1,12 @@
-import CustomScrollBar from "@components/_helpers/CustomScrollBar";
-import MessagesList from "@components/hub/elements/MessagesList";
-import SMessageList from "@skeletons/hub/elements/SMessageList";
-import { selectActiveConversationMessages } from "@store/values/Messages";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
+import CustomScrollBar from "@components/_helpers/CustomScrollBar";
+import MessagesList from "@components/hub/elements/MessagesList";
+import SMessageList from "@skeletons/hub/elements/SMessageList";
+
+import { selectActiveConversationMessages } from "@store/values/Messages";
 
 export default function ChatFormContent({ chatMessagesBlock }) {
   const messages = useSelector(selectActiveConversationMessages);

@@ -101,7 +101,7 @@ export default function ChatEditorCode() {
 
   return (
     <div className="relative flex grow-3 items-end">
-      <div className="absolute top-0 left-0 h-[calc(100%)] w-full pt-4 pb-4">
+      <div className="absolute top-0 left-0 h-[calc(100%)] w-full pt-4 pb-4 !font-normal">
         <Editor
           height="100%"
           theme="custom"

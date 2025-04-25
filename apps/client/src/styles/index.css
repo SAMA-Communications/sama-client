@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --text-h1: 48px;
+  --text-h2: 40px;
+  --text-h3: 33px;
+  --text-h4: 28px;
+  --text-h5: 23px;
+  --text-h6: 19px;
+  --text-p: 16px;
+  --text-span: 13px;
+  --text-indicator: 12px;
+
+  --color-white: #fff;
+  --color-black: #000;
+  --color-black-25: rgba(0, 0, 0, 0.25);
+  --color-black-50: rgba(0, 0, 0, 0.5);
+  --color-black-75: rgba(0, 0, 0, 0.75);
+  --color-black-90: rgba(0, 0, 0, 0.9);
+  --color-grey-50: rgba(26, 26, 26, 0.5);
+  --color-red: #df2e38;
+  --color-bg-light: #f6f6f6;
+  --color-bg-light-25: rgba(246, 246, 246, 0.25);
+  --color-bg-light-90: rgba(246, 246, 246, 0.9);
+  --color-bg-dark: #1b1b1d;
+  --color-text-light: #b0b0b0;
+  --color-text-dark: #6d6d6d;
+  --color-hover-light: #e7e7e7;
+  --color-hover-dark: #3f3f3f;
+  --color-accent-light: #dbdcfc;
+  --color-accent-dark: #7678e5;
+  --color-indicator: #68174d;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
+  font-family: "Inter", sans-serif;
+  font-weight: 200;
+}
+
+main {
+  width: 100dvw;
+  height: 100dvh;
+
+  display: flex;
+
+  background-color: var(--color-bg-dark);
+}
+
+@media screen and (max-width: 767px) {
+  main {
+    padding: 0;
+  }
+}
+
+.editor-validation .editor-tooltip-style {
+  padding: 15px 30px !important;
+  color: black;
+
+  border-radius: 8px;
+  background-color: var(--color-white);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+}
+
+.editor-validation .editor-tooltip-arrow {
+  background-color: var(--color-accent-dark);
+}
+
+#logo-icon-line {
+  position: absolute;
+}
+#logo-text {
+  margin: 0 12px;
+}
+
+/* vertical scroll */
+.scroll-bar__outer-container > div:nth-child(3) {
+  width: 6px !important;
+
+  right: 4px !important;
+  bottom: 4px !important;
+  top: 4px !important;
+
+  border-radius: 3px !important;
+}
+
+#inputMessage::-webkit-scrollbar {
+  display: none;
+}
+
+#chatMessagesScrollable .infinite-scroll-component {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+#chatMessagesScrollable {
+  display: flex;
+  flex-direction: column-reverse;
+}
+#chatMessagesScrollable .infinite-scroll-component {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+}
+
+#conversationItemsScrollable .infinite-scroll-component {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}

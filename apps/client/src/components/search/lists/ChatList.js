@@ -1,4 +1,4 @@
-import ConversationItemList from "@src/components/hub/elements/ConversationItemList";
+import ConversationItemList from "@components/hub/chatList/ConversationItemList";
 
 export default function ChatList({
   conversations,
@@ -7,9 +7,13 @@ export default function ChatList({
 }) {
   return (
     <>
-      {isShowTitle ? <div className="search__list-title">Chats</div> : null}
+      {isShowTitle ? (
+        <div className="py-[6px] px-[18px] my-[3px] text-black text-p rounded-[8px] bg-(--color-hover-light)">
+          Chats
+        </div>
+      ) : null}
       <ConversationItemList conversations={conversations} />
-      <p className="search__text">{isChatSearched}</p>
+      <p className="text-center text-h6">{isChatSearched}</p>
     </>
   );
 }

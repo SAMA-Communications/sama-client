@@ -5,7 +5,7 @@ import Apps from "@icons/chat/Apps.svg?react";
 
 export default function ChatFormNavigation({ currentTab, changeTabFunc }) {
   return (
-    <div className="flex flex-shrink gap-2">
+    <div className="flex flex-shrink gap-2 pb-[5px]">
       <button
         className={`flex gap-1 items-center px-2 py-1 cursor-pointer border-b rounded-lg ${
           currentTab === "messages" ? "border-lightgray" : "border-[#f6f6f6]"

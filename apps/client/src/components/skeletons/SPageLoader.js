@@ -3,7 +3,7 @@ import { Oval } from "react-loader-spinner";
 
 export default function SPageLoader() {
   return (
-    <div className="page-loader fcc">
+    <div className="flex flex-1 pl-[30px] justify-center items-center">
       <Oval
         height={100}
         width={100}

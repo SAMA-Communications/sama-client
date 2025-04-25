@@ -1,26 +1,29 @@
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
+
+import api from "@api/api";
+
+import activityService from "@services/activityService";
+import conversationService from "@services/conversationsService";
+import { useKeyDown } from "@hooks/useKeyDown";
+
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import InfoBox from "@components/info/elements/InfoBox";
-import activityService from "@services/activityService";
-import api from "@api/api";
-import conversationService from "@services/conversationsService";
-import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
-import getUserFullName from "@utils/user/get_user_full_name";
 import DynamicAvatar from "@components/info/elements/DynamicAvatar";
-import navigateTo from "@utils/navigation/navigate_to";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
-import showCustomAlert from "@utils/show_alert";
-import { KEY_CODES } from "@utils/global/keyCodes";
+
 import {
   addUser,
   selectParticipantsEntities,
 } from "@store/values/Participants.js";
 import { getIsMobileView } from "@store/values/IsMobileView";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo, useState } from "react";
-import { useKeyDown } from "@hooks/useKeyDown";
-import { useLocation } from "react-router-dom";
 
-import "@styles/info/UserProfile.css";
+import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
+import getUserFullName from "@utils/user/get_user_full_name";
+import navigateTo from "@utils/navigation/navigate_to";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
+import showCustomAlert from "@utils/show_alert";
+import { KEY_CODES } from "@utils/global/keyCodes";
 
 import Close from "@icons/actions/CloseGray.svg?react";
 import LinkTo from "@icons/options/LinkTo.svg?react";
@@ -68,22 +71,22 @@ export default function OtherUserProfile() {
   );
 
   return (
-    <div className="first-window__container">
-      <div className="profile__container">
-        <CustomScrollBar>
-          <div className="profile__container--top fcc">
+    <div className="absolute top-[0px] left-[0px] p-[30px] w-dvw h-dvh flex flex-col justify-start items-center bg-(--color-black-50) z-[200] max-md:p-[0px] max-md:bg-(--color-bg-dark) max-">
+      <div className="w-[400px] h-full mr-[15px] max-md:w-dvw max-md:h-dvh max-md:mr-[0px]">
+        <CustomScrollBar childrenClassName="py-[20px] flex flex-col gap-[15px] max-md:py-[0px]">
+          <div className="relative flex flex-col justify-center items-center py-[40px] gap-[20px] rounded-[32px] bg-(--color-accent-light) max-md:rounded-t-[0px]">
             {isMobileView ? (
               <BackBtn
-                className="ci-close"
+                className="absolute right-[30px] top-[30px] cursor-pointer max-md:left-[4svw] max-md:top-[34px]"
                 onClick={() => removeAndNavigateLastSection(pathname + hash)}
               />
             ) : (
               <Close
-                className="profile__close"
+                className="absolute top-[30px] right-[30px] cursor-pointer"
                 onClick={() => removeAndNavigateLastSection(pathname + hash)}
               />
             )}
-            <div className="profile__photo fcc">
+            <div className="relative w-[160px] h-[160px] rounded-[24px] bg-(--color-bg-light) flex justify-center items-center cursor-pointer overflow-hidden">
               <DynamicAvatar
                 avatarUrl={userObject.avatar_url}
                 avatarBlurHash={userObject.avatar_object?.file_blur_hash}
@@ -91,39 +94,44 @@ export default function OtherUserProfile() {
                 altText={"User's Profile"}
               />
             </div>
-            <div className="profile__info">
-              <p className="uname__full">{getUserFullName(userObject)}</p>
-              <p className="profile__status">{viewStatusActivity}</p>
+            <div className="w-[90%]">
+              <p className="mt-[-5px] text-center !font-medium text-h3 text-black overflow-hidden text-ellipsis whitespace-nowrap">
+                {getUserFullName(userObject)}
+              </p>
+              <p className="mt-[10px] mb-[-10px] text-center text-h6">
+                {viewStatusActivity}
+              </p>
             </div>
           </div>
-          <div className="profile__container--bottom">
-            <p className="info__title">Personal information</p>
+          <div className="py-[30px] px-[20px] flex flex-col rounded-[32px] bg-(--color-bg-light) max-md:flex-1 max-md:rounded-b-[0px]">
+            <p className="text-center !font-normal text-h5 text-(--color-text-dark) mb-[10px]">
+              Personal information
+            </p>
             <InfoBox
-              className="uname__box"
-              modifier={"--not-hover"}
+              modifier={"!cursor-default"}
               iconType={"login"}
               title={"Username"}
               value={login}
               hideIfNull={true}
             />
             <InfoBox
-              modifier={"--not-hover"}
+              modifier={"!cursor-default"}
               iconType={"phone"}
               title={"Mobile phone"}
               value={phone}
               hideIfNull={true}
             />
             <InfoBox
-              modifier={"--not-hover"}
+              modifier={"!cursor-default"}
               iconType={"email"}
               title={"Email address"}
               value={email}
               hideIfNull={true}
             />
-            <div className="info__link">
+            <div className="flex items-center gap-[10px] px-[10px] cursor-pointer mt-[10px]">
               <LinkTo />
               <p
-                className="info__new-conversation"
+                className="text-(--color-accent-dark) text-h6"
                 onClick={async () => {
                   const chatId = await conversationService.createPrivateChat(
                     userId

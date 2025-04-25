@@ -1,10 +1,10 @@
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import PlayButton from "@components/_helpers/PlayButton.js";
-import addSuffix from "@utils/navigation/add_suffix";
-import getFileType from "@utils/media/get_file_type.js";
 import { useLocation } from "react-router-dom";
 
-import "@styles/hub/elements/MessageMedia.css";
+import PlayButton from "@components/_helpers/PlayButton.js";
+
+import addSuffix from "@utils/navigation/add_suffix";
+import getFileType from "@utils/media/get_file_type.js";
 
 export default function MessageAttachments({ attachments, mid }) {
   const { pathname, hash } = useLocation();

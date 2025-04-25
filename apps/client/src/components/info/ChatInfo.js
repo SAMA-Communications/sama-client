@@ -1,22 +1,24 @@
+import { useLocation } from "react-router-dom";
+import { useMemo, useRef } from "react";
+import { useSelector } from "react-redux";
+
+import { useKeyDown } from "@hooks/useKeyDown";
+
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import ParticipantInChat from "@components/info/elements/ParticipantInChat";
-import addSuffix from "@utils/navigation/add_suffix";
-import conversationService from "@services/conversationsService";
-import globalConstants from "@utils/global/constants";
-import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
-import { KEY_CODES } from "@utils/global/keyCodes";
+
 import { getConverastionById } from "@store/values/Conversations";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView } from "@store/values/IsTabletView";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
-import { useKeyDown } from "@hooks/useKeyDown";
-import { useLocation } from "react-router-dom";
-import { useMemo, useRef } from "react";
-import { useSelector } from "react-redux";
 
-import "@styles/info/ChatInfo.css";
+import addSuffix from "@utils/navigation/add_suffix";
+import conversationService from "@services/conversationsService";
+import globalConstants from "@utils/global/constants";
+import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
+import { KEY_CODES } from "@utils/global/keyCodes";
 
 import AddParticipants from "@icons/AddParticipants.svg?react";
 import BackBtn from "@icons/options/Back.svg?react";
@@ -79,37 +81,48 @@ export default function ChatInfo() {
     void (await conversationService.updateChatImage(file));
 
   return (
-    <div className="chat-info__container">
-      <CustomScrollBar>
-        <div className="chat-info__container--top fcc">
-          <div className="ci-top__title">Chat info</div>
+    <div className="w-[400px] shrink md:my-[20px] md:mr-[20px] max-md:w-dvw">
+      <CustomScrollBar childrenClassName="flex flex-col gap-[15px]">
+        <div className="py-[30px] flex-col gap-[20px] rounded-[32px] bg-(--color-bg-light) flex items-center justify-center max-md:rounded-t-[0px] max-md:rounded-b-[16px]">
+          <div className="mb-[10px] text-center !font-normal text-h5 text-black">
+            Chat info
+          </div>
           {isMobileView ? (
             <BackBtn
-              className="ci-close"
+              className="absolute right-[30px] top-[30px] cursor-pointer max-md:left-[4svw] max-md:top-[34px]"
               onClick={() => removeAndNavigateSubLink(pathname + hash, "/info")}
             />
           ) : (
             <Close
-              className="ci-close"
+              className="absolute right-[30px] top-[30px] cursor-pointer max-md:left-[4svw] max-md:top-[34px]"
               onClick={() => removeAndNavigateSubLink(pathname + hash, "/info")}
             />
           )}
           <div
-            className={`ci-photo${
-              isCurrentUserOwner ? "--owner cursor-pointer" : ""
-            } fcc`}
+            className={`relative w-[160px] h-[160px] max-md:w-[120px] max-md:h-[120px] rounded-[24px] bg-(--color-bg-dark) flex items-center justify-center overflow-hidden`}
             onClick={pickFileClick}
           >
+            {isCurrentUserOwner ? (
+              <span
+                className="absolute w-full h-full bg-(--color-black-25) rounded-[24px] opacity-0 transition-opacity duration-300 hover:opacity-100 cursor-pointer"
+                aria-hidden="true"
+              ></span>
+            ) : null}
             <DynamicAvatar
               avatarUrl={selectedConversation.image_url}
               avatarBlurHash={selectedConversation.image_object?.file_blur_hash}
               defaultIcon={
-                isCurrentUserOwner ? <ImageOwnerBig /> : <ImageBig />
+                isCurrentUserOwner ? (
+                  <ImageOwnerBig className="!w-[80px] !h-[80px]" />
+                ) : (
+                  <ImageBig className="!w-[80px] !h-[80px]" />
+                )
               }
               altText={"Chat Group"}
             />
             <input
               id="inputFile"
+              className="hidden"
               ref={inputFilesRef}
               type="file"
               onChange={(e) =>
@@ -120,7 +133,7 @@ export default function ChatInfo() {
             />
           </div>
           <div
-            className={`chat-info__content ${
+            className={`w-full px-[30px] ${
               isCurrentUserOwner ? "cursor-pointer" : ""
             }`}
             onClick={() =>
@@ -129,26 +142,38 @@ export default function ChatInfo() {
                 : null
             }
           >
-            <p className="ci-name">
+            <p className="text-black text-center text-h4 max-md:text-h5 !font-medium overflow-hidden text-ellipsis whitespace-nowrap">
               {selectedConversation.name || (
-                <span className="ci-name--gray">Group name</span>
+                <span className="!font-medium text-h4 text-(--color-text-dark)">
+                  Group name
+                </span>
               )}
             </p>
-            <p className="ci-description">
+            <p
+              className="text-black text-center mt-[15px] max-h-[50px] text-h6 "
+              style={{
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                WebkitLineClamp: 2,
+              }}
+            >
               {selectedConversation.description || (
-                <span className="ci-description--gray">Description</span>
+                <span className="mt-[15px] text-h6 text-(--colot-text-dark)">
+                  Description
+                </span>
               )}
             </p>
           </div>
         </div>
-        <div className="chat-info__container--bottom">
-          <div className="ci-bottom__header">
-            <p className="ci-header__text">
+        <div className="py-[30px] px-[20px] flex flex-col flex-1 gap-[15px] rounded-[32px] bg-(--color-accent-light) max-md:pb-[0px] max-md:rounded-t-[16px] max-md:rounded-b-[0px]">
+          <div className="flex justify-between">
+            <p className="text-black !font-medium text-h5">
               {participantsCount} member{participantsCount > 1 ? "s" : ""}
             </p>
             {isCurrentUserOwner ? (
               <AddParticipants
-                className="ci-addparticipants"
+                className="cursor-pointer"
                 onClick={() => addSuffix(pathname + hash, "/add")}
               />
             ) : null}

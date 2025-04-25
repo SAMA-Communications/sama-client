@@ -38,7 +38,10 @@ export default function LoginLinks({ changePage, content }) {
 
   return (
     <>
-      <div className="auth-form__button fcc" onClick={sendRequest}>
+      <div
+        className="auth-form__button flex items-center justify-center"
+        onClick={sendRequest}
+      >
         {isLoader ? (
           <OvalLoader
             height={34}

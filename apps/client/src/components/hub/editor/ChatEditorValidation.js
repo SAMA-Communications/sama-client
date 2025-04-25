@@ -1,13 +1,16 @@
-import OvalLoader from "@components/_helpers/OvalLoader.js";
-import conversationHandlerService from "@services/conversationHandlerService.js";
 import { Tooltip } from "react-tooltip";
-import { debounce } from "@hooks/debounce.js";
-import { getCurrentUserFromParticipants } from "@store/values/Participants.js";
-import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
-import { updateHandler } from "@store/values/Conversations.js";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMonaco } from "@monaco-editor/react";
 import { useSelector, useDispatch } from "react-redux";
+
+import conversationHandlerService from "@services/conversationHandlerService.js";
+import { debounce } from "@hooks/debounce.js";
+
+import OvalLoader from "@components/_helpers/OvalLoader.js";
+
+import { getCurrentUserFromParticipants } from "@store/values/Participants.js";
+import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
+import { updateHandler } from "@store/values/Conversations.js";
 
 import Debug from "@icons/editor/Debug.svg?react";
 import Fail from "@icons/status/Fail.svg?react";
@@ -45,7 +48,8 @@ export default function ChatEditorValidation({ setLogs }) {
 
     try {
       const validationResult = await conversationHandlerService.validateHandler(
-        editorCodeSplit
+        editorCodeSplit,
+        editorCode
       );
       setValidationChecks(validationResult);
 
@@ -89,8 +93,8 @@ export default function ChatEditorValidation({ setLogs }) {
       if (model) {
         const timeout = 1000;
         const handleEditorChange = debounce(() => {
-          const editorCode = getEditorCode();
           setValidationStatus(null);
+          const editorCode = getEditorCode();
           localStorage.setItem(
             `conversation_handler_${selectedCid}`,
             editorCode
@@ -124,8 +128,8 @@ export default function ChatEditorValidation({ setLogs }) {
 
     const checks = [
       { key: "noSyntaxError", label: "No syntax errors" },
-      { key: "noConsoleLog", label: "No console.log statements" },
-      { key: "existResolve", label: "Resolve exists" },
+      { key: "isExportHandler", label: "Export handler" },
+      { key: "isHandlerHeader", label: "Handler header" },
     ];
 
     return (
@@ -150,7 +154,7 @@ export default function ChatEditorValidation({ setLogs }) {
 
   return (
     <div className="h-full flex gap-2.5">
-      <div className="edito-validation h-full px-3 py-2 flex items-center gap-2 bg-[#f6f6f6] rounded-lg">
+      <div className="editor-validation h-full px-3 py-2 flex items-center gap-2 bg-[#f6f6f6] rounded-lg">
         <div
           data-tooltip-id="editor-status-tooltip"
           data-tooltip-delay-hide={500}

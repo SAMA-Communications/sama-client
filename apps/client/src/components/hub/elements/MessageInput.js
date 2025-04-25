@@ -1,12 +1,16 @@
-import TextAreaInput from "@components/hub/elements/TextAreaInput";
-import addSuffix from "@utils/navigation/add_suffix";
-import api from "@api/api";
-import isMobile from "@utils/get_device_type";
-import { KEY_CODES } from "@utils/global/keyCodes";
-import { getSelectedConversationId } from "@store/values/SelectedConversation";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+
+import api from "@api/api";
+
+import TextAreaInput from "@components/hub/elements/TextAreaInput";
+
+import { getSelectedConversationId } from "@store/values/SelectedConversation";
+
+import addSuffix from "@utils/navigation/add_suffix";
+import isMobile from "@utils/get_device_type";
+import { KEY_CODES } from "@utils/global/keyCodes";
 
 import Attach from "@icons/options/Attach.svg?react";
 import Send from "@icons/options/Send.svg?react";
@@ -84,7 +88,7 @@ export default function MessageInput({
   const inputsView = useMemo(() => {
     if (isBlockedConv) {
       return (
-        <p style={{ alignSelf: "center", marginLeft: 15, marginRight: 15 }}>
+        <p className="self-center ml-[15px] mr-[15px]">
           The user you are currently chatting with has deleted their account.
           You can no longer continue the chat.
         </p>
@@ -94,13 +98,7 @@ export default function MessageInput({
     return (
       <>
         <Attach
-          style={{
-            width: 55,
-            height: 45,
-            paddingLeft: 10,
-            paddingBottom: 12,
-            cursor: "pointer",
-          }}
+          className="w-[55px] h-[45px] pl=[10px] pb-[12px] cursor-pointer"
           onClick={() => {
             addSuffix(location.pathname + location.hash, "/attach");
             storeInputText();
@@ -115,14 +113,7 @@ export default function MessageInput({
           placeholder={"Type your message..."}
         />
         <Send
-          style={{
-            width: 55,
-            height: 55,
-            marginRight: 10,
-            paddingLeft: 8,
-            paddingRight: 8,
-            cursor: "pointer",
-          }}
+          className="mr-[10px] px-[8px] !w-[55px] !h-[55px]  cursor-pointer"
           onClick={onSubmitFunc}
         />
       </>
@@ -130,19 +121,7 @@ export default function MessageInput({
   }, [location, isBlockedConv, onSubmitFunc]);
 
   return (
-    <div
-      style={{
-        minHeight: 60,
-        paddingTop: 3,
-        paddingBottom: 3,
-        flexShrink: 1,
-        display: "flex",
-        alignItems: "flex-end",
-        gap: 5,
-        borderRadius: 16,
-        backgroundColor: "var(--color-hover-light)",
-      }}
-    >
+    <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light)">
       {inputsView}
     </div>
   );

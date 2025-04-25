@@ -1,14 +1,18 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+
+import api from "@api/api";
+
+import DownloadManager from "@lib/downloadManager";
+import { useKeyDown } from "@hooks/useKeyDown";
+
 import AttachmentItem from "@components/attach/components/AttachmentItem";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
-import DownloadManager from "@lib/downloadManager";
 import OvalLoader from "@components/_helpers/OvalLoader";
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
-import api from "@api/api";
-import globalConstants from "@utils/global/constants";
-import processFile from "@utils/media/process_file";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import showCustomAlert from "@utils/show_alert";
-import { KEY_CODES } from "@utils/global/keyCodes";
+
+import { getNetworkState } from "@store/values/NetworkState";
 import {
   addMessage,
   removeMessage,
@@ -21,13 +25,12 @@ import {
 } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { getIsMobileView } from "@store/values/IsMobileView";
-import { getNetworkState } from "@store/values/NetworkState";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useKeyDown } from "@hooks/useKeyDown";
-import { useLocation } from "react-router-dom";
 
-import "@styles/attach/AttachHub.css";
+import globalConstants from "@utils/global/constants";
+import processFile from "@utils/media/process_file";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import showCustomAlert from "@utils/show_alert";
+import { KEY_CODES } from "@utils/global/keyCodes";
 
 export default function AttachHub() {
   const dispatch = useDispatch();
@@ -133,7 +136,7 @@ export default function AttachHub() {
     }
 
     if (!files.length) {
-      return <p className="attach-input__alt">Select files</p>;
+      return <p className="py-[10px] text-h5">Select files</p>;
     }
 
     return files.map((file, index) => {
@@ -290,28 +293,31 @@ export default function AttachHub() {
     <>
       <input
         id="inputFile"
+        className="hidden"
         ref={inputFilesRef}
         type="file"
         onChange={(e) => addFiles(Array.from(e.target.files))}
         accept={globalConstants.allowedFileFormats}
         multiple
       />
-      <div className="attach-window__container fcc">
-        <div className="attach-modal__content">
-          <p className="attach-modal__title">
+      <div className="absolute top-[0px] p-[10px] w-dvw h-dvh bg-(--color-black-50) z-[200] flex items-center justify-center">
+        <div className="p-[30px] w-[500px] max-h-[90svh] flex flex-col gap-[20px] rounded-[32px] bg-(--color-bg-light) max-sm:w-[94svw]">
+          <p className="text-h5 !font-normal text-black">
             {files.length > 1
               ? `Selected ${files.length} files`
               : "Send attachment"}
           </p>
           <CustomScrollBar
             customId={"attach-view__container"}
+            customClassName={"flex flex-col items-center gap-[7px]"}
             autoHeight={true}
             autoHeightMax={"min(460px, calc(100svh - 300px))"}
           >
             {attachListView}
           </CustomScrollBar>
           <TextAreaInput
-            customId="attach-inputs__message"
+            customId="attach-inputs__message" //::-webkit-scrollbar none
+            customClassName="py-[12px] px-15px resize-none min-h-[40px] h-[40px] max-h-[140px] text-black rounded-[12px] bg-(--color-hover-light)"
             inputRef={inputTextRef}
             handleInput={handleInput}
             handeOnKeyDown={handeOnKeyDown}
@@ -324,15 +330,24 @@ export default function AttachHub() {
             }
           />
           {isSendMessageDisable ? null : (
-            <div className="attach-navigation__container fcc">
-              <p className="attach-navigation__link" onClick={pickFileClick}>
+            <div className="mt-auto justify-end gap-[30px] flex items-center">
+              <p
+                className="text-h6 text-(--color-accent-dark) !font-light cursor-pointer mr-auto"
+                onClick={pickFileClick}
+              >
                 Add
               </p>
-              <p className="attach-navigation__link" onClick={closeModal}>
+              <p
+                className="text-h6 text-(--color-accent-dark) !font-light cursor-pointer"
+                onClick={closeModal}
+              >
                 Cancel
               </p>
 
-              <p className="attach-navigation__link" onClick={sendMessage}>
+              <p
+                className="text-h6 text-(--color-accent-dark) !font-light cursor-pointer"
+                onClick={sendMessage}
+              >
                 Send
               </p>
             </div>

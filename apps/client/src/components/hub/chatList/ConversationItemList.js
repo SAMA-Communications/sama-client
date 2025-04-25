@@ -1,18 +1,23 @@
-import ConversationItem from "@components/hub/elements/ConversationItem";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { useCallback, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import api from "@api/api.js";
+
 import conversationService from "@services/conversationsService.js";
-import getLastMessageUserName from "@utils/user/get_last_message_user_name";
-import getUserFullName from "@utils/user/get_user_full_name";
-import navigateTo from "@utils/navigation/navigate_to";
+
+import ConversationItem from "@components/hub/chatList/ConversationItem";
+
 import store from "@store/store.js";
 import { getConverastionById } from "@store/values/Conversations";
 import { insertChats } from "@store/values/Conversations.js";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
-import { useCallback, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+
+import getLastMessageUserName from "@utils/user/get_last_message_user_name";
+import getUserFullName from "@utils/user/get_user_full_name";
+import navigateTo from "@utils/navigation/navigate_to";
 
 export default function ConversationItemList({ conversations }) {
   const dispatch = useDispatch();
@@ -64,7 +69,8 @@ export default function ConversationItemList({ conversations }) {
         const chatParticipant = participants[chatParticipantId] || {};
         const chatName = obj.name || getUserFullName(chatParticipant);
 
-        const showLastMsgUser = isGroup && !obj.last_message?.x;
+        const showLastMsgUser = isGroup;
+        //!obj.last_message?.x replace with better checker for event message
         const lastMessageUserId = obj?.last_message?.from;
         const lastMessageUser = participants[lastMessageUserId] || {};
         const lastMessageUserName = showLastMsgUser

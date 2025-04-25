@@ -51,7 +51,10 @@ export default function SignUpLinks({ changePage, content }) {
 
   return (
     <>
-      <div className="auth-form__button fcc" onClick={sendRequest}>
+      <div
+        className="auth-form__button flex items-center justify-center"
+        onClick={sendRequest}
+      >
         {isLoader ? (
           <OvalLoader
             height={34}
@@ -63,7 +66,7 @@ export default function SignUpLinks({ changePage, content }) {
           <p>Create account</p>
         )}
       </div>
-      <div className="auth-form__checkbox fcc">
+      <div className="auth-form__checkbox flex items-center justify-center">
         <input
           type="checkbox"
           id="isLogin"

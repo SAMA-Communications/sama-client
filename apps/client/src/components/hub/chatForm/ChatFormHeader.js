@@ -1,9 +1,9 @@
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
+
 import TypingLine from "@components/_helpers/TypingLine";
-import addSuffix from "@utils/navigation/add_suffix";
-import getLastVisitTime from "@utils/user/get_last_visit_time";
-import getUserFullName from "@utils/user/get_user_full_name";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import showCustomAlert from "@utils/show_alert";
+
 import {
   getConverastionById,
   selectConversationsEntities,
@@ -13,11 +13,12 @@ import { getIsMobileView } from "@store/values/IsMobileView";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setAllParams } from "@store/values/ContextMenu";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
-import { useMemo } from "react";
 
-import "@styles/hub/chatForm/ChatFormHeader.css";
+import addSuffix from "@utils/navigation/add_suffix";
+import getLastVisitTime from "@utils/user/get_last_visit_time";
+import getUserFullName from "@utils/user/get_user_full_name";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import showCustomAlert from "@utils/show_alert";
 
 import BackBtn from "@icons/options/Back.svg?react";
 import More from "@icons/options/More.svg?react";
@@ -88,8 +89,8 @@ export default function ChatFormHeader({ closeFormFunc }) {
       }
       const opponentLastActivity = participants[opponentId]?.recent_activity;
       return opponentLastActivity === "online" ? (
-        <ul style={{ paddingLeft: 25 }}>
-          <li style={{ color: "var(--color-accent-dark)" }}>online</li>
+        <ul className="pl-[25px]">
+          <li className="text-(--color-accent-dark)">online</li>
         </ul>
       ) : (
         getLastVisitTime(opponentLastActivity)
@@ -144,48 +145,35 @@ export default function ChatFormHeader({ closeFormFunc }) {
 
   return (
     <div
-      style={{
-        flexShrink: 1,
-        height: "max-content",
-        display: "flex",
-        paddingBottom: 10,
-      }}
+      className="flex shrink pb-[10px] h-max "
       onClick={viewChatOrPaticipantInfo}
     >
       {isMobile || isTablet ? (
-        <BackBtn className="header-back" onClick={closeFormFunc} />
+        <BackBtn
+          className="mr-[25px] cursor-pointer self-center"
+          onClick={closeFormFunc}
+        />
       ) : null}
       <div
-        style={{
-          height: "max-content",
-          marginTop: -10,
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
-        }}
+        className={`h-max -mt-[10px] grow flex ${
+          isGroupChat ? "flex-row items-end gap-[15px]" : "flex-col"
+        } `}
       >
-        <p
-          style={{
-            fontWeight: 500,
-            fontSize: "var(--font-h2)",
-            color: "black",
-            lineHeight: "1.5",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
+        <p className="!font-medium text-h2 text-black leading-[1.5] overflow-hidden text-ellipsis whitespace-nowrap">
           &zwnj;{viewChatName}
         </p>
-        <p>{viewStatusActivity}</p>
+        <p
+          className={
+            isGroupChat
+              ? "py-[2px] px-[10px] rounded-2xl bg-[var(--color-hover-light)] text-gray-500 mb-[9px]"
+              : ""
+          }
+        >
+          {viewStatusActivity}
+        </p>
       </div>
       <div
-        style={{
-          width: 5,
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-        }}
+        className="w-[15px] cursor-pointer flex items-center justify-center"
         onContextMenu={openContextMenu}
         onClick={openContextMenu}
       >

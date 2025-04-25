@@ -1,18 +1,20 @@
-import ChatNameInput from "@components/modals/components/ChatNameInput";
-import UserSelectorBlock from "@components/modals/components/UserSelectorBlock";
-import conversationService from "@services/conversationsService";
-import navigateTo from "@utils/navigation/navigate_to";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
-import { KEY_CODES } from "@utils/global/keyCodes";
-import { getConverastionById } from "@store/values/Conversations";
-import { selectParticipantsEntities } from "@store/values/Participants";
-import { useKeyDown } from "@hooks/useKeyDown";
 import { useLocation } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
-import "@styles/modals/UsersSelectModalHub.css";
+import conversationService from "@services/conversationsService";
+import { useKeyDown } from "@hooks/useKeyDown";
+
+import ChatNameInput from "@components/modals/components/ChatNameInput";
+import UserSelectorBlock from "@components/modals/components/UserSelectorBlock";
+
+import { getConverastionById } from "@store/values/Conversations";
+import { selectParticipantsEntities } from "@store/values/Participants";
+
+import navigateTo from "@utils/navigation/navigate_to";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
+import { KEY_CODES } from "@utils/global/keyCodes";
 
 export default function UsersSelectModalHub({ type }) {
   const selectedConversation = useSelector(getConverastionById);
@@ -72,9 +74,11 @@ export default function UsersSelectModalHub({ type }) {
   }, [type, chatName, selectedConversation, participants]);
 
   return (
-    <div className="edit-modal__container fcc">
+    <div className="absolute top-[0px] w-dvw h-dvh bg-(--color-black-50) flex items-center justify-center">
       <div
-        className={`edit-modal__content--chat${chatName || type ? "" : "name"}`}
+        className={`p-[30px] flex flex-col gap-[20px] rounded-[32px] bg-(--color-bg-light) w-[min(460px,100%)] max-md:w-[94svw] max-md:p-[20px] ${
+          chatName || type ? "h-[80svh]" : ""
+        }`}
       >
         {typeOfFunc}
       </div>

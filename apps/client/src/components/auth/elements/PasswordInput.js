@@ -18,7 +18,7 @@ export default function PasswordInput({ setState }) {
         type={passwordType}
         autoComplete="off"
       />
-      <div className="auth-form__password-visibility fcc">
+      <div className="auth-form__password-visibility flex items-center justify-center">
         {passwordType === "password" ? (
           <HidePassword onClick={() => setPasswordType("text")} />
         ) : (

@@ -1,7 +1,15 @@
-import addPrefix from "@utils/navigation/add_prefix";
-import addSuffix from "@utils/navigation/add_suffix";
-import conversationService from "@services/conversationsService";
-import navigateTo from "@utils/navigation/navigate_to";
+import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
+
+import AddParticipantsLink from "@components/context/elements/AddParticipantsLink";
+import EditLink from "@components/context/elements/EditLink";
+import InfoChatLink from "@components/context/elements/InfoChatLink";
+import InfoUserLink from "@components/context/elements/InfoUserLink";
+import LeaveAndDeleteLink from "@components/context/elements/LeaveAndDeleteLink";
+import RemoveParticipantLink from "@components/context/elements/RemoveParticipantLink";
+import SendMessageLink from "@components/context/elements/SendMessageLink";
+
 import {
   getConverastionById,
   selectAllConversations,
@@ -12,19 +20,11 @@ import {
   selectContextList,
   selectCoords,
 } from "@store/values/ContextMenu";
-import { useLocation } from "react-router-dom";
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
 
-import "@styles/context/ContextMenuHub.css";
-
-import AddParticipantsLink from "@components/context/elements/AddParticipantsLink";
-import EditLink from "@components/context/elements/EditLink";
-import InfoChatLink from "@components/context/elements/InfoChatLink";
-import InfoUserLink from "@components/context/elements/InfoUserLink";
-import LeaveAndDeleteLink from "@components/context/elements/LeaveAndDeleteLink";
-import RemoveParticipantLink from "@components/context/elements/RemoveParticipantLink";
-import SendMessageLink from "@components/context/elements/SendMessageLink";
+import addPrefix from "@utils/navigation/add_prefix";
+import addSuffix from "@utils/navigation/add_suffix";
+import conversationService from "@services/conversationsService";
+import navigateTo from "@utils/navigation/navigate_to";
 
 export default function ContextMenuHub() {
   const { pathname, hash } = useLocation();
@@ -114,7 +114,10 @@ export default function ContextMenuHub() {
   }, [list, userObject, currentPath, type, opponent_id, isCurrentUserOwner]);
 
   return (
-    <div className="context-menu__container" style={{ top, left }}>
+    <div
+      className="absolute left-[10px] w-[240px] py-[10px] px-[4px] flex flex-col gap-px rounded-[12px] shadow-md bg-(--color-bg-light) z-50"
+      style={{ top, left }}
+    >
       {listView}
     </div>
   );

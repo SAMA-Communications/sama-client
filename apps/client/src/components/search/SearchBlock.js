@@ -1,14 +1,15 @@
+import { useEffect, useState, useTransition } from "react";
+import { useSelector } from "react-redux";
+
+import conversationService from "@services/conversationsService";
+import usersService from "@services/usersService";
+
 import ChatList from "@components/search/lists/ChatList";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import OvalLoader from "@components/_helpers/OvalLoader";
 import SearchedUser from "@components/search/elements/SearchedUser";
-import conversationService from "@services/conversationsService";
-import usersService from "@services/usersService";
-import { selectConversationsEntities } from "@store/values/Conversations";
-import { useEffect, useState, useTransition } from "react";
-import { useSelector } from "react-redux";
 
-import "@styles/search/SearchBlock.css";
+import { selectConversationsEntities } from "@store/values/Conversations";
 
 export default function SearchBlock({
   searchText,
@@ -17,6 +18,7 @@ export default function SearchBlock({
   addUserToArray,
   removeUserFromArray,
   isMaxLimit,
+  customClassName = "",
   isClickDisabledFunc = () => false,
   isSelectUserToArray = false,
   isClearInputText = false,
@@ -88,14 +90,18 @@ export default function SearchBlock({
   };
 
   return (
-    <div className="search__container fcc" style={viewProperty(searchText)}>
+    <div
+      className={`h-[80svh] flex-1 mt-[5px] flex items-center justify-center max-xl:w-full max-xl:mt-[0px] max-xl:rounded-[16px] max-xl:bg-(--color-bg-light) ${customClassName}`}
+      style={viewProperty(searchText)}
+    >
       {isPending ? (
         <OvalLoader width={80} height={80} />
       ) : searchText?.length < 2 ? null : (
-        <CustomScrollBar customStyle={{ width: "400px" }}>
-          {isSearchOnlyUsers ? null : (
-            <div className="search__list-title">Users</div>
-          )}
+        <CustomScrollBar
+          customClassName="w-[400px] max-xl:!w-full"
+          childrenClassName="flex flex-col gap-[5px]"
+        >
+          {isSearchOnlyUsers ? null : <div>Users</div>}
           {searchedUsers.map((u) => {
             const isSelected = selectedUsers?.some(
               (uObj) => uObj._id === u._id
@@ -119,7 +125,9 @@ export default function SearchBlock({
               />
             );
           })}
-          <p className="search__text">{isUserSearched}</p>
+          <p className="text-h6 text-(--color-text-dark) text-center">
+            {isUserSearched}
+          </p>
           {isSearchOnlyUsers ? null : (
             <ChatList
               conversations={searchedChats}

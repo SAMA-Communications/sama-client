@@ -212,7 +212,9 @@ class MessagesService {
   }
 
   async sendMessage(message) {
-    const { server_mid, t, modified } = await api.messageCreate(message);
+    const { server_mid, t, modified, bot_message } = await api.messageCreate(
+      message
+    );
     const { mid, body, cid, from } = message;
 
     const mObject = {
@@ -228,6 +230,11 @@ class MessagesService {
       updateLastMessageField({ cid, resaveLastMessageId: mid, msg: mObject })
     );
     store.dispatch(removeMessage(mid));
+
+    if (bot_message) {
+      store.dispatch(addMessage(bot_message));
+      store.dispatch(updateLastMessageField({ cid, msg: bot_message }));
+    }
   }
 }
 

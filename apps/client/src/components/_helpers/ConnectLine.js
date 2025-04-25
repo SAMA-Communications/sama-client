@@ -18,9 +18,11 @@ export default function ConnectLine() {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="connect-line"
+      className="absolute top-0 w-screen h-[28px] bg-(--color-accent-dark) shadow-md z-1000"
     >
-      <p className="connect-line__text">Connecting...</p>
+      <p className="text-center font-light text-[18px] text-white">
+        Connecting...
+      </p>
     </m.div>
   );
 }

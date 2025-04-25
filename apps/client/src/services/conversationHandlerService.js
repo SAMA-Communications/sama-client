@@ -32,6 +32,7 @@ class ConversationHandlerService {
         env: {
           MESSAGE: message,
           USER: user,
+          ACCEPT: () => {},
           RESOLVE: (value) => value,
           REJECT: (value) => value,
         },
@@ -45,17 +46,26 @@ class ConversationHandlerService {
     return model;
   }
 
-  async validateHandler(code) {
+  async validateHandler(code, originCode) {
     if (!this.#sandBox) throw new Error("Sandbox is not initialized");
 
     const { ok } = await this.#sandBox.runSandboxed(async ({ validateCode }) =>
       validateCode(code)
     );
 
+    await this.#sandBox.runSandboxed(async ({ validateCode }) =>
+      validateCode(code)
+    );
+
     return {
       noSyntaxError: ok,
-      noConsoleLog: !/console\.log/.test(code),
-      existResolve: /return\s+resolve/.test(code),
+      isExportHandler: /export\s+default\s+await\s+handler\s*\(.*\)/.test(
+        originCode
+      ),
+      isHandlerHeader:
+        /const\s+handler\s*=\s*async\s*\(message,\s*user,\s*accept,\s*resolve,\s*reject\)\s*=>\s*\{/.test(
+          originCode
+        ),
     };
   }
 

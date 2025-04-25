@@ -7,8 +7,6 @@ import { urlify } from "@utils/text/urlify";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
 
-import "@styles/hub/elements/ChatMessage.css";
-
 import CornerLight from "@icons/_helpers/CornerLight.svg?react";
 import CornerAccent from "@icons/_helpers/CornerAccent.svg?react";
 
@@ -36,13 +34,22 @@ export default function ChatMessage({
 
   return (
     <div
-      className={`message__container${isCurrentUser ? "--my" : ""} ${
-        prev ? "" : "mt-8"
+      className={`relative w-max max-w-[min(80%,820px)] flex flex-row gap-[16px] ${
+        prev ? "" : "mt-[8px]"
       }`}
     >
-      <div className={`message-photo${sender ? "--hover" : ""}`}>
+      <div
+        className={`min-w-[46px] flex items-end ${
+          sender ? "cursor-pointer" : ""
+        }`}
+      >
         {next ? null : (
-          <div className="photo__container fcc" onClick={openUserProfile}>
+          <div
+            className={`w-[46px] h-[46px] uppercase text-black rounded-[16px] bg-(--color-hover-light) flex items-center justify-center ${
+              isCurrentUser ? "!text-white !bg-(--color-accent-dark)" : ""
+            }`}
+            onClick={openUserProfile}
+          >
             <MessageUserIcon
               userObject={sender}
               isCurrentUser={isCurrentUser}
@@ -50,37 +57,64 @@ export default function ChatMessage({
           </div>
         )}
       </div>
-      <div className={`message-content__container ${next ? "" : "br-bl-0"}`}>
+      <div
+        className={`relative max-w-full w-fit min-h-[46px] p-[15px] flex flex-col gap-[10px] rounded-[16px] bg-(--color-hover-light) ${
+          next ? "" : "rounded-bl-none"
+        } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""}`}
+      >
         {next ? null : isCurrentUser ? (
-          <CornerAccent className="message-content--corner" />
+          <CornerAccent className="absolute -left-[16px] bottom-[0px]" />
         ) : (
-          <CornerLight className="message-content--corner" />
+          <CornerLight className="absolute -left-[16px] bottom-[0px]" />
         )}
         {prev ? null : (
           <div
-            className={`content__uname${sender ? "--hover" : ""}`}
+            className={`text-(--color-accent-dark) !font-medium ${
+              sender ? "cursor-pointer" : ""
+            } ${isCurrentUser ? "!text-white" : ""}`}
             onClick={openUserProfile}
           >
             &zwnj;{getUserFullName(sender) || "Deleted account"}
           </div>
         )}
         <div
-          className={`content__container${
-            attachments?.length ? "--with-media" : ""
-          }`}
+          className={`flex flex-row flex-wrap items-end gap-y-[8px] gap-x-[15px] ${
+            attachments?.length ? "w-auto flex-col items-start" : ""
+          } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""}`}
         >
           {attachments?.length ? (
             <MessageAttachments attachments={attachments} mid={message._id} />
           ) : null}
-          {body ? <div className="content__text">{urlify(body)}</div> : null}
+          {body ? (
+            <div
+              className={`max-w-full whitespace-pre-wrap text-black  wrap-break-word ${
+                attachments?.length ? "self-end" : ""
+              } ${isCurrentUser ? "!text-white" : ""}`}
+              style={{ wordBreak: "break-word", inlineSize: "auto" }}
+            >
+              {urlify(body, isCurrentUser ? "white" : "black")}
+            </div>
+          ) : null}
           <div
-            className={`content__status${
-              attachments?.length && !body ? "--darken" : ""
-            } fcc ${isCurrentUser ? "pr-28" : ""}`}
+            className={`grow justify-end ${
+              attachments?.length && !body
+                ? "absolute bottom-[3px] right-[3px] p-[8px] rounded-[8px] bg-(--color-black-50) self-end"
+                : ""
+            } flex items-center justify-center ${
+              isCurrentUser ? "pr-[28px]" : ""
+            }`}
           >
-            <div className="status__time">{timeSend}</div>
+            <div
+              className={`text-(--color-text-dark) text-span ${
+                (attachments?.length && !body) || isCurrentUser
+                  ? "text-white"
+                  : ""
+              }`}
+            >
+              {timeSend}
+            </div>
             {isCurrentUser ? (
-              <div className="status__icon">
+              <div className="absolute right-[3px] top-1/2 flex transform -translate-y-1/2">
                 <MessageStatus
                   status={status}
                   type={isCurrentUser ? "white" : "accent"}

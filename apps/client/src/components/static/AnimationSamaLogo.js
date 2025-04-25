@@ -7,6 +7,7 @@ export default function AnimationSamaLogo() {
       <div className="logo-icon">
         <svg
           id="logo-icon-line"
+          className="absolute"
           width="199"
           height="347"
           viewBox="0 0 199 347"
@@ -43,6 +44,7 @@ export default function AnimationSamaLogo() {
       </div>
       <m.svg
         id="logo-text"
+        className="my-[12px]"
         transition={{ delay: 2.4, duration: 1 }}
         width="572"
         height="257"

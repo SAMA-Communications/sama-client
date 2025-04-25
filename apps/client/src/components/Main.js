@@ -83,23 +83,7 @@ export default function Main() {
     }
 
     return (
-      <section
-        style={{
-          padding: 30,
-
-          marginTop: 20,
-          marginBottom: 20,
-          marginRight: 20,
-
-          display: "flex",
-          flex: 1,
-          flexDirection: "row",
-          gap: "15px",
-
-          borderRadius: "var(--border-48)",
-          backgroundColor: "var(--color-bg-light)",
-        }}
-      >
+      <section className="p-[30px] mr-[20px] my-[20px] flex flex-1 flex-row gap-[15px] rounded-[48px] bg-(--color-bg-light)">
         {location.pathname.includes("/profile") ? null : <ChatList />}
         <ChatForm />
       </section>

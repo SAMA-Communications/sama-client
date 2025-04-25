@@ -10,7 +10,10 @@ export default function InformativeMessage({
 
   return (
     <div
-      className={"informative-message" + (isPrevMesssageUsers ? " mt-10" : "")}
+      className={
+        "self-center py-[6px] px-[18px] rounded-[16px] bg-(--color-hover-light) cursor-pointer text-gray-500" +
+        (isPrevMesssageUsers ? " mt-[10px]" : "")
+      }
       onClick={() =>
         addSuffix(pathname + hash, `/user?uid=${params?.user?._id}`)
       }

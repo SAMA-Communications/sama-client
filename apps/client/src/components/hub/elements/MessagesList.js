@@ -1,8 +1,15 @@
-import ChatMessage from "@components/hub/elements/ChatMessage";
-import DownloadManager from "@lib/downloadManager";
 import InfiniteScroll from "react-infinite-scroll-component";
-import InformativeMessage from "@components/hub/elements/InformativeMessage";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+
 import api from "@api/api";
+
+import DownloadManager from "@lib/downloadManager";
+
+import InformativeMessage from "@components/hub/elements/InformativeMessage";
+import ChatMessage from "@components/hub/elements/ChatMessage";
+
 import {
   addMessages,
   selectActiveConversationMessages,
@@ -14,9 +21,6 @@ import {
 } from "@store/values/Participants";
 import { getConverastionById, upsertChat } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
 
 export default function MessagesList() {
   const dispatch = useDispatch();

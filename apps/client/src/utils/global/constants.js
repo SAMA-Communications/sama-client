@@ -2,8 +2,8 @@ const globalConstants = {
   dayInMs: 86400000,
   //   monthInMs: 2629743830,
   yearInMs: 31556926000,
-  mobileViewWidth: 800,
-  tabletViewWidth: 1400,
+  mobileViewWidth: 767,
+  tabletViewWidth: 1279,
   linksRegExp: /https:\/\/\S+/g, ///(((https?:\/\/)|(www\.))[^\s]+)/g
   allowedFileFormats: [
     ".heic",
@@ -28,22 +28,21 @@ const globalConstants = {
     5: "Fr",
     6: "Sa",
   },
-  defaultEditorCode: `/*  
- * Processes every message in a chat with moderation capabilities.
- */
-const handler = async (chatMessage, user, resolve, reject) => {
-    const body = chatMessage.body;
+  defaultEditorCode: `// vvv Don\`t remove or change the line below! vvv
+const handler = async (message, user, accept, resolve, reject) => {
+    const body = mesage.body;
 
     // Reject the message if it contains any prohibited words
     const prohibitedWords = ["asshole", "fuck", "bullshit"];
     if (prohibitedWords.some(word => body.includes(word))) {
-        return reject({ message: "Message blocked by moderation."});
+        return reject("Message blocked by moderation.");
     }
 
-    return resolve();
+    return accept();
 };
 
-export default await handler(env.MESSAGE, env.USER, env.RESOLVE, env.REJECT);
+// vvv Don\`t remove or change the line below! vvv
+export default await handler(env.MESSAGE, env.USER, env.ACCEPT, env.RESOLVE, env.REJECT);
 `,
 };
 

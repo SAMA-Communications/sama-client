@@ -2,11 +2,11 @@ import Skeleton from "react-loading-skeleton";
 
 export default function SChatMessage() {
   return (
-    <div className="message__container">
-      <div className="message-photo">
+    <div className="relative w-max max-w-[min(80%,820px)] flex flex-row gap-[16px]">
+      <div className="min-w-[46px] flex items-end">
         <Skeleton height={46} width={46} />
       </div>
-      <div className="message-content__container--skeleton">
+      <div>
         {/* <CornerLight className="message-content--corner" /> */}
         <Skeleton
           height={122}

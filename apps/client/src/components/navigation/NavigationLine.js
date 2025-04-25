@@ -1,21 +1,22 @@
-import DynamicAvatar from "@components/info/elements/DynamicAvatar";
-import addPrefix from "@utils/navigation/add_prefix";
-import getUserInitials from "@utils/user/get_user_initials";
-import navigateTo from "@utils/navigation/navigate_to";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
+
 import usersService from "@services/usersService";
+
+import SamaLogo from "@components/static/SamaLogo";
+import DynamicAvatar from "@components/info/elements/DynamicAvatar";
+
 import { getCurrentUserFromParticipants } from "@store/values/Participants";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView } from "@store/values/IsTabletView";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
-import { useMemo } from "react";
 
-import "@styles/navigation/NavigationLine.css";
-
-import SamaLogo from "@components/static/SamaLogo";
+import addPrefix from "@utils/navigation/add_prefix";
+import getUserInitials from "@utils/user/get_user_initials";
+import navigateTo from "@utils/navigation/navigate_to";
 
 import List from "@icons/Conversations.svg?react";
 import Create from "@icons/AddConversation.svg?react";
@@ -46,19 +47,16 @@ export default function NavigationLine() {
     useMemo(() => {
       const isProfilePage = pathname.includes("/profile");
       return [
-        isProfilePage ? "active" : "",
-        !isProfilePage ? "active" : "",
-        pathname.includes("/create") ? "active" : "",
+        isProfilePage ? "bg-(--color-hover-dark)" : "",
+        !isProfilePage ? "bg-(--color-hover-dark)" : "",
+        pathname.includes("/create") ? "bg-(--color-hover-dark)" : "",
       ];
     }, [pathname]);
 
   return (
-    <aside
-      className="navigation__container"
-      style={{ paddingTop: 20, paddingBottom: 20 }}
-    >
+    <aside className="w-[84px] px-[10px] flex flex-col justify-between bg-transparent select-none pt-[20px] pb-[20px]">
       <div
-        className="navigation__logo fcc"
+        className="flex items-center justify-center cursor-pointer"
         onClick={() => {
           dispatch(setSelectedConversation({}));
           navigateTo("/");
@@ -66,7 +64,7 @@ export default function NavigationLine() {
       >
         <SamaLogo />
       </div>
-      <div className="navigation__menu fcc">
+      <div className="flex flex-col gap-[20px] items-center justify-center">
         <div
           onClick={() => {
             const currentPath =
@@ -75,9 +73,9 @@ export default function NavigationLine() {
                 : pathname + hash;
             addPrefix(currentPath, "/profile");
           }}
-          className={`menu__profile fcc ${isProfilePageActive}`}
+          className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) flex items-center justify-center ${isProfilePageActive}`}
         >
-          <span className="fcc">
+          <span className="w-full h-full text-h5 text-black rounded-[16px] bg-(--color-bg-light) overflow-hidden flex items-center justify-center">
             <DynamicAvatar
               avatarUrl={currentUser.avatar_url}
               avatarBlurHash={currentUser.avatar_object?.file_blur_hash}
@@ -95,15 +93,15 @@ export default function NavigationLine() {
               navigateTo(`/${hash || ""}`);
             }
           }}
-          className={`menu__list fcc ${isChatListActive}`}
+          className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) flex items-center justify-center ${isChatListActive}`}
         >
           <List />
         </div>
         <div
           onClick={() => addPrefix(pathname + hash, "/create")}
-          className={`menu__create fcc ${isCreatePageActive}`}
+          className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) flex items-center justify-center ${isCreatePageActive}`}
         >
-          <Create />
+          <Create className="w-[36px]" />
         </div>
       </div>
       <div
@@ -111,7 +109,7 @@ export default function NavigationLine() {
           sendLogout();
           navigateTo("/authorization");
         }}
-        className="menu__logout fcc"
+        className="w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) flex items-center justify-center"
       >
         <Logout />
       </div>

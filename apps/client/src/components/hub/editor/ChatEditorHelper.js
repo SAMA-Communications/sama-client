@@ -54,13 +54,15 @@ export default function ChatEditorHelper() {
           </span>
           <span>-</span>
           <span>
-            If u want to change body: return resolve(&#123;body: "ur
-            message"&#125;)
+            If you want to send a response message by bot:(&#123;message:
+            &#123;body: "ur message"&#125;&#125;)
           </span>
           <span>
-            If u want to reject message: return reject(&#123;message: "ur
-            message"&#125; / "ur message")
+            If u want to change user body: return resolve(&#123;message:
+            &#123;body: "ur message"&#125;&#125;, &#123;isReplaceBody:
+            true&#125;)
           </span>
+          <span>If u want to reject message: return reject("ur message")</span>
         </div>
       </Tooltip>
       <span className="w-[1px] h-full bg-gray-400"></span>
