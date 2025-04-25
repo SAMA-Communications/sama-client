@@ -232,6 +232,13 @@ class MessagesService {
     store.dispatch(removeMessage(mid));
 
     if (bot_message) {
+      const participants = store.getState().participants;
+      if (!participants[bot_message.from]) {
+        const botObject = await api.getUsersByIds({
+          ids: [bot_message.from],
+        });
+        store.dispatch(addUser(botObject[0]));
+      }
       store.dispatch(addMessage(bot_message));
       store.dispatch(updateLastMessageField({ cid, msg: bot_message }));
     }

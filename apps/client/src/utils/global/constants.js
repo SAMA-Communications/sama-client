@@ -30,7 +30,7 @@ const globalConstants = {
   },
   defaultEditorCode: `// vvv Don\`t remove or change the line below! vvv
 const handler = async (message, user, accept, resolve, reject) => {
-    const body = mesage.body;
+    const body = message.body;
 
     // Reject the message if it contains any prohibited words
     const prohibitedWords = ["asshole", "fuck", "bullshit"];

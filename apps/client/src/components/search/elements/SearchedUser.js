@@ -54,7 +54,7 @@ export default function SearchedUser({
       className="w-[400px] p-[10px] gap-[15px] justify-start rounded-[12px] flex items-center hover:bg-(--color-hover-light) max-md:w-full"
       onClick={onClickFunc}
     >
-      <div className="relative w-[70px] h-[70px] !font-light text-h4 rounded-[8px] bg-(--color-bg-dark) flex items-center justify-center text-(--color-text-dark)">
+      <div className="relative w-[70px] h-[70px] !font-light text-h4 rounded-[8px] bg-(--color-bg-dark) flex items-center justify-center text-(--color-text-dark) overflow-hidden">
         <DynamicAvatar
           avatarUrl={uObject.avatar_url}
           avatarBlurHash={uObject.avatar_object?.file_blur_hash}
