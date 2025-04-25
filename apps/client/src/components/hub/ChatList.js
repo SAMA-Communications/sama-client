@@ -44,7 +44,7 @@ export default function ChatList() {
     <section className="w-dvw mt-[5px] flex gap-[10px] flex-col justify-start items-center max-xl:flex-1 xl:w-[400px] md:max-xl:mb-[20px] md:max-xl:mr-[20px] ">
       {isMobileView ? <MenuButtons /> : null}
       <SearchInput
-        customClassName="max-w-[calc(100%-85px)]"
+        customClassName="max-w-full"
         inputClassName="max-w-[calc(100%-15px)]"
         closeClassName="right-[25px]"
         shadowText={"Search"}
