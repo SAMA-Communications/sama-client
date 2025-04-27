@@ -45,14 +45,14 @@ export default function ChatList() {
       {isMobileView ? <MenuButtons /> : null}
       <SearchInput
         customClassName="max-w-full"
-        inputClassName="max-w-[calc(100%-15px)]"
+        inputClassName="max-w-full"
         closeClassName="right-[25px]"
         shadowText={"Search"}
         setState={setInputText}
       />
       {inputText ? (
         <SearchBlock
-          customClassName="max-xl:px-[2svw] max-xl:pt-[2swh] max-xl:pb-[2px]"
+          customClassName="w-full max-xl:px-[2svw] max-xl:pt-[2swh] max-xl:pb-[2px]"
           searchText={inputText}
           isClearInputText={true}
           clearInputText={() => setInputText(null)}

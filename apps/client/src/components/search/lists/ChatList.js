@@ -13,7 +13,9 @@ export default function ChatList({
         </div>
       ) : null}
       <ConversationItemList conversations={conversations} />
-      <p className="text-center text-h6">{isChatSearched}</p>
+      <p className="text-center text-h6 text-(--color-text-dark)">
+        {isChatSearched}
+      </p>
     </>
   );
 }

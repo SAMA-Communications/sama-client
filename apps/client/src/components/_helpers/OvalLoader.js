@@ -3,7 +3,7 @@ import { Oval } from "react-loader-spinner";
 export default function OvalLoader({
   width,
   height,
-  customClassName,
+  customClassName = "",
   secondaryColor,
   mainColor,
 }) {
@@ -13,7 +13,7 @@ export default function OvalLoader({
       width={height}
       color={mainColor || "#2a2a2a"}
       secondaryColor={secondaryColor || "#6d6d6d"}
-      wrapperClass={`search__pending ${customClassName}`}
+      wrapperClass={`${customClassName}`}
       visible={true}
       ariaLabel="oval-loading"
       strokeWidth={2}

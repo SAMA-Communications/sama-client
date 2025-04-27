@@ -46,7 +46,7 @@ export default function ParticipantInChat({
         );
       }}
     >
-      <div className="w-[70px] h-[70px] text-h4 rounded-[8px] bg-(--color-bg-light) flex items-center justify-center">
+      <div className="w-[70px] h-[70px] text-h4 rounded-[8px] bg-(--color-bg-light) flex items-center justify-center overflow-hidden">
         <DynamicAvatar
           avatarUrl={userObject.avatar_url}
           avatarBlurHash={userObject.avatar_object?.file_blur_hash}

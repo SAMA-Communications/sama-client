@@ -106,6 +106,7 @@ export default function MessageInput({
         />
         <TextAreaInput
           inputRef={inputTextRef}
+          customClassName="grow py-[18px] text-black resize-none max-xl:disabled:!p-[9px] placeholder:text-(--color-text-dark) placeholder:text-p [&::-webkit-scrollbar]:hidden"
           handleInput={handleInput}
           handeOnKeyDown={handeOnKeyDown}
           isDisabled={false}
@@ -121,7 +122,7 @@ export default function MessageInput({
   }, [location, isBlockedConv, onSubmitFunc]);
 
   return (
-    <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light)">
+    <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden">
       {inputsView}
     </div>
   );

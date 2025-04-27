@@ -1,11 +1,13 @@
+import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
+
 import MessageAttachments from "@components/message/elements/MessageAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
+
 import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
 import { urlify } from "@utils/text/urlify";
-import { useLocation } from "react-router-dom";
-import { useMemo } from "react";
 
 import CornerLight from "@icons/_helpers/CornerLight.svg?react";
 import CornerAccent from "@icons/_helpers/CornerAccent.svg?react";
@@ -58,7 +60,7 @@ export default function ChatMessage({
         )}
       </div>
       <div
-        className={`relative max-w-full w-fit min-h-[46px] p-[15px] flex flex-col gap-[10px] rounded-[16px] bg-(--color-hover-light) ${
+        className={`relative max-w-full w-fit min-h-[46px] p-[15px] flex flex-col gap-[5px] rounded-[16px] bg-(--color-hover-light) ${
           next ? "" : "rounded-bl-none"
         } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""}`}
       >
@@ -79,7 +81,7 @@ export default function ChatMessage({
         )}
         <div
           className={`flex flex-row flex-wrap items-end gap-y-[8px] gap-x-[15px] ${
-            attachments?.length ? "w-auto flex-col items-start" : ""
+            attachments?.length ? "w-auto !flex-col items-start" : ""
           } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""}`}
         >
           {attachments?.length ? (
@@ -87,18 +89,20 @@ export default function ChatMessage({
           ) : null}
           {body ? (
             <div
-              className={`max-w-full whitespace-pre-wrap text-black  wrap-break-word ${
-                attachments?.length ? "self-end" : ""
-              } ${isCurrentUser ? "!text-white" : ""}`}
+              className={`${
+                attachments?.length ? "max-w-[440px]" : "max-w-full"
+              } whitespace-pre-wrap text-black  wrap-break-word ${
+                isCurrentUser ? "!text-white" : ""
+              }`}
               style={{ wordBreak: "break-word", inlineSize: "auto" }}
             >
               {urlify(body, isCurrentUser ? "white" : "black")}
             </div>
           ) : null}
           <div
-            className={`grow justify-end ${
+            className={`relative grow justify-end self-end ${
               attachments?.length && !body
-                ? "absolute bottom-[3px] right-[3px] p-[8px] rounded-[8px] bg-(--color-black-50) self-end"
+                ? "!absolute bottom-[4px] right-[4px] p-[8px] rounded-full bg-(--color-black-50) self-end"
                 : ""
             } flex items-center justify-center ${
               isCurrentUser ? "pr-[28px]" : ""
@@ -114,7 +118,13 @@ export default function ChatMessage({
               {timeSend}
             </div>
             {isCurrentUser ? (
-              <div className="absolute right-[3px] top-1/2 flex transform -translate-y-1/2">
+              <div
+                className={`absolute right-[3px] flex ${
+                  attachments?.length && !body
+                    ? "bottom-[5px]"
+                    : "-bottom-[3px]"
+                }`}
+              >
                 <MessageStatus
                   status={status}
                   type={isCurrentUser ? "white" : "accent"}

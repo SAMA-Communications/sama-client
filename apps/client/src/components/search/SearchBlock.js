@@ -6,7 +6,6 @@ import usersService from "@services/usersService";
 
 import ChatList from "@components/search/lists/ChatList";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
-import OvalLoader from "@components/_helpers/OvalLoader";
 import SearchedUser from "@components/search/elements/SearchedUser";
 
 import { selectConversationsEntities } from "@store/values/Conversations";
@@ -25,7 +24,7 @@ export default function SearchBlock({
   isPreviewUserProfile = false,
   isSearchOnlyUsers = false,
 }) {
-  const viewProperty = (v) => ({ display: v ? "block" : "none" });
+  const viewProperty = (v) => ({ display: v ? "flex" : "none" });
 
   const conversations = useSelector(selectConversationsEntities);
 
@@ -94,14 +93,16 @@ export default function SearchBlock({
       className={`h-[80svh] flex-1 mt-[5px] flex items-center justify-center max-xl:w-full max-xl:mt-[0px] max-xl:rounded-[16px] max-xl:bg-(--color-bg-light) ${customClassName}`}
       style={viewProperty(searchText)}
     >
-      {isPending ? (
-        <OvalLoader width={80} height={80} />
-      ) : searchText?.length < 2 ? null : (
+      {searchText?.length < 2 ? null : (
         <CustomScrollBar
           customClassName="w-[400px] max-xl:!w-full"
           childrenClassName="flex flex-col gap-[5px]"
         >
-          {isSearchOnlyUsers ? null : <div>Users</div>}
+          {isSearchOnlyUsers ? null : (
+            <div className="py-[6px] px-[18px] my-[3px] text-black text-p rounded-[8px] bg-(--color-hover-light)">
+              Users
+            </div>
+          )}
           {searchedUsers.map((u) => {
             const isSelected = selectedUsers?.some(
               (uObj) => uObj._id === u._id

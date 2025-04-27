@@ -270,7 +270,7 @@ export default function AttachHub() {
       const countOfLines = e.target.value.split("\n").length - 1;
       inputTextRef.current.style.height = `calc(${
         40 + countOfLines * 20 < 230 ? 40 + countOfLines * 20 : 215
-      }px * var(--base-scale)) `;
+      }px`;
       inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
     }
   };
@@ -309,15 +309,17 @@ export default function AttachHub() {
           </p>
           <CustomScrollBar
             customId={"attach-view__container"}
-            customClassName={"flex flex-col items-center gap-[7px]"}
+            customClassName={"flex flex-col flex-1 items-center"}
+            childrenClassName={
+              "[&::-webkit-scrollbar]:hidden flex flex-col items-center gap-[7px] !mr-[0px] !mb-[0px]"
+            }
             autoHeight={true}
             autoHeightMax={"min(460px, calc(100svh - 300px))"}
           >
             {attachListView}
           </CustomScrollBar>
           <TextAreaInput
-            customId="attach-inputs__message" //::-webkit-scrollbar none
-            customClassName="py-[12px] px-15px resize-none min-h-[40px] h-[40px] max-h-[140px] text-black rounded-[12px] bg-(--color-hover-light)"
+            customClassName="py-[12px] px-[15px] resize-none min-h-[40px] h-[40px] max-h-[140px] text-black rounded-[12px] bg-(--color-hover-light) [&::-webkit-scrollbar]:hidden"
             inputRef={inputTextRef}
             handleInput={handleInput}
             handeOnKeyDown={handeOnKeyDown}

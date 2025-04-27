@@ -60,6 +60,10 @@ main {
   }
 }
 
+.monaco-editor span {
+  font-family: Consolas, "Courier New", monospace;
+}
+
 .editor-validation .editor-tooltip-style {
   padding: 15px 30px !important;
   color: black;
@@ -89,10 +93,6 @@ main {
   top: 4px !important;
 
   border-radius: 3px !important;
-}
-
-#inputMessage::-webkit-scrollbar {
-  display: none;
 }
 
 #chatMessagesScrollable .infinite-scroll-component {

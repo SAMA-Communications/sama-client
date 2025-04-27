@@ -1,5 +1,5 @@
 export default function TextAreaInput({
-  customId,
+  customId = "",
   customClassName = "",
   inputRef,
   handleInput,
@@ -10,8 +10,8 @@ export default function TextAreaInput({
 }) {
   return (
     <textarea
-      id={customId || "inputMessage"}
-      className={`grow py-[18px] text-black resize-none focus:outline-hidden max-xl:disabled:!p-[9px] placeholder:text-(--color-text-dark) placeholder:text-p ${customClassName}`}
+      id={customId}
+      className={`focus:outline-hidden ${customClassName}`}
       ref={inputRef}
       onInput={handleInput}
       onKeyDown={handeOnKeyDown}

@@ -155,7 +155,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
         />
       ) : null}
       <div
-        className={`h-max -mt-[10px] grow flex ${
+        className={`h-max -mt-[10px] grow flex cursor-default ${
           isGroupChat ? "flex-row items-end gap-[15px]" : "flex-col"
         } `}
       >
@@ -165,7 +165,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
         <p
           className={
             isGroupChat
-              ? "py-[2px] px-[10px] rounded-2xl bg-[var(--color-hover-light)] text-gray-500 mb-[9px]"
+              ? "py-[2px] px-[10px] rounded-2xl bg-[var(--color-hover-light)] text-gray-500 mb-[9px] cursor-default"
               : ""
           }
         >
