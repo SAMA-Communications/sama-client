@@ -14,7 +14,7 @@ export default function MenuButtons() {
         onClick={() => addPrefix(pathname + hash, "/profile")}
       />
       <div
-        className="absolute bottom-[19px] right-[20px] pt-[15px] px-[15px] pb-[10px] rounded-[16px] bg-(--color-accent-light)] z-50"
+        className="absolute bottom-[19px] right-[20px] pt-[15px] px-[15px] pb-[10px] rounded-[16px] bg-(--color-accent-light) cursor-pointer z-50"
         onClick={() => addPrefix(pathname + hash, "/create")}
       >
         <CreateChat />

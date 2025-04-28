@@ -64,7 +64,7 @@ export default function ConfirmButton({ page, content }) {
       {isLoginPage ? null : (
         <label
           htmlFor="isAutoAuth"
-          className="w-max text-gray-500 cursor-pointer select-none flex items-center"
+          className="w-full text-gray-500 cursor-pointer select-none flex items-center"
         >
           <input
             className="mr-[5px]"
@@ -77,7 +77,7 @@ export default function ConfirmButton({ page, content }) {
         </label>
       )}
       <button
-        className="w-full mt-[25px] py-[7px] px-[14px] flex justify-center bg-(--color-accent-dark) rounded-lg cursor-pointer"
+        className="w-full sm:mt-[25px] py-[7px] px-[14px] flex justify-center bg-(--color-accent-dark) rounded-lg cursor-pointer"
         disabled={isPending}
         onClick={sendRequest}
       >

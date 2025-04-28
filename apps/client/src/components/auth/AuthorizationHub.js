@@ -17,20 +17,19 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
   const isLoginPage = page === "login";
 
   return (
-    <section className="w-dvw h-dvh flex flex-col justify-center items-center bg-[url(@assets/BGmax.svg)] bg-cover bg-no-repeat bg-center">
+    <section className="w-dvw h-dvh max-sm:pt-[65px] flex flex-col justify-center items-center bg-[url(@assets/BGmax.svg)] bg-cover bg-no-repeat bg-center">
       <div
         className={`relative max-w-[95dvw] w-[1200px] max-lg:w-[min(600px,95dvw)] max-h-[95dvh] h-[800px] max-lg:h-max max-lg:py-[4dvh] p-[20px] flex flex-row justify-center gap-[20px] rounded-[32px] bg-(--color-bg-light) shadow-lg shadow-white-100/90`}
       >
-        <HeaderWaves className="lg:hidden absolute top-0 rounded-t-[32px]" />
-        <div className=" w-1/2 max-lg:w-full self-center flex flex-col gap-[20px] px-[70px] max-xl:p-[18px] justify-center ">
+        <HeaderWaves className="lg:hidden absolute w-full top-0 rounded-t-[32px]" />
+        <div className=" w-1/2 max-lg:w-full self-center flex flex-col gap-[20px] justify-center px-[70px] max-xl:p-[18px] max-sm:p-[5px] z-10">
           <SAMALogo
             customClassName={
-              "lg:hidden w-[190px] bg-(--color-bg-light-90) p-[25px] rounded-[62px] self-center -mt-[120px] shadow-md z-10"
+              "lg:hidden w-[190px] max-sm:w-[130px] bg-(--color-bg-light-90) p-[25px] max-sm:p-[20px] rounded-[60px] max-sm:rounded-full self-center -mt-[120px] shadow-md z-20"
             }
           />
-
           <div className="w-full">
-            <p className="text-h1 max-md:text-h2 !font-medium">
+            <p className="text-h1 max-md:text-h2 max-sm:text-h3 !font-medium">
               {isLoginPage ? "Welcome back!" : "Create an account"}
             </p>
             <p className="text-h6">
@@ -55,7 +54,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
               </p>
             </div>
           ) : null}
-          <div className="mt-[25px] flex-1 flex flex-col gap-[15px]">
+          <div className="sm:mt-[25px] flex-1 flex flex-col gap-[15px]">
             <UserNameInput setState={setContent} />
             <PasswordInput setState={setContent} />
             <ConfirmButton page={page} content={content} />
