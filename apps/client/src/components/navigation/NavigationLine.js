@@ -62,7 +62,15 @@ export default function NavigationLine() {
           navigateTo("/");
         }}
       >
-        <SAMALogo customClassName="w-[58px] h-[58px]" />
+        <SAMALogo
+          customClassName="w-[58px] h-[58px]"
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{
+            opacity: 1,
+            scale: [0, 1.2, 1],
+            transition: { duration: 0.5 },
+          }}
+        />
       </div>
       <div className="flex flex-col gap-[20px] items-center justify-center">
         <div

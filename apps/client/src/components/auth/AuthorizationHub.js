@@ -14,11 +14,12 @@ import ConfirmButton from "@components/auth/elements/ConfirmButton";
 import { getIsMobileView } from "@store/values/IsMobileView.js";
 
 import HeaderWaves from "@icons/_helpers/HeaderWaves.svg?react";
+import Discord from "@icons/socials/DiscordIcon.svg?react";
 import Medium from "@icons/socials/MediumIcon.svg?react";
 import GitHub from "@icons/socials/GitHubIcon.png";
 
 export default function AuthorizationHub({ showDemoMessage = false }) {
-  const [page, setPage] = useState("signup");
+  const [page, setPage] = useState("login");
   const [content, setContent] = useState({});
 
   const isMobileView = useSelector(getIsMobileView);
@@ -34,6 +35,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
           scale: [0, 1.1, 1],
           transition: { delay: 0.1, duration: 0.9 },
         }}
+        exit={{ opacity: [1, 0] }}
       >
         <HeaderWaves className="lg:hidden absolute w-full top-0 rounded-t-[32px]" />
         <m.div
@@ -56,7 +58,13 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
               transition: { delay: 1, duration: 0.5 },
             }}
           />
-          <div className="w-full">
+          <m.div
+            key={isLoginPage ? "login" : "signup"}
+            className="w-full"
+            animate={{ scale: [1.02, 1] }}
+            exit={{ scale: [1, 1.02] }}
+            transition={{ duration: 0.2 }}
+          >
             <p className="text-h1 max-md:text-h2 max-sm:text-h3 !font-medium">
               {isLoginPage ? "Welcome back!" : "Create an account"}
             </p>
@@ -70,7 +78,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
                 {isLoginPage ? "Sign up" : "Log in"}
               </span>
             </p>
-          </div>
+          </m.div>
           {showDemoMessage ? (
             <div className="py-[10px] px-[20px] text-white text-center rounded-lg bg-(--color-accent-dark) ">
               <p className="!font-light text-h6">Welcome to the SAMA demo.</p>
@@ -110,6 +118,15 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
             >
               <Medium className="w-[28px] h-[28px]" />
               <p className="!font-light">Medium</p>
+            </a>
+            <a
+              href="https://discord.gg/WSCQhFg65J"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex flex-row gap-[10px] justify-center items-center py-[7px] px-[14px] border border-gray-700/30 rounded-lg hover:bg-(--color-hover-light) transition-colors cursor-pointer"
+            >
+              <Discord className="w-[28px] h-[28px]" />
+              <p className="!font-light">Discord</p>
             </a>
           </div>
         </m.div>

@@ -1,9 +1,7 @@
 import { cloneElement, useMemo } from "react";
-import { getIsMobileView } from "@store/values/IsMobileView";
-import { getIsTabletView } from "@store/values/IsTabletView";
-import { selectConversationsEntities } from "@store/values/Conversations";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { AnimatePresence, motion as m } from "framer-motion";
 
 import ChatForm from "@components/hub/ChatForm";
 import ChatInfo from "@components/info/ChatInfo";
@@ -17,6 +15,10 @@ import NavigationLine from "@components/navigation/NavigationLine";
 import OtherUserProfile from "@components/info/OtherUserProfile";
 import UserProfile from "@components/info/UserProfile";
 import UsersSelectModalHub from "@components/modals/UsersSelectModalHub";
+
+import { getIsMobileView } from "@store/values/IsMobileView";
+import { getIsTabletView } from "@store/values/IsTabletView";
+import { selectConversationsEntities } from "@store/values/Conversations";
 
 import SHub from "@skeletons/hub/SHub";
 
@@ -83,10 +85,15 @@ export default function Main() {
     }
 
     return (
-      <section className="p-[30px] mr-[20px] my-[20px] flex flex-1 flex-row gap-[15px] rounded-[48px] bg-(--color-bg-light)">
+      <m.section
+        className="p-[30px] mr-[20px] my-[20px] flex flex-1 flex-row gap-[15px] rounded-[48px] bg-(--color-bg-light)"
+        animate={{ scale: [0.4, 1.02, 1], opacity: [0, 1] }}
+        exit={{ scale: 0 }}
+        transition={{ duration: 1 }}
+      >
         {location.pathname.includes("/profile") ? null : <ChatList />}
         <ChatForm />
-      </section>
+      </m.section>
     );
   }, [location, isMobileView, isTabletView, conversations]);
 
@@ -96,10 +103,12 @@ export default function Main() {
 
   return (
     <>
-      {isMobileView ? null : <NavigationLine />}
-      {additionalContainerLeft}
-      {hubContainer}
-      {additionalContainerRight}
+      <AnimatePresence mode="wait">
+        {isMobileView ? null : <NavigationLine />}
+        {additionalContainerLeft}
+        {hubContainer}
+        {additionalContainerRight}
+      </AnimatePresence>
     </>
   );
 }
