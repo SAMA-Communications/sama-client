@@ -7,6 +7,7 @@ import UserNameInput from "@components/auth/elements/UserNameInput";
 import ConfirmButton from "@components/auth/elements/ConfirmButton";
 
 import HeaderWaves from "@icons/_helpers/HeaderWaves.svg?react";
+import Discord from "@icons/socials/DiscordIcon.svg?react";
 import Medium from "@icons/socials/MediumIcon.svg?react";
 import GitHub from "@icons/socials/GitHubIcon.png";
 
@@ -82,6 +83,15 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
             >
               <Medium className="w-[28px] h-[28px]" />
               <p className="!font-light">Medium</p>
+            </a>
+            <a
+              href="https://discord.gg/WSCQhFg65J"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex flex-row gap-[10px] justify-center items-center py-[7px] px-[14px] border border-gray-700/30 rounded-lg hover:bg-(--color-hover-light) transition-colors cursor-pointer"
+            >
+              <Discord className="w-[28px] h-[28px]" />
+              <p className="!font-light">Discord</p>
             </a>
           </div>
         </div>
