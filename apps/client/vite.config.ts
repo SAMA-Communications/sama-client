@@ -26,6 +26,7 @@ export default defineConfig({
       "@services": createPath("src/services"),
 
       "@icons": createPath("src/assets/icons"),
+      "@assets": createPath("src/assets"),
       "@styles": createPath("src/styles"),
 
       "@lib": createPath("src/lib"),
