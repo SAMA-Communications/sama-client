@@ -1,4 +1,4 @@
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, LazyMotion, domAnimation } from "motion/react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Suspense, lazy, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -116,22 +116,26 @@ export default function App() {
   }, []);
 
   return (
-    <Suspense
-      fallback={localStorage.getItem("sessionId") ? <SMain /> : <SPageLoader />}
-    >
-      {isContextClicked ? (
-        <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
-      ) : null}
+    <LazyMotion features={domAnimation}>
       <AnimatePresence initial={false} mode="wait">
-        <Routes location={history.location}>
-          <Route path="/authorization" element={<AuthorizationHub />} />
-          <Route
-            path="/demo"
-            element={<AuthorizationHub showDemoMessage={true} />}
-          />
-          <Route path="/*" element={<Main />} />
-        </Routes>
+        <Suspense
+          fallback={
+            localStorage.getItem("sessionId") ? <SMain /> : <SPageLoader />
+          }
+        >
+          {isContextClicked ? (
+            <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
+          ) : null}
+          <Routes location={history.location}>
+            <Route path="/authorization" element={<AuthorizationHub />} />
+            <Route
+              path="/demo"
+              element={<AuthorizationHub showDemoMessage={true} />}
+            />
+            <Route path="/*" element={<Main />} />
+          </Routes>
+        </Suspense>
       </AnimatePresence>
-    </Suspense>
+    </LazyMotion>
   );
 }
