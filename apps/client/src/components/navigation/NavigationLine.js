@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import usersService from "@services/usersService";
 
-import SAMAminiLogo from "@components/static/SAMAminiLogo";
+import SAMALogo from "@components/static/SAMALogo";
 import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 
 import { getCurrentUserFromParticipants } from "@store/values/Participants";
@@ -62,7 +62,7 @@ export default function NavigationLine() {
           navigateTo("/");
         }}
       >
-        <SAMAminiLogo />
+        <SAMALogo customClassName="w-[64px] h-[64px]" />
       </div>
       <div className="flex flex-col gap-[20px] items-center justify-center">
         <div
