@@ -20,16 +20,38 @@ export default function ChatEditorCode() {
   );
 
   useEffect(() => {
-    conversationHandlerService
-      .getHandlerFromLocalStorage(selectedCid)
-      .then((localStorageCode) => {
-        if (localStorageCode) {
-          setEditorCode(localStorageCode);
-          // return;
-        }
+    const fetchAndSyncHandler = async () => {
+      const localStorageCode =
+        await conversationHandlerService.getHandlerFromLocalStorage(
+          selectedCid
+        );
+      if (localStorageCode) {
+        setEditorCode(localStorageCode);
+      } else {
         conversationHandlerService.syncConversationHandler(selectedCid);
-      });
+      }
+    };
+    fetchAndSyncHandler();
   }, [selectedCid]);
+
+  useEffect(() => {
+    if (!monaco) return;
+
+    const updateModelValue = async () => {
+      const localStorageCode =
+        await conversationHandlerService.getHandlerFromLocalStorage(
+          selectedCid
+        );
+      const uri = monaco.Uri.parse(`file://${selectedCid}`);
+      const model = monaco.editor.getModel(uri);
+
+      if (model) {
+        model.setValue(localStorageCode || editorCode || "");
+      }
+    };
+
+    setTimeout(() => updateModelValue(), 100);
+  }, [monaco, editorCode]);
 
   useEffect(() => {
     if (selectedConversation.handler_options) {
@@ -87,17 +109,6 @@ export default function ChatEditorCode() {
     // model.onDidChangeContent(() => updateRestrictions());
     // constrainedInstance.addRestrictionsTo(model, restrictions);
   };
-
-  useEffect(() => {
-    setTimeout(() => {
-      const uri = monaco?.Uri.parse(`file://${selectedCid}`);
-      const model = monaco?.editor.getModel(uri);
-
-      if (model && editorCode && typeof editorCode === "string") {
-        model.setValue(editorCode);
-      }
-    }, 300);
-  }, [monaco, editorCode]);
 
   return (
     <div className="relative flex grow-3 items-end">

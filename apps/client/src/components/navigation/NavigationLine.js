@@ -62,7 +62,7 @@ export default function NavigationLine() {
           navigateTo("/");
         }}
       >
-        <SAMALogo customClassName="w-[64px] h-[64px]" />
+        <SAMALogo customClassName="w-[58px] h-[58px]" />
       </div>
       <div className="flex flex-col gap-[20px] items-center justify-center">
         <div

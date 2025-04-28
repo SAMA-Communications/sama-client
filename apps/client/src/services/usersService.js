@@ -164,9 +164,7 @@ class UsersService {
       await performLogoutRequest();
       throw new Error("User logout error");
     } finally {
-      localStorage.removeItem("sessionId");
-      localStorage.removeItem("sessionExpiredAt");
-      localStorage.removeItem("userData");
+      localStorage.clear();
     }
   }
 
