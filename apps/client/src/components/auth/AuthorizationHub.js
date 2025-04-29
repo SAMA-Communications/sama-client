@@ -27,7 +27,10 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
   const isLoginPage = page === "login";
 
   return (
-    <section className="w-dvw h-dvh flex flex-col justify-center items-center bg-[#DBDCFC] bg-cover bg-no-repeat bg-center">
+    <m.section
+      className="w-dvw h-dvh flex flex-col justify-center items-center bg-[#DBDCFC] bg-cover bg-no-repeat bg-center"
+      exit={{ opacity: 0, y: -20, transition: { duration: 3 } }}
+    >
       <AnimatedBGbig customClassName="absolute w-dvw h-dvh overflow-hidden z-0" />
       <m.div
         className={`relative max-w-[95dvw] w-[1200px] max-lg:w-[min(600px,95dvw)] max-h-[95dvh] h-[800px] max-lg:h-max max-lg:py-[4dvh] p-[20px] flex flex-row justify-center gap-[20px] rounded-[32px] bg-(--color-bg-light) shadow-lg shadow-white-100/90`}
@@ -182,6 +185,6 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
           </div>
         </div>
       </m.div>
-    </section>
+    </m.section>
   );
 }

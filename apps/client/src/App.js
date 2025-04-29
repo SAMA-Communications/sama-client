@@ -1,4 +1,9 @@
-import { AnimatePresence, LazyMotion, domAnimation } from "motion/react";
+import {
+  AnimatePresence,
+  LazyMotion,
+  domAnimation,
+  motion,
+} from "motion/react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Suspense, lazy, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -117,25 +122,40 @@ export default function App() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <AnimatePresence initial={false} mode="wait">
-        <Suspense
-          fallback={
-            localStorage.getItem("sessionId") ? <SMain /> : <SPageLoader />
-          }
-        >
-          {isContextClicked && (
-            <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
-          )}
-          <Routes location={history.location}>
-            <Route path="/authorization" element={<AuthorizationHub />} />
-            <Route
-              path="/demo"
-              element={<AuthorizationHub showDemoMessage={true} />}
-            />
-            <Route path="/*" element={<Main />} />
-          </Routes>
-        </Suspense>
+      {/* <Suspense
+        fallback={
+          localStorage.getItem("sessionId") ? <SMain /> : <SPageLoader />
+        }
+      > */}
+      {isContextClicked && (
+        <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
+      )}
+      <AnimatePresence mode="wait">
+        <Routes location={history.location} key={history.location.pathname}>
+          <Route
+            path="/authorization"
+            element={
+              <motion.div
+                className="bg-(--color-bg-dark)"
+                initial={{ opacity: 1 }}
+                exit={{
+                  opacity: 0,
+                  scale: [1, 0.5],
+                  transition: { duration: 0.4 },
+                }}
+              >
+                <AuthorizationHub />
+              </motion.div>
+            }
+          />
+          <Route
+            path="/demo"
+            element={<AuthorizationHub showDemoMessage={true} />}
+          />
+          <Route path="/*" element={<Main />} />
+        </Routes>
       </AnimatePresence>
+      {/* </Suspense> */}
     </LazyMotion>
   );
 }

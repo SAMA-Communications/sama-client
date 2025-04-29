@@ -95,6 +95,7 @@ export default function Main() {
     return (
       <m.section
         className="p-[30px] mr-[20px] my-[20px] flex flex-1 flex-row gap-[15px] rounded-[48px] bg-(--color-bg-light)"
+        initial={{ opacity: 0 }}
         animate={{ scale: [0.8, 1.02, 1], opacity: [0, 1] }}
         transition={{ duration: 0.8 }}
       >
