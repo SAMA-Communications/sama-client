@@ -136,11 +136,9 @@ export default function App() {
             path="/authorization"
             element={
               <motion.div
-                className="bg-(--color-bg-dark)"
-                initial={{ opacity: 1 }}
+                className="bg-[#DBDCFC]"
                 exit={{
-                  opacity: 0,
-                  scale: [1, 0.5],
+                  backgroundColor: "#1b1b1d",
                   transition: { duration: 0.4 },
                 }}
               >
