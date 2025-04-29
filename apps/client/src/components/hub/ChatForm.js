@@ -8,6 +8,7 @@ import {
 } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { motion as m } from "framer-motion";
 
 import api from "@api/api";
 
@@ -133,7 +134,11 @@ export default function ChatForm() {
   }, [selectedCID, currentTab, chatMessagesBlock]);
 
   return (
-    <section className="flex flex-col flex-grow max-md:p-[4svw] md:max-xl:my-[20px] md:max-xl:mr-[20px] max-xl:p-[20px] md:rounded-[32px] bg-(--color-bg-light)">
+    <m.section
+      className="flex flex-col flex-grow max-md:p-[4svw] md:max-xl:my-[20px] md:max-xl:mr-[20px] max-xl:p-[20px] md:rounded-[32px] bg-(--color-bg-light)"
+      animate={{ scale: [1.02, 1], y: [3, 0], opacity: [0, 1] }}
+      transition={{ delay: 0.3, duration: 0.8 }}
+    >
       {selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />
@@ -150,6 +155,6 @@ export default function ChatForm() {
           Select a conversation to start chatting
         </p>
       )}
-    </section>
+    </m.section>
   );
 }

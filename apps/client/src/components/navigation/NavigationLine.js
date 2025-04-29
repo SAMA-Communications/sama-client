@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { useMemo } from "react";
+import { motion as m } from "framer-motion";
 
 import usersService from "@services/usersService";
 
@@ -53,6 +54,16 @@ export default function NavigationLine() {
       ];
     }, [pathname]);
 
+  const showItem = (index) => ({
+    hidden: { opacity: 0, scale: 0 },
+    visible: {
+      opacity: 1,
+      scale: [0, 1.2, 1],
+      transition: { duration: 0.5, delay: 0.1 + index * 0.27 },
+    },
+    tap: { opacity: 1, scale: [1, 0.9, 1] },
+  });
+
   return (
     <aside className="w-[84px] px-[10px] flex flex-col justify-between bg-transparent select-none pt-[20px] pb-[20px]">
       <div
@@ -73,7 +84,7 @@ export default function NavigationLine() {
         />
       </div>
       <div className="flex flex-col gap-[20px] items-center justify-center">
-        <div
+        <m.div
           onClick={() => {
             const currentPath =
               isTabletView && hash.includes("/info")
@@ -81,7 +92,12 @@ export default function NavigationLine() {
                 : pathname + hash;
             addPrefix(currentPath, "/profile");
           }}
-          className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) flex items-center justify-center ${isProfilePageActive}`}
+          className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) transition-[background-color] duration-200 flex items-center justify-center ${isProfilePageActive}`}
+          variants={showItem(3)}
+          whileTap="tap"
+          initial="hidden"
+          animate="visible"
+          layout
         >
           <span className="w-full h-full text-h5 text-black rounded-[16px] bg-(--color-bg-light) overflow-hidden flex items-center justify-center">
             <DynamicAvatar
@@ -91,8 +107,8 @@ export default function NavigationLine() {
               altText={"User's Profile"}
             />
           </span>
-        </div>
-        <div
+        </m.div>
+        <m.div
           onClick={() => {
             if (isTabletView || isMobileView) {
               dispatch(setSelectedConversation({}));
@@ -101,26 +117,38 @@ export default function NavigationLine() {
               navigateTo(`/${hash || ""}`);
             }
           }}
-          className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) flex items-center justify-center ${isChatListActive}`}
+          className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) transition-[background-color] duration-200 flex items-center justify-center ${isChatListActive}`}
+          variants={showItem(2)}
+          whileTap="tap"
+          initial="hidden"
+          animate="visible"
         >
           <List />
-        </div>
-        <div
+        </m.div>
+        <m.div
           onClick={() => addPrefix(pathname + hash, "/create")}
-          className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) flex items-center justify-center ${isCreatePageActive}`}
+          className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) transition-[background-color] duration-200 flex items-center justify-center ${isCreatePageActive}`}
+          variants={showItem(1)}
+          whileTap={{ scale: 0.95 }}
+          initial="hidden"
+          animate="visible"
         >
           <Create className="w-[36px]" />
-        </div>
+        </m.div>
       </div>
-      <div
+      <m.div
         onClick={() => {
           sendLogout();
           navigateTo("/authorization");
         }}
-        className="w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) flex items-center justify-center"
+        className="w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) transition-[background-color] duration-200 flex items-center justify-center"
+        whileTap={{ scale: [1, 0.95, 1] }}
+        variants={showItem(0)}
+        initial="hidden"
+        animate="visible"
       >
         <Logout />
-      </div>
+      </m.div>
     </aside>
   );
 }

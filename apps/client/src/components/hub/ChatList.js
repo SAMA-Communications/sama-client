@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { motion as m } from "framer-motion";
 
 import ConversationItemList from "@components/hub/chatList/ConversationItemList";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
@@ -41,7 +42,21 @@ export default function ChatList() {
   }, [filteredConversations]);
 
   return (
-    <section className="w-dvw mt-[5px] flex gap-[10px] flex-col justify-start items-center max-xl:flex-1 xl:w-[400px] md:max-xl:mb-[20px] md:max-xl:mr-[20px] ">
+    <m.section
+      className="w-dvw mt-[5px] flex gap-[10px] flex-col justify-start items-center max-xl:flex-1 xl:w-[400px] md:max-xl:mb-[20px] md:max-xl:mr-[20px] "
+      animate={{
+        scale: [1.02, 1],
+        y: [3, 0],
+        opacity: [0, 1],
+      }}
+      transition={{ delay: 0.4, duration: 0.7, times: [0, 0.1, 0.7, 1] }}
+      exit={{
+        width: 0,
+        opacity: [1, 0],
+        x: [0, 15],
+        transition: { duration: 0.7 },
+      }}
+    >
       {isMobileView ? <MenuButtons /> : null}
       <SearchInput
         customClassName="max-w-full"
@@ -66,6 +81,6 @@ export default function ChatList() {
           {chatsList}
         </CustomScrollBar>
       )}
-    </section>
+    </m.section>
   );
 }

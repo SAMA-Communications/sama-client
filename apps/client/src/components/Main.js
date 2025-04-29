@@ -25,13 +25,15 @@ import SHub from "@skeletons/hub/SHub";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const blockMap = {
-  "/info": <ChatInfo />,
-  "/user": <OtherUserProfile />,
-  "/add": <UsersSelectModalHub type={"add_participants"} />,
-  "/create": <UsersSelectModalHub />,
-  "/attach": <AttachHub />,
-  "/media": <MediaHub />,
-  "/edit": <EditModalHub />,
+  "/info": <ChatInfo key="chatInfo" />,
+  "/user": <OtherUserProfile key="otherUserProfile" />,
+  "/add": (
+    <UsersSelectModalHub type={"add_participants"} key="usersSelectModalHub" />
+  ),
+  "/create": <UsersSelectModalHub key="usersSelectModalHub" />,
+  "/attach": <AttachHub key="attachHub" />,
+  "/media": <MediaHub key="mediaHub" />,
+  "/edit": <EditModalHub key="editModalHub" />,
 };
 
 export default function Main() {
@@ -63,9 +65,11 @@ export default function Main() {
         .length
     ) {
       if (isMobileView) {
-        return location.pathname.includes("/profile") ? null : <EmptyHub />;
+        return location.pathname.includes("/profile") ? null : (
+          <EmptyHub key="emtyHub" />
+        );
       }
-      return <EmptyHub />;
+      return <EmptyHub key="emtyHub" />;
     }
 
     if (isMobileView) {
@@ -73,37 +77,46 @@ export default function Main() {
 
       return !!location.hash ? (
         keys.includes("/user") || keys.includes("/info") ? null : (
-          <ChatForm />
+          <ChatForm key="chatFrom" />
         )
       ) : location.pathname.includes("/profile") ? null : (
-        <ChatList />
+        <ChatList key="chatList" />
       );
     }
 
     if (isTabletView) {
-      return !!location.hash ? <ChatForm /> : <ChatList />;
+      return !!location.hash ? (
+        <ChatForm key="chatFrom" />
+      ) : (
+        <ChatList key="chatList" />
+      );
     }
 
     return (
       <m.section
         className="p-[30px] mr-[20px] my-[20px] flex flex-1 flex-row gap-[15px] rounded-[48px] bg-(--color-bg-light)"
-        animate={{ scale: [0.4, 1.02, 1], opacity: [0, 1] }}
-        exit={{ scale: 0 }}
-        transition={{ duration: 1 }}
+        animate={{ scale: [0.8, 1.02, 1], opacity: [0, 1] }}
+        transition={{ duration: 0.8 }}
       >
-        {location.pathname.includes("/profile") ? null : <ChatList />}
-        <ChatForm />
+        <AnimatePresence>
+          {location.pathname.includes("/profile") ? null : (
+            <ChatList key="chatList" />
+          )}
+          <ChatForm key="chatFrom" />
+        </AnimatePresence>
       </m.section>
     );
   }, [location, isMobileView, isTabletView, conversations]);
 
   const additionalContainerLeft = useMemo(() => {
-    return location.pathname.includes("/profile") ? <UserProfile /> : null;
+    return location.pathname.includes("/profile") ? (
+      <UserProfile key="userProfile" />
+    ) : null;
   }, [location]);
 
   return (
     <>
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {isMobileView ? null : <NavigationLine />}
         {additionalContainerLeft}
         {hubContainer}

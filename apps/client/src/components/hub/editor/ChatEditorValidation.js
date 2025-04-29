@@ -2,6 +2,7 @@ import { Tooltip } from "react-tooltip";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMonaco } from "@monaco-editor/react";
 import { useSelector, useDispatch } from "react-redux";
+import { motion as m } from "framer-motion";
 
 import conversationHandlerService from "@services/conversationHandlerService.js";
 import { debounce } from "@hooks/debounce.js";
@@ -95,6 +96,7 @@ export default function ChatEditorValidation({ setLogs }) {
         const handleEditorChange = debounce(() => {
           setValidationStatus(null);
           const editorCode = getEditorCode();
+          if (!editorCode) return;
           localStorage.setItem(
             `conversation_handler_${selectedCid}`,
             editorCode
@@ -171,22 +173,24 @@ export default function ChatEditorValidation({ setLogs }) {
           defaultValue={"message"}
         />
       </div>
-      <button
+      <m.button
         className="h-full mr-6.5 px-5 bg-[var(--color-accent-dark)] rounded-lg text-white cursor-pointer"
         onClick={validateCode}
+        whileTap={{ scale: 0.8 }}
       >
         Check
-      </button>
-      <button
+      </m.button>
+      <m.button
         className={`h-full px-5 rounded-lg text-white cursor-pointer ${
           validationStatus ? "bg-[var(--color-accent-dark)]" : "bg-gray-500"
         } flex items-center gap-2`}
         disabled={validationStatus !== true}
         onClick={saveSchemeCode}
+        whileTap={{ scale: 0.8 }}
       >
         <Save />
         Save
-      </button>
+      </m.button>
     </div>
   );
 }

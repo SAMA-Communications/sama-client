@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { motion as m } from "framer-motion";
 
 import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 
@@ -23,7 +24,7 @@ export default function ParticipantInChat({
   const isCurrentUser = currentUserId === userObject._id;
 
   return (
-    <div
+    <m.div
       className={`p-[10px] flex gap-[20px] items-center rounded-[12px] tensition-[background] duration-200 cursor-pointer hover:bg-(--color-accent-dark)`}
       onClick={() =>
         isCurrentUser
@@ -45,6 +46,14 @@ export default function ParticipantInChat({
           })
         );
       }}
+      initial={{ opacity: 0, scale: 1.05 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.7 }}
+      whileInView={{ opacity: 1, scalle: 1 }}
+      whileHover={{ y: -2, scale: 0.98, transition: { duration: 0.1 } }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ duration: 0.3 }}
+      layout
     >
       <div className="w-[70px] h-[70px] text-h4 rounded-[8px] bg-(--color-bg-light) flex items-center justify-center overflow-hidden">
         <DynamicAvatar
@@ -59,6 +68,6 @@ export default function ParticipantInChat({
         </p>
         {isOwner ? <span className="text-black text-h6">admin</span> : null}
       </div>
-    </div>
+    </m.div>
   );
 }

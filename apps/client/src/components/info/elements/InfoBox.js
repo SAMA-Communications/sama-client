@@ -1,3 +1,5 @@
+import { motion as m } from "framer-motion";
+
 import Email from "@icons/media/Email.svg?react";
 import Phone from "@icons/media/Phone.svg?react";
 import User from "@icons/users/User.svg?react";
@@ -10,6 +12,10 @@ export default function InfoBox({
   value,
   hideIfNull = false,
   onClickFunc,
+  variants = {},
+  initial = {},
+  animate = {},
+  exit = {},
 }) {
   if (!value && hideIfNull) {
     return;
@@ -21,9 +27,13 @@ export default function InfoBox({
   };
 
   return (
-    <div
+    <m.div
       className={`py-[15px] px-[10px] flex flex-col gap-[10px] rounded-[16px] cursor-pointer ${modifier} hover:bg-(--color-white) max-md:p-[10px] max-md:gap-[5px]`}
       onClick={onClickFunc}
+      variants={variants}
+      initial={initial}
+      animate={animate}
+      exit={exit}
     >
       <div className={`flex gap-[10px] items-center`}>
         {infoIcons[iconType]}
@@ -38,6 +48,6 @@ export default function InfoBox({
           </span>
         )}
       </p>
-    </div>
+    </m.div>
   );
 }

@@ -2,6 +2,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { domAnimation, LayoutGroup, LazyMotion } from "framer-motion";
 
 import api from "@api/api";
 
@@ -139,35 +140,39 @@ export default function MessagesList() {
       hasMore={true && needToGetMoreMessage.current}
       scrollableTarget="chatMessagesScrollable"
     >
-      {messages.map((msg, i) =>
-        msg.x?.type ? (
-          <InformativeMessage
-            key={msg._id}
-            params={msg.x}
-            text={msg.body}
-            isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
-          />
-        ) : (
-          <ChatMessage
-            key={msg._id}
-            message={msg}
-            sender={participants[msg.from]}
-            currentUserId={currentUserId}
-            isPrevMesssageYours={
-              i > 0
-                ? messages[i - 1].from === messages[i].from &&
-                  !messages[i - 1].x?.type
-                : false
-            }
-            isNextMessageYours={
-              i < messages.length - 1
-                ? messages[i].from === messages[i + 1].from &&
-                  !messages[i + 1].x?.type
-                : false
-            }
-          />
-        )
-      )}
+      <LazyMotion features={domAnimation}>
+        <LayoutGroup id="chatMessagesListLayoutGroup">
+          {messages.map((msg, i) =>
+            msg.x?.type ? (
+              <InformativeMessage
+                key={msg._id}
+                params={msg.x}
+                text={msg.body}
+                isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
+              />
+            ) : (
+              <ChatMessage
+                key={msg._id}
+                message={msg}
+                sender={participants[msg.from]}
+                currentUserId={currentUserId}
+                isPrevMesssageYours={
+                  i > 0
+                    ? messages[i - 1].from === messages[i].from &&
+                      !messages[i - 1].x?.type
+                    : false
+                }
+                isNextMessageYours={
+                  i < messages.length - 1
+                    ? messages[i].from === messages[i + 1].from &&
+                      !messages[i + 1].x?.type
+                    : false
+                }
+              />
+            )
+          )}
+        </LayoutGroup>
+      </LazyMotion>
     </InfiniteScroll>
   );
 }

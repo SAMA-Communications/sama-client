@@ -123,9 +123,9 @@ export default function App() {
             localStorage.getItem("sessionId") ? <SMain /> : <SPageLoader />
           }
         >
-          {isContextClicked ? (
+          {isContextClicked && (
             <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
-          ) : null}
+          )}
           <Routes location={history.location}>
             <Route path="/authorization" element={<AuthorizationHub />} />
             <Route

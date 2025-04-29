@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { AnimatePresence, motion as m } from "framer-motion";
 
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchBar";
@@ -15,29 +16,48 @@ export default function EmptyHub() {
   return (
     <>
       {isMobileView ? <MenuButtons /> : null}
-      <section
-        className={`flex flex-1 flex-col gap-[20px] md:my-[30px] md:mr-[30px] md:py-[60px] items-center rounded-[48px] bg-(--color-bg-light) ${
-          inputText ? "justify-start" : "justify-center"
-        } max-md:w-full max-md:h-[calc(100dvh-60px)] max-md:mt-[60px] max-md:pt-[15px] max-md:rounded-b-[0] max-md:rounded-t-[16px]`}
+      <m.section
+        className={`flex flex-1 flex-col gap-[20px] md:my-[30px] md:mr-[30px] md:py-[60px] items-center justify-center rounded-[48px] bg-(--color-bg-light) max-md:w-full max-md:h-[calc(100dvh-60px)] max-md:mt-[60px] max-md:pt-[15px] max-md:rounded-b-[0] max-md:rounded-t-[16px]`}
+        animate={{ scale: [0.8, 1.02, 1], opacity: [0, 1] }}
+        transition={{ duration: 0.8 }}
       >
-        <div className={`overflow-hidden ${inputText ? "hidden" : "block"}`}>
-          <p className="mb-[20px] text-center text-[58px] max-xl:text-h1">
-            You don't have any chats yet.
-          </p>
-        </div>
+        <AnimatePresence>
+          {inputText ? null : (
+            <m.div
+              className={`overflow-hidden`}
+              initial={{ height: 0, opacity: 1, marginBottom: -20 }}
+              animate={{
+                opacity: 1,
+                height: 107,
+                marginBottom: 0,
+                transition: { delay: 0.6 },
+              }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <p className="mb-[20px] text-center text-[58px] max-xl:text-h1">
+                You don't have any chats yet.
+              </p>
+            </m.div>
+          )}
+        </AnimatePresence>
         <SearchInput
           customLastClassName="max-md:w-full"
           shadowText={"Search"}
           setState={setInputText}
           isLargeSize={true}
         />
-        <SearchBlock
-          customClassName="w-[400px]"
-          searchText={inputText}
-          isPreviewUserProfile={true}
-          isSearchOnlyUsers={true}
-        />
-      </section>
+        <AnimatePresence>
+          {inputText && (
+            <SearchBlock
+              customClassName="w-[400px]"
+              searchText={inputText}
+              isPreviewUserProfile={true}
+              isSearchOnlyUsers={true}
+            />
+          )}
+        </AnimatePresence>
+      </m.section>
     </>
   );
 }
