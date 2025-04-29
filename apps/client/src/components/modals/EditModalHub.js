@@ -1,6 +1,7 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { motion as m } from "framer-motion";
 
 import conversationService from "@services/conversationsService";
 import usersService from "@services/usersService";
@@ -21,6 +22,7 @@ export default function EditModalHub() {
   const dispatch = useDispatch();
   const { pathname, hash, search } = useLocation();
 
+  const [type, setType] = useState(null);
   const [content, setContent] = useState({});
 
   const addFieldToEdit = (field, value) =>
@@ -44,7 +46,12 @@ export default function EditModalHub() {
     },
   };
 
-  const type = (search || hash).split("=")[1];
+  useEffect(() => {
+    const newType = (search || hash).split("=")[1];
+    const delay = newType ? "0" : "300";
+    setTimeout(() => setType((search || hash).split("=")[1]), delay);
+  }, [search, hash]);
+
   const { component, title, style } = types[type] || {};
 
   const closeModal = useCallback(
@@ -87,9 +94,19 @@ export default function EditModalHub() {
   useKeyDown(KEY_CODES.ENTER, sendRequest);
 
   return (
-    <div className="absolute top-[0px] w-dvw h-dvh bg-(--color-black-50) flex items-center justify-center">
-      <div
+    <m.div
+      className="absolute top-[0px] w-dvw h-dvh bg-(--color-black-50) flex items-center justify-center"
+      initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+      animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+      transition={{ duration: 0.2 }}
+    >
+      <m.div
         className={`p-[30px] flex flex-col gap-[20px] rounded-[32px] bg-(--color-bg-light) max-md:w-[94svw] max-md:p-[20px] ${style}`}
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1, transition: { delay: 0.1 } }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ duration: 0.2 }}
       >
         <p className="text-h5 !font-normal text-black">{title}</p>
         <div className="flex flex-col gap-[15px]">{component}</div>
@@ -107,7 +124,7 @@ export default function EditModalHub() {
             Save
           </p>
         </div>
-      </div>
-    </div>
+      </m.div>
+    </m.div>
   );
 }

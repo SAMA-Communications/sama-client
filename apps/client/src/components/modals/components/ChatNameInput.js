@@ -37,7 +37,7 @@ export default function ChatNameInput({ setState, setImage, closeWindow }) {
     <>
       <div className="flex flex-1 flex-row gap-[20px]">
         <div
-          className="relative w-[100px] h-[100px] rounded-[24px] bg-(--color-bg-dark) cursor-pointer flex items-center justify-center"
+          className="relative w-[100px] h-[100px] rounded-[24px] bg-(--color-bg-dark) cursor-pointer flex items-center justify-center overflow-hidden"
           onClick={pickFileClick}
         >
           <span

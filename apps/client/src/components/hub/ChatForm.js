@@ -32,6 +32,7 @@ import {
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
 import { setClicked } from "@store/values/ContextMenu";
+import { getIsMobileView } from "@store/values/IsMobileView.js";
 
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import { CHAT_CONTENT_TABS } from "@utils/global/chatContentTabs.js";
@@ -43,6 +44,7 @@ export default function ChatForm() {
 
   const isUserLogin = useSelector(getUserIsLoggedIn);
   const isTabInFocus = useSelector(getIsTabInFocus);
+  const isMobileView = useSelector(getIsMobileView);
 
   const conversations = useSelector(selectConversationsEntities);
   const selectedConversation = useSelector(getConverastionById);
@@ -55,7 +57,7 @@ export default function ChatForm() {
 
   const [currentTab, setCurrentTab] = useState(CHAT_CONTENT_TABS.MESSAGES);
   const isEnableProgrammableChat =
-    import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true";
+    import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true" && !isMobileView;
 
   const chatMessagesBlock = useRef();
 

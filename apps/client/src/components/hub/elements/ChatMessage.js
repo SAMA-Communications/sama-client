@@ -54,7 +54,7 @@ export default function ChatMessage({
           <div
             className={`w-[46px] h-[46px] uppercase text-black rounded-[16px] bg-(--color-hover-light) flex items-center justify-center ${
               isCurrentUser ? "!text-white !bg-(--color-accent-dark)" : ""
-            }`}
+            } overflow-hidden`}
             onClick={openUserProfile}
           >
             <MessageUserIcon

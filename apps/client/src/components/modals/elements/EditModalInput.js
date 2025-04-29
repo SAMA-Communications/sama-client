@@ -5,12 +5,10 @@ export default function EditModalInput({
   onChageFunc,
 }) {
   return (
-    <div className="flex-1">
-      <p className="absolute top-[12px] left-[15px] !font-light z-50">
-        {title}
-      </p>
+    <div className="flex-1 px-[15px] py-[10px] rounded-[12px] bg-(--color-hover-light)">
+      <p className="!font-light text-(--color-text-light)">{title}</p>
       <input
-        className=" w-full pt-[38px] px-[15px] pb-[12px] text-h6 text-black !font-light rounded-[12px] bg-(--color-hover-light) focus:outline-none"
+        className=" w-full text-h6 text-black !font-light focus:outline-none"
         defaultValue={value || ""}
         placeholder={"Empty"}
         onChange={(e) => onChageFunc(systemTitle, e.target.value)}

@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { motion as m } from "framer-motion";
 
 import api from "@api/api";
 
@@ -42,7 +43,9 @@ export default function OtherUserProfile() {
 
   useEffect(() => {
     const uid = extractUserIdFromUrl(pathname + hash + search);
+    if (!uid) return;
     let user = participants[uid];
+
     if (!user) {
       api.getUsersByIds({ ids: [uid] }).then((users) => {
         user = users?.[0];
@@ -71,8 +74,20 @@ export default function OtherUserProfile() {
   );
 
   return (
-    <div className="absolute top-[0px] left-[0px] p-[30px] w-dvw h-dvh flex flex-col justify-start items-center bg-(--color-black-50) z-[200] max-md:p-[0px] max-md:bg-(--color-bg-dark) max-">
-      <div className="w-[400px] h-full mr-[15px] max-md:w-dvw max-md:h-dvh max-md:mr-[0px]">
+    <m.div
+      className="absolute top-[0px] left-[0px] p-[30px] w-dvw h-dvh flex flex-col justify-start items-center bg-(--color-black)/50 z-[200] max-md:p-[0px] max-md:bg-(--color-bg-dark) overflow-hidden"
+      initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+      animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+      transition={{ duration: 0.2 }}
+    >
+      <m.div
+        className="w-[400px] h-full mr-[15px] max-md:w-dvw max-md:h-dvh max-md:mr-[0px]"
+        initial={{ y: -100, scale: 0.8, opacity: 0 }}
+        animate={{ y: 0, scale: 1, opacity: 1, transition: { delay: 0.1 } }}
+        exit={{ y: -100, scale: 0.8, opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
         <CustomScrollBar childrenClassName="py-[20px] flex flex-col gap-[15px] max-md:py-[0px]">
           <div className="relative flex flex-col justify-center items-center py-[40px] gap-[20px] rounded-[32px] bg-(--color-accent-light) max-md:rounded-t-[0px]">
             {isMobileView ? (
@@ -144,7 +159,7 @@ export default function OtherUserProfile() {
             </div>
           </div>
         </CustomScrollBar>
-      </div>
-    </div>
+      </m.div>
+    </m.div>
   );
 }

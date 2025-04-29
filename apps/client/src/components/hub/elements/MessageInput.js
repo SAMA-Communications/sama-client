@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { motion as m } from "framer-motion";
 
 import api from "@api/api";
 
@@ -97,13 +98,15 @@ export default function MessageInput({
 
     return (
       <>
-        <Attach
-          className="w-[55px] h-[45px] pl=[10px] pb-[12px] cursor-pointer"
-          onClick={() => {
-            addSuffix(location.pathname + location.hash, "/attach");
-            storeInputText();
-          }}
-        />
+        <m.span whileTap={{ scale: 0.8 }}>
+          <Attach
+            className="w-[55px] h-[45px] pl=[10px] pb-[12px] cursor-pointer"
+            onClick={() => {
+              addSuffix(location.pathname + location.hash, "/attach");
+              storeInputText();
+            }}
+          />
+        </m.span>
         <TextAreaInput
           inputRef={inputTextRef}
           customClassName="grow py-[18px] text-black resize-none max-xl:disabled:!p-[9px] placeholder:text-(--color-text-dark) placeholder:text-p [&::-webkit-scrollbar]:hidden"
@@ -113,10 +116,12 @@ export default function MessageInput({
           isMobile={isMobile}
           placeholder={"Type your message..."}
         />
-        <Send
-          className="mr-[10px] px-[8px] !w-[55px] !h-[55px]  cursor-pointer"
-          onClick={onSubmitFunc}
-        />
+        <m.span whileTap={{ translateX: 10, scale: 0.9 }}>
+          <Send
+            className="mr-[10px] px-[8px] !w-[55px] !h-[55px] cursor-pointer"
+            onClick={onSubmitFunc}
+          />
+        </m.span>
       </>
     );
   }, [location, isBlockedConv, onSubmitFunc]);

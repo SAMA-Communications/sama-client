@@ -131,7 +131,8 @@ export default function App() {
         <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
       )}
       <AnimatePresence mode="wait">
-        <Routes location={history.location} key={history.location.pathname}>
+        <Routes location={history.location}>
+          {/* key={history.location.pathname} */}
           <Route
             path="/authorization"
             element={
