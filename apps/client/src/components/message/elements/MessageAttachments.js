@@ -1,5 +1,5 @@
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 
 import PlayButton from "@components/_helpers/PlayButton.js";
 

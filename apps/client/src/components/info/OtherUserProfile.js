@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
+import { motion as m } from "framer-motion";
 
 import api from "@api/api";
 
@@ -25,6 +26,11 @@ import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
 import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
+import {
+  showOtherUserProfileContainer,
+  showOtherUserProfileContent,
+} from "@animations/aOtherUserProfile.js";
+
 import Close from "@icons/actions/CloseGray.svg?react";
 import LinkTo from "@icons/options/LinkTo.svg?react";
 import BackBtn from "@icons/options/Back.svg?react";
@@ -42,7 +48,9 @@ export default function OtherUserProfile() {
 
   useEffect(() => {
     const uid = extractUserIdFromUrl(pathname + hash + search);
+    if (!uid) return;
     let user = participants[uid];
+
     if (!user) {
       api.getUsersByIds({ ids: [uid] }).then((users) => {
         user = users?.[0];
@@ -71,8 +79,22 @@ export default function OtherUserProfile() {
   );
 
   return (
-    <div className="absolute top-[0px] left-[0px] p-[30px] w-dvw h-dvh flex flex-col justify-start items-center bg-(--color-black-50) z-[200] max-md:p-[0px] max-md:bg-(--color-bg-dark) max-">
-      <div className="w-[400px] h-full mr-[15px] max-md:w-dvw max-md:h-dvh max-md:mr-[0px]">
+    <m.div
+      className="absolute top-[0px] left-[0px] p-[30px] w-dvw h-dvh flex flex-col justify-start items-center bg-(--color-black)/50 z-[200] max-md:p-[0px] max-md:bg-(--color-bg-dark) overflow-hidden"
+      variants={showOtherUserProfileContainer(isMobileView)}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      transition="transition"
+    >
+      <m.div
+        className="w-[400px] h-full mr-[15px] max-md:w-dvw max-md:h-dvh max-md:mr-[0px]"
+        variants={showOtherUserProfileContent(isMobileView)}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        transition="transition"
+      >
         <CustomScrollBar childrenClassName="py-[20px] flex flex-col gap-[15px] max-md:py-[0px]">
           <div className="relative flex flex-col justify-center items-center py-[40px] gap-[20px] rounded-[32px] bg-(--color-accent-light) max-md:rounded-t-[0px]">
             {isMobileView ? (
@@ -144,7 +166,7 @@ export default function OtherUserProfile() {
             </div>
           </div>
         </CustomScrollBar>
-      </div>
-    </div>
+      </m.div>
+    </m.div>
   );
 }

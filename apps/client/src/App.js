@@ -1,12 +1,26 @@
-import { AnimatePresence } from "framer-motion";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { Suspense, lazy, useEffect, useRef } from "react";
+import { Route, Routes, useLocation, useNavigate } from "react-router";
+import {
+  lazy,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  AnimatePresence,
+  LazyMotion,
+  domAnimation,
+  motion,
+} from "motion/react";
 
 import autoLoginService from "@services/autoLoginService";
 import activityService from "@services/activityService";
 import conversationService from "@services/conversationsService";
 import messagesService from "@services/messagesService";
+
+import BetterSuspense from "@hooks/BetterSuspense.js";
 
 import ContextMenuHub from "@components/context/ContextMenuHub";
 
@@ -36,6 +50,7 @@ export default function App() {
   history.navigate = useNavigate();
 
   const isContextClicked = useSelector(selectIsClicked);
+  const isUserLoggedIn = !!localStorage.getItem("sessionId");
 
   const isMobileView = useSelector(getIsMobileView);
   const isMobileViewRef = useRef(isMobileView);
@@ -115,23 +130,80 @@ export default function App() {
     };
   }, []);
 
+  const routePathKey = useMemo(() => {
+    const { pathname } = history.location;
+    return ["/authorization", "/demo"].includes(pathname)
+      ? "/authorization"
+      : "/*";
+  }, [history.location.pathname]);
+
+  useLayoutEffect(() => {
+    const mainElement = document.getElementsByTagName("main")[0];
+    const bodyElement = document.getElementsByTagName("body")[0];
+    mainElement.style.backgroundColor =
+      routePathKey === "/*" ? "#1b1b1d" : "#DBDCFC";
+    bodyElement.style.backgroundColor =
+      routePathKey === "/*" ? "#1b1b1d" : "#DBDCFC";
+  }, [routePathKey]);
+
+  const exitAnimation = {
+    scale: [1, 1.00001],
+    transition: { duration: 0.5 },
+  };
+
+  const [isNeedToAnimateMain, setIsNeedToAnimateMain] = useState(true);
+  useEffect(() => setIsNeedToAnimateMain(true), [routePathKey]);
+
   return (
-    <Suspense
-      fallback={localStorage.getItem("sessionId") ? <SMain /> : <SPageLoader />}
-    >
-      {isContextClicked ? (
-        <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
-      ) : null}
-      <AnimatePresence initial={false} mode="wait">
-        <Routes location={history.location}>
-          <Route path="/authorization" element={<AuthorizationHub />} />
-          <Route
-            path="/demo"
-            element={<AuthorizationHub showDemoMessage={true} />}
-          />
-          <Route path="/*" element={<Main />} />
-        </Routes>
-      </AnimatePresence>
-    </Suspense>
+    <>
+      <LazyMotion features={domAnimation}>
+        <BetterSuspense
+          fallback={
+            isUserLoggedIn & (routePathKey !== "/authorization") ? (
+              <SMain setAnimateMainPage={setIsNeedToAnimateMain} />
+            ) : (
+              <SPageLoader />
+            )
+          }
+          fallbackMinDurationMs={isUserLoggedIn ? 700 : 400}
+        >
+          {isContextClicked && (
+            <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
+          )}
+          <AnimatePresence mode="wait">
+            <Routes location={history.location} key={routePathKey}>
+              <Route
+                path="/authorization"
+                element={
+                  <motion.div key={routePathKey} exit={exitAnimation}>
+                    <AuthorizationHub />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/demo"
+                element={
+                  <motion.div key={routePathKey} exit={exitAnimation}>
+                    <AuthorizationHub showDemoMessage={true} />
+                  </motion.div>
+                }
+              />
+              <Route
+                path="/*"
+                element={
+                  <motion.div
+                    key={routePathKey}
+                    className="w-dvw h-dvh flex overflow-hidden"
+                    exit={exitAnimation}
+                  >
+                    <Main isNeedToAnimate={isNeedToAnimateMain} />
+                  </motion.div>
+                }
+              />
+            </Routes>
+          </AnimatePresence>
+        </BetterSuspense>
+      </LazyMotion>
+    </>
   );
 }

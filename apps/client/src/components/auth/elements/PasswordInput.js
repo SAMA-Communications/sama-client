@@ -26,7 +26,7 @@ export default function PasswordInput({ setState }) {
           />
         ) : (
           <ShowPassword
-            className="mt-[4px]"
+            className="mt-[5px]"
             onClick={() => setPasswordType("password")}
           />
         )}

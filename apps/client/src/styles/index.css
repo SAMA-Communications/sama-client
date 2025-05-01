@@ -50,13 +50,17 @@ span {
   font-weight: 200;
 }
 
+body {
+  background-color: var(--color-bg-dark);
+}
+
 main {
   width: 100dvw;
   height: 100dvh;
 
   display: flex;
 
-  background-color: var(--color-bg-dark);
+  transition: background-color 0.7s;
 }
 
 @media screen and (max-width: 767px) {
@@ -101,6 +105,9 @@ main {
 }
 
 #chatMessagesScrollable .infinite-scroll-component {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+
   display: flex;
   flex-direction: column;
   gap: 7px;
@@ -108,10 +115,6 @@ main {
 #chatMessagesScrollable {
   display: flex;
   flex-direction: column-reverse;
-}
-#chatMessagesScrollable .infinite-scroll-component {
-  padding-top: 15px !important;
-  padding-bottom: 15px !important;
 }
 
 #conversationItemsScrollable .infinite-scroll-component {

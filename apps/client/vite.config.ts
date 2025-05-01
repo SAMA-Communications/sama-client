@@ -31,6 +31,7 @@ export default defineConfig({
 
       "@lib": createPath("src/lib"),
       "@utils": createPath("src/utils"),
+      "@animations": createPath("src/animations"),
       "@validations": createPath("src/lib/validations"),
 
       "@hooks": createPath("src/hooks"),

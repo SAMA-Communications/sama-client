@@ -1,6 +1,7 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { motion as m } from "framer-motion";
 
 import conversationService from "@services/conversationsService";
 import { useKeyDown } from "@hooks/useKeyDown";
@@ -74,14 +75,31 @@ export default function UsersSelectModalHub({ type }) {
   }, [type, chatName, selectedConversation, participants]);
 
   return (
-    <div className="absolute top-[0px] w-dvw h-dvh bg-(--color-black-50) flex items-center justify-center">
-      <div
+    <m.div
+      className="absolute top-[0px] w-dvw h-dvh bg-(--color-black-50) flex items-center justify-center"
+      initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+      animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+      transition={{ duration: 0.2 }}
+    >
+      <m.div
         className={`p-[30px] flex flex-col gap-[20px] rounded-[32px] bg-(--color-bg-light) w-[min(460px,100%)] max-md:w-[94svw] max-md:p-[20px] ${
           chatName || type ? "h-[80svh]" : ""
         }`}
+        key={
+          type === "add_participants"
+            ? "addParticipants"
+            : chatName
+            ? "userSelectorBlock"
+            : "chatNameInput"
+        }
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1, transition: { delay: 0.1 } }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ duration: 0.2 }}
       >
         {typeOfFunc}
-      </div>
-    </div>
+      </m.div>
+    </m.div>
   );
 }

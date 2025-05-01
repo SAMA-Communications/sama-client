@@ -1,5 +1,5 @@
 import addSuffix from "@utils/navigation/add_suffix";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 
 export default function InformativeMessage({
   text,

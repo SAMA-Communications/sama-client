@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { motion as m } from "framer-motion";
 
 import ConversationItemList from "@components/hub/chatList/ConversationItemList";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import MenuButtons from "@components/info/elements/MenuButtons";
 import SearchBlock from "@components/search/SearchBlock";
-import SearchInput from "@components/static/SearchBar";
+import SearchInput from "@components/static/SearchInput";
 
 import SChatList from "@skeletons/hub/SChatList";
 
@@ -41,12 +42,25 @@ export default function ChatList() {
   }, [filteredConversations]);
 
   return (
-    <section className="w-dvw mt-[5px] flex gap-[10px] flex-col justify-start items-center max-xl:flex-1 xl:w-[400px] md:max-xl:mb-[20px] md:max-xl:mr-[20px] ">
+    <m.div
+      key="chaList"
+      className="flex flex-col relative gap-[10px] justify-start items-center max-xl:flex-1 xl:w-[400px] md:max-xl:mb-[20px]"
+      initial={{ scale: 1, opacity: 0 }}
+      animate={{
+        scale: [1.02, 1],
+        y: [3, 0],
+        opacity: 1,
+      }}
+      exit={{
+        opacity: [1, 0],
+        x: [0, 15],
+        transition: { duration: 0.5 },
+      }}
+      transition={{ delay: 0.3, duration: 0.5 }}
+    >
       {isMobileView ? <MenuButtons /> : null}
       <SearchInput
         customClassName="max-w-full"
-        inputClassName="max-w-full"
-        closeClassName="right-[25px]"
         shadowText={"Search"}
         setState={setInputText}
       />
@@ -60,12 +74,12 @@ export default function ChatList() {
       ) : (
         <CustomScrollBar
           customId={"conversationItemsScrollable"}
-          customClassName="rounded-[8px] max-md:rounded-t-[16px] max-md:rounded-b-[0px] max-xl:rounded-[32px] max-xl:bg-(--color-bg-light)"
-          childrenClassName="mt-[5px] flex flex-col gap-[5px] max-md:mt-[2svh] max-md:py-[0px] max-xl:px-[2svw] max-xl:pt-[10px] max-xl:pb-[20px]"
+          customClassName="rounded-[8px] max-md:rounded-t-[16px] max-md:rounded-b-[0px] max-xl:rounded-[32px]"
+          childrenClassName="flex flex-col gap-[5px] max-md:py-[0px] "
         >
           {chatsList}
         </CustomScrollBar>
       )}
-    </section>
+    </m.div>
   );
 }

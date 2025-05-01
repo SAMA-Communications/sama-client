@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { useMemo } from "react";
 
 import TypingLine from "@components/_helpers/TypingLine";
@@ -145,7 +145,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
 
   return (
     <div
-      className="flex shrink pb-[10px] h-max "
+      className="flex shrink pb-[10px] h-max"
       onClick={viewChatOrPaticipantInfo}
     >
       {isMobile || isTablet ? (
@@ -155,14 +155,14 @@ export default function ChatFormHeader({ closeFormFunc }) {
         />
       ) : null}
       <div
-        className={`h-max -mt-[10px] grow flex cursor-default ${
+        className={`h-max -mt-[10px] grow flex cursor-pointer ${
           isGroupChat ? "flex-row items-end gap-[15px]" : "flex-col"
         } `}
       >
         <p className="!font-medium text-h2 text-black leading-[1.5] overflow-hidden text-ellipsis whitespace-nowrap">
           &zwnj;{viewChatName}
         </p>
-        <p
+        <div
           className={
             isGroupChat
               ? "py-[2px] px-[10px] rounded-2xl bg-[var(--color-hover-light)] text-gray-500 mb-[9px] cursor-default"
@@ -170,7 +170,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
           }
         >
           {viewStatusActivity}
-        </p>
+        </div>
       </div>
       <div
         className="w-[15px] cursor-pointer flex items-center justify-center"

@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { motion as m } from "framer-motion";
 
 import LastMessage from "@components/message/LastMessage";
 import TypingLine from "@components/_helpers/TypingLine";
@@ -32,11 +33,17 @@ export default function ConversationItem({
   }, [updated_at, last_message]);
 
   return (
-    <div
+    <m.div
       className={`relative w-full p-[10px] flex gap-[15px] items-center rounded-[12px] cursor-pointer ${
         isSelected ? "bg-(--color-hover-light)" : ""
-      } hover:bg-(--color-hover-light)`}
+      } hover:bg-(--color-hover-light) transition-[background-color] duration-200`}
       onClick={onClickFunc}
+      initial={{ opacity: 0, x: -30 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      whileHover={{ x: -3 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ duration: 0.3 }}
+      layout
     >
       <div className="w-[70px] h-[70px] !font-light text-h4 rounded-[8px] bg-(--color-bg-dark) flex items-center justify-center text-(--color-text-dark) overflow-hidden">
         <DynamicAvatar
@@ -77,6 +84,6 @@ export default function ConversationItem({
           )}
         </div>
       </div>
-    </div>
+    </m.div>
   );
 }

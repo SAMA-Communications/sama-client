@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { useMemo } from "react";
+import { AnimatePresence, motion as m, useAnimate } from "framer-motion";
 
 import usersService from "@services/usersService";
 
@@ -18,13 +19,21 @@ import addPrefix from "@utils/navigation/add_prefix";
 import getUserInitials from "@utils/user/get_user_initials";
 import navigateTo from "@utils/navigation/navigate_to";
 
+import { showItem, showLogoOptions } from "@animations/aNavigationLine.js";
+
 import List from "@icons/Conversations.svg?react";
 import Create from "@icons/AddConversation.svg?react";
 import Logout from "@icons/actions/Logout.svg?react";
 
-export default function NavigationLine() {
+export default function NavigationLine({
+  isReverse,
+  disableAnimation = false,
+  triggerMainExitEvent,
+}) {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
+
+  const [navigationLineRef, animateNavigationLine] = useAnimate();
 
   const currentUser = useSelector(getCurrentUserFromParticipants);
 
@@ -54,65 +63,107 @@ export default function NavigationLine() {
     }, [pathname]);
 
   return (
-    <aside className="w-[84px] px-[10px] flex flex-col justify-between bg-transparent select-none pt-[20px] pb-[20px]">
-      <div
-        className="flex items-center justify-center cursor-pointer"
-        onClick={() => {
-          dispatch(setSelectedConversation({}));
-          navigateTo("/");
-        }}
-      >
-        <SAMALogo customClassName="w-[58px] h-[58px]" />
-      </div>
-      <div className="flex flex-col gap-[20px] items-center justify-center">
-        <div
+    <aside
+      ref={navigationLineRef}
+      className="w-[84px] px-[10px] flex flex-col justify-between bg-transparent select-none pt-[20px] pb-[20px]"
+    >
+      <AnimatePresence initial={!disableAnimation}>
+        <m.div
+          key="navigationLineLogo"
+          className="flex items-center justify-center cursor-pointer"
           onClick={() => {
-            const currentPath =
-              isTabletView && hash.includes("/info")
-                ? pathname + hash.replace("/info", "")
-                : pathname + hash;
-            addPrefix(currentPath, "/profile");
+            dispatch(setSelectedConversation({}));
+            navigateTo("/");
           }}
-          className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) flex items-center justify-center ${isProfilePageActive}`}
+          whileTap={{ scale: 0.95 }}
         >
-          <span className="w-full h-full text-h5 text-black rounded-[16px] bg-(--color-bg-light) overflow-hidden flex items-center justify-center">
-            <DynamicAvatar
-              avatarUrl={currentUser.avatar_url}
-              avatarBlurHash={currentUser.avatar_object?.file_blur_hash}
-              defaultIcon={getUserInitials()}
-              altText={"User's Profile"}
-            />
-          </span>
+          <SAMALogo
+            customClassName="w-[58px] h-[58px]"
+            variants={showLogoOptions(isReverse)}
+            initial="hidden"
+            animate="visible"
+            reduceDuration={0.2}
+            reduceDelay={isReverse ? 1.1 : 0.6}
+          />
+        </m.div>
+        <div className="flex flex-col gap-[20px] items-center justify-center">
+          <m.div
+            key="navigationLineProfileIcon"
+            className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) transition-[background-color] duration-200 flex items-center justify-center ${isProfilePageActive}`}
+            onClick={() => {
+              const currentPath =
+                isTabletView && hash.includes("/info")
+                  ? pathname + hash.replace("/info", "")
+                  : pathname + hash;
+              addPrefix(currentPath, "/profile");
+            }}
+            variants={showItem(3, isReverse, disableAnimation)}
+            initial="hidden"
+            animate="visible"
+            whileTap="tap"
+          >
+            <span className="w-full h-full text-h5 text-black rounded-[16px] bg-(--color-bg-light) overflow-hidden flex items-center justify-center">
+              <DynamicAvatar
+                avatarUrl={currentUser.avatar_url}
+                avatarBlurHash={currentUser.avatar_object?.file_blur_hash}
+                defaultIcon={getUserInitials()}
+                altText={"User's Profile"}
+              />
+            </span>
+          </m.div>
+          <m.div
+            key="navigationLineChatIcon"
+            onClick={() => {
+              if (isTabletView || isMobileView) {
+                dispatch(setSelectedConversation({}));
+                navigateTo(`/`);
+              } else {
+                navigateTo(`/${hash || ""}`);
+              }
+            }}
+            className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) transition-[background-color] duration-200 flex items-center justify-center ${isChatListActive}`}
+            variants={showItem(2, isReverse, disableAnimation)}
+            initial="hidden"
+            animate="visible"
+            whileTap="tap"
+          >
+            <List />
+          </m.div>
+          <m.div
+            key="navigationLineCreateicon"
+            onClick={() => addPrefix(pathname + hash, "/create")}
+            className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) transition-[background-color] duration-200 flex items-center justify-center ${isCreatePageActive}`}
+            variants={showItem(1, isReverse, disableAnimation)}
+            initial="hidden"
+            animate="visible"
+            whileTap="tap"
+          >
+            <Create className="w-[36px]" />
+          </m.div>
         </div>
-        <div
+        <m.div
+          key="navigationLineLogoutIcon"
           onClick={() => {
-            if (isTabletView || isMobileView) {
-              dispatch(setSelectedConversation({}));
-              navigateTo(`/`);
-            } else {
-              navigateTo(`/${hash || ""}`);
-            }
+            navigateTo("/authorization");
+            triggerMainExitEvent();
+            animateNavigationLine([
+              [
+                navigationLineRef.current,
+                { x: -64, opacity: [1, 0] },
+                { duration: 0.4 },
+              ],
+            ]);
+            sendLogout();
           }}
-          className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) flex items-center justify-center ${isChatListActive}`}
+          className="w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) transition-[background-color] duration-200 flex items-center justify-center"
+          variants={showItem(0, isReverse, disableAnimation)}
+          initial="hidden"
+          animate="visible"
+          whileTap="tap"
         >
-          <List />
-        </div>
-        <div
-          onClick={() => addPrefix(pathname + hash, "/create")}
-          className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) flex items-center justify-center ${isCreatePageActive}`}
-        >
-          <Create className="w-[36px]" />
-        </div>
-      </div>
-      <div
-        onClick={() => {
-          sendLogout();
-          navigateTo("/authorization");
-        }}
-        className="w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) flex items-center justify-center"
-      >
-        <Logout />
-      </div>
+          <Logout />
+        </m.div>
+      </AnimatePresence>
     </aside>
   );
 }

@@ -40,7 +40,7 @@ export default function ChatEditorHelper() {
   };
 
   return (
-    <div className="h-full py-3 flex items-center gap-4">
+    <div className="h-full py-3 flex items-center gap-2 xl:gap-4">
       <Help
         data-tooltip-id="editor-help-tooltip"
         data-tooltip-delay-hide={500}

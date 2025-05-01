@@ -1,5 +1,6 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { useMemo } from "react";
+import { motion as m } from "framer-motion";
 
 import MessageAttachments from "@components/message/elements/MessageAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
@@ -35,10 +36,14 @@ export default function ChatMessage({
     sender ? addSuffix(pathname + hash, `/user?uid=${from}`) : {};
 
   return (
-    <div
+    <m.div
       className={`relative w-max max-w-[min(80%,820px)] flex flex-row gap-[16px] ${
         prev ? "" : "mt-[8px]"
       }`}
+      whileInView={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0, x: -15 }}
+      exit={{ width: 0, opacity: [1, 1, 0, 0] }}
+      transition={{ duration: 0.3, delay: 0.03 }}
     >
       <div
         className={`min-w-[46px] flex items-end ${
@@ -49,7 +54,7 @@ export default function ChatMessage({
           <div
             className={`w-[46px] h-[46px] uppercase text-black rounded-[16px] bg-(--color-hover-light) flex items-center justify-center ${
               isCurrentUser ? "!text-white !bg-(--color-accent-dark)" : ""
-            }`}
+            } overflow-hidden`}
             onClick={openUserProfile}
           >
             <MessageUserIcon
@@ -134,6 +139,6 @@ export default function ChatMessage({
           </div>
         </div>
       </div>
-    </div>
+    </m.div>
   );
 }

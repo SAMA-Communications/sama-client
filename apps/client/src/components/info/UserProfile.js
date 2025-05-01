@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { useRef } from "react";
+import { motion as m, useAnimate } from "framer-motion";
 
 import usersService from "@services/usersService";
 import { useKeyDown } from "@hooks/useKeyDown";
@@ -19,6 +20,11 @@ import globalConstants from "@utils/global/constants";
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@utils/global/keyCodes";
+
+import {
+  showUserProfileContainer,
+  showUserProfileContent,
+} from "@animations/aUserProfile.js";
 
 import BackBtn from "@icons/options/Back.svg?react";
 import Close from "@icons/actions/CloseGray.svg?react";
@@ -61,8 +67,32 @@ export default function UserProfile() {
   const sendChangeAvatarRequest = async (file) =>
     void (await usersService.updateUserAvatar(file));
 
+  const [userProfileContainerRef, animateUserProfileContainer] = useAnimate();
+
+  const triggerExitAnimation = () => {
+    console.log(isMobileView, userProfileContainerRef);
+
+    if (isMobileView) {
+      if (!userProfileContainerRef.current) return;
+      animateUserProfileContainer([
+        [
+          userProfileContainerRef.current,
+          { scale: [1, 0.6], opacity: [1, 0.3, 0], borderRadius: [0, 48, 48] },
+          { duration: 0.4 },
+        ],
+      ]);
+    }
+  };
+
   return (
-    <div className="w-[400px] h-full mr-[15px] max-md:w-dvw max-md:h-dvh max-md:mr-[0px]">
+    <m.section
+      ref={userProfileContainerRef}
+      className=" max-md:!w-dvw md:w-[400px] h-full md:mr-[15px] max-md:h-dvh overflow-hidden"
+      variants={showUserProfileContainer(isMobileView)}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+    >
       <CustomScrollBar childrenClassName="py-[20px] flex flex-col gap-[15px] max-md:py-[0px]">
         <div className="relative flex flex-col justify-center items-center py-[40px] gap-[20px] rounded-[32px] bg-(--color-accent-light) max-md:rounded-t-[0px]">
           {isMobileView ? (
@@ -80,9 +110,13 @@ export default function UserProfile() {
               }
             />
           )}
-          <div
+          <m.div
             className="relative w-[160px] h-[160px] rounded-[24px] bg-(--color-bg-light) flex justify-center items-center cursor-pointer overflow-hidden"
             onClick={pickFileClick}
+            variants={showUserProfileContent(isMobileView)}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
           >
             <span
               className="absolute w-full h-full bg-(--color-black-25) rounded-[24px] opacity-0 transition-opacity duration-300 hover:opacity-100"
@@ -105,10 +139,14 @@ export default function UserProfile() {
               accept={globalConstants.allowedAvatarFormats}
               multiple
             />
-          </div>
-          <div
+          </m.div>
+          <m.div
             className="w-[90%]"
             onClick={() => addSuffix(pathname + hash, "/edit?type=user")}
+            variants={showUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
           >
             <p className="overflow-hidden text-ellipsis whitespace-nowrap cursor-pointer text-center !font-bold text-h3 text-black">
               {first_name || (
@@ -124,17 +162,27 @@ export default function UserProfile() {
                 </span>
               )}
             </p>
-          </div>
+          </m.div>
         </div>
         <div className="py-[30px] px-[20px] flex flex-1 flex-col rounded-[32px] bg-(--color-bg-light) max-md:flex-1 max-md:rounded-b-[0px]">
-          <p className="text-center !font-normal text-h5 text-(--color-text-dark) mb-[10px]">
+          <m.p
+            className="text-center !font-normal text-h5 text-(--color-text-dark) mb-[10px]"
+            variants={showUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
             Personal information
-          </p>
+          </m.p>
           <InfoBox
             modifier={"!cursor-default"}
             iconType={"login"}
             title={"Username"}
             value={login}
+            variants={showUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
           />
           <InfoBox
             modifier={"mt-[10px]"}
@@ -145,6 +193,10 @@ export default function UserProfile() {
             title={"Mobile phone"}
             value={phone}
             placeholder={"Enter your phone number"}
+            variants={showUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
           />
           <InfoBox
             modifier={"mt-[10px]"}
@@ -155,9 +207,19 @@ export default function UserProfile() {
             title={"Email address"}
             value={email}
             placeholder={"Enter your email address"}
+            variants={showUserProfileContent}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
           />
           {isCurrentUserCantLeave ? null : (
-            <div className="flex items-center gap-[10px] px-[10px] cursor-pointer mt-[10px]">
+            <m.div
+              className="flex items-center gap-[10px] px-[10px] cursor-pointer mt-[10px]"
+              variants={showUserProfileContent}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
               <Password />
               <p
                 className="info__password"
@@ -179,23 +241,36 @@ export default function UserProfile() {
               >
                 Change password...
               </p>
-            </div>
+            </m.div>
           )}
           {isMobileView ? (
-            <div className="flex items-center gap-[10px] px-[10px] cursor-pointer mt-[30px] max-md:mt-[20px]">
+            <m.div
+              className="flex items-center gap-[10px] px-[10px] cursor-pointer mt-[30px] max-md:mt-[20px]"
+              variants={showUserProfileContent}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
               <LogoutMini />
               <p
-                onClick={async () => {
-                  sendLogout();
+                onClick={() => {
                   navigateTo("/authorization");
+                  triggerExitAnimation();
+                  sendLogout();
                 }}
               >
                 Log out
               </p>
-            </div>
+            </m.div>
           ) : null}
           {isCurrentUserCantLeave ? null : (
-            <div className="flex items-center gap-[10px] px-[10px] cursor-pointer mt-auto">
+            <m.div
+              className="flex items-center gap-[10px] px-[10px] cursor-pointer mt-auto"
+              variants={showUserProfileContent}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
               <Trash />
               <p
                 className="text-(--color-red)"
@@ -206,10 +281,10 @@ export default function UserProfile() {
               >
                 Delete account
               </p>
-            </div>
+            </m.div>
           )}
         </div>
       </CustomScrollBar>
-    </div>
+    </m.section>
   );
 }

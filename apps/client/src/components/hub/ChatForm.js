@@ -6,8 +6,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
+import { motion as m } from "framer-motion";
 
 import api from "@api/api";
 
@@ -31,6 +32,7 @@ import {
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
 import { setClicked } from "@store/values/ContextMenu";
+import { getIsMobileView } from "@store/values/IsMobileView.js";
 
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import { CHAT_CONTENT_TABS } from "@utils/global/chatContentTabs.js";
@@ -42,6 +44,7 @@ export default function ChatForm() {
 
   const isUserLogin = useSelector(getUserIsLoggedIn);
   const isTabInFocus = useSelector(getIsTabInFocus);
+  const isMobileView = useSelector(getIsMobileView);
 
   const conversations = useSelector(selectConversationsEntities);
   const selectedConversation = useSelector(getConverastionById);
@@ -54,7 +57,7 @@ export default function ChatForm() {
 
   const [currentTab, setCurrentTab] = useState(CHAT_CONTENT_TABS.MESSAGES);
   const isEnableProgrammableChat =
-    import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true";
+    import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true" && !isMobileView;
 
   const chatMessagesBlock = useRef();
 
@@ -76,7 +79,7 @@ export default function ChatForm() {
   };
 
   const readMessage = useCallback(() => {
-    if (!conversations[selectedCID] || !document.hasFocus()) {
+    if (!conversations || !conversations[selectedCID] || !document.hasFocus()) {
       return;
     }
 
@@ -133,7 +136,13 @@ export default function ChatForm() {
   }, [selectedCID, currentTab, chatMessagesBlock]);
 
   return (
-    <section className="flex flex-col flex-grow max-md:p-[4svw] md:max-xl:my-[20px] md:max-xl:mr-[20px] max-xl:p-[20px] md:rounded-[32px] bg-(--color-bg-light)">
+    <m.div
+      key="chatForm"
+      className="flex flex-col flex-grow md:max-xl:p-[10px] md:rounded-[32px]"
+      initial={{ scale: 1, opacity: 0 }}
+      animate={{ scale: [1.02, 1], y: [3, 0], opacity: [0, 1] }}
+      transition={{ delay: 0.3, duration: 0.5 }}
+    >
       {selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />
@@ -146,10 +155,15 @@ export default function ChatForm() {
           {formComponent}
         </>
       ) : (
-        <p className="mt-auto mb-auto text-center font-light text-[58px] !text-(--color-text-light)">
+        <m.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="mt-auto mb-auto text-center font-light text-[58px] !text-(--color-text-light)"
+        >
           Select a conversation to start chatting
-        </p>
+        </m.p>
       )}
-    </section>
+    </m.div>
   );
 }

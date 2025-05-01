@@ -1,6 +1,7 @@
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { domAnimation, LayoutGroup, LazyMotion } from "framer-motion";
 
 import api from "@api/api.js";
 
@@ -61,43 +62,49 @@ export default function ConversationItemList({ conversations }) {
       hasMore={true && needToGetMoreChats.current}
       scrollableTarget="conversationItemsScrollable"
     >
-      {conversations.map((obj) => {
-        const isSelected = activeConversationId === obj._id;
-        const isGroup = obj.type === "g";
-        const chatParticipantId =
-          obj.owner_id === currentUserId ? obj.opponent_id : obj.owner_id;
-        const chatParticipant = participants[chatParticipantId] || {};
-        const chatName = obj.name || getUserFullName(chatParticipant);
+      <LazyMotion features={domAnimation}>
+        <LayoutGroup id="conversationItemListLayoutGroup">
+          {conversations.map((obj) => {
+            const isSelected = activeConversationId === obj._id;
+            const isGroup = obj.type === "g";
+            const chatParticipantId =
+              obj.owner_id === currentUserId ? obj.opponent_id : obj.owner_id;
+            const chatParticipant = participants[chatParticipantId] || {};
+            const chatName = obj.name || getUserFullName(chatParticipant);
 
-        const showLastMsgUser = isGroup;
-        //!obj.last_message?.x replace with better checker for event message
-        const lastMessageUserId = obj?.last_message?.from;
-        const lastMessageUser = participants[lastMessageUserId] || {};
-        const lastMessageUserName = showLastMsgUser
-          ? currentUserId === lastMessageUserId
-            ? "You"
-            : getLastMessageUserName(lastMessageUser)
-          : null;
+            const showLastMsgUser = isGroup;
+            //!obj.last_message?.x replace with better checker for event message
+            const lastMessageUserId = obj?.last_message?.from;
+            const lastMessageUser = participants[lastMessageUserId] || {};
+            const lastMessageUserName = showLastMsgUser
+              ? currentUserId === lastMessageUserId
+                ? "You"
+                : getLastMessageUserName(lastMessageUser)
+              : null;
 
-        const avatarUrl = isGroup ? obj.image_url : chatParticipant.avatar_url;
-        const avatarBlurHash = isGroup
-          ? obj.image_object?.file_blur_hash
-          : chatParticipant.avatar_object?.file_blur_hash;
+            const avatarUrl = isGroup
+              ? obj.image_url
+              : chatParticipant.avatar_url;
+            const avatarBlurHash = isGroup
+              ? obj.image_object?.file_blur_hash
+              : chatParticipant.avatar_object?.file_blur_hash;
 
-        return (
-          <ConversationItem
-            key={obj._id}
-            isSelected={isSelected}
-            onClickFunc={() => convItemOnClickFunc(obj._id)}
-            chatName={chatName}
-            lastMessageUserName={lastMessageUserName}
-            chatAvatarUrl={avatarUrl}
-            chatAvatarBlutHash={avatarBlurHash}
-            chatObject={obj}
-            currentUserId={currentUserId}
-          />
-        );
-      })}
+            return (
+              <ConversationItem
+                key={obj._id}
+                isSelected={isSelected}
+                onClickFunc={() => convItemOnClickFunc(obj._id)}
+                chatName={chatName}
+                lastMessageUserName={lastMessageUserName}
+                chatAvatarUrl={avatarUrl}
+                chatAvatarBlutHash={avatarBlurHash}
+                chatObject={obj}
+                currentUserId={currentUserId}
+              />
+            );
+          })}
+        </LayoutGroup>
+      </LazyMotion>
     </InfiniteScroll>
   );
 }

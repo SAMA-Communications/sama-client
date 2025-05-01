@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 
 import addPrefix from "@utils/navigation/add_prefix";
 
@@ -7,10 +7,11 @@ import CreateChat from "@icons/AddConversationBlack.svg?react";
 
 export default function MenuButtons() {
   const { pathname, hash } = useLocation();
+
   return (
     <>
       <AccountIcon
-        className="absolute top-[19px] left-[20px] cursor-pointer z-50"
+        className="absolute top-[24px] left-[24px] transform -translate-1/2 cursor-pointer z-50"
         onClick={() => addPrefix(pathname + hash, "/profile")}
       />
       <div

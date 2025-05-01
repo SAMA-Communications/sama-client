@@ -1,5 +1,6 @@
 import { useCallback, useState, useTransition } from "react";
 import { useDispatch } from "react-redux";
+import { AnimatePresence, motion as m } from "framer-motion";
 
 import subscribeForNotifications from "@services/notifications";
 import usersService from "@services/usersService";
@@ -16,7 +17,7 @@ import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
-export default function ConfirmButton({ page, content }) {
+export default function ConfirmButton({ page, content, onClickEvent }) {
   const dispatch = useDispatch();
 
   const [isPending, startTransition] = useTransition();
@@ -53,6 +54,7 @@ export default function ConfirmButton({ page, content }) {
         dispatch(setCurrentUserId(userData._id));
         dispatch(upsertUser(userData));
         navigateTo("/");
+        onClickEvent();
       }
     });
   }, [content, isAutoAuth, isLoginPage]);
@@ -61,38 +63,48 @@ export default function ConfirmButton({ page, content }) {
 
   return (
     <>
-      {isLoginPage ? null : (
-        <label
-          htmlFor="isAutoAuth"
-          className="w-full text-gray-500 cursor-pointer select-none flex items-center"
-        >
-          <input
-            className="mr-[5px]"
-            type="checkbox"
-            id="isAutoAuth"
-            checked={isAutoAuth}
-            onChange={() => setIsAutoAuth((prev) => !prev)}
-          />
-          * Sign in automatically after creating an account
-        </label>
-      )}
-      <button
-        className="w-full sm:mt-[25px] py-[7px] px-[14px] flex justify-center bg-(--color-accent-dark) rounded-lg cursor-pointer"
-        disabled={isPending}
-        onClick={sendRequest}
-      >
-        {isPending ? (
-          <DotsLoader
-            height={40}
-            width={40}
-            mainColor={"var(--color-accent-light)"}
-          />
-        ) : (
-          <p className="h-[40px] flex-1 text-center flex items-center justify-center !font-normal text-white ">
-            {isLoginPage ? "Log in" : "Create account"}
-          </p>
+      <AnimatePresence mode="wait">
+        {isLoginPage ? null : (
+          <m.label
+            key="isAutoAuth"
+            htmlFor="isAutoAuth"
+            className="w-full text-gray-500 cursor-pointer select-none flex items-center overflow-hidden"
+            animate={{ height: ["0px", "24px"] }}
+            exit={{ height: ["24px", "0px"], marginBottom: ["0px", "-15px"] }}
+            transition={{ duration: 0.2 }}
+          >
+            <input
+              className="mr-[5px]"
+              type="checkbox"
+              id="isAutoAuth"
+              checked={isAutoAuth}
+              onChange={() => setIsAutoAuth((prev) => !prev)}
+            />
+            * Sign in automatically after creating an account
+          </m.label>
         )}
-      </button>
+        <m.button
+          key={isLoginPage ? "login" : "signup"}
+          className="w-full sm:mt-[25px] py-[7px] px-[14px] flex justify-center bg-(--color-accent-dark) hover:bg-(--color-accent-dark)/80 transition-colors  rounded-lg cursor-pointer"
+          disabled={isPending}
+          onClick={sendRequest}
+          animate={{ opacity: [0.7, 1], scale: [1.02, 1] }}
+          exit={{ opacity: [1, 0.7], scale: [1, 1.02] }}
+          transition={{ duration: 0.2 }}
+        >
+          {isPending ? (
+            <DotsLoader
+              height={40}
+              width={40}
+              mainColor={"var(--color-accent-light)"}
+            />
+          ) : (
+            <p className="h-[40px] flex-1 text-center flex items-center justify-center !font-normal text-white ">
+              {isLoginPage ? "Log in" : "Create account"}
+            </p>
+          )}
+        </m.button>
+      </AnimatePresence>
     </>
   );
 }

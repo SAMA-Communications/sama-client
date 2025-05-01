@@ -1,5 +1,6 @@
 import { useEffect, useState, useTransition } from "react";
 import { useSelector } from "react-redux";
+import { AnimatePresence, motion as m } from "framer-motion";
 
 import conversationService from "@services/conversationsService";
 import usersService from "@services/usersService";
@@ -24,8 +25,6 @@ export default function SearchBlock({
   isPreviewUserProfile = false,
   isSearchOnlyUsers = false,
 }) {
-  const viewProperty = (v) => ({ display: v ? "flex" : "none" });
-
   const conversations = useSelector(selectConversationsEntities);
 
   const [isPending, startTransition] = useTransition();
@@ -35,7 +34,7 @@ export default function SearchBlock({
   const [isChatSearched, setIsChatSearched] = useState(null);
 
   useEffect(() => {
-    if (!searchText) {
+    if (searchText?.length < 1) {
       setSearchedUsers([]);
       setIsUserSearched(null);
     }
@@ -89,21 +88,37 @@ export default function SearchBlock({
   };
 
   return (
-    <div
-      className={`h-[80svh] flex-1 mt-[5px] flex items-center justify-center max-xl:w-full max-xl:mt-[0px] max-xl:rounded-[16px] max-xl:bg-(--color-bg-light) ${customClassName}`}
-      style={viewProperty(searchText)}
+    <m.div
+      className={`mt-[5px] flex items-center justify-center max-xl:w-full max-xl:mt-[0px] max-xl:rounded-[16px] max-xl:bg-(--color-bg-light) ${customClassName}`}
+      initial={{ height: "0svh" }}
+      animate={{ height: ["0svh", "80svh"] }}
+      exit={{ height: "0svh" }}
+      transition={{ duration: 0.6, ease: "easeInOut" }}
     >
-      {searchText?.length < 2 ? null : (
-        <CustomScrollBar
-          customClassName="w-[400px] max-xl:!w-full"
-          childrenClassName="flex flex-col gap-[5px]"
-        >
-          {isSearchOnlyUsers ? null : (
-            <div className="py-[6px] px-[18px] my-[3px] text-black text-p rounded-[8px] bg-(--color-hover-light)">
-              Users
-            </div>
-          )}
-          {searchedUsers.map((u) => {
+      <CustomScrollBar
+        customClassName="w-[400px] max-xl:!w-full"
+        childrenClassName="flex flex-col gap-[5px]"
+      >
+        {isSearchOnlyUsers ? null : (
+          <div className="py-[6px] px-[18px] my-[3px] text-black text-p rounded-[8px] bg-(--color-hover-light)">
+            Users
+          </div>
+        )}
+        {isUserSearched ? (
+          <m.p
+            className="text-h6 text-(--color-text-dark) text-center"
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 1,
+              transition: { dealy: 0.4, duration: 0.2 },
+            }}
+            exit={{ opacity: 0 }}
+          >
+            {isUserSearched}
+          </m.p>
+        ) : null}
+        <AnimatePresence>
+          {searchedUsers.map((u, index) => {
             const isSelected = selectedUsers?.some(
               (uObj) => uObj._id === u._id
             );
@@ -114,6 +129,7 @@ export default function SearchBlock({
             return (
               <SearchedUser
                 key={u._id}
+                index={index}
                 uObject={u}
                 isSelected={isSelected}
                 isClickDisabled={isClickDisabled}
@@ -126,17 +142,14 @@ export default function SearchBlock({
               />
             );
           })}
-          <p className="text-h6 text-(--color-text-dark) text-center">
-            {isUserSearched}
-          </p>
-          {isSearchOnlyUsers ? null : (
-            <ChatList
-              conversations={searchedChats}
-              isChatSearched={isChatSearched}
-            />
-          )}
-        </CustomScrollBar>
-      )}
-    </div>
+        </AnimatePresence>
+        {isSearchOnlyUsers ? null : (
+          <ChatList
+            conversations={searchedChats}
+            isChatSearched={isChatSearched}
+          />
+        )}
+      </CustomScrollBar>
+    </m.div>
   );
 }
