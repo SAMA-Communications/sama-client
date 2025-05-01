@@ -120,6 +120,11 @@ main {
   flex-direction: column-reverse;
 }
 
+#chatFormContainer .scroll-bar__outer-container > div:nth-child(3) {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
 #conversationItemsScrollable .infinite-scroll-component {
   display: flex;
   flex-direction: column;

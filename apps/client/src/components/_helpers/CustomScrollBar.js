@@ -4,7 +4,7 @@ export default function CustomScrollBar({
   children,
   customStyle,
   customClassName,
-  childrenClassName,
+  childrenClassName = "",
   customId,
   autoHide = true,
   autoHeight = false,

@@ -3,7 +3,6 @@ import {
   useEffect,
   useLayoutEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { useLocation } from "react-router";
@@ -58,8 +57,6 @@ export default function ChatForm() {
   const [currentTab, setCurrentTab] = useState(CHAT_CONTENT_TABS.MESSAGES);
   const isEnableProgrammableChat =
     import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true" && !isMobileView;
-
-  const chatMessagesBlock = useRef();
 
   const closeForm = (e) => {
     const { pathname, hash } = location;
@@ -127,17 +124,18 @@ export default function ChatForm() {
 
     switch (currentTab) {
       case CHAT_CONTENT_TABS.MESSAGES:
-        return <ChatFormContent chatMessagesBlock={chatMessagesBlock} />;
+        return <ChatFormContent />;
       case CHAT_CONTENT_TABS.APPS:
         return <ChatFormEditor />;
       default:
         return null;
     }
-  }, [selectedCID, currentTab, chatMessagesBlock]);
+  }, [selectedCID, currentTab]);
 
   return (
     <m.div
       key="chatForm"
+      id="chatFormContainer"
       className={`max-xl:max-w-full ${
         location.pathname.includes("/profile")
           ? "xl:max-w-full"

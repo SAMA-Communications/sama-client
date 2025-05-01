@@ -23,7 +23,7 @@ import {
 import { getConverastionById, upsertChat } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 
-export default function MessagesList() {
+export default function MessagesList({ scrollRef }) {
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -134,6 +134,7 @@ export default function MessagesList() {
 
   return (
     <InfiniteScroll
+      ref={scrollRef}
       dataLength={messages.length}
       next={lastMessageRef}
       inverse={true}
