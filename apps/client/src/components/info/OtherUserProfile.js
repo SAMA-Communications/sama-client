@@ -26,6 +26,11 @@ import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
 import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
+import {
+  showOtherUserProfileContainer,
+  showOtherUserProfileContent,
+} from "@animations/aOtherUserProfile.js";
+
 import Close from "@icons/actions/CloseGray.svg?react";
 import LinkTo from "@icons/options/LinkTo.svg?react";
 import BackBtn from "@icons/options/Back.svg?react";
@@ -76,17 +81,19 @@ export default function OtherUserProfile() {
   return (
     <m.div
       className="absolute top-[0px] left-[0px] p-[30px] w-dvw h-dvh flex flex-col justify-start items-center bg-(--color-black)/50 z-[200] max-md:p-[0px] max-md:bg-(--color-bg-dark) overflow-hidden"
-      initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
-      animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-      exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
-      transition={{ duration: 0.2 }}
+      variants={showOtherUserProfileContainer(isMobileView)}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      transition="transition"
     >
       <m.div
         className="w-[400px] h-full mr-[15px] max-md:w-dvw max-md:h-dvh max-md:mr-[0px]"
-        initial={{ y: -100, scale: 0.8, opacity: 0 }}
-        animate={{ y: 0, scale: 1, opacity: 1, transition: { delay: 0.1 } }}
-        exit={{ y: -100, scale: 0.8, opacity: 0 }}
-        transition={{ duration: 0.2 }}
+        variants={showOtherUserProfileContent(isMobileView)}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        transition="transition"
       >
         <CustomScrollBar childrenClassName="py-[20px] flex flex-col gap-[15px] max-md:py-[0px]">
           <div className="relative flex flex-col justify-center items-center py-[40px] gap-[20px] rounded-[32px] bg-(--color-accent-light) max-md:rounded-t-[0px]">

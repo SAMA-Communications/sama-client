@@ -19,6 +19,8 @@ import addPrefix from "@utils/navigation/add_prefix";
 import getUserInitials from "@utils/user/get_user_initials";
 import navigateTo from "@utils/navigation/navigate_to";
 
+import { showItem, showLogoOptions } from "@animations/aNavigationLine.js";
+
 import List from "@icons/Conversations.svg?react";
 import Create from "@icons/AddConversation.svg?react";
 import Logout from "@icons/actions/Logout.svg?react";
@@ -57,31 +59,6 @@ export default function NavigationLine({
       ];
     }, [pathname]);
 
-  const showItem = useMemo(
-    () => (index) =>
-      disableAnimation
-        ? {}
-        : {
-            hidden: isReverse
-              ? { scale: 1, opacity: 1 }
-              : { scale: 0.5, opacity: 0 },
-            visible: {
-              ...(isReverse
-                ? { scale: 0.5, opacity: 0 }
-                : {
-                    scale: 1,
-                    opacity: 1,
-                  }),
-              transition: {
-                duration: 0.5,
-                delay: isReverse ? 0 : 0.1 + index * 0.09,
-              },
-            },
-            tap: { scale: 0.85 },
-          },
-    [disableAnimation]
-  );
-
   return (
     <aside className="w-[84px] px-[10px] flex flex-col justify-between bg-transparent select-none pt-[20px] pb-[20px]">
       <AnimatePresence initial={!disableAnimation}>
@@ -96,18 +73,9 @@ export default function NavigationLine({
         >
           <SAMALogo
             customClassName="w-[58px] h-[58px]"
-            initial={
-              isReverse ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }
-            }
-            animate={
-              isReverse
-                ? { opacity: 0, scale: 0.5 }
-                : {
-                    opacity: 1,
-                    scale: [0.5, 1.2, 1],
-                    transition: { duration: 0.5, delay: 0.1 },
-                  }
-            }
+            variants={showLogoOptions(isReverse)}
+            initial="hidden"
+            animate="visible"
             reduceDuration={0.2}
             reduceDelay={isReverse ? 1.1 : 0.6}
           />
@@ -123,7 +91,7 @@ export default function NavigationLine({
                   : pathname + hash;
               addPrefix(currentPath, "/profile");
             }}
-            variants={showItem(3)}
+            variants={showItem(3, isReverse, disableAnimation)}
             initial="hidden"
             animate="visible"
             whileTap="tap"
@@ -148,7 +116,7 @@ export default function NavigationLine({
               }
             }}
             className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) transition-[background-color] duration-200 flex items-center justify-center ${isChatListActive}`}
-            variants={showItem(2)}
+            variants={showItem(2, isReverse, disableAnimation)}
             initial="hidden"
             animate="visible"
             whileTap="tap"
@@ -159,7 +127,7 @@ export default function NavigationLine({
             key="navigationLineCreateicon"
             onClick={() => addPrefix(pathname + hash, "/create")}
             className={`w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) transition-[background-color] duration-200 flex items-center justify-center ${isCreatePageActive}`}
-            variants={showItem(1)}
+            variants={showItem(1, isReverse, disableAnimation)}
             initial="hidden"
             animate="visible"
             whileTap="tap"
@@ -174,7 +142,7 @@ export default function NavigationLine({
             navigateTo("/authorization");
           }}
           className="w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) transition-[background-color] duration-200 flex items-center justify-center"
-          variants={showItem(0)}
+          variants={showItem(0, isReverse, disableAnimation)}
           initial="hidden"
           animate="visible"
           whileTap="tap"

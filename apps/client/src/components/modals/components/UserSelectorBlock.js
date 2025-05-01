@@ -1,7 +1,7 @@
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import OvalLoader from "@components/_helpers/OvalLoader";
 import SearchBlock from "@components/search/SearchBlock";
-import SearchInput from "@components/static/SearchBar";
+import SearchInput from "@components/static/SearchInput";
 import UserInfo from "@components/modals/elements/UserInfo";
 import { KEY_CODES } from "@utils/global/keyCodes";
 import { useEffect, useMemo, useState } from "react";
@@ -85,7 +85,7 @@ export default function UserSelectorBlock({
         </p>
       </div>
       <SearchInput
-        inputClassName="w-full"
+        customClassName="min-h-[48px] w-full"
         shadowText={"Enter a username"}
         setState={setInputText}
       />

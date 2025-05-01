@@ -21,6 +21,11 @@ import globalConstants from "@utils/global/constants";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
+import {
+  showChatInfoContainer,
+  showChatInfoContent,
+} from "@animations/aChatInfo.js";
+
 import AddParticipants from "@icons/AddParticipants.svg?react";
 import BackBtn from "@icons/options/Back.svg?react";
 import Close from "@icons/actions/CloseGray.svg?react";
@@ -81,48 +86,10 @@ export default function ChatInfo() {
   const sendChangeAvatarRequest = async (file) =>
     void (await conversationService.updateChatImage(file));
 
-  const showChatInfoContainer = {
-    hidden: {
-      width: 0,
-      scale: 0.9,
-      opacity: 0,
-      marginRight: 0,
-      transition: { duration: 0.7 },
-    },
-    visible: {
-      width: 400,
-      scale: 1,
-      opacity: 1,
-      marginRight: "15px",
-      transition: { duration: 0.7 },
-    },
-    exit: {
-      width: 0,
-      scale: 0.9,
-      opacity: 0,
-      marginRight: 0,
-      transition: { duration: 0.7 },
-    },
-  };
-
-  const showChatInfoContent = {
-    hidden: {
-      opacity: 0,
-    },
-    visible: {
-      opacity: 1,
-      transition: { duration: 0.2, delay: 0.4 },
-    },
-    exit: {
-      opacity: 0,
-      transition: { duration: 0.2 },
-    },
-  };
-
   return (
     <m.div
-      className="w-[400px] shrink md:my-[20px] md:mr-[20px] max-md:w-dvw"
-      variants={showChatInfoContainer}
+      className="md:w-[400px] max-md:!w-dvw shrink md:my-[20px] md:mr-[20px] "
+      variants={showChatInfoContainer(isMobileView)}
       initial="hidden"
       animate="visible"
       exit="exit"
@@ -131,7 +98,7 @@ export default function ChatInfo() {
         <div className="py-[30px] flex-col gap-[20px] rounded-[32px] bg-(--color-bg-light) flex items-center justify-center max-md:rounded-t-[0px] max-md:rounded-b-[16px]">
           <m.div
             className="mb-[10px] text-center !font-normal text-h5 text-black"
-            variants={showChatInfoContent}
+            variants={showChatInfoContent(isMobileView)}
             initial="hidden"
             animate="visible"
             exit="exit"
@@ -152,7 +119,7 @@ export default function ChatInfo() {
           <m.div
             className={`relative w-[160px] h-[160px] max-md:w-[120px] max-md:h-[120px] rounded-[24px] bg-(--color-bg-dark) flex items-center justify-center overflow-hidden`}
             onClick={pickFileClick}
-            variants={showChatInfoContent}
+            variants={showChatInfoContent(isMobileView)}
             initial="hidden"
             animate="visible"
             exit="exit"
@@ -196,7 +163,7 @@ export default function ChatInfo() {
                 ? addSuffix(pathname + hash, "/edit?type=chat")
                 : null
             }
-            variants={showChatInfoContent}
+            variants={showChatInfoContent(isMobileView)}
             initial="hidden"
             animate="visible"
             exit="exit"
@@ -228,7 +195,7 @@ export default function ChatInfo() {
         <div className="py-[30px] px-[20px] flex flex-col flex-1 gap-[15px] rounded-[32px] bg-(--color-accent-light) max-md:pb-[0px] max-md:rounded-t-[16px] max-md:rounded-b-[0px]">
           <m.div
             className="flex justify-between"
-            variants={showChatInfoContent}
+            variants={showChatInfoContent(isMobileView)}
             initial="hidden"
             animate="visible"
             exit="exit"

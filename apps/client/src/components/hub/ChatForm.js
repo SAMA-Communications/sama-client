@@ -136,8 +136,8 @@ export default function ChatForm() {
   }, [selectedCID, currentTab, chatMessagesBlock]);
 
   return (
-    <m.section
-      className="flex flex-col flex-grow max-md:p-[4svw] md:max-xl:my-[20px] md:max-xl:mr-[20px] max-xl:p-[20px] md:rounded-[32px] bg-(--color-bg-light)"
+    <m.div
+      className="flex flex-col flex-grow md:max-xl:p-[10px] md:rounded-[32px]"
       initial={{ scale: 1, opacity: 0 }}
       animate={{ scale: [1.02, 1], y: [3, 0], opacity: [0, 1] }}
       transition={{ delay: 0.3, duration: 0.5 }}
@@ -158,6 +158,6 @@ export default function ChatForm() {
           Select a conversation to start chatting
         </p>
       )}
-    </m.section>
+    </m.div>
   );
 }

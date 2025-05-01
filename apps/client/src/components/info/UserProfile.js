@@ -21,6 +21,11 @@ import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
+import {
+  showUserProfileContainer,
+  showUserProfileContent,
+} from "@animations/aUserProfile.js";
+
 import BackBtn from "@icons/options/Back.svg?react";
 import Close from "@icons/actions/CloseGray.svg?react";
 import LogoutMini from "@icons/actions/LogoutMini.svg?react";
@@ -62,48 +67,10 @@ export default function UserProfile() {
   const sendChangeAvatarRequest = async (file) =>
     void (await usersService.updateUserAvatar(file));
 
-  const showUserProfileContainer = {
-    hidden: {
-      width: 0,
-      scale: 0.9,
-      opacity: 0,
-      marginRight: 0,
-      transition: { duration: 0.7 },
-    },
-    visible: {
-      width: 400,
-      scale: 1,
-      opacity: 1,
-      marginRight: "15px",
-      transition: { duration: 0.7 },
-    },
-    exit: {
-      width: 0,
-      scale: 0.9,
-      opacity: 0,
-      marginRight: 0,
-      transition: { duration: 0.7 },
-    },
-  };
-
-  const showUserProfileContent = {
-    hidden: {
-      opacity: 0,
-    },
-    visible: {
-      opacity: 1,
-      transition: { duration: 0.2, delay: 0.4 },
-    },
-    exit: {
-      opacity: 0,
-      transition: { duration: 0.2 },
-    },
-  };
-
   return (
-    <m.div
-      className="w-[400px] h-full mr-[15px] max-md:w-dvw max-md:h-dvh max-md:mr-[0px]"
-      variants={showUserProfileContainer}
+    <m.section
+      className=" max-md:!w-dvw md:w-[400px] h-full md:mr-[15px] max-md:h-dvh "
+      variants={showUserProfileContainer(isMobileView)}
       initial="hidden"
       animate="visible"
       exit="exit"
@@ -128,7 +95,7 @@ export default function UserProfile() {
           <m.div
             className="relative w-[160px] h-[160px] rounded-[24px] bg-(--color-bg-light) flex justify-center items-center cursor-pointer overflow-hidden"
             onClick={pickFileClick}
-            variants={showUserProfileContent}
+            variants={showUserProfileContent(isMobileView)}
             initial="hidden"
             animate="visible"
             exit="exit"
@@ -299,6 +266,6 @@ export default function UserProfile() {
           )}
         </div>
       </CustomScrollBar>
-    </m.div>
+    </m.section>
   );
 }

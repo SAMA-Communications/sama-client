@@ -80,39 +80,55 @@ export default function Main({ isNeedToAnimate }) {
 
       return !!location.hash ? (
         keys.includes("/user") || keys.includes("/info") ? null : (
-          <ChatForm key="chatFrom" />
+          <ChatForm key="mobileChatFrom" />
         )
       ) : location.pathname.includes("/profile") ? null : (
-        <ChatList key="chatList" />
+        <ChatList key="mobileChatList" />
       );
     }
 
     if (isTabletView) {
       return !!location.hash ? (
-        <ChatForm key="chatFrom" />
+        <ChatForm key="tabletChatFrom" />
       ) : (
-        <ChatList key="chatList" />
+        <ChatList key="tabletChatList" />
       );
     }
+
+    return (
+      <>
+        {location.pathname.includes("/profile") ? null : (
+          <ChatList key="chatList" />
+        )}
+        <ChatForm key="chatFrom" />
+      </>
+    );
+  }, [location, isMobileView, isTabletView, conversations]);
+
+  const mainContent = useMemo(() => {
+    const shouldRenderContent = isMobileView
+      ? !(!!location.hash
+          ? additionalContainerRight.some(
+              (el) => el.key === "/user" || el.key === "/info"
+            )
+          : location.pathname.includes("/profile"))
+      : true;
+
+    if (!shouldRenderContent) return null;
 
     return (
       <AnimatePresence initial={isNeedToAnimate}>
         <m.section
           key="mainContainer"
           ref={mainContainerRef}
-          className="p-[30px] mr-[20px] my-[20px] flex flex-1 flex-row gap-[15px] rounded-[48px] bg-(--color-bg-light)"
-          initial={{ opacity: 0 }}
+          className="max-xl:p-[20px] p-[30px] md:mr-[20px] md:my-[20px] flex flex-1 flex-row gap-[15px] md:rounded-[48px] bg-(--color-bg-light) overflow-hidden"
+          initial={{ opacity: isMobileView ? 1 : 0 }}
         >
-          <AnimatePresence>
-            {location.pathname.includes("/profile") ? null : (
-              <ChatList key="chatList" />
-            )}
-            <ChatForm key="chatFrom" />
-          </AnimatePresence>
+          <AnimatePresence>{hubContainer}</AnimatePresence>
         </m.section>
       </AnimatePresence>
     );
-  }, [location, isMobileView, isTabletView, conversations]);
+  }, [hubContainer]);
 
   const additionalContainerLeft = useMemo(() => {
     return location.pathname.includes("/profile") ? (
@@ -132,11 +148,13 @@ export default function Main({ isNeedToAnimate }) {
   }, []);
 
   return (
-    <>
-      {isMobileView ? null : <NavigationLine disableAnimation={true} />}
+    <AnimatePresence>
+      {isMobileView ? null : (
+        <NavigationLine key="navigationLine" disableAnimation={true} />
+      )}
       {additionalContainerLeft}
-      {hubContainer}
+      {mainContent}
       {additionalContainerRight}
-    </>
+    </AnimatePresence>
   );
 }
