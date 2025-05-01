@@ -44,7 +44,7 @@ export default function ChatList() {
   return (
     <m.div
       key="chaList"
-      className="flex flex-col relative gap-[10px] justify-start items-center max-xl:flex-1 xl:w-[400px] md:max-xl:mb-[20px]"
+      className="flex flex-col relative gap-[10px] justify-start sm:items-center max-sm:items-end max-xl:flex-1 xl:w-[400px] md:max-xl:mb-[20px]"
       initial={{ scale: 1, opacity: 0 }}
       animate={{
         scale: [1.02, 1],
@@ -60,7 +60,7 @@ export default function ChatList() {
     >
       {isMobileView ? <MenuButtons /> : null}
       <SearchInput
-        customClassName="max-w-full"
+        customClassName="sm:max-w-full max-sm:max-w-[calc(100%-60px)]"
         shadowText={"Search"}
         setState={setInputText}
       />
