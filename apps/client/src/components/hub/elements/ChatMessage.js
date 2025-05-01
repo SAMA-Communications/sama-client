@@ -22,7 +22,7 @@ export default function ChatMessage({
 }) {
   const { pathname, hash } = useLocation();
 
-  const { body, from, attachments, status, t } = message;
+  const { _id: key, body, from, attachments, status, t } = message;
   const isCurrentUser = from === currentUserId;
 
   const timeSend = useMemo(() => {
@@ -37,11 +37,12 @@ export default function ChatMessage({
 
   return (
     <m.div
+      key={key}
       className={`relative w-max max-w-[min(80%,820px)] flex flex-row gap-[16px] ${
         prev ? "" : "mt-[8px]"
       }`}
       whileInView={{ opacity: 1, x: 0 }}
-      initial={{ opacity: 0, x: -15 }}
+      initial={{ opacity: 0, x: -10 }}
       exit={{ width: 0, opacity: [1, 1, 0, 0] }}
       transition={{ duration: 0.3, delay: 0.03 }}
     >

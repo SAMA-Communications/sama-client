@@ -120,33 +120,33 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
             <p className="text-gray-700/80">Our socials</p>
             <span className="flex-1 h-[1px] rounded-[2px] bg-gray-700/30"></span>
           </div>
-          <div className="flex flex-row gap-[15px]">
+          <div className="grid sm:grid-cols-3 max-sm:grid-cols-2 flex-row gap-[15px]">
             <a
-              href="https://github.com/SAMA-Communications"
+              href="https://discord.gg/WSCQhFg65J"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex flex-row gap-[10px] justify-center items-center py-[7px] px-[14px] border border-gray-700/30 rounded-lg hover:bg-(--color-hover-light) transition-colors cursor-pointer"
+              className="col-span-1 flex flex-row gap-[10px] justify-center items-center py-[7px] px-[14px] border border-gray-700/30 rounded-lg hover:bg-(--color-hover-light) transition-colors cursor-pointer"
             >
-              <img className="w-[28px] h-[28px]" src={GitHub} alt="" />
-              <p className="!font-light">GitHub</p>
+              <Discord className="w-[28px] h-[28px]" />
+              <p className="!font-light">Discord</p>
             </a>
             <a
               href="https://medium.com/sama-communications"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex flex-row gap-[10px] justify-center items-center py-[7px] px-[14px] border border-gray-700/30 rounded-lg hover:bg-(--color-hover-light) transition-colors cursor-pointer"
+              className="col-span-1 flex flex-row gap-[10px] justify-center items-center py-[7px] px-[14px] border border-gray-700/30 rounded-lg hover:bg-(--color-hover-light) transition-colors cursor-pointer"
             >
               <Medium className="w-[28px] h-[28px]" />
               <p className="!font-light">Medium</p>
             </a>
             <a
-              href="https://discord.gg/WSCQhFg65J"
+              href="https://github.com/SAMA-Communications"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex flex-row gap-[10px] justify-center items-center py-[7px] px-[14px] border border-gray-700/30 rounded-lg hover:bg-(--color-hover-light) transition-colors cursor-pointer"
+              className="sm:col-span-1 max-sm:col-span-2 flex flex-row gap-[10px] justify-center items-center py-[7px] px-[14px] border border-gray-700/30 rounded-lg hover:bg-(--color-hover-light) transition-colors cursor-pointer"
             >
-              <Discord className="w-[28px] h-[28px]" />
-              <p className="!font-light">Discord</p>
+              <img className="w-[28px] h-[28px]" src={GitHub} alt="" />
+              <p className="!font-light">GitHub</p>
             </a>
           </div>
         </m.div>

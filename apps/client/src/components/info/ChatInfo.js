@@ -32,7 +32,7 @@ import Close from "@icons/actions/CloseGray.svg?react";
 import ImageBig from "@icons/media/ImageBig_latest.svg?react";
 import ImageOwnerBig from "@icons/media/ImageBig.svg?react";
 
-export default function ChatInfo() {
+export default function ChatInfo({ shareRef }) {
   const { pathname, hash } = useLocation();
 
   const isMobileView = useSelector(getIsMobileView);
@@ -88,6 +88,7 @@ export default function ChatInfo() {
 
   return (
     <m.div
+      ref={shareRef}
       className="md:w-[400px] max-md:!w-dvw shrink md:my-[20px] md:mr-[20px] "
       variants={showChatInfoContainer(isMobileView)}
       initial="hidden"

@@ -1,5 +1,7 @@
-import addSuffix from "@utils/navigation/add_suffix";
 import { useLocation } from "react-router";
+import { motion as m } from "framer-motion";
+
+import addSuffix from "@utils/navigation/add_suffix";
 
 export default function InformativeMessage({
   text,
@@ -9,7 +11,10 @@ export default function InformativeMessage({
   const { pathname, hash } = useLocation();
 
   return (
-    <div
+    <m.div
+      whileInView={{ y: 0 }}
+      initial={{ y: 5 }}
+      transition={{ duration: 0.3, delay: 0.03 }}
       className={
         "self-center py-[6px] px-[18px] rounded-[16px] bg-(--color-hover-light) cursor-pointer text-gray-500" +
         (isPrevMesssageUsers ? " mt-[10px]" : "")
@@ -19,6 +24,6 @@ export default function InformativeMessage({
       }
     >
       <p>{text}</p>
-    </div>
+    </m.div>
   );
 }

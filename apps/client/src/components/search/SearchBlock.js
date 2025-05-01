@@ -91,7 +91,7 @@ export default function SearchBlock({
     <m.div
       className={`mt-[5px] flex items-center justify-center max-xl:w-full max-xl:mt-[0px] max-xl:rounded-[16px] max-xl:bg-(--color-bg-light) ${customClassName}`}
       initial={{ height: "0svh" }}
-      animate={{ height: ["0svh", "80svh"] }}
+      animate={{ height: ["0svh", "100%"] }}
       exit={{ height: "0svh" }}
       transition={{ duration: 0.6, ease: "easeInOut" }}
     >

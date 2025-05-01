@@ -25,15 +25,13 @@ import SHub from "@skeletons/hub/SHub";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const blockMap = {
-  "/info": <ChatInfo key="chatInfo" />,
-  "/user": <OtherUserProfile key="otherUserProfile" />,
-  "/add": (
-    <UsersSelectModalHub type={"add_participants"} key="usersSelectModalHub" />
-  ),
-  "/create": <UsersSelectModalHub key="usersSelectModalHub" />,
-  "/attach": <AttachHub key="attachHub" />,
-  "/media": <MediaHub key="mediaHub" />,
-  "/edit": <EditModalHub key="editModalHub" />,
+  "/info": <ChatInfo />,
+  "/user": <OtherUserProfile />,
+  "/add": <UsersSelectModalHub type={"add_participants"} />,
+  "/create": <UsersSelectModalHub />,
+  "/attach": <AttachHub />,
+  "/media": <MediaHub />,
+  "/edit": <EditModalHub />,
 };
 
 export default function Main({ isNeedToAnimate }) {
@@ -45,18 +43,9 @@ export default function Main({ isNeedToAnimate }) {
   const conversations = useSelector(selectConversationsEntities);
   const conversationsArray = conversations && Object.values(conversations);
 
-  const additionalContainerRight = useMemo(() => {
-    const { pathname, hash } = location;
-
-    const allBlocks = Object.entries(blockMap)
-      .filter(([key, _]) => pathname.includes(key) || hash.includes(key))
-      .map(([key, component]) => cloneElement(component, { key }));
-
-    return isMobileView ? allBlocks.slice(-2) : allBlocks;
-  }, [location, isMobileView]);
-
   const [mainContainerRef, animateMainContainer] = useAnimate();
   const [userProfileRef, animateUserProfileContainer] = useAnimate();
+  const [chatInfoeRef, animateChatInfoContainer] = useAnimate();
   const [navigationLineRef, animateNavigationLineContainer] = useAnimate();
 
   useEffect(() => {
@@ -71,6 +60,14 @@ export default function Main({ isNeedToAnimate }) {
   }, []);
 
   const triggerExitAnimation = useCallback(() => {
+    chatInfoeRef.current &&
+      animateChatInfoContainer([
+        [
+          chatInfoeRef.current,
+          { scale: [1, 1.02, 0.8], opacity: [1, 0.3, 0] },
+          { duration: 0.4 },
+        ],
+      ]);
     userProfileRef.current &&
       animateUserProfileContainer([
         [
@@ -99,7 +96,27 @@ export default function Main({ isNeedToAnimate }) {
           { duration: 0.4 },
         ],
       ]);
-  }, [mainContainerRef, userProfileRef, navigationLineRef]);
+  }, [mainContainerRef, userProfileRef, navigationLineRef, chatInfoeRef]);
+
+  const additionalContainerRight = useMemo(() => {
+    const { pathname, hash } = location;
+
+    const isChatInfo = hash.includes("/info");
+    const allBlocks = Object.entries(blockMap)
+      .filter(([key, _]) => pathname.includes(key) || hash.includes(key))
+      .map(([key, component]) =>
+        cloneElement(component, {
+          key,
+          ...(isChatInfo ? { shareRef: chatInfoeRef } : {}),
+        })
+      );
+
+    return (
+      <AnimatePresence>
+        {isMobileView ? allBlocks.slice(-2) : allBlocks}
+      </AnimatePresence>
+    );
+  }, [location, isMobileView]);
 
   const hubContainer = useMemo(() => {
     if (!conversations) return <SHub />;
@@ -185,7 +202,7 @@ export default function Main({ isNeedToAnimate }) {
       </AnimatePresence>
       <AnimatePresence mode="wait">{additionalContainerLeft}</AnimatePresence>
       <AnimatePresence>{mainContent}</AnimatePresence>
-      <AnimatePresence mode="wait">{additionalContainerRight}</AnimatePresence>
+      <AnimatePresence>{additionalContainerRight}</AnimatePresence>
     </>
   );
 }
