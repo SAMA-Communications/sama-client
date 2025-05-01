@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { useRef } from "react";
-import { motion as m, useAnimate } from "framer-motion";
+import { motion as m } from "framer-motion";
 
 import usersService from "@services/usersService";
 import { useKeyDown } from "@hooks/useKeyDown";
@@ -33,7 +33,7 @@ import Password from "@icons/users/Password.svg?react";
 import Trash from "@icons/actions/Trash.svg?react";
 import UserIcon from "@icons/users/AddAvatar.svg?react";
 
-export default function UserProfile({ triggerMainExitEvent }) {
+export default function UserProfile({ triggerExitEvent, shareRef }) {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
@@ -67,27 +67,9 @@ export default function UserProfile({ triggerMainExitEvent }) {
   const sendChangeAvatarRequest = async (file) =>
     void (await usersService.updateUserAvatar(file));
 
-  const [userProfileContainerRef, animateUserProfileContainer] = useAnimate();
-
-  const triggerExitAnimation = () => {
-    triggerMainExitEvent();
-    if (!userProfileContainerRef.current) return;
-    animateUserProfileContainer([
-      [
-        userProfileContainerRef.current,
-        {
-          scale: isMobileView ? [1, 0.6] : [1, 1.02, 0.8],
-          opacity: [1, 0.3, 0],
-          ...(isMobileView ? { borderRadius: [0, 48, 48] } : {}),
-        },
-        { duration: 0.4 },
-      ],
-    ]);
-  };
-
   return (
     <m.section
-      ref={userProfileContainerRef}
+      ref={shareRef}
       className=" max-md:!w-dvw md:w-[400px] h-full md:mr-[15px] max-md:h-dvh overflow-hidden"
       variants={showUserProfileContainer(isMobileView)}
       initial="hidden"
@@ -256,7 +238,7 @@ export default function UserProfile({ triggerMainExitEvent }) {
               <p
                 onClick={() => {
                   navigateTo("/authorization");
-                  triggerExitAnimation();
+                  triggerExitEvent();
                   sendLogout();
                 }}
               >
@@ -277,7 +259,7 @@ export default function UserProfile({ triggerMainExitEvent }) {
                 className="text-(--color-red)"
                 onClick={async () => {
                   navigateTo("/authorization");
-                  triggerExitAnimation();
+                  triggerExitEvent();
                   await usersService.deleteCurrentUser();
                 }}
               >

@@ -1,4 +1,4 @@
-import { cloneElement, useEffect, useMemo } from "react";
+import { cloneElement, useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
 import { AnimatePresence, motion as m, useAnimate } from "framer-motion";
@@ -56,6 +56,8 @@ export default function Main({ isNeedToAnimate }) {
   }, [location, isMobileView]);
 
   const [mainContainerRef, animateMainContainer] = useAnimate();
+  const [userProfileRef, animateUserProfileContainer] = useAnimate();
+  const [navigationLineRef, animateNavigationLineContainer] = useAnimate();
 
   useEffect(() => {
     if (!isNeedToAnimate || !mainContainerRef.current) return;
@@ -68,16 +70,36 @@ export default function Main({ isNeedToAnimate }) {
     ]);
   }, []);
 
-  const triggerExitAnimation = () => {
-    if (!mainContainerRef.current) return;
-    animateMainContainer([
-      [
-        mainContainerRef.current,
-        { scale: [1, 1.02, 0.8], opacity: [1, 0.3, 0] },
-        { duration: 0.4 },
-      ],
-    ]);
-  };
+  const triggerExitAnimation = useCallback(() => {
+    userProfileRef.current &&
+      animateUserProfileContainer([
+        [
+          userProfileRef.current,
+          {
+            scale: isMobileView ? [1, 0.6] : [1, 1.02, 0.8],
+            opacity: [1, 0.3, 0],
+            ...(isMobileView ? { borderRadius: [0, 48, 48] } : {}),
+          },
+          { duration: 0.4 },
+        ],
+      ]);
+    navigationLineRef.current &&
+      animateNavigationLineContainer?.([
+        [
+          navigationLineRef.current,
+          { x: -64, opacity: [1, 0] },
+          { duration: 0.4 },
+        ],
+      ]);
+    mainContainerRef.current &&
+      animateMainContainer([
+        [
+          mainContainerRef.current,
+          { scale: [1, 1.02, 0.8], opacity: [1, 0.3, 0] },
+          { duration: 0.4 },
+        ],
+      ]);
+  }, [mainContainerRef, userProfileRef, navigationLineRef]);
 
   const hubContainer = useMemo(() => {
     if (!conversations) return <SHub />;
@@ -142,7 +164,8 @@ export default function Main({ isNeedToAnimate }) {
     return location.pathname.includes("/profile") ? (
       <UserProfile
         key="userProfile"
-        triggerMainExitEvent={triggerExitAnimation}
+        shareRef={userProfileRef}
+        triggerExitEvent={triggerExitAnimation}
       />
     ) : null;
   }, [location]);
@@ -153,8 +176,10 @@ export default function Main({ isNeedToAnimate }) {
         {isMobileView ? null : (
           <NavigationLine
             key="navigationLine"
-            disableAnimation={true}
-            triggerMainExitEvent={triggerExitAnimation}
+            disableAnimation={!isNeedToAnimate}
+            isShareExitEvent={true}
+            shareRef={navigationLineRef}
+            triggerExitEvent={triggerExitAnimation}
           />
         )}
       </AnimatePresence>
