@@ -33,7 +33,7 @@ import Password from "@icons/users/Password.svg?react";
 import Trash from "@icons/actions/Trash.svg?react";
 import UserIcon from "@icons/users/AddAvatar.svg?react";
 
-export default function UserProfile() {
+export default function UserProfile({ triggerMainExitEvent }) {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
@@ -70,18 +70,19 @@ export default function UserProfile() {
   const [userProfileContainerRef, animateUserProfileContainer] = useAnimate();
 
   const triggerExitAnimation = () => {
-    console.log(isMobileView, userProfileContainerRef);
-
-    if (isMobileView) {
-      if (!userProfileContainerRef.current) return;
-      animateUserProfileContainer([
-        [
-          userProfileContainerRef.current,
-          { scale: [1, 0.6], opacity: [1, 0.3, 0], borderRadius: [0, 48, 48] },
-          { duration: 0.4 },
-        ],
-      ]);
-    }
+    triggerMainExitEvent();
+    if (!userProfileContainerRef.current) return;
+    animateUserProfileContainer([
+      [
+        userProfileContainerRef.current,
+        {
+          scale: isMobileView ? [1, 0.6] : [1, 1.02, 0.8],
+          opacity: [1, 0.3, 0],
+          ...(isMobileView ? { borderRadius: [0, 48, 48] } : {}),
+        },
+        { duration: 0.4 },
+      ],
+    ]);
   };
 
   return (
@@ -274,10 +275,11 @@ export default function UserProfile() {
               <Trash />
               <p
                 className="text-(--color-red)"
-                onClick={async () =>
-                  (await usersService.deleteCurrentUser()) &&
-                  navigateTo("/authorization")
-                }
+                onClick={async () => {
+                  navigateTo("/authorization");
+                  triggerExitAnimation();
+                  await usersService.deleteCurrentUser();
+                }}
               >
                 Delete account
               </p>

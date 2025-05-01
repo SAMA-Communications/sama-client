@@ -27,7 +27,7 @@ export default function LastMessage({ message, count, userId, viewName }) {
           {viewName ? `${viewName}:` : null}
         </p>
         {lastAtt ? <LastMessageMedia attachment={lastAtt} /> : null}
-        <p className="w-full !font-light overflow-hidden text-ellipsis whitespace-nowrap">
+        <p className="w-full !font-light text-(--color-text-dark) overflow-hidden text-ellipsis whitespace-nowrap">
           {lastMessageText(body, lastAtt)}
         </p>
       </div>

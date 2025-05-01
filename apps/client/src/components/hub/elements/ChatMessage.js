@@ -96,12 +96,12 @@ export default function ChatMessage({
             <div
               className={`${
                 attachments?.length ? "max-w-[440px]" : "max-w-full"
-              } whitespace-pre-wrap text-black  wrap-break-word ${
+              } whitespace-pre-wrap text-black wrap-break-word ${
                 isCurrentUser ? "!text-white" : ""
               }`}
               style={{ wordBreak: "break-word", inlineSize: "auto" }}
             >
-              {urlify(body, isCurrentUser ? "white" : "black")}
+              <p>{urlify(body, isCurrentUser ? "white" : "black")}</p>
             </div>
           ) : null}
           <div

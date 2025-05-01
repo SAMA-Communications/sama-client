@@ -145,7 +145,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
 
   return (
     <div
-      className="flex shrink pb-[10px] h-max"
+      className="flex shrink pb-[10px] h-max max-w-full"
       onClick={viewChatOrPaticipantInfo}
     >
       {isMobile || isTablet ? (
@@ -155,8 +155,8 @@ export default function ChatFormHeader({ closeFormFunc }) {
         />
       ) : null}
       <div
-        className={`h-max -mt-[10px] grow flex cursor-pointer ${
-          isGroupChat ? "flex-row items-end gap-[15px]" : "flex-col"
+        className={`h-max max-xl:max-w-[calc(100%-75px)] xl:max-w-[calc(100%-15px)] -mt-[10px] grow flex cursor-pointer ${
+          isGroupChat ? "flex-row items-end gap-[15px] mr-[25px]" : "flex-col"
         } `}
       >
         <p className="!font-medium text-h2 text-black leading-[1.5] overflow-hidden text-ellipsis whitespace-nowrap">
@@ -165,8 +165,8 @@ export default function ChatFormHeader({ closeFormFunc }) {
         <div
           className={
             isGroupChat
-              ? "py-[2px] px-[10px] rounded-2xl bg-[var(--color-hover-light)] text-gray-500 mb-[9px] cursor-default"
-              : ""
+              ? "py-[2px] px-[10px] rounded-2xl bg-[var(--color-hover-light)] text-gray-400 mb-[9px] cursor-default text-nowrap"
+              : "text-(--color-text-light)"
           }
         >
           {viewStatusActivity}

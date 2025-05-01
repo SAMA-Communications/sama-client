@@ -30,7 +30,9 @@ export default function ChatFormContent({ chatMessagesBlock }) {
 
     return (
       <div className="flex flex-grow items-end pb-[15px]">
-        <p className="font-light text-[23px]">Write the first message...</p>
+        <p className="font-light text-[23px] text-(--color-text-light)">
+          Write the first message...
+        </p>
       </div>
     );
   }, [messages]);

@@ -18,7 +18,9 @@ import Medium from "@icons/socials/MediumIcon.svg?react";
 import GitHub from "@icons/socials/GitHubIcon.png";
 
 export default function AuthorizationHub({ showDemoMessage = false }) {
-  const [page, setPage] = useState("login");
+  const [page, setPage] = useState(
+    localStorage.getItem("isUsedBefore") ? "login" : "signup"
+  );
   const [content, setContent] = useState({});
 
   const [scope, animate] = useAnimate();

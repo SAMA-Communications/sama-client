@@ -73,6 +73,7 @@ main {
   font-family: Consolas, "Courier New", monospace;
 }
 
+.editor-helper .editor-tooltip-style,
 .editor-validation .editor-tooltip-style {
   padding: 15px 30px !important;
   color: black;
@@ -82,6 +83,7 @@ main {
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
 }
 
+.editor-helper .editor-tooltip-arrow,
 .editor-validation .editor-tooltip-arrow {
   background-color: var(--color-accent-dark);
 }

@@ -20,13 +20,13 @@ export default function PasswordInput({ setState }) {
       />
       <div className="flex items-center justify-center select-none cursor-pointer">
         {passwordType === "password" ? (
-          <HidePassword
+          <ShowPassword
             className="mt-[5px]"
             onClick={() => setPasswordType("text")}
           />
         ) : (
-          <ShowPassword
-            className="mt-[5px]"
+          <HidePassword
+            className="mt-[6px]"
             onClick={() => setPasswordType("password")}
           />
         )}

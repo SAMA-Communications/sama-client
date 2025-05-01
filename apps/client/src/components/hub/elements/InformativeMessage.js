@@ -18,7 +18,7 @@ export default function InformativeMessage({
         addSuffix(pathname + hash, `/user?uid=${params?.user?._id}`)
       }
     >
-      {text}
+      <p>{text}</p>
     </div>
   );
 }

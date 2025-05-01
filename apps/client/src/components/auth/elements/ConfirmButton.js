@@ -55,6 +55,7 @@ export default function ConfirmButton({ page, content, onClickEvent }) {
         dispatch(upsertUser(userData));
         navigateTo("/");
         onClickEvent();
+        localStorage.setItem("isUsedBefore", true);
       }
     });
   }, [content, isAutoAuth, isLoginPage]);

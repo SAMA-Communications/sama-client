@@ -168,6 +168,7 @@ class UsersService {
       throw new Error("User logout error");
     } finally {
       localStorage.clear();
+      localStorage.setItem("isUsedBefore", true);
     }
   }
 

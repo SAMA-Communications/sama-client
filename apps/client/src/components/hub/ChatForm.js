@@ -138,7 +138,12 @@ export default function ChatForm() {
   return (
     <m.div
       key="chatForm"
-      className="flex flex-col flex-grow md:max-xl:p-[10px] md:rounded-[32px]"
+      className={`max-xl:max-w-full ${
+        location.pathname.includes("/profile")
+          ? "xl:max-w-full"
+          : "xl:max-w-[calc(100%-420px)]"
+      } flex flex-col flex-grow md:max-xl:p-[10px] md:rounded-[32px]`}
+      // layout
       initial={{ scale: 1, opacity: 0 }}
       animate={{ scale: [1.02, 1], y: [3, 0], opacity: [0, 1] }}
       transition={{ delay: 0.3, duration: 0.5 }}

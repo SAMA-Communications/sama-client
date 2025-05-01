@@ -57,6 +57,28 @@ export default function Main({ isNeedToAnimate }) {
 
   const [mainContainerRef, animateMainContainer] = useAnimate();
 
+  useEffect(() => {
+    if (!isNeedToAnimate || !mainContainerRef.current) return;
+    animateMainContainer([
+      [
+        mainContainerRef.current,
+        { scale: [0.6, 1.01, 1], opacity: [0, 0.3, 1] },
+        { duration: 0.8 },
+      ],
+    ]);
+  }, []);
+
+  const triggerExitAnimation = () => {
+    if (!mainContainerRef.current) return;
+    animateMainContainer([
+      [
+        mainContainerRef.current,
+        { scale: [1, 1.02, 0.8], opacity: [1, 0.3, 0] },
+        { duration: 0.4 },
+      ],
+    ]);
+  };
+
   const hubContainer = useMemo(() => {
     if (!conversations) return <SHub />;
 
@@ -107,7 +129,7 @@ export default function Main({ isNeedToAnimate }) {
       <AnimatePresence initial={isNeedToAnimate}>
         <m.section
           ref={mainContainerRef}
-          className="max-xl:p-[20px] p-[30px] md:mr-[20px] md:my-[20px] flex flex-1 flex-row gap-[15px] md:rounded-[48px] bg-(--color-bg-light) overflow-hidden"
+          className="max-xl:p-[20px] p-[30px] md:mr-[20px] md:my-[20px] flex flex-1 flex-row justify-center gap-[15px] md:rounded-[48px] bg-(--color-bg-light) overflow-hidden"
           initial={{ opacity: isMobileView || !isNeedToAnimate ? 1 : 0 }}
         >
           <AnimatePresence>{hubContainer}</AnimatePresence>
@@ -118,31 +140,12 @@ export default function Main({ isNeedToAnimate }) {
 
   const additionalContainerLeft = useMemo(() => {
     return location.pathname.includes("/profile") ? (
-      <UserProfile key="userProfile" />
+      <UserProfile
+        key="userProfile"
+        triggerMainExitEvent={triggerExitAnimation}
+      />
     ) : null;
   }, [location]);
-
-  useEffect(() => {
-    if (!isNeedToAnimate || !mainContainerRef.current) return;
-    animateMainContainer([
-      [
-        mainContainerRef.current,
-        { scale: [0.6, 1.01, 1], opacity: [0, 0.3, 1] },
-        { duration: 0.8 },
-      ],
-    ]);
-  }, []);
-
-  const triggerExitAnimation = () => {
-    if (!mainContainerRef.current) return;
-    animateMainContainer([
-      [
-        mainContainerRef.current,
-        { scale: [1, 1.02, 0.8], opacity: [1, 0.3, 0] },
-        { duration: 0.4 },
-      ],
-    ]);
-  };
 
   return (
     <>

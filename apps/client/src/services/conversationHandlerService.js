@@ -53,10 +53,6 @@ class ConversationHandlerService {
       validateCode(code)
     );
 
-    await this.#sandBox.runSandboxed(async ({ validateCode }) =>
-      validateCode(code)
-    );
-
     return {
       noSyntaxError: ok,
       isExportHandler: /export\s+default\s+await\s+handler\s*\(.*\)/.test(
