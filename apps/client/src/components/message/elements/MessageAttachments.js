@@ -1,5 +1,6 @@
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useLocation } from "react-router";
+import { motion as m } from "motion/react";
 
 import PlayButton from "@components/_helpers/PlayButton.js";
 
@@ -23,8 +24,9 @@ export default function MessageAttachments({ attachments, mid }) {
     >
       <Masonry className="gap-[5px]! media-gallery">
         {attachments.map((att, index) => (
-          <div
-            key={att.file_id}
+          <m.div
+            key={att.file_name}
+            layout
             className="masonry-item w-full max-h-[200px] h-full overflow-hidden rounded-lg cursor-pointer"
           >
             {getFileType(att.file_name) === "Video" ? (
@@ -49,7 +51,7 @@ export default function MessageAttachments({ attachments, mid }) {
                 }
               />
             )}
-          </div>
+          </m.div>
         ))}
       </Masonry>
     </ResponsiveMasonry>

@@ -145,14 +145,14 @@ export default function MessagesList() {
           {messages.map((msg, i) =>
             msg.x?.type ? (
               <InformativeMessage
-                key={msg._id}
+                key={msg.old_id || msg._id}
                 params={msg.x}
                 text={msg.body}
                 isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
               />
             ) : (
               <ChatMessage
-                key={msg._id}
+                key={msg.old_id || msg._id}
                 message={msg}
                 sender={participants[msg.from]}
                 currentUserId={currentUserId}

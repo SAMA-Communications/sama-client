@@ -1,7 +1,8 @@
-import DownloadManager from "@lib/downloadManager";
-import api from "@api/api";
 import jwtDecode from "jwt-decode";
-import navigateTo from "@utils/navigation/navigate_to";
+
+import api from "@api/api";
+import DownloadManager from "@lib/downloadManager";
+
 import store from "@store/store";
 import { addUser } from "@store/values/Participants";
 import {
@@ -19,6 +20,8 @@ import {
   upsertChat,
   upsertParticipants,
 } from "@store/values/Conversations";
+
+import navigateTo from "@utils/navigation/navigate_to";
 
 class MessagesService {
   currentChatId;
@@ -219,6 +222,7 @@ class MessagesService {
 
     const mObject = {
       _id: server_mid,
+      old_id: mid,
       body: modified?.body || body,
       from,
       status: "sent",

@@ -158,6 +158,7 @@ export default function AttachHub() {
 
   const sendMessage = useCallback(
     async (event) => {
+      if (isPending) return;
       event?.preventDefault();
 
       if (!connectState) {
@@ -217,6 +218,7 @@ export default function AttachHub() {
       if (response.mid) {
         msg = {
           _id: response.server_mid,
+          old_id: mid,
           body,
           from: currentUserId,
           status: "sent",
@@ -246,6 +248,7 @@ export default function AttachHub() {
       connectState,
       currentUserId,
       files,
+      isPending,
       isSendMessageDisable,
       messages,
       selectedCID,
