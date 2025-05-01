@@ -5,6 +5,8 @@ export default function SAMALogo({
   variants = {},
   initial = {},
   animate = {},
+  reduceDelay = 0,
+  reduceDuration = 0,
 }) {
   return (
     <m.div
@@ -49,8 +51,8 @@ export default function SAMALogo({
             scale: [0, 1],
             rotate: [80, 0],
             transition: {
-              delay: 1.1,
-              duration: 0.4,
+              delay: 1.1 - reduceDelay,
+              duration: 0.4 - reduceDuration,
               ease: "easeOut",
             },
           }}
@@ -94,7 +96,13 @@ export default function SAMALogo({
           cx="368.61"
           cy="402.88"
           r="223.6"
-          animate={{ scale: [0, 1], transition: { duration: 0.5, delay: 1.3 } }}
+          animate={{
+            scale: [0, 1],
+            transition: {
+              duration: 0.5 - reduceDuration,
+              delay: 1.3 - reduceDelay,
+            },
+          }}
         />
         <m.g
           animate={{
@@ -102,7 +110,10 @@ export default function SAMALogo({
             rotateY: [50, -20, 0],
             scale: [0.8, 1.1, 1],
             x: [-30, 10, 0],
-            transition: { duration: 0.6, delay: 1.5 },
+            transition: {
+              duration: 0.6 - reduceDuration,
+              delay: 1.5 - reduceDelay,
+            },
           }}
         >
           <path

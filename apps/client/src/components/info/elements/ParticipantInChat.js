@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { motion as m } from "framer-motion";
 
 import DynamicAvatar from "@components/info/elements/DynamicAvatar";

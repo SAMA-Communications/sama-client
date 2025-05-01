@@ -1,7 +1,7 @@
-import { cloneElement, useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import { cloneElement, useEffect, useMemo } from "react";
+import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
-import { AnimatePresence, motion as m } from "framer-motion";
+import { AnimatePresence, motion as m, useAnimate } from "framer-motion";
 
 import ChatForm from "@components/hub/ChatForm";
 import ChatInfo from "@components/info/ChatInfo";
@@ -36,10 +36,11 @@ const blockMap = {
   "/edit": <EditModalHub key="editModalHub" />,
 };
 
-export default function Main() {
+export default function Main({ isNeedToAnimate }) {
+  const location = useLocation();
+
   const isMobileView = useSelector(getIsMobileView);
   const isTabletView = useSelector(getIsTabletView);
-  const location = useLocation();
 
   const conversations = useSelector(selectConversationsEntities);
   const conversationsArray = conversations && Object.values(conversations);
@@ -53,6 +54,8 @@ export default function Main() {
 
     return isMobileView ? allBlocks.slice(-2) : allBlocks;
   }, [location, isMobileView]);
+
+  const [mainContainerRef, animateMainContainer] = useAnimate();
 
   const hubContainer = useMemo(() => {
     if (!conversations) {
@@ -93,19 +96,21 @@ export default function Main() {
     }
 
     return (
-      <m.section
-        className="p-[30px] mr-[20px] my-[20px] flex flex-1 flex-row gap-[15px] rounded-[48px] bg-(--color-bg-light)"
-        initial={{ opacity: 0 }}
-        animate={{ scale: [0.8, 1.01, 1], opacity: [0, 1] }}
-        transition={{ duration: 0.8 }}
-      >
-        <AnimatePresence>
-          {location.pathname.includes("/profile") ? null : (
-            <ChatList key="chatList" />
-          )}
-          <ChatForm key="chatFrom" />
-        </AnimatePresence>
-      </m.section>
+      <AnimatePresence initial={isNeedToAnimate}>
+        <m.section
+          key="mainContainer"
+          ref={mainContainerRef}
+          className="p-[30px] mr-[20px] my-[20px] flex flex-1 flex-row gap-[15px] rounded-[48px] bg-(--color-bg-light)"
+          initial={{ opacity: 0 }}
+        >
+          <AnimatePresence>
+            {location.pathname.includes("/profile") ? null : (
+              <ChatList key="chatList" />
+            )}
+            <ChatForm key="chatFrom" />
+          </AnimatePresence>
+        </m.section>
+      </AnimatePresence>
     );
   }, [location, isMobileView, isTabletView, conversations]);
 
@@ -115,14 +120,23 @@ export default function Main() {
     ) : null;
   }, [location]);
 
+  useEffect(() => {
+    if (!isNeedToAnimate || !mainContainerRef.current) return;
+    animateMainContainer([
+      [
+        mainContainerRef.current,
+        { scale: [0.6, 1.01, 1], opacity: [0, 0.3, 1] },
+        { duration: 0.8 },
+      ],
+    ]);
+  }, []);
+
   return (
     <>
-      <AnimatePresence>
-        {isMobileView ? null : <NavigationLine />}
-        {additionalContainerLeft}
-        {hubContainer}
-        {additionalContainerRight}
-      </AnimatePresence>
+      {isMobileView ? null : <NavigationLine disableAnimation={true} />}
+      {additionalContainerLeft}
+      {hubContainer}
+      {additionalContainerRight}
     </>
   );
 }

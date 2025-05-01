@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { useMemo } from "react";
 
 import TypingLine from "@components/_helpers/TypingLine";

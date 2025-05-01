@@ -17,7 +17,7 @@ import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
-export default function ConfirmButton({ page, content }) {
+export default function ConfirmButton({ page, content, onClickEvent }) {
   const dispatch = useDispatch();
 
   const [isPending, startTransition] = useTransition();
@@ -54,6 +54,7 @@ export default function ConfirmButton({ page, content }) {
         dispatch(setCurrentUserId(userData._id));
         dispatch(upsertUser(userData));
         navigateTo("/");
+        onClickEvent();
       }
     });
   }, [content, isAutoAuth, isLoginPage]);

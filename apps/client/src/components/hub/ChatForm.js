@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { motion as m } from "framer-motion";
 
@@ -138,8 +138,9 @@ export default function ChatForm() {
   return (
     <m.section
       className="flex flex-col flex-grow max-md:p-[4svw] md:max-xl:my-[20px] md:max-xl:mr-[20px] max-xl:p-[20px] md:rounded-[32px] bg-(--color-bg-light)"
+      initial={{ scale: 1, opacity: 0 }}
       animate={{ scale: [1.02, 1], y: [3, 0], opacity: [0, 1] }}
-      transition={{ delay: 0.3, duration: 0.8 }}
+      transition={{ delay: 0.3, duration: 0.5 }}
     >
       {selectedCID ? (
         <>

@@ -50,13 +50,19 @@ span {
   font-weight: 200;
 }
 
+body {
+  background-color: var(--color-bg-dark);
+}
+
 main {
   width: 100dvw;
   height: 100dvh;
 
   display: flex;
 
-  background-color: var(--color-bg-dark);
+  overflow: hidden;
+
+  transition: background-color 0.7s;
 }
 
 @media screen and (max-width: 767px) {

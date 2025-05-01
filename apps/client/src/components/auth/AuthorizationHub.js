@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { motion as m } from "framer-motion";
+import { motion as m, useAnimate } from "framer-motion";
 
 import SAMALogo from "@components/static/SAMALogo";
 
@@ -22,23 +22,35 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
   const [page, setPage] = useState("login");
   const [content, setContent] = useState({});
 
+  const [scope, animate] = useAnimate();
+  const [triggerBGAnimation, setTriggerBGAnimation] = useState(false);
+
   const isMobileView = useSelector(getIsMobileView);
 
   const isLoginPage = page === "login";
 
+  useEffect(() => setTriggerBGAnimation(false));
+  const triggerExitAnimation = () => {
+    animate([
+      [scope.current, { opacity: 0, scale: [1, 1.05, 0.6] }, { duration: 0.4 }],
+    ]);
+    setTriggerBGAnimation(true);
+  };
+
   return (
-    <m.section
-      className="w-dvw h-dvh flex flex-col justify-center items-center bg-[#DBDCFC] bg-cover bg-no-repeat bg-center"
-      exit={{ opacity: 0, y: -20, transition: { duration: 3 } }}
-    >
-      <AnimatedBGbig customClassName="absolute w-dvw h-dvh overflow-hidden z-0" />
+    <section className="w-dvw h-dvh flex flex-col justify-center items-center overflow-hidden">
+      <AnimatedBGbig
+        customClassName="absolute w-dvw h-dvh overflow-hidden z-0"
+        isTriggered={triggerBGAnimation}
+      />
       <m.div
-        className={`relative max-w-[95dvw] w-[1200px] max-lg:w-[min(600px,95dvw)] max-h-[95dvh] h-[800px] max-lg:h-max max-lg:py-[4dvh] p-[20px] flex flex-row justify-center gap-[20px] rounded-[32px] bg-(--color-bg-light) shadow-lg shadow-white-100/90`}
+        ref={scope}
+        className={` relative max-w-[95dvw] w-[1200px] max-lg:w-[min(600px,95dvw)] max-h-[95dvh] h-[800px] max-lg:h-max max-lg:py-[4dvh] p-[20px] flex flex-row justify-center gap-[20px] rounded-[32px] bg-(--color-bg-light) shadow-lg shadow-white-100/90`}
+        initial={{ scale: 0 }}
         animate={{
           scale: [0, 1.1, 1],
           transition: { delay: 0.1, duration: 0.9 },
         }}
-        exit={{ opacity: [1, 0] }}
       >
         <HeaderWaves className="lg:hidden absolute w-full top-0 rounded-t-[32px]" />
         <m.div
@@ -96,7 +108,11 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
           <div className="sm:mt-[25px] flex-1 flex flex-col gap-[15px]">
             <UserNameInput setState={setContent} />
             <PasswordInput setState={setContent} />
-            <ConfirmButton page={page} content={content} />
+            <ConfirmButton
+              page={page}
+              content={content}
+              onClickEvent={triggerExitAnimation}
+            />
           </div>
           <div className="w-full flex flex-row items-center gap-[10px]">
             <span className="flex-1 h-[1px] rounded-[2px] bg-gray-700/30"></span>
@@ -185,6 +201,6 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
           </div>
         </div>
       </m.div>
-    </m.section>
+    </section>
   );
 }

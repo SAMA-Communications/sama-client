@@ -1,17 +1,25 @@
-import { motion as m } from "framer-motion";
+import { motion as m, useAnimate } from "framer-motion";
+import { useEffect } from "react";
 
-export default function AnimatedBGbig({ customClassName = "" }) {
+export default function AnimatedBGbig({ customClassName = "", isTriggered }) {
+  const [scope, animate] = useAnimate();
+
+  useEffect(() => {
+    isTriggered && animate([["path", { pathLength: 0 }, { duration: 0.35 }]]);
+  }, [isTriggered, animate]);
+
   const drawPath = {
     hidden: { pathLength: 0 },
     visible: {
       pathLength: 1,
-      transition: { duration: 2.2, yoyo: Infinity, ease: "easeInOut" },
+      transition: { duration: 2.2, ease: "easeInOut" },
     },
   };
 
   return (
     <div className={customClassName}>
       <svg
+        ref={scope}
         className="h-dvh w-auto absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 "
         width="1986"
         height="1200"
