@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { useRef } from "react";
-import { motion as m } from "framer-motion";
+import { motion as m, useAnimate } from "framer-motion";
 
 import usersService from "@services/usersService";
 import { useKeyDown } from "@hooks/useKeyDown";
@@ -67,9 +67,27 @@ export default function UserProfile() {
   const sendChangeAvatarRequest = async (file) =>
     void (await usersService.updateUserAvatar(file));
 
+  const [userProfileContainerRef, animateUserProfileContainer] = useAnimate();
+
+  const triggerExitAnimation = () => {
+    console.log(isMobileView, userProfileContainerRef);
+
+    if (isMobileView) {
+      if (!userProfileContainerRef.current) return;
+      animateUserProfileContainer([
+        [
+          userProfileContainerRef.current,
+          { scale: [1, 0.6], opacity: [1, 0.3, 0], borderRadius: [0, 48, 48] },
+          { duration: 0.4 },
+        ],
+      ]);
+    }
+  };
+
   return (
     <m.section
-      className=" max-md:!w-dvw md:w-[400px] h-full md:mr-[15px] max-md:h-dvh "
+      ref={userProfileContainerRef}
+      className=" max-md:!w-dvw md:w-[400px] h-full md:mr-[15px] max-md:h-dvh overflow-hidden"
       variants={showUserProfileContainer(isMobileView)}
       initial="hidden"
       animate="visible"
@@ -235,9 +253,10 @@ export default function UserProfile() {
             >
               <LogoutMini />
               <p
-                onClick={async () => {
-                  sendLogout();
+                onClick={() => {
                   navigateTo("/authorization");
+                  triggerExitAnimation();
+                  sendLogout();
                 }}
               >
                 Log out

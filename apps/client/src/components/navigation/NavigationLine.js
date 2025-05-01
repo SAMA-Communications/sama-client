@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { useMemo } from "react";
-import { AnimatePresence, motion as m, scale } from "framer-motion";
+import { AnimatePresence, motion as m, useAnimate } from "framer-motion";
 
 import usersService from "@services/usersService";
 
@@ -28,9 +28,12 @@ import Logout from "@icons/actions/Logout.svg?react";
 export default function NavigationLine({
   isReverse,
   disableAnimation = false,
+  triggerMainExitEvent,
 }) {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
+
+  const [navigationLineRef, animateNavigationLine] = useAnimate();
 
   const currentUser = useSelector(getCurrentUserFromParticipants);
 
@@ -60,7 +63,10 @@ export default function NavigationLine({
     }, [pathname]);
 
   return (
-    <aside className="w-[84px] px-[10px] flex flex-col justify-between bg-transparent select-none pt-[20px] pb-[20px]">
+    <aside
+      ref={navigationLineRef}
+      className="w-[84px] px-[10px] flex flex-col justify-between bg-transparent select-none pt-[20px] pb-[20px]"
+    >
       <AnimatePresence initial={!disableAnimation}>
         <m.div
           key="navigationLineLogo"
@@ -138,8 +144,16 @@ export default function NavigationLine({
         <m.div
           key="navigationLineLogoutIcon"
           onClick={() => {
-            sendLogout();
             navigateTo("/authorization");
+            triggerMainExitEvent();
+            animateNavigationLine([
+              [
+                navigationLineRef.current,
+                { x: -64, opacity: [1, 0] },
+                { duration: 0.4 },
+              ],
+            ]);
+            sendLogout();
           }}
           className="w-[58px] h-[58px] p-[6px] rounded-[16px] cursor-pointer hover:bg-(--color-hover-dark) transition-[background-color] duration-200 flex items-center justify-center"
           variants={showItem(0, isReverse, disableAnimation)}

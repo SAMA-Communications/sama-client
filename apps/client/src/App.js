@@ -1,5 +1,12 @@
 import { Route, Routes, useLocation, useNavigate } from "react-router";
-import { lazy, useEffect, useMemo, useRef, useState } from "react";
+import {
+  lazy,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AnimatePresence,
@@ -130,9 +137,12 @@ export default function App() {
       : "/*";
   }, [history.location.pathname]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const mainElement = document.getElementsByTagName("main")[0];
+    const bodyElement = document.getElementsByTagName("body")[0];
     mainElement.style.backgroundColor =
+      routePathKey === "/*" ? "#1b1b1d" : "#DBDCFC";
+    bodyElement.style.backgroundColor =
       routePathKey === "/*" ? "#1b1b1d" : "#DBDCFC";
   }, [routePathKey]);
 
@@ -142,32 +152,30 @@ export default function App() {
   };
 
   const [isNeedToAnimateMain, setIsNeedToAnimateMain] = useState(true);
+  useEffect(() => setIsNeedToAnimateMain(true), [routePathKey]);
 
   return (
     <>
       <LazyMotion features={domAnimation}>
         <BetterSuspense
           fallback={
-            isUserLoggedIn ? (
-              <SMain
-                isReverseAnimation={routePathKey === "/authorization"}
-                setAnimateMainPage={setIsNeedToAnimateMain}
-              />
+            isUserLoggedIn & (routePathKey !== "/authorization") ? (
+              <SMain setAnimateMainPage={setIsNeedToAnimateMain} />
             ) : (
               <SPageLoader />
             )
           }
-          fallbackMinDurationMs={isUserLoggedIn ? 1000 : 400}
+          fallbackMinDurationMs={isUserLoggedIn ? 700 : 400}
         >
           {isContextClicked && (
             <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
           )}
-          <AnimatePresence mode="">
+          <AnimatePresence mode="wait">
             <Routes location={history.location} key={routePathKey}>
               <Route
                 path="/authorization"
                 element={
-                  <motion.div exit={exitAnimation}>
+                  <motion.div key={routePathKey} exit={exitAnimation}>
                     <AuthorizationHub />
                   </motion.div>
                 }
@@ -175,14 +183,22 @@ export default function App() {
               <Route
                 path="/demo"
                 element={
-                  <motion.div exit={exitAnimation}>
+                  <motion.div key={routePathKey} exit={exitAnimation}>
                     <AuthorizationHub showDemoMessage={true} />
                   </motion.div>
                 }
               />
               <Route
                 path="/*"
-                element={<Main isNeedToAnimate={isNeedToAnimateMain} />}
+                element={
+                  <motion.div
+                    key={routePathKey}
+                    className="w-dvw h-dvh flex overflow-hidden"
+                    exit={exitAnimation}
+                  >
+                    <Main isNeedToAnimate={isNeedToAnimateMain} />
+                  </motion.div>
+                }
               />
             </Routes>
           </AnimatePresence>

@@ -58,49 +58,36 @@ export default function Main({ isNeedToAnimate }) {
   const [mainContainerRef, animateMainContainer] = useAnimate();
 
   const hubContainer = useMemo(() => {
-    if (!conversations) {
-      return <SHub />;
-    }
+    if (!conversations) return <SHub />;
 
     if (
       !location.hash &&
       !conversationsArray?.filter((obj) => obj.type === "g" || obj.last_message)
         .length
     ) {
-      if (isMobileView) {
-        return location.pathname.includes("/profile") ? null : (
-          <EmptyHub key="emtyHub" />
-        );
-      }
-      return <EmptyHub key="emtyHub" />;
+      if (isMobileView)
+        return location.pathname.includes("/profile") ? null : <EmptyHub />;
+      return <EmptyHub />;
     }
 
     if (isMobileView) {
       const keys = additionalContainerRight.map((el) => el.key);
-
-      return !!location.hash ? (
-        keys.includes("/user") || keys.includes("/info") ? null : (
-          <ChatForm key="mobileChatFrom" />
-        )
-      ) : location.pathname.includes("/profile") ? null : (
-        <ChatList key="mobileChatList" />
-      );
+      if (!!location.hash) {
+        return keys.includes("/user") || keys.includes("/info") ? null : (
+          <ChatForm />
+        );
+      }
+      return location.pathname.includes("/profile") ? null : <ChatList />;
     }
 
     if (isTabletView) {
-      return !!location.hash ? (
-        <ChatForm key="tabletChatFrom" />
-      ) : (
-        <ChatList key="tabletChatList" />
-      );
+      return !!location.hash ? <ChatForm /> : <ChatList />;
     }
 
     return (
       <>
-        {location.pathname.includes("/profile") ? null : (
-          <ChatList key="chatList" />
-        )}
-        <ChatForm key="chatFrom" />
+        {!location.pathname.includes("/profile") && <ChatList />}
+        <ChatForm />
       </>
     );
   }, [location, isMobileView, isTabletView, conversations]);
@@ -119,10 +106,9 @@ export default function Main({ isNeedToAnimate }) {
     return (
       <AnimatePresence initial={isNeedToAnimate}>
         <m.section
-          key="mainContainer"
           ref={mainContainerRef}
           className="max-xl:p-[20px] p-[30px] md:mr-[20px] md:my-[20px] flex flex-1 flex-row gap-[15px] md:rounded-[48px] bg-(--color-bg-light) overflow-hidden"
-          initial={{ opacity: isMobileView ? 1 : 0 }}
+          initial={{ opacity: isMobileView || !isNeedToAnimate ? 1 : 0 }}
         >
           <AnimatePresence>{hubContainer}</AnimatePresence>
         </m.section>
@@ -147,14 +133,31 @@ export default function Main({ isNeedToAnimate }) {
     ]);
   }, []);
 
+  const triggerExitAnimation = () => {
+    if (!mainContainerRef.current) return;
+    animateMainContainer([
+      [
+        mainContainerRef.current,
+        { scale: [1, 1.02, 0.8], opacity: [1, 0.3, 0] },
+        { duration: 0.4 },
+      ],
+    ]);
+  };
+
   return (
-    <AnimatePresence>
-      {isMobileView ? null : (
-        <NavigationLine key="navigationLine" disableAnimation={true} />
-      )}
-      {additionalContainerLeft}
-      {mainContent}
-      {additionalContainerRight}
-    </AnimatePresence>
+    <>
+      <AnimatePresence>
+        {isMobileView ? null : (
+          <NavigationLine
+            key="navigationLine"
+            disableAnimation={true}
+            triggerMainExitEvent={triggerExitAnimation}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence mode="wait">{additionalContainerLeft}</AnimatePresence>
+      <AnimatePresence>{mainContent}</AnimatePresence>
+      <AnimatePresence mode="wait">{additionalContainerRight}</AnimatePresence>
+    </>
   );
 }

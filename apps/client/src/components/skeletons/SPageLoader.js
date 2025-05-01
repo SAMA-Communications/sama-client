@@ -4,7 +4,7 @@ import { Oval } from "react-loader-spinner";
 
 export default function SPageLoader() {
   return (
-    <div className="flex flex-1 pl-[30px] justify-center items-center bg-[#DBDCFC]">
+    <div className="flex flex-1 pl-[30px] justify-center items-center ">
       <m.span initial={{ scale: 0 }} animate={{ scale: 1 }}>
         <Oval
           height={100}

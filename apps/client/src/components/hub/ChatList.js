@@ -12,11 +12,9 @@ import SChatList from "@skeletons/hub/SChatList";
 
 import { getDisplayableConversations } from "@store/values/Conversations.js";
 import { getIsMobileView } from "@store/values/IsMobileView";
-import { useLocation } from "react-router";
 
 export default function ChatList() {
   const [inputText, setInputText] = useState(null);
-  const location = useLocation();
 
   const isMobileView = useSelector(getIsMobileView);
 
@@ -45,7 +43,7 @@ export default function ChatList() {
 
   return (
     <m.div
-      key={isMobileView ? location.pathname : "test"}
+      key="chaList"
       className="flex flex-col relative gap-[10px] justify-start items-center max-xl:flex-1 xl:w-[400px] md:max-xl:mb-[20px]"
       initial={{ scale: 1, opacity: 0 }}
       animate={{
@@ -53,13 +51,12 @@ export default function ChatList() {
         y: [3, 0],
         opacity: 1,
       }}
-      transition={{ delay: 0.3, duration: 0.5 }}
       exit={{
-        width: 0,
         opacity: [1, 0],
         x: [0, 15],
         transition: { duration: 0.5 },
       }}
+      transition={{ delay: 0.3, duration: 0.5 }}
     >
       {isMobileView ? <MenuButtons /> : null}
       <SearchInput

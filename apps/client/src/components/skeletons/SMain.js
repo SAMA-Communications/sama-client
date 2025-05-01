@@ -6,16 +6,13 @@ import { getIsMobileView } from "@store/values/IsMobileView.js";
 
 import SHub from "@skeletons/hub/SHub";
 
-export default function SMain({ isReverseAnimation, setAnimateMainPage }) {
+export default function SMain({ setAnimateMainPage }) {
   const isMobileView = useSelector(getIsMobileView);
 
   return (
-    <>
-      {isMobileView ? null : <NavigationLine isReverse={isReverseAnimation} />}
-      <SHub
-        isReverse={isReverseAnimation}
-        animateOptions={setAnimateMainPage}
-      />
-    </>
+    <div className="w-dvw h-dvh flex overflow-hidden">
+      {isMobileView ? null : <NavigationLine />}
+      <SHub animateOptions={setAnimateMainPage} />
+    </div>
   );
 }

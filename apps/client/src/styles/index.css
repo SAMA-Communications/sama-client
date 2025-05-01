@@ -60,8 +60,6 @@ main {
 
   display: flex;
 
-  overflow: hidden;
-
   transition: background-color 0.7s;
 }
 

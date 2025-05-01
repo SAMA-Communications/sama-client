@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { motion as m, useAnimate } from "framer-motion";
 
 import SAMALogo from "@components/static/SAMALogo";
-
 import AnimatedBGbig from "@components/auth/animations/AnimatedBGbig.js";
 import AnimatedBGmini from "@components/auth/animations/AnimatedBGmini.js";
 
