@@ -72,7 +72,7 @@ class ActivityService {
   getUserLastActivity(userId) {
     const opponentLastActivity =
       store.getState().participants.entities[userId]?.recent_activity;
-    return opponentLastActivity === "online" ? (
+    return opponentLastActivity === 0 ? (
       <span className="status--online">online</span>
     ) : (
       getLastVisitTime(opponentLastActivity)

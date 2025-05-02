@@ -87,7 +87,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
         return null;
       }
       const opponentLastActivity = participants[opponentId]?.recent_activity;
-      return opponentLastActivity === "online" ? (
+      return opponentLastActivity === 0 ? (
         <ul className="activity--online">
           <li>online</li>
         </ul>
