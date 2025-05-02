@@ -6,6 +6,7 @@ class SAMAClient {
   private socket: WebSocket | null = null;
   private wsEndpoint: string;
   private httpEndpoint: string;
+  private organizationId: string;
   private curerntUserId: string | null = null;
   private responsesPromises: Record<string, IResponsePromise> = {};
   private deviceId: string | null = null;
@@ -22,9 +23,10 @@ class SAMAClient {
   public onMessageEvent: ((message: IMessage) => void) | null = null;
   public onDisconnectEvent: (() => void) | null = null;
 
-  constructor({ endpoint: { ws, http } }: { endpoint: { ws: string; http: string } }) {
+  constructor({ endpoint: { ws, http }, organization_id }: { endpoint: { ws: string; http: string }, organization_id: string }) {
     this.wsEndpoint = ws;
     this.httpEndpoint = http;
+    this.organizationId = organization_id;
     getBrowserFingerprint({ hardwareOnly: true }).then((device_id) => (this.deviceId = device_id.toString()));
   }
 
@@ -200,7 +202,7 @@ class SAMAClient {
   }
 
   async userCreate(data: { login: string; password: string }): Promise<IUser> {
-    return this.sendRequest("user_create", { login: data.login, password: data.password }, "user");
+    return this.sendRequest("user_create", { organization_id: this.organizationId, login: data.login, password: data.password }, "user");
   }
 
   async userEdit(data: { [key: string]: any }): Promise<IUser> {
@@ -214,7 +216,7 @@ class SAMAClient {
     const tokenExpiredAt = parseInt(localStorage.getItem("sessionExpiredAt") || `${currentTime}`, 10);
     if (tokenExpiredAt - currentTime <= 0) localStorage.removeItem("sessionId");
 
-    const requestData: { device_id: string; login?: string; password?: string } = { device_id: this.deviceId };
+    const requestData: { organizationId: string, device_id: string | null; login?: string; password?: string } = { organizationId: this.organizationId, device_id: this.deviceId };
     if (login && password) {
       requestData.login = login;
       requestData.password = password;

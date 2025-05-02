@@ -3,7 +3,8 @@ import { default as reduxStore } from "@store/store";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 
-import { SAMAClient } from "@sama-communications/sdk";
+// import { SAMAClient } from "@sama-communications/sdk";
+import { SAMAClient } from "../../../../packages/sdk/dist/sama-sdk.es.js";
 
 const onConnect = () => {
   EventEmitter.emit("onConnect");
@@ -22,6 +23,7 @@ const config = {
     ws: import.meta.env.VITE_SOCKET_CONNECT,
     http: import.meta.env.VITE_HTTP_CONNECT,
   },
+  organization_id: import.meta.env.VITE_ORGANIZATION_ID,
 };
 const api = new SAMAClient(config);
 
