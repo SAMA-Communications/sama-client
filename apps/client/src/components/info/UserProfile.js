@@ -1,7 +1,7 @@
+import * as m from "motion/react-m";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { useRef } from "react";
-import { motion as m } from "framer-motion";
 
 import usersService from "@services/usersService";
 import { useKeyDown } from "@hooks/useKeyDown";

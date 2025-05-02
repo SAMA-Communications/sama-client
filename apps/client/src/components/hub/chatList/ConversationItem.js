@@ -1,5 +1,5 @@
+import * as m from "motion/react-m";
 import { useMemo } from "react";
-import { motion as m } from "framer-motion";
 
 import LastMessage from "@components/message/LastMessage";
 import TypingLine from "@components/_helpers/TypingLine";

@@ -1,7 +1,7 @@
 import InfiniteScroll from "react-infinite-scroll-component";
+import { domMax, LayoutGroup, LazyMotion } from "motion/react";
 import { useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { domAnimation, LayoutGroup, LazyMotion } from "framer-motion";
 
 import api from "@api/api.js";
 
@@ -62,7 +62,7 @@ export default function ConversationItemList({ conversations }) {
       hasMore={true && needToGetMoreChats.current}
       scrollableTarget="conversationItemsScrollable"
     >
-      <LazyMotion features={domAnimation}>
+      <LazyMotion features={domMax}>
         <LayoutGroup id="conversationItemListLayoutGroup">
           {conversations.map((obj) => {
             const isSelected = activeConversationId === obj._id;

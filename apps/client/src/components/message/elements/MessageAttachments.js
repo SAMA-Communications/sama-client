@@ -1,6 +1,6 @@
+import * as m from "motion/react-m";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useLocation } from "react-router";
-import { motion as m } from "motion/react";
 
 import PlayButton from "@components/_helpers/PlayButton.js";
 

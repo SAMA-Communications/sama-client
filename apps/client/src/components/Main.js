@@ -1,7 +1,8 @@
-import { cloneElement, useCallback, useEffect, useMemo, useState } from "react";
+import * as m from "motion/react-m";
+import { AnimatePresence, useAnimate } from "motion/react";
+import { cloneElement, useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
-import { AnimatePresence, motion as m, useAnimate } from "framer-motion";
 
 import ChatForm from "@components/hub/ChatForm";
 import ChatInfo from "@components/info/ChatInfo";
@@ -111,11 +112,7 @@ export default function Main({ isNeedToAnimate }) {
         })
       );
 
-    return (
-      <AnimatePresence>
-        {isMobileView ? allBlocks.slice(-2) : allBlocks}
-      </AnimatePresence>
-    );
+    return isMobileView ? allBlocks.slice(-2) : allBlocks;
   }, [location, isMobileView]);
 
   const hubContainer = useMemo(() => {

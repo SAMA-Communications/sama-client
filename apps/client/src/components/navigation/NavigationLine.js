@@ -1,7 +1,8 @@
+import * as m from "motion/react-m";
+import { AnimatePresence } from "motion/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { useMemo } from "react";
-import { AnimatePresence, motion as m } from "framer-motion";
 
 import usersService from "@services/usersService";
 
@@ -78,11 +79,12 @@ export default function NavigationLine({
         >
           <SAMALogo
             customClassName="w-[58px] h-[58px]"
-            variants={showLogoOptions(isReverse)}
+            variants={disableAnimation ? false : showLogoOptions(isReverse)}
             initial="hidden"
             animate="visible"
-            reduceDuration={0.2}
-            reduceDelay={isReverse ? 1.1 : 0.6}
+            disableAnimation={disableAnimation}
+            reduceDuration={0.4}
+            reduceDelay={isReverse ? 1.1 : 0.9}
           />
         </m.div>
         <div className="flex flex-col gap-[20px] items-center justify-center">

@@ -1,5 +1,5 @@
+import * as m from "motion/react-m";
 import { useLocation } from "react-router";
-import { motion as m } from "framer-motion";
 
 import addSuffix from "@utils/navigation/add_suffix";
 

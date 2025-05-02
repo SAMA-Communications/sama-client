@@ -1,4 +1,4 @@
-import { motion as m } from "framer-motion";
+import * as m from "motion/react-m";
 
 import { CHAT_CONTENT_TABS } from "@utils/global/chatContentTabs.js";
 

@@ -1,6 +1,7 @@
+import * as m from "motion/react-m";
+import { AnimatePresence } from "motion/react";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import { AnimatePresence, motion as m } from "framer-motion";
 
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchInput";
@@ -46,6 +47,7 @@ export default function EmptyHub() {
           customClassName="max-md:w-full"
           shadowText={"Search"}
           setState={setInputText}
+          disableAnimation={false}
           isLargeSize={true}
         />
         <AnimatePresence>

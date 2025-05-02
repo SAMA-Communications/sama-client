@@ -1,7 +1,7 @@
+import * as m from "motion/react-m";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router";
-import { motion as m } from "framer-motion";
 
 import conversationService from "@services/conversationsService";
 import usersService from "@services/usersService";

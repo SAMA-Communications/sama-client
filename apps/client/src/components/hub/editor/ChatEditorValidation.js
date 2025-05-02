@@ -1,8 +1,8 @@
+import * as m from "motion/react-m";
 import { Tooltip } from "react-tooltip";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMonaco } from "@monaco-editor/react";
 import { useSelector, useDispatch } from "react-redux";
-import { motion as m } from "framer-motion";
 
 import conversationHandlerService from "@services/conversationHandlerService.js";
 import { debounce } from "@hooks/debounce.js";

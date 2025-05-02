@@ -1,7 +1,8 @@
 import Skeleton from "react-loading-skeleton";
+import * as m from "motion/react-m";
+import { useAnimate } from "motion/react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { motion as m, useAnimate } from "framer-motion";
 
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 

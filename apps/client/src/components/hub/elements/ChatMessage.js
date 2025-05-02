@@ -1,6 +1,6 @@
+import * as m from "motion/react-m";
 import { useLocation } from "react-router";
 import { useMemo } from "react";
-import { motion as m } from "framer-motion";
 
 import MessageAttachments from "@components/message/elements/MessageAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";

@@ -1,5 +1,6 @@
+import * as m from "motion/react-m";
 import { useRef, useState } from "react";
-import { AnimatePresence, motion as m } from "motion/react";
+import { AnimatePresence } from "motion/react";
 
 import Search from "@icons/actions/Search.svg?react";
 import Close from "@icons/options/Close.svg?react";
@@ -8,6 +9,7 @@ export default function SearchInput({
   shadowText,
   setState,
   isLargeSize,
+  disableAnimation = true,
   customClassName = "",
 }) {
   const inputRef = useRef(null);
@@ -32,12 +34,20 @@ export default function SearchInput({
   };
 
   return (
-    <div
+    <m.div
       className={`relative flex flex-row gap-[10px] items-center bg-(--color-hover-light) rounded-[12px] ${
         isLargeSize
           ? "w-[500px] h-[60px] px-[20px]"
           : "w-[360px] h-[46px] px-[15px]"
       } ${customClassName}`}
+      initial={
+        disableAnimation ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }
+      }
+      animate={{ opacity: 1, scale: 1 }}
+      exit={
+        disableAnimation ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }
+      }
+      transition={{ duration: 0.3, delay: 0.3 }}
     >
       <AnimatePresence>
         {isTextInInput ? null : (
@@ -83,6 +93,6 @@ export default function SearchInput({
           </m.div>
         ) : null}
       </AnimatePresence>
-    </div>
+    </m.div>
   );
 }

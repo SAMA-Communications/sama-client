@@ -1,4 +1,4 @@
-import { motion as m } from "framer-motion";
+import * as m from "motion/react-m";
 
 export default function AnimatedBGmini({ customClassName = "" }) {
   const showPath = {

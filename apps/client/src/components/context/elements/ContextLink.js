@@ -1,4 +1,4 @@
-import { motion as m } from "framer-motion";
+import * as m from "motion/react-m";
 
 export default function ContextLink({ text, icon, onClick, isDangerStyle }) {
   return (

@@ -1,10 +1,11 @@
-import { motion as m } from "framer-motion";
+import * as m from "motion/react-m";
 
 export default function SAMALogo({
   customClassName = "",
   variants = {},
   initial = {},
   animate = {},
+  disableAnimation = false,
   reduceDelay = 0,
   reduceDuration = 0,
 }) {
@@ -46,16 +47,20 @@ export default function SAMALogo({
           </style>
         </defs>
         <m.g
-          animate={{
-            opacity: [0, 1],
-            scale: [0, 1],
-            rotate: [80, 0],
-            transition: {
-              delay: 1.1 - reduceDelay,
-              duration: 0.4 - reduceDuration,
-              ease: "easeOut",
-            },
-          }}
+          animate={
+            disableAnimation
+              ? false
+              : {
+                  opacity: [0, 1],
+                  scale: [0, 1],
+                  rotate: [80, 0],
+                  transition: {
+                    delay: 1.1 - reduceDelay,
+                    duration: 0.4 - reduceDuration,
+                    ease: "easeOut",
+                  },
+                }
+          }
         >
           <m.path
             className="cls-4"
@@ -96,25 +101,33 @@ export default function SAMALogo({
           cx="368.61"
           cy="402.88"
           r="223.6"
-          animate={{
-            scale: [0, 1],
-            transition: {
-              duration: 0.5 - reduceDuration,
-              delay: 1.3 - reduceDelay,
-            },
-          }}
+          animate={
+            disableAnimation
+              ? false
+              : {
+                  scale: [0, 1],
+                  transition: {
+                    duration: 0.5 - reduceDuration,
+                    delay: 1.3 - reduceDelay,
+                  },
+                }
+          }
         />
         <m.g
-          animate={{
-            opacity: [0, 0.3, 1],
-            rotateY: [50, -20, 0],
-            scale: [0.8, 1.1, 1],
-            x: [-30, 10, 0],
-            transition: {
-              duration: 0.6 - reduceDuration,
-              delay: 1.5 - reduceDelay,
-            },
-          }}
+          animate={
+            disableAnimation
+              ? false
+              : {
+                  opacity: [0, 0.3, 1],
+                  rotateY: [50, -20, 0],
+                  scale: [0.8, 1.1, 1],
+                  x: [-30, 10, 0],
+                  transition: {
+                    duration: 0.6 - reduceDuration,
+                    delay: 1.5 - reduceDelay,
+                  },
+                }
+          }
         >
           <path
             className="cls-1"

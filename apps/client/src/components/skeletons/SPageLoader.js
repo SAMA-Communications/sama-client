@@ -1,5 +1,5 @@
 import React from "react";
-import { motion as m } from "framer-motion";
+import * as m from "motion/react-m";
 import { Oval } from "react-loader-spinner";
 
 export default function SPageLoader() {

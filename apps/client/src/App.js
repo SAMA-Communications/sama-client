@@ -1,3 +1,5 @@
+import * as m from "motion/react-m";
+import { AnimatePresence, LazyMotion, domAnimation } from "motion/react";
 import { Route, Routes, useLocation, useNavigate } from "react-router";
 import {
   lazy,
@@ -8,12 +10,6 @@ import {
   useState,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  AnimatePresence,
-  LazyMotion,
-  domAnimation,
-  motion,
-} from "motion/react";
 
 import autoLoginService from "@services/autoLoginService";
 import activityService from "@services/activityService";
@@ -155,55 +151,53 @@ export default function App() {
   useEffect(() => setIsNeedToAnimateMain(true), [routePathKey]);
 
   return (
-    <>
-      <LazyMotion features={domAnimation}>
-        <BetterSuspense
-          fallback={
-            isUserLoggedIn & (routePathKey !== "/authorization") ? (
-              <SMain setAnimateMainPage={setIsNeedToAnimateMain} />
-            ) : (
-              <SPageLoader />
-            )
-          }
-          fallbackMinDurationMs={isUserLoggedIn ? 700 : 400}
-        >
-          {isContextClicked && (
-            <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
-          )}
-          <AnimatePresence mode="wait">
-            <Routes location={history.location} key={routePathKey}>
-              <Route
-                path="/authorization"
-                element={
-                  <motion.div key={routePathKey} exit={exitAnimation}>
-                    <AuthorizationHub />
-                  </motion.div>
-                }
-              />
-              <Route
-                path="/demo"
-                element={
-                  <motion.div key={routePathKey} exit={exitAnimation}>
-                    <AuthorizationHub showDemoMessage={true} />
-                  </motion.div>
-                }
-              />
-              <Route
-                path="/*"
-                element={
-                  <motion.div
-                    key={routePathKey}
-                    className="w-dvw h-dvh flex overflow-hidden"
-                    exit={exitAnimation}
-                  >
-                    <Main isNeedToAnimate={isNeedToAnimateMain} />
-                  </motion.div>
-                }
-              />
-            </Routes>
-          </AnimatePresence>
-        </BetterSuspense>
-      </LazyMotion>
-    </>
+    <LazyMotion features={domAnimation}>
+      <BetterSuspense
+        fallback={
+          isUserLoggedIn & (routePathKey !== "/authorization") ? (
+            <SMain setAnimateMainPage={setIsNeedToAnimateMain} />
+          ) : (
+            <SPageLoader />
+          )
+        }
+        fallbackMinDurationMs={isUserLoggedIn ? 700 : 400}
+      >
+        {isContextClicked && (
+          <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
+        )}
+        <AnimatePresence mode="wait">
+          <Routes location={history.location} key={routePathKey}>
+            <Route
+              path="/authorization"
+              element={
+                <m.div key={routePathKey} exit={exitAnimation}>
+                  <AuthorizationHub />
+                </m.div>
+              }
+            />
+            <Route
+              path="/demo"
+              element={
+                <m.div key={routePathKey} exit={exitAnimation}>
+                  <AuthorizationHub showDemoMessage={true} />
+                </m.div>
+              }
+            />
+            <Route
+              path="/*"
+              element={
+                <m.div
+                  key={routePathKey}
+                  className="w-dvw h-dvh flex overflow-hidden"
+                  exit={exitAnimation}
+                >
+                  <Main isNeedToAnimate={isNeedToAnimateMain} />
+                </m.div>
+              }
+            />
+          </Routes>
+        </AnimatePresence>
+      </BetterSuspense>
+    </LazyMotion>
   );
 }

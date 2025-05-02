@@ -1,4 +1,4 @@
-import { motion as m } from "framer-motion";
+import * as m from "motion/react-m";
 
 import Editor from "@monaco-editor/react";
 

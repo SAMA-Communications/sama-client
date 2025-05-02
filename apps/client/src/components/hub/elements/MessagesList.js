@@ -1,8 +1,8 @@
 import InfiniteScroll from "react-infinite-scroll-component";
+import { domMax, LayoutGroup, LazyMotion } from "motion/react";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
-import { domAnimation, LayoutGroup, LazyMotion } from "framer-motion";
 
 import api from "@api/api";
 
@@ -141,7 +141,7 @@ export default function MessagesList({ scrollRef }) {
       hasMore={true && needToGetMoreMessage.current}
       scrollableTarget="chatMessagesScrollable"
     >
-      <LazyMotion features={domAnimation}>
+      <LazyMotion features={domMax}>
         <LayoutGroup id="chatMessagesListLayoutGroup">
           {messages.map((msg, i) =>
             msg.x?.type ? (

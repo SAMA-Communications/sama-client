@@ -1,7 +1,7 @@
+import * as m from "motion/react-m";
 import { useLocation } from "react-router";
 import { useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
-import { motion as m } from "framer-motion";
 
 import { useKeyDown } from "@hooks/useKeyDown";
 

@@ -1,6 +1,7 @@
+import * as m from "motion/react-m";
+import { AnimatePresence } from "motion/react";
 import { useEffect, useState, useTransition } from "react";
 import { useSelector } from "react-redux";
-import { AnimatePresence, motion as m } from "framer-motion";
 
 import conversationService from "@services/conversationsService";
 import usersService from "@services/usersService";

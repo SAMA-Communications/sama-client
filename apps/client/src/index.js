@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router";
 import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router";
 
 import App from "@src/App";
 import ConnectLine from "@components/_helpers/ConnectLine";

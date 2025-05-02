@@ -1,4 +1,5 @@
-import { motion as m, useAnimate } from "framer-motion";
+import * as m from "motion/react-m";
+import { useAnimate } from "motion/react";
 import { useEffect } from "react";
 
 export default function AnimatedBGbig({ customClassName = "", isTriggered }) {

@@ -1,7 +1,7 @@
+import * as m from "motion/react-m";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
-import { motion as m } from "framer-motion";
 
 import api from "@api/api";
 

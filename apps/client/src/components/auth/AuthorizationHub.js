@@ -1,6 +1,7 @@
+import * as m from "motion/react-m";
+import { useAnimate } from "motion/react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { motion as m, useAnimate } from "framer-motion";
 
 import SAMALogo from "@components/static/SAMALogo";
 import AnimatedBGbig from "@components/auth/animations/AnimatedBGbig.js";

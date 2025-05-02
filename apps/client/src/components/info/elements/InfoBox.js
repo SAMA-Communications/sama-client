@@ -1,4 +1,4 @@
-import { motion as m } from "framer-motion";
+import * as m from "motion/react-m";
 
 import Email from "@icons/media/Email.svg?react";
 import Phone from "@icons/media/Phone.svg?react";

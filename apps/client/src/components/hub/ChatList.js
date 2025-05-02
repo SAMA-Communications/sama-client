@@ -1,6 +1,6 @@
+import * as m from "motion/react-m";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { motion as m } from "framer-motion";
 
 import ConversationItemList from "@components/hub/chatList/ConversationItemList";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
