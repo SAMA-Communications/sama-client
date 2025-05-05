@@ -1,9 +1,9 @@
-import ItemLoader from "@components/attach/elements/ItemLoader";
-import getFileSize from "@utils/media/get_file_size";
-import getFileType from "@utils/media/get_file_type";
 import { useMemo, useState } from "react";
 
-import "@styles/attach/AttachmentItem.css";
+import ItemLoader from "@components/attach/elements/ItemLoader";
+
+import getFileSize from "@utils/media/get_file_size";
+import getFileType from "@utils/media/get_file_type";
 
 import CloseIcon from "@icons/actions/CloseGray.svg?react";
 
@@ -31,20 +31,28 @@ export default function AttachmentItem({
       }
 
       if (url || localUrl) {
-        return <video src={url || localUrl} alt={name} />;
+        return (
+          <video
+            className="w-auto h-full object-cover"
+            src={url || localUrl}
+            alt={name}
+          />
+        );
       }
       return <ItemLoader blurHash={blurHash} />;
     }
 
     if (url) {
-      const image = <img src={url} alt={name} />;
+      const image = (
+        <img className="w-auto h-full object-cover" src={url} alt={name} />
+      );
       if (!initFileSize) {
         getFileSize(url).then((size) => setSize(size));
       }
       return image;
     }
     return localUrl ? (
-      <img src={localUrl} alt={name} />
+      <img className="w-auto h-full object-cover" src={localUrl} alt={name} />
     ) : (
       <ItemLoader blurHash={blurHash} />
     );
@@ -52,17 +60,24 @@ export default function AttachmentItem({
 
   return (
     <div
-      className="att-item__container"
+      className="min-w-[240px] w-full max-w-[min(440px,100%)] p-[14px] flex gap-[10px] rounded-[12px] bg-(--color-accent-light) cursor-pointer disabled:!cursor-default"
       aria-label={isOnClickDisabled ? "disabled" : ""}
       onClick={onClickfunc}
     >
-      <div className="att-item__photo fcc">{pictureView}</div>
-      <div className="att-item__content">
-        <p className="att-item__name">{name || "Undefined"}</p>
-        <p className="att-item__size">{initFileSize || size || 0} MB</p>
+      <div className="w-[70px] h-[70px] rounded-[8px] bg-(--color-accent-dark) overflow-hidden flex items-center justify-center">
+        {pictureView}
+      </div>
+      <div className="w-[calc(100%-122px)] flex-1 flex flex-col justify-center gap-[7px]">
+        <p className="!font-light text-black overflow-hidden text-ellipsis whitespace-nowrap">
+          {name || "Undefined"}
+        </p>
+        <p>{initFileSize || size || 0} MB</p>
       </div>
       {removeFileFunc ? (
-        <CloseIcon className="att-item__remove" onClick={removeFileFunc} />
+        <CloseIcon
+          className="px-[2px] self-center cursor-pointer"
+          onClick={removeFileFunc}
+        />
       ) : null}
     </div>
   );

@@ -1,6 +1,11 @@
 import { ThreeDots } from "react-loader-spinner";
 
-export default function DotsLoader({ width, height, mainColor }) {
+export default function DotsLoader({
+  customClassName = "",
+  mainColor,
+  width,
+  height,
+}) {
   return (
     <ThreeDots
       visible={true}
@@ -10,7 +15,7 @@ export default function DotsLoader({ width, height, mainColor }) {
       radius="9"
       ariaLabel="three-dots-loading"
       wrapperStyle={{}}
-      wrapperClass={"typing-dots"}
+      wrapperClass={`${customClassName}`}
     />
   );
 }

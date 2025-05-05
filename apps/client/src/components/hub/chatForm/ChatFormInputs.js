@@ -1,14 +1,19 @@
-import MessageInput from "@components/hub/elements/MessageInput";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useMemo, useRef, useState } from "react";
+
 import messagesService from "@services/messagesService";
-import navigateTo from "@utils/navigation/navigate_to";
-import showCustomAlert from "@utils/show_alert";
+
+import MessageInput from "@components/hub/elements/MessageInput";
+
 import {
   addMessage,
+  removeMessage,
   selectActiveConversationMessages,
 } from "@store/values/Messages";
 import {
   getConverastionById,
   removeChat,
+  removeLastMessage,
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
@@ -16,10 +21,9 @@ import { getNetworkState } from "@store/values/NetworkState";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo, useRef, useState } from "react";
 
-import "@styles/hub/chatForm/ChatFormInputs.css";
+import navigateTo from "@utils/navigation/navigate_to";
+import showCustomAlert from "@utils/show_alert";
 
 export default function ChatFormInputs({ chatMessagesBlockRef }) {
   const dispatch = useDispatch();
@@ -83,6 +87,10 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
           msg: messages[messages.length - 1],
         })
       );
+      dispatch(removeLastMessage({ cid: selectedCID }));
+      dispatch(removeMessage(mObject.mid));
+      inputRef.current.value = body;
+      setIsSendMessageDisable(false);
 
       if (e.status === 403) {
         dispatch(removeChat(selectedCID));
@@ -100,8 +108,10 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   };
 
   useEffect(() => {
-    inputRef.current.value = "";
-    inputRef.current.style.height = `55px`;
+    if (inputRef.current) {
+      inputRef.current.value = "";
+      inputRef.current.style.height = `55px`;
+    }
   }, [selectedCID]);
 
   const isBlockedConv = useMemo(() => {

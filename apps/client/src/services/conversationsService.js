@@ -110,6 +110,10 @@ class ConversationsService {
 
     const additionalUsersIds = [];
     conversations.forEach((chat) => {
+      if (chat.last_message?.from) {
+        !users.find((u) => u.native_id === chat.last_message?.from) &&
+          additionalUsersIds.push(chat.last_message?.from);
+      }
       if (chat.type === "g") return;
       const opponentId = getOpponentId(chat, api.curerntUserId);
       !users.find((u) => u.native_id === opponentId) &&

@@ -1,0 +1,169 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Krona+One&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --accent-font: "Krona One", sans-serif;
+
+  --text-h1: 48px;
+  --text-h2: 40px;
+  --text-h3: 33px;
+  --text-h4: 28px;
+  --text-h5: 23px;
+  --text-h6: 19px;
+  --text-p: 16px;
+  --text-span: 13px;
+  --text-indicator: 12px;
+
+  --color-white: #fff;
+  --color-black: #000;
+  --color-black-25: rgba(0, 0, 0, 0.25);
+  --color-black-50: rgba(0, 0, 0, 0.5);
+  --color-black-75: rgba(0, 0, 0, 0.75);
+  --color-black-90: rgba(0, 0, 0, 0.9);
+  --color-grey-50: rgba(26, 26, 26, 0.5);
+  --color-red: #df2e38;
+  --color-bg-light: #f6f6f6;
+  --color-bg-light-25: rgba(246, 246, 246, 0.25);
+  --color-bg-light-50: rgba(246, 246, 246, 0.5);
+  --color-bg-light-90: rgba(246, 246, 246, 0.9);
+  --color-bg-dark: #1b1b1d;
+  --color-text-light: #b0b0b0;
+  --color-text-dark: #6d6d6d;
+  --color-hover-light: #e7e7e7;
+  --color-hover-dark: #3f3f3f;
+  --color-accent-light: #dbdcfc;
+  --color-accent-light-50: #babbf2;
+  --color-accent-dark: #7678e5;
+  --color-indicator: #68174d;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
+  font-family: "Inter", sans-serif;
+  font-weight: 200;
+  font-variant-numeric: tabular-nums;
+}
+
+body {
+  background-color: var(--color-bg-dark);
+}
+
+main {
+  width: 100dvw;
+  height: 100dvh;
+
+  display: flex;
+
+  transition: background-color 0.7s;
+}
+
+@media screen and (max-width: 767px) {
+  main {
+    padding: 0;
+  }
+}
+
+.monaco-editor span {
+  font-family: Consolas, "Courier New", monospace;
+}
+
+.editor-helper .editor-tooltip-style,
+.editor-validation .editor-tooltip-style {
+  padding: 15px 30px !important;
+  color: black;
+
+  border-radius: 8px;
+  background-color: var(--color-white);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+}
+
+.editor-helper .editor-tooltip-arrow,
+.editor-validation .editor-tooltip-arrow {
+  background-color: var(--color-accent-dark);
+}
+
+#logo-icon-line {
+  position: absolute;
+}
+#logo-text {
+  margin: 0 12px;
+}
+
+/* vertical scroll */
+.scroll-bar__outer-container > div:nth-child(3) {
+  width: 6px !important;
+
+  right: 4px !important;
+  bottom: 4px !important;
+  top: 4px !important;
+
+  border-radius: 3px !important;
+}
+
+#chatMessagesScrollable .infinite-scroll-component {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+#chatMessagesScrollable {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+#chatFormContainer .scroll-bar__outer-container > div:nth-child(3) {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+#conversationItemsScrollable .infinite-scroll-component {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid gray;
+  border-radius: 4px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+input[type="checkbox"]:checked {
+  background-color: #7678e5;
+  border-color: #7678e5;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+}
+input[type="checkbox"]:active {
+  filter: brightness(90%);
+}
+input[type="checkbox"]:hover:not(:disabled) {
+  border-color: #7678e5;
+}
+input[type="checkbox"]:focus {
+  border-color: #7678e5;
+  outline: none;
+  box-shadow: 0 0 0 0.25rem #7678e544;
+}
+input[type="checkbox"]:disabled {
+  filter: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+input[type="checkbox"]:disabled ~ .checkbox-label {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

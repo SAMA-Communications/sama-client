@@ -1,18 +1,21 @@
+import * as m from "motion/react-m";
+import { useLocation } from "react-router";
+import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+
+import conversationService from "@services/conversationsService";
+import { useKeyDown } from "@hooks/useKeyDown";
+
 import ChatNameInput from "@components/modals/components/ChatNameInput";
 import UserSelectorBlock from "@components/modals/components/UserSelectorBlock";
-import conversationService from "@services/conversationsService";
+
+import { getConverastionById } from "@store/values/Conversations";
+import { selectParticipantsEntities } from "@store/values/Participants";
+
 import navigateTo from "@utils/navigation/navigate_to";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@utils/global/keyCodes";
-import { getConverastionById } from "@store/values/Conversations";
-import { selectParticipantsEntities } from "@store/values/Participants";
-import { useKeyDown } from "@hooks/useKeyDown";
-import { useLocation } from "react-router-dom";
-import { useMemo, useState } from "react";
-import { useSelector } from "react-redux";
-
-import "@styles/modals/UsersSelectModalHub.css";
 
 export default function UsersSelectModalHub({ type }) {
   const selectedConversation = useSelector(getConverastionById);
@@ -72,12 +75,31 @@ export default function UsersSelectModalHub({ type }) {
   }, [type, chatName, selectedConversation, participants]);
 
   return (
-    <div className="edit-modal__container fcc">
-      <div
-        className={`edit-modal__content--chat${chatName || type ? "" : "name"}`}
+    <m.div
+      className="absolute top-[0px] w-dvw h-dvh bg-(--color-black-50) flex items-center justify-center"
+      initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+      animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+      transition={{ duration: 0.2 }}
+    >
+      <m.div
+        className={`p-[30px] flex flex-col gap-[20px] rounded-[32px] bg-(--color-bg-light) w-[min(460px,100%)] max-md:w-[94svw] max-md:p-[20px] ${
+          chatName || type ? "h-[80svh]" : ""
+        }`}
+        key={
+          type === "add_participants"
+            ? "addParticipants"
+            : chatName
+            ? "userSelectorBlock"
+            : "chatNameInput"
+        }
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1, transition: { delay: 0.1 } }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ duration: 0.2 }}
       >
         {typeOfFunc}
-      </div>
-    </div>
+      </m.div>
+    </m.div>
   );
 }

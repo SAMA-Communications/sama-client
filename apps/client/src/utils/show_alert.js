@@ -1,5 +1,3 @@
-import "@styles/system/Alert.css";
-
 let timer = null;
 
 const themes = {
@@ -40,7 +38,8 @@ function createAndShowAlert(message, themeStyle) {
   const theme = themes[themeStyle] || themes.default;
 
   const customAlert = document.createElement("div");
-  customAlert.className = "alert";
+  customAlert.className =
+    "fixed top-[25px] left-1/2 max-w-[98vw] w-max h-auto px-[25px] py-[10px] text-center !font-normal transform -translate-x-1/2 opacity-0 transition-opacity duration-300 rounded-[5px] shadow-lg overflow-hidden cursor-pointer z-1000";
   customAlert.textContent = message;
   customAlert.style.backgroundColor = theme.bgColor;
   customAlert.style.color = theme.textColor;

@@ -9,6 +9,8 @@ export default function SChatList() {
       <SConversationItem />
       <SConversationItem />
       <SConversationItem />
+      <SConversationItem />
+      <SConversationItem />
     </>
   );
 }

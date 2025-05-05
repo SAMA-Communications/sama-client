@@ -2,14 +2,14 @@ import { useState } from "react";
 
 import HidePassword from "@icons/actions/HidePassword.svg?react";
 import ShowPassword from "@icons/actions/ShowPassword.svg?react";
-import Password from "@icons/auth/Password.svg?react";
 
 export default function PasswordInput({ setState }) {
   const [passwordType, setPasswordType] = useState("password");
 
   return (
-    <div className="auth-form__input">
+    <div className="w-full py-[7px] px-[14px] flex gap-[10px] bg-(--color-hover-light) rounded-lg">
       <input
+        className="h-[40px] flex-1 outline-none"
         onKeyDown={(e) => e.key === " " && e.preventDefault()}
         onChange={({ target }) =>
           setState((prev) => ({ ...prev, password: target.value }))
@@ -18,16 +18,19 @@ export default function PasswordInput({ setState }) {
         type={passwordType}
         autoComplete="off"
       />
-      <div className="auth-form__password-visibility fcc">
+      <div className="flex items-center justify-center select-none cursor-pointer">
         {passwordType === "password" ? (
-          <HidePassword onClick={() => setPasswordType("text")} />
+          <ShowPassword
+            className="mt-[5px]"
+            onClick={() => setPasswordType("text")}
+          />
         ) : (
-          <ShowPassword onClick={() => setPasswordType("password")} />
+          <HidePassword
+            className="mt-[6px]"
+            onClick={() => setPasswordType("password")}
+          />
         )}
       </div>
-      <span className="auth-form__placeholder">
-        <Password /> Password
-      </span>
     </div>
   );
 }
