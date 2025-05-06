@@ -1,10 +1,26 @@
+import * as m from "motion/react-m";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
+import { useLocation } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+
+import api from "@api/api";
+
+import { useKeyDown } from "@hooks/useKeyDown";
+
 import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
 import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
-import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
-import api from "@api/api";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import ChatFormNavigation from "@components/hub/chatForm/ChatFormNavigation.js";
+import ChatFormEditor from "@components/hub/chatForm/ChatFormEditor.js";
+
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
 import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
+import { selectCurrentUserId } from "@store/values/CurrentUserId.js";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
@@ -14,14 +30,12 @@ import {
   clearSelectedConversation,
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
-import { KEY_CODES } from "@utils/global/keyCodes";
 import { setClicked } from "@store/values/ContextMenu";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useKeyDown } from "@hooks/useKeyDown";
-import { useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { getIsMobileView } from "@store/values/IsMobileView.js";
 
-import "@styles/hub/ChatForm.css";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import { CHAT_CONTENT_TABS } from "@utils/global/chatContentTabs.js";
+import { KEY_CODES } from "@utils/global/keyCodes";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -29,13 +43,20 @@ export default function ChatForm() {
 
   const isUserLogin = useSelector(getUserIsLoggedIn);
   const isTabInFocus = useSelector(getIsTabInFocus);
+  const isMobileView = useSelector(getIsMobileView);
 
   const conversations = useSelector(selectConversationsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
+  const isGroup = selectedConversation?.type === "g";
 
-  const chatMessagesBlock = useRef();
-  const [files, setFiles] = useState([]);
+  const currentUserId = useSelector(selectCurrentUserId);
+  const conversationOwner = selectedConversation.owner_id?.toString();
+  const isOwner = currentUserId === conversationOwner;
+
+  const [currentTab, setCurrentTab] = useState(CHAT_CONTENT_TABS.MESSAGES);
+  const isEnableProgrammableChat =
+    import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true" && !isMobileView;
 
   const closeForm = (e) => {
     const { pathname, hash } = location;
@@ -55,7 +76,7 @@ export default function ChatForm() {
   };
 
   const readMessage = useCallback(() => {
-    if (!conversations[selectedCID] || !document.hasFocus()) {
+    if (!conversations || !conversations[selectedCID] || !document.hasFocus()) {
       return;
     }
 
@@ -72,8 +93,6 @@ export default function ChatForm() {
   }, [isTabInFocus, readMessage]);
 
   useEffect(() => {
-    files.length && setFiles([]);
-
     document.addEventListener("swiped-left", closeForm);
     document.addEventListener("swiped-right", closeForm);
 
@@ -95,23 +114,59 @@ export default function ChatForm() {
 
   useKeyDown(KEY_CODES.ESCAPE, closeForm);
 
+  useLayoutEffect(
+    () => setCurrentTab(CHAT_CONTENT_TABS.MESSAGES),
+    [selectedCID]
+  );
+
+  const formComponent = useMemo(() => {
+    if (!selectedCID) return null;
+
+    switch (currentTab) {
+      case CHAT_CONTENT_TABS.MESSAGES:
+        return <ChatFormContent />;
+      case CHAT_CONTENT_TABS.APPS:
+        return <ChatFormEditor />;
+      default:
+        return null;
+    }
+  }, [selectedCID, currentTab]);
+
   return (
-    <section className={`chat-form__container ${selectedCID ? "" : "fcc"}`}>
+    <m.div
+      key="chatForm"
+      id="chatFormContainer"
+      className={`max-xl:max-w-full ${
+        location.pathname.includes("/profile")
+          ? "xl:max-w-full"
+          : "xl:max-w-[calc(100%-420px)]"
+      } flex flex-col flex-grow md:max-xl:p-[10px] md:rounded-[32px]`}
+      // layout
+      initial={{ scale: 1, opacity: 0 }}
+      animate={{ scale: [1.02, 1], y: [3, 0], opacity: [0, 1] }}
+      transition={{ delay: 0.3, duration: 0.5 }}
+    >
       {selectedCID ? (
         <>
           <ChatFormHeader closeFormFunc={closeForm} />
-          <ChatFormContent scrollRef={chatMessagesBlock} />
-          <ChatFormInputs
-            chatMessagesBlockRef={chatMessagesBlock}
-            files={files}
-            setFiles={setFiles}
-          />
+          {isGroup && isOwner && isEnableProgrammableChat ? (
+            <ChatFormNavigation
+              currentTab={currentTab}
+              changeTabFunc={setCurrentTab}
+            />
+          ) : null}
+          {formComponent}
         </>
       ) : (
-        <p className="chat-form__title">
+        <m.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="mt-auto mb-auto text-center font-light text-[58px] !text-(--color-text-light)"
+        >
           Select a conversation to start chatting
-        </p>
+        </m.p>
       )}
-    </section>
+    </m.div>
   );
 }

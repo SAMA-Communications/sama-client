@@ -1,24 +1,28 @@
+import * as m from "motion/react-m";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router";
+
+import conversationService from "@services/conversationsService";
+import usersService from "@services/usersService";
+import { useKeyDown } from "@hooks/useKeyDown";
+
 import GroupDetailsInputs from "@components/modals/components/GroupDetailsInputs";
 import UserContactsInput from "@components/modals/components/UserContactsInput";
 import UserNameInputs from "@components/modals/components/UserNameInputs";
-import conversationService from "@services/conversationsService";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import showCustomAlert from "@utils/show_alert";
-import usersService from "@services/usersService";
-import { KEY_CODES } from "@utils/global/keyCodes";
+
 import { upsertChat } from "@store/values/Conversations";
 import { upsertUser } from "@store/values/Participants";
-import { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useKeyDown } from "@hooks/useKeyDown";
-import { useLocation } from "react-router-dom";
 
-import "@styles/modals/EditModalHub.css";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import showCustomAlert from "@utils/show_alert";
+import { KEY_CODES } from "@utils/global/keyCodes";
 
 export default function EditModalHub() {
   const dispatch = useDispatch();
   const { pathname, hash, search } = useLocation();
 
+  const [type, setType] = useState(null);
   const [content, setContent] = useState({});
 
   const addFieldToEdit = (field, value) =>
@@ -28,22 +32,27 @@ export default function EditModalHub() {
     chat: {
       component: <GroupDetailsInputs setState={addFieldToEdit} />,
       title: "Edit chat information",
-      styleName: "chatname",
+      style: "w-[min(460px,100%)]",
     },
     personal: {
       component: <UserContactsInput setState={addFieldToEdit} />,
       title: "Edit personal info",
-      styleName: "user",
+      style: "w-[min(360px,100%)]",
     },
     user: {
       component: <UserNameInputs setState={addFieldToEdit} />,
       title: "Edit your name",
-      styleName: "user",
+      style: "w-[min(360px,100%)]",
     },
   };
 
-  const type = (search || hash).split("=")[1];
-  const { component, title, styleName } = types[type] || {};
+  useEffect(() => {
+    const newType = (search || hash).split("=")[1];
+    const delay = newType ? "0" : "300";
+    setTimeout(() => setType((search || hash).split("=")[1]), delay);
+  }, [search, hash]);
+
+  const { component, title, style } = types[type] || {};
 
   const closeModal = useCallback(
     () => removeAndNavigateLastSection(pathname + hash),
@@ -85,19 +94,37 @@ export default function EditModalHub() {
   useKeyDown(KEY_CODES.ENTER, sendRequest);
 
   return (
-    <div className="edit-modal__container fcc">
-      <div className={`edit-modal__content--${styleName}`}>
-        <p className="edit-modal__title">{title}</p>
-        <div className="em-inputs__container">{component}</div>
-        <div className="em-navigation__container fcc">
-          <p className="em-navigation__link" onClick={closeModal}>
+    <m.div
+      className="absolute top-[0px] w-dvw h-dvh bg-(--color-black-50) flex items-center justify-center"
+      initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+      animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+      transition={{ duration: 0.2 }}
+    >
+      <m.div
+        className={`p-[30px] flex flex-col gap-[20px] rounded-[32px] bg-(--color-bg-light) max-md:w-[94svw] max-md:p-[20px] ${style}`}
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1, transition: { delay: 0.1 } }}
+        exit={{ scale: 0.8, opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      >
+        <p className="text-h5 !font-normal text-black">{title}</p>
+        <div className="flex flex-col gap-[15px]">{component}</div>
+        <div className="mt-auto justify-end gap-[30px] flex items-center">
+          <p
+            className="text-h6 text-(--color-accent-dark) !forn-light cursor-pointer"
+            onClick={closeModal}
+          >
             Cancel
           </p>
-          <p className="em-navigation__link" onClick={sendRequest}>
+          <p
+            className="text-h6 text-(--color-accent-dark) !forn-light cursor-pointer"
+            onClick={sendRequest}
+          >
             Save
           </p>
         </div>
-      </div>
-    </div>
+      </m.div>
+    </m.div>
   );
 }

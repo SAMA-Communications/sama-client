@@ -26,10 +26,12 @@ export default defineConfig({
       "@services": createPath("src/services"),
 
       "@icons": createPath("src/assets/icons"),
+      "@assets": createPath("src/assets"),
       "@styles": createPath("src/styles"),
 
       "@lib": createPath("src/lib"),
       "@utils": createPath("src/utils"),
+      "@animations": createPath("src/animations"),
       "@validations": createPath("src/lib/validations"),
 
       "@hooks": createPath("src/hooks"),

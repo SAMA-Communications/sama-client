@@ -1,11 +1,23 @@
+import * as m from "motion/react-m";
+
 export default function ContextLink({ text, icon, onClick, isDangerStyle }) {
   return (
-    <div
+    <m.div
       key={text}
-      className={`context-menu__link${isDangerStyle ? "--danger" : ""}`}
+      className={`py-[3px] px-[13px] flex gap-[15px] items-center rounded-[8px] cursor-pointer hover:bg-(--color-hover-light) ${
+        isDangerStyle ? "mt-[5px]" : ""
+      }`}
       onClick={onClick}
+      animate={{ height: [0, 35], opacity: [0, 1] }}
     >
-      {icon} <p className="context-menu__text">{text}</p>
-    </div>
+      {icon}{" "}
+      <p
+        className={`text-black text-h6 text-nowrap ${
+          isDangerStyle ? "!text-(--color-red)" : ""
+        }`}
+      >
+        {text}
+      </p>
+    </m.div>
   );
 }

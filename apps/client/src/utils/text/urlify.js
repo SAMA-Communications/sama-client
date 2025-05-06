@@ -1,6 +1,6 @@
 import globalConstants from "@utils/global/constants";
 
-export function urlify(inputText) {
+export function urlify(inputText, color = "black") {
   const matches = inputText.match(globalConstants.linksRegExp) || [];
   const parts = inputText.split(globalConstants.linksRegExp);
 
@@ -10,7 +10,7 @@ export function urlify(inputText) {
     if (i < matches.length) {
       result.push(
         <a
-          className="message-body-link"
+          className={`text-${color} underline`}
           href={matches[i]}
           target="_blank"
           key={i}

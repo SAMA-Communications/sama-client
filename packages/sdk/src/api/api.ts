@@ -339,6 +339,18 @@ class SAMAClient {
     return this.sendRequest("conversation_search", { name: data.name }, "conversations");
   }
 
+  async conversationHandlerCreate(data: { cid: string, content: string }): Promise<any> {
+    return this.sendRequest("conversation_handler_create", { cid: data.cid, content: data.content });
+  }
+
+  async getConversationHandler(data: { cid: string }): Promise<any> {
+    return this.sendRequest("get_conversation_handler", { cid: data.cid }, "conversation_handler");
+  }
+
+  async conversationHandlerDelete(data: { cid: string }): Promise<any> {
+    return this.sendRequest("conversation_handler_delete", { cid: data.cid });
+  }
+
   async pushSubscriptionCreate(data: { web_endpoint: string; web_key_auth: string; web_key_p256dh: string }): Promise<ISubscription> {
     return this.sendRequest("push_subscription_create", {
       platform: "web",

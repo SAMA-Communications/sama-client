@@ -32,6 +32,14 @@ export const getDisplayableConversations = createSelector(
     return conversations.filter((obj) => obj.type === "g" || obj.last_message);
   }
 );
+
+export const getConversationHandler = createSelector(
+  [getSelectedConversationId, selectConversationsEntities],
+  (id, conversations) => {
+    return conversations && id ? conversations[id].handler_options : null;
+  }
+);
+
 export const conversations = createSlice({
   name: "Conversations",
   initialState: conversationsAdapter.getInitialState({ entities: null }),
@@ -124,6 +132,18 @@ export const conversations = createSlice({
 
       conversationsAdapter.upsertOne(state, updateParams);
     },
+    removeLastMessage: (state, { payload }) => {
+      const { cid } = payload;
+      const conv = state.entities[cid];
+
+      if (!conv) return;
+
+      const updateParams = {
+        _id: cid,
+        messagesIds: conv.messagesIds.slice(0, -1),
+      };
+      conversationsAdapter.upsertOne(state, updateParams);
+    },
 
     upsertParticipants: (state, { payload }) => {
       const { cid, participants } = payload;
@@ -146,7 +166,9 @@ export const conversations = createSlice({
       const updateParams = {
         _id: cid,
         last_message: msg,
-        updated_at: new Date(msg.t * 1000).toISOString(),
+        updated_at: msg
+          ? new Date(msg.t * 1000).toISOString()
+          : conv.created_at,
       };
       conversationsAdapter.upsertOne(state, updateParams);
     },
@@ -172,6 +194,26 @@ export const conversations = createSlice({
           last_message: { ...lastMessageField, status: "read" },
         });
     },
+
+    updateHandler: (state, action) => {
+      const { _id, content, updated_at, updated_by, not_saved } =
+        action.payload;
+      const conv = state.entities[_id];
+
+      const existingHandlerOptions = conv?.handler_options || {};
+      const updatedHandlerOptions = {
+        ...existingHandlerOptions,
+        ...(content && { content }),
+        ...(updated_at && { updated_at }),
+        ...(updated_by && { updated_by }),
+        not_saved,
+      };
+
+      conversationsAdapter.upsertOne(state, {
+        _id: _id,
+        handler_options: updatedHandlerOptions,
+      });
+    },
   },
 });
 
@@ -181,12 +223,15 @@ export const {
   insertChat,
   markConversationAsRead,
   removeChat,
+  removeLastMessage,
   setChats,
   setLastMessageField,
   updateChatIndicator,
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
+  updateHandler,
+  deleteScheme,
 } = conversations.actions;
 
 export default conversations.reducer;

@@ -1,12 +1,14 @@
-import App from "@src/App";
-import ConnectLine from "@components/_helpers/ConnectLine";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import store from "@store/store";
-import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router";
 
-import "@styles/GlobalParam.css";
+import App from "@src/App";
+import ConnectLine from "@components/_helpers/ConnectLine";
+
+import store from "@store/store";
+
+import "@styles/index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

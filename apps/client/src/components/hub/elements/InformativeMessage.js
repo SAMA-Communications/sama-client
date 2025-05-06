@@ -1,5 +1,7 @@
+import * as m from "motion/react-m";
+import { useLocation } from "react-router";
+
 import addSuffix from "@utils/navigation/add_suffix";
-import { useLocation } from "react-router-dom";
 
 export default function InformativeMessage({
   text,
@@ -9,13 +11,19 @@ export default function InformativeMessage({
   const { pathname, hash } = useLocation();
 
   return (
-    <div
-      className={"informative-message" + (isPrevMesssageUsers ? " mt-10" : "")}
+    <m.div
+      whileInView={{ y: 0 }}
+      initial={{ y: 5 }}
+      transition={{ duration: 0.3, delay: 0.03 }}
+      className={
+        "self-center py-[6px] px-[18px] rounded-[16px] bg-(--color-hover-light) cursor-pointer text-gray-500" +
+        (isPrevMesssageUsers ? " mt-[10px]" : "")
+      }
       onClick={() =>
         addSuffix(pathname + hash, `/user?uid=${params?.user?._id}`)
       }
     >
-      {text}
-    </div>
+      <p>{text}</p>
+    </m.div>
   );
 }

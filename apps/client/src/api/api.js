@@ -4,7 +4,7 @@ import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 
 // import { SAMAClient } from "@sama-communications/sdk";
-import { SAMAClient } from "../../../../packages/sdk/dist/sama-sdk.es.js";
+import { SAMAClient } from "../../../../packages/sdk/dist/@sama-communications.sdk.es.js";
 
 const onConnect = () => {
   EventEmitter.emit("onConnect");

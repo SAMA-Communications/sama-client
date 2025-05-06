@@ -1,12 +1,17 @@
-import TextAreaInput from "@components/hub/elements/TextAreaInput";
-import addSuffix from "@utils/navigation/add_suffix";
+import * as m from "motion/react-m";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router";
+import { useSelector } from "react-redux";
+
 import api from "@api/api";
+
+import TextAreaInput from "@components/hub/elements/TextAreaInput";
+
+import { getSelectedConversationId } from "@store/values/SelectedConversation";
+
+import addSuffix from "@utils/navigation/add_suffix";
 import isMobile from "@utils/get_device_type";
 import { KEY_CODES } from "@utils/global/keyCodes";
-import { getSelectedConversationId } from "@store/values/SelectedConversation";
-import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 import Attach from "@icons/options/Attach.svg?react";
 import Send from "@icons/options/Send.svg?react";
@@ -84,40 +89,46 @@ export default function MessageInput({
   const inputsView = useMemo(() => {
     if (isBlockedConv) {
       return (
-        <TextAreaInput
-          inputRef={inputTextRef}
-          handleInput={handleInput}
-          handeOnKeyDown={handeOnKeyDown}
-          isDisabled={true}
-          isMobile={isMobile}
-          placeholder={
-            "The user you are currently chatting with has deleted their account. You can no longer continue the chat."
-          }
-        />
+        <p className="self-center ml-[15px] mr-[15px]">
+          The user you are currently chatting with has deleted their account.
+          You can no longer continue the chat.
+        </p>
       );
     }
 
     return (
       <>
-        <Attach
-          className="input-file__button"
-          onClick={() => {
-            addSuffix(location.pathname + location.hash, "/attach");
-            storeInputText();
-          }}
-        />
+        <m.span whileTap={{ scale: 0.8 }}>
+          <Attach
+            className="w-[55px] h-[45px] pl=[10px] pb-[12px] cursor-pointer"
+            onClick={() => {
+              addSuffix(location.pathname + location.hash, "/attach");
+              storeInputText();
+            }}
+          />
+        </m.span>
         <TextAreaInput
           inputRef={inputTextRef}
+          customClassName="grow py-[12px] text-black !font-light  resize-none max-xl:disabled:!p-[9px] placeholder:text-(--color-text-dark) placeholder:text-p [&::-webkit-scrollbar]:hidden"
           handleInput={handleInput}
           handeOnKeyDown={handeOnKeyDown}
           isDisabled={false}
           isMobile={isMobile}
           placeholder={"Type your message..."}
         />
-        <Send className="input-text__button" onClick={onSubmitFunc} />
+        <m.span whileTap={{ translateX: 10, scale: 0.9 }}>
+          <Send
+            className="mr-[10px] px-[8px] !w-[55px] !h-[55px] cursor-pointer"
+            onClick={onSubmitFunc}
+          />
+        </m.span>
       </>
     );
   }, [location, isBlockedConv, onSubmitFunc]);
 
-  return <div className="inputs__container">{inputsView}</div>;
+  return (
+    <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden">
+      {inputsView}
+    </div>
+  );
 }

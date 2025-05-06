@@ -1,7 +1,8 @@
-import DownloadManager from "@lib/downloadManager";
-import api from "@api/api";
 import jwtDecode from "jwt-decode";
-import navigateTo from "@utils/navigation/navigate_to";
+
+import api from "@api/api";
+import DownloadManager from "@lib/downloadManager";
+
 import store from "@store/store";
 import { addUser } from "@store/values/Participants";
 import {
@@ -19,6 +20,8 @@ import {
   upsertChat,
   upsertParticipants,
 } from "@store/values/Conversations";
+
+import navigateTo from "@utils/navigation/navigate_to";
 
 class MessagesService {
   currentChatId;
@@ -212,16 +215,37 @@ class MessagesService {
   }
 
   async sendMessage(message) {
-    const { server_mid, t } = await api.messageCreate(message);
+    const { server_mid, t, modified, bot_message } = await api.messageCreate(
+      message
+    );
     const { mid, body, cid, from } = message;
 
-    const mObject = { _id: server_mid, body, from, status: "sent", t };
+    const mObject = {
+      _id: server_mid,
+      old_id: mid,
+      body: modified?.body || body,
+      from,
+      status: "sent",
+      t,
+    };
 
     store.dispatch(addMessage(mObject));
     store.dispatch(
       updateLastMessageField({ cid, resaveLastMessageId: mid, msg: mObject })
     );
     store.dispatch(removeMessage(mid));
+
+    if (bot_message) {
+      const participants = store.getState().participants;
+      if (!participants[bot_message.from]) {
+        const botObject = await api.getUsersByIds({
+          ids: [bot_message.from],
+        });
+        store.dispatch(addUser(botObject[0]));
+      }
+      store.dispatch(addMessage(bot_message));
+      store.dispatch(updateLastMessageField({ cid, msg: bot_message }));
+    }
   }
 }
 
