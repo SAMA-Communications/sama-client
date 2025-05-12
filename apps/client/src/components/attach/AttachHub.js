@@ -4,6 +4,8 @@ import { useLocation } from "react-router";
 
 import api from "@api/api";
 
+import draftService from "@services/draftService.js";
+
 import DownloadManager from "@lib/downloadManager";
 import { useKeyDown } from "@hooks/useKeyDown";
 
@@ -86,13 +88,13 @@ export default function AttachHub() {
 
   const storeInputText = () => {
     if (inputTextRef.current?.value) {
-      localStorage.setItem(draftKey, inputTextRef.current.value);
+      draftService.saveDraft(selectedCID, inputTextRef.current.value);
       inputTextRef.current.value = "";
     }
   };
 
   const syncInputText = () => {
-    const messageBody = localStorage.getItem(draftKey);
+    const messageBody = draftService.getDraftMessage(selectedCID);
     messageBody && (inputTextRef.current.value = messageBody);
   };
 

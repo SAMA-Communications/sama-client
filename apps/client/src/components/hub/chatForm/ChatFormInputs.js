@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import draftService from "@services/draftService.js";
 import messagesService from "@services/messagesService";
 
 import MessageInput from "@components/hub/elements/MessageInput";
@@ -35,7 +36,6 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
-  const draftKey = `draft_${selectedCID}`;
 
   const inputRef = useRef(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
@@ -103,7 +103,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     }
 
     setIsSendMessageDisable(false);
-    localStorage.removeItem(draftKey);
+    draftService.removeDraft(selectedCID);
     chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
     // inputRef.current.focus(); //care..
     window.scrollTo(0, document.body.scrollHeight - 200);
@@ -112,7 +112,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
 
   useEffect(() => {
     if (inputRef.current) {
-      const draftText = localStorage.getItem(draftKey) || "";
+      const draftText = draftService.getDraftMessage(selectedCID) || "";
       inputRef.current.value = draftText;
       inputRef.current.style.height = `${calcInputHeight(draftText)}px`;
     }

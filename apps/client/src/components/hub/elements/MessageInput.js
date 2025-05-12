@@ -7,6 +7,8 @@ import api from "@api/api";
 
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
 
+import draftService from "@services/draftService.js";
+
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 
 import addSuffix from "@utils/navigation/add_suffix";
@@ -25,7 +27,6 @@ export default function MessageInput({
   const location = useLocation();
 
   const selectedConversationId = useSelector(getSelectedConversationId);
-  const draftKey = `draft_${selectedConversationId}`;
 
   let lastTypingRequestTime = null;
   const handleInput = (e) => {
@@ -39,8 +40,8 @@ export default function MessageInput({
 
     if (inputTextRef.current) {
       text?.length > 0
-        ? localStorage.setItem(draftKey, text)
-        : localStorage.removeItem(draftKey);
+        ? draftService.saveDraft(selectedConversationId, text)
+        : draftService.removeDraft(selectedConversationId);
       inputTextRef.current.style.height = `${calcInputHeight(text)}px`;
       inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
     }
@@ -57,8 +58,9 @@ export default function MessageInput({
   };
 
   const storeInputText = () => {
-    if (inputTextRef.current?.value) {
-      localStorage.setItem(draftKey, inputTextRef.current.value);
+    const inputText = inputTextRef.current?.value;
+    if (inputText) {
+      draftService.saveDraft(selectedConversationId, inputText);
       inputTextRef.current.value = "";
       inputTextRef.current.style.height = `55px`;
     }
@@ -67,7 +69,7 @@ export default function MessageInput({
   const syncInputText = () => {
     const message = location.hash.includes("/attach")
       ? ""
-      : localStorage.getItem(draftKey);
+      : draftService.getDraftMessage(selectedConversationId);
     if (message) {
       if (inputTextRef.current) {
         inputTextRef.current.value = message || "";
