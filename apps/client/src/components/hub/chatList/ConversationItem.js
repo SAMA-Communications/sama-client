@@ -33,15 +33,14 @@ export default function ConversationItem({
     last_message,
     unread_messages_count,
     updated_at,
-    old_updated_at,
   } = chatObject;
 
   const dispatch = useDispatch();
 
   const draftMessage = useMemo(() => {
-    if (isSelected && !(old_updated_at || last_message?.old_t)) return null;
+    if (isSelected && !draft) return null;
     return draftService.getDraftMessage(cid);
-  }, [isSelected, old_updated_at, last_message]);
+  }, [isSelected, draft]);
 
   useEffect(() => {
     const draftParams = draftService.getDraft(cid);
