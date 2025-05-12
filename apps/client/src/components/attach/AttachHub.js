@@ -42,6 +42,7 @@ export default function AttachHub() {
   const messages = useSelector(selectAllMessages);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation._id;
+  const draftKey = `draft_${selectedCID}`;
   const currentUserId = useSelector(selectCurrentUserId);
 
   const [isPending, setIsPending] = useState(false);
@@ -85,17 +86,14 @@ export default function AttachHub() {
 
   const storeInputText = () => {
     if (inputTextRef.current?.value) {
-      localStorage.setItem("mtext", inputTextRef.current.value);
+      localStorage.setItem(draftKey, inputTextRef.current.value);
       inputTextRef.current.value = "";
     }
   };
 
   const syncInputText = () => {
-    const mtext = localStorage.getItem("mtext");
-    if (mtext) {
-      localStorage.removeItem("mtext");
-      inputTextRef.current.value = mtext;
-    }
+    const messageBody = localStorage.getItem(draftKey);
+    messageBody && (inputTextRef.current.value = messageBody);
   };
 
   const closeModal = useCallback(

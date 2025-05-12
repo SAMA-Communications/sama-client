@@ -21,12 +21,18 @@ export default function ConversationItem({
   lastMessageUserName,
 }) {
   const {
+    _id: cid,
     updated_at,
     unread_messages_count,
     type,
     last_message,
     typing_users,
   } = chatObject;
+
+  const draftText = useMemo(() => {
+    if (isSelected) return null;
+    return localStorage.getItem(`draft_${cid}`);
+  }, [isSelected]);
 
   const tView = useMemo(() => {
     return getLastUpdateTime(updated_at, last_message);
@@ -77,6 +83,7 @@ export default function ConversationItem({
           ) : (
             <LastMessage
               message={last_message}
+              draft={draftText}
               viewName={lastMessageUserName}
               count={unread_messages_count}
               userId={currentUserId}

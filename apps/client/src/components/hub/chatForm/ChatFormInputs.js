@@ -24,6 +24,7 @@ import { setSelectedConversation } from "@store/values/SelectedConversation";
 
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
+import calcInputHeight from "@utils/text/calc_input_height.js";
 
 export default function ChatFormInputs({ chatMessagesBlockRef }) {
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
+  const draftKey = `draft_${selectedCID}`;
 
   const inputRef = useRef(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
@@ -101,6 +103,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
     }
 
     setIsSendMessageDisable(false);
+    localStorage.removeItem(draftKey);
     chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
     // inputRef.current.focus(); //care..
     window.scrollTo(0, document.body.scrollHeight - 200);
@@ -109,8 +112,9 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
 
   useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.value = "";
-      inputRef.current.style.height = `55px`;
+      const draftText = localStorage.getItem(draftKey) || "";
+      inputRef.current.value = draftText;
+      inputRef.current.style.height = `${calcInputHeight(draftText)}px`;
     }
   }, [selectedCID]);
 
