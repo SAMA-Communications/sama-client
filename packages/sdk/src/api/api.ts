@@ -185,7 +185,14 @@ class SAMAClient {
     if (data) params.body = JSON.stringify(data);
 
     const response = await fetch(`${this.httpEndpoint}/${endpoint}`, params);
-    const responseData = await response.json();
+
+    const text = await response.text();
+    if (!response.ok) {
+      console.error("[http.error]", text);
+      throw text || response.statusText;
+    }
+
+    const responseData = text ? JSON.parse(text) : {};
     console.log("[http.response]", { response: responseData });
 
     return responseData;

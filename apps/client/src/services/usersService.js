@@ -163,8 +163,7 @@ class UsersService {
       }
       await performLogoutRequest();
     } catch (err) {
-      console.error(err);
-      await performLogoutRequest();
+      // await performLogoutRequest();
       throw new Error("User logout error");
     } finally {
       localStorage.clear();
