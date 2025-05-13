@@ -17,16 +17,14 @@ class DraftService {
       localStorage.setItem(this.#getDraftKey(cid), JSON.stringify(draftParams));
   }
 
-  getDraftMessage(cid) {
-    const stringDraftParams = localStorage.getItem(this.#getDraftKey(cid));
-    const draftParams = stringDraftParams ? JSON.parse(stringDraftParams) : {};
-    return draftParams.message;
-  }
-
   getDraft(cid) {
     const stringDraftParams = localStorage.getItem(this.#getDraftKey(cid));
     const draftParams = stringDraftParams ? JSON.parse(stringDraftParams) : {};
     return draftParams;
+  }
+
+  getDraftMessage(cid) {
+    return this.getDraft(cid).message;
   }
 
   removeDraft(cid) {
