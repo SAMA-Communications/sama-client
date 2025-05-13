@@ -216,7 +216,7 @@ class SAMAClient {
     const tokenExpiredAt = parseInt(localStorage.getItem("sessionExpiredAt") || `${currentTime}`, 10);
     if (tokenExpiredAt - currentTime <= 0) localStorage.removeItem("sessionId");
 
-    const requestData: { organizationId: string, device_id: string | null; login?: string; password?: string } = { organizationId: this.organizationId, device_id: this.deviceId };
+    const requestData: { organization_id: string, device_id: string | null; login?: string; password?: string } = { organization_id: this.organizationId, device_id: this.deviceId };
     if (login && password) {
       requestData.login = login;
       requestData.password = password;
