@@ -1,4 +1,4 @@
-let timer = null;
+import globalConstants from "./global/constants.js";
 
 const themes = {
   default: {
@@ -19,19 +19,10 @@ const themes = {
   },
 };
 
+const toastTimers = new Map();
+
 export default function showCustomAlert(message, themeStyle) {
-  const existingAlert = document.querySelector(".alert");
-
-  if (existingAlert) {
-    existingAlert.style.opacity = "0";
-
-    setTimeout(() => {
-      document.body.removeChild(existingAlert);
-      createAndShowAlert(message, themeStyle);
-    }, 300);
-  } else {
-    createAndShowAlert(message, themeStyle);
-  }
+  createAndShowAlert(message, themeStyle);
 }
 
 function createAndShowAlert(message, themeStyle) {
@@ -39,24 +30,64 @@ function createAndShowAlert(message, themeStyle) {
 
   const customAlert = document.createElement("div");
   customAlert.className =
-    "fixed top-[25px] left-1/2 max-w-[98vw] w-max h-auto px-[25px] py-[10px] text-center !font-normal transform -translate-x-1/2 opacity-0 transition-opacity duration-300 rounded-[5px] shadow-lg overflow-hidden cursor-pointer z-1000";
+    "custom-toast fixed left-1/2 max-w-[98vw] w-max h-auto px-[25px] py-[10px] text-center !font-normal transform -translate-x-1/2 transition-all duration-300 rounded-[5px] shadow-lg overflow-hidden cursor-pointer z-1000 opacity-0";
   customAlert.textContent = message;
   customAlert.style.backgroundColor = theme.bgColor;
   customAlert.style.color = theme.textColor;
 
-  document.body.appendChild(customAlert);
+  document.body.prepend(customAlert);
 
-  clearTimeout(timer);
-  setTimeout(() => (customAlert.style.opacity = "1"), 10);
+  setTimeout(() => {
+    customAlert.style.opacity = "1";
+    repositionToasts();
+  }, 10);
 
-  const hideAlert = () => {
-    customAlert.style.opacity = "0";
-    setTimeout(() => document.body.removeChild(customAlert), 300);
-  };
   customAlert.onclick = () => {
-    clearTimeout(timer);
-    hideAlert();
+    clearTimeout(toastTimers.get(customAlert));
+    toastTimers.delete(customAlert);
+    removeToast(customAlert);
   };
 
-  timer = setTimeout(hideAlert, 3000);
+  const timer = setTimeout(() => {
+    toastTimers.delete(customAlert);
+    removeToast(customAlert);
+  }, 3000);
+
+  toastTimers.set(customAlert, timer);
+
+  cleanupOldToasts();
+}
+
+function removeToast(toast) {
+  toast.style.opacity = "0";
+  setTimeout(() => {
+    if (document.body.contains(toast)) {
+      document.body.removeChild(toast);
+      repositionToasts();
+    }
+  }, 300);
+}
+
+function cleanupOldToasts() {
+  const toasts = Array.from(document.querySelectorAll(".custom-toast"));
+  while (toasts.length > globalConstants.maxTtoasts) {
+    const oldest = toasts.pop();
+    clearTimeout(toastTimers.get(oldest));
+    toastTimers.delete(oldest);
+    removeToast(oldest);
+  }
+}
+
+function repositionToasts() {
+  const toasts = Array.from(document.querySelectorAll(".custom-toast"));
+  toasts.forEach((toast, index) => {
+    const offset = 25 + index * 20;
+    const opacity = 1 - index * 0.3;
+    const scale = 1 - index * 0.05;
+
+    toast.style.top = `${offset}px`;
+    toast.style.opacity = `${opacity}`;
+    toast.style.transform = `scale(${scale})`;
+    toast.style.zIndex = `${1000 - index}`;
+  });
 }
