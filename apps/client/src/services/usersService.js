@@ -163,8 +163,7 @@ class UsersService {
       }
       await performLogoutRequest();
     } catch (err) {
-      console.error(err);
-      await performLogoutRequest();
+      // await performLogoutRequest();
       throw new Error("User logout error");
     } finally {
       localStorage.clear();
@@ -218,6 +217,8 @@ class UsersService {
       try {
         await api.userDelete();
         store.dispatch({ type: "RESET_STORE" });
+        localStorage.clear();
+        localStorage.setItem("isUsedBefore", true);
         return true;
       } catch (err) {
         showCustomAlert(err.message, "danger");

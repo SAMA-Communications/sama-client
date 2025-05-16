@@ -20,7 +20,7 @@ export default function EmptyHub() {
     <>
       {isMobileView ? <MenuButtons /> : null}
       <m.div
-        className={`flex flex-1 flex-col gap-[20px] items-center justify-center rounded-[48px] max-md:w-full  max-md:rounded-[0]`}
+        className={`flex flex-1 flex-col gap-[20px] items-center justify-center rounded-[48px] max-md:w-full max-md:mt-[35px] max-md:rounded-[0]`}
       >
         <AnimatePresence>
           {inputText ? null : (
@@ -54,7 +54,7 @@ export default function EmptyHub() {
           {inputText && (
             <SearchBlock
               key="emptyHubInput"
-              customClassName="w-[400px]"
+              customClassName="w-[400px] md:max-xl:!w-[400px]"
               searchText={inputText}
               isPreviewUserProfile={true}
               isSearchOnlyUsers={true}

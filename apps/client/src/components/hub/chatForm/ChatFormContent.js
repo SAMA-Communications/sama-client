@@ -16,7 +16,7 @@ export default function ChatFormContent() {
   const chatContentView = useMemo(() => {
     if (!messages) {
       return (
-        <CustomScrollBar>
+        <CustomScrollBar customId={"chatMessagesScrollable"}>
           <SMessageList />
         </CustomScrollBar>
       );

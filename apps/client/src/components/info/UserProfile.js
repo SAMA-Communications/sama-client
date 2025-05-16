@@ -258,9 +258,11 @@ export default function UserProfile({ triggerExitEvent, shareRef }) {
               <p
                 className="text-(--color-red)"
                 onClick={async () => {
-                  navigateTo("/authorization");
-                  triggerExitEvent();
-                  await usersService.deleteCurrentUser();
+                  const isSuccess = await usersService.deleteCurrentUser();
+                  if (isSuccess) {
+                    navigateTo("/authorization");
+                    triggerExitEvent();
+                  }
                 }}
               >
                 Delete account

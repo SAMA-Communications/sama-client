@@ -66,7 +66,7 @@ export default function ChatList() {
       />
       {inputText ? (
         <SearchBlock
-          customClassName="w-full max-xl:px-[2svw] max-xl:pt-[2swh] max-xl:pb-[2px]"
+          customClassName="w-full md:max-xl:!w-[400px] max-xl:px-[2svw] max-xl:pt-[2swh] max-xl:pb-[2px]"
           searchText={inputText}
           isClearInputText={true}
           clearInputText={() => setInputText(null)}

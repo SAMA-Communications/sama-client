@@ -1,9 +1,14 @@
 import * as m from "motion/react-m";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { useDispatch } from "react-redux";
 
 import LastMessage from "@components/message/LastMessage";
 import TypingLine from "@components/_helpers/TypingLine";
 import DynamicAvatar from "@components/info/elements/DynamicAvatar";
+
+import draftService from "@services/draftService.js";
+
+import { updateWithDrafts } from "@store/values/Conversations.js";
 
 import getLastUpdateTime from "@utils/conversation/get_last_update_time";
 
@@ -21,12 +26,35 @@ export default function ConversationItem({
   lastMessageUserName,
 }) {
   const {
-    updated_at,
-    unread_messages_count,
+    _id: cid,
     type,
-    last_message,
     typing_users,
+    draft,
+    last_message,
+    unread_messages_count,
+    updated_at,
   } = chatObject;
+
+  const dispatch = useDispatch();
+
+  const draftMessage = useMemo(() => {
+    if (isSelected && !draft) return null;
+    return draftService.getDraftMessage(cid);
+  }, [isSelected, draft]);
+
+  useEffect(() => {
+    const draftParams = draftService.getDraft(cid);
+    const { message, updated_at: draftUpdatedAt } = draftParams;
+    if (!message) return;
+    if (!draft) {
+      dispatch(updateWithDrafts({ cid, draft: draftParams }));
+      return;
+    }
+
+    const convUpdatedAt = Math.floor(Date.parse(updated_at) / 1000);
+    !(draftUpdatedAt === convUpdatedAt || draftUpdatedAt === last_message?.t) &&
+      dispatch(updateWithDrafts({ cid, draft: draftParams }));
+  }, [isSelected]);
 
   const tView = useMemo(() => {
     return getLastUpdateTime(updated_at, last_message);
@@ -77,6 +105,7 @@ export default function ConversationItem({
           ) : (
             <LastMessage
               message={last_message}
+              draft={draftMessage}
               viewName={lastMessageUserName}
               count={unread_messages_count}
               userId={currentUserId}

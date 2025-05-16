@@ -1,5 +1,5 @@
 import * as m from "motion/react-m";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
 
@@ -7,10 +7,13 @@ import api from "@api/api";
 
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
 
+import draftService from "@services/draftService.js";
+
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 
 import addSuffix from "@utils/navigation/add_suffix";
 import isMobile from "@utils/get_device_type";
+import calcInputHeight from "@utils/text/calc_input_height.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 import Attach from "@icons/options/Attach.svg?react";
@@ -20,17 +23,15 @@ export default function MessageInput({
   inputTextRef,
   onSubmitFunc,
   isBlockedConv,
-  chatMessagesBlockRef,
 }) {
   const location = useLocation();
 
   const selectedConversationId = useSelector(getSelectedConversationId);
 
-  const [isPrevLocationAttach, setIsPrevLocationAttach] = useState(false);
-
   let lastTypingRequestTime = null;
   const handleInput = (e) => {
-    if (e.target.value.length > 0) {
+    const text = e.target.value;
+    if (text.length > 0) {
       if (new Date() - lastTypingRequestTime > 3000 || !lastTypingRequestTime) {
         api.sendTypingStatus({ cid: selectedConversationId });
         lastTypingRequestTime = new Date();
@@ -38,10 +39,10 @@ export default function MessageInput({
     }
 
     if (inputTextRef.current) {
-      const countOfLines = e.target.value.split("\n").length - 1;
-      inputTextRef.current.style.height = `${
-        55 + countOfLines * 20 < 230 ? 55 + countOfLines * 20 : 215
-      }px`;
+      text?.length > 0
+        ? draftService.saveDraft(selectedConversationId, text)
+        : draftService.removeDraft(selectedConversationId);
+      inputTextRef.current.style.height = `${calcInputHeight(text)}px`;
       inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
     }
   };
@@ -57,34 +58,30 @@ export default function MessageInput({
   };
 
   const storeInputText = () => {
-    if (inputTextRef.current.value) {
-      localStorage.setItem("mtext", inputTextRef.current.value);
+    const inputText = inputTextRef.current?.value;
+    if (inputText) {
+      draftService.saveDraft(selectedConversationId, inputText);
       inputTextRef.current.value = "";
       inputTextRef.current.style.height = `55px`;
     }
   };
 
   const syncInputText = () => {
-    const mtext = localStorage.getItem("mtext");
-    if (mtext) {
-      localStorage.removeItem("mtext");
-      inputTextRef.current.value = mtext;
-      handleInput({ target: { value: mtext } });
+    const message = location.hash.includes("/attach")
+      ? ""
+      : draftService.getDraftMessage(selectedConversationId);
+    if (message) {
+      if (inputTextRef.current) {
+        inputTextRef.current.value = message || "";
+        inputTextRef.current.style.height = `${calcInputHeight(
+          message || ""
+        )}px`;
+        inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
+      }
     }
   };
 
-  useEffect(() => {
-    const isCurrentLocationAttach = location.hash.includes("/attach");
-
-    if (!isCurrentLocationAttach && isPrevLocationAttach) {
-      chatMessagesBlockRef.current?._infScroll?.scrollIntoView({
-        block: "end",
-      });
-      syncInputText();
-    }
-
-    setIsPrevLocationAttach(isCurrentLocationAttach);
-  }, [location]);
+  useEffect(() => syncInputText(), [location]);
 
   const inputsView = useMemo(() => {
     if (isBlockedConv) {

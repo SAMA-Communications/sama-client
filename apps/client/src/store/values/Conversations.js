@@ -132,6 +132,42 @@ export const conversations = createSlice({
 
       conversationsAdapter.upsertOne(state, updateParams);
     },
+    updateWithDrafts: (state, { payload }) => {
+      const { cid, isRemove = false, draft } = payload;
+      const conv = state.entities[cid];
+
+      if (isRemove && !conv?.draft) return;
+      const updateParams = { _id: cid };
+
+      if (conv.last_message.t > draft?.updated_at) {
+        if (draft) updateParams.draft = draft.message;
+      } else if (conv.last_message) {
+        updateParams.last_message = {
+          ...conv.last_message,
+          ...(isRemove
+            ? { t: conv.last_message.old_t || conv.last_message.t, old_t: null }
+            : { t: draft.updated_at, old_t: conv.last_message.t }),
+        };
+        if (isRemove) {
+          updateParams.draft = null;
+        } else if (draft) {
+          updateParams.draft = draft.message;
+        }
+      } else {
+        if (isRemove) {
+          updateParams.updated_at = conv.old_updated_at;
+          updateParams.old_updated_at = null;
+          updateParams.draft = null;
+        } else {
+          updateParams.updated_at = draft.updated_at;
+          updateParams.old_updated_at = conv.updated_at;
+          if (draft) updateParams.draft = draft.message;
+        }
+      }
+
+      conversationsAdapter.upsertOne(state, updateParams);
+    },
+
     removeLastMessage: (state, { payload }) => {
       const { cid } = payload;
       const conv = state.entities[cid];
@@ -228,6 +264,7 @@ export const {
   setLastMessageField,
   updateChatIndicator,
   updateLastMessageField,
+  updateWithDrafts,
   upsertChat,
   upsertParticipants,
   updateHandler,
