@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.13.0
+
+### Features
+
+- Added support for all new requests for the programmable chat feature
+- Added support for organizations
+
+### Improvements
+
+- Improved handler for http errors
+
 ## 0.12.1
 
 ### Important fixes

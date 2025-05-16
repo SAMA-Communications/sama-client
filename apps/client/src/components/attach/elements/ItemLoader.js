@@ -3,7 +3,7 @@ import { Blurhash } from "react-blurhash";
 
 export default function ItemLoader({ blurHash, isShowLoader = true }) {
   return (
-    <div className="blur-hash-preloader">
+    <div className="blur-hash-preloader relative w-full h-full">
       <Blurhash
         className="canvas-preloader"
         hash={blurHash || "LEHLk~WB2yk8pyo0adR*.7kCMdnj"}
@@ -12,7 +12,15 @@ export default function ItemLoader({ blurHash, isShowLoader = true }) {
         resolutionX={32}
         resolutionY={32}
       />
-      {isShowLoader ? <OvalLoader height={50} width={50} /> : null}
+      {isShowLoader ? (
+        <OvalLoader
+          customClassName={
+            "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          }
+          height={35}
+          width={35}
+        />
+      ) : null}
     </div>
   );
 }

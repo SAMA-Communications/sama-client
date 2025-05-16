@@ -1,12 +1,20 @@
-import TextAreaInput from "@components/hub/elements/TextAreaInput";
-import addSuffix from "@utils/navigation/add_suffix";
-import api from "@api/api";
-import isMobile from "@utils/get_device_type";
-import { KEY_CODES } from "@utils/global/keyCodes";
-import { getSelectedConversationId } from "@store/values/SelectedConversation";
-import { useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import * as m from "motion/react-m";
+import { useEffect, useMemo } from "react";
+import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
+
+import api from "@api/api";
+
+import TextAreaInput from "@components/hub/elements/TextAreaInput";
+
+import draftService from "@services/draftService.js";
+
+import { getSelectedConversationId } from "@store/values/SelectedConversation";
+
+import addSuffix from "@utils/navigation/add_suffix";
+import isMobile from "@utils/get_device_type";
+import calcInputHeight from "@utils/text/calc_input_height.js";
+import { KEY_CODES } from "@utils/global/keyCodes";
 
 import Attach from "@icons/options/Attach.svg?react";
 import Send from "@icons/options/Send.svg?react";
@@ -15,17 +23,15 @@ export default function MessageInput({
   inputTextRef,
   onSubmitFunc,
   isBlockedConv,
-  chatMessagesBlockRef,
 }) {
   const location = useLocation();
 
   const selectedConversationId = useSelector(getSelectedConversationId);
 
-  const [isPrevLocationAttach, setIsPrevLocationAttach] = useState(false);
-
   let lastTypingRequestTime = null;
   const handleInput = (e) => {
-    if (e.target.value.length > 0) {
+    const text = e.target.value;
+    if (text.length > 0) {
       if (new Date() - lastTypingRequestTime > 3000 || !lastTypingRequestTime) {
         api.sendTypingStatus({ cid: selectedConversationId });
         lastTypingRequestTime = new Date();
@@ -33,10 +39,10 @@ export default function MessageInput({
     }
 
     if (inputTextRef.current) {
-      const countOfLines = e.target.value.split("\n").length - 1;
-      inputTextRef.current.style.height = `${
-        55 + countOfLines * 20 < 230 ? 55 + countOfLines * 20 : 215
-      }px`;
+      text?.length > 0
+        ? draftService.saveDraft(selectedConversationId, text)
+        : draftService.removeDraft(selectedConversationId);
+      inputTextRef.current.style.height = `${calcInputHeight(text)}px`;
       inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
     }
   };
@@ -52,72 +58,74 @@ export default function MessageInput({
   };
 
   const storeInputText = () => {
-    if (inputTextRef.current.value) {
-      localStorage.setItem("mtext", inputTextRef.current.value);
+    const inputText = inputTextRef.current?.value;
+    if (inputText) {
+      draftService.saveDraft(selectedConversationId, inputText);
       inputTextRef.current.value = "";
       inputTextRef.current.style.height = `55px`;
     }
   };
 
   const syncInputText = () => {
-    const mtext = localStorage.getItem("mtext");
-    if (mtext) {
-      localStorage.removeItem("mtext");
-      inputTextRef.current.value = mtext;
-      handleInput({ target: { value: mtext } });
+    const message = location.hash.includes("/attach")
+      ? ""
+      : draftService.getDraftMessage(selectedConversationId);
+    if (message) {
+      if (inputTextRef.current) {
+        inputTextRef.current.value = message || "";
+        inputTextRef.current.style.height = `${calcInputHeight(
+          message || ""
+        )}px`;
+        inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
+      }
     }
   };
 
-  useEffect(() => {
-    const isCurrentLocationAttach = location.hash.includes("/attach");
-
-    if (!isCurrentLocationAttach && isPrevLocationAttach) {
-      chatMessagesBlockRef.current?._infScroll?.scrollIntoView({
-        block: "end",
-      });
-      syncInputText();
-    }
-
-    setIsPrevLocationAttach(isCurrentLocationAttach);
-  }, [location]);
+  useEffect(() => syncInputText(), [location]);
 
   const inputsView = useMemo(() => {
     if (isBlockedConv) {
       return (
-        <TextAreaInput
-          inputRef={inputTextRef}
-          handleInput={handleInput}
-          handeOnKeyDown={handeOnKeyDown}
-          isDisabled={true}
-          isMobile={isMobile}
-          placeholder={
-            "The user you are currently chatting with has deleted their account. You can no longer continue the chat."
-          }
-        />
+        <p className="self-center ml-[15px] mr-[15px]">
+          The user you are currently chatting with has deleted their account.
+          You can no longer continue the chat.
+        </p>
       );
     }
 
     return (
       <>
-        <Attach
-          className="input-file__button"
-          onClick={() => {
-            addSuffix(location.pathname + location.hash, "/attach");
-            storeInputText();
-          }}
-        />
+        <m.span whileTap={{ scale: 0.8 }}>
+          <Attach
+            className="w-[55px] h-[45px] pl=[10px] pb-[12px] cursor-pointer"
+            onClick={() => {
+              addSuffix(location.pathname + location.hash, "/attach");
+              storeInputText();
+            }}
+          />
+        </m.span>
         <TextAreaInput
           inputRef={inputTextRef}
+          customClassName="grow py-[12px] text-black !font-light  resize-none max-xl:disabled:!p-[9px] placeholder:text-(--color-text-dark) placeholder:text-p [&::-webkit-scrollbar]:hidden"
           handleInput={handleInput}
           handeOnKeyDown={handeOnKeyDown}
           isDisabled={false}
           isMobile={isMobile}
           placeholder={"Type your message..."}
         />
-        <Send className="input-text__button" onClick={onSubmitFunc} />
+        <m.span whileTap={{ translateX: 10, scale: 0.9 }}>
+          <Send
+            className="mr-[10px] px-[8px] !w-[55px] !h-[55px] cursor-pointer"
+            onClick={onSubmitFunc}
+          />
+        </m.span>
       </>
     );
   }, [location, isBlockedConv, onSubmitFunc]);
 
-  return <div className="inputs__container">{inputsView}</div>;
+  return (
+    <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden">
+      {inputsView}
+    </div>
+  );
 }

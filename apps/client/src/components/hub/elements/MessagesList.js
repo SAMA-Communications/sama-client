@@ -1,8 +1,16 @@
-import ChatMessage from "@components/hub/elements/ChatMessage";
-import DownloadManager from "@lib/downloadManager";
 import InfiniteScroll from "react-infinite-scroll-component";
-import InformativeMessage from "@components/hub/elements/InformativeMessage";
+import { domMax, LayoutGroup, LazyMotion } from "motion/react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router";
+
 import api from "@api/api";
+
+import DownloadManager from "@lib/downloadManager";
+
+import InformativeMessage from "@components/hub/elements/InformativeMessage";
+import ChatMessage from "@components/hub/elements/ChatMessage";
+
 import {
   addMessages,
   selectActiveConversationMessages,
@@ -14,9 +22,6 @@ import {
 } from "@store/values/Participants";
 import { getConverastionById, upsertChat } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
 
 export default function MessagesList({ scrollRef }) {
   const dispatch = useDispatch();
@@ -136,35 +141,39 @@ export default function MessagesList({ scrollRef }) {
       hasMore={true && needToGetMoreMessage.current}
       scrollableTarget="chatMessagesScrollable"
     >
-      {messages.map((msg, i) =>
-        msg.x?.type ? (
-          <InformativeMessage
-            key={msg._id}
-            params={msg.x}
-            text={msg.body}
-            isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
-          />
-        ) : (
-          <ChatMessage
-            key={msg._id}
-            message={msg}
-            sender={participants[msg.from]}
-            currentUserId={currentUserId}
-            isPrevMesssageYours={
-              i > 0
-                ? messages[i - 1].from === messages[i].from &&
-                  !messages[i - 1].x?.type
-                : false
-            }
-            isNextMessageYours={
-              i < messages.length - 1
-                ? messages[i].from === messages[i + 1].from &&
-                  !messages[i + 1].x?.type
-                : false
-            }
-          />
-        )
-      )}
+      <LazyMotion features={domMax}>
+        <LayoutGroup id="chatMessagesListLayoutGroup">
+          {messages.map((msg, i) =>
+            msg.x?.type ? (
+              <InformativeMessage
+                key={msg.old_id || msg._id}
+                params={msg.x}
+                text={msg.body}
+                isPrevMesssageUsers={i > 0 ? !messages[i - 1].x?.type : false}
+              />
+            ) : (
+              <ChatMessage
+                key={msg.old_id || msg._id}
+                message={msg}
+                sender={participants[msg.from]}
+                currentUserId={currentUserId}
+                isPrevMesssageYours={
+                  i > 0
+                    ? messages[i - 1].from === messages[i].from &&
+                      !messages[i - 1].x?.type
+                    : false
+                }
+                isNextMessageYours={
+                  i < messages.length - 1
+                    ? messages[i].from === messages[i + 1].from &&
+                      !messages[i + 1].x?.type
+                    : false
+                }
+              />
+            )
+          )}
+        </LayoutGroup>
+      </LazyMotion>
     </InfiniteScroll>
   );
 }

@@ -1,13 +1,18 @@
+import { useSelector } from "react-redux";
+
 import NavigationLine from "@components/navigation/NavigationLine";
+
+import { getIsMobileView } from "@store/values/IsMobileView.js";
+
 import SHub from "@skeletons/hub/SHub";
 
-import "@styles/hub/MainHub.css";
+export default function SMain({ setAnimateMainPage }) {
+  const isMobileView = useSelector(getIsMobileView);
 
-export default function SMain() {
   return (
-    <>
-      <NavigationLine />
-      <SHub />
-    </>
+    <div className="w-dvw h-dvh flex overflow-hidden">
+      {isMobileView ? null : <NavigationLine />}
+      <SHub animateOptions={setAnimateMainPage} />
+    </div>
   );
 }

@@ -8,7 +8,14 @@ export default function AvatarWithFallback({ avatarUrl, altText }) {
   useEffect(() => {
     const img = new Image();
     img.src = avatarUrl;
-    img.onload = () => setComponent(<img src={avatarUrl} alt={altText} />);
+    img.onload = () =>
+      setComponent(
+        <img
+          className="w-full h-full object-cover"
+          src={avatarUrl}
+          alt={altText}
+        />
+      );
     img.onerror = () => setComponent(<UserIcon />);
   }, [avatarUrl]);
 

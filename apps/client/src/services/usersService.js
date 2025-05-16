@@ -1,8 +1,11 @@
 import DownloadManager from "@lib/downloadManager";
+
 import api from "@api/api";
+
 import isHeic from "@utils/media/is_heic";
 import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
+
 import store from "@store/store";
 import { upsertUser } from "@store/values/Participants";
 
@@ -160,13 +163,11 @@ class UsersService {
       }
       await performLogoutRequest();
     } catch (err) {
-      console.error(err);
-      await performLogoutRequest();
+      // await performLogoutRequest();
       throw new Error("User logout error");
     } finally {
-      localStorage.removeItem("sessionId");
-      localStorage.removeItem("sessionExpiredAt");
-      localStorage.removeItem("userData");
+      localStorage.clear();
+      localStorage.setItem("isUsedBefore", true);
     }
   }
 
@@ -216,6 +217,8 @@ class UsersService {
       try {
         await api.userDelete();
         store.dispatch({ type: "RESET_STORE" });
+        localStorage.clear();
+        localStorage.setItem("isUsedBefore", true);
         return true;
       } catch (err) {
         showCustomAlert(err.message, "danger");

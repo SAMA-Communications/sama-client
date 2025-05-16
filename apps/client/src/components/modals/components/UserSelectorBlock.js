@@ -1,7 +1,7 @@
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import OvalLoader from "@components/_helpers/OvalLoader";
 import SearchBlock from "@components/search/SearchBlock";
-import SearchInput from "@components/static/SearchBar";
+import SearchInput from "@components/static/SearchInput";
 import UserInfo from "@components/modals/elements/UserInfo";
 import { KEY_CODES } from "@utils/global/keyCodes";
 import { useEffect, useMemo, useState } from "react";
@@ -40,9 +40,9 @@ export default function UserSelectorBlock({
       : selectedUsers;
 
     return (
-      <div className="em-selected__container">
+      <div className="-mt-[5px] -mb-[5px] flex items-center min-h-[32px] max-h-[64px]">
         {filteredUsers.length ? (
-          <CustomScrollBar>
+          <CustomScrollBar childrenClassName="flex flex-row gap-[7px] rounded-[8px]">
             {filteredUsers.map((u) => (
               <UserInfo
                 key={u._id}
@@ -56,7 +56,7 @@ export default function UserSelectorBlock({
             ))}
           </CustomScrollBar>
         ) : (
-          <p className="em-selected__text">Select users to add...</p>
+          <p className="text-h6">Select users to add...</p>
         )}
       </div>
     );
@@ -78,11 +78,17 @@ export default function UserSelectorBlock({
 
   return (
     <>
-      <div className="em__header">
-        <p className="edit-modal__title">Add participants</p>
-        <p className="edit-modal__counter">{counter}/50</p>
+      <div className="flex justify-between">
+        <p className="text-h5 !font-normal text-black">Add participants</p>
+        <p className="text-h5 !font-normal text-(--colot-text-dark)">
+          {counter}/50
+        </p>
       </div>
-      <SearchInput shadowText={"Enter a username"} setState={setInputText} />
+      <SearchInput
+        customClassName="min-h-[48px] w-full"
+        shadowText={"Enter a username"}
+        setState={setInputText}
+      />
       {selectedUsersBlock}
       <SearchBlock
         searchText={inputText}
@@ -103,14 +109,20 @@ export default function UserSelectorBlock({
         isSelectUserToArray={true}
         isSearchOnlyUsers={true}
       />
-      <div className="em-navigation__container fcc">
-        <p className="em-navigation__link" onClick={closeWindow}>
+      <div className="mt-auto justify-end gap-[30px] flex items-center">
+        <p
+          className="text-h6 text-(--color-accent-dark) !forn-light cursor-pointer"
+          onClick={closeWindow}
+        >
           Cancel
         </p>
         {isLoading ? (
-          <OvalLoader height={60} width={23} />
+          <OvalLoader customClassName="!p-[0px]" height={60} width={23} />
         ) : (
-          <p className="em-navigation__link" onClick={() => validateClick()}>
+          <p
+            className="text-h6 text-(--color-accent-dark) !forn-light cursor-pointer"
+            onClick={() => validateClick()}
+          >
             {initSelectedUsers ? "Add" : "Create"}
           </p>
         )}

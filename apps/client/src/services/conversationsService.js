@@ -1,14 +1,12 @@
-import DownloadManager from "@lib/downloadManager";
 import api from "@api/api";
+
 import eventEmitter from "@lib/eventEmitter";
-import getOpponentId from "@utils/user/get_opponent_id";
-import isHeic from "@utils/media/is_heic";
-import navigateTo from "@utils/navigation/navigate_to";
-import processFile from "@utils/media/process_file";
-import showCustomAlert from "@utils/show_alert";
+import DownloadManager from "@lib/downloadManager";
+
+import draftService from "./draftService.js";
+
 import store from "@store/store";
 import { addUsers, upsertUsers } from "@store/values/Participants";
-import { history } from "@utils/global/history";
 import {
   insertChat,
   insertChats,
@@ -16,11 +14,20 @@ import {
   upsertChat,
   upsertParticipants,
 } from "@store/values/Conversations";
-import { notificationQueueByCid } from "@services/notifications";
+
 import {
   clearSelectedConversation,
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
+
+import getOpponentId from "@utils/user/get_opponent_id";
+import isHeic from "@utils/media/is_heic";
+import navigateTo from "@utils/navigation/navigate_to";
+import processFile from "@utils/media/process_file";
+import showCustomAlert from "@utils/show_alert";
+import { history } from "@utils/global/history";
+
+import { notificationQueueByCid } from "@services/notifications";
 
 import validateFieldLength from "@validations/validateFieldLength";
 
@@ -110,6 +117,10 @@ class ConversationsService {
 
     const additionalUsersIds = [];
     conversations.forEach((chat) => {
+      if (chat.last_message?.from) {
+        !users.find((u) => u.native_id === chat.last_message?.from) &&
+          additionalUsersIds.push(chat.last_message?.from);
+      }
       if (chat.type === "g") return;
       const opponentId = getOpponentId(chat, api.curerntUserId);
       !users.find((u) => u.native_id === opponentId) &&
@@ -300,6 +311,7 @@ class ConversationsService {
         await api.conversationDelete({ cid: selectedConversation.id });
         store.dispatch(clearSelectedConversation());
         store.dispatch(removeChat(selectedConversation.id));
+        draftService.removeDraft(selectedConversation.id);
       }
     } catch (err) {
       showCustomAlert(err.message, "warning");

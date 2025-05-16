@@ -1,9 +1,11 @@
-import api from "@api/api";
-import getLastVisitTime from "@utils/user/get_last_visit_time";
 import jwtDecode from "jwt-decode";
+
+import api from "@api/api";
+
 import store from "@store/store";
 import { upsertUser } from "@store/values/Participants";
 
+import getLastVisitTime from "@utils/user/get_last_visit_time";
 class ActivityService {
   currentChatId;
   activeChat;
@@ -72,8 +74,9 @@ class ActivityService {
   getUserLastActivity(userId) {
     const opponentLastActivity =
       store.getState().participants.entities[userId]?.recent_activity;
-    return opponentLastActivity === "online" ? (
-      <span className="status--online">online</span>
+
+    return opponentLastActivity === 0 ? (
+      <span className="text-(--color-accent-dark) text-h5">online</span>
     ) : (
       getLastVisitTime(opponentLastActivity)
     );

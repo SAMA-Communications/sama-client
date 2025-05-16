@@ -1,5 +1,5 @@
 import { getNetworkState } from "@store/values/NetworkState";
-import { motion as m } from "framer-motion";
+import { motion } from "motion/react";
 import { useSelector } from "react-redux";
 
 export default function ConnectLine() {
@@ -10,7 +10,7 @@ export default function ConnectLine() {
   }
 
   return (
-    <m.div
+    <motion.div
       variants={{
         hidden: { marginTop: "-28px" },
         visible: { marginTop: "0", transition: { duration: 0.3 } },
@@ -18,9 +18,11 @@ export default function ConnectLine() {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="connect-line"
+      className="absolute top-0 w-screen h-[28px] bg-(--color-accent-dark) shadow-md z-1000"
     >
-      <p className="connect-line__text">Connecting...</p>
-    </m.div>
+      <p className="text-center font-light text-[18px] text-white">
+        Connecting...
+      </p>
+    </motion.div>
   );
 }
