@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.7.0
+
+### Features
+
+- Implemented Programmable Chat for group chat admins to enhance management capabilities
+- Added a Draft feature to locally save unsent messages
+- Added different animations in the application
+- Added support for verifying that a user belongs to a specific organization
+
+### Improvements
+
+- Upgraded API requests for 1-on-1 chats
+- Improved css styles, rewritten on tailwind
+- Improved real-time updates for Online status to enhance compatibility with mobile apps
+
+### Bug Fixes:
+
+- Fixed scrolling issues in the main chat list
+- Fixed behavior when a user cancels a deletion action
+
 ## 1.6.0
 
 ### Features
