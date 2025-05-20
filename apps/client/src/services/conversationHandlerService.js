@@ -6,7 +6,7 @@ import { updateHandler, upsertChat } from "@store/values/Conversations.js";
 import api from "@api/api.js";
 
 class ConversationHandlerService {
-  #options = { allowFetch: true, allowFs: true };
+  #options = { allowFetch: true, allowFs: false, executionTimeout: 3000 };
   #sandBox = null;
 
   constructor() {
