@@ -219,11 +219,11 @@ class MessagesService {
       message
     );
     const { mid, body, cid, from } = message;
-
     const mObject = {
       _id: server_mid,
       old_id: mid,
       body: modified?.body || body,
+      ...(modified?.attachments && { attachments: modified.attachments }),
       from,
       status: "sent",
       t,

@@ -186,6 +186,9 @@ export default function AttachHub() {
           file_id: file.name,
           file_name: file.name,
           file_url: file.localUrl,
+          file_content_type: file.type,
+          file_width: file.width,
+          file_height: file.height,
         })),
       };
 
@@ -201,6 +204,9 @@ export default function AttachHub() {
           file_id: obj.file_id,
           file_name: obj.file_name,
           file_blur_hash: files[i].blurHash,
+          file_content_type: files[i].type,
+          file_width: files[i].width,
+          file_height: files[i].height,
         }));
       }
 
@@ -229,6 +235,9 @@ export default function AttachHub() {
             file_url: obj.file_url,
             file_local_url: files[i].localUrl,
             file_blur_hash: files[i].blurHash,
+            file_content_type: files[i].type,
+            file_width: files[i].width,
+            file_height: files[i].height,
           })),
         };
 

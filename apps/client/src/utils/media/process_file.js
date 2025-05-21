@@ -40,10 +40,26 @@ export default async function processFile(
 
   if (file.type.startsWith("image/")) {
     file = await compressAndHashFile(file, maxSizeMB, maxWidthOrHeight);
+
+    const image = new Image();
+    image.src = file.localUrl;
+    file.width = image.width;
+    file.height = image.height;
   }
 
   if (file.type.startsWith("video/")) {
     file.localUrl = URL.createObjectURL(file);
+
+    const video = document.createElement("video");
+    video.src = file.localUrl;
+    await new Promise((resolve) => {
+      video.onloadedmetadata = () => {
+        file.width = video.videoWidth;
+        file.height = video.videoHeight;
+        resolve();
+      };
+    });
   }
+
   return file;
 }

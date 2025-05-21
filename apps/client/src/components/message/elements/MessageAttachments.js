@@ -25,7 +25,7 @@ export default function MessageAttachments({ attachments, mid }) {
       <Masonry className="gap-[5px]! media-gallery">
         {attachments.map((att, index) => (
           <m.div
-            key={att.file_name}
+            key={att.file_name || att.file_url}
             layout
             className="masonry-item w-full max-h-[200px] h-full overflow-hidden rounded-lg cursor-pointer"
           >
