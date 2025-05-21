@@ -292,7 +292,6 @@ export default function AttachHub() {
     });
 
     function handleInput(e) {
-      e.preventDefault();
       if (!selectedCID) return;
 
       let files = [];

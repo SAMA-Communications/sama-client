@@ -92,7 +92,6 @@ export default function MessageInput({
     }
 
     function handleInput(e) {
-      e.preventDefault();
       if (!selectedConversationId) return;
 
       let files = [];
@@ -147,7 +146,7 @@ export default function MessageInput({
         </m.span>
         <TextAreaInput
           inputRef={inputTextRef}
-          customClassName="grow py-[12px] text-black !font-light  resize-none max-xl:disabled:!p-[9px] placeholder:text-(--color-text-dark) placeholder:text-p [&::-webkit-scrollbar]:hidden"
+          customClassName="max-h-full grow py-[12px] text-black !font-light  resize-none max-xl:disabled:!p-[9px] placeholder:text-(--color-text-dark) placeholder:text-p [&::-webkit-scrollbar]:hidden"
           handleInput={handleInput}
           handeOnKeyDown={handeOnKeyDown}
           isDisabled={false}
