@@ -5,7 +5,8 @@ import { useRef, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useTouchScreen } from "@hooks/useTouchScreen";
 
-import MessageAttachment from "@components/message/elements/MessageAttachment";
+import ImageView from "./components/ImageView.js";
+import VideoView from "./components/VideoView.js";
 
 import getFileType from "@utils/media/get_file_type";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
@@ -53,6 +54,12 @@ export default function MediaHub() {
     up: closeModal,
   });
 
+  const currentAttachment = attachments[currentIndex];
+  const currentFileType = getFileType(
+    currentAttachment?.file_name,
+    currentAttachment?.file_content_type
+  );
+
   return (
     <div
       className="absolute top-0 w-dvw h-dvh flex flex-col bg-[var(--color-black-90)] z-10"
@@ -72,10 +79,16 @@ export default function MediaHub() {
         ref={swipedBlockRef}
         className="max-h-[calc(100dvh-250px)] px-[30px] md:px-[max(10%,90px)] flex-1 flex justify-center items-center"
       >
-        <MessageAttachment
-          url={attachments[currentIndex]?.file_url}
-          name={attachments[currentIndex]?.file_name}
-        />
+        {currentFileType === "Video" ? (
+          <VideoView
+            video={currentAttachment}
+            enableControls={true}
+            isFullSize={false}
+            onClickFunc={(e) => e.stopPropagation()}
+          />
+        ) : (
+          <ImageView image={currentAttachment} isFullSize={false} />
+        )}
       </div>
       {!isFirstIndex && (
         <div
@@ -111,18 +124,10 @@ export default function MediaHub() {
               setCurrentIndex(i);
             }}
           >
-            {getFileType(file.file_name) === "Video" ? (
-              <video
-                className="w-full h-full object-cover"
-                src={file.file_url}
-                alt={file.file_name}
-              />
+            {getFileType(file.file_name, file.file_content_type) === "Video" ? (
+              <VideoView video={file} removePlayButton={true} />
             ) : (
-              <img
-                className="w-full h-full object-cover"
-                src={file.file_url}
-                alt={file.file_name}
-              />
+              <ImageView image={file} />
             )}
           </div>
         ))}

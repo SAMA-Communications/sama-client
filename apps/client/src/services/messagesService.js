@@ -165,6 +165,7 @@ class MessagesService {
             continue;
           }
           attachments.forEach((obj) => {
+            if (obj.file_url) return;
             const mAttachmentsObject = mAttachments[obj.file_id];
             if (!mAttachmentsObject) {
               mAttachments[obj.file_id] = {
@@ -218,12 +219,12 @@ class MessagesService {
     const { server_mid, t, modified, bot_message } = await api.messageCreate(
       message
     );
-    const { mid, body, cid, from } = message;
+    const { mid, body, cid, from, attachments } = message;
     const mObject = {
       _id: server_mid,
       old_id: mid,
       body: modified?.body || body,
-      ...(modified?.attachments && { attachments: modified.attachments }),
+      attachments: modified?.attachments || attachments,
       from,
       status: "sent",
       t,
@@ -238,14 +239,14 @@ class MessagesService {
     if (bot_message) {
       const participants = store.getState().participants;
       if (!participants[bot_message.from]) {
-        const botObject = await api.getUsersByIds({
-          ids: [bot_message.from],
-        });
+        const botObject = await api.getUsersByIds({ ids: [bot_message.from] });
         store.dispatch(addUser(botObject[0]));
       }
       store.dispatch(addMessage(bot_message));
       store.dispatch(updateLastMessageField({ cid, msg: bot_message }));
     }
+
+    return mObject;
   }
 }
 

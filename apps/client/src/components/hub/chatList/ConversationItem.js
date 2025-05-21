@@ -64,7 +64,7 @@ export default function ConversationItem({
     <m.div
       className={`relative w-full p-[10px] flex gap-[15px] items-center rounded-[12px] cursor-pointer ${
         isSelected ? "bg-(--color-hover-light)" : ""
-      } hover:bg-(--color-hover-light) transition-[background-color] duration-200`}
+      } hover:bg-(--color-hover-light) transition-[background-color] duration-200 focus:outline-none`}
       onClick={onClickFunc}
       initial={{ opacity: 0, x: -30 }}
       whileInView={{ opacity: 1, x: 0 }}

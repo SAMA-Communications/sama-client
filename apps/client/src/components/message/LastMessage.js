@@ -29,7 +29,8 @@ export default function LastMessage({
 
   const lastMessageText = (text, att) => {
     if (text) return text;
-    if (att?.file_name) return getFileType(att.file_name);
+    if (att?.file_name || att?.file_content_type)
+      return getFileType(att.file_name, att.file_content_type);
     return "";
   };
 

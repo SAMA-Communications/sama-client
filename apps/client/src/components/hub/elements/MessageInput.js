@@ -1,4 +1,5 @@
 import * as m from "motion/react-m";
+import localforage from "localforage";
 import { useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
@@ -14,6 +15,7 @@ import { getSelectedConversationId } from "@store/values/SelectedConversation";
 import addSuffix from "@utils/navigation/add_suffix";
 import isMobile from "@utils/get_device_type";
 import calcInputHeight from "@utils/text/calc_input_height.js";
+import extractFilesFromClipboard from "@utils/media/extract_files_from_clipboard.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 import Attach from "@icons/options/Attach.svg?react";
@@ -82,6 +84,45 @@ export default function MessageInput({
   };
 
   useEffect(() => syncInputText(), [location]);
+
+  useEffect(() => {
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    function handleInput(e) {
+      e.preventDefault();
+      if (!selectedConversationId) return;
+
+      let files = [];
+      const clipboardItems = e.clipboardData || e.originalEvent?.clipboardData;
+      if (clipboardItems?.items) {
+        files = extractFilesFromClipboard(clipboardItems);
+      } else if (e.dataTransfer?.files) {
+        files = Array.from(e.dataTransfer.files);
+      }
+
+      if (!files.length) return;
+      localforage.setItem("attachFiles", files);
+      addSuffix(location.pathname + location.hash, "/attach");
+      storeInputText();
+    }
+
+    document.addEventListener("dragover", preventDefaults);
+    document.addEventListener("dragenter", preventDefaults);
+    document.addEventListener("dragleave", preventDefaults);
+    document.addEventListener("drop", handleInput);
+    document.addEventListener("paste", handleInput);
+
+    return () => {
+      document.removeEventListener("dragover", preventDefaults);
+      document.removeEventListener("dragenter", preventDefaults);
+      document.removeEventListener("dragleave", preventDefaults);
+      document.removeEventListener("drop", handleInput);
+      document.removeEventListener("paste", handleInput);
+    };
+  }, [selectedConversationId]);
 
   const inputsView = useMemo(() => {
     if (isBlockedConv) {

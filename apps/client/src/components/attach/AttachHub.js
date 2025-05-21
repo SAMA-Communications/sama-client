@@ -1,23 +1,22 @@
+import localforage from "localforage";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 
-import api from "@api/api";
-
 import draftService from "@services/draftService.js";
+import messagesService from "@services/messagesService.js";
 
 import DownloadManager from "@lib/downloadManager";
 import { useKeyDown } from "@hooks/useKeyDown";
 
-import AttachmentItem from "@components/attach/components/AttachmentItem";
-import CustomScrollBar from "@components/_helpers/CustomScrollBar";
+import MediaAttachments from "@components/message/elements/MediaAttachments.js";
 import OvalLoader from "@components/_helpers/OvalLoader";
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
 
 import { getNetworkState } from "@store/values/NetworkState";
 import {
   addMessage,
-  removeMessage,
+  upsertMessage,
   selectAllMessages,
 } from "@store/values/Messages";
 import {
@@ -32,6 +31,7 @@ import globalConstants from "@utils/global/constants";
 import processFile from "@utils/media/process_file";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
 import showCustomAlert from "@utils/show_alert";
+import extractFilesFromClipboard from "@utils/media/extract_files_from_clipboard.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 export default function AttachHub() {
@@ -44,7 +44,6 @@ export default function AttachHub() {
   const messages = useSelector(selectAllMessages);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation._id;
-  const draftKey = `draft_${selectedCID}`;
   const currentUserId = useSelector(selectCurrentUserId);
 
   const [isPending, setIsPending] = useState(false);
@@ -102,6 +101,7 @@ export default function AttachHub() {
     (isForseClose) => {
       const close = () => {
         removeAndNavigateLastSection(pathname + hash);
+        localforage.removeItem("attachFiles");
         storeInputText();
         return true;
       };
@@ -132,33 +132,38 @@ export default function AttachHub() {
 
   const attachListView = useMemo(() => {
     if (isPending) {
-      return <OvalLoader width={80} height={80} />;
+      return (
+        <OvalLoader width={80} height={80} customClassName="self-center" />
+      );
     }
 
     if (!files.length) {
-      return <p className="py-[10px] text-h5">Select files</p>;
+      return <p className="py-[10px] text-h5 self-center">Select files</p>;
     }
 
-    return files.map((file, index) => {
-      return (
-        <AttachmentItem
-          key={index}
-          file={{
-            ...file,
+    return (
+      <MediaAttachments
+        maxHeight={"min(460px, calc(100svh - 300px))"}
+        attachments={files.map((file) => {
+          return {
             file_name: file.name,
-            size: (file.size / 1000000).toFixed(2),
-          }}
-          isOnClickDisabled={true}
-          removeFileFunc={() => removeFile(index)}
-          url={file.localUrl}
-        />
-      );
-    });
+            file_url: file.localUrl,
+            file_blur_hash: file.blurHash,
+            file_size: (file.size / 1000000).toFixed(2),
+            file_content_type: file.type,
+            file_width: file.width,
+            file_height: file.height,
+          };
+        })}
+        disableAnimation={true}
+        removeFileFunc={(index) => removeFile(index)}
+      />
+    );
   }, [files, isPending]);
 
   const sendMessage = useCallback(
     async (event) => {
-      if (isPending) return;
+      if (isPending || isSendMessageDisable) return;
       event?.preventDefault();
 
       if (!connectState) {
@@ -167,7 +172,7 @@ export default function AttachHub() {
       }
 
       const body = inputTextRef.current.value.trim();
-      if ((body.length === 0 && !files) || isSendMessageDisable) {
+      if (body?.length === 0 && !files) {
         return;
       }
       setIsSendMessageDisable(true);
@@ -175,82 +180,68 @@ export default function AttachHub() {
 
       inputTextRef.current.value = "";
       const cid = selectedCID;
-      const mid = currentUserId + Date.now();
+      const mid = `${currentUserId}${Date.now()}`;
+
+      const optimisticAttachments = files.map((file) => ({
+        file_id: file.name,
+        file_name: file.name,
+        file_url: file.localUrl,
+        file_content_type: file.type,
+        file_width: file.width,
+        file_height: file.height,
+      }));
 
       let msg = {
         _id: mid,
         body,
         from: currentUserId,
         t: Date.now(),
-        attachments: files.map((file) => ({
-          file_id: file.name,
-          file_name: file.name,
-          file_url: file.localUrl,
-          file_content_type: file.type,
-          file_width: file.width,
-          file_height: file.height,
-        })),
+        attachments: optimisticAttachments,
       };
 
       dispatch(addMessage(msg));
       dispatch(updateLastMessageField({ cid, msg }));
 
       let attachments = [];
-      const reqData = { mid, body, cid };
+      const reqData = { mid, body, cid, from: currentUserId };
 
-      if (files?.length) {
-        attachments = await DownloadManager.getFileObjects(files);
-        reqData["attachments"] = attachments.map((obj, i) => ({
-          file_id: obj.file_id,
-          file_name: obj.file_name,
-          file_blur_hash: files[i].blurHash,
-          file_content_type: files[i].type,
-          file_width: files[i].width,
-          file_height: files[i].height,
-        }));
-      }
-
-      let response;
       try {
-        response = await api.messageCreate(reqData);
-      } catch (err) {
-        showCustomAlert("The server connection is unavailable.", "warning");
-        dispatch(
-          setLastMessageField({ cid, msg: messages[messages.length - 1] })
-        );
-        return;
-      }
+        if (files?.length) {
+          attachments = await DownloadManager.getFileObjects(files);
+          reqData.attachments = attachments.map((obj, i) => ({
+            file_id: obj.file_id,
+            file_name: obj.file_name,
+            file_blur_hash: files[i].blurHash,
+            file_content_type: files[i].type,
+            file_width: files[i].width,
+            file_height: files[i].height,
+          }));
+        }
 
-      if (response.mid) {
-        msg = {
-          _id: response.server_mid,
-          old_id: mid,
-          body,
-          from: currentUserId,
-          status: "sent",
-          t: response.t,
+        const message = await messagesService.sendMessage(reqData);
+        const upsertMessageParams = {
+          _id: message._id,
           attachments: attachments.map((obj, i) => ({
             file_id: obj.file_id,
             file_name: obj.file_name,
-            file_url: obj.file_url,
-            file_local_url: files[i].localUrl,
+            file_url: obj.file_url || files[i].localUrl,
             file_blur_hash: files[i].blurHash,
             file_content_type: files[i].type,
             file_width: files[i].width,
             file_height: files[i].height,
           })),
         };
-
-        dispatch(addMessage(msg));
+        dispatch(upsertMessage(upsertMessageParams));
+      } catch (err) {
+        showCustomAlert("The server connection is unavailable.", "warning");
         dispatch(
-          updateLastMessageField({ cid, resaveLastMessageId: mid, msg })
+          setLastMessageField({ cid, msg: messages[messages.length - 1] })
         );
-        dispatch(removeMessage(mid));
+      } finally {
+        setIsSendMessageDisable(false);
+        setIsPending(false);
+        closeModal(true);
       }
-
-      setIsSendMessageDisable(false);
-      setIsPending(false);
-      closeModal(true);
     },
     [
       closeModal,
@@ -290,8 +281,38 @@ export default function AttachHub() {
   const pickFileClick = () => inputFilesRef.current.click();
 
   useEffect(() => {
-    pickFileClick();
-    syncInputText();
+    localforage.getItem("attachFiles").then((filesFromDragAndDrop) => {
+      if (filesFromDragAndDrop?.length) {
+        addFiles(filesFromDragAndDrop);
+        localforage.removeItem("attachFiles");
+      } else {
+        pickFileClick();
+      }
+      syncInputText();
+    });
+
+    function handleInput(e) {
+      e.preventDefault();
+      if (!selectedCID) return;
+
+      let files = [];
+      const clipboardItems = e.clipboardData || e.originalEvent?.clipboardData;
+      if (clipboardItems?.items) {
+        files = extractFilesFromClipboard(clipboardItems);
+      } else if (e.dataTransfer?.files) {
+        files = Array.from(e.dataTransfer.files);
+      }
+
+      if (!files.length) return;
+      addFiles(files);
+    }
+
+    document.addEventListener("drop", handleInput);
+    document.addEventListener("paste", handleInput);
+    return () => {
+      document.removeEventListener("drop", handleInput);
+      document.removeEventListener("paste", handleInput);
+    };
   }, []);
 
   useKeyDown(KEY_CODES.ESCAPE, closeModal);
@@ -319,17 +340,7 @@ export default function AttachHub() {
               ? `Selected ${files.length} files`
               : "Send attachment"}
           </p>
-          <CustomScrollBar
-            customId={"attach-view__container"}
-            customClassName={"flex flex-col flex-1 items-center"}
-            childrenClassName={
-              "[&::-webkit-scrollbar]:hidden flex flex-col items-center gap-[7px] !mr-[0px] !mb-[0px]"
-            }
-            autoHeight={true}
-            autoHeightMax={"min(460px, calc(100svh - 300px))"}
-          >
-            {attachListView}
-          </CustomScrollBar>
+          {attachListView}
           <TextAreaInput
             customClassName="py-[12px] px-[15px] resize-none min-h-[40px] h-[40px] max-h-[140px] text-black rounded-[12px] bg-(--color-hover-light) [&::-webkit-scrollbar]:hidden"
             inputRef={inputTextRef}

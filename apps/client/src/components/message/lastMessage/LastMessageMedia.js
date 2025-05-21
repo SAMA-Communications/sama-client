@@ -21,7 +21,9 @@ export default function LastMessageMedia({ attachment }) {
           resolutionY={32}
         />
       ) : (
-        attIcons[getFileType(attachment.file_name)]
+        attIcons[
+          getFileType(attachment.file_name, attachment.file_content_type)
+        ]
       )}
     </div>
   );
