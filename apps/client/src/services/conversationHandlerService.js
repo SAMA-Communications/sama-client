@@ -6,6 +6,7 @@ import store from "@store/store.js";
 import { updateHandler, upsertChat } from "@store/values/Conversations.js";
 
 import showCustomAlert from "@utils/show_alert.js";
+import globalConstants from "@utils/global/constants.js";
 
 class ConversationHandlerService {
   #options = { allowFetch: true, allowFs: false, executionTimeout: 3000 };
@@ -27,23 +28,30 @@ class ConversationHandlerService {
 
   async runHandler(code, message, user) {
     if (!this.#sandBox) throw new Error("Sandbox is not initialized");
-    return await this.#sandBox.runSandboxed(
+    let errorMessage = null;
+
+    const env = {
+      MESSAGE: message,
+      USER: user,
+      ACCEPT: () => {},
+      RESOLVE: (value) => value,
+      REJECT: (value) => value,
+      FETCH: async (input, init = {}) => {
+        try {
+          return await fetch(input, init);
+        } catch {
+          errorMessage = globalConstants.editorFetchErrorMessage;
+          return { json: async () => ({}), text: async () => "" };
+        }
+      },
+    };
+
+    const result = await this.#sandBox.runSandboxed(
       async ({ evalCode }) => evalCode(code),
-      {
-        ...this.#options,
-        env: {
-          MESSAGE: message,
-          USER: user,
-          ACCEPT: () => {},
-          RESOLVE: (value) => value,
-          REJECT: (value) => value,
-          FETCH: async (input, init = {}) => {
-            const res = await fetch(input, init);
-            return res;
-          },
-        },
-      }
+      { ...this.#options, env }
     );
+
+    return errorMessage ? { ...result, error: errorMessage } : result;
   }
 
   getHandlerModelByCid(monaco, id) {
