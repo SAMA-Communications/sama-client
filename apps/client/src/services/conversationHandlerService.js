@@ -1,9 +1,11 @@
-import showCustomAlert from "@utils/show_alert.js";
-import store from "@store/store.js";
 import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@latest";
-import { updateHandler, upsertChat } from "@store/values/Conversations.js";
 
 import api from "@api/api.js";
+
+import store from "@store/store.js";
+import { updateHandler, upsertChat } from "@store/values/Conversations.js";
+
+import showCustomAlert from "@utils/show_alert.js";
 
 class ConversationHandlerService {
   #options = { allowFetch: true, allowFs: false, executionTimeout: 3000 };
@@ -16,7 +18,7 @@ class ConversationHandlerService {
   async initializeSandbox() {
     try {
       this.#sandBox = await loadQuickJs(
-        "https://esm.sh/@jitl/quickjs-ng-wasmfile-release-sync"
+        "https://esm.sh/@jitl/quickjs-singlefile-browser-release-sync"
       );
     } catch (error) {
       console.error("Failed to initialize sandbox:", error);
@@ -35,6 +37,10 @@ class ConversationHandlerService {
           ACCEPT: () => {},
           RESOLVE: (value) => value,
           REJECT: (value) => value,
+          FETCH: async (input, init = {}) => {
+            const res = await fetch(input, init);
+            return res;
+          },
         },
       }
     );
@@ -59,7 +65,7 @@ class ConversationHandlerService {
         originCode
       ),
       isHandlerHeader:
-        /const\s+handler\s*=\s*async\s*\(message,\s*user,\s*accept,\s*resolve,\s*reject\)\s*=>\s*\{/.test(
+        /const\s+handler\s*=\s*async\s*\(message,\s*user,\s*accept,\s*resolve,\s*reject,\s*fetch\)\s*=>\s*\{/.test(
           originCode
         ),
     };
