@@ -41,12 +41,17 @@ class MessagesService {
     api.onMessageListener = async (message) => {
       const attachments = message.attachments;
       if (attachments) {
-        const urls = await api.getDownloadUrlForFiles({
-          file_ids: attachments.map((obj) => obj.file_id),
-        });
-        message.attachments = attachments.map((obj) => {
-          return { ...obj, file_url: urls[obj.file_id] };
-        });
+        const attachmentsIds = attachments
+          .filter((obj) => !obj.file_url && obj.file_id)
+          .map((obj) => obj.file_id);
+        if (attachmentsIds.length) {
+          const urls = await api.getDownloadUrlForFiles({
+            file_ids: attachmentsIds,
+          });
+          message.attachments = attachments.map((obj) => {
+            return { ...obj, file_url: urls[obj.file_id] };
+          });
+        }
       }
 
       const userInfo = jwtDecode(localStorage.getItem("sessionId"));
