@@ -35,13 +35,26 @@ class ConversationHandlerService {
       USER: user,
       ACCEPT: () => {},
       RESOLVE: (value) => value,
-      REJECT: (value) => value,
+      REJECT: (value) => (errorMessage = value),
       FETCH: async (input, init = {}) => {
         try {
-          return await fetch(input, init);
-        } catch {
+          const res = await fetch(input, init);
+          const data = await res.json();
+          return {
+            ok: res.ok,
+            status: res.status,
+            headers: res.headers,
+            json: async () => data,
+            text: async () => JSON.stringify(data),
+          };
+        } catch (e) {
           errorMessage = globalConstants.editorFetchErrorMessage;
-          return { json: async () => ({}), text: async () => "" };
+          return {
+            ok: false,
+            status: 500,
+            json: async () => ({}),
+            text: async () => "",
+          };
         }
       },
     };
