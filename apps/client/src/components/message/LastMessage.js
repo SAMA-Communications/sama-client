@@ -24,7 +24,7 @@ export default function LastMessage({
     );
   }
 
-  const { attachments, body } = message;
+  const { attachments, body } = message || {};
   const lastAtt = attachments?.slice(-1)[0];
 
   const lastMessageText = (text, att) => {

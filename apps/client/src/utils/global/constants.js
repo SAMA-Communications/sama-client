@@ -29,7 +29,7 @@ const globalConstants = {
     6: "Sa",
   },
   defaultEditorCode: `// vvv Don\`t remove or change the line below! vvv
-const handler = async (message, user, accept, resolve, reject) => {
+const handler = async (message, user, accept, resolve, reject, fetch) => {
     const body = message.body;
 
     // Reject the message if it contains any prohibited words
@@ -42,8 +42,10 @@ const handler = async (message, user, accept, resolve, reject) => {
 };
 
 // vvv Don\`t remove or change the line below! vvv
-export default await handler(env.MESSAGE, env.USER, env.ACCEPT, env.RESOLVE, env.REJECT);
+export default await handler(env.MESSAGE, env.USER, env.ACCEPT, env.RESOLVE, env.REJECT, env.FETCH);
 `,
+  editorFetchErrorMessage:
+    "A CORS error occurred while trying to perform a network request. This is likely due to browser restrictions that prevent fetching data from external sites in this environment. Please save your code and try running this script directly within a chat conversation instead.",
 };
 
 export default globalConstants;
