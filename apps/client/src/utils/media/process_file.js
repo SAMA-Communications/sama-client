@@ -1,6 +1,8 @@
+import compressAndHashFile from "@utils/media/compress_and_hash";
+import encodeImageToBlurhash from "@utils/media/get_blur_hash.js";
+import extractFirstFrame from "@utils/media/extract_first_frame.js";
 import globalConstants from "@utils/global/constants";
 import heicToPng from "@utils/media/heic_to_png";
-import compressAndHashFile from "@utils/media/compress_and_hash";
 
 export default async function processFile(
   fileObj,
@@ -40,10 +42,35 @@ export default async function processFile(
 
   if (file.type.startsWith("image/")) {
     file = await compressAndHashFile(file, maxSizeMB, maxWidthOrHeight);
+
+    const image = new Image();
+    image.src = file.localUrl;
+    file.width = image.width;
+    file.height = image.height;
   }
 
   if (file.type.startsWith("video/")) {
     file.localUrl = URL.createObjectURL(file);
+
+    try {
+      const firstFrameUrl = await extractFirstFrame(file);
+      file.blurHash = firstFrameUrl
+        ? await encodeImageToBlurhash(firstFrameUrl)
+        : globalConstants.defaultBlurHash;
+    } catch (e) {
+      file.blurHash = globalConstants.defaultBlurHash;
+    }
+
+    const video = document.createElement("video");
+    video.src = file.localUrl;
+    await new Promise((resolve) => {
+      video.onloadedmetadata = () => {
+        file.width = video.videoWidth;
+        file.height = video.videoHeight;
+        resolve();
+      };
+    });
   }
+
   return file;
 }

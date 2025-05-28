@@ -1,6 +1,6 @@
-import globalConstants from "@utils/global/constants";
 import compressFile from "@utils/media/compress_file";
 import encodeImageToBlurhash from "@utils/media/get_blur_hash";
+import globalConstants from "@utils/global/constants";
 
 export default async function compressAndHashFile(
   file,

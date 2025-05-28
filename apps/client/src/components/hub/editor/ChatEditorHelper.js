@@ -67,42 +67,13 @@ export default function ChatEditorHelper() {
 
   return (
     <div className="editor-helper h-full py-3 flex items-center xl:gap-2 max-xl:gap-[16px] xl:gap-4">
-      <Help
-        data-tooltip-id="editor-help-tooltip"
-        data-tooltip-delay-hide={500}
-        className="mr-auto h-[30px] w-[30px]"
-      />
-      <Tooltip
-        id="editor-help-tooltip"
-        className="editor-tooltip-style"
-        classNameArrow="editor-tooltip-arrow"
+      <a
+        href="https://oleksandr-ch.notion.site/Programmable-Chat-feature-1ffe3b41e4ae804da619f63b706e7263"
+        target="_blank"
+        rel="noopener noreferrer"
       >
-        <div>
-          <p className="!font-normal text-p">
-            Below is a walkthrough on how to use the editor, plus some useful
-            tips.
-          </p>
-          <p>&nbsp;</p>
-          {renderTooltipContent([
-            {
-              label: "If you want to send a response message by bot:",
-              code: `return resolve({message: {body: "ur message"}})`,
-            },
-            {
-              label: "If u want to change user body:",
-              code: `return resolve({message: {body: "ur message"}}, {isReplaceBody: true})`,
-            },
-            {
-              label: "If u want to reject message:",
-              code: `return reject("ur message")`,
-            },
-            {
-              label: "If u want to accept message:",
-              code: `return accent()`,
-            },
-          ])}
-        </div>
-      </Tooltip>
+        <Help className="mr-auto h-[30px] w-[30px]" />
+      </a>
       <span className="w-[1px] h-full bg-gray-400"></span>
       <Options
         data-tooltip-id="editor-options-tooltip"

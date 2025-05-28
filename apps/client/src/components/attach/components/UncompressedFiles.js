@@ -7,7 +7,7 @@ import getFileType from "@utils/media/get_file_type";
 
 import CloseIcon from "@icons/actions/CloseGray.svg?react";
 
-export default function AttachmentItem({
+export default function UncompressedFiles({
   file = {},
   removeFileFunc,
   isOnClickDisabled = false,
@@ -17,11 +17,12 @@ export default function AttachmentItem({
     file_url: url,
     file_blur_hash: blurHash,
     file_name: name,
+    file_content_type: type,
     size: initFileSize,
   } = file;
 
   const [size, setSize] = useState(null);
-  const fileType = getFileType(name);
+  const fileType = getFileType(name, type);
   const localUrl = file.file_local_url || file.localUrl;
 
   const pictureView = useMemo(() => {

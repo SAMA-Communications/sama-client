@@ -3,9 +3,8 @@ import { Blurhash } from "react-blurhash";
 
 export default function ItemLoader({ blurHash, isShowLoader = true }) {
   return (
-    <div className="blur-hash-preloader relative w-full h-full">
+    <div className="relative w-full h-full">
       <Blurhash
-        className="canvas-preloader"
         hash={blurHash || "LEHLk~WB2yk8pyo0adR*.7kCMdnj"}
         width={"100%"}
         height={"100%"}
