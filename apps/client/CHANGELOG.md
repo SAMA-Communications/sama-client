@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.8.0
+
+### Updated
+
+- Added a handler for fetch logic in PC
+- Added image support for PC
+
+### Improvements
+
+- Extended fields for the `attachments` field in the `Message` object
+- Improved loading and display of media attachments in chat
+
 ## 1.7.0
 
 ### Features

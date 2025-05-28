@@ -41,12 +41,17 @@ class MessagesService {
     api.onMessageListener = async (message) => {
       const attachments = message.attachments;
       if (attachments) {
-        const urls = await api.getDownloadUrlForFiles({
-          file_ids: attachments.map((obj) => obj.file_id),
-        });
-        message.attachments = attachments.map((obj) => {
-          return { ...obj, file_url: urls[obj.file_id] };
-        });
+        const attachmentsIds = attachments
+          .filter((obj) => !obj.file_url && obj.file_id)
+          .map((obj) => obj.file_id);
+        if (attachmentsIds.length) {
+          const urls = await api.getDownloadUrlForFiles({
+            file_ids: attachmentsIds,
+          });
+          message.attachments = attachments.map((obj) => {
+            return { ...obj, file_url: urls[obj.file_id] };
+          });
+        }
       }
 
       const userInfo = jwtDecode(localStorage.getItem("sessionId"));
@@ -165,6 +170,7 @@ class MessagesService {
             continue;
           }
           attachments.forEach((obj) => {
+            if (obj.file_url) return;
             const mAttachmentsObject = mAttachments[obj.file_id];
             if (!mAttachmentsObject) {
               mAttachments[obj.file_id] = {
@@ -218,12 +224,12 @@ class MessagesService {
     const { server_mid, t, modified, bot_message } = await api.messageCreate(
       message
     );
-    const { mid, body, cid, from } = message;
-
+    const { mid, body, cid, from, attachments } = message;
     const mObject = {
       _id: server_mid,
       old_id: mid,
       body: modified?.body || body,
+      attachments: modified?.attachments || attachments,
       from,
       status: "sent",
       t,
@@ -238,14 +244,14 @@ class MessagesService {
     if (bot_message) {
       const participants = store.getState().participants;
       if (!participants[bot_message.from]) {
-        const botObject = await api.getUsersByIds({
-          ids: [bot_message.from],
-        });
+        const botObject = await api.getUsersByIds({ ids: [bot_message.from] });
         store.dispatch(addUser(botObject[0]));
       }
       store.dispatch(addMessage(bot_message));
       store.dispatch(updateLastMessageField({ cid, msg: bot_message }));
     }
+
+    return mObject;
   }
 }
 

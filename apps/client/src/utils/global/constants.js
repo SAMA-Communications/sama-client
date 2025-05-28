@@ -18,8 +18,7 @@ const globalConstants = {
     "video/quicktime",
   ],
   allowedAvatarFormats: [".heic", ".HEIC", "image/jpeg", "image/png"],
-  defaultBlurHash:
-    "|KO2?U%2Tw=wR6cErDEhOD]~RBVZRip0W9ofwxM_};RPxuwH%3s89]t8$%tLOtxZ%gixtQt8IUS#I.ENa0NZIVt6xFM{M{%1j^M_bcRPX9nht7n+j[rrW;ni%Mt7V@W;t7t8%1bbxat7WBIUR*RjRjRjxuRjs.MxbbV@WY",
+  defaultBlurHash: "U27nLE$*00_N^k,@s9xu#7$2$%xtVD-B-pkW",
   weekDays: {
     0: "Su",
     1: "Mo",
@@ -30,7 +29,7 @@ const globalConstants = {
     6: "Sa",
   },
   defaultEditorCode: `// vvv Don\`t remove or change the line below! vvv
-const handler = async (message, user, accept, resolve, reject) => {
+const handler = async (message, user, accept, resolve, reject, fetch) => {
     const body = message.body;
 
     // Reject the message if it contains any prohibited words
@@ -43,8 +42,10 @@ const handler = async (message, user, accept, resolve, reject) => {
 };
 
 // vvv Don\`t remove or change the line below! vvv
-export default await handler(env.MESSAGE, env.USER, env.ACCEPT, env.RESOLVE, env.REJECT);
+export default await handler(env.MESSAGE, env.USER, env.ACCEPT, env.RESOLVE, env.REJECT, env.FETCH);
 `,
+  editorFetchErrorMessage:
+    "A CORS error occurred while trying to perform a network request. This is likely due to browser restrictions that prevent fetching data from external sites in this environment. Please save your code and try running this script directly within a chat conversation instead.",
 };
 
 export default globalConstants;

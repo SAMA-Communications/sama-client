@@ -1,49 +1,39 @@
-import { Blurhash } from "react-blurhash";
-import { Oval } from "react-loader-spinner";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-export default function ImageView({ url, localUrl, blurHash, altName }) {
-  const [loaded, setLoaded] = useState(false);
+import MediaBlurHash from "@components/attach/components/MediaBlurHash.js";
+
+export default function ImageView({ image, onClickFunc, isFullSize = true }) {
+  const [loadStatus, setLoadStatus] = useState("load");
+
+  const { file_name, file_url, file_blur_hash } = image || {};
 
   const preloaderView = useMemo(() => {
-    if (loaded || !blurHash) {
-      return null;
-    }
+    if (loadStatus === "success") return null;
 
-    return localUrl ? (
-      <img src={localUrl} alt={altName} />
-    ) : (
-      <div className="blur-hash-preloader">
-        <Blurhash
-          className="canvas-preloader"
-          hash={blurHash}
-          width={400}
-          height={300}
-          resolutionX={32}
-          resolutionY={32}
-        />
-        <Oval
-          height={50}
-          width={50}
-          color="#1a8ee1"
-          wrapperClass={"blur-hash-loader"}
-          visible={true}
-          ariaLabel="oval-loading"
-          secondaryColor="#8dc7f0"
-          strokeWidth={2}
-          strokeWidthSecondary={3}
-        />
-      </div>
-    );
-  }, [loaded, localUrl, blurHash]);
+    return <MediaBlurHash status={loadStatus} blurHash={file_blur_hash} />;
+  }, [loadStatus, file_blur_hash]);
+
+  useEffect(() => {
+    if (!file_url) return;
+    const img = new Image();
+    img.onerror = () => setLoadStatus("error");
+    img.src = file_url;
+    return () => {
+      img.onerror = null;
+    };
+  }, [file_url]);
 
   return (
     <>
       <img
-        className={`max-w-full max-h-full ${loaded ? "block" : "hidden"}`}
-        onLoad={() => setLoaded(true)}
-        src={url}
-        alt={altName}
+        className={`${
+          isFullSize ? "w-full h-full" : "max-w-full max-h-full"
+        } object-cover`}
+        onLoad={() => setLoadStatus("success")}
+        onError={() => setLoadStatus("error")}
+        onClick={loadStatus !== "error" ? onClickFunc : null}
+        alt={file_name}
+        src={file_url}
       />
       {preloaderView}
     </>

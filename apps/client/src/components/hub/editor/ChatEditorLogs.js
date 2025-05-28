@@ -37,6 +37,7 @@ export default function ChatEditorLogs({ logs, setLogs }) {
             quickSuggestions: false,
             suggestOnTriggerCharacters: false,
             wordBasedSuggestions: false,
+            wordWrap: "on",
             lineNumbers: "off",
             folding: false,
             occurrencesHighlight: false,

@@ -2,7 +2,7 @@ import * as m from "motion/react-m";
 import { useLocation } from "react-router";
 import { useMemo } from "react";
 
-import MessageAttachments from "@components/message/elements/MessageAttachments";
+import MediaAttachments from "@components/message/elements/MediaAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
 
@@ -44,7 +44,7 @@ export default function ChatMessage({
       whileInView={{ opacity: 1, x: 0 }}
       initial={{ opacity: 0, x: -7 }}
       transition={{ duration: 0.3, delay: 0.03 }}
-      layout
+      // layout
     >
       <div
         className={`min-w-[46px] flex items-end ${
@@ -91,7 +91,7 @@ export default function ChatMessage({
           } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""}`}
         >
           {attachments?.length ? (
-            <MessageAttachments attachments={attachments} mid={message._id} />
+            <MediaAttachments attachments={attachments} mid={message._id} />
           ) : null}
           {body ? (
             <div
@@ -108,7 +108,7 @@ export default function ChatMessage({
           <div
             className={`relative grow justify-end self-end ${
               attachments?.length && !body
-                ? "!absolute bottom-[4px] right-[4px] p-[8px] rounded-full bg-(--color-black-50) self-end"
+                ? "!absolute bottom-[16px] right-[16px] p-[8px] rounded-lg bg-(--color-black-50) self-end"
                 : ""
             } flex items-center justify-center ${
               isCurrentUser ? "pr-[28px]" : ""
