@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import MediaAttachments from "@components/message/elements/MediaAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
+import MessageLinkPreview from "@components/hub/elements/MessageLinkPreview.js";
 
 import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
@@ -22,7 +23,8 @@ export default function ChatMessage({
 }) {
   const { pathname, hash } = useLocation();
 
-  const { _id, old_id, body, from, attachments, status, t } = message;
+  const { _id, old_id, body, from, attachments, status, t, url_preview } =
+    message;
   const isCurrentUser = from === currentUserId;
 
   const timeSend = useMemo(() => {
@@ -35,16 +37,17 @@ export default function ChatMessage({
   const openUserProfile = () =>
     sender ? addSuffix(pathname + hash, `/user?uid=${from}`) : {};
 
+  const linkColor = isCurrentUser ? "white" : "black";
+
   return (
     <m.div
       key={old_id || _id}
-      className={`relative w-max max-w-[min(80%,820px)] flex flex-row gap-[16px] ${
+      className={`relative w-max 2xl:max-w-[min(60%,820px)] max-2xl:max-w-[min(80%,820px)] flex flex-row gap-[16px] ${
         prev ? "" : "mt-[8px]"
       }`}
       whileInView={{ opacity: 1, x: 0 }}
       initial={{ opacity: 0, x: -7 }}
       transition={{ duration: 0.3, delay: 0.03 }}
-      // layout
     >
       <div
         className={`min-w-[46px] flex items-end ${
@@ -102,7 +105,8 @@ export default function ChatMessage({
               }`}
               style={{ wordBreak: "break-word", inlineSize: "auto" }}
             >
-              <p>{urlify(body, isCurrentUser ? "white" : "black")}</p>
+              <p>{urlify(_id, body, linkColor, !url_preview)}</p>
+              <MessageLinkPreview urlData={url_preview} color={linkColor} />
             </div>
           ) : null}
           <div
