@@ -108,7 +108,9 @@ export default function ChatMessage({
               style={{ wordBreak: "break-word", inlineSize: "auto" }}
             >
               <p>{urlify(_id, body, linkColor, !url_preview)}</p>
-              <MessageLinkPreview urlData={url_preview} color={linkColor} />
+              {!attachments?.length && (
+                <MessageLinkPreview urlData={url_preview} color={linkColor} />
+              )}
             </div>
           ) : null}
           <div
