@@ -1,6 +1,9 @@
+import { useState } from "react";
+
 export default function MessageLinkPreview({ urlData, color }) {
   if (!urlData) return null;
   const { url, title, siteName, description, images, favicons } = urlData;
+  const [imageError, setImageError] = useState(false);
   // console.log(urlData);
 
   if (!description && (!images || images.length === 0)) return null;
@@ -38,11 +41,12 @@ export default function MessageLinkPreview({ urlData, color }) {
             {description}
           </p>
         )}
-        {images?.length > 0 && (
+        {images?.length > 0 && !imageError && (
           <img
             src={images[0]}
             alt="Preview"
-            className="w-full max-h-[300px] h-full object-contain rounded-md mt-[4px]"
+            className="w-full max-h-[300px] h-full object-cover rounded-md mt-[4px]"
+            onError={() => setImageError(true)}
           />
         )}
       </div>

@@ -89,9 +89,11 @@ export default function ChatMessage({
           </div>
         )}
         <div
-          className={`flex flex-row flex-wrap items-end gap-y-[8px] gap-x-[15px] ${
+          className={`flex flex-wrap items-end gap-y-[8px] gap-x-[15px] ${
             attachments?.length ? "w-auto !flex-col items-start" : ""
-          } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""}`}
+          } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""} ${
+            url_preview ? "flex-col" : "flex-row"
+          }`}
         >
           {attachments?.length ? (
             <MediaAttachments attachments={attachments} mid={message._id} />
@@ -114,7 +116,7 @@ export default function ChatMessage({
               attachments?.length && !body
                 ? "!absolute bottom-[16px] right-[16px] p-[8px] rounded-lg bg-(--color-black-50) self-end"
                 : ""
-            } flex items-center justify-center flex-shrink-1 ${
+            } flex items-center justify-center ${
               isCurrentUser ? "pr-[28px]" : ""
             }`}
           >
