@@ -114,7 +114,7 @@ export default function ChatMessage({
               attachments?.length && !body
                 ? "!absolute bottom-[16px] right-[16px] p-[8px] rounded-lg bg-(--color-black-50) self-end"
                 : ""
-            } flex items-center justify-center ${
+            } flex items-center justify-center flex-shrink-1 ${
               isCurrentUser ? "pr-[28px]" : ""
             }`}
           >
