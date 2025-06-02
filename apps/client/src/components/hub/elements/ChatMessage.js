@@ -2,6 +2,8 @@ import * as m from "motion/react-m";
 import { useLocation } from "react-router";
 import { useMemo } from "react";
 
+import { urlify } from "@services/urlify";
+
 import MediaAttachments from "@components/message/elements/MediaAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
@@ -9,7 +11,6 @@ import MessageLinkPreview from "@components/hub/elements/MessageLinkPreview.js";
 
 import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
-import { urlify } from "@utils/text/urlify";
 
 import CornerLight from "@icons/_helpers/CornerLight.svg?react";
 import CornerAccent from "@icons/_helpers/CornerAccent.svg?react";
@@ -107,11 +108,7 @@ export default function ChatMessage({
               }`}
               style={{ wordBreak: "break-word", inlineSize: "auto" }}
             >
-              <p>
-                {_id?.length === 24
-                  ? urlify(_id, body, linkColor, !url_preview)
-                  : body}
-              </p>
+              <p>{urlify(_id, body, linkColor, !url_preview)}</p>
               {!attachments?.length && (
                 <MessageLinkPreview urlData={url_preview} color={linkColor} />
               )}
