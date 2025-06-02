@@ -8,6 +8,30 @@ import globalConstants from "@utils/global/constants";
 const urlMetaTimers = {};
 const URL_META_EXPIRE_MS = globalConstants.urlMetaDataExpire;
 
+const urlMetaQueue = [];
+let activeRequests = 0;
+const MAX_PARALLEL_REQUESTS = globalConstants.urlMaxParallelRequests;
+
+const processQueue = () => {
+  while (activeRequests < MAX_PARALLEL_REQUESTS && urlMetaQueue.length > 0) {
+    const { mid, url, resolve } = urlMetaQueue.shift();
+
+    activeRequests++;
+    getAndStoreUrlMetaData(mid, url).finally(() => {
+      activeRequests--;
+      processQueue();
+      if (resolve) resolve();
+    });
+  }
+};
+
+const enqueueUrlMeta = (mid, url) => {
+  return new Promise((resolve) => {
+    urlMetaQueue.push({ mid, url, resolve });
+    processQueue();
+  });
+};
+
 const getAndStoreUrlMetaData = async (mid, url) => {
   const token = localStorage.getItem("sessionId");
   const cacheKey = `url_meta_${url}`;
@@ -47,7 +71,7 @@ const getAndStoreUrlMetaData = async (mid, url) => {
 
 function debounceUrlMeta(mid, url) {
   if (urlMetaTimers[mid]) clearTimeout(urlMetaTimers[mid]);
-  urlMetaTimers[mid] = setTimeout(() => getAndStoreUrlMetaData(mid, url), 300);
+  urlMetaTimers[mid] = setTimeout(() => enqueueUrlMeta(mid, url), 300);
 }
 
 export function urlify(
