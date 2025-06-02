@@ -20,6 +20,8 @@ const globalConstants = {
     "video/quicktime",
   ],
   allowedAvatarFormats: [".heic", ".HEIC", "image/jpeg", "image/png"],
+  supportedDocumentPreviewRegex:
+    /\.(pdf|docx?|xlsx?|pptx?|txt|rtf|odt|ods|odp)(\?.*)?$/i,
   defaultBlurHash: "U27nLE$*00_N^k,@s9xu#7$2$%xtVD-B-pkW",
   weekDays: {
     0: "Su",
