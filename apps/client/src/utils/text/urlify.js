@@ -1,23 +1,48 @@
+import localforage from "localforage";
+
 import store from "@store/store.js";
 import { upsertMessage } from "@store/values/Messages.js";
 
 import globalConstants from "@utils/global/constants";
 
 const urlMetaTimers = {};
+const URL_META_EXPIRE_MS = globalConstants.urlMetaDataExpire;
 
-const getAndStoreUrlMetaData = (mid, url) => {
+const getAndStoreUrlMetaData = async (mid, url) => {
   const token = localStorage.getItem("sessionId");
-  fetch(import.meta.env.VITE_URL_PREVIEW_CONNECT + "/unfurl", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Session-Token": token },
-    body: JSON.stringify({ url }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      mid && store.dispatch(upsertMessage({ _id: mid, url_preview: data }));
-      delete urlMetaTimers[mid];
-    })
-    .catch(() => {});
+  const cacheKey = `url_meta_${url}`;
+  const now = Date.now();
+
+  try {
+    const cached = await localforage.getItem(cacheKey);
+    if (
+      cached?.data &&
+      cached?.created_at &&
+      now - cached.created_at < URL_META_EXPIRE_MS
+    ) {
+      if (mid)
+        store.dispatch(upsertMessage({ _id: mid, url_preview: cached.data }));
+      return;
+    }
+    if (cached) await localforage.removeItem(cacheKey);
+  } catch {}
+
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_URL_PREVIEW_CONNECT}/unfurl`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Session-Token": token },
+        body: JSON.stringify({ url }),
+      }
+    );
+    const data = await res.json();
+    if (mid) store.dispatch(upsertMessage({ _id: mid, url_preview: data }));
+    await localforage.setItem(cacheKey, { data, created_at: now });
+  } catch {
+  } finally {
+    delete urlMetaTimers[mid];
+  }
 };
 
 function debounceUrlMeta(mid, url) {

@@ -1,5 +1,6 @@
 const globalConstants = {
   maxTtoasts: 3,
+  urlMetaDataExpire: 3600000,
   dayInMs: 86400000,
   //   monthInMs: 2629743830,
   yearInMs: 31556926000,
