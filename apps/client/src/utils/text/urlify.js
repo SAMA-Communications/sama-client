@@ -15,22 +15,28 @@ const MAX_PARALLEL_REQUESTS = globalConstants.urlMaxParallelRequests;
 const processQueue = () => {
   while (activeRequests < MAX_PARALLEL_REQUESTS && urlMetaQueue.length > 0) {
     const { mid, url, resolve } = urlMetaQueue.shift();
-
     activeRequests++;
-    getAndStoreUrlMetaData(mid, url).finally(() => {
+    getAndStoreUrlMetaData(mid, url).then((data) => {
       activeRequests--;
       processQueue();
-      if (resolve) resolve();
+      if (resolve) resolve(data);
     });
   }
 };
 
-const enqueueUrlMeta = (mid, url) => {
+const debounceAndEnqueueUrlMeta = (mid, url) => {
   return new Promise((resolve) => {
-    urlMetaQueue.push({ mid, url, resolve });
-    processQueue();
+    if (urlMetaTimers[mid]) clearTimeout(urlMetaTimers[mid]);
+    urlMetaTimers[mid] = setTimeout(() => {
+      urlMetaQueue.push({ mid, url, resolve });
+      processQueue();
+    }, 300);
   });
 };
+
+function isValidMetaData(data) {
+  return data && (data.description || data.image);
+}
 
 const getAndStoreUrlMetaData = async (mid, url) => {
   const token = localStorage.getItem("sessionId");
@@ -46,7 +52,7 @@ const getAndStoreUrlMetaData = async (mid, url) => {
     ) {
       if (mid)
         store.dispatch(upsertMessage({ _id: mid, url_preview: cached.data }));
-      return;
+      return isValidMetaData(cached.data) ? "ok" : "invalid";
     }
     if (cached) await localforage.removeItem(cacheKey);
   } catch {}
@@ -63,15 +69,19 @@ const getAndStoreUrlMetaData = async (mid, url) => {
     const data = await res.json();
     if (mid) store.dispatch(upsertMessage({ _id: mid, url_preview: data }));
     await localforage.setItem(cacheKey, { data, created_at: now });
+    return isValidMetaData(data) ? "ok" : "invalid";
   } catch {
+    return "error";
   } finally {
     delete urlMetaTimers[mid];
   }
 };
 
-function debounceUrlMeta(mid, url) {
-  if (urlMetaTimers[mid]) clearTimeout(urlMetaTimers[mid]);
-  urlMetaTimers[mid] = setTimeout(() => enqueueUrlMeta(mid, url), 300);
+async function tryLoadFirstValidUrl(mid, matches) {
+  for (let i = 0; i < matches.length; i++) {
+    const status = await debounceAndEnqueueUrlMeta(mid, matches[i]);
+    if (status === "ok") break;
+  }
 }
 
 export function urlify(
@@ -83,15 +93,14 @@ export function urlify(
   const matches = inputText.match(globalConstants.linksRegExp) || [];
   const parts = inputText.split(globalConstants.linksRegExp);
 
-  let isFirstUrlLoaded = false;
+  if (isNeedToLoadUrl && matches.length && !urlMetaTimers[mid]) {
+    tryLoadFirstValidUrl(mid, matches);
+  }
+
   return parts.reduce((result, part, i) => {
     result.push(part);
 
     if (i < matches.length) {
-      if (isNeedToLoadUrl && !isFirstUrlLoaded) {
-        if (!urlMetaTimers[mid]) debounceUrlMeta(mid, matches[i]);
-        isFirstUrlLoaded = true;
-      }
       result.push(
         <a
           className={`text-${color} underline`}
