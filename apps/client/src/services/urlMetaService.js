@@ -48,7 +48,7 @@ class UrlMetaService {
 
     if (!force) {
       try {
-        const cached = null; //await localforage.getItem(cacheKey);
+        const cached = await localforage.getItem(cacheKey);
         if (
           cached?.data &&
           cached?.created_at &&
