@@ -80,6 +80,8 @@ const getAndStoreUrlMetaData = async (mid, url) => {
 async function tryLoadFirstValidUrl(mid, matches) {
   for (let i = 0; i < matches.length; i++) {
     const status = await debounceAndEnqueueUrlMeta(mid, matches[i]);
+    console.log(matches[i], status);
+
     if (status === "ok") break;
   }
 }
