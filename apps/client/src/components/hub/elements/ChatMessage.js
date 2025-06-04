@@ -2,7 +2,7 @@ import * as m from "motion/react-m";
 import { useLocation } from "react-router";
 import { useMemo } from "react";
 
-import { urlify } from "@services/urlify";
+import { urlify, hardUrlify } from "@services/urlMetaService";
 
 import MediaAttachments from "@components/message/elements/MediaAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
@@ -39,6 +39,11 @@ export default function ChatMessage({
     sender ? addSuffix(pathname + hash, `/user?uid=${from}`) : {};
 
   const linkColor = isCurrentUser ? "white" : "black";
+
+  const refreshLinkPreview = (event, url) => {
+    event.preventDefault();
+    hardUrlify(_id, url);
+  };
 
   return (
     <m.div
@@ -110,7 +115,11 @@ export default function ChatMessage({
             >
               <p>{urlify(_id, body, linkColor, !url_preview)}</p>
               {!attachments?.length && (
-                <MessageLinkPreview urlData={url_preview} color={linkColor} />
+                <MessageLinkPreview
+                  urlData={url_preview}
+                  color={linkColor}
+                  refreshFunc={refreshLinkPreview}
+                />
               )}
             </div>
           ) : null}

@@ -1,9 +1,12 @@
 import { useState } from "react";
+
 import globalConstants from "@utils/global/constants.js";
 import formatFileSize from "@utils/media/format_file_size.js";
-import File from "@icons/media/File.svg?react";
 
-export default function MessageLinkPreview({ urlData, color }) {
+import File from "@icons/media/File.svg?react";
+import Refresh from "@icons/options/Refresh.svg?react";
+
+export default function MessageLinkPreview({ refreshFunc, urlData, color }) {
   if (!urlData) return null;
 
   const {
@@ -68,6 +71,7 @@ export default function MessageLinkPreview({ urlData, color }) {
               {title}
             </p>
           </div>
+          <Refresh onClick={(e) => refreshFunc(e, url)} className={"h-[10px"} />
         </div>
         {description && (
           <p className="line-clamp-2 overflow-hidden text-ellipsis mt-[2px]">
