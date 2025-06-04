@@ -48,7 +48,7 @@ class UrlMetaService {
 
     if (!force) {
       try {
-        const cached = await localforage.getItem(cacheKey);
+        const cached = null; //await localforage.getItem(cacheKey);
         if (
           cached?.data &&
           cached?.created_at &&
@@ -77,6 +77,7 @@ class UrlMetaService {
         }
       );
       const data = await res.json();
+      console.log("fetch", url, data);
 
       if (mid) store.dispatch(upsertMessage({ _id: mid, url_preview: data }));
       await localforage.setItem(cacheKey, { data, created_at: now });
