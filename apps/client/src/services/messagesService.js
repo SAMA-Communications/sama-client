@@ -113,7 +113,7 @@ class MessagesService {
       const { clearTypingStatus, lastRequestTime } =
         this.typingTimers[cid] || {};
 
-      if (new Date() - lastRequestTime > 3000 && clearTypingStatus) {
+      if (new Date() - lastRequestTime > 5000 && clearTypingStatus) {
         clearTimeout(clearTypingStatus);
       }
 
@@ -128,7 +128,7 @@ class MessagesService {
               ),
             })
           );
-        }, 4000),
+        }, 6000),
         lastRequestTime: new Date(),
       };
     };

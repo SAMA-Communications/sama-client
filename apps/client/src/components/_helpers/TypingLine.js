@@ -1,3 +1,4 @@
+import * as m from "motion/react-m";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
@@ -7,7 +8,11 @@ import { selectParticipantsEntities } from "@store/values/Participants";
 
 import getLastMessageUserName from "@utils/user/get_last_message_user_name";
 
-export default function TypingLine({ userIds, displayUserNames = false }) {
+export default function TypingLine({
+  userIds,
+  displayUserNames = false,
+  displayBackground = false,
+}) {
   const participants = useSelector(selectParticipantsEntities);
 
   const usersNameView = useMemo(() => {
@@ -33,9 +38,19 @@ export default function TypingLine({ userIds, displayUserNames = false }) {
   }, [participants, userIds, displayUserNames]);
 
   return (
-    <div className="mt-[5px] flex gap-[10px] items-end">
+    <m.div
+      initial={{ y: -8, opacity: 0.7 }}
+      animate={{ y: 0, opacity: 1, transition: { duration: 0.2 } }}
+      className={`ml-[5px] flex items-center gap-[10px] ${
+        displayBackground
+          ? "py-[2px] px-[10px] rounded-2xl bg-accent-dark/10"
+          : ""
+      }`}
+    >
       <DotsLoader height={22} width={16} />
-      <p className="text-(--color-accent-dark)">{usersNameView}typing</p>
-    </div>
+      <p className="text-(--color-accent-dark) !font-light">
+        {usersNameView}typing
+      </p>
+    </m.div>
   );
 }

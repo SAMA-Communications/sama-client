@@ -34,7 +34,7 @@ export default function MessageInput({
   const handleInput = (e) => {
     const text = e.target.value;
     if (text.length > 0) {
-      if (new Date() - lastTypingRequestTime > 3000 || !lastTypingRequestTime) {
+      if (new Date() - lastTypingRequestTime > 5000 || !lastTypingRequestTime) {
         api.sendTypingStatus({ cid: selectedConversationId });
         lastTypingRequestTime = new Date();
       }
