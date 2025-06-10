@@ -82,7 +82,7 @@ export default function MessageLinkPreview({ refreshFunc, urlData, color }) {
           <img
             src={images[0]}
             alt="Preview"
-            className="w-full max-h-[300px] h-full object-cover rounded-md mt-[4px]"
+            className="w-full max-h-[240px] h-full object-cover rounded-md mt-[4px]"
             onError={() => setImageError(true)}
           />
         )}

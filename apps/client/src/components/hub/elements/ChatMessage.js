@@ -45,10 +45,15 @@ export default function ChatMessage({
     hardUrlify(_id, url);
   };
 
+  const width = useMemo(() => {
+    if (attachments?.length || url_preview) return "w-[min(80%,540px)]";
+    return "w-max max-2xl:max-w-[min(80%,680px)] 2xl:max-w-[min(60%,680px)]";
+  }, [attachments, url_preview]);
+
   return (
     <m.div
       key={old_id || _id}
-      className={`relative w-max 2xl:max-w-[min(60%,820px)] max-2xl:max-w-[min(80%,820px)] flex flex-row gap-[16px] ${
+      className={`relative ${width} flex flex-row gap-[16px] ${
         prev ? "" : "mt-[8px]"
       }`}
       whileInView={{ opacity: 1, x: 0 }}
@@ -106,9 +111,7 @@ export default function ChatMessage({
           ) : null}
           {body ? (
             <div
-              className={`${
-                attachments?.length ? "max-w-[440px]" : "max-w-full"
-              } whitespace-pre-wrap text-black wrap-break-word ${
+              className={`max-w-full whitespace-pre-wrap text-black wrap-break-word ${
                 isCurrentUser ? "!text-white" : ""
               }`}
               style={{ wordBreak: "break-word", inlineSize: "auto" }}
