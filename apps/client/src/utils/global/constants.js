@@ -1,4 +1,5 @@
 const globalConstants = {
+  typingDurationMs: 6000,
   maxTtoasts: 3,
   dayInMs: 86400000,
   //   monthInMs: 2629743830,

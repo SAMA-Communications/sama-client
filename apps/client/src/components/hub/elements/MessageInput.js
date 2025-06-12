@@ -16,6 +16,7 @@ import addSuffix from "@utils/navigation/add_suffix";
 import isMobile from "@utils/get_device_type";
 import calcInputHeight from "@utils/text/calc_input_height.js";
 import extractFilesFromClipboard from "@utils/media/extract_files_from_clipboard.js";
+import globalConstants from "@utils/global/constants.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 import Attach from "@icons/options/Attach.svg?react";
@@ -34,7 +35,11 @@ export default function MessageInput({
   const handleInput = (e) => {
     const text = e.target.value;
     if (text.length > 0) {
-      if (new Date() - lastTypingRequestTime > 5000 || !lastTypingRequestTime) {
+      const typingDuration = globalConstants.typingDurationMs;
+      if (
+        new Date() - lastTypingRequestTime > typingDuration - 1000 ||
+        !lastTypingRequestTime
+      ) {
         api.sendTypingStatus({ cid: selectedConversationId });
         lastTypingRequestTime = new Date();
       }
