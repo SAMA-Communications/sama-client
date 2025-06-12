@@ -54,7 +54,7 @@ class ConversationsService {
 
   handleConversationCreate = async (chat) => {
     try {
-      const users = await api.getParticipantsByCids({ cids: [chat._id] });
+      const { users } = await api.getParticipantsByCids({ cids: [chat._id] });
       store.dispatch(
         upsertChat({
           ...chat,
@@ -110,7 +110,7 @@ class ConversationsService {
   }
 
   async getAndStoreParticipantsFromChats(conversations) {
-    const users = await api.getParticipantsByCids({
+    const { users } = await api.getParticipantsByCids({
       cids: conversations.map((el) => el._id),
     });
     store.dispatch(upsertUsers(users));
