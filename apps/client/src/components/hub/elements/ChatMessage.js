@@ -2,13 +2,15 @@ import * as m from "motion/react-m";
 import { useLocation } from "react-router";
 import { useMemo } from "react";
 
+import { urlify, hardUrlify } from "@services/urlMetaService";
+
 import MediaAttachments from "@components/message/elements/MediaAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
+import MessageLinkPreview from "@components/hub/elements/MessageLinkPreview.js";
 
 import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
-import { urlify } from "@utils/text/urlify";
 
 import CornerLight from "@icons/_helpers/CornerLight.svg?react";
 import CornerAccent from "@icons/_helpers/CornerAccent.svg?react";
@@ -22,7 +24,8 @@ export default function ChatMessage({
 }) {
   const { pathname, hash } = useLocation();
 
-  const { _id, old_id, body, from, attachments, status, t } = message;
+  const { _id, old_id, body, from, attachments, status, t, url_preview } =
+    message;
   const isCurrentUser = from === currentUserId;
 
   const timeSend = useMemo(() => {
@@ -35,16 +38,27 @@ export default function ChatMessage({
   const openUserProfile = () =>
     sender ? addSuffix(pathname + hash, `/user?uid=${from}`) : {};
 
+  const linkColor = isCurrentUser ? "white" : "black";
+
+  const refreshLinkPreview = (event, url) => {
+    event.preventDefault();
+    hardUrlify(_id, url);
+  };
+
+  const width = useMemo(() => {
+    if (attachments?.length || url_preview) return "w-[min(80%,540px)]";
+    return "w-max max-2xl:max-w-[min(80%,680px)] 2xl:max-w-[min(60%,680px)]";
+  }, [attachments, url_preview]);
+
   return (
     <m.div
       key={old_id || _id}
-      className={`relative w-max max-w-[min(80%,820px)] flex flex-row gap-[16px] ${
+      className={`relative ${width} flex flex-row gap-[16px] ${
         prev ? "" : "mt-[8px]"
       }`}
       whileInView={{ opacity: 1, x: 0 }}
       initial={{ opacity: 0, x: -7 }}
       transition={{ duration: 0.3, delay: 0.03 }}
-      // layout
     >
       <div
         className={`min-w-[46px] flex items-end ${
@@ -86,23 +100,30 @@ export default function ChatMessage({
           </div>
         )}
         <div
-          className={`flex flex-row flex-wrap items-end gap-y-[8px] gap-x-[15px] ${
+          className={`flex flex-wrap items-end gap-y-[8px] gap-x-[15px] ${
             attachments?.length ? "w-auto !flex-col items-start" : ""
-          } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""}`}
+          } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""} ${
+            url_preview ? "flex-col" : "flex-row"
+          }`}
         >
           {attachments?.length ? (
             <MediaAttachments attachments={attachments} mid={message._id} />
           ) : null}
           {body ? (
             <div
-              className={`${
-                attachments?.length ? "max-w-[440px]" : "max-w-full"
-              } whitespace-pre-wrap text-black wrap-break-word ${
+              className={`max-w-full whitespace-pre-wrap text-black wrap-break-word ${
                 isCurrentUser ? "!text-white" : ""
               }`}
               style={{ wordBreak: "break-word", inlineSize: "auto" }}
             >
-              <p>{urlify(body, isCurrentUser ? "white" : "black")}</p>
+              <p>{urlify(_id, body, linkColor, !url_preview)}</p>
+              {!attachments?.length && (
+                <MessageLinkPreview
+                  urlData={url_preview}
+                  color={linkColor}
+                  refreshFunc={refreshLinkPreview}
+                />
+              )}
             </div>
           ) : null}
           <div
