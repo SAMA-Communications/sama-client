@@ -12,6 +12,7 @@ import {
   insertChats,
   removeChat,
   upsertChat,
+  upsertChats,
   upsertParticipants,
 } from "@store/values/Conversations";
 
@@ -110,10 +111,15 @@ class ConversationsService {
   }
 
   async getAndStoreParticipantsFromChats(conversations) {
-    const { users } = await api.getParticipantsByCids({
+    const { users, conversations: convs } = await api.getParticipantsByCids({
       cids: conversations.map((el) => el._id),
     });
     store.dispatch(upsertUsers(users));
+
+    const participantsArray = Object.entries(convs).map(
+      ([cid, participants]) => ({ _id: cid, participants })
+    );
+    store.dispatch(upsertChats(participantsArray));
 
     const additionalUsersIds = [];
     conversations.forEach((chat) => {
