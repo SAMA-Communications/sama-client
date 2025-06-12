@@ -77,7 +77,6 @@ class UrlMetaService {
         }
       );
       const data = await res.json();
-      console.log("fetch", url, data);
 
       if (mid) store.dispatch(upsertMessage({ _id: mid, url_preview: data }));
       await localforage.setItem(cacheKey, { data, created_at: now });
