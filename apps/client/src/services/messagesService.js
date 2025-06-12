@@ -59,7 +59,8 @@ class MessagesService {
       message.from === userInfo._id && (message["status"] = "sent");
       store.dispatch(addMessage(message));
 
-      clearTimeout(this.typingTimers[message.cid].clearTypingStatus);
+      this.typingTimers[message.cid]?.clearTypingStatus &&
+        clearTimeout(this.typingTimers[message.cid].clearTypingStatus);
       store.dispatch(upsertChat({ _id: message.cid, typing_users: null }));
 
       let countOfNewMessages = 0;
