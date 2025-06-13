@@ -154,11 +154,11 @@ input[type="checkbox"]:active {
 input[type="checkbox"]:hover:not(:disabled) {
   border-color: #7678e5;
 }
-input[type="checkbox"]:focus {
+/* input[type="checkbox"]:focus {
   border-color: #7678e5;
   outline: none;
   box-shadow: 0 0 0 0.25rem #7678e544;
-}
+} */
 input[type="checkbox"]:disabled {
   filter: none;
   opacity: 0.5;
