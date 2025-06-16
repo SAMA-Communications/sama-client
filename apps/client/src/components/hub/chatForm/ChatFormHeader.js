@@ -149,15 +149,16 @@ export default function ChatFormHeader({ closeFormFunc }) {
     e.stopPropagation();
     dispatch(
       setAllParams({
+        category: "conversation",
         list: [
           currentPath.includes("/info")
             ? null
             : !isOpponentExist && !isGroupChat
             ? null
-            : "infoChat",
-          isCurrentUserOwner && isGroupChat ? "edit" : null,
-          isCurrentUserOwner && isGroupChat ? "addParticipants" : null,
-          isCurrentUserCantLeave ? null : "leave",
+            : "convInfo",
+          isCurrentUserOwner && isGroupChat ? "convEdit" : null,
+          isCurrentUserOwner && isGroupChat ? "convAddParticipants" : null,
+          isCurrentUserCantLeave ? null : "convLeave",
         ],
         coords: { x: e.pageX, y: e.pageY },
         clicked: true,

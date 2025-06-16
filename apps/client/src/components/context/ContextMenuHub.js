@@ -1,117 +1,30 @@
-import { useLocation } from "react-router";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
-import AddParticipantsLink from "@components/context/elements/AddParticipantsLink";
-import EditLink from "@components/context/elements/EditLink";
-import InfoChatLink from "@components/context/elements/InfoChatLink";
-import InfoUserLink from "@components/context/elements/InfoUserLink";
-import LeaveAndDeleteLink from "@components/context/elements/LeaveAndDeleteLink";
-import RemoveParticipantLink from "@components/context/elements/RemoveParticipantLink";
-import SendMessageLink from "@components/context/elements/SendMessageLink";
+import ConversationLinks from "@components/context/elements/ConversationLinks.js";
+import MessageLinks from "@components/context/elements/MessageLinks.js";
 
 import {
-  getConverastionById,
-  selectAllConversations,
-} from "@store/values/Conversations";
-import { getIsTabletView } from "@store/values/IsTabletView";
-import {
-  selectContextExternalProps,
+  selectContextListCategory,
   selectContextList,
   selectCoords,
 } from "@store/values/ContextMenu";
 
-import addPrefix from "@utils/navigation/add_prefix";
-import addSuffix from "@utils/navigation/add_suffix";
-import conversationService from "@services/conversationsService";
-import navigateTo from "@utils/navigation/navigate_to";
-
 export default function ContextMenuHub() {
-  const { pathname, hash } = useLocation();
-  const { type, opponent_id, owner_id } =
-    useSelector(getConverastionById) || {};
-  const currentUser = useSelector(selectAllConversations);
-  const currentPath = pathname + hash;
-  const isCurrentUserOwner = currentUser._id === owner_id;
-
-  const isTabletView = useSelector(getIsTabletView);
-
+  const category = useSelector(selectContextListCategory);
   const list = useSelector(selectContextList);
-  const { userObject } = useSelector(selectContextExternalProps);
   const { x: left, y: top } = useSelector(selectCoords);
 
   const listView = useMemo(() => {
-    const links = {
-      infoChat: (
-        <InfoChatLink
-          key={"infoChat"}
-          onClick={() => {
-            const tmpPath =
-              isTabletView && currentPath.includes("/profile")
-                ? currentPath.replace("/profile", "")
-                : currentPath;
-            addSuffix(
-              tmpPath,
-              type === "g" ? "/info" : `/user?uid=${opponent_id}`
-            );
-          }}
-        />
-      ),
-      edit: (
-        <EditLink
-          key={"edit"}
-          onClick={() => addSuffix(currentPath, "/edit?type=chat")}
-        />
-      ),
-      infoUser: (
-        <InfoUserLink
-          key={"infoUser"}
-          uId={userObject?._id}
-          onClick={() => {
-            isCurrentUserOwner
-              ? addPrefix(currentPath, "/profile")
-              : addSuffix(currentPath, `/user?uid=${userObject?._id}`);
-          }}
-        />
-      ),
-      addParticipants: (
-        <AddParticipantsLink
-          key={"addParticipants"}
-          onClick={() => addSuffix(currentPath, "/add")}
-        />
-      ),
-      leave: (
-        <LeaveAndDeleteLink
-          key={"leave"}
-          onClick={async () => {
-            navigateTo("/");
-            await conversationService.deleteConversation();
-          }}
-        />
-      ),
-      removeParticipant: (
-        <RemoveParticipantLink
-          key={"removeParticipant"}
-          onClick={() => conversationService.removeParticipant(userObject?._id)}
-        />
-      ),
-      newChat: (
-        <SendMessageLink
-          key={"newChat"}
-          uObject={userObject}
-          onClick={async () => {
-            const chatId = await conversationService.createPrivateChat(
-              userObject?._id,
-              userObject
-            );
-            navigateTo(`/#${chatId}`);
-          }}
-        />
-      ),
-    };
-
-    return list.map((linkName) => links[linkName]).filter(Boolean);
-  }, [list, userObject, currentPath, type, opponent_id, isCurrentUserOwner]);
+    switch (category) {
+      case "conversation":
+        return <ConversationLinks listOfIds={list} />;
+      case "message":
+        return <MessageLinks listOfIds={list} />;
+      default:
+        return [];
+    }
+  }, [list, category]);
 
   return (
     <div

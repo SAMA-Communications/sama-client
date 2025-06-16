@@ -50,12 +50,26 @@ export default function ChatMessage({
     return "w-max max-2xl:max-w-[min(80%,680px)] 2xl:max-w-[min(60%,680px)]";
   }, [attachments, url_preview]);
 
+  const openContextMenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(
+      setAllParams({
+        category: "message",
+        list: ["messageReply"],
+        coords: { x: e.pageX, y: e.pageY },
+        clicked: true,
+      })
+    );
+  };
+
   return (
     <m.div
       key={old_id || _id}
       className={`relative ${width} flex flex-row gap-[16px] ${
         prev ? "" : "mt-[8px]"
       }`}
+      onContextMenu={openContextMenu}
       whileInView={{ opacity: 1, x: 0 }}
       initial={{ opacity: 0, x: -7 }}
       transition={{ duration: 0.3, delay: 0.03 }}
