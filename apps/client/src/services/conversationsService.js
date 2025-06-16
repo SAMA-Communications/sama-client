@@ -61,7 +61,7 @@ class ConversationsService {
           ...chat,
           unread_messages_count: chat.unread_messages_count || 0,
           messagesIds: null,
-          participants: users.map((u) => u._id),
+          participants: users.map((u) => u.native_id),
         })
       );
       store.dispatch(addUsers(users));
@@ -185,7 +185,13 @@ class ConversationsService {
     });
 
     store.dispatch(addUsers(participants));
-    store.dispatch(insertChat({ ...chat, messagesIds: null }));
+    store.dispatch(
+      insertChat({
+        ...chat,
+        messagesIds: null,
+        participants: [api.curerntUserId, ...participants.map((el) => el._id)],
+      })
+    );
     store.dispatch(setSelectedConversation({ id: chat._id }));
 
     return chat._id;
