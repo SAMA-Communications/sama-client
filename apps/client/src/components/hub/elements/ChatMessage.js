@@ -1,6 +1,7 @@
 import * as m from "motion/react-m";
-import { useLocation } from "react-router";
 import { useMemo } from "react";
+import { useLocation } from "react-router";
+import { useDispatch } from "react-redux";
 
 import { urlify, hardUrlify } from "@services/urlMetaService";
 
@@ -8,6 +9,8 @@ import MediaAttachments from "@components/message/elements/MediaAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
 import MessageLinkPreview from "@components/hub/elements/MessageLinkPreview.js";
+
+import { setAllParams } from "@store/values/ContextMenu.js";
 
 import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
@@ -22,6 +25,7 @@ export default function ChatMessage({
   isPrevMesssageYours: prev,
   isNextMessageYours: next,
 }) {
+  const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
   const { _id, old_id, body, from, attachments, status, t, url_preview } =
