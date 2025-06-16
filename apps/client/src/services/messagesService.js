@@ -22,6 +22,7 @@ import {
 } from "@store/values/Conversations";
 
 import navigateTo from "@utils/navigation/navigate_to";
+import globalConstants from "@utils/global/constants.js";
 
 class MessagesService {
   currentChatId;
@@ -57,6 +58,9 @@ class MessagesService {
       const userInfo = jwtDecode(localStorage.getItem("sessionId"));
       message.from === userInfo._id && (message["status"] = "sent");
       store.dispatch(addMessage(message));
+
+      this.typingTimers[message.cid]?.clearTypingStatus &&
+        clearTimeout(this.typingTimers[message.cid].clearTypingStatus);
       store.dispatch(upsertChat({ _id: message.cid, typing_users: null }));
 
       let countOfNewMessages = 0;
@@ -113,7 +117,9 @@ class MessagesService {
       const { clearTypingStatus, lastRequestTime } =
         this.typingTimers[cid] || {};
 
-      if (new Date() - lastRequestTime > 3000 && clearTypingStatus) {
+      const typingDuration = globalConstants.typingDurationMs;
+      const now = Date.now();
+      if (clearTypingStatus && now - lastRequestTime > typingDuration - 1000) {
         clearTimeout(clearTypingStatus);
       }
 
@@ -128,8 +134,8 @@ class MessagesService {
               ),
             })
           );
-        }, 4000),
-        lastRequestTime: new Date(),
+        }, +typingDuration),
+        lastRequestTime: now,
       };
     };
 

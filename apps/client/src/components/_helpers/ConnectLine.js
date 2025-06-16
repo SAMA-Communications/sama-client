@@ -1,6 +1,7 @@
-import { getNetworkState } from "@store/values/NetworkState";
-import { motion } from "motion/react";
+import * as m from "motion/react-m";
 import { useSelector } from "react-redux";
+
+import { getNetworkState } from "@store/values/NetworkState";
 
 export default function ConnectLine() {
   const isSocketConnected = useSelector(getNetworkState);
@@ -10,7 +11,7 @@ export default function ConnectLine() {
   }
 
   return (
-    <motion.div
+    <m.div
       variants={{
         hidden: { marginTop: "-28px" },
         visible: { marginTop: "0", transition: { duration: 0.3 } },
@@ -23,6 +24,6 @@ export default function ConnectLine() {
       <p className="text-center font-light text-[18px] text-white">
         Connecting...
       </p>
-    </motion.div>
+    </m.div>
   );
 }
