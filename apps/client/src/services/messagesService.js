@@ -202,22 +202,6 @@ class MessagesService {
             store.dispatch(upsertMessages(messagesToUpdate));
           });
         }
-        const conv =
-          store.getState().conversations.entities[this.currentChatId];
-        if (conv.type !== "u") {
-          api
-            .getParticipantsByCids({
-              cids: [this.currentChatId],
-            })
-            .then((arr) =>
-              store.dispatch(
-                upsertParticipants({
-                  cid: this.currentChatId,
-                  participants: arr.map((obj) => obj._id),
-                })
-              )
-            );
-        }
       })
       .catch(() => {
         store.dispatch(removeChat(cid));

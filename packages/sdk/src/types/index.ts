@@ -58,5 +58,5 @@ export interface ISubscription {
 export interface IResponsePromise {
   resolve: (value?: any) => void;
   reject: (reason?: any) => void;
-  resObjKey?: string;
+  resObjKey?: string | string[];
 }
