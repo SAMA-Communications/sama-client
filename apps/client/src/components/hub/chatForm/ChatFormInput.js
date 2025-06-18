@@ -70,10 +70,19 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
       t: Date.now(),
     };
 
+    const repliedMid = selectedConversation.draft?.replied_mid;
+    repliedMid && (msg["replied_message_id"] = repliedMid);
+
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
-    const mObject = { mid, body, cid: selectedCID, from: currentUserId };
+    const mObject = {
+      mid,
+      body,
+      cid: selectedCID,
+      from: currentUserId,
+      replied_message_id: repliedMid,
+    };
     inputRef.current.focus(); //care..
 
     try {

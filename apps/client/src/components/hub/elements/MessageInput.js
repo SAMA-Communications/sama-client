@@ -22,6 +22,8 @@ import { KEY_CODES } from "@utils/global/keyCodes";
 import Attach from "@icons/options/Attach.svg?react";
 import Send from "@icons/options/Send.svg?react";
 
+let lastTypingRequestTime = null;
+
 export default function MessageInput({
   inputTextRef,
   onSubmitFunc,
@@ -31,17 +33,16 @@ export default function MessageInput({
 
   const selectedConversationId = useSelector(getSelectedConversationId);
 
-  let lastTypingRequestTime = null;
   const handleInput = (e) => {
     const text = e.target.value;
     if (text.length > 0) {
       const typingDuration = globalConstants.typingDurationMs;
       if (
-        new Date() - lastTypingRequestTime > typingDuration - 1000 ||
+        Date.now() - lastTypingRequestTime > typingDuration - 1000 ||
         !lastTypingRequestTime
       ) {
         api.sendTypingStatus({ cid: selectedConversationId });
-        lastTypingRequestTime = new Date();
+        lastTypingRequestTime = Date.now();
       }
     }
 

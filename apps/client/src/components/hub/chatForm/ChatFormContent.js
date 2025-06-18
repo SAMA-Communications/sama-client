@@ -14,15 +14,15 @@ import SMessageList from "@skeletons/hub/elements/SMessageList";
 export default function ChatFormContent() {
   const chatMessagesBlock = useRef(null);
 
-  const conversation = useSelector(getConverastionById);
+  const selectedConversation = useSelector(getConverastionById);
   const messagesEntities = useSelector(selectMessagesEntities);
   const messages = Object.values(messagesEntities);
 
   const draftRepliedMessage = useMemo(() => {
-    return conversation.draft?.replied_mid
-      ? messagesEntities[conversation.draft?.replied_mid]
+    return selectedConversation.draft?.replied_mid
+      ? messagesEntities[selectedConversation.draft?.replied_mid]
       : null;
-  }, [conversation]);
+  }, [selectedConversation]);
 
   const chatContentView = useMemo(() => {
     if (!messages) {
@@ -54,7 +54,7 @@ export default function ChatFormContent() {
     <>
       {chatContentView}
       <ChatFormInputContent
-        cid={conversation._id}
+        cid={selectedConversation._id}
         message={draftRepliedMessage}
       />
       <ChatFormInput chatMessagesBlockRef={chatMessagesBlock} />
