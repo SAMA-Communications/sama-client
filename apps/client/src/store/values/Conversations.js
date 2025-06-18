@@ -140,7 +140,7 @@ export const conversations = createSlice({
       const updateParams = { _id: cid };
 
       if (conv.last_message?.t > draft?.updated_at) {
-        if (draft) updateParams.draft = draft.message;
+        if (draft) updateParams.draft = draft;
       } else if (conv.last_message) {
         updateParams.last_message = {
           ...conv.last_message,
@@ -151,7 +151,7 @@ export const conversations = createSlice({
         if (isRemove) {
           updateParams.draft = null;
         } else if (draft) {
-          updateParams.draft = draft.message;
+          updateParams.draft = draft;
         }
       } else {
         if (isRemove) {
@@ -163,7 +163,7 @@ export const conversations = createSlice({
             draft.updated_at * 1000
           ).toISOString();
           updateParams.old_updated_at = conv.updated_at;
-          if (draft) updateParams.draft = draft.message;
+          if (draft) updateParams.draft = draft;
         }
       }
 

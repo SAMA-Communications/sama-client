@@ -27,7 +27,7 @@ import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import calcInputHeight from "@utils/text/calc_input_height.js";
 
-export default function ChatFormInputs({ chatMessagesBlockRef }) {
+export default function ChatFormInput({ chatMessagesBlockRef }) {
   const dispatch = useDispatch();
 
   const connectState = useSelector(getNetworkState);

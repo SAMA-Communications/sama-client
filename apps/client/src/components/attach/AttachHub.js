@@ -87,7 +87,7 @@ export default function AttachHub() {
 
   const storeInputText = () => {
     if (inputTextRef.current?.value) {
-      draftService.saveDraft(selectedCID, inputTextRef.current.value);
+      draftService.saveDraft(selectedCID, { text: inputTextRef.current.value });
       inputTextRef.current.value = "";
     }
   };

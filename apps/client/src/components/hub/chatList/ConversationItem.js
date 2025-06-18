@@ -37,15 +37,15 @@ export default function ConversationItem({
 
   const dispatch = useDispatch();
 
-  const draftMessage = useMemo(() => {
-    if (isSelected && !draft) return null;
-    return draftService.getDraftMessage(cid);
-  }, [isSelected, draft]);
+  const draftParams = useMemo(
+    () => (isSelected ? null : draft),
+    [isSelected, draft]
+  );
 
   useEffect(() => {
     const draftParams = draftService.getDraft(cid);
-    const { message, updated_at: draftUpdatedAt } = draftParams;
-    if (!message) return;
+    const { text, replied_mid, updated_at: draftUpdatedAt } = draftParams;
+    if (!text && !replied_mid) return;
     if (!draft) {
       dispatch(updateWithDrafts({ cid, draft: draftParams }));
       return;
@@ -105,7 +105,7 @@ export default function ConversationItem({
           ) : (
             <LastMessage
               message={last_message}
-              draft={draftMessage}
+              draft={draftParams}
               viewName={lastMessageUserName}
               count={unread_messages_count}
               userId={currentUserId}

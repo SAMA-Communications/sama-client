@@ -63,6 +63,7 @@ export default function ChatMessage({
         list: ["messageReply"],
         coords: { x: e.pageX, y: e.pageY },
         clicked: true,
+        externalProps: { mid: _id },
       })
     );
   };

@@ -47,8 +47,11 @@ export default function MessageInput({
 
     if (inputTextRef.current) {
       text?.length > 0
-        ? draftService.saveDraft(selectedConversationId, text)
-        : draftService.removeDraft(selectedConversationId);
+        ? draftService.saveDraft(selectedConversationId, { text })
+        : draftService.removeDraftWithOptions(
+            selectedConversationId,
+            "message"
+          );
       inputTextRef.current.style.height = `${calcInputHeight(text)}px`;
       inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
     }
@@ -67,7 +70,7 @@ export default function MessageInput({
   const storeInputText = () => {
     const inputText = inputTextRef.current?.value;
     if (inputText) {
-      draftService.saveDraft(selectedConversationId, inputText);
+      draftService.saveDraft(selectedConversationId, { text: inputText });
       inputTextRef.current.value = "";
       inputTextRef.current.style.height = `55px`;
     }
@@ -142,7 +145,7 @@ export default function MessageInput({
       <>
         <m.span whileTap={{ scale: 0.8 }}>
           <Attach
-            className="w-[55px] h-[45px] pl=[10px] pb-[12px] cursor-pointer"
+            className="w-[55px] h-[45px] pl-[10px] pb-[12px] cursor-pointer"
             onClick={() => {
               addSuffix(location.pathname + location.hash, "/attach");
               storeInputText();
@@ -169,7 +172,7 @@ export default function MessageInput({
   }, [location, isBlockedConv, onSubmitFunc]);
 
   return (
-    <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden">
+    <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden z-20">
       {inputsView}
     </div>
   );

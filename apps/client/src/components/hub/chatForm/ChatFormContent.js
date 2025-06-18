@@ -1,17 +1,28 @@
 import { useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 
-import ChatFormInputs from "@components/hub/chatForm/ChatFormInputs.js";
+import ChatFormInput from "@components/hub/chatForm/ChatFormInput.js";
+import ChatFormInputContent from "@components/hub/chatForm/ChatFormInputContent.js";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import MessagesList from "@components/hub/elements/MessagesList";
-import SMessageList from "@skeletons/hub/elements/SMessageList";
 
-import { selectActiveConversationMessages } from "@store/values/Messages";
+import { getConverastionById } from "@store/values/Conversations.js";
+import { selectMessagesEntities } from "@store/values/Messages.js";
+
+import SMessageList from "@skeletons/hub/elements/SMessageList";
 
 export default function ChatFormContent() {
   const chatMessagesBlock = useRef(null);
 
-  const messages = useSelector(selectActiveConversationMessages);
+  const conversation = useSelector(getConverastionById);
+  const messagesEntities = useSelector(selectMessagesEntities);
+  const messages = Object.values(messagesEntities);
+
+  const draftRepliedMessage = useMemo(() => {
+    return conversation.draft?.replied_mid
+      ? messagesEntities[conversation.draft?.replied_mid]
+      : null;
+  }, [conversation]);
 
   const chatContentView = useMemo(() => {
     if (!messages) {
@@ -42,7 +53,11 @@ export default function ChatFormContent() {
   return (
     <>
       {chatContentView}
-      <ChatFormInputs chatMessagesBlockRef={chatMessagesBlock} />
+      <ChatFormInputContent
+        cid={conversation._id}
+        message={draftRepliedMessage}
+      />
+      <ChatFormInput chatMessagesBlockRef={chatMessagesBlock} />
     </>
   );
 }
