@@ -22,7 +22,7 @@ export default function MessageLinks({ listOfIds }) {
         text="Reply"
         icon={<Reply />}
         onClick={() => {
-          draftService.saveDraft(selectedCID, { replied_mid: mid });
+          draftService.saveDraft(selectedCID, { replied_mid: mid }, true);
         }}
       />
     ),

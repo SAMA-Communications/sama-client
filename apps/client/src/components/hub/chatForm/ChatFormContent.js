@@ -53,10 +53,7 @@ export default function ChatFormContent() {
   return (
     <>
       {chatContentView}
-      <ChatFormInputContent
-        cid={selectedConversation._id}
-        message={draftRepliedMessage}
-      />
+      <ChatFormInputContent message={draftRepliedMessage} />
       <ChatFormInput chatMessagesBlockRef={chatMessagesBlock} />
     </>
   );

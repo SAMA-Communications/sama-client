@@ -13,8 +13,8 @@ import ChatMessage from "@components/hub/elements/ChatMessage";
 
 import {
   addMessages,
-  selectActiveConversationMessages,
   upsertMessages,
+  selectActiveConversationMessagesEntities,
 } from "@store/values/Messages";
 import {
   addUsers,
@@ -27,7 +27,8 @@ export default function MessagesList({ scrollRef }) {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const messages = useSelector(selectActiveConversationMessages);
+  const messagesEntites = useSelector(selectActiveConversationMessagesEntities);
+  const messages = Object.values(messagesEntites);
   const participants = useSelector(selectParticipantsEntities);
   const currentUserId = useSelector(selectCurrentUserId);
   const selectedConversation = useSelector(getConverastionById);
@@ -155,6 +156,7 @@ export default function MessagesList({ scrollRef }) {
               <ChatMessage
                 key={msg.old_id || msg._id}
                 message={msg}
+                repliedMessage={messagesEntites[msg.replied_message_id]}
                 sender={participants[msg.from]}
                 currentUserId={currentUserId}
                 isPrevMesssageYours={

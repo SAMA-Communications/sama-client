@@ -9,6 +9,7 @@ import MediaAttachments from "@components/message/elements/MediaAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
 import MessageLinkPreview from "@components/hub/elements/MessageLinkPreview.js";
+import RepliedMessage from "./RepliedMessage.js";
 
 import { setAllParams } from "@store/values/ContextMenu.js";
 
@@ -21,6 +22,7 @@ import CornerAccent from "@icons/_helpers/CornerAccent.svg?react";
 export default function ChatMessage({
   sender,
   message,
+  repliedMessage,
   currentUserId,
   isPrevMesssageYours: prev,
   isNextMessageYours: next,
@@ -117,6 +119,12 @@ export default function ChatMessage({
           >
             &zwnj;{getUserFullName(sender) || "Deleted account"}
           </div>
+        )}
+        {repliedMessage && (
+          <RepliedMessage
+            message={repliedMessage}
+            color={isCurrentUser ? "accent" : "light"}
+          />
         )}
         <div
           className={`flex flex-wrap items-end gap-y-[8px] gap-x-[15px] ${

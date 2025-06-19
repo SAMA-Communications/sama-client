@@ -44,6 +44,17 @@ export const selectActiveConversationMessages = createSelector(
     return conversation?.messagesIds?.map((id) => messages[id]) || [];
   }
 );
+export const selectActiveConversationMessagesEntities = createSelector(
+  [getConverastionById, selectMessagesEntities],
+  (conversation, messages) => {
+    return (
+      conversation?.messagesIds?.reduce((acc, id) => {
+        if (messages[id]) acc[id] = messages[id];
+        return acc;
+      }, {}) || {}
+    );
+  }
+);
 
 const getId = (_, id) => id;
 

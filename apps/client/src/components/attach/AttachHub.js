@@ -198,12 +198,20 @@ export default function AttachHub() {
         t: Date.now(),
         attachments: optimisticAttachments,
       };
+      const repliedMid = selectedConversation.draft?.replied_mid;
+      repliedMid && (msg["replied_message_id"] = repliedMid);
 
       dispatch(addMessage(msg));
       dispatch(updateLastMessageField({ cid, msg }));
 
       let attachments = [];
-      const reqData = { mid, body, cid, from: currentUserId };
+      const reqData = {
+        mid,
+        body,
+        cid,
+        from: currentUserId,
+        replied_message_id: repliedMid,
+      };
 
       try {
         if (files?.length) {
@@ -232,6 +240,7 @@ export default function AttachHub() {
           })),
         };
         dispatch(upsertMessage(upsertMessageParams));
+        draftService.removeDraft(selectedCID);
       } catch (err) {
         showCustomAlert("The server connection is unavailable.", "warning");
         dispatch(

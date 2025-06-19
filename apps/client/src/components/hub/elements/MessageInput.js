@@ -49,10 +49,7 @@ export default function MessageInput({
     if (inputTextRef.current) {
       text?.length > 0
         ? draftService.saveDraft(selectedConversationId, { text })
-        : draftService.removeDraftWithOptions(
-            selectedConversationId,
-            "message"
-          );
+        : draftService.removeDraftWithOptions(selectedConversationId, "text");
       inputTextRef.current.style.height = `${calcInputHeight(text)}px`;
       inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
     }
@@ -173,7 +170,7 @@ export default function MessageInput({
   }, [location, isBlockedConv, onSubmitFunc]);
 
   return (
-    <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden z-20">
+    <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden z-5">
       {inputsView}
     </div>
   );
