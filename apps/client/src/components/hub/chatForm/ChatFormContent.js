@@ -34,11 +34,7 @@ export default function ChatFormContent() {
     }
 
     if (messages.length) {
-      return (
-        <CustomScrollBar customId={"chatMessagesScrollable"}>
-          <MessagesList scrollRef={chatMessagesBlock} />
-        </CustomScrollBar>
-      );
+      return <MessagesList scrollRef={chatMessagesBlock} />;
     }
 
     return (

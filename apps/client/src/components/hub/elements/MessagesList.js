@@ -1,14 +1,7 @@
-import InfiniteScroll from "react-infinite-scroll-component";
 import { domMax, LayoutGroup, LazyMotion } from "motion/react";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-} from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useLocation } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 
 import api from "@api/api";
 
@@ -29,9 +22,11 @@ import {
 import { getConverastionById, upsertChat } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 
-export default function MessagesList({ scrollRef }) {
+export default function MessagesList() {
   const dispatch = useDispatch();
   const location = useLocation();
+
+  const scrollableContainer = useRef(null);
 
   const participants = useSelector(selectParticipantsEntities);
   const currentUserId = useSelector(selectCurrentUserId);
@@ -69,23 +64,33 @@ export default function MessagesList({ scrollRef }) {
 
   useEffect(() => updateParticipantsFromMessages(), []);
 
-  const needToGetMoreMessage = useRef(true);
+  useEffect(() => {
+    if (!scrollableContainer.current) return;
+    const scrollToBottom = () => {
+      scrollableContainer.current.scrollTop =
+        scrollableContainer.current.scrollHeight;
+    };
+    scrollToBottom();
+  }, [location, scrollableContainer]);
+
+  // const needToGetMoreMessage = useRef(true);
   const lastMessageRef = useCallback(async () => {
     if (!selectedCID || messages.length === 0) return;
+
     const arr = await api.messageList({
       cid: selectedCID,
       limit: +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD,
       updated_at: { lt: messages[0].created_at },
     });
     if (!arr.length) {
-      needToGetMoreMessage.current = false;
+      // needToGetMoreMessage.current = false;
       return;
     }
 
     const messagesIds = arr.map((el) => el._id).reverse();
-    needToGetMoreMessage.current = !(
-      messagesIds.length < +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD
-    );
+    // needToGetMoreMessage.current = !(
+    //   messagesIds.length < +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD
+    // );
 
     updateParticipantsFromMessages(arr);
     dispatch(addMessages(arr));
@@ -155,16 +160,13 @@ export default function MessagesList({ scrollRef }) {
         dispatch(upsertMessages(messagesToUpdate));
       });
     }
-  }, [selectedCID, messages, needToGetMoreMessage]);
-
-  useLayoutEffect(() => {
-    setTimeout(() => (needToGetMoreMessage.current = true), 300);
-  }, [location]);
+  }, [selectedCID, messages]);
 
   const messagesView = useMemo(() => {
     return messages.map((msg, i) => {
       const { _id, old_id, body, from, replied_message_id, x } = msg;
 
+      const key = old_id || _id;
       const repliedMessage =
         messagesEntites[replied_message_id] ||
         additionalMessages[replied_message_id];
@@ -183,15 +185,18 @@ export default function MessagesList({ scrollRef }) {
 
       return x?.type ? (
         <InformativeMessage
-          key={old_id || _id}
+          key={key}
+          id={key}
           params={x}
           text={body}
           isPrevMesssageUsers={isPrevMesssageUsers}
         />
       ) : (
         <ChatMessage
-          key={old_id || _id}
+          key={key}
+          id={key}
           message={msg}
+          onViewFunc={i === 0 ? lastMessageRef : null}
           repliedMessage={repliedMessage}
           sender={participants[from]}
           currentUserId={currentUserId}
@@ -200,22 +205,21 @@ export default function MessagesList({ scrollRef }) {
         />
       );
     });
-  }, [messagesEntites]);
+  }, [messagesEntites, scrollableContainer]);
 
   return (
-    <InfiniteScroll
-      ref={scrollRef}
-      dataLength={messages.length}
-      next={lastMessageRef}
-      inverse={true}
-      hasMore={true && needToGetMoreMessage.current}
-      scrollableTarget="chatMessagesScrollable"
+    <div
+      className="flex flex-col flex-grow justify-end overflow-auto"
+      id="chatMessagesScrollable"
+      ref={scrollableContainer}
     >
-      <LazyMotion features={domMax}>
-        <LayoutGroup id="chatMessagesListLayoutGroup">
-          {messagesView}
-        </LayoutGroup>
-      </LazyMotion>
-    </InfiniteScroll>
+      <div className="h-full py-[15px] flex flex-col gap-[7px]">
+        <LazyMotion features={domMax}>
+          <LayoutGroup id="chatMessagesListLayoutGroup">
+            {messagesView}
+          </LayoutGroup>
+        </LazyMotion>
+      </div>
+    </div>
   );
 }

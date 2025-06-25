@@ -1,9 +1,10 @@
 import * as m from "motion/react-m";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useLocation } from "react-router";
 import { useDispatch } from "react-redux";
 
 import { urlify, hardUrlify } from "@services/urlMetaService";
+import { messageObserver as observer } from "@services/visibilityObserver.js";
 
 import MediaAttachments from "@components/message/elements/MediaAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
@@ -24,12 +25,14 @@ export default function ChatMessage({
   message,
   repliedMessage,
   currentUserId,
+  onViewFunc,
   isPrevMesssageYours: prev,
   isNextMessageYours: next,
 }) {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
+  const messageRef = useRef(null);
   const { _id, old_id, body, from, attachments, status, t, url_preview } =
     message;
   const isCurrentUser = from === currentUserId;
@@ -70,8 +73,20 @@ export default function ChatMessage({
     );
   };
 
+  useEffect(() => {
+    const el = messageRef.current;
+    if (!el || !observer || !onViewFunc) return;
+    const handleVisible = () => {
+      console.log("Visible message:", body);
+      if (onViewFunc) onViewFunc();
+    };
+    observer.observe(el, handleVisible, true);
+    return () => observer.unobserve(el);
+  }, [_id, onViewFunc]);
+
   return (
     <m.div
+      ref={messageRef}
       key={old_id || _id}
       className={`relative ${width} flex flex-row gap-[16px] ${
         prev ? "" : "mt-[8px]"

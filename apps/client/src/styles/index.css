@@ -75,6 +75,19 @@ main {
   font-family: Consolas, "Courier New", monospace;
 }
 
+*::-webkit-scrollbar {
+  width: 6px;
+}
+*::-webkit-scrollbar-track {
+  background-color: none;
+}
+*::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.2);
+
+  cursor: pointer;
+}
+
 .editor-helper .editor-tooltip-style,
 .editor-validation .editor-tooltip-style {
   padding: 15px 30px !important;
@@ -115,10 +128,6 @@ main {
   display: flex;
   flex-direction: column;
   gap: 7px;
-}
-#chatMessagesScrollable {
-  display: flex;
-  flex-direction: column-reverse;
 }
 
 #chatFormContainer .scroll-bar__outer-container > div:nth-child(3) {
