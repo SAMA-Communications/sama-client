@@ -47,12 +47,29 @@ export const selectActiveConversationMessages = createSelector(
 export const selectActiveConversationMessagesEntities = createSelector(
   [getConverastionById, selectMessagesEntities],
   (conversation, messages) => {
-    return (
-      conversation?.messagesIds?.reduce((acc, id) => {
-        if (messages[id]) acc[id] = messages[id];
-        return acc;
-      }, {}) || {}
-    );
+    if (!conversation?.messagesIds) return {};
+
+    const result = {};
+    const notVisibleMessages = {};
+
+    for (const mid of conversation.messagesIds) {
+      const message = messages[mid];
+      if (!message) continue;
+      result[mid] = message;
+
+      const repliedId = message.replied_message_id;
+      if (
+        repliedId &&
+        !result[repliedId] &&
+        !notVisibleMessages[repliedId] &&
+        messages[repliedId]
+      ) {
+        notVisibleMessages[repliedId] = messages[repliedId];
+      }
+    }
+
+    result.not_visible_messages = notVisibleMessages;
+    return result;
   }
 );
 

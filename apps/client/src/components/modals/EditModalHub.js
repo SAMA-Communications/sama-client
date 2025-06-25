@@ -95,7 +95,7 @@ export default function EditModalHub() {
 
   return (
     <m.div
-      className="absolute top-[0px] w-dvw h-dvh bg-(--color-black-50) flex items-center justify-center"
+      className="absolute top-[0px] w-dvw h-dvh bg-(--color-black-50) flex items-center justify-center z-10"
       initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
       animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
       exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}

@@ -1,7 +1,8 @@
 import * as m from "motion/react-m";
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
-import MediaAttachment from "../../message/elements/MediaAttachment.js";
+import MediaAttachment from "@components/message/elements/MediaAttachment.js";
 
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 
@@ -9,7 +10,6 @@ import getUserFullName from "@utils/user/get_user_full_name.js";
 
 import Reply from "@icons/context/ReplyGray.svg?react";
 import Close from "@icons/options/Close.svg?react";
-import { useMemo } from "react";
 
 export default function RepliedMessage({
   message,
@@ -44,6 +44,18 @@ export default function RepliedMessage({
     }
   }, [color]);
 
+  if (message.error) {
+    return (
+      <div
+        className={`w-[calc(100%)] px-[10px] py-[7px] border-l-[3px] rounded-lg shrink ${bgColor}   ${
+          color === "accent" ? "border-l-accent-light" : "border-l-accent-dark"
+        }`}
+      >
+        <p className={`${bodyColor}`}>{message.error}</p>
+      </div>
+    );
+  }
+
   const animateInOut = isPreview && {
     opacity: 0,
     scale: 0.98,
@@ -67,13 +79,13 @@ export default function RepliedMessage({
       exit={animateInOut}
       className={`${
         isPreview
-          ? `h-[90px] w-[calc(100%-20px)] -mb-[20px] pb-[20px] pt-[5px] px-[18px] rounded-[16px] ${bgColor}`
-          : `w-[calc(100%)] px-[10px] py-[7px] cursor-pointer border-l-[3px] rounded-lg ${bgColor} ${
+          ? `h-[90px] w-[calc(100%-20px)] -mb-[20px] pb-[20px] pt-[5px] px-[18px] rounded-[16px] gap-[15px] ${bgColor} z-1`
+          : `w-[calc(100%)] px-[10px] py-[7px] cursor-pointer border-l-[3px] rounded-lg gap-[10px] ${bgColor} ${
               color === "accent"
                 ? "border-l-accent-light"
                 : "border-l-accent-dark"
             }`
-      } shrink flex items-center self-center gap-[15px] overflow-hidden z-1`}
+      } shrink flex items-center self-centeroverflow-hidden`}
     >
       {isPreview && (
         <span>

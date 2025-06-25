@@ -284,9 +284,10 @@ class SAMAClient {
     });
   }
 
-  async messageList(data: { cid: string; limit?: number; updated_at?: string }): Promise<IMessage[]> {
+  async messageList(data: { cid: string; ids?: string[]; limit?: number; updated_at?: string }): Promise<IMessage[]> {
     const messageParams = {
       cid: data.cid,
+      ...(data.ids && { ids: data.ids }),
       ...(data.limit && { limit: data.limit }),
       ...(data.updated_at && { updated_at: data.updated_at }),
     };

@@ -169,28 +169,50 @@ class MessagesService {
             activated: true,
           })
         );
+
         const mAttachments = {};
-        for (let i = 0; i < arr.length; i++) {
-          const attachments = arr[i].attachments;
-          if (!attachments) {
-            continue;
-          }
+        const repliedMids = [];
+
+        const handleAttachments = (mid, attachments) => {
           attachments.forEach((obj) => {
-            if (obj.file_url) return;
             const mAttachmentsObject = mAttachments[obj.file_id];
             if (!mAttachmentsObject) {
-              mAttachments[obj.file_id] = {
-                _id: arr[i]._id,
-                ...obj,
-              };
+              mAttachments[obj.file_id] = { _id: mid, ...obj };
               return;
             }
 
             const mids = mAttachmentsObject._id;
             mAttachments[obj.file_id]._id = Array.isArray(mids)
-              ? [arr[i]._id, ...mids]
-              : [arr[i]._id, mids];
+              ? [mid, ...mids]
+              : [mid, mids];
           });
+        };
+
+        for (let i = 0; i < arr.length; i++) {
+          const { _id, attachments, replied_message_id } = arr[i];
+          attachments && handleAttachments(_id, attachments);
+          replied_message_id && repliedMids.push(replied_message_id);
+        }
+
+        if (repliedMids.length) {
+          const repliedMsgs = await api.messageList({ cid, ids: repliedMids });
+          const receivedIds = new Set(
+            repliedMsgs.map((msg) => {
+              msg.attachments && handleAttachments(msg._id, msg.attachments);
+              return msg._id;
+            })
+          );
+          repliedMsgs.length && store.dispatch(addMessages(repliedMsgs));
+
+          const notReceived = repliedMids.filter(
+            (mid) => !receivedIds.has(mid)
+          );
+          notReceived.length &&
+            store.dispatch(
+              addMessages(
+                notReceived.map((_id) => ({ _id, error: "Message deleted" }))
+              )
+            );
         }
 
         if (Object.keys(mAttachments).length > 0) {
@@ -202,6 +224,7 @@ class MessagesService {
             store.dispatch(upsertMessages(messagesToUpdate));
           });
         }
+
         const conv =
           store.getState().conversations.entities[this.currentChatId];
         if (conv.type !== "u") {

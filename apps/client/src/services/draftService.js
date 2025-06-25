@@ -16,7 +16,7 @@ class DraftService {
     const oldDraft = this.getDraft(cid);
     const newDraft = { ...oldDraft, ...draftParams };
     localStorage.setItem(this.#getDraftKey(cid), JSON.stringify(newDraft));
-    // isUpdateStore && store.dispatch(updateWithDrafts({ cid, draft: newDraft }));
+    isUpdateStore && store.dispatch(updateWithDrafts({ cid, draft: newDraft }));
   }
 
   getDraft(cid) {
