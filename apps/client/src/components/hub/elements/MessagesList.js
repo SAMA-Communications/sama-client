@@ -1,32 +1,31 @@
 import { domMax, LayoutGroup, LazyMotion } from "motion/react";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 
 import api from "@api/api";
 
-import DownloadManager from "@lib/downloadManager";
+import messagesService from "@services/messagesService.js";
 
 import InformativeMessage from "@components/hub/elements/InformativeMessage";
 import ChatMessage from "@components/hub/elements/ChatMessage";
 
-import {
-  addMessages,
-  upsertMessages,
-  selectActiveConversationMessagesEntities,
-} from "@store/values/Messages";
+import { selectActiveConversationMessagesEntities } from "@store/values/Messages";
 import {
   addUsers,
   selectParticipantsEntities,
 } from "@store/values/Participants";
-import { getConverastionById, upsertChat } from "@store/values/Conversations";
+import { getConverastionById } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
+
+let timer = null;
 
 export default function MessagesList() {
   const dispatch = useDispatch();
   const location = useLocation();
 
   const scrollableContainer = useRef(null);
+  const [isScrolling, setIsScrolling] = useState(true);
 
   const participants = useSelector(selectParticipantsEntities);
   const currentUserId = useSelector(selectCurrentUserId);
@@ -41,6 +40,7 @@ export default function MessagesList() {
         .map(([, value]) => value),
     [messagesEntites]
   );
+  const [messagesFetchFunc, setMessagesFetchFunc] = useState({});
 
   const updateParticipantsFromMessages = (messageArray) => {
     messageArray ??= messages;
@@ -66,110 +66,226 @@ export default function MessagesList() {
 
   useEffect(() => {
     if (!scrollableContainer.current) return;
-    const scrollToBottom = () => {
-      scrollableContainer.current.scrollTop =
-        scrollableContainer.current.scrollHeight;
+    const container = scrollableContainer.current;
+    const savedScrollFromBottom = localStorage.getItem(
+      `scroll_pos_${selectedCID}`
+    );
+
+    const restoreScrollPosition = () => {
+      if (savedScrollFromBottom !== null) {
+        container.scrollTop =
+          container.scrollHeight -
+          container.clientHeight -
+          Number(savedScrollFromBottom);
+      } else {
+        container.scrollTop = container.scrollHeight;
+      }
+      setIsScrolling(false);
     };
-    scrollToBottom();
-  }, [location, scrollableContainer]);
 
-  // const needToGetMoreMessage = useRef(true);
-  const lastMessageRef = useCallback(async () => {
-    if (!selectedCID || messages.length === 0) return;
+    setTimeout(restoreScrollPosition, 100);
+  }, [location]);
 
-    const arr = await api.messageList({
-      cid: selectedCID,
-      limit: +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD,
-      updated_at: { lt: messages[0].created_at },
+  const fetchOnViewMessage = async (options, anchorMid) => {
+    console.log("fetchOnViewMessage");
+
+    const timeParam = options.updated_at.gt ? "gt" : "lt";
+    const isInsertBefore = timeParam === "lt";
+    const newMessages = await messagesService.getMessagesByCid(selectedCID, {
+      updated_at: options.updated_at,
     });
-    if (!arr.length) {
-      // needToGetMoreMessage.current = false;
+    console.log(newMessages);
+
+    updateParticipantsFromMessages(newMessages);
+
+    const container = scrollableContainer.current;
+    const prevScrollHeight = container.scrollHeight;
+    const prevScrollTop = container.scrollTop;
+
+    const { messagesIds } = await messagesService.processMessages(newMessages, {
+      anchor_mid: anchorMid,
+      position: timeParam,
+    });
+
+    if (newMessages.length) {
+      container.scrollTop =
+        prevScrollTop + (container.scrollHeight - prevScrollHeight);
+    }
+
+    console.log("messagesIds", messagesIds?.length);
+    if (!messagesIds?.length) return;
+
+    const lastMessage = isInsertBefore
+      ? newMessages[newMessages.length - 1]
+      : newMessages[0];
+    const lastMessageIndex = messagesIds.indexOf(lastMessage._id);
+
+    const newAnchorMessageId = isInsertBefore
+      ? messagesIds[lastMessageIndex - 1]
+      : messagesIds[lastMessageIndex + 1];
+    const newAnchorMessage = messagesEntites[newAnchorMessageId];
+
+    console.log("newAnchorMessage", newAnchorMessage);
+
+    if (
+      !newAnchorMessage ||
+      newMessages.length < +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD
+    ) {
+      newAnchorMessage && removeFetchFuncFromMessage(newAnchorMessage);
       return;
     }
 
-    const messagesIds = arr.map((el) => el._id).reverse();
-    // needToGetMoreMessage.current = !(
-    //   messagesIds.length < +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD
-    // );
+    let gt, lt;
+    isInsertBefore
+      ? (gt = newAnchorMessage.created_at)
+      : (lt = newAnchorMessage.created_at);
+    console.log("lastMessage", lastMessage);
 
-    updateParticipantsFromMessages(arr);
-    dispatch(addMessages(arr));
-    dispatch(
-      upsertChat({
-        _id: selectedCID,
-        messagesIds: [
-          ...new Set([...messagesIds, ...messages.map((el) => el._id)]),
-        ],
-        activated: true,
-      })
-    );
+    addFetchFuncToMessage(lastMessage, timeParam, gt, lt);
+  };
 
-    const mAttachments = {};
-    const repliedMids = [];
+  useEffect(() => {
+    if (!messages.length) return;
+    const lastMessage = messages[0];
+    setMessagesFetchFunc((prev) => ({
+      ...prev,
+      [lastMessage._id]: () => {
+        fetchOnViewMessage({ updated_at: { lt: lastMessage.created_at } });
+        setMessagesFetchFunc((prev2) => {
+          const { [lastMessage._id]: _, ...rest } = prev2;
+          return rest;
+        });
+      },
+    }));
+  }, [messages]);
 
-    const handleAttachments = (mid, attachments) => {
-      attachments.forEach((obj) => {
-        const mAttachmentsObject = mAttachments[obj.file_id];
-        if (!mAttachmentsObject) {
-          mAttachments[obj.file_id] = { _id: mid, ...obj };
+  const removeFetchFuncFromMessage = (message) => {
+    setMessagesFetchFunc((prev) => {
+      const { [message._id]: _, ...rest } = prev;
+      return rest;
+    });
+  };
+
+  const addFetchFuncToMessage = (message, timeParam, gt, lt) => {
+    setMessagesFetchFunc((prev) => ({
+      ...prev,
+      [message._id]: async () => {
+        await fetchOnViewMessage(
+          {
+            updated_at: {
+              [timeParam]: message.created_at,
+              ...(lt ? { lt } : {}),
+              ...(gt ? { gt } : {}),
+            },
+          },
+          message._id
+        );
+        setMessagesFetchFunc((prev2) => {
+          const { [message._id]: _, ...rest } = prev2;
+          return rest;
+        });
+      },
+    }));
+  };
+
+  const onReplyClick = async (rMessage) => {
+    if (!rMessage) return null;
+    setIsScrolling(true);
+
+    const messagesIds = messages.map((m) => m._id);
+    const rIndex = messagesIds.indexOf(rMessage._id);
+    console.log("rIndex", rIndex);
+
+    const scrollToMessage = (message) => {
+      const container = scrollableContainer.current;
+      if (container) {
+        const messageElement = container.querySelector(
+          `[data-message-id="${message._id}"]`
+        );
+        if (messageElement) {
+          messageElement.scrollIntoView({ block: "center" });
+          setIsScrolling(false);
+        }
+      }
+    };
+
+    let gt, lt;
+    if (rIndex > 0) {
+      scrollToMessage(rMessage);
+      return;
+    } else {
+      gt = messages[rIndex - 1]?.created_at;
+      lt = messages[rIndex + 1]?.created_at;
+    }
+
+    const nextMessages = await messagesService.getMessagesByCid(selectedCID, {
+      updated_at: { lt: rMessage.created_at, ...(gt ? { gt } : {}) },
+      limit: 10,
+    });
+    const prevMessages = await messagesService.getMessagesByCid(selectedCID, {
+      updated_at: { gt: rMessage.created_at, ...(lt ? { lt } : {}) },
+      limit: 10,
+    });
+
+    const newMessages = [...prevMessages, rMessage, ...nextMessages];
+
+    updateParticipantsFromMessages(newMessages);
+    const { messagesIds: newMessagesIds } =
+      await messagesService.processMessages(newMessages, {});
+
+    if (newMessages.length) {
+      const syncFetchFunc = (
+        message,
+        timeParam,
+        newMessages,
+        newMessagesIds
+      ) => {
+        const isInsertBefore = timeParam === "lt";
+        const lastMessageIndex = newMessagesIds.indexOf(message._id);
+
+        const newAnchorMessageId = isInsertBefore
+          ? newMessagesIds[lastMessageIndex - 1]
+          : newMessagesIds[lastMessageIndex + 1];
+        const newAnchorMessage = messagesEntites[newAnchorMessageId];
+
+        console.log("newAnchorMessage_1", newAnchorMessage);
+
+        if (
+          !newAnchorMessage ||
+          newMessages.length < +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD
+        ) {
+          newAnchorMessage && removeFetchFuncFromMessage(newAnchorMessage);
           return;
         }
 
-        const mids = mAttachmentsObject._id;
-        mAttachments[obj.file_id]._id = Array.isArray(mids)
-          ? [mid, ...mids]
-          : [mid, mids];
-      });
-    };
+        let gt, lt;
+        isInsertBefore
+          ? (gt = newAnchorMessage.created_at)
+          : (lt = newAnchorMessage.created_at);
+        console.log("lastMessage_1", message);
 
-    for (let i = 0; i < arr.length; i++) {
-      const { _id, attachments, replied_message_id } = arr[i];
-      attachments && handleAttachments(_id, attachments);
-      replied_message_id && repliedMids.push(replied_message_id);
+        addFetchFuncToMessage(message, timeParam, gt, lt);
+      };
+
+      const firstMsg = newMessages[0];
+      const lastMsg = newMessages[newMessages.length - 1];
+
+      syncFetchFunc(firstMsg, "gt", newMessages, newMessagesIds);
+      syncFetchFunc(lastMsg, "lt", newMessages, newMessagesIds);
+
+      setTimeout(() => scrollToMessage(rMessage), 100);
     }
-
-    if (repliedMids.length) {
-      const repliedMsgs = await api.messageList({
-        cid: selectedCID,
-        ids: repliedMids,
-      });
-      const receivedIds = new Set(
-        repliedMsgs.map((msg) => {
-          msg.attachments && handleAttachments(msg._id, msg.attachments);
-          return msg._id;
-        })
-      );
-      repliedMsgs.length && dispatch(addMessages(repliedMsgs));
-
-      const notReceived = repliedMids.filter((mid) => !receivedIds.has(mid));
-      notReceived.length &&
-        dispatch(
-          addMessages(
-            notReceived.map((_id) => ({ _id, error: "Message deleted" }))
-          )
-        );
-    }
-
-    if (Object.keys(mAttachments).length > 0) {
-      DownloadManager.getDownloadFileLinks(mAttachments).then((msgs) => {
-        const messagesToUpdate = msgs.flatMap((msg) => {
-          const mids = Array.isArray(msg._id) ? msg._id : [msg._id];
-          return mids.map((mid) => ({ ...msg, _id: mid }));
-        });
-
-        dispatch(upsertMessages(messagesToUpdate));
-      });
-    }
-  }, [selectedCID, messages]);
+  };
 
   const messagesView = useMemo(() => {
     return messages.map((msg, i) => {
       const { _id, old_id, body, from, replied_message_id, x } = msg;
 
       const key = old_id || _id;
+
       const repliedMessage =
         messagesEntites[replied_message_id] ||
-        additionalMessages[replied_message_id];
+        additionalMessages?.[replied_message_id];
 
       const isPrevMesssageUsers = i > 0 ? !messages[i - 1].x?.type : false;
       const isPrevMesssageYours =
@@ -196,7 +312,8 @@ export default function MessagesList() {
           key={key}
           id={key}
           message={msg}
-          onViewFunc={i === 0 ? lastMessageRef : null}
+          onViewFunc={isScrolling ? null : messagesFetchFunc[msg._id]}
+          onReplyClickFunc={() => onReplyClick(repliedMessage)}
           repliedMessage={repliedMessage}
           sender={participants[from]}
           currentUserId={currentUserId}
@@ -205,13 +322,24 @@ export default function MessagesList() {
         />
       );
     });
-  }, [messagesEntites, scrollableContainer]);
+  }, [isScrolling, messages, messagesFetchFunc]);
 
   return (
     <div
       className="flex flex-col flex-grow justify-end overflow-auto"
       id="chatMessagesScrollable"
       ref={scrollableContainer}
+      onScroll={() => {
+        if (timer !== null) clearTimeout(timer);
+        timer = setTimeout(() => {
+          const container = scrollableContainer.current;
+          const scrollFromBottom =
+            container.scrollHeight -
+            container.scrollTop -
+            container.clientHeight;
+          localStorage.setItem(`scroll_pos_${selectedCID}`, scrollFromBottom);
+        }, 150);
+      }}
     >
       <div className="h-full py-[15px] flex flex-col gap-[7px]">
         <LazyMotion features={domMax}>

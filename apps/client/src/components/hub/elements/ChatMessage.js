@@ -26,6 +26,7 @@ export default function ChatMessage({
   repliedMessage,
   currentUserId,
   onViewFunc,
+  onReplyClickFunc,
   isPrevMesssageYours: prev,
   isNextMessageYours: next,
 }) {
@@ -88,6 +89,7 @@ export default function ChatMessage({
     <m.div
       ref={messageRef}
       key={old_id || _id}
+      data-message-id={_id}
       className={`relative ${width} flex flex-row gap-[16px] ${
         prev ? "" : "mt-[8px]"
       }`}
@@ -138,6 +140,7 @@ export default function ChatMessage({
         {repliedMessage && (
           <RepliedMessage
             message={repliedMessage}
+            onClickFunc={onReplyClickFunc}
             color={isCurrentUser ? "accent" : "light"}
           />
         )}

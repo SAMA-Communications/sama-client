@@ -16,6 +16,7 @@ export default function RepliedMessage({
   color,
   isPreview = false,
   onCloseFunc,
+  onClickFunc,
 }) {
   const participants = useSelector(selectParticipantsEntities);
 
@@ -85,7 +86,8 @@ export default function RepliedMessage({
                 ? "border-l-accent-light"
                 : "border-l-accent-dark"
             }`
-      } shrink flex items-center self-centeroverflow-hidden`}
+      } shrink flex items-center self-center`}
+      onClick={onClickFunc}
     >
       {isPreview && (
         <span>
