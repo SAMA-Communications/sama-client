@@ -87,14 +87,11 @@ export default function MessagesList() {
   }, [location]);
 
   const fetchOnViewMessage = async (options, anchorMid) => {
-    console.log("fetchOnViewMessage");
-
     const timeParam = options.updated_at.gt ? "gt" : "lt";
     const isInsertBefore = timeParam === "lt";
     const newMessages = await messagesService.getMessagesByCid(selectedCID, {
       updated_at: options.updated_at,
     });
-    console.log(newMessages);
 
     updateParticipantsFromMessages(newMessages);
 
@@ -112,7 +109,6 @@ export default function MessagesList() {
         prevScrollTop + (container.scrollHeight - prevScrollHeight);
     }
 
-    console.log("messagesIds", messagesIds?.length);
     if (!messagesIds?.length) return;
 
     const lastMessage = isInsertBefore
@@ -124,8 +120,6 @@ export default function MessagesList() {
       ? messagesIds[lastMessageIndex - 1]
       : messagesIds[lastMessageIndex + 1];
     const newAnchorMessage = messagesEntites[newAnchorMessageId];
-
-    console.log("newAnchorMessage", newAnchorMessage);
 
     if (
       !newAnchorMessage ||
@@ -139,7 +133,6 @@ export default function MessagesList() {
     isInsertBefore
       ? (gt = newAnchorMessage.created_at)
       : (lt = newAnchorMessage.created_at);
-    console.log("lastMessage", lastMessage);
 
     addFetchFuncToMessage(lastMessage, timeParam, gt, lt);
   };
@@ -194,7 +187,6 @@ export default function MessagesList() {
 
     const messagesIds = messages.map((m) => m._id);
     const rIndex = messagesIds.indexOf(rMessage._id);
-    console.log("rIndex", rIndex);
 
     const scrollToMessage = (message) => {
       const container = scrollableContainer.current;
@@ -248,8 +240,6 @@ export default function MessagesList() {
           : newMessagesIds[lastMessageIndex + 1];
         const newAnchorMessage = messagesEntites[newAnchorMessageId];
 
-        console.log("newAnchorMessage_1", newAnchorMessage);
-
         if (
           !newAnchorMessage ||
           newMessages.length < +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD
@@ -262,7 +252,6 @@ export default function MessagesList() {
         isInsertBefore
           ? (gt = newAnchorMessage.created_at)
           : (lt = newAnchorMessage.created_at);
-        console.log("lastMessage_1", message);
 
         addFetchFuncToMessage(message, timeParam, gt, lt);
       };

@@ -81,7 +81,7 @@ export default function ChatMessage({
     const el = messageRef.current;
     if (!el || !observer || !onViewFunc) return;
     const handleVisible = () => {
-      console.log("Visible message:", body);
+      // console.log("Visible message:", body);
       if (onViewFunc) onViewFunc();
     };
     observer.observe(el, handleVisible, true);

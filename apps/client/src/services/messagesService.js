@@ -237,11 +237,8 @@ class MessagesService {
   }
 
   async processMessages(newMessages, additionalOptions) {
-    console.log("newMessages", newMessages);
-
     if (!newMessages.length) return {};
 
-    console.log("start", newMessages, additionalOptions);
     const convId = newMessages[0].cid;
     const conversation = store.getState().conversations.entities[convId];
 
