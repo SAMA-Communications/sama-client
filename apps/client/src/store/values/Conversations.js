@@ -95,6 +95,8 @@ export const conversations = createSlice({
 
       conversationsAdapter.upsertOne(state, conversation);
     },
+    upsertChats: conversationsAdapter.upsertMany,
+
     removeChat: conversationsAdapter.removeOne,
 
     updateLastMessageField: (state, { payload }) => {
@@ -268,6 +270,7 @@ export const {
   updateLastMessageField,
   updateWithDrafts,
   upsertChat,
+  upsertChats,
   upsertParticipants,
   updateHandler,
   deleteScheme,

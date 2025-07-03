@@ -43,10 +43,6 @@ export default function UsersSelectModalHub({ type }) {
     removeAndNavigateLastSection(pathname + hash);
   };
 
-  useKeyDown(KEY_CODES.ESCAPE, () =>
-    removeAndNavigateSubLink(pathname + hash, "/create")
-  );
-
   const typeOfFunc = useMemo(() => {
     if (type === "add_participants") {
       return (
@@ -73,6 +69,8 @@ export default function UsersSelectModalHub({ type }) {
       />
     );
   }, [type, chatName, selectedConversation, participants]);
+
+  useKeyDown(KEY_CODES.ESCAPE, () => closeModal);
 
   return (
     <m.div

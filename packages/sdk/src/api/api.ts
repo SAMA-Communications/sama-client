@@ -111,7 +111,17 @@ class SAMAClient {
           if (response.error) {
             response.error.status === 403 ? this.responsesPromises[responseId].reject(response.error) : reject(response.error);
           } else {
-            resObjKey ? response[resObjKey] ? resolve(response[resObjKey]) : reject({ message: "Server error." }) : resolve(response);
+            if (Array.isArray(resObjKey)) {
+              const result = resObjKey.reduce<Record<string, any>>((acc, key) => {
+                response[key] !== undefined && (acc[key] = response[key]);
+                return acc;
+              }, {});
+              resObjKey.every(key => key in result) ? resolve(result) : reject({ message: "Server error." });
+            } else if (resObjKey) {
+              response[resObjKey] ? resolve(response[resObjKey]) : reject({ message: "Server error." });
+            } else {
+              resolve(response);
+            }
           }
           delete this.responsesPromises[responseId];
         }
@@ -148,7 +158,7 @@ class SAMAClient {
     }
   }
 
-  private async sendRequest<T>(action: string, data: any = {}, resObjKey: string = "success"): Promise<T> {
+  private async sendRequest<T>(action: string, data: any = {}, resObjKey: string | string[] = "success"): Promise<T> {
     const requestData = {
       request: {
         [action]: data,
@@ -158,7 +168,7 @@ class SAMAClient {
     return this.sendPromise(requestData, resObjKey);
   }
 
-  private async sendPromise<T>(req: ISocketRequest<any>, key: string): Promise<T> {
+  private async sendPromise<T>(req: ISocketRequest<any>, key: string | string[]): Promise<T> {
     return new Promise((resolve, reject) => {
       if (!this.socket) {
         reject("Socket is not connected.");
@@ -256,7 +266,7 @@ class SAMAClient {
   }
 
   async getParticipantsByCids(data: { cids: string[] }): Promise<IUser[]> {
-    return this.sendRequest("get_participants_by_cids", { cids: data.cids }, "users");
+    return this.sendRequest("get_participants_by_cids", { cids: data.cids }, ["users", "conversations"]);
   }
 
   async createUploadUrlForFiles(data: { files: any[] }): Promise<IFile[]> {

@@ -12,6 +12,7 @@ import {
   insertChats,
   removeChat,
   upsertChat,
+  upsertChats,
   upsertParticipants,
 } from "@store/values/Conversations";
 
@@ -54,13 +55,13 @@ class ConversationsService {
 
   handleConversationCreate = async (chat) => {
     try {
-      const users = await api.getParticipantsByCids({ cids: [chat._id] });
+      const { users } = await api.getParticipantsByCids({ cids: [chat._id] });
       store.dispatch(
         upsertChat({
           ...chat,
           unread_messages_count: chat.unread_messages_count || 0,
           messagesIds: null,
-          participants: users.map((u) => u._id),
+          participants: users.map((u) => u.native_id),
         })
       );
       store.dispatch(addUsers(users));
@@ -110,10 +111,15 @@ class ConversationsService {
   }
 
   async getAndStoreParticipantsFromChats(conversations) {
-    const users = await api.getParticipantsByCids({
+    const { users, conversations: convs } = await api.getParticipantsByCids({
       cids: conversations.map((el) => el._id),
     });
     store.dispatch(upsertUsers(users));
+
+    const participantsArray = Object.entries(convs).map(
+      ([cid, participants]) => ({ _id: cid, participants })
+    );
+    store.dispatch(upsertChats(participantsArray));
 
     const additionalUsersIds = [];
     conversations.forEach((chat) => {
@@ -179,7 +185,13 @@ class ConversationsService {
     });
 
     store.dispatch(addUsers(participants));
-    store.dispatch(insertChat({ ...chat, messagesIds: null }));
+    store.dispatch(
+      insertChat({
+        ...chat,
+        messagesIds: null,
+        participants: [api.curerntUserId, ...participants.map((el) => el._id)],
+      })
+    );
     store.dispatch(setSelectedConversation({ id: chat._id }));
 
     return chat._id;
