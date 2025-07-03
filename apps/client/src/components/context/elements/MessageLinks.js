@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import draftService from "@services/draftService.js";
+import draftService from "@services/tools/draftService.js";
 
 import ContextLink from "@components/context/elements/ContextLink";
 

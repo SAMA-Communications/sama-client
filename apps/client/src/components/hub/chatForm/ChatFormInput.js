@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import draftService from "@services/draftService.js";
+import draftService from "@services/tools/draftService.js";
 import messagesService from "@services/messagesService";
 
 import MessageInput from "@components/hub/elements/MessageInput";

@@ -8,7 +8,7 @@ import api from "@api/api";
 
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
 
-import draftService from "@services/draftService.js";
+import draftService from "@services/tools/draftService.js";
 
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 

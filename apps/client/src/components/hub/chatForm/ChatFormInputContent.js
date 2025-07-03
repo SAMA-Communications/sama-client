@@ -1,7 +1,7 @@
 import { AnimatePresence } from "motion/react";
 import { useDispatch } from "react-redux";
 
-import draftService from "@services/draftService.js";
+import draftService from "@services/tools/draftService.js";
 
 import RepliedMessage from "@components/hub/elements/RepliedMessage.js";
 

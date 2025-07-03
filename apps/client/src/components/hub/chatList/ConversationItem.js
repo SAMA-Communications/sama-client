@@ -6,7 +6,7 @@ import LastMessage from "@components/message/LastMessage";
 import TypingLine from "@components/_helpers/TypingLine";
 import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 
-import draftService from "@services/draftService.js";
+import draftService from "@services/tools/draftService.js";
 
 import { updateWithDrafts } from "@store/values/Conversations.js";
 

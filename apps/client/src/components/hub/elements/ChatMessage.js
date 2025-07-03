@@ -3,9 +3,9 @@ import { useEffect, useMemo, useRef } from "react";
 import { useLocation } from "react-router";
 import { useDispatch } from "react-redux";
 
-import { urlify, hardUrlify } from "@services/urlMetaService";
-import { messageObserver as observer } from "@services/visibilityObserver.js";
-import draftService from "@services/draftService.js";
+import { urlify, hardUrlify } from "@services/tools/urlMetaService";
+import { messageObserver as observer } from "@services/tools/visibilityObserver.js";
+import draftService from "@services/tools/draftService.js";
 
 import MediaAttachments from "@components/message/elements/MediaAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";

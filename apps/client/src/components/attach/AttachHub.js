@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 
-import draftService from "@services/draftService.js";
+import draftService from "@services/tools/draftService.js";
 import messagesService from "@services/messagesService.js";
 
 import DownloadManager from "@lib/downloadManager";
