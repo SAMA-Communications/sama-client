@@ -23,6 +23,9 @@ export const contextMenu = createSlice({
     setList: (state, { payload }) => void (state.list = payload),
     setExternalProps: (state, { payload }) =>
       void (state.externalProps = payload),
+    addExternalProps: (state, { payload }) => {
+      state.externalProps = { ...state.externalProps, ...payload };
+    },
     setAllParams: (state, { payload }) => {
       const { list, category, coords, clicked, externalProps } = payload;
 
@@ -56,6 +59,7 @@ export const {
   setClicked,
   setList,
   setExternalProps,
+  addExternalProps,
   setAllParams,
 } = contextMenu.actions;
 

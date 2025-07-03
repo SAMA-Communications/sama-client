@@ -8,7 +8,7 @@ class DraftService {
     return `draft_${cid}`;
   }
 
-  saveDraft(cid, options, isUpdateStore) {
+  saveDraft(cid, options) {
     const draftParams = { updated_at: Math.floor(Date.now() / 1000) };
     options.text && (draftParams.text = options.text);
     options.replied_mid && (draftParams.replied_mid = options.replied_mid);
@@ -16,7 +16,6 @@ class DraftService {
     const oldDraft = this.getDraft(cid);
     const newDraft = { ...oldDraft, ...draftParams };
     localStorage.setItem(this.#getDraftKey(cid), JSON.stringify(newDraft));
-    isUpdateStore && store.dispatch(updateWithDrafts({ cid, draft: newDraft }));
   }
 
   getDraft(cid) {

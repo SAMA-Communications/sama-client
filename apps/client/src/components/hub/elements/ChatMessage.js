@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 
 import { urlify, hardUrlify } from "@services/urlMetaService";
 import { messageObserver as observer } from "@services/visibilityObserver.js";
+import draftService from "@services/draftService.js";
 
 import MediaAttachments from "@components/message/elements/MediaAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
@@ -12,10 +13,12 @@ import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
 import MessageLinkPreview from "@components/hub/elements/MessageLinkPreview.js";
 import RepliedMessage from "./RepliedMessage.js";
 
+import { addExternalProps } from "@store/values/ContextMenu.js";
 import { setAllParams } from "@store/values/ContextMenu.js";
 
 import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
+import globalConstants from "@utils/global/constants.js";
 
 import CornerLight from "@icons/_helpers/CornerLight.svg?react";
 import CornerAccent from "@icons/_helpers/CornerAccent.svg?react";
@@ -93,6 +96,18 @@ export default function ChatMessage({
       className={`relative ${width} flex flex-row gap-[16px] ${
         prev ? "" : "mt-[8px]"
       }`}
+      drag="x"
+      dragDirectionLock
+      dragConstraints={{ left: 0, right: 0 }}
+      onDragEnd={(e, info) => {
+        if (info.offset.x < -globalConstants.swipeThreshold) {
+          dispatch(
+            addExternalProps({ [message.cid]: { draft_replied_mid: _id } })
+          );
+          draftService.saveDraft(message.cid, { replied_mid: _id });
+        }
+      }}
+      whileDrag={{ scale: 0.9 }}
       onContextMenu={openContextMenu}
       whileInView={{ opacity: 1, x: 0 }}
       initial={{ opacity: 0, x: -7 }}
