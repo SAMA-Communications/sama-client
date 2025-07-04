@@ -212,11 +212,11 @@ export default function MessagesList() {
 
     const nextMessages = await messagesService.getMessagesByCid(selectedCID, {
       updated_at: { lt: rMessage.created_at, ...(gt ? { gt } : {}) },
-      limit: 10,
+      limit: 10, //Math.floor(+import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD / 2)
     });
     const prevMessages = await messagesService.getMessagesByCid(selectedCID, {
       updated_at: { gt: rMessage.created_at, ...(lt ? { lt } : {}) },
-      limit: 10,
+      limit: 10, //Math.floor(+import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD / 2)
     });
 
     const newMessages = [...prevMessages, rMessage, ...nextMessages];
