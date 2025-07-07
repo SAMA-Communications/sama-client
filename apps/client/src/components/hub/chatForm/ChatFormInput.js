@@ -18,6 +18,7 @@ import {
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
+import { addExternalProps } from "@store/values/ContextMenu.js";
 import { getNetworkState } from "@store/values/NetworkState";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
@@ -70,7 +71,7 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
       t: Date.now(),
     };
 
-    const repliedMid = selectedConversation.draft?.replied_mid;
+    const repliedMid = draftService.getDraftRepliedMessageId(selectedCID);
     repliedMid && (msg["replied_message_id"] = repliedMid);
 
     dispatch(addMessage(msg));
@@ -113,9 +114,11 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
 
     setIsSendMessageDisable(false);
     draftService.removeDraft(selectedCID);
-    chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
+    dispatch(addExternalProps({ [selectedCID]: {} }));
+    chatMessagesBlockRef.current.scrollTop =
+      chatMessagesBlockRef.current.scrollHeight;
     // inputRef.current.focus(); //care..
-    window.scrollTo(0, document.body.scrollHeight - 200);
+    // window.scrollTo(0, document.body.scrollHeight - 200);
     inputRef.current.style.height = `55px`;
   };
 

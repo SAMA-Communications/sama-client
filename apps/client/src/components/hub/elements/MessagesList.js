@@ -1,4 +1,5 @@
-import { domMax, LayoutGroup, LazyMotion } from "motion/react";
+import * as m from "motion/react-m";
+import { AnimatePresence, domMax, LayoutGroup, LazyMotion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,14 +19,16 @@ import {
 import { getConverastionById } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 
-let timer = null;
+import ArrowBottom from "@icons/options/ArrowBottom.svg?react";
 
-export default function MessagesList() {
+export default function MessagesList({ scrollRef: scrollableContainer }) {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const scrollableContainer = useRef(null);
+  const timer = useRef(null);
+
   const [isScrolling, setIsScrolling] = useState(true);
+  const [isScrollToBottomVisible, setIsScrollToBottomVisible] = useState(false);
 
   const participants = useSelector(selectParticipantsEntities);
   const currentUserId = useSelector(selectCurrentUserId);
@@ -85,6 +88,15 @@ export default function MessagesList() {
 
     setTimeout(restoreScrollPosition, 100);
   }, [location]);
+
+  const scrollToBottom = () => {
+    setIsScrolling(true);
+    const container = scrollableContainer.current;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+      setIsScrolling(false);
+    }
+  };
 
   const fetchOnViewMessage = async (options, anchorMid) => {
     const timeParam = options.updated_at.gt ? "gt" : "lt";
@@ -314,29 +326,45 @@ export default function MessagesList() {
   }, [isScrolling, messages, messagesFetchFunc]);
 
   return (
-    <div
-      className="flex flex-col flex-grow justify-end overflow-auto"
-      id="chatMessagesScrollable"
-      ref={scrollableContainer}
-      onScroll={() => {
-        if (timer !== null) clearTimeout(timer);
-        timer = setTimeout(() => {
-          const container = scrollableContainer.current;
-          const scrollFromBottom =
-            container.scrollHeight -
-            container.scrollTop -
-            container.clientHeight;
-          localStorage.setItem(`scroll_pos_${selectedCID}`, scrollFromBottom);
-        }, 150);
-      }}
-    >
-      <div className="h-full py-[15px] flex flex-col gap-[7px]">
-        <LazyMotion features={domMax}>
-          <LayoutGroup id="chatMessagesListLayoutGroup">
-            {messagesView}
-          </LayoutGroup>
-        </LazyMotion>
+    <div className="relative flex flex-grow overflow-hidden">
+      <div
+        className="flex flex-col flex-grow justify-end overflow-auto"
+        id="chatMessagesScrollable"
+        ref={scrollableContainer}
+        onScroll={() => {
+          if (timer.current !== null) clearTimeout(timer.current);
+          timer.current = setTimeout(() => {
+            const container = scrollableContainer.current;
+            const scrollFromBottom =
+              container.scrollHeight -
+              container.scrollTop -
+              container.clientHeight;
+            localStorage.setItem(`scroll_pos_${selectedCID}`, scrollFromBottom);
+            setIsScrollToBottomVisible(scrollFromBottom > 200);
+          }, 150);
+        }}
+      >
+        <div className="h-full py-[15px] flex flex-col gap-[7px]">
+          <LazyMotion features={domMax}>
+            <LayoutGroup id="chatMessagesListLayoutGroup">
+              {messagesView}
+            </LayoutGroup>
+          </LazyMotion>
+        </div>
       </div>
+      <AnimatePresence>
+        {isScrollToBottomVisible && (
+          <m.div
+            initial={{ y: 65 }}
+            animate={{ y: 0 }}
+            exit={{ y: 65 }}
+            className="w-[41px] h-[40px] absolute right-4 bottom-4 flex items-center justify-center rounded-full bg-hover-light cursor-pointer z-4"
+            onClick={scrollToBottom}
+          >
+            <ArrowBottom />
+          </m.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
