@@ -18,7 +18,10 @@ import {
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
-import { addExternalProps } from "@store/values/ContextMenu.js";
+import {
+  addExternalProps,
+  selectContextExternalProps,
+} from "@store/values/ContextMenu.js";
 import { getNetworkState } from "@store/values/NetworkState";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
@@ -37,6 +40,7 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
+  const draftExtenralProps = useSelector(selectContextExternalProps);
 
   const inputRef = useRef(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
@@ -71,7 +75,7 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
       t: Date.now(),
     };
 
-    const repliedMid = draftService.getDraftRepliedMessageId(selectedCID);
+    const repliedMid = draftExtenralProps[selectedCID]?.draft_replied_mid;
     repliedMid && (msg["replied_message_id"] = repliedMid);
 
     dispatch(addMessage(msg));
@@ -129,6 +133,11 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
       inputRef.current.style.height = `${calcInputHeight(draftText)}px`;
     }
   }, [selectedCID]);
+
+  useEffect(() => {
+    draftExtenralProps[selectedCID]?.draft_replied_mid &&
+      inputRef.current.focus();
+  }, [draftExtenralProps]);
 
   const isBlockedConv = useMemo(() => {
     const { type, owner_id, opponent_id } = selectedConversation;
