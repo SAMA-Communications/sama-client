@@ -185,11 +185,11 @@ class MessagesService {
           .getParticipantsByCids({
             cids: [cid],
           })
-          .then((arr) =>
+          .then(({ users }) =>
             store.dispatch(
               upsertParticipants({
                 cid,
-                participants: arr.map((obj) => obj._id),
+                participants: users.map((obj) => obj._id),
               })
             )
           );

@@ -24,7 +24,7 @@ import Add from "@icons/context/AddParticipants.svg?react";
 import Remove from "@icons/context/Remove.svg?react";
 import SendMessage from "@icons/context/SendMessage.svg?react";
 
-export default function ConversationLinks({ listOfIds }) {
+export default function ConversationActions({ listOfIds }) {
   const { pathname, hash } = useLocation();
   const { type, opponent_id, owner_id } =
     useSelector(getConverastionById) || {};

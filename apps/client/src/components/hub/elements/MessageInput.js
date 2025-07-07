@@ -1,6 +1,6 @@
 import * as m from "motion/react-m";
 import localforage from "localforage";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
 
@@ -22,14 +22,14 @@ import { KEY_CODES } from "@utils/global/keyCodes";
 import Attach from "@icons/options/Attach.svg?react";
 import Send from "@icons/options/Send.svg?react";
 
-let lastTypingRequestTime = null;
-
 export default function MessageInput({
   inputTextRef,
   onSubmitFunc,
   isBlockedConv,
 }) {
   const location = useLocation();
+
+  const lastTypingRequestTime = useRef(null);
 
   const selectedConversationId = useSelector(getSelectedConversationId);
 
@@ -38,11 +38,11 @@ export default function MessageInput({
     if (text.length > 0) {
       const typingDuration = globalConstants.typingDurationMs;
       if (
-        Date.now() - lastTypingRequestTime > typingDuration - 1000 ||
-        !lastTypingRequestTime
+        Date.now() - lastTypingRequestTime.current > typingDuration - 1000 ||
+        !lastTypingRequestTime.current
       ) {
         api.sendTypingStatus({ cid: selectedConversationId });
-        lastTypingRequestTime = Date.now();
+        lastTypingRequestTime.current = Date.now();
       }
     }
 

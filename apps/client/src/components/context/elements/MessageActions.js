@@ -11,7 +11,7 @@ import { selectContextExternalProps } from "@store/values/ContextMenu.js";
 
 import Reply from "@icons/context/Reply.svg?react";
 
-export default function MessageLinks({ listOfIds }) {
+export default function MessageActions({ listOfIds }) {
   const dispatch = useDispatch();
 
   const selectedCID = useSelector(getSelectedConversationId);

@@ -40,10 +40,7 @@ export default function ConversationItem({
 
   const isGroup = type === "g";
 
-  const draftParams = useMemo(
-    () => (isSelected ? null : draft),
-    [isSelected, draft]
-  );
+  const draftParams = isSelected ? null : draft;
 
   useEffect(() => {
     const draftParams = draftService.getDraft(cid);

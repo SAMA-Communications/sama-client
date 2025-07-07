@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
-import ConversationLinks from "@components/context/elements/ConversationLinks.js";
-import MessageLinks from "@components/context/elements/MessageLinks.js";
+import ConversationActions from "@components/context/elements/ConversationActions.js";
+import MessageActions from "@components/context/elements/MessageActions.js";
 
 import {
   selectContextListCategory,
@@ -18,9 +18,9 @@ export default function ContextMenuHub() {
   const listView = useMemo(() => {
     switch (category) {
       case "conversation":
-        return <ConversationLinks listOfIds={list} />;
+        return <ConversationActions listOfIds={list} />;
       case "message":
-        return <MessageLinks listOfIds={list} />;
+        return <MessageActions listOfIds={list} />;
       default:
         return [];
     }
