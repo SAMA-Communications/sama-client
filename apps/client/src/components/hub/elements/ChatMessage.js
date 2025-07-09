@@ -80,10 +80,7 @@ export default function ChatMessage({
   useEffect(() => {
     const el = messageRef.current;
     if (!el || !observer || !onViewFunc) return;
-    const handleVisible = () => {
-      // console.log("Visible message:", body);
-      if (onViewFunc) onViewFunc();
-    };
+    const handleVisible = () => onViewFunc && onViewFunc();
     observer.observe(el, handleVisible, true);
     return () => observer.unobserve(el);
   }, [_id, onViewFunc]);
@@ -108,7 +105,6 @@ export default function ChatMessage({
         }
       }}
       whileDrag={{ scale: 0.9 }}
-      onContextMenu={openContextMenu}
       whileInView={{ opacity: 1, x: 0 }}
       initial={{ opacity: 0, x: -7 }}
       transition={{ duration: 0.3, delay: 0.03 }}
@@ -136,6 +132,7 @@ export default function ChatMessage({
         className={`relative max-w-full w-fit min-h-[46px] p-[15px] flex flex-col gap-[5px] rounded-[16px] bg-(--color-hover-light) ${
           next ? "" : "rounded-bl-none"
         } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""}`}
+        onContextMenu={openContextMenu}
       >
         {next ? null : isCurrentUser ? (
           <CornerAccent className="absolute -left-[16px] bottom-[0px]" />

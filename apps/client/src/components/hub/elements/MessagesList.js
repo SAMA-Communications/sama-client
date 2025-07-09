@@ -86,7 +86,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
       setIsScrolling(false);
     };
 
-    setTimeout(restoreScrollPosition, 100);
+    setTimeout(restoreScrollPosition, 150);
   }, [location]);
 
   const scrollToBottom = () => {
@@ -152,6 +152,8 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
   useEffect(() => {
     if (!messages.length) return;
     const lastMessage = messages[0];
+    console.log(lastMessage);
+
     setMessagesFetchFunc((prev) => ({
       ...prev,
       [lastMessage._id]: () => {
@@ -162,7 +164,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
         });
       },
     }));
-  }, [messages]);
+  }, [messages, selectedCID]);
 
   const removeFetchFuncFromMessage = (message) => {
     setMessagesFetchFunc((prev) => {
@@ -335,6 +337,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
           if (timer.current !== null) clearTimeout(timer.current);
           timer.current = setTimeout(() => {
             const container = scrollableContainer.current;
+            if (!container) return;
             const scrollFromBottom =
               container.scrollHeight -
               container.scrollTop -

@@ -171,12 +171,9 @@ class MessagesService {
     const cid = this.currentChatId;
 
     try {
-      const arr = await api.messageList({
-        cid,
-        limit: +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD,
-      });
+      const messages = await this.getMessagesByCid(cid, {});
 
-      const { conversation } = await this.processMessages(arr, {
+      const { conversation } = await this.processMessages(messages, {
         position: "reverseOld",
       });
 
