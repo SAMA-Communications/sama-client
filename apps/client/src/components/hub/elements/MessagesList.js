@@ -152,7 +152,6 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
   useEffect(() => {
     if (!messages.length) return;
     const lastMessage = messages[0];
-    console.log(lastMessage);
 
     setMessagesFetchFunc((prev) => ({
       ...prev,

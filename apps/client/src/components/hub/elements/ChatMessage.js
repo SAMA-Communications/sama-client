@@ -85,6 +85,19 @@ export default function ChatMessage({
     return () => observer.unobserve(el);
   }, [_id, onViewFunc]);
 
+  const longPressTimeout = useRef(null);
+  const longPressTriggered = useRef(false);
+
+  const handlePointerUp = () => clearTimeout(longPressTimeout.current);
+  const handleClick = (e) => longPressTriggered.current && e.stopPropagation();
+  const handlePointerDown = (e) => {
+    longPressTriggered.current = false;
+    longPressTimeout.current = setTimeout(() => {
+      longPressTriggered.current = true;
+      openContextMenu(e);
+    }, 350);
+  };
+
   return (
     <m.div
       ref={messageRef}
@@ -128,10 +141,15 @@ export default function ChatMessage({
           </div>
         )}
       </div>
-      <div
+      <m.div
         className={`relative max-w-full w-fit min-h-[46px] p-[15px] flex flex-col gap-[5px] rounded-[16px] bg-(--color-hover-light) ${
           next ? "" : "rounded-bl-none"
         } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""}`}
+        whileTap={{ scale: 0.95, transition: { duration: 0.3, delay: 0.05 } }}
+        onClick={handleClick}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
         onContextMenu={openContextMenu}
       >
         {next ? null : isCurrentUser ? (
@@ -217,7 +235,7 @@ export default function ChatMessage({
             ) : null}
           </div>
         </div>
-      </div>
+      </m.div>
     </m.div>
   );
 }
