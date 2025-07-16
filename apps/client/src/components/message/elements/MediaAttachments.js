@@ -10,6 +10,7 @@ export default function MediaAttachments({
   mid,
   removeFileFunc,
   disableAnimation = false,
+  onContextMenu,
 }) {
   if (!attachments?.length) return null;
 
@@ -47,6 +48,7 @@ export default function MediaAttachments({
                   flexGrow={flexGrow}
                   removeFileFunc={removeFileFunc}
                   disableAnimation={disableAnimation}
+                  onContextMenu={(e) => onContextMenu(e, att)}
                 />
               );
             })}

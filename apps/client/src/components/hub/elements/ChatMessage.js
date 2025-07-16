@@ -63,16 +63,24 @@ export default function ChatMessage({
     return "w-max max-2xl:max-w-[min(80%,680px)] 2xl:max-w-[min(60%,680px)]";
   }, [attachments, url_preview]);
 
-  const openContextMenu = (e) => {
+  const openContextMenu = (e, copyType, externalProps) => {
     e.preventDefault();
     e.stopPropagation();
+    const list = [
+      "messageReply",
+      copyType ? `messageCopy${copyType}` : null,
+      copyType === "Attachment" ? "messageSaveAs" : null,
+      "messageForward",
+      "messageSelect",
+    ].filter(Boolean);
+
     dispatch(
       setAllParams({
         category: "message",
-        list: ["messageReply"],
+        list,
         coords: { x: e.pageX, y: e.pageY },
         clicked: true,
-        externalProps: { mid: _id },
+        externalProps: { message, ...externalProps },
       })
     );
   };
@@ -132,7 +140,7 @@ export default function ChatMessage({
         className={`relative max-w-full w-fit min-h-[46px] p-[15px] flex flex-col gap-[5px] rounded-[16px] bg-(--color-hover-light) ${
           next ? "" : "rounded-bl-none"
         } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""}`}
-        onContextMenu={openContextMenu}
+        onContextMenu={(e) => openContextMenu(e, "Text")}
       >
         {next ? null : isCurrentUser ? (
           <CornerAccent className="absolute -left-[16px] bottom-[0px]" />
@@ -164,7 +172,13 @@ export default function ChatMessage({
           }`}
         >
           {attachments?.length ? (
-            <MediaAttachments attachments={attachments} mid={message._id} />
+            <MediaAttachments
+              onContextMenu={(e, att) => {
+                openContextMenu(e, "Attachment", { attachment: att });
+              }}
+              attachments={attachments}
+              mid={message._id}
+            />
           ) : null}
           {body ? (
             <div

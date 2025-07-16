@@ -177,7 +177,7 @@ class MessagesService {
         position: "reverseOld",
       });
 
-      if (conversation.type !== "u") {
+      if (conversation?.type !== "u") {
         api
           .getParticipantsByCids({
             cids: [cid],

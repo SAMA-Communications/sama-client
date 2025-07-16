@@ -75,7 +75,9 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
       t: Date.now(),
     };
 
-    const repliedMid = draftExtenralProps[selectedCID]?.draft_replied_mid;
+    const repliedMid =
+      draftExtenralProps[selectedCID]?.draft_replied_mid ||
+      selectedConversation?.draft?.replied_mid;
     repliedMid && (msg["replied_message_id"] = repliedMid);
 
     dispatch(addMessage(msg));
