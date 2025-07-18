@@ -202,7 +202,15 @@ class MessagesService {
     const { server_mid, t, modified, bot_message } = await api.messageCreate(
       message
     );
-    const { mid, body, cid, from, attachments, replied_message_id } = message;
+    const {
+      mid,
+      body,
+      cid,
+      from,
+      attachments,
+      replied_message_id,
+      forwarded_message_id,
+    } = message;
     const mObject = {
       _id: server_mid,
       old_id: mid,
@@ -211,6 +219,7 @@ class MessagesService {
       from,
       status: "sent",
       replied_message_id,
+      forwarded_message_id,
       t,
     };
 

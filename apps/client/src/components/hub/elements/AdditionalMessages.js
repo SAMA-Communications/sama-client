@@ -8,19 +8,28 @@ import { selectParticipantsEntities } from "@store/values/Participants.js";
 
 import getUserFullName from "@utils/user/get_user_full_name.js";
 
+import Forward from "@icons/context/ForwardGray.svg?react";
 import Reply from "@icons/context/ReplyGray.svg?react";
 import Close from "@icons/options/Close.svg?react";
 
-export default function RepliedMessage({
+export default function AdditionalMessages({
   message,
+  messages,
   color,
+  type,
   isPreview = false,
   onCloseFunc,
   onClickFunc,
 }) {
   const participants = useSelector(selectParticipantsEntities);
 
-  const { attachments, body, from: senderId } = message || {};
+  const {
+    attachments,
+    body,
+    from: senderId,
+    error,
+  } = message || messages[0] || {};
+  const isReply = type === "reply";
 
   const { bodyColor, bgColor, userNameColor } = useMemo(() => {
     switch (color) {
@@ -45,14 +54,14 @@ export default function RepliedMessage({
     }
   }, [color]);
 
-  if (message.error) {
+  if (error) {
     return (
       <div
         className={`w-[calc(100%)] px-[10px] py-[7px] border-l-[3px] rounded-lg shrink ${bgColor}   ${
           color === "accent" ? "border-l-accent-light" : "border-l-accent-dark"
         }`}
       >
-        <p className={`${bodyColor}`}>{message.error}</p>
+        <p className={`${bodyColor}`}>{error}</p>
       </div>
     );
   }
@@ -91,7 +100,11 @@ export default function RepliedMessage({
     >
       {isPreview && (
         <span>
-          <Reply className="w-[25px] h-[25px]" />
+          {isReply ? (
+            <Reply className="w-[25px] h-[25px]" />
+          ) : (
+            <Forward className="w-[25px] h-[25px]" />
+          )}
         </span>
       )}
       {attachments?.length && (
@@ -103,12 +116,15 @@ export default function RepliedMessage({
         <p
           className={`${userNameColor} !font-normal overflow-hidden text-ellipsis whitespace-nowrap`}
         >
-          {isPreview && "Reply to "} {getUserFullName(participants[senderId])}
+          {isPreview && isReply ? "Reply to " : ""}
+          {getUserFullName(participants[senderId])}
         </p>
         <p
           className={`${bodyColor} overflow-hidden text-ellipsis whitespace-nowrap`}
         >
-          {body}
+          {isReply || messages?.length < 2
+            ? body
+            : messages?.length + " forwarded messages"}
         </p>
       </div>
       {onCloseFunc && (

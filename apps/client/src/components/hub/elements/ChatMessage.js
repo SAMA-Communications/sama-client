@@ -7,11 +7,11 @@ import { urlify, hardUrlify } from "@services/tools/urlMetaService";
 import { messageObserver as observer } from "@services/tools/visibilityObserver.js";
 import draftService from "@services/tools/draftService.js";
 
+import AdditionalMessages from "./AdditionalMessages.js";
 import MediaAttachments from "@components/message/elements/MediaAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
 import MessageLinkPreview from "@components/hub/elements/MessageLinkPreview.js";
-import RepliedMessage from "./RepliedMessage.js";
 
 import { addExternalProps } from "@store/values/ContextMenu.js";
 import { setAllParams } from "@store/values/ContextMenu.js";
@@ -22,6 +22,8 @@ import globalConstants from "@utils/global/constants.js";
 
 import CornerLight from "@icons/_helpers/CornerLight.svg?react";
 import CornerAccent from "@icons/_helpers/CornerAccent.svg?react";
+import ForwardWhite from "@icons/context/ForwardWhiteBold.svg?react";
+import ForwardAccent from "@icons/context/ForwardAccentBold.svg?react";
 
 export default function ChatMessage({
   sender,
@@ -40,6 +42,7 @@ export default function ChatMessage({
   const { _id, old_id, body, from, attachments, status, t, url_preview } =
     message;
   const isCurrentUser = from === currentUserId;
+  const isForwardMessage = !!message.forwarded_message_id;
 
   const timeSend = useMemo(() => {
     const time = new Date(t * 1000);
@@ -48,8 +51,8 @@ export default function ChatMessage({
     }`;
   }, [t]);
 
-  const openUserProfile = () =>
-    sender ? addSuffix(pathname + hash, `/user?uid=${from}`) : {};
+  const openUserProfile = (uid) =>
+    sender ? addSuffix(pathname + hash, `/user?uid=${uid}`) : {};
 
   const linkColor = isCurrentUser ? "white" : "black";
 
@@ -127,7 +130,7 @@ export default function ChatMessage({
             className={`w-[46px] h-[46px] uppercase text-black rounded-[16px] bg-(--color-hover-light) flex items-center justify-center ${
               isCurrentUser ? "!text-white !bg-(--color-accent-dark)" : ""
             } overflow-hidden`}
-            onClick={openUserProfile}
+            onClick={() => openUserProfile(from)}
           >
             <MessageUserIcon
               userObject={sender}
@@ -147,22 +150,39 @@ export default function ChatMessage({
         ) : (
           <CornerLight className="absolute -left-[16px] bottom-[0px]" />
         )}
-        {prev ? null : (
+        {prev || isForwardMessage ? null : (
           <div
             className={`text-(--color-accent-dark) !font-medium ${
               sender ? "cursor-pointer" : ""
             } ${isCurrentUser ? "!text-white" : ""}`}
-            onClick={openUserProfile}
+            onClick={() => openUserProfile(from)}
           >
             &zwnj;{getUserFullName(sender) || "Deleted account"}
           </div>
         )}
         {repliedMessage && (
-          <RepliedMessage
+          <AdditionalMessages
+            type={"reply"}
             message={repliedMessage}
             onClickFunc={onReplyClickFunc}
             color={isCurrentUser ? "accent" : "light"}
           />
+        )}
+        {isForwardMessage && (
+          <div className="flex flex-row gap-[7px] items-center flex-nowrap">
+            {isCurrentUser ? (
+              <ForwardWhite className="w-[18px] h-[12px]" />
+            ) : (
+              <ForwardAccent className="w-[18px] h-[12px]" />
+            )}
+            <p
+              className={`!font-medium ${
+                isCurrentUser ? "text-white" : "text-accent-dark"
+              }`}
+            >
+              Forwarded
+            </p>
+          </div>
         )}
         <div
           className={`flex flex-wrap items-end gap-y-[8px] gap-x-[15px] ${

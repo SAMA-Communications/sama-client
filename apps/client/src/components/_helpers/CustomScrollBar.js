@@ -32,7 +32,9 @@ export default function CustomScrollBar({
       autoHeight={autoHeight}
       autoHeightMax={autoHeightMax}
       style={customStyle}
-      onScrollStop={() => onScrollStop(scrollableContainer)}
+      onScrollStop={
+        onScrollStop ? () => onScrollStop(scrollableContainer) : null
+      }
       renderView={(props) => (
         <div {...props} className={childrenClassName} id={customId} />
       )}

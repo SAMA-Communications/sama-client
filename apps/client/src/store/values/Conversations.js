@@ -171,6 +171,23 @@ export const conversations = createSlice({
 
       conversationsAdapter.upsertOne(state, updateParams);
     },
+    removeDraftField: (state, action) => {
+      const { cid, fields } = action.payload;
+      const conv = state.entities[cid];
+
+      if (!conv || !conv.draft) return;
+
+      const updatedDraft = { ...conv.draft };
+      if (Array.isArray(fields)) {
+        fields.forEach((field) => delete updatedDraft[field]);
+      }
+
+      const updateParams = {
+        _id: cid,
+        draft: Object.keys(updatedDraft).length ? updatedDraft : null,
+      };
+      conversationsAdapter.upsertOne(state, updateParams);
+    },
 
     removeLastMessage: (state, { payload }) => {
       const { cid } = payload;
@@ -264,6 +281,7 @@ export const {
   markConversationAsRead,
   removeChat,
   removeLastMessage,
+  removeDraftField,
   setChats,
   setLastMessageField,
   updateChatIndicator,

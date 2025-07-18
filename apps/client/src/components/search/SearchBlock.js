@@ -20,15 +20,18 @@ export default function SearchBlock({
   removeUserFromArray,
   isMaxLimit,
   customClassName = "",
-  isClickDisabledFunc = () => false,
+  additionalOnClickfunc,
   isSelectUserToArray = false,
   isClearInputText = false,
   isPreviewUserProfile = false,
   isSearchOnlyUsers = false,
+  isShowDefaultConvs = false,
+  isClickDisabledFunc = () => false,
 }) {
   const conversations = useSelector(selectConversationsEntities);
 
   const [isPending, startTransition] = useTransition();
+  const [defaultChats, setDefaultChats] = useState([]);
   const [searchedUsers, setSearchedUsers] = useState([]);
   const [searchedChats, setSearchedChats] = useState([]);
   const [isUserSearched, setIsUserSearched] = useState(null);
@@ -42,6 +45,11 @@ export default function SearchBlock({
     const debounce = setTimeout(() => sendSearchRequest(searchText), 300);
     return () => clearTimeout(debounce);
   }, [searchText]);
+
+  useEffect(() => {
+    if (!isShowDefaultConvs) return;
+    setDefaultChats(Object.values(conversations).slice(0, 20));
+  }, [isShowDefaultConvs]);
 
   const sendSearchRequest = async (text) => {
     startTransition(async () => {
@@ -98,57 +106,69 @@ export default function SearchBlock({
     >
       <CustomScrollBar
         customClassName="w-[400px] max-xl:!w-full"
-        childrenClassName="flex flex-col gap-[5px]"
+        childrenClassName="flex flex-col gap-[5px] !overflow-x-hidden"
       >
-        {isSearchOnlyUsers ? null : (
-          <div className="py-[6px] px-[18px] my-[3px] text-black text-p rounded-[8px] bg-(--color-hover-light)">
-            Users
-          </div>
-        )}
-        {isUserSearched ? (
-          <m.p
-            className="text-h6 text-(--color-text-dark) text-center"
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: 1,
-              transition: { dealy: 0.4, duration: 0.2 },
-            }}
-            exit={{ opacity: 0 }}
-          >
-            {isUserSearched}
-          </m.p>
-        ) : null}
-        <AnimatePresence>
-          {searchedUsers.map((u, index) => {
-            const isSelected = selectedUsers?.some(
-              (uObj) => uObj._id === u._id
-            );
-            const isClickDisabled = isMaxLimit
-              ? isClickDisabledFunc(u) || !isSelected
-              : isClickDisabledFunc(u) && isSelected;
-
-            return (
-              <SearchedUser
-                key={u._id}
-                index={index}
-                uObject={u}
-                isSelected={isSelected}
-                isClickDisabled={isClickDisabled}
-                clearInputText={clearInputText}
-                addUserToArray={addUserToArray}
-                removeUserFromArray={removeUserFromArray}
-                isClearInputText={isClearInputText}
-                isSelectUserToArray={isSelectUserToArray}
-                isPreviewUserProfile={isPreviewUserProfile}
-              />
-            );
-          })}
-        </AnimatePresence>
-        {isSearchOnlyUsers ? null : (
+        {isShowDefaultConvs && !searchText?.length ? (
           <ChatList
-            conversations={searchedChats}
-            isChatSearched={isChatSearched}
+            conversations={defaultChats}
+            isShowTitle={false}
+            additionalOnClickfunc={additionalOnClickfunc}
           />
+        ) : (
+          <>
+            {isSearchOnlyUsers ? null : (
+              <div className="py-[6px] px-[18px] my-[3px] text-black text-p rounded-[8px] bg-(--color-hover-light)">
+                Users
+              </div>
+            )}
+            {isUserSearched ? (
+              <m.p
+                className="text-h6 text-(--color-text-dark) text-center"
+                initial={{ opacity: 0 }}
+                animate={{
+                  opacity: 1,
+                  transition: { dealy: 0.4, duration: 0.2 },
+                }}
+                exit={{ opacity: 0 }}
+              >
+                {isUserSearched}
+              </m.p>
+            ) : null}
+            <AnimatePresence>
+              {searchedUsers.map((u, index) => {
+                const isSelected = selectedUsers?.some(
+                  (uObj) => uObj._id === u._id
+                );
+                const isClickDisabled = isMaxLimit
+                  ? isClickDisabledFunc(u) || !isSelected
+                  : isClickDisabledFunc(u) && isSelected;
+
+                return (
+                  <SearchedUser
+                    key={u._id}
+                    index={index}
+                    uObject={u}
+                    isSelected={isSelected}
+                    isClickDisabled={isClickDisabled}
+                    clearInputText={clearInputText}
+                    addUserToArray={addUserToArray}
+                    removeUserFromArray={removeUserFromArray}
+                    isClearInputText={isClearInputText}
+                    isSelectUserToArray={isSelectUserToArray}
+                    isPreviewUserProfile={isPreviewUserProfile}
+                    additionalOnClickfunc={additionalOnClickfunc}
+                  />
+                );
+              })}
+            </AnimatePresence>
+            {isSearchOnlyUsers ? null : (
+              <ChatList
+                conversations={searchedChats}
+                isChatSearched={isChatSearched}
+                additionalOnClickfunc={additionalOnClickfunc}
+              />
+            )}
+          </>
         )}
       </CustomScrollBar>
     </m.div>

@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useLocation } from "react-router";
 
 import draftService from "@services/tools/draftService.js";
 
@@ -9,6 +10,8 @@ import { addExternalProps } from "@store/values/ContextMenu.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
 import { selectContextExternalProps } from "@store/values/ContextMenu.js";
 
+import addSuffix from "@utils/navigation/add_suffix.js";
+
 import Reply from "@icons/context/Reply.svg?react";
 import Copy from "@icons/context/Copy.svg?react";
 import Forward from "@icons/context/Forward.svg?react";
@@ -17,6 +20,7 @@ import Download from "@icons/context/Download.svg?react";
 
 export default function MessageActions({ listOfIds }) {
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const selectedCID = useSelector(getSelectedConversationId);
 
@@ -98,7 +102,12 @@ export default function MessageActions({ listOfIds }) {
         key={"messageForward"}
         text="Forward"
         icon={<Forward />}
-        onClick={() => {}}
+        onClick={() => {
+          addSuffix(
+            location.pathname + location.hash,
+            `/forward?mids=[${message._id}]`
+          );
+        }}
       />
     ),
     messageSelect: (
