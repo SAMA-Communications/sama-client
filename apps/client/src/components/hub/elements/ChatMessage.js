@@ -116,6 +116,19 @@ export default function ChatMessage({
     return () => observer.unobserve(el);
   }, [_id, onViewFunc]);
 
+  const longPressTimeout = useRef(null);
+  const longPressTriggered = useRef(false);
+
+  const handlePointerUp = () => clearTimeout(longPressTimeout.current);
+  const handleClick = (e) => longPressTriggered.current && e.stopPropagation();
+  const handlePointerDown = (e) => {
+    longPressTriggered.current = false;
+    longPressTimeout.current = setTimeout(() => {
+      longPressTriggered.current = true;
+      openContextMenu(e);
+    }, 350);
+  };
+
   return (
     <div
       className="w-full flex flex-row justify-between items-end gap-[7px] flex-nowrap"
