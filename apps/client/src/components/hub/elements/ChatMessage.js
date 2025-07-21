@@ -20,8 +20,10 @@ import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
 import globalConstants from "@utils/global/constants.js";
 
+import Selected from "@icons/status/Selected.svg?react";
 import CornerLight from "@icons/_helpers/CornerLight.svg?react";
 import CornerAccent from "@icons/_helpers/CornerAccent.svg?react";
+import CornerSelected from "@icons/_helpers/CornerSelected.svg?react";
 import ForwardWhite from "@icons/context/ForwardWhiteBold.svg?react";
 import ForwardAccent from "@icons/context/ForwardAccentBold.svg?react";
 
@@ -31,7 +33,11 @@ export default function ChatMessage({
   repliedMessage,
   currentUserId,
   onViewFunc,
+  onSelectClick = () => {},
+  onUnselectClick = () => {},
   onReplyClickFunc,
+  isSelected,
+  isSelectionMode = false,
   isPrevMesssageYours: prev,
   isNextMessageYours: next,
 }) {
@@ -88,6 +94,20 @@ export default function ChatMessage({
     );
   };
 
+  const openSelectionContextMenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(
+      setAllParams({
+        category: "message",
+        list: ["messageSelect"],
+        coords: { x: e.pageX, y: e.pageY },
+        clicked: true,
+        externalProps: { message },
+      })
+    );
+  };
+
   useEffect(() => {
     const el = messageRef.current;
     if (!el || !observer || !onViewFunc) return;
@@ -97,161 +117,196 @@ export default function ChatMessage({
   }, [_id, onViewFunc]);
 
   return (
-    <m.div
-      ref={messageRef}
-      key={old_id || _id}
-      data-message-id={_id}
-      className={`relative ${width} flex flex-row gap-[16px] ${
-        prev ? "" : "mt-[8px]"
-      }`}
-      drag="x"
-      dragDirectionLock
-      dragConstraints={{ left: 0, right: 0 }}
-      onDragEnd={(e, info) => {
-        if (info.offset.x < -globalConstants.swipeThreshold) {
-          dispatch(
-            addExternalProps({ [message.cid]: { draft_replied_mid: _id } })
-          );
-          draftService.saveDraft(message.cid, { replied_mid: _id });
-        }
-      }}
-      whileDrag={{ scale: 0.9 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      initial={{ opacity: 0, x: -7 }}
-      transition={{ duration: 0.3, delay: 0.03 }}
+    <div
+      className="w-full flex flex-row justify-between items-end gap-[7px] flex-nowrap"
+      onClick={
+        isSelectionMode
+          ? isSelected
+            ? () => onUnselectClick(_id)
+            : () => onSelectClick(_id)
+          : null
+      }
+      onContextMenu={openSelectionContextMenu}
     >
-      <div
-        className={`min-w-[46px] flex items-end ${
-          sender ? "cursor-pointer" : ""
+      <m.div
+        ref={messageRef}
+        key={old_id || _id}
+        data-message-id={_id}
+        className={`relative ${width} flex flex-row gap-[16px] ${
+          prev ? "" : "mt-[8px]"
         }`}
+        drag="x"
+        dragDirectionLock
+        dragConstraints={{ left: 0, right: 0 }}
+        onDragEnd={(e, info) => {
+          if (info.offset.x < -globalConstants.swipeThreshold) {
+            dispatch(
+              addExternalProps({ [message.cid]: { draft_replied_mid: _id } })
+            );
+            draftService.saveDraft(message.cid, { replied_mid: _id });
+          }
+        }}
+        whileDrag={{ scale: 0.9 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, x: -7 }}
+        transition={{ duration: 0.3, delay: 0.03 }}
       >
-        {next ? null : (
-          <div
-            className={`w-[46px] h-[46px] uppercase text-black rounded-[16px] bg-(--color-hover-light) flex items-center justify-center ${
-              isCurrentUser ? "!text-white !bg-(--color-accent-dark)" : ""
-            } overflow-hidden`}
-            onClick={() => openUserProfile(from)}
-          >
-            <MessageUserIcon
-              userObject={sender}
-              isCurrentUser={isCurrentUser}
-            />
-          </div>
-        )}
-      </div>
-      <div
-        className={`relative max-w-full w-fit min-h-[46px] p-[15px] flex flex-col gap-[5px] rounded-[16px] bg-(--color-hover-light) ${
-          next ? "" : "rounded-bl-none"
-        } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""}`}
-        onContextMenu={(e) => openContextMenu(e, "Text")}
-      >
-        {next ? null : isCurrentUser ? (
-          <CornerAccent className="absolute -left-[16px] bottom-[0px]" />
-        ) : (
-          <CornerLight className="absolute -left-[16px] bottom-[0px]" />
-        )}
-        {prev || isForwardMessage ? null : (
-          <div
-            className={`text-(--color-accent-dark) !font-medium ${
-              sender ? "cursor-pointer" : ""
-            } ${isCurrentUser ? "!text-white" : ""}`}
-            onClick={() => openUserProfile(from)}
-          >
-            &zwnj;{getUserFullName(sender) || "Deleted account"}
-          </div>
-        )}
-        {repliedMessage && (
-          <AdditionalMessages
-            type={"reply"}
-            message={repliedMessage}
-            onClickFunc={onReplyClickFunc}
-            color={isCurrentUser ? "accent" : "light"}
-          />
-        )}
-        {isForwardMessage && (
-          <div className="flex flex-row gap-[7px] items-center flex-nowrap">
-            {isCurrentUser ? (
-              <ForwardWhite className="w-[18px] h-[12px]" />
-            ) : (
-              <ForwardAccent className="w-[18px] h-[12px]" />
-            )}
-            <p
-              className={`!font-medium ${
-                isCurrentUser ? "text-white" : "text-accent-dark"
-              }`}
-            >
-              Forwarded
-            </p>
-          </div>
-        )}
         <div
-          className={`flex flex-wrap items-end gap-y-[8px] gap-x-[15px] ${
-            attachments?.length ? "w-auto !flex-col items-start" : ""
-          } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""} ${
-            url_preview ? "flex-col" : "flex-row"
+          className={`min-w-[46px] flex items-end ${
+            sender ? "cursor-pointer" : ""
           }`}
         >
-          {attachments?.length ? (
-            <MediaAttachments
-              onContextMenu={(e, att) => {
-                openContextMenu(e, "Attachment", { attachment: att });
-              }}
-              attachments={attachments}
-              mid={message._id}
+          {next ? null : (
+            <div
+              className={`w-[46px] h-[46px] uppercase text-black rounded-[16px] bg-(--color-hover-light) flex items-center justify-center ${
+                isCurrentUser ? "!text-white !bg-(--color-accent-dark)" : ""
+              } ${
+                isSelected ? "!bg-(--color-accent-dark)/45" : ""
+              } overflow-hidden`}
+              onClick={() => openUserProfile(from)}
+            >
+              <MessageUserIcon
+                userObject={sender}
+                isCurrentUser={isCurrentUser}
+              />
+            </div>
+          )}
+        </div>
+        <div
+          className={`relative max-w-full w-fit min-h-[46px] p-[15px] flex flex-col gap-[5px] rounded-[16px] bg-(--color-hover-light) ${
+            next ? "" : "rounded-bl-none"
+          } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""} ${
+            isSelected ? "!bg-(--color-accent-dark)/50" : ""
+          }`}
+          onContextMenu={
+            isSelectionMode
+              ? openSelectionContextMenu
+              : (e) => openContextMenu(e, "Text")
+          }
+        >
+          {next ? null : isSelected ? (
+            <CornerSelected className="absolute -left-[16px] bottom-[0px]" />
+          ) : isCurrentUser ? (
+            <CornerAccent className="absolute -left-[16px] bottom-[0px]" />
+          ) : (
+            <CornerLight className="absolute -left-[16px] bottom-[0px]" />
+          )}
+          {prev || isForwardMessage ? null : (
+            <div
+              className={`text-(--color-accent-dark) !font-medium ${
+                sender ? "cursor-pointer" : ""
+              } ${isCurrentUser ? "!text-white" : ""}`}
+              onClick={() => openUserProfile(from)}
+            >
+              &zwnj;{getUserFullName(sender) || "Deleted account"}
+            </div>
+          )}
+          {repliedMessage && (
+            <AdditionalMessages
+              type={"reply"}
+              message={repliedMessage}
+              onClickFunc={onReplyClickFunc}
+              color={isCurrentUser ? "accent" : "light"}
             />
-          ) : null}
-          {body ? (
-            <div
-              className={`max-w-full whitespace-pre-wrap text-black wrap-break-word ${
-                isCurrentUser ? "!text-white" : ""
-              }`}
-              style={{ wordBreak: "break-word", inlineSize: "auto" }}
-            >
-              <p>{urlify(_id, body, linkColor, !url_preview)}</p>
-              {!attachments?.length && (
-                <MessageLinkPreview
-                  urlData={url_preview}
-                  color={linkColor}
-                  refreshFunc={refreshLinkPreview}
-                />
+          )}
+          {isForwardMessage && (
+            <div className="flex flex-row gap-[7px] items-center flex-nowrap">
+              {isCurrentUser ? (
+                <ForwardWhite className="w-[18px] h-[12px]" />
+              ) : (
+                <ForwardAccent className="w-[18px] h-[12px]" />
               )}
-            </div>
-          ) : null}
-          <div
-            className={`relative grow justify-end self-end ${
-              attachments?.length && !body
-                ? "!absolute bottom-[16px] right-[16px] p-[8px] rounded-lg bg-(--color-black-50) self-end"
-                : ""
-            } flex items-center justify-center ${
-              isCurrentUser ? "pr-[28px]" : ""
-            }`}
-          >
-            <div
-              className={`text-(--color-text-dark) text-span ${
-                (attachments?.length && !body) || isCurrentUser
-                  ? "text-white"
-                  : ""
-              }`}
-            >
-              {timeSend}
-            </div>
-            {isCurrentUser ? (
-              <div
-                className={`absolute right-[3px] flex ${
-                  attachments?.length && !body
-                    ? "bottom-[5px]"
-                    : "-bottom-[3px]"
+              <p
+                className={`!font-medium ${
+                  isCurrentUser ? "text-white" : "text-accent-dark"
                 }`}
               >
-                <MessageStatus
-                  status={status}
-                  type={isCurrentUser ? "white" : "accent"}
-                />
+                Forwarded
+              </p>
+            </div>
+          )}
+          <div
+            className={`flex flex-wrap items-end gap-y-[8px] gap-x-[15px] ${
+              attachments?.length ? "w-auto !flex-col items-start" : ""
+            }  ${url_preview ? "flex-col" : "flex-row"}`}
+          >
+            {attachments?.length ? (
+              <MediaAttachments
+                onContextMenu={
+                  isSelectionMode
+                    ? openSelectionContextMenu
+                    : (e, att) => {
+                        openContextMenu(e, "Attachment", { attachment: att });
+                      }
+                }
+                attachments={attachments}
+                mid={message._id}
+              />
+            ) : null}
+            {body ? (
+              <div
+                className={`max-w-full whitespace-pre-wrap text-black wrap-break-word ${
+                  isCurrentUser ? "!text-white" : ""
+                }`}
+                style={{ wordBreak: "break-word", inlineSize: "auto" }}
+              >
+                <p>{urlify(_id, body, linkColor, !url_preview)}</p>
+                {!attachments?.length && (
+                  <MessageLinkPreview
+                    urlData={url_preview}
+                    color={linkColor}
+                    refreshFunc={refreshLinkPreview}
+                  />
+                )}
               </div>
             ) : null}
+            <div
+              className={`relative grow justify-end self-end ${
+                attachments?.length && !body
+                  ? "!absolute bottom-[16px] right-[16px] p-[8px] rounded-lg bg-(--color-black-50) self-end"
+                  : ""
+              } flex items-center justify-center ${
+                isCurrentUser ? "pr-[28px]" : ""
+              }`}
+            >
+              <div
+                className={`text-(--color-text-dark) text-span ${
+                  (attachments?.length && !body) || isCurrentUser
+                    ? "text-white"
+                    : ""
+                }`}
+              >
+                {timeSend}
+              </div>
+              {isCurrentUser ? (
+                <div
+                  className={`absolute right-[3px] flex ${
+                    attachments?.length && !body
+                      ? "bottom-[5px]"
+                      : "-bottom-[3px]"
+                  }`}
+                >
+                  <MessageStatus
+                    status={status}
+                    type={isCurrentUser ? "white" : "accent"}
+                  />
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
-      </div>
-    </m.div>
+      </m.div>
+      {isSelectionMode && (
+        <div className="flex mr-[calc(100%-min(80%,680px))]">
+          {isSelected ? (
+            <span className="w-[22px] h-[22px] bg-accent-dark/70 rounded-full flex items-center justify-center">
+              <Selected className="w-[14px] h-[14px]" />
+            </span>
+          ) : (
+            <span className="w-[22px] h-[22px] border-black/50 border-[1px] border-solid rounded-full"></span>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

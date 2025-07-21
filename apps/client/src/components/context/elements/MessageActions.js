@@ -11,6 +11,7 @@ import { getSelectedConversationId } from "@store/values/SelectedConversation.js
 import { selectContextExternalProps } from "@store/values/ContextMenu.js";
 
 import addSuffix from "@utils/navigation/add_suffix.js";
+import upsertMidsInPath from "@utils/navigation/upasert_mids_in_path.js";
 
 import Reply from "@icons/context/Reply.svg?react";
 import Copy from "@icons/context/Copy.svg?react";
@@ -115,7 +116,13 @@ export default function MessageActions({ listOfIds }) {
         key={"messageSelect"}
         text="Select"
         icon={<Select />}
-        onClick={() => {}}
+        onClick={() => {
+          const isSelected = location.hash.includes("selection");
+          const currentPath = location.pathname + location.hash;
+          isSelected
+            ? upsertMidsInPath(currentPath, [message._id], "add")
+            : addSuffix(currentPath, `/selection?mids=[${message._id}]`);
+        }}
       />
     ),
   };

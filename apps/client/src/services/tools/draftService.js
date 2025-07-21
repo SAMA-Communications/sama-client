@@ -34,7 +34,6 @@ class DraftService {
 
   removeDraft(cid) {
     const draftKey = this.#getDraftKey(cid);
-    if (!localStorage.getItem(draftKey)) return;
     localStorage.removeItem(draftKey);
     store.dispatch(updateWithDrafts({ cid, isRemove: true }));
   }
