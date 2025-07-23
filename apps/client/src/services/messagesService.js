@@ -239,7 +239,7 @@ class MessagesService {
     if (!newMessages.length) return {};
 
     const convId = newMessages[0].cid;
-    const conversation = store.getState().conversations.entities[convId];
+    const conversation = store.getState().conversations.entities?.[convId];
 
     const { anchor_mid, position } = additionalOptions;
 
