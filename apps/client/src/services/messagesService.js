@@ -192,8 +192,6 @@ class MessagesService {
           );
       }
     } catch (err) {
-      console.log(err);
-
       store.dispatch(removeChat(cid));
       store.dispatch(setSelectedConversation({}));
       navigateTo("/");
