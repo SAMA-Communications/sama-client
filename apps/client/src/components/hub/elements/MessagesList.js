@@ -327,7 +327,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
   }, [isScrolling, messages, messagesFetchFunc]);
 
   return (
-    <div className="relative flex flex-grow overflow-hidden">
+    <div className="relative pb-[10px] flex flex-grow overflow-hidden">
       <div
         className="flex flex-col flex-grow justify-end overflow-auto"
         id="chatMessagesScrollable"
