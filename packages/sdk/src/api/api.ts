@@ -277,7 +277,7 @@ class SAMAClient {
     return this.sendRequest("get_file_urls", { file_ids: data.file_ids }, "file_urls");
   }
 
-  async messageCreate(data: { mid: string; body: string; cid: string; attachments?: any[] }): Promise<IMessage> {
+  async messageCreate(data: { mid: string; body: string; cid: string; attachments?: any[], replied_message_id: string }): Promise<IMessage> {
     return new Promise((resolve, reject) => {
       const requestData = {
         message: {
@@ -285,6 +285,7 @@ class SAMAClient {
           body: data.body,
           cid: data.cid,
           attachments: data.attachments,
+          replied_message_id: data.replied_message_id
         },
       };
       this.responsesPromises[requestData.message.id] = { resolve, reject };
@@ -293,9 +294,10 @@ class SAMAClient {
     });
   }
 
-  async messageList(data: { cid: string; limit?: number; updated_at?: string }): Promise<IMessage[]> {
+  async messageList(data: { cid: string; ids?: string[]; limit?: number; updated_at?: string }): Promise<IMessage[]> {
     const messageParams = {
       cid: data.cid,
+      ...(data.ids && { ids: data.ids }),
       ...(data.limit && { limit: data.limit }),
       ...(data.updated_at && { updated_at: data.updated_at }),
     };

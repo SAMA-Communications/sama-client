@@ -98,7 +98,7 @@ export default function SearchBlock({
     >
       <CustomScrollBar
         customClassName="w-[400px] max-xl:!w-full"
-        childrenClassName="flex flex-col gap-[5px]"
+        childrenClassName="flex flex-col gap-[5px] !overflow-x-hidden"
       >
         {isSearchOnlyUsers ? null : (
           <div className="py-[6px] px-[18px] my-[3px] text-black text-p rounded-[8px] bg-(--color-hover-light)">

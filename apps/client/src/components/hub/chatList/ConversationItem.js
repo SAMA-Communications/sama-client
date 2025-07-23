@@ -6,13 +6,14 @@ import LastMessage from "@components/message/LastMessage";
 import TypingLine from "@components/_helpers/TypingLine";
 import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 
-import draftService from "@services/draftService.js";
+import draftService from "@services/tools/draftService.js";
 
 import { updateWithDrafts } from "@store/values/Conversations.js";
 
 import getLastUpdateTime from "@utils/conversation/get_last_update_time";
 
 import Group from "@icons/users/Group.svg?react";
+import GroupMini from "@icons/users/GroupMini.svg?react";
 import UnknownPhoto from "@icons/users/UnknownPhoto.svg?react";
 
 export default function ConversationItem({
@@ -37,15 +38,14 @@ export default function ConversationItem({
 
   const dispatch = useDispatch();
 
-  const draftMessage = useMemo(() => {
-    if (isSelected && !draft) return null;
-    return draftService.getDraftMessage(cid);
-  }, [isSelected, draft]);
+  const isGroup = type === "g";
+
+  const draftParams = isSelected ? null : draft;
 
   useEffect(() => {
     const draftParams = draftService.getDraft(cid);
-    const { message, updated_at: draftUpdatedAt } = draftParams;
-    if (!message) return;
+    const { text, replied_mid, updated_at: draftUpdatedAt } = draftParams;
+    if (!text && !replied_mid) return;
     if (!draft) {
       dispatch(updateWithDrafts({ cid, draft: draftParams }));
       return;
@@ -78,7 +78,7 @@ export default function ConversationItem({
           avatarUrl={chatAvatarUrl}
           avatarBlurHash={chatAvatarBlutHash}
           defaultIcon={
-            type === "g" ? (
+            isGroup ? (
               <Group />
             ) : chatName ? (
               chatName.slice(0, 2).toUpperCase()
@@ -86,26 +86,24 @@ export default function ConversationItem({
               <UnknownPhoto />
             )
           }
-          altText={type === "g" ? "Chat Group" : "User's Profile"}
+          altText={isGroup ? "Chat Group" : "User's Profile"}
         />
       </div>
       <div className="max-w-[calc(100%-90px)] max-h-[70px] flex-1 flex gap-[7px] flex-col overflow-hidden">
         <div className="flex gap-[12px] items-center justify-between">
-          <p className="!font-medium text-black text-h6 overflow-hidden text-ellipsis whitespace-nowrap no-underline">
-            &zwnj;{chatName || "Deleted account"}
+          <p className="!font-medium flex flex-nowrap items-center gap-[7px] text-black text-h6 overflow-hidden text-ellipsis whitespace-nowrap no-underline">
+            &zwnj;{isGroup && <GroupMini className="-ml-[7px]" />}
+            {chatName || "Deleted account"}
           </p>
           <div className="!font-light text-(--color-text-light)">{tView}</div>
         </div>
         <div className="flex gap-[12px] items-center justify-between h-[32px]">
           {typing_users?.length && !isSelected ? (
-            <TypingLine
-              userIds={typing_users}
-              displayUserNames={type === "g"}
-            />
+            <TypingLine userIds={typing_users} displayUserNames={isGroup} />
           ) : (
             <LastMessage
               message={last_message}
-              draft={draftMessage}
+              draft={draftParams}
               viewName={lastMessageUserName}
               count={unread_messages_count}
               userId={currentUserId}

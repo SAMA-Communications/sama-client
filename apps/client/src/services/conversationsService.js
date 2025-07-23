@@ -3,7 +3,7 @@ import api from "@api/api";
 import eventEmitter from "@lib/eventEmitter";
 import DownloadManager from "@lib/downloadManager";
 
-import draftService from "./draftService.js";
+import draftService from "./tools/draftService.js";
 
 import store from "@store/store";
 import { addUsers, upsertUsers } from "@store/values/Participants";
@@ -28,7 +28,7 @@ import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
 import { history } from "@utils/global/history";
 
-import { notificationQueueByCid } from "@services/notifications";
+import { notificationQueueByCid } from "@services/tools/notifications";
 
 import validateFieldLength from "@validations/validateFieldLength";
 

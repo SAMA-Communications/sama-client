@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import draftService from "@services/draftService.js";
+import draftService from "@services/tools/draftService.js";
 import messagesService from "@services/messagesService";
 
 import MessageInput from "@components/hub/elements/MessageInput";
@@ -18,6 +18,10 @@ import {
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
+import {
+  addExternalProps,
+  selectContextExternalProps,
+} from "@store/values/ContextMenu.js";
 import { getNetworkState } from "@store/values/NetworkState";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
@@ -27,7 +31,7 @@ import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import calcInputHeight from "@utils/text/calc_input_height.js";
 
-export default function ChatFormInputs({ chatMessagesBlockRef }) {
+export default function ChatFormInput({ chatMessagesBlockRef }) {
   const dispatch = useDispatch();
 
   const connectState = useSelector(getNetworkState);
@@ -36,6 +40,7 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
+  const draftExtenralProps = useSelector(selectContextExternalProps);
 
   const inputRef = useRef(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
@@ -70,10 +75,19 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
       t: Date.now(),
     };
 
+    const repliedMid = draftExtenralProps[selectedCID]?.draft_replied_mid;
+    repliedMid && (msg["replied_message_id"] = repliedMid);
+
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
 
-    const mObject = { mid, body, cid: selectedCID, from: currentUserId };
+    const mObject = {
+      mid,
+      body,
+      cid: selectedCID,
+      from: currentUserId,
+      replied_message_id: repliedMid,
+    };
     inputRef.current.focus(); //care..
 
     try {
@@ -104,9 +118,11 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
 
     setIsSendMessageDisable(false);
     draftService.removeDraft(selectedCID);
-    chatMessagesBlockRef.current?._infScroll?.scrollIntoView({ block: "end" });
+    dispatch(addExternalProps({ [selectedCID]: {} }));
+    chatMessagesBlockRef.current.scrollTop =
+      chatMessagesBlockRef.current.scrollHeight;
     // inputRef.current.focus(); //care..
-    window.scrollTo(0, document.body.scrollHeight - 200);
+    // window.scrollTo(0, document.body.scrollHeight - 200);
     inputRef.current.style.height = `55px`;
   };
 
@@ -117,6 +133,11 @@ export default function ChatFormInputs({ chatMessagesBlockRef }) {
       inputRef.current.style.height = `${calcInputHeight(draftText)}px`;
     }
   }, [selectedCID]);
+
+  useEffect(() => {
+    draftExtenralProps[selectedCID]?.draft_replied_mid &&
+      inputRef.current.focus();
+  }, [draftExtenralProps]);
 
   const isBlockedConv = useMemo(() => {
     const { type, owner_id, opponent_id } = selectedConversation;

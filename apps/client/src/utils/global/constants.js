@@ -1,6 +1,7 @@
 const globalConstants = {
   typingDurationMs: 6000,
   maxTtoasts: 3,
+  swipeThreshold: 90,
   dayInMs: 86400000,
   //   monthInMs: 2629743830,
   yearInMs: 31556926000,

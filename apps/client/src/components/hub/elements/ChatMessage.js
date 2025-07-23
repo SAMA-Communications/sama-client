@@ -1,16 +1,24 @@
 import * as m from "motion/react-m";
+import { useEffect, useMemo, useRef } from "react";
 import { useLocation } from "react-router";
-import { useMemo } from "react";
+import { useDispatch } from "react-redux";
 
-import { urlify, hardUrlify } from "@services/urlMetaService";
+import { urlify, hardUrlify } from "@services/tools/urlMetaService";
+import { messageObserver as observer } from "@services/tools/visibilityObserver.js";
+import draftService from "@services/tools/draftService.js";
 
 import MediaAttachments from "@components/message/elements/MediaAttachments";
 import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
 import MessageLinkPreview from "@components/hub/elements/MessageLinkPreview.js";
+import RepliedMessage from "./RepliedMessage.js";
+
+import { addExternalProps } from "@store/values/ContextMenu.js";
+import { setAllParams } from "@store/values/ContextMenu.js";
 
 import addSuffix from "@utils/navigation/add_suffix";
 import getUserFullName from "@utils/user/get_user_full_name";
+import globalConstants from "@utils/global/constants.js";
 
 import CornerLight from "@icons/_helpers/CornerLight.svg?react";
 import CornerAccent from "@icons/_helpers/CornerAccent.svg?react";
@@ -18,12 +26,17 @@ import CornerAccent from "@icons/_helpers/CornerAccent.svg?react";
 export default function ChatMessage({
   sender,
   message,
+  repliedMessage,
   currentUserId,
+  onViewFunc,
+  onReplyClickFunc,
   isPrevMesssageYours: prev,
   isNextMessageYours: next,
 }) {
+  const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
+  const messageRef = useRef(null);
   const { _id, old_id, body, from, attachments, status, t, url_preview } =
     message;
   const isCurrentUser = from === currentUserId;
@@ -50,12 +63,61 @@ export default function ChatMessage({
     return "w-max max-2xl:max-w-[min(80%,680px)] 2xl:max-w-[min(60%,680px)]";
   }, [attachments, url_preview]);
 
+  const openContextMenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(
+      setAllParams({
+        category: "message",
+        list: ["messageReply"],
+        coords: { x: e.pageX, y: e.pageY },
+        clicked: true,
+        externalProps: { mid: _id },
+      })
+    );
+  };
+
+  useEffect(() => {
+    const el = messageRef.current;
+    if (!el || !observer || !onViewFunc) return;
+    const handleVisible = () => onViewFunc && onViewFunc();
+    observer.observe(el, handleVisible, true);
+    return () => observer.unobserve(el);
+  }, [_id, onViewFunc]);
+
+  const longPressTimeout = useRef(null);
+  const longPressTriggered = useRef(false);
+
+  const handlePointerUp = () => clearTimeout(longPressTimeout.current);
+  const handleClick = (e) => longPressTriggered.current && e.stopPropagation();
+  const handlePointerDown = (e) => {
+    longPressTriggered.current = false;
+    longPressTimeout.current = setTimeout(() => {
+      longPressTriggered.current = true;
+      openContextMenu(e);
+    }, 350);
+  };
+
   return (
     <m.div
+      ref={messageRef}
       key={old_id || _id}
+      data-message-id={_id}
       className={`relative ${width} flex flex-row gap-[16px] ${
         prev ? "" : "mt-[8px]"
       }`}
+      drag="x"
+      dragDirectionLock
+      dragConstraints={{ left: 0, right: 0 }}
+      onDragEnd={(e, info) => {
+        if (info.offset.x < -globalConstants.swipeThreshold) {
+          dispatch(
+            addExternalProps({ [message.cid]: { draft_replied_mid: _id } })
+          );
+          draftService.saveDraft(message.cid, { replied_mid: _id });
+        }
+      }}
+      whileDrag={{ scale: 0.9 }}
       whileInView={{ opacity: 1, x: 0 }}
       initial={{ opacity: 0, x: -7 }}
       transition={{ duration: 0.3, delay: 0.03 }}
@@ -79,10 +141,16 @@ export default function ChatMessage({
           </div>
         )}
       </div>
-      <div
+      <m.div
         className={`relative max-w-full w-fit min-h-[46px] p-[15px] flex flex-col gap-[5px] rounded-[16px] bg-(--color-hover-light) ${
           next ? "" : "rounded-bl-none"
         } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""}`}
+        whileTap={{ scale: 0.95, transition: { duration: 0.3, delay: 0.05 } }}
+        onClick={handleClick}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+        onContextMenu={openContextMenu}
       >
         {next ? null : isCurrentUser ? (
           <CornerAccent className="absolute -left-[16px] bottom-[0px]" />
@@ -98,6 +166,13 @@ export default function ChatMessage({
           >
             &zwnj;{getUserFullName(sender) || "Deleted account"}
           </div>
+        )}
+        {repliedMessage && (
+          <RepliedMessage
+            message={repliedMessage}
+            onClickFunc={onReplyClickFunc}
+            color={isCurrentUser ? "accent" : "light"}
+          />
         )}
         <div
           className={`flex flex-wrap items-end gap-y-[8px] gap-x-[15px] ${
@@ -160,7 +235,7 @@ export default function ChatMessage({
             ) : null}
           </div>
         </div>
-      </div>
+      </m.div>
     </m.div>
   );
 }

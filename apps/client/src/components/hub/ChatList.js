@@ -76,6 +76,12 @@ export default function ChatList() {
           customId={"conversationItemsScrollable"}
           customClassName="rounded-[8px] max-md:rounded-t-[16px] max-md:rounded-b-[0px] max-xl:rounded-[32px]"
           childrenClassName="flex flex-col gap-[5px] max-md:py-[0px] "
+          onScrollStop={(container) =>
+            localStorage.setItem(
+              `scroll_pos_conversationItemsScrollable`,
+              container.current.view.scrollTop
+            )
+          }
         >
           {chatsList}
         </CustomScrollBar>
