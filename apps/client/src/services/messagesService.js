@@ -266,7 +266,7 @@ class MessagesService {
     store.dispatch(addMessages(newMessages));
     store.dispatch(
       upsertChat({
-        _id: conversation._id,
+        _id: convId,
         messagesIds: updatedMessagesIds,
         activated: true,
       })
@@ -298,7 +298,7 @@ class MessagesService {
 
     if (repliedMids.length) {
       const repliedMsgs = await api.messageList({
-        cid: conversation._id,
+        cid: convId,
         ids: repliedMids,
       });
       const receivedIds = new Set(
