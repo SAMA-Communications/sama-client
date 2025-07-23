@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.14.0
+
+### Features
+
+- Added support `replied_message_id` field for Message obejct
+
 ## 0.13.0
 
 ### Features
