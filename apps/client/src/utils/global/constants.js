@@ -1,11 +1,15 @@
 const globalConstants = {
+  typingDurationMs: 6000,
   maxTtoasts: 3,
+  swipeThreshold: 90,
   dayInMs: 86400000,
   //   monthInMs: 2629743830,
   yearInMs: 31556926000,
   mobileViewWidth: 767,
   tabletViewWidth: 1279,
   linksRegExp: /https:\/\/\S+/g, ///(((https?:\/\/)|(www\.))[^\s]+)/g
+  urlMetaDataExpire: 3600000,
+  urlMaxParallelRequests: 5,
   allowedFileFormats: [
     ".heic",
     ".HEIC",
@@ -18,6 +22,8 @@ const globalConstants = {
     "video/quicktime",
   ],
   allowedAvatarFormats: [".heic", ".HEIC", "image/jpeg", "image/png"],
+  supportedDocumentPreviewRegex:
+    /\.(pdf|docx?|xlsx?|pptx?|txt|rtf|odt|ods|odp)(\?.*)?$/i,
   defaultBlurHash: "U27nLE$*00_N^k,@s9xu#7$2$%xtVD-B-pkW",
   weekDays: {
     0: "Su",

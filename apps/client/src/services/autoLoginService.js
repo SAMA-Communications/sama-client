@@ -2,7 +2,7 @@ import api from "@api/api";
 import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import store from "@store/store";
-import subscribeForNotifications from "@services/notifications";
+import subscribeForNotifications from "@services/tools/notifications";
 import { default as EventEmitter } from "@lib/eventEmitter";
 import { history } from "@utils/global/history";
 import { setCurrentUserId } from "@store/values/CurrentUserId";

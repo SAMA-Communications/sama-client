@@ -35,10 +35,13 @@ export default function ParticipantInChat({
         e.preventDefault();
         dispatch(
           setAllParams({
+            category: "conversation",
             list: [
-              "infoUser",
-              isCurrentUser ? null : "newChat",
-              !isCurrentUserOwner || isCurrentUser ? null : "removeParticipant",
+              "participantInfo",
+              isCurrentUser ? null : "participantSendMessage",
+              !isCurrentUserOwner || isCurrentUser
+                ? null
+                : "convRemoveParticipants",
             ],
             coords: { x: e.pageX, y: e.pageY },
             externalProps: { userObject },

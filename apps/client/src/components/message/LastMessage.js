@@ -1,6 +1,9 @@
 import LastMessageMedia from "@components/message/lastMessage/LastMessageMedia";
 import LastMessageStatus from "@components/message/lastMessage/LastMessageStatus";
+
 import getFileType from "@utils/media/get_file_type";
+
+import Reply from "@icons/context/ReplyAccent.svg?react";
 
 export default function LastMessage({
   message,
@@ -9,16 +12,17 @@ export default function LastMessage({
   userId,
   viewName,
 }) {
-  if (!message && !draft) return null;
+  const { text: dText, replied_mid: dRepliedMid } = draft || {};
+  if (!message && !dText && !dRepliedMid) return null;
 
-  if (draft && count < 1) {
+  if ((dText || dRepliedMid) && count < 1) {
     return (
       <div className="flex flex-1 items-center gap-[5px] overflow-y-hidden">
-        <p className="text-(--color-accent-dark) text-nowrap !font-light">
-          Draft:
+        <p className="flex items-center gap-[3px] text-(--color-accent-dark) text-nowrap !font-light">
+          {dRepliedMid && <Reply />} Draft:
         </p>
         <p className="w-full !font-light text-(--color-text-dark) overflow-hidden text-ellipsis whitespace-nowrap">
-          {draft}
+          {dText}
         </p>
       </div>
     );

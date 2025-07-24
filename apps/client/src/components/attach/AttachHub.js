@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 
-import draftService from "@services/draftService.js";
+import draftService from "@services/tools/draftService.js";
 import messagesService from "@services/messagesService.js";
 
 import DownloadManager from "@lib/downloadManager";
@@ -87,7 +87,7 @@ export default function AttachHub() {
 
   const storeInputText = () => {
     if (inputTextRef.current?.value) {
-      draftService.saveDraft(selectedCID, inputTextRef.current.value);
+      draftService.saveDraft(selectedCID, { text: inputTextRef.current.value });
       inputTextRef.current.value = "";
     }
   };
@@ -198,12 +198,20 @@ export default function AttachHub() {
         t: Date.now(),
         attachments: optimisticAttachments,
       };
+      const repliedMid = selectedConversation.draft?.replied_mid;
+      repliedMid && (msg["replied_message_id"] = repliedMid);
 
       dispatch(addMessage(msg));
       dispatch(updateLastMessageField({ cid, msg }));
 
       let attachments = [];
-      const reqData = { mid, body, cid, from: currentUserId };
+      const reqData = {
+        mid,
+        body,
+        cid,
+        from: currentUserId,
+        replied_message_id: repliedMid,
+      };
 
       try {
         if (files?.length) {
@@ -232,6 +240,7 @@ export default function AttachHub() {
           })),
         };
         dispatch(upsertMessage(upsertMessageParams));
+        draftService.removeDraft(selectedCID);
       } catch (err) {
         showCustomAlert("The server connection is unavailable.", "warning");
         dispatch(

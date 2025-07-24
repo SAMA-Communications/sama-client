@@ -4,6 +4,7 @@ export const contextMenu = createSlice({
   name: "ContextMenu",
   initialState: {
     list: [],
+    category: null,
     externalProps: {},
     clicked: false,
     coords: { x: null, y: null },
@@ -22,10 +23,14 @@ export const contextMenu = createSlice({
     setList: (state, { payload }) => void (state.list = payload),
     setExternalProps: (state, { payload }) =>
       void (state.externalProps = payload),
+    addExternalProps: (state, { payload }) => {
+      state.externalProps = { ...state.externalProps, ...payload };
+    },
     setAllParams: (state, { payload }) => {
-      const { list, coords, clicked, externalProps } = payload;
+      const { list, category, coords, clicked, externalProps } = payload;
 
       list && (state.list = list);
+      category && (state.category = category);
       if (coords) {
         const { x, y } = coords;
         const { innerHeight, innerWidth } = window;
@@ -45,6 +50,7 @@ export const contextMenu = createSlice({
 export const selectIsClicked = (state) => state.contextMenu.clicked;
 export const selectCoords = (state) => state.contextMenu.coords;
 export const selectContextList = (state) => state.contextMenu.list;
+export const selectContextListCategory = (state) => state.contextMenu.category;
 export const selectContextExternalProps = (state) =>
   state.contextMenu.externalProps;
 
@@ -53,6 +59,7 @@ export const {
   setClicked,
   setList,
   setExternalProps,
+  addExternalProps,
   setAllParams,
 } = contextMenu.actions;
 

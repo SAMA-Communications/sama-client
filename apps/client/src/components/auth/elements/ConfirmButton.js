@@ -3,7 +3,7 @@ import { AnimatePresence } from "motion/react";
 import { useCallback, useState, useTransition } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import subscribeForNotifications from "@services/notifications";
+import subscribeForNotifications from "@services/tools/notifications";
 import usersService from "@services/usersService";
 import { useKeyDown } from "@hooks/useKeyDown";
 

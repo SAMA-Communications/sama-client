@@ -1,3 +1,4 @@
+import * as m from "motion/react-m";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { useMemo } from "react";
@@ -22,6 +23,7 @@ import showCustomAlert from "@utils/show_alert";
 
 import BackBtn from "@icons/options/Back.svg?react";
 import More from "@icons/options/More.svg?react";
+import { AnimatePresence } from "motion/react";
 
 export default function ChatFormHeader({ closeFormFunc }) {
   const dispatch = useDispatch();
@@ -76,10 +78,13 @@ export default function ChatFormHeader({ closeFormFunc }) {
   const viewStatusActivity = useMemo(() => {
     if (selectedConversation.typing_users?.length) {
       return (
-        <TypingLine
-          userIds={selectedConversation.typing_users}
-          displayUserNames={selectedConversation.type === "g"}
-        />
+        <div className="text-(--color-text-light) mb-[9px]">
+          <TypingLine
+            userIds={selectedConversation.typing_users}
+            displayBackground={isGroupChat}
+            displayUserNames={isGroupChat}
+          />
+        </div>
       );
     }
 
@@ -88,18 +93,34 @@ export default function ChatFormHeader({ closeFormFunc }) {
         return null;
       }
       const opponentLastActivity = participants[opponentId]?.recent_activity;
-
-      return opponentLastActivity === 0 ? (
-        <ul className="pl-[25px]">
-          <li className="text-(--color-accent-dark)">online</li>
-        </ul>
-      ) : (
-        getLastVisitTime(opponentLastActivity)
+      return (
+        <div className="text-(--color-text-light) mb-[9px]">
+          {opponentLastActivity === 0 ? (
+            <m.ul
+              initial={{ y: -8, opacity: 0.7 }}
+              animate={{ y: 0, opacity: 1, transition: { duration: 0.2 } }}
+              className="ml-[5px] flex items-center gap-[10px]"
+            >
+              <span className="mt-[3px] w-[7px] h-[7px] rounded-full bg-accent-dark"></span>
+              <li className="text-accent-dark !font-light">online</li>
+            </m.ul>
+          ) : (
+            getLastVisitTime(opponentLastActivity)
+          )}
+        </div>
       );
     }
 
     const count = selectedConversation.participants?.length || 0;
-    return `${count} member${count > 1 ? "s" : ""}`;
+    return (
+      <m.div
+        initial={{ y: -8, opacity: 0.7 }}
+        animate={{ y: 0, opacity: 1, transition: { duration: 0.2 } }}
+        className="py-[2px] px-[10px] rounded-2xl bg-[var(--color-hover-light)] text-gray-400 mb-[9px] cursor-default text-nowrap"
+      >
+        {count} member{count > 1 ? "s" : ""}
+      </m.div>
+    );
   }, [opponentId, participants, selectedConversation]);
 
   const viewChatOrPaticipantInfo = () => {
@@ -128,15 +149,16 @@ export default function ChatFormHeader({ closeFormFunc }) {
     e.stopPropagation();
     dispatch(
       setAllParams({
+        category: "conversation",
         list: [
           currentPath.includes("/info")
             ? null
             : !isOpponentExist && !isGroupChat
             ? null
-            : "infoChat",
-          isCurrentUserOwner && isGroupChat ? "edit" : null,
-          isCurrentUserOwner && isGroupChat ? "addParticipants" : null,
-          isCurrentUserCantLeave ? null : "leave",
+            : "convInfo",
+          isCurrentUserOwner && isGroupChat ? "convEdit" : null,
+          isCurrentUserOwner && isGroupChat ? "convAddParticipants" : null,
+          isCurrentUserCantLeave ? null : "convLeave",
         ],
         coords: { x: e.pageX, y: e.pageY },
         clicked: true,
@@ -163,15 +185,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
         <p className="!font-medium text-h2 text-black leading-[1.5] overflow-hidden text-ellipsis whitespace-nowrap">
           &zwnj;{viewChatName}
         </p>
-        <div
-          className={
-            isGroupChat
-              ? "py-[2px] px-[10px] rounded-2xl bg-[var(--color-hover-light)] text-gray-400 mb-[9px] cursor-default text-nowrap"
-              : "text-(--color-text-light)"
-          }
-        >
-          {viewStatusActivity}
-        </div>
+        {viewStatusActivity}
       </div>
       <div
         className="w-[15px] cursor-pointer flex items-center justify-center"

@@ -45,6 +45,7 @@ h4,
 h5,
 h6,
 p,
+li,
 span {
   font-family: "Inter", sans-serif;
   font-weight: 200;
@@ -72,6 +73,19 @@ main {
 
 .monaco-editor span {
   font-family: Consolas, "Courier New", monospace;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+*::-webkit-scrollbar-track {
+  background-color: none;
+}
+*::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.2);
+
+  cursor: pointer;
 }
 
 .editor-helper .editor-tooltip-style,
@@ -115,10 +129,6 @@ main {
   flex-direction: column;
   gap: 7px;
 }
-#chatMessagesScrollable {
-  display: flex;
-  flex-direction: column-reverse;
-}
 
 #chatFormContainer .scroll-bar__outer-container > div:nth-child(3) {
   display: flex;
@@ -153,11 +163,11 @@ input[type="checkbox"]:active {
 input[type="checkbox"]:hover:not(:disabled) {
   border-color: #7678e5;
 }
-input[type="checkbox"]:focus {
+/* input[type="checkbox"]:focus {
   border-color: #7678e5;
   outline: none;
   box-shadow: 0 0 0 0.25rem #7678e544;
-}
+} */
 input[type="checkbox"]:disabled {
   filter: none;
   opacity: 0.5;

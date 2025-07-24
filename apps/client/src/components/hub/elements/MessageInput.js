@@ -1,6 +1,6 @@
 import * as m from "motion/react-m";
 import localforage from "localforage";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
 
@@ -8,7 +8,7 @@ import api from "@api/api";
 
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
 
-import draftService from "@services/draftService.js";
+import draftService from "@services/tools/draftService.js";
 
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 
@@ -16,6 +16,7 @@ import addSuffix from "@utils/navigation/add_suffix";
 import isMobile from "@utils/get_device_type";
 import calcInputHeight from "@utils/text/calc_input_height.js";
 import extractFilesFromClipboard from "@utils/media/extract_files_from_clipboard.js";
+import globalConstants from "@utils/global/constants.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 import Attach from "@icons/options/Attach.svg?react";
@@ -28,22 +29,27 @@ export default function MessageInput({
 }) {
   const location = useLocation();
 
+  const lastTypingRequestTime = useRef(null);
+
   const selectedConversationId = useSelector(getSelectedConversationId);
 
-  let lastTypingRequestTime = null;
   const handleInput = (e) => {
     const text = e.target.value;
     if (text.length > 0) {
-      if (new Date() - lastTypingRequestTime > 3000 || !lastTypingRequestTime) {
+      const typingDuration = globalConstants.typingDurationMs;
+      if (
+        Date.now() - lastTypingRequestTime.current > typingDuration - 1000 ||
+        !lastTypingRequestTime.current
+      ) {
         api.sendTypingStatus({ cid: selectedConversationId });
-        lastTypingRequestTime = new Date();
+        lastTypingRequestTime.current = Date.now();
       }
     }
 
     if (inputTextRef.current) {
       text?.length > 0
-        ? draftService.saveDraft(selectedConversationId, text)
-        : draftService.removeDraft(selectedConversationId);
+        ? draftService.saveDraft(selectedConversationId, { text })
+        : draftService.removeDraftWithOptions(selectedConversationId, "text");
       inputTextRef.current.style.height = `${calcInputHeight(text)}px`;
       inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
     }
@@ -62,7 +68,7 @@ export default function MessageInput({
   const storeInputText = () => {
     const inputText = inputTextRef.current?.value;
     if (inputText) {
-      draftService.saveDraft(selectedConversationId, inputText);
+      draftService.saveDraft(selectedConversationId, { text: inputText });
       inputTextRef.current.value = "";
       inputTextRef.current.style.height = `55px`;
     }
@@ -137,7 +143,7 @@ export default function MessageInput({
       <>
         <m.span whileTap={{ scale: 0.8 }}>
           <Attach
-            className="w-[55px] h-[45px] pl=[10px] pb-[12px] cursor-pointer"
+            className="w-[55px] h-[45px] pl-[10px] pb-[12px] cursor-pointer"
             onClick={() => {
               addSuffix(location.pathname + location.hash, "/attach");
               storeInputText();
@@ -164,7 +170,7 @@ export default function MessageInput({
   }, [location, isBlockedConv, onSubmitFunc]);
 
   return (
-    <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden">
+    <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden z-5">
       {inputsView}
     </div>
   );

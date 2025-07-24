@@ -43,10 +43,6 @@ export default function UsersSelectModalHub({ type }) {
     removeAndNavigateLastSection(pathname + hash);
   };
 
-  useKeyDown(KEY_CODES.ESCAPE, () =>
-    removeAndNavigateSubLink(pathname + hash, "/create")
-  );
-
   const typeOfFunc = useMemo(() => {
     if (type === "add_participants") {
       return (
@@ -74,9 +70,11 @@ export default function UsersSelectModalHub({ type }) {
     );
   }, [type, chatName, selectedConversation, participants]);
 
+  useKeyDown(KEY_CODES.ESCAPE, () => closeModal);
+
   return (
     <m.div
-      className="absolute top-[0px] w-dvw h-dvh bg-(--color-black-50) flex items-center justify-center"
+      className="absolute top-[0px] w-dvw h-dvh bg-(--color-black-50) flex items-center justify-center z-10"
       initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
       animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
       exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
