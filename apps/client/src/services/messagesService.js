@@ -164,6 +164,8 @@ class MessagesService {
 
     const messages = await api.messageList(params);
 
+    if (options.updated_at?.gt) return messages.reverse();
+
     return messages;
   }
 
@@ -202,6 +204,7 @@ class MessagesService {
     const { server_mid, t, modified, bot_message } = await api.messageCreate(
       message
     );
+
     const {
       mid,
       body,
@@ -246,7 +249,7 @@ class MessagesService {
     if (!newMessages.length) return {};
 
     const convId = newMessages[0].cid;
-    const conversation = store.getState().conversations.entities[convId];
+    const conversation = store.getState().conversations.entities?.[convId];
 
     const { anchor_mid, position } = additionalOptions;
 
@@ -273,7 +276,7 @@ class MessagesService {
     store.dispatch(addMessages(newMessages));
     store.dispatch(
       upsertChat({
-        _id: conversation._id,
+        _id: convId,
         messagesIds: updatedMessagesIds,
         activated: true,
       })
@@ -305,7 +308,7 @@ class MessagesService {
 
     if (repliedMids.length) {
       const repliedMsgs = await api.messageList({
-        cid: conversation._id,
+        cid: convId,
         ids: repliedMids,
       });
       const receivedIds = new Set(

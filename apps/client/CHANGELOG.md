@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.9.0
+
+### Features
+
+- Implemented link preview
+- Implemented the option to reply to messages
+
+### Improvements
+
+- Improved the process of synchronizing participants in the chat
+- Minor update to typing status processes
+
 ## 1.8.0
 
 ### Updated
