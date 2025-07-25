@@ -20,7 +20,10 @@ import getLastMessageUserName from "@utils/user/get_last_message_user_name";
 import getUserFullName from "@utils/user/get_user_full_name";
 import navigateTo from "@utils/navigation/navigate_to";
 
-export default function ConversationItemList({ conversations }) {
+export default function ConversationItemList({
+  conversations,
+  additionalOnClickfunc,
+}) {
   const dispatch = useDispatch();
 
   const participants = useSelector(selectParticipantsEntities);
@@ -31,6 +34,7 @@ export default function ConversationItemList({ conversations }) {
   const convItemOnClickFunc = (id) => {
     dispatch(setSelectedConversation({ id }));
     navigateTo(`/#${id}`);
+    additionalOnClickfunc && additionalOnClickfunc(id);
   };
 
   const needToGetMoreChats = useRef(true);

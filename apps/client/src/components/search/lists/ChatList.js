@@ -4,6 +4,7 @@ export default function ChatList({
   conversations,
   isShowTitle = true,
   isChatSearched,
+  additionalOnClickfunc,
 }) {
   return (
     <>
@@ -12,7 +13,10 @@ export default function ChatList({
           Chats
         </div>
       ) : null}
-      <ConversationItemList conversations={conversations} />
+      <ConversationItemList
+        conversations={conversations}
+        additionalOnClickfunc={additionalOnClickfunc}
+      />
       <p className="text-center text-h6 text-(--color-text-dark)">
         {isChatSearched}
       </p>
