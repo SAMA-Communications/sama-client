@@ -29,7 +29,6 @@ export default function ConversationSelectHub({ title }) {
 
     const newDraft = {
       ...(forwardToConversation.draft || {}),
-      updated_at: Math.floor(Date.now() / 1000),
       forwarded_mids: forwardedMids,
     };
 

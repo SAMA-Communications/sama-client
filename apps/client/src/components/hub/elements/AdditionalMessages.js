@@ -89,7 +89,7 @@ export default function AdditionalMessages({
       exit={animateInOut}
       className={`${
         isPreview
-          ? `h-[90px] w-[calc(100%-20px)] -mb-[20px] pb-[20px] pt-[5px] px-[18px] rounded-[16px] gap-[15px] ${bgColor} z-1`
+          ? `!h-[73px] w-[calc(100%-20px)] -mb-[20px] pb-[20px] pt-[5px] px-[18px] rounded-[16px] gap-[15px] ${bgColor} z-1`
           : `w-[calc(100%)] px-[10px] py-[7px] cursor-pointer border-l-[3px] rounded-lg gap-[10px] ${bgColor} ${
               color === "accent"
                 ? "border-l-accent-light"

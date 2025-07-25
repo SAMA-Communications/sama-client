@@ -156,19 +156,18 @@ export const conversations = createSlice({
           updateParams.draft = draft;
         }
       } else {
+        if (draft) updateParams.draft = draft;
         if (isRemove) {
           updateParams.updated_at = conv.old_updated_at;
           updateParams.old_updated_at = null;
           updateParams.draft = null;
-        } else {
+        } else if (draft.updated_at) {
           updateParams.updated_at = new Date(
             draft.updated_at * 1000
           ).toISOString();
           updateParams.old_updated_at = conv.updated_at;
-          if (draft) updateParams.draft = draft;
         }
       }
-
       conversationsAdapter.upsertOne(state, updateParams);
     },
     removeDraftField: (state, action) => {

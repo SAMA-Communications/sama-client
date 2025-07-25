@@ -1,17 +1,21 @@
 import { AnimatePresence } from "motion/react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import draftService from "@services/tools/draftService.js";
 
 import AdditionalMessages from "@components/hub/elements/AdditionalMessages.js";
 
+import {
+  removeDraftField,
+  getConverastionById,
+} from "@store/values/Conversations.js";
 import { addExternalProps } from "@store/values/ContextMenu.js";
-import { removeDraftField } from "@store/values/Conversations.js";
 
 export default function ChatFormInputContent({
   repliedMessage,
   forwardedMessages = [],
 }) {
+  const selectedCID = useSelector(getConverastionById)._id;
   const dispatch = useDispatch();
 
   const handleClose = () => {
@@ -20,10 +24,7 @@ export default function ChatFormInputContent({
       draftService.removeDraftWithOptions(repliedMessage.cid, "replied_mid");
     } else if (forwardedMessages.length) {
       dispatch(
-        removeDraftField({
-          cid: forwardedMessages[0].cid,
-          fields: ["forwarded_mids"],
-        })
+        removeDraftField({ cid: selectedCID, fields: ["forwarded_mids"] })
       );
     }
   };

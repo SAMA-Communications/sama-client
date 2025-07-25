@@ -59,7 +59,9 @@ export default function MessageActions({ listOfIds }) {
                 {
                   description: "All Files",
                   accept: {
-                    [blob.type]: [`.${attachment.file_url.split(".").pop()}`],
+                    [blob.type]: [
+                      `.${attachment.file_content_type.split("/").pop()}`,
+                    ],
                   },
                 },
               ],
@@ -87,9 +89,9 @@ export default function MessageActions({ listOfIds }) {
         text="Copy Media"
         icon={<Copy />}
         onClick={async () => {
-          if (!attachment.url) return;
+          if (!attachment.file_url) return;
           try {
-            const response = await fetch(attachment.url);
+            const response = await fetch(attachment.file_url);
             const blob = await response.blob();
             await navigator.clipboard.write([
               new ClipboardItem({ [blob.type]: blob }),
