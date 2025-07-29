@@ -23,6 +23,7 @@ import navigateTo from "@utils/navigation/navigate_to";
 export default function ConversationItemList({
   conversations,
   additionalOnClickfunc,
+  isHideDeletedUsers = false,
 }) {
   const dispatch = useDispatch();
 
@@ -75,6 +76,8 @@ export default function ConversationItemList({
               obj.owner_id === currentUserId ? obj.opponent_id : obj.owner_id;
             const chatParticipant = participants[chatParticipantId] || {};
             const chatName = obj.name || getUserFullName(chatParticipant);
+
+            if (isHideDeletedUsers && !chatName) return null;
 
             const showLastMsgUser = isGroup;
             //!obj.last_message?.x replace with better checker for event message

@@ -81,7 +81,7 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
     attachments.map((file, i) => ({
       file_id: file.file_id,
       file_name: file.file_name,
-      file_url: file.file_url,
+      file_url: originalAttachments[i].file_url,
       file_blur_hash: originalAttachments[i]?.file_blur_hash,
       file_content_type: originalAttachments[i]?.file_content_type,
       file_width: originalAttachments[i]?.file_width,
@@ -154,6 +154,7 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
           forwarded_message_id: message._id,
         };
 
+        let originalAttachments = message.attachments;
         if (message.attachments?.length) {
           const files = await DownloadManager.getFileObjectsFromUrls(
             message.attachments.map((att) => ({
@@ -162,13 +163,18 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
               contentType: att.file_content_type,
             }))
           );
-          mObject.attachments = files;
+          mObject.attachments = files.map((att, i) => {
+            const { file_url, _id, ...rest } = originalAttachments[i];
+            const newAtt = { ...rest, ...att };
+            delete newAtt.file_url;
+            return newAtt;
+          });
         }
 
-        await sendMessageToServer(mObject, message.attachments);
+        await sendMessageToServer(mObject, originalAttachments);
       }
-    } catch (e) {
-      await handleError(e, selectedCID, lastMessage);
+    } catch (err) {
+      await handleError(err, selectedCID, lastMessage);
       return;
     }
 

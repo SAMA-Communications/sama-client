@@ -26,8 +26,9 @@ export default function AttachmentCompressed({
   const isVideo =
     getFileType(file_name || file_url, file_content_type) === "Video";
 
-  const openMediaWindow = () =>
+  const openMediaWindow = () => {
     mid ? addSuffix(pathname + hash, `/media?mid=${mid}=${index}`) : {};
+  };
 
   const animation = disableAnimation
     ? {}

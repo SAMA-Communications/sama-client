@@ -1,5 +1,5 @@
 import * as m from "motion/react-m";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useLocation } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -12,28 +12,36 @@ import {
 } from "@store/values/Conversations.js";
 
 import extractForwardedMids from "@utils/conversation/extract_forwarded_mids.js";
+import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
+
+import Close from "@icons/options/Close.svg?react";
 
 export default function ConversationSelectHub({ title }) {
   const dispatch = useDispatch();
-  const location = useLocation();
+  const { pathname, hash } = useLocation();
 
   const [inputText, setInputText] = useState(null);
 
   const conversation = useSelector(selectConversationsEntities);
 
   const onClickFunc = (forwardToCid) => {
-    const forwardedMids = extractForwardedMids(location.hash);
+    const forwardedMids = extractForwardedMids(hash);
     if (!forwardedMids.length) return;
 
     const forwardToConversation = conversation[forwardToCid];
 
     const newDraft = {
-      ...(forwardToConversation.draft || {}),
+      ...(forwardToConversation?.draft || {}),
       forwarded_mids: forwardedMids,
     };
 
     dispatch(updateWithDrafts({ cid: forwardToCid, draft: newDraft }));
   };
+
+  const closeModal = useCallback(
+    () => removeAndNavigateLastSection(pathname + hash),
+    [pathname, hash]
+  );
 
   return (
     <m.div
@@ -51,7 +59,13 @@ export default function ConversationSelectHub({ title }) {
         exit={{ scale: 0.8, opacity: 0 }}
         transition={{ duration: 0.2 }}
       >
-        <p className="!text-h5 !font-normal text-black">{title}</p>
+        <div className="flex justify-between items-center">
+          <p className="!text-h5 !font-normal text-black">{title}</p>
+          <Close
+            className="w-[22px] h-[22px] cursor-pointer"
+            onClick={closeModal}
+          />
+        </div>
         <SearchInput
           customClassName="w-full"
           shadowText={"Search"}
@@ -62,6 +76,7 @@ export default function ConversationSelectHub({ title }) {
           searchText={inputText}
           isClearInputText={true}
           isShowDefaultConvs={true}
+          isHideDeletedUsers={true}
           additionalOnClickfunc={onClickFunc}
           clearInputText={() => setInputText(null)}
         />

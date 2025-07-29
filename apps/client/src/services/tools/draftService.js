@@ -38,24 +38,33 @@ class DraftService {
     store.dispatch(updateWithDrafts({ cid, isRemove: true }));
   }
 
-  removeDraftWithOptions(cid, field) {
+  removeDraftWithOptions(cid, fields) {
     const draftKey = this.#getDraftKey(cid);
     const draft = this.getDraft(cid);
 
     if (!localStorage.getItem(draftKey)) return;
-    if (!field) return this.removeDraft(cid);
+    if (!fields) return this.removeDraft(cid);
 
-    if (
-      this.#allowedDraftFields.includes(field) &&
-      draft.hasOwnProperty(field)
-    ) {
-      delete draft[field];
-      if (Object.keys(draft).length <= 1) {
-        this.removeDraft(cid);
-      } else {
-        localStorage.setItem(draftKey, JSON.stringify(draft));
-        store.dispatch(updateWithDrafts({ cid, draft }));
+    const fieldsArray = Array.isArray(fields) ? fields : [fields];
+
+    let modified = false;
+    for (const field of fieldsArray) {
+      if (
+        this.#allowedDraftFields.includes(field) &&
+        draft.hasOwnProperty(field)
+      ) {
+        delete draft[field];
+        modified = true;
       }
+    }
+
+    if (!modified) return;
+
+    if (Object.keys(draft).length <= 1) {
+      this.removeDraft(cid);
+    } else {
+      localStorage.setItem(draftKey, JSON.stringify(draft));
+      store.dispatch(updateWithDrafts({ cid, draft }));
     }
   }
 }

@@ -148,7 +148,9 @@ export const conversations = createSlice({
           ...conv.last_message,
           ...(isRemove
             ? { t: conv.last_message.old_t || conv.last_message.t, old_t: null }
-            : { t: draft.updated_at, old_t: conv.last_message.t }),
+            : draft.updated_at
+            ? { t: draft.updated_at, old_t: conv.last_message.t }
+            : {}),
         };
         if (isRemove) {
           updateParams.draft = null;

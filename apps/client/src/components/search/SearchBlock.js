@@ -26,6 +26,7 @@ export default function SearchBlock({
   isPreviewUserProfile = false,
   isSearchOnlyUsers = false,
   isShowDefaultConvs = false,
+  isHideDeletedUsers = false,
   isClickDisabledFunc = () => false,
 }) {
   const conversations = useSelector(selectConversationsEntities);
@@ -48,7 +49,12 @@ export default function SearchBlock({
 
   useEffect(() => {
     if (!isShowDefaultConvs) return;
-    setDefaultChats(Object.values(conversations).slice(0, 20));
+    setDefaultChats(
+      Object.values(conversations)
+        .filter((el) => el.last_message || el.type === "g")
+        .sort((a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at))
+        .slice(0, 20)
+    );
   }, [isShowDefaultConvs]);
 
   const sendSearchRequest = async (text) => {
@@ -112,6 +118,7 @@ export default function SearchBlock({
           <ChatList
             conversations={defaultChats}
             isShowTitle={false}
+            isHideDeletedUsers={isHideDeletedUsers}
             additionalOnClickfunc={additionalOnClickfunc}
           />
         ) : (
@@ -165,6 +172,7 @@ export default function SearchBlock({
               <ChatList
                 conversations={searchedChats}
                 isChatSearched={isChatSearched}
+                isHideDeletedUsers={isHideDeletedUsers}
                 additionalOnClickfunc={additionalOnClickfunc}
               />
             )}

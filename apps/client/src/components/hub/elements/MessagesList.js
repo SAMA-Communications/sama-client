@@ -342,9 +342,9 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
           message={msg}
           onViewFunc={isScrolling ? null : messagesFetchFunc[msg._id]}
           onSelectClick={
-            !isSelected && forwardedMids.length <= 20 && selectMessageFunc
+            !isSelected && forwardedMids.length < 20 ? selectMessageFunc : null
           }
-          onUnselectClick={isSelected && unselectMessageFunc}
+          onUnselectClick={isSelected ? unselectMessageFunc : null}
           onReplyClickFunc={() => onReplyClick(repliedMessage)}
           repliedMessage={repliedMessage}
           sender={participants[from]}

@@ -12,6 +12,7 @@ import { selectContextExternalProps } from "@store/values/ContextMenu.js";
 
 import addSuffix from "@utils/navigation/add_suffix.js";
 import upsertMidsInPath from "@utils/navigation/upasert_mids_in_path.js";
+import writeToCanvas from "@utils/media/write_to_canvas.js";
 
 import Reply from "@icons/context/Reply.svg?react";
 import Copy from "@icons/context/Copy.svg?react";
@@ -26,6 +27,50 @@ export default function MessageActions({ listOfIds }) {
   const selectedCID = useSelector(getSelectedConversationId);
 
   const { message, attachment } = useSelector(selectContextExternalProps);
+
+  const linksAction = {
+    messageSaveAs: async () => {
+      if (!attachment?.file_url) return;
+      try {
+        const response = await fetch(attachment.file_url);
+        const blob = await response.blob();
+        if (window.showSaveFilePicker) {
+          const fileHandle = await window.showSaveFilePicker({
+            suggestedName: attachment.file_name || attachment.file_id,
+            types: [
+              {
+                description: "All Files",
+                accept: {
+                  [blob.type]: [
+                    `.${attachment.file_content_type.split("/").pop()}`,
+                  ],
+                },
+              },
+            ],
+          });
+          const writable = await fileHandle.createWritable();
+          await writable.write(blob);
+          await writable.close();
+        } else {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = attachment.file_name || "file";
+          a.click();
+          URL.revokeObjectURL(url);
+        }
+      } catch {}
+    },
+    messageCopyAttachment: async () => {
+      if (!attachment.file_url) return;
+      try {
+        const blob = await writeToCanvas(attachment.file_url);
+        await navigator.clipboard.write([
+          new ClipboardItem({ [blob.type]: blob }),
+        ]);
+      } catch {}
+    },
+  };
 
   const links = {
     messageReply: (
@@ -46,31 +91,9 @@ export default function MessageActions({ listOfIds }) {
     messageSaveAs: (
       <ContextLink
         key={"messageSaveAs"}
-        text="Save As"
+        text={`Save${window.showSaveFilePicker ? " As" : ""}`}
         icon={<Download />}
-        onClick={async () => {
-          if (!attachment?.file_url) return;
-          try {
-            const response = await fetch(attachment.file_url);
-            const blob = await response.blob();
-            const fileHandle = await window.showSaveFilePicker({
-              suggestedName: attachment.file_name || attachment.file_id,
-              types: [
-                {
-                  description: "All Files",
-                  accept: {
-                    [blob.type]: [
-                      `.${attachment.file_content_type.split("/").pop()}`,
-                    ],
-                  },
-                },
-              ],
-            });
-            const writable = await fileHandle.createWritable();
-            await writable.write(blob);
-            await writable.close();
-          } catch {}
-        }}
+        onClick={linksAction.messageSaveAs}
       />
     ),
     messageCopyText: (
@@ -88,16 +111,7 @@ export default function MessageActions({ listOfIds }) {
         key={"messageCopyAttachment"}
         text="Copy Media"
         icon={<Copy />}
-        onClick={async () => {
-          if (!attachment.file_url) return;
-          try {
-            const response = await fetch(attachment.file_url);
-            const blob = await response.blob();
-            await navigator.clipboard.write([
-              new ClipboardItem({ [blob.type]: blob }),
-            ]);
-          } catch {}
-        }}
+        onClick={linksAction.messageCopyAttachment}
       />
     ),
     messageForward: (

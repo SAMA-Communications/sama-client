@@ -68,8 +68,8 @@ export default function ChatMessage({
   };
 
   const width = useMemo(() => {
-    if (attachments?.length || url_preview) return "w-[min(80%,540px)]";
-    return "w-max max-2xl:max-w-[min(80%,680px)] 2xl:max-w-[min(60%,680px)]";
+    if (attachments?.length || url_preview) return "w-[min(85%,540px)]";
+    return "w-max max-2xl:max-w-[min(85%,680px)] 2xl:max-w-[min(60%,680px)]";
   }, [attachments, url_preview]);
 
   const openContextMenu = (e, copyType, externalProps) => {
@@ -122,11 +122,12 @@ export default function ChatMessage({
   const handlePointerUp = () => clearTimeout(longPressTimeout.current);
   const handleClick = (e) => longPressTriggered.current && e.stopPropagation();
   const handlePointerDown = (e) => {
+    e.stopPropagation();
     longPressTriggered.current = false;
     longPressTimeout.current = setTimeout(() => {
       longPressTriggered.current = true;
-      openContextMenu(e);
-    }, 350);
+      openContextMenu(e, message.body ? "Text" : null);
+    }, 250);
   };
 
   return (
@@ -185,16 +186,21 @@ export default function ChatMessage({
             </div>
           )}
         </div>
-        <div
+        <m.div
           className={`relative max-w-full w-fit min-h-[46px] p-[15px] flex flex-col gap-[5px] rounded-[16px] bg-(--color-hover-light) ${
             next ? "" : "rounded-bl-none"
           } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""} ${
             isSelected ? "!bg-(--color-accent-dark)/50" : ""
           }`}
+          whileTap={{ scale: 0.95, transition: { duration: 0.3, delay: 0.05 } }}
+          onClick={handleClick}
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerUp}
+          onPointerLeave={handlePointerUp}
           onContextMenu={
             isSelectionMode
               ? openSelectionContextMenu
-              : (e) => openContextMenu(e, "Text")
+              : (e) => openContextMenu(e, message.body ? "Text" : null)
           }
         >
           {next ? null : isSelected ? (
@@ -249,7 +255,10 @@ export default function ChatMessage({
                   isSelectionMode
                     ? openSelectionContextMenu
                     : (e, att) => {
-                        openContextMenu(e, "Attachment", { attachment: att });
+                        globalConstants.allowedFormatsToCopy.includes(
+                          att.file_content_type
+                        ) &&
+                          openContextMenu(e, "Attachment", { attachment: att });
                       }
                 }
                 attachments={attachments}
@@ -307,10 +316,10 @@ export default function ChatMessage({
               ) : null}
             </div>
           </div>
-        </div>
+        </m.div>
       </m.div>
       {isSelectionMode && (
-        <div className="flex mr-[calc(100%-min(80%,680px))]">
+        <div className="flex 2xl:mr-[calc(100%-min(85%,680px))] max-2xl:mr-[15px]">
           {isSelected ? (
             <span className="w-[22px] h-[22px] bg-accent-dark/70 rounded-full flex items-center justify-center">
               <Selected className="w-[14px] h-[14px]" />

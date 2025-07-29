@@ -4,6 +4,7 @@ export default function ChatList({
   conversations,
   isShowTitle = true,
   isChatSearched,
+  isHideDeletedUsers,
   additionalOnClickfunc,
 }) {
   return (
@@ -15,6 +16,7 @@ export default function ChatList({
       ) : null}
       <ConversationItemList
         conversations={conversations}
+        isHideDeletedUsers={isHideDeletedUsers}
         additionalOnClickfunc={additionalOnClickfunc}
       />
       <p className="text-center text-h6 text-(--color-text-dark)">
