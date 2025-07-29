@@ -172,6 +172,15 @@ export default function ChatFormHeader({ closeFormFunc }) {
     );
   };
 
+  const countOfSelectedMessages = useMemo(() => {
+    const match = hash.match(/mids=\[([^\]]*)\]/);
+    if (!match?.[1]) return null;
+    return match[1]
+      .split(",")
+      .map((id) => id.trim())
+      .filter(Boolean).length;
+  }, [hash]);
+
   const closeSelectionMode = () =>
     removeSectionAndNavigate(pathname + hash, "/selection");
 
@@ -187,6 +196,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
       >
         <Forward />
         Forward
+        <span className="text-white/75">{countOfSelectedMessages}</span>
       </button>
       <button
         className="px-[16px] py-[8px] !font-normal text-accent-dark cursor-pointer"
