@@ -75,10 +75,21 @@ export default function ChatMessage({
   const openContextMenu = (e, copyType, externalProps) => {
     e.preventDefault();
     e.stopPropagation();
+    const isAttachment = copyType === "Attachment";
+    const isCopyableAttachment =
+      isAttachment &&
+      globalConstants.allowedFormatsToCopy.includes(
+        externalProps?.attachment?.file_content_type
+      );
+    const copyOption =
+      (isCopyableAttachment && "messageCopyAttachment") ||
+      (message.body && "messageCopyText") ||
+      null;
+
     const list = [
       "messageReply",
-      copyType ? `messageCopy${copyType}` : null,
-      copyType === "Attachment" ? "messageSaveAs" : null,
+      copyOption,
+      isAttachment ? "messageSaveAs" : null,
       "messageForward",
       "messageSelect",
     ].filter(Boolean);
@@ -254,12 +265,8 @@ export default function ChatMessage({
                 onContextMenu={
                   isSelectionMode
                     ? openSelectionContextMenu
-                    : (e, att) => {
-                        globalConstants.allowedFormatsToCopy.includes(
-                          att.file_content_type
-                        ) &&
-                          openContextMenu(e, "Attachment", { attachment: att });
-                      }
+                    : (e, att) =>
+                        openContextMenu(e, "Attachment", { attachment: att })
                 }
                 attachments={attachments}
                 mid={message._id}

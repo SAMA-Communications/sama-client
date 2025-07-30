@@ -98,7 +98,7 @@ export default function AdditionalMessages({
       } shrink flex items-center self-center`}
       onClick={onClickFunc}
     >
-      {isPreview && (
+      {isPreview ? (
         <span>
           {isReply ? (
             <Reply className="w-[25px] h-[25px]" />
@@ -106,12 +106,12 @@ export default function AdditionalMessages({
             <Forward className="w-[25px] h-[25px]" />
           )}
         </span>
-      )}
-      {attachments?.length && (
+      ) : null}
+      {attachments?.length ? (
         <div className="w-[45px] h-[45px] overflow-hidden rounded-lg object-cover flex">
           <MediaAttachment attachment={attachments[0]} flexGrow={1} />
         </div>
-      )}
+      ) : null}
       <div className="w-[calc(100%-160px)] flex flex-col grow">
         <p
           className={`${userNameColor} !font-normal overflow-hidden text-ellipsis whitespace-nowrap`}

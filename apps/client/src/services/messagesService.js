@@ -164,7 +164,7 @@ class MessagesService {
 
     const messages = await api.messageList(params);
 
-    if (options.updated_at?.gt) return messages.reverse();
+    // if (options.updated_at?.gt) return messages.reverse();
 
     return messages;
   }

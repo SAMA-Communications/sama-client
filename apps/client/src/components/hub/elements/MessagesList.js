@@ -154,6 +154,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
       newMessages.length < +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD
     ) {
       newAnchorMessage && removeFetchFuncFromMessage(newAnchorMessage);
+      anchorMid === lastMessage._id && removeFetchFuncFromMessage(lastMessage);
       return;
     }
 
@@ -172,7 +173,10 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     setMessagesFetchFunc((prev) => ({
       ...prev,
       [lastMessage._id]: () => {
-        fetchOnViewMessage({ updated_at: { lt: lastMessage.created_at } });
+        fetchOnViewMessage(
+          { updated_at: { lt: lastMessage.created_at } },
+          lastMessage._id
+        );
         setMessagesFetchFunc((prev2) => {
           const { [lastMessage._id]: _, ...rest } = prev2;
           return rest;
