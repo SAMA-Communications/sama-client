@@ -9,6 +9,7 @@ import ChatInfo from "@components/info/ChatInfo";
 import ChatList from "@components/hub/ChatList";
 
 import AttachHub from "@components/attach/AttachHub";
+import ConversationSelectHub from "@components/modals/ConversationSelectHub.js";
 import EditModalHub from "@components/modals/EditModalHub";
 import EmptyHub from "@components/hub/EmptyHub";
 import MediaHub from "@components/attach/MediaHub";
@@ -33,6 +34,7 @@ const blockMap = {
   "/attach": <AttachHub />,
   "/media": <MediaHub />,
   "/edit": <EditModalHub />,
+  "/forward": <ConversationSelectHub title="Forward to..." />,
 };
 
 export default function Main({ isNeedToAnimate }) {

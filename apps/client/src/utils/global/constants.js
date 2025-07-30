@@ -21,6 +21,14 @@ const globalConstants = {
     "video/webm",
     "video/quicktime",
   ],
+  allowedFormatsToCopy: [
+    ".heic",
+    ".HEIC",
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/bmp",
+  ],
   allowedAvatarFormats: [".heic", ".HEIC", "image/jpeg", "image/png"],
   supportedDocumentPreviewRegex:
     /\.(pdf|docx?|xlsx?|pptx?|txt|rtf|odt|ods|odp)(\?.*)?$/i,

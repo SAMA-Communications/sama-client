@@ -164,7 +164,7 @@ class MessagesService {
 
     const messages = await api.messageList(params);
 
-    if (options.updated_at?.gt) return messages.reverse();
+    // if (options.updated_at?.gt) return messages.reverse();
 
     return messages;
   }
@@ -204,7 +204,16 @@ class MessagesService {
     const { server_mid, t, modified, bot_message } = await api.messageCreate(
       message
     );
-    const { mid, body, cid, from, attachments, replied_message_id } = message;
+
+    const {
+      mid,
+      body,
+      cid,
+      from,
+      attachments,
+      replied_message_id,
+      forwarded_message_id,
+    } = message;
     const mObject = {
       _id: server_mid,
       old_id: mid,
@@ -213,6 +222,7 @@ class MessagesService {
       from,
       status: "sent",
       replied_message_id,
+      forwarded_message_id,
       t,
     };
 

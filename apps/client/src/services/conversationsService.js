@@ -152,7 +152,7 @@ class ConversationsService {
 
     const chat = await api.conversationCreate(requestData);
     userObject && store.dispatch(addUsers([userObject]));
-    store.dispatch(insertChat({ ...chat, messagesIds: null }));
+    store.dispatch(upsertChat({ ...chat, messagesIds: null }));
     store.dispatch(setSelectedConversation({ id: chat._id }));
 
     return chat._id;

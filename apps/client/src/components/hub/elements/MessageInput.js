@@ -127,7 +127,7 @@ export default function MessageInput({
       document.removeEventListener("drop", handleInput);
       document.removeEventListener("paste", handleInput);
     };
-  }, [selectedConversationId]);
+  }, [selectedConversationId, location]);
 
   const inputsView = useMemo(() => {
     if (isBlockedConv) {
