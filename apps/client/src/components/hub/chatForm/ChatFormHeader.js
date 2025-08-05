@@ -15,15 +15,20 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setAllParams } from "@store/values/ContextMenu";
 
+import { useKeyDown } from "@hooks/useKeyDown.js";
+
+import { KEY_CODES } from "@utils/global/keyCodes.js";
 import addSuffix from "@utils/navigation/add_suffix";
+import showCustomAlert from "@utils/show_alert";
 import getLastVisitTime from "@utils/user/get_last_visit_time";
 import getUserFullName from "@utils/user/get_user_full_name";
+import navigateTo from "@utils/navigation/navigate_to.js";
 import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import showCustomAlert from "@utils/show_alert";
+import removeSectionAndNavigate from "@utils/navigation/remove_section.js";
 
 import BackBtn from "@icons/options/Back.svg?react";
 import More from "@icons/options/More.svg?react";
-import { AnimatePresence } from "motion/react";
+import Forward from "@icons/context/ForwardWhiteBold.svg?react";
 
 export default function ChatFormHeader({ closeFormFunc }) {
   const dispatch = useDispatch();
@@ -45,6 +50,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
   const isGroupChat = selectedConversation.type === "g";
   const isCurrentUserCantLeave =
     participants[currentUserId].login.startsWith("sama-user-");
+  const isSelectionMode = hash.includes("/selection");
 
   const opponentId = useMemo(() => {
     const conversation = conversations[selectedCID];
@@ -166,7 +172,40 @@ export default function ChatFormHeader({ closeFormFunc }) {
     );
   };
 
-  return (
+  const countOfSelectedMessages = useMemo(() => {
+    const match = hash.match(/mids=\[([^\]]*)\]/);
+    if (!match?.[1]) return null;
+    return match[1]
+      .split(",")
+      .map((id) => id.trim())
+      .filter(Boolean).length;
+  }, [hash]);
+
+  const closeSelectionMode = () =>
+    removeSectionAndNavigate(pathname + hash, "/selection");
+
+  useKeyDown(KEY_CODES.ESCAPE, closeSelectionMode);
+
+  return isSelectionMode ? (
+    <div className="flex justify-between items-center shrink pb-[15px] pt-[5px] max-w-full">
+      <button
+        className="px-[16px] py-[8px] flex items-center gap-[7px] !font-normal text-white bg-accent-dark rounded-md cursor-pointer"
+        onClick={async () => {
+          navigateTo((pathname + hash).replace("selection", "forward"));
+        }}
+      >
+        <Forward />
+        Forward
+        <span className="text-white/75">{countOfSelectedMessages}</span>
+      </button>
+      <button
+        className="px-[16px] py-[8px] !font-normal text-accent-dark cursor-pointer"
+        onClick={closeSelectionMode}
+      >
+        Cancel
+      </button>
+    </div>
+  ) : (
     <div
       className="flex shrink pb-[10px] h-max max-w-full"
       onClick={viewChatOrPaticipantInfo}

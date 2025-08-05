@@ -21,6 +21,7 @@ export default function SearchedUser({
   clearInputText,
   addUserToArray,
   removeUserFromArray,
+  additionalOnClickfunc,
   isSelected = false,
   isClickDisabled = false,
   isClearInputText = false,
@@ -53,6 +54,8 @@ export default function SearchedUser({
       uObject
     );
     navigateTo(`/#${chatId}`);
+
+    additionalOnClickfunc && additionalOnClickfunc(chatId);
   };
 
   return (

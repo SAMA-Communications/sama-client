@@ -16,6 +16,7 @@ export default function AttachmentCompressed({
   attachment,
   flexGrow,
   removeFileFunc,
+  onContextMenu,
   disableAnimation = false,
 }) {
   const { pathname, hash } = useLocation();
@@ -25,8 +26,9 @@ export default function AttachmentCompressed({
   const isVideo =
     getFileType(file_name || file_url, file_content_type) === "Video";
 
-  const openMediaWindow = () =>
+  const openMediaWindow = () => {
     mid ? addSuffix(pathname + hash, `/media?mid=${mid}=${index}`) : {};
+  };
 
   const animation = disableAnimation
     ? {}
@@ -54,6 +56,7 @@ export default function AttachmentCompressed({
       key={file_name || file_url}
       className={`relative overflow-hidden flex justify-center items-center`}
       style={{ flexGrow, flexBasis: 0 }}
+      onContextMenu={onContextMenu}
     >
       {isVideo ? (
         <VideoView video={attachment} onClickFunc={openMediaWindow} />
