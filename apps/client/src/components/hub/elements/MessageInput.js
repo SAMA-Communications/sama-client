@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import api from "@api/api";
 
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
+import OvalLoader from "@components/_helpers/OvalLoader";
 
 import draftService from "@services/tools/draftService.js";
 
@@ -26,6 +27,7 @@ export default function MessageInput({
   inputTextRef,
   onSubmitFunc,
   isBlockedConv,
+  isSending = false,
 }) {
   const location = useLocation();
 
@@ -144,10 +146,14 @@ export default function MessageInput({
         <m.span whileTap={{ scale: 0.8 }}>
           <Attach
             className="w-[55px] h-[45px] pl-[10px] pb-[12px] cursor-pointer"
-            onClick={() => {
-              addSuffix(location.pathname + location.hash, "/attach");
-              storeInputText();
-            }}
+            onClick={
+              isSending
+                ? null
+                : () => {
+                    addSuffix(location.pathname + location.hash, "/attach");
+                    storeInputText();
+                  }
+            }
           />
         </m.span>
         <TextAreaInput
@@ -155,19 +161,27 @@ export default function MessageInput({
           customClassName="max-h-full grow py-[12px] text-black !font-light  resize-none max-xl:disabled:!p-[9px] placeholder:text-(--color-text-dark) placeholder:text-p [&::-webkit-scrollbar]:hidden"
           handleInput={handleInput}
           handeOnKeyDown={handeOnKeyDown}
-          isDisabled={false}
+          isDisabled={isSending}
           isMobile={isMobile}
           placeholder={"Type your message..."}
         />
-        <m.span whileTap={{ translateX: 10, scale: 0.9 }}>
-          <Send
-            className="mr-[10px] px-[8px] !w-[55px] !h-[55px] cursor-pointer"
-            onClick={onSubmitFunc}
+        {isSending ? (
+          <OvalLoader
+            width={35}
+            height={35}
+            customClassName="mr-[10px] px-[8px] self-center"
           />
-        </m.span>
+        ) : (
+          <m.span whileTap={{ translateX: 10, scale: 0.9 }}>
+            <Send
+              className="mr-[10px] px-[8px] !w-[55px] !h-[55px] cursor-pointer"
+              onClick={onSubmitFunc}
+            />
+          </m.span>
+        )}
       </>
     );
-  }, [location, isBlockedConv, onSubmitFunc]);
+  }, [location, isBlockedConv, isSending, onSubmitFunc]);
 
   return (
     <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden z-5">

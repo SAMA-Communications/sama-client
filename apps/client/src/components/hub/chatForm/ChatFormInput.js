@@ -268,6 +268,7 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
     <MessageInput
       inputTextRef={inputRef}
       isBlockedConv={isBlockedConv}
+      isSending={isSendMessageDisable}
       onSubmitFunc={createAndSendMessage}
       chatMessagesBlockRef={chatMessagesBlockRef}
     />
