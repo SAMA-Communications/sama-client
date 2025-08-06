@@ -1,6 +1,6 @@
 export interface ISocketRequest<T> {
   request: {
-    [key: string]: T;
+    [key: string]: any;
     id: string;
   };
 }

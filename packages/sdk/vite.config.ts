@@ -10,10 +10,10 @@ export default defineConfig({
       formats: ["es", "cjs", "umd"],
     },
     rollupOptions: {
-      external: ['get-browser-fingerprint'],
+      external: ['ws'],
       output: {
         globals: {
-          'get-browser-fingerprint': 'getBrowserFingerprint'
+          'ws': 'wsNode'
         }
       },
     },

@@ -45,13 +45,18 @@
   },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "vite build"
+    "clean": "rm -rf ./dist",
+    "build": "npm run clean && vite build"
+  },
+  "browser": {
+    "ws": false
   },
   "devDependencies": {
+    "@types/ws": "^8.18.1",
     "typescript": "~5.7.2",
     "vite": "^6.2.0"
   },
   "dependencies": {
-    "get-browser-fingerprint": "^4.1.0"
+    "ws": "8.18.3"
   }
 }

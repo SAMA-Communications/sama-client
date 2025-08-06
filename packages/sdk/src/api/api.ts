@@ -1,38 +1,46 @@
-import getBrowserFingerprint from "get-browser-fingerprint";
 import getUniqueId from "../utils/uuid";
+import WebSocketImp from "../utils/websocket";
 import { ISocketRequest, IMessage, IConversation, IUser, IFile, ISubscription, IResponsePromise } from "../types"
 
 class SAMAClient {
-  private socket: WebSocket | null = null;
+  private socket?: WebSocket;
   private wsEndpoint: string;
   private httpEndpoint: string;
   private organizationId: string;
-  private curerntUserId: string | null = null;
+  private currentUserId?: string;
   private responsesPromises: Record<string, IResponsePromise> = {};
-  private deviceId: string | null = null;
+  public deviceId?: string;
 
-  public onMessageListener: ((message: IMessage) => void) | null = null;
-  public onMessageStatusListener: ((status: any) => void) | null = null;
-  public onUserActivityListener: ((activity: any) => void) | null = null;
-  public onUserTypingListener: ((typing: any) => void) | null = null;
-  public onConversationCreateListener: ((conversation: IConversation) => void) | null = null;
-  public onConversationUpdateListener: ((conversation: IConversation) => void) | null = null;
-  public onConversationDeleteListener: ((conversationId: string) => void) | null = null;
+  public onMessageListener?: ((message: IMessage) => void);
+  public onMessageStatusListener?: ((status: any) => void)
+  public onMessageEditListener?: ((messageEdit: any) => void);
+  public onMessageDeleteListener?: ((messageDelete: any) => void);
+  public onMessageReactionsListener?: ((messageReactions: any) => void);
 
-  public onConnectEvent: (() => void) | null = null;
-  public onMessageEvent: ((message: IMessage) => void) | null = null;
-  public onDisconnectEvent: (() => void) | null = null;
+  public onUserActivityListener?: ((activity: any) => void);
+  public onUserTypingListener?: ((typing: any) => void);
 
-  constructor({ endpoint: { ws, http }, organization_id }: { endpoint: { ws: string; http: string }, organization_id: string }) {
+  public onConversationCreateListener?: ((conversation: IConversation) => void);
+  public onConversationUpdateListener?: ((conversation: IConversation) => void);
+  public onConversationDeleteListener?: ((conversationId: string) => void);
+
+  public onConnectEvent?: (() => void);
+  public onMessageEvent?: ((message: IMessage) => void);
+  public onSystemMessageEvent?: ((message: IMessage) => void);
+  public onDisconnectEvent?: (() => void);
+
+  constructor(
+    { endpoint: { ws, http }, organization_id }
+    : { endpoint: { ws: string; http: string }, organization_id: string }
+  ) {
     this.wsEndpoint = ws;
     this.httpEndpoint = http;
     this.organizationId = organization_id;
-    getBrowserFingerprint({ hardwareOnly: true }).then((device_id) => (this.deviceId = device_id.toString()));
   }
 
   async connect(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.socket = new WebSocket(this.wsEndpoint);
+      this.socket = new WebSocketImp(this.wsEndpoint);
 
       this.socket.onopen = () => {
         console.log("[socket.open]");
@@ -42,6 +50,8 @@ class SAMAClient {
 
       this.socket.onmessage = (e: MessageEvent) => {
         const message = JSON.parse(e.data);
+        this.onMessageListener?.(message);
+
         console.log("[socket.message]", message);
 
         if (message.typing) {
@@ -50,7 +60,8 @@ class SAMAClient {
         }
 
         if (message.system_message || message.message?.system_message) {
-          const { conversation_created, conversation_updated, conversation_kicked } = message.system_message?.x || message.message?.system_message?.x || {};
+          const systemMessage = message.system_message ?? message.message?.system_message
+          const { conversation_created, conversation_updated, conversation_kicked } = systemMessage?.x ?? {};
 
           if (conversation_created) {
             this.onConversationCreateListener?.(conversation_created);
@@ -64,6 +75,8 @@ class SAMAClient {
             this.onConversationDeleteListener?.(conversation_kicked);
             return;
           }
+
+          this.onSystemMessageEvent?.(systemMessage)
           return;
         }
 
@@ -78,13 +91,30 @@ class SAMAClient {
           return;
         }
 
+        if (message.message_edit) {
+          this.onMessageEditListener?.(message.message_edit)
+
+          return
+        }
+
+        if (message.message_delete) {
+          this.onMessageDeleteListener?.(message.message_delete)
+
+          return
+        }
+
+        if (message.message_reactions_update) {
+          this.onMessageReactionsListener?.(message.message_reactions_update)
+
+          return
+        }
+
         if (message.message) {
           if (message.message.error) {
             this.responsesPromises[Object.keys(this.responsesPromises).slice(-1)[0]].reject(message.message.error);
             return;
           }
-          this.onMessageListener?.(message.message);
-          if (message.message.from.toString() !== this.curerntUserId) {
+          if (message.message.from.toString() !== this.currentUserId) {
             this.onMessageEvent?.(message.message);
           }
           return;
@@ -135,27 +165,12 @@ class SAMAClient {
       this.socket.onclose = () => {
         console.log("[socket.close]");
         this.onDisconnectEvent?.();
-        this.reconnect();
-
       };
     });
   }
 
-  private reconnect() {
-    const reConnect = () => {
-      if (navigator.onLine && document.visibilityState === "visible") {
-        this.connect();
-        window.removeEventListener("online", reConnect);
-        document.removeEventListener("visibilitychange", reConnect);
-      }
-    };
-
-    if (navigator.onLine && document.visibilityState === "visible") {
-      this.connect();
-    } else {
-      window.addEventListener("online", reConnect);
-      document.addEventListener("visibilitychange", reConnect);
-    }
+  public async disconnect(): Promise<void> {
+    return this.socket?.close()
   }
 
   private async sendRequest<T>(action: string, data: any = {}, resObjKey: string | string[] = "success"): Promise<T> {
@@ -210,8 +225,12 @@ class SAMAClient {
     return responseData;
   }
 
+  async socketLogin(data: { user: { userId: number, login: string, password: string, }, deviceId?: string, token?: string }): Promise<any> {
+    return this.sendRequest("user_login", { organization_id: this.organizationId, ...data.user, device_id: data.deviceId ?? this.deviceId, token: data.token }, "user");
+  }
+
   async connectSocket(data: { token: string; deviceId: string }): Promise<any> {
-    return this.sendRequest("connect", { token: data.token, device_id: this.deviceId });
+    return this.sendRequest("connect", { token: data.token, device_id: data.deviceId ?? this.deviceId });
   }
 
   async disconnectSocket(): Promise<any> {
@@ -233,7 +252,7 @@ class SAMAClient {
     const tokenExpiredAt = parseInt(localStorage.getItem("sessionExpiredAt") || `${currentTime}`, 10);
     if (tokenExpiredAt - currentTime <= 0) localStorage.removeItem("sessionId");
 
-    const requestData: { organization_id: string, device_id: string | null; login?: string; password?: string } = { organization_id: this.organizationId, device_id: this.deviceId };
+    const requestData: { organization_id: string, device_id?: string; login?: string; password?: string } = { organization_id: this.organizationId, device_id: this.deviceId };
     if (login && password) {
       requestData.login = login;
       requestData.password = password;
@@ -277,18 +296,35 @@ class SAMAClient {
     return this.sendRequest("get_file_urls", { file_ids: data.file_ids }, "file_urls");
   }
 
-  async messageCreate(data: { mid: string; body: string; cid: string; attachments?: any[], replied_message_id: string }): Promise<IMessage> {
+  async messageCreate(data: { mid: string; body: string; cid: string; x?: { [key: string]: any }, attachments?: any[], replied_message_id: string }): Promise<IMessage> {
     return new Promise((resolve, reject) => {
       const requestData = {
         message: {
           id: data.mid,
           body: data.body,
           cid: data.cid,
+          x: data.x,
           attachments: data.attachments,
           replied_message_id: data.replied_message_id
         },
       };
       this.responsesPromises[requestData.message.id] = { resolve, reject };
+      this.socket?.send(JSON.stringify(requestData));
+      console.log("[socket.send]", requestData);
+    });
+  }
+
+  async messageSystem(data: { mid: string; uids?: string[], cid?: string; x: { [key: string]: any }}): Promise<IMessage> {
+    return new Promise((resolve, reject) => {
+      const requestData = {
+        system_message: {
+          id: data.mid,
+          uids: data.uids,
+          cid: data.cid,
+          x: data.x
+        },
+      };
+      this.responsesPromises[requestData.system_message.id] = { resolve, reject };
       this.socket?.send(JSON.stringify(requestData));
       console.log("[socket.send]", requestData);
     });
@@ -304,8 +340,21 @@ class SAMAClient {
     return this.sendRequest("message_list", messageParams, "messages");
   }
 
-  async markConversationAsRead(data: { cid: string }): Promise<any> {
-    return this.sendRequest("message_read", { cid: data.cid });
+  
+  async markConversationAsRead(data: { cid: string, mids?: string[] }): Promise<any> {
+    return this.sendRequest("message_read", { cid: data.cid, ids: data.mids });
+  }
+
+  async messageEdit(data: { mid: string, body: string }): Promise<any> {
+    return this.sendRequest("message_edit", { id: data.mid, body: data.body });
+  }
+
+  async messageDelete(data: { cid: string, mids?: string[], type?: "myself" | "all" }): Promise<any> {
+    return this.sendRequest("message_delete", { cid: data.cid, ids: data.mids, type: data.type ?? "myself" });
+  }
+
+  async getUserActivity(userIds: string[]): Promise<any> {
+    return this.sendRequest("user_last_activity", { ids: userIds }, "last_activity");
   }
 
   async subscribeToUserActivity(data: string): Promise<any> {
@@ -316,12 +365,12 @@ class SAMAClient {
     return this.sendRequest("user_last_activity_unsubscribe");
   }
 
-  async sendTypingStatus(data: { cid: string }): Promise<any> {
+  async sendTypingStatus(data: { cid: string, userId: string, status?: string }): Promise<void> {
     return new Promise((resolve, reject) => {
-      const requestData = { typing: { cid: data.cid } };
-      this.responsesPromises[requestData.typing.cid] = { resolve, reject };
+      const requestData = { typing: { cid: data.cid, userId: data.userId, status: data.status } };
       this.socket?.send(JSON.stringify(requestData));
       console.log("[socket.send]", requestData);
+      resolve();
     });
   }
 
@@ -382,6 +431,34 @@ class SAMAClient {
 
   async pushSubscriptionDelete(): Promise<any> {
     return this.sendRequest("push_subscription_delete", { device_udid: this.deviceId });
+  }
+
+  async ping(): Promise<any> {
+    return this.sendRequest("ping", {}, "pong")
+  }
+
+  async setActivityStatus(isInactive: boolean): Promise<any> {
+    return this.sendRequest("activity_status", { isInactive: !!isInactive }, "success")
+  }
+
+  async blockList() {
+    return this.sendRequest("list_blocked_users", {}, "users")
+  }
+
+  async blockUsers(users: string[]) {
+    return this.sendRequest("block_user", { ids: users }, "success")
+  }
+
+  async unblockUsers(users: string[]) {
+    return this.sendRequest("unblock_user", { ids: users }, "success")
+  }
+
+  async reactionsUpdate(mid: string, addReaction?: string, removeReaction?: string) {
+    return this.sendRequest("message_reactions_update", { mid, add: addReaction, remove: removeReaction }, "success")
+  }
+
+  async reactionsList(mid: string) {
+    return this.sendRequest("message_reactions_list", { mid }, "reactions")
   }
 }
 
