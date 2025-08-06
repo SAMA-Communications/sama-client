@@ -1,8 +1,8 @@
 import getUniqueId from "../utils/uuid";
 import WebSocketImp from "../utils/websocket";
-import { ISocketRequest, IMessage, IConversation, IUser, IFile, ISubscription, IResponsePromise } from "../types"
+import { ISocketRequest, IMessage, IConversation, IUser, IFile, ISubscription, IResponsePromise, ISamaClient } from "../types"
 
-class SAMAClient {
+class SAMAClient implements ISamaClient {
   private socket?: WebSocket;
   private wsEndpoint: string;
   private httpEndpoint: string;

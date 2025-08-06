@@ -1,7 +1,7 @@
 {
   "name": "@sama-communications/sdk",
   "description": "A SDK client for interacting with the SAMA chat server from Web/Node.js apps",
-  "version": "0.14.0",
+  "version": "0.14.2",
   "keywords": [
     "chat",
     "chat-application",
@@ -35,18 +35,20 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/sama-sdk.cjs.js",
-  "module": "./dist/sama-sdk.es.js",
+  "main": "./dist/@sama-communications.sdk.cjs",
+  "module": "./dist/@sama-communications.sdk.mjs",
   "exports": {
     ".": {
-      "import": "./dist/sama-sdk.es.js",
-      "require": "./dist/sama-sdk.cjs.js"
+      "import": "./dist/@sama-communications.sdk.mjs",
+      "require": "./dist/@sama-communications.sdk.cjs"
     }
   },
   "types": "./dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf ./dist",
-    "build": "npm run clean && vite build"
+    "build:sdk": "vite build --config vite.config.ts",
+    "build:types": "tsc -p tsconfig.types.json",
+    "build": "npm run clean && npm run build:sdk && npm run build:types"
   },
   "browser": {
     "ws": false

@@ -60,3 +60,25 @@ export interface IResponsePromise {
   reject: (reason?: any) => void;
   resObjKey?: string | string[];
 }
+
+export interface ISamaClient {
+  deviceId?: string;
+
+  onMessageListener?: ((message: IMessage) => void);
+  onMessageStatusListener?: ((status: any) => void)
+  onMessageEditListener?: ((messageEdit: any) => void);
+  onMessageDeleteListener?: ((messageDelete: any) => void);
+  onMessageReactionsListener?: ((messageReactions: any) => void);
+
+  onUserActivityListener?: ((activity: any) => void);
+  onUserTypingListener?: ((typing: any) => void);
+
+  onConversationCreateListener?: ((conversation: IConversation) => void);
+  onConversationUpdateListener?: ((conversation: IConversation) => void);
+  onConversationDeleteListener?: ((conversationId: string) => void);
+
+  onConnectEvent?: (() => void);
+  onMessageEvent?: ((message: IMessage) => void);
+  onSystemMessageEvent?: ((message: IMessage) => void);
+  onDisconnectEvent?: (() => void);
+}
