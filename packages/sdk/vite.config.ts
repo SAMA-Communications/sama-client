@@ -6,14 +6,18 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "SAMAClient",
-      fileName: (format) => `@sama-communications.sdk.${format}.js`,
+      fileName: (format) => {
+        if (format === "es") return `@sama-communications.sdk.mjs`
+        if (format === "cjs") return `@sama-communications.sdk.cjs`
+        return `@sama-communications.sdk.js`
+      },
       formats: ["es", "cjs", "umd"],
     },
     rollupOptions: {
-      external: ['get-browser-fingerprint'],
+      external: ['ws'],
       output: {
         globals: {
-          'get-browser-fingerprint': 'getBrowserFingerprint'
+          'ws': 'wsNode'
         }
       },
     },
