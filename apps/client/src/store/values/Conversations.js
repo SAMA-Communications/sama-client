@@ -148,7 +148,9 @@ export const conversations = createSlice({
           ...conv.last_message,
           ...(isRemove
             ? { t: conv.last_message.old_t || conv.last_message.t, old_t: null }
-            : { t: draft.updated_at, old_t: conv.last_message.t }),
+            : draft.updated_at
+            ? { t: draft.updated_at, old_t: conv.last_message.t }
+            : {}),
         };
         if (isRemove) {
           updateParams.draft = null;
@@ -156,19 +158,35 @@ export const conversations = createSlice({
           updateParams.draft = draft;
         }
       } else {
+        if (draft) updateParams.draft = draft;
         if (isRemove) {
           updateParams.updated_at = conv.old_updated_at;
           updateParams.old_updated_at = null;
           updateParams.draft = null;
-        } else {
+        } else if (draft.updated_at) {
           updateParams.updated_at = new Date(
             draft.updated_at * 1000
           ).toISOString();
           updateParams.old_updated_at = conv.updated_at;
-          if (draft) updateParams.draft = draft;
         }
       }
+      conversationsAdapter.upsertOne(state, updateParams);
+    },
+    removeDraftField: (state, action) => {
+      const { cid, fields } = action.payload;
+      const conv = state.entities[cid];
 
+      if (!conv || !conv.draft) return;
+
+      const updatedDraft = { ...conv.draft };
+      if (Array.isArray(fields)) {
+        fields.forEach((field) => delete updatedDraft[field]);
+      }
+
+      const updateParams = {
+        _id: cid,
+        draft: Object.keys(updatedDraft).length ? updatedDraft : null,
+      };
       conversationsAdapter.upsertOne(state, updateParams);
     },
 
@@ -264,6 +282,7 @@ export const {
   markConversationAsRead,
   removeChat,
   removeLastMessage,
+  removeDraftField,
   setChats,
   setLastMessageField,
   updateChatIndicator,

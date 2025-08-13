@@ -18,16 +18,20 @@ export default function ChatFormContent() {
   const chatMessagesBlock = useRef(null);
 
   const selectedConversation = useSelector(getConverastionById);
+  const selectedCID = selectedConversation?._id;
   const messagesEntities = useSelector(selectMessagesEntities);
   const messages = Object.values(messagesEntities);
 
   const draftExtenralProps = useSelector(selectContextExternalProps);
   const draftRepliedMessage = useMemo(() => {
-    const selectedCID = selectedConversation?._id;
     const repliedMessageId =
       draftExtenralProps[selectedCID]?.draft_replied_mid ||
       draftService.getDraftRepliedMessageId(selectedCID);
     return messagesEntities[repliedMessageId];
+  }, [selectedConversation, draftExtenralProps, messagesEntities]);
+  const draftForwardedMessage = useMemo(() => {
+    const forwardedMessageId = selectedConversation?.draft?.forwarded_mids;
+    return forwardedMessageId?.map((mid) => messagesEntities[mid]);
   }, [selectedConversation, draftExtenralProps, messagesEntities]);
 
   const chatContentView = useMemo(() => {
@@ -55,7 +59,10 @@ export default function ChatFormContent() {
   return (
     <>
       {chatContentView}
-      <ChatFormInputContent message={draftRepliedMessage} />
+      <ChatFormInputContent
+        repliedMessage={draftRepliedMessage}
+        forwardedMessages={draftForwardedMessage}
+      />
       <ChatFormInput chatMessagesBlockRef={chatMessagesBlock} />
     </>
   );
