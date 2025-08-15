@@ -240,7 +240,11 @@ export default function AttachHub() {
           })),
         };
         dispatch(upsertMessage(upsertMessageParams));
-        draftService.removeDraft(selectedCID);
+        draftService.removeDraftWithOptions(selectedCID, [
+          "replied_mid",
+          "text",
+        ]);
+        scrollToBottom();
       } catch (err) {
         showCustomAlert("The server connection is unavailable.", "warning");
         dispatch(
@@ -263,6 +267,13 @@ export default function AttachHub() {
       selectedCID,
     ]
   );
+
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      const chatContainer = document.getElementById("chatMessagesScrollable");
+      chatContainer && (chatContainer.scrollTop = chatContainer.scrollHeight);
+    }, 300);
+  };
 
   const handeOnKeyDown = useCallback(
     (e) => {

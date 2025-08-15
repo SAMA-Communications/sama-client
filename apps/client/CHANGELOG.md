@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.10.0
+
+### Features
+
+- Implemented the option to forward messages
+
 ## 1.9.0
 
 ### Features

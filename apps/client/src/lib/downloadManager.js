@@ -61,4 +61,45 @@ export default class DownloadManager {
       return { ...att, file_url: fileDownloadUrl[att.file_id] };
     });
   }
+
+  static async getFileObjectsFromUrls(filesInfo) {
+    const files = await Promise.all(
+      filesInfo.map(async ({ url, fileName, contentType }) => {
+        const response = await fetch(url);
+        if (!response.ok)
+          throw new Error(`Failed to fetch file from URL: ${url}`);
+        const blob = await response.blob();
+        return new File([blob], fileName, { type: contentType });
+      })
+    );
+
+    const fileUploadUrls = await api.createUploadUrlForFiles({
+      files: files.map((file) => ({
+        name: file.name,
+        size: file.size,
+        content_type: file.type,
+      })),
+    });
+
+    await Promise.all(
+      fileUploadUrls.map((uploadInfo, i) => {
+        const requestOptions = {
+          method: "PUT",
+          headers: { "Content-Type": uploadInfo.content_type },
+          body: files[i],
+        };
+        return fetch(uploadInfo.upload_url, requestOptions);
+      })
+    );
+
+    const fileDownloadUrl = await api.getDownloadUrlForFiles({
+      file_ids: fileUploadUrls.map((obj) => obj.object_id),
+    });
+
+    return fileUploadUrls.map((uploadInfo) => ({
+      file_id: uploadInfo.object_id,
+      file_name: uploadInfo.name,
+      file_url: fileDownloadUrl[uploadInfo.object_id],
+    }));
+  }
 }

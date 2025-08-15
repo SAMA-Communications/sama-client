@@ -1,7 +1,7 @@
 {
   "name": "@sama-communications/sdk",
   "description": "A SDK client for interacting with the SAMA chat server from Web/Node.js apps",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "keywords": [
     "chat",
     "chat-application",
