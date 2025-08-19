@@ -1,3 +1,5 @@
+export type UserId = string | number
+
 export interface ISocketRequest<T> {
   request: {
     [key: string]: any;
@@ -5,12 +7,18 @@ export interface ISocketRequest<T> {
   };
 }
 
+export interface IMessageCreateAck {
+  mid: string
+  server_mid?: string
+  t: number
+}
+
 export interface IMessage {
   id: string;
   body: string;
   cid: string;
   attachments?: any[];
-  from?: string;
+  from?: UserId;
   error?: any;
 }
 
@@ -19,12 +27,12 @@ export interface IConversation {
   name: string;
   description?: string;
   is_encrypted?: boolean;
-  participants?: string[];
+  participants?: UserId[];
   image_object?: any;
 }
 
 export interface IUser {
-  id: string;
+  id: UserId;
   login: string;
   first_name?: string;
   last_name?: string;
@@ -50,7 +58,7 @@ export interface ISubscription {
   web_key_auth: string;
   web_key_p256dh: string;
   device_udid: string;
-  user_id?: string;
+  user_id?: UserId;
   created_at?: string;
   updated_at?: string;
 }
@@ -59,26 +67,4 @@ export interface IResponsePromise {
   resolve: (value?: any) => void;
   reject: (reason?: any) => void;
   resObjKey?: string | string[];
-}
-
-export interface ISamaClient {
-  deviceId?: string;
-
-  onMessageListener?: ((message: IMessage) => void);
-  onMessageStatusListener?: ((status: any) => void)
-  onMessageEditListener?: ((messageEdit: any) => void);
-  onMessageDeleteListener?: ((messageDelete: any) => void);
-  onMessageReactionsListener?: ((messageReactions: any) => void);
-
-  onUserActivityListener?: ((activity: any) => void);
-  onUserTypingListener?: ((typing: any) => void);
-
-  onConversationCreateListener?: ((conversation: IConversation) => void);
-  onConversationUpdateListener?: ((conversation: IConversation) => void);
-  onConversationDeleteListener?: ((conversationId: string) => void);
-
-  onConnectEvent?: (() => void);
-  onMessageEvent?: ((message: IMessage) => void);
-  onSystemMessageEvent?: ((message: IMessage) => void);
-  onDisconnectEvent?: (() => void);
 }

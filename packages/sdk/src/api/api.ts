@@ -1,8 +1,8 @@
 import getUniqueId from "../utils/uuid";
 import WebSocketImp from "../utils/websocket";
-import { ISocketRequest, IMessage, IConversation, IUser, IFile, ISubscription, IResponsePromise, ISamaClient } from "../types"
+import { ISocketRequest, UserId, IMessageCreateAck, IMessage, IConversation, IUser, IFile, ISubscription, IResponsePromise } from "../types"
 
-class SAMAClient implements ISamaClient {
+class SAMAClient {
   private socket?: WebSocket;
   private wsEndpoint: string;
   private httpEndpoint: string;
@@ -225,7 +225,7 @@ class SAMAClient implements ISamaClient {
     return responseData;
   }
 
-  async socketLogin(data: { user: { userId: number, login: string, password: string, }, deviceId?: string, token?: string }): Promise<any> {
+  async socketLogin(data: { user: { userId: UserId, login: string, password: string, }, deviceId?: string, token?: string }): Promise<any> {
     return this.sendRequest("user_login", { organization_id: this.organizationId, ...data.user, device_id: data.deviceId ?? this.deviceId, token: data.token }, "user");
   }
 
@@ -296,7 +296,7 @@ class SAMAClient implements ISamaClient {
     return this.sendRequest("get_file_urls", { file_ids: data.file_ids }, "file_urls");
   }
 
-  async messageCreate(data: { mid: string; body: string; cid: string; x?: { [key: string]: any }, attachments?: any[], replied_message_id: string }): Promise<IMessage> {
+  async messageCreate(data: { mid: string; body: string; cid: string; x?: { [key: string]: any }, attachments?: any[], replied_message_id: string }): Promise<IMessageCreateAck> {
     return new Promise((resolve, reject) => {
       const requestData = {
         message: {
@@ -314,7 +314,7 @@ class SAMAClient implements ISamaClient {
     });
   }
 
-  async messageSystem(data: { mid: string; uids?: string[], cid?: string; x: { [key: string]: any }}): Promise<IMessage> {
+  async messageSystem(data: { mid: string; uids?: string[], cid?: string; x: { [key: string]: any }}): Promise<IMessageCreateAck> {
     return new Promise((resolve, reject) => {
       const requestData = {
         system_message: {
@@ -339,7 +339,6 @@ class SAMAClient implements ISamaClient {
     };
     return this.sendRequest("message_list", messageParams, "messages");
   }
-
   
   async markConversationAsRead(data: { cid: string, mids?: string[] }): Promise<any> {
     return this.sendRequest("message_read", { cid: data.cid, ids: data.mids });
@@ -349,15 +348,15 @@ class SAMAClient implements ISamaClient {
     return this.sendRequest("message_edit", { id: data.mid, body: data.body });
   }
 
-  async messageDelete(data: { cid: string, mids?: string[], type?: "myself" | "all" }): Promise<any> {
+  async messageDelete(data: { cid: string, mids?: string[], type?: string }): Promise<any> {
     return this.sendRequest("message_delete", { cid: data.cid, ids: data.mids, type: data.type ?? "myself" });
   }
 
-  async getUserActivity(userIds: string[]): Promise<any> {
+  async getUserActivity(userIds: UserId[]): Promise<any> {
     return this.sendRequest("user_last_activity", { ids: userIds }, "last_activity");
   }
 
-  async subscribeToUserActivity(data: string): Promise<any> {
+  async subscribeToUserActivity(data: UserId): Promise<any> {
     return this.sendRequest("user_last_activity_subscribe", { id: data }, "last_activity");
   }
 
@@ -365,9 +364,9 @@ class SAMAClient implements ISamaClient {
     return this.sendRequest("user_last_activity_unsubscribe");
   }
 
-  async sendTypingStatus(data: { cid: string, userId: string, status?: string }): Promise<void> {
+  async sendTypingStatus(data: { cid: string, status?: string }): Promise<void> {
     return new Promise((resolve, reject) => {
-      const requestData = { typing: { cid: data.cid, userId: data.userId, status: data.status } };
+      const requestData = { typing: { cid: data.cid, status: data.status } };
       this.socket?.send(JSON.stringify(requestData));
       console.log("[socket.send]", requestData);
       resolve();
@@ -441,23 +440,23 @@ class SAMAClient implements ISamaClient {
     return this.sendRequest("activity_status", { isInactive: !!isInactive }, "success")
   }
 
-  async blockList() {
+  async blockList(): Promise<UserId[]> {
     return this.sendRequest("list_blocked_users", {}, "users")
   }
 
-  async blockUsers(users: string[]) {
+  async blockUsers(users: UserId[]): Promise<void> {
     return this.sendRequest("block_user", { ids: users }, "success")
   }
 
-  async unblockUsers(users: string[]) {
+  async unblockUsers(users: UserId[]): Promise<void> {
     return this.sendRequest("unblock_user", { ids: users }, "success")
   }
 
-  async reactionsUpdate(mid: string, addReaction?: string, removeReaction?: string) {
+  async reactionsUpdate(mid: string, addReaction?: string, removeReaction?: string): Promise<void> {
     return this.sendRequest("message_reactions_update", { mid, add: addReaction, remove: removeReaction }, "success")
   }
 
-  async reactionsList(mid: string) {
+  async reactionsList(mid: string): Promise<void> {
     return this.sendRequest("message_reactions_list", { mid }, "reactions")
   }
 }
