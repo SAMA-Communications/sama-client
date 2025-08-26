@@ -7,6 +7,8 @@ import messagesService from "@services/messagesService.js";
 
 import ContextLink from "@components/context/elements/ContextLink";
 
+import { useConfirmWindow } from "@hooks/useConfirmWindow.js";
+
 import { addExternalProps } from "@store/values/ContextMenu.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
 import { selectContextExternalProps } from "@store/values/ContextMenu.js";
@@ -26,6 +28,8 @@ import Delete from "@icons/context/Delete.svg?react";
 export default function MessageActions({ listOfIds }) {
   const dispatch = useDispatch();
   const location = useLocation();
+
+  const confirmWindow = useConfirmWindow();
 
   const selectedCID = useSelector(getSelectedConversationId);
 
@@ -150,10 +154,15 @@ export default function MessageActions({ listOfIds }) {
         key={"messageDelete"}
         text="Delete"
         icon={<Delete />}
-        onClick={() => {
-          const isComfirm = confirm("Are you shure to delete message?");
+        onClick={async () => {
+          const { isConfirm, data } = await confirmWindow({
+            title: "Delete selected message?",
+            confirmText: "Delete",
+            cancelText: "Cancel",
+            action: "messageDelete",
+          });
           const { _id, cid } = message;
-          isComfirm && messagesService.sendMessageDelete(cid, [_id], "all");
+          isConfirm && messagesService.sendMessageDelete(cid, [_id], data.type);
         }}
       />
     ),

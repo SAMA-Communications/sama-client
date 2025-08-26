@@ -18,6 +18,7 @@ import { selectParticipantsEntities } from "@store/values/Participants";
 import { setAllParams } from "@store/values/ContextMenu";
 
 import { useKeyDown } from "@hooks/useKeyDown.js";
+import { useConfirmWindow } from "@hooks/useConfirmWindow.js";
 
 import { KEY_CODES } from "@utils/global/keyCodes.js";
 import addSuffix from "@utils/navigation/add_suffix";
@@ -35,6 +36,8 @@ import Delete from "@icons/context/DeleteWhite.svg?react";
 
 export default function ChatFormHeader({ closeFormFunc }) {
   const dispatch = useDispatch();
+
+  const confirmWindow = useConfirmWindow();
 
   const isMobile = useSelector(getIsMobileView);
   const isTablet = useSelector(getIsTabletView);
@@ -209,10 +212,15 @@ export default function ChatFormHeader({ closeFormFunc }) {
       <button
         className="mr-auto px-[16px] py-[8px] flex items-center gap-[7px] !font-normal text-white bg-accent-dark rounded-md cursor-pointer"
         onClick={async () => {
-          const isComfirm = confirm("Are you shure to delete message?");
           const mids = midsArrayOfSelectedMessages;
-          isComfirm &&
-            messagesService.sendMessageDelete(selectedCID, mids, "all");
+          const { isConfirm, data } = await confirmWindow({
+            title: `Delete selected message${mids.length > 1 ? "s" : ""}?`,
+            confirmText: "Delete",
+            cancelText: "Cancel",
+            action: "messageDelete",
+          });
+          isConfirm &&
+            messagesService.sendMessageDelete(selectedCID, mids, data.type);
           removeAndNavigateLastSection(pathname + hash);
         }}
       >
