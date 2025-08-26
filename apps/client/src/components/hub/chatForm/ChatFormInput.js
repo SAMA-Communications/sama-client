@@ -259,9 +259,14 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
         messagesService.sendMessageDelete(selectedCID, [eMid], "all");
       return;
     }
-    await messagesService.sendMessageEdit(eMid, { body: inputValue });
+    if (editedMessage.body !== inputRef.current.value) {
+      await messagesService.sendEditMessage(editedMessage._id, {
+        body: inputRef.current.value,
+      });
+    }
     dispatch(addExternalProps({ [selectedCID]: {} }));
     draftService.removeDraftWithOptions(selectedCID, "edited_mid");
+    inputRef.current.value = draftService.getLastInputText(selectedCID);
   };
 
   useEffect(() => {
