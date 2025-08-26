@@ -35,6 +35,7 @@ export const messages = createSlice({
       messagesAdapter.upsertMany(state, mids);
     },
     removeMessage: messagesAdapter.removeOne,
+    removeMessages: messagesAdapter.removeMany,
   },
 });
 
@@ -87,6 +88,7 @@ export const {
   upsertMessages,
   markMessagesAsRead,
   removeMessage,
+  removeMessages,
 } = messages.actions;
 
 export default messages.reducer;

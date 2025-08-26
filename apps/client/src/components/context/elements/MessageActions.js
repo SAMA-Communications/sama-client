@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router";
 
 import draftService from "@services/tools/draftService.js";
+import messagesService from "@services/messagesService.js";
 
 import ContextLink from "@components/context/elements/ContextLink";
 
@@ -20,6 +21,7 @@ import Copy from "@icons/context/Copy.svg?react";
 import Forward from "@icons/context/Forward.svg?react";
 import Select from "@icons/context/Select.svg?react";
 import Download from "@icons/context/Download.svg?react";
+import Delete from "@icons/context/Delete.svg?react";
 
 export default function MessageActions({ listOfIds }) {
   const dispatch = useDispatch();
@@ -140,6 +142,18 @@ export default function MessageActions({ listOfIds }) {
             })
           );
           draftService.saveDraft(selectedCID, { edited_mid: message._id });
+        }}
+      />
+    ),
+    messageDelete: (
+      <ContextLink
+        key={"messageDelete"}
+        text="Delete"
+        icon={<Delete />}
+        onClick={() => {
+          const isComfirm = confirm("Are you shure to delete message?");
+          const { _id, cid } = message;
+          isComfirm && messagesService.sendMessageDelete(cid, [_id], "all");
         }}
       />
     ),

@@ -243,14 +243,15 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
   };
 
   const editMessageFunc = async () => {
-    if (!inputRef.current.value.trim().length) {
-      showCustomAlert("Message cann't be empty", "warning");
-      //delete message
+    const eMid = editedMessage._id;
+    const inputValue = inputRef.current.value.trim();
+    if (!inputValue.length) {
+      const isComfirm = confirm("Are you shure to delete message?");
+      isComfirm &&
+        messagesService.sendMessageDelete(selectedCID, [eMid], "all");
       return;
     }
-    await messagesService.sendEditMessage(editedMessage._id, {
-      body: inputRef.current.value,
-    });
+    await messagesService.sendMessageEdit(eMid, { body: inputValue });
     dispatch(addExternalProps({ [selectedCID]: {} }));
     draftService.removeDraftWithOptions(selectedCID, "edited_mid");
   };

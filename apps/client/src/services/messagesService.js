@@ -10,6 +10,7 @@ import {
   addMessages,
   markMessagesAsRead,
   removeMessage,
+  removeMessages,
   upsertMessage,
   upsertMessages,
 } from "@store/values/Messages";
@@ -107,6 +108,10 @@ class MessagesService {
       store.dispatch(
         upsertMessage({ _id: id, body, updated_at: new Date().toISOString() })
       );
+    };
+
+    api.onMessageDeleteListener = async (message) => {
+      store.dispatch(removeMessages(message.ids));
     };
 
     api.onUserTypingListener = (data) => {
@@ -253,7 +258,7 @@ class MessagesService {
     return mObject;
   }
 
-  async sendEditMessage(mid, newFields) {
+  async sendMessageEdit(mid, newFields) {
     await api.messageEdit({ mid, body: newFields.body });
     store.dispatch(
       upsertMessage({
@@ -262,6 +267,11 @@ class MessagesService {
         updated_at: new Date().toISOString(),
       })
     );
+  }
+
+  async sendMessageDelete(cid, mids, type) {
+    await api.messageDelete({ cid, mids, type });
+    store.dispatch(removeMessages(mids));
   }
 
   async processMessages(newMessages, additionalOptions) {
