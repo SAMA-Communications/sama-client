@@ -243,6 +243,11 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
   };
 
   const editMessageFunc = async () => {
+    if (!inputRef.current.value.trim().length) {
+      showCustomAlert("Message cann't be empty", "warning");
+      //delete message
+      return;
+    }
     await messagesService.sendEditMessage(editedMessage._id, {
       body: inputRef.current.value,
     });
