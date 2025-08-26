@@ -35,7 +35,7 @@ import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import calcInputHeight from "@utils/text/calc_input_height.js";
 
-export default function ChatFormInput({ chatMessagesBlockRef }) {
+export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
   const dispatch = useDispatch();
 
   const connectState = useSelector(getNetworkState);
@@ -216,7 +216,7 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
 
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
-    inputRef.current.focus();
+    setTimeout(() => inputRef.current.focus(), 50);
 
     const mObject = {
       mid: msg._id,
@@ -241,6 +241,26 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
       chatMessagesBlockRef.current.scrollHeight;
     inputRef.current.style.height = `55px`;
   };
+
+  const editMessageFunc = async () => {
+    await messagesService.sendEditMessage(editedMessage._id, {
+      body: inputRef.current.value,
+    });
+    dispatch(addExternalProps({ [selectedCID]: {} }));
+    draftService.removeDraftWithOptions(selectedCID, "edited_mid");
+  };
+
+  useEffect(() => {
+    if (editedMessage) {
+      inputRef.current.value &&
+        draftService.saveLastInputText(selectedCID, inputRef.current.value);
+      draftService.saveDraft(selectedCID, { text: editedMessage.body });
+      inputRef.current.value = editedMessage.body;
+    } else {
+      inputRef.current.value = draftService.getLastInputText(selectedCID);
+      draftService.saveDraft(selectedCID, { text: inputRef.current.value });
+    }
+  }, [editedMessage]);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -268,8 +288,9 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
     <MessageInput
       inputTextRef={inputRef}
       isBlockedConv={isBlockedConv}
+      isEditAction={!!editedMessage}
       isSending={isSendMessageDisable}
-      onSubmitFunc={createAndSendMessage}
+      onSubmitFunc={editedMessage ? editMessageFunc : createAndSendMessage}
       chatMessagesBlockRef={chatMessagesBlockRef}
     />
   );

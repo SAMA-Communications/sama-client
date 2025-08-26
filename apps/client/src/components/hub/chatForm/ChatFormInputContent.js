@@ -12,6 +12,7 @@ import {
 import { addExternalProps } from "@store/values/ContextMenu.js";
 
 export default function ChatFormInputContent({
+  editedMessage,
   repliedMessage,
   forwardedMessages = [],
 }) {
@@ -19,22 +20,25 @@ export default function ChatFormInputContent({
   const dispatch = useDispatch();
 
   const handleClose = () => {
-    if (repliedMessage) {
-      dispatch(addExternalProps({ [repliedMessage.cid]: {} }));
-      draftService.removeDraftWithOptions(repliedMessage.cid, "replied_mid");
+    if (editedMessage) {
+      dispatch(addExternalProps({ [editedMessage.cid]: {} }));
+      draftService.removeDraftWithOptions(editedMessage.cid, "edited_mid");
     } else if (forwardedMessages.length) {
       dispatch(
         removeDraftField({ cid: selectedCID, fields: ["forwarded_mids"] })
       );
+    } else if (repliedMessage) {
+      dispatch(addExternalProps({ [repliedMessage.cid]: {} }));
+      draftService.removeDraftWithOptions(repliedMessage.cid, "replied_mid");
     }
   };
 
   return (
     <AnimatePresence mode="exit">
-      {(repliedMessage || forwardedMessages.length) && (
+      {(repliedMessage || forwardedMessages.length || editedMessage) && (
         <AdditionalMessages
-          type={repliedMessage ? "reply" : "forward"}
-          message={repliedMessage}
+          type={editedMessage ? "edit" : repliedMessage ? "reply" : "forward"}
+          message={editedMessage || repliedMessage}
           messages={forwardedMessages}
           isPreview={true}
           onCloseFunc={handleClose}

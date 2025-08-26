@@ -23,15 +23,24 @@ export default function ChatFormContent() {
   const messages = Object.values(messagesEntities);
 
   const draftExtenralProps = useSelector(selectContextExternalProps);
+
   const draftRepliedMessage = useMemo(() => {
     const repliedMessageId =
       draftExtenralProps[selectedCID]?.draft_replied_mid ||
       draftService.getDraftRepliedMessageId(selectedCID);
     return messagesEntities[repliedMessageId];
   }, [selectedConversation, draftExtenralProps, messagesEntities]);
+
   const draftForwardedMessage = useMemo(() => {
     const forwardedMessageId = selectedConversation?.draft?.forwarded_mids;
     return forwardedMessageId?.map((mid) => messagesEntities[mid]);
+  }, [selectedConversation, draftExtenralProps, messagesEntities]);
+
+  const draftEditedMessage = useMemo(() => {
+    const editedMessageId =
+      draftExtenralProps[selectedCID]?.draft_edited_mid ||
+      draftService.getDraftEditedMessageId(selectedCID);
+    return messagesEntities[editedMessageId];
   }, [selectedConversation, draftExtenralProps, messagesEntities]);
 
   const chatContentView = useMemo(() => {
@@ -60,10 +69,14 @@ export default function ChatFormContent() {
     <>
       {chatContentView}
       <ChatFormInputContent
+        editedMessage={draftEditedMessage}
         repliedMessage={draftRepliedMessage}
         forwardedMessages={draftForwardedMessage}
       />
-      <ChatFormInput chatMessagesBlockRef={chatMessagesBlock} />
+      <ChatFormInput
+        chatMessagesBlockRef={chatMessagesBlock}
+        editedMessage={draftEditedMessage}
+      />
     </>
   );
 }

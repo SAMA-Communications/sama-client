@@ -15,6 +15,7 @@ import upsertMidsInPath from "@utils/navigation/upasert_mids_in_path.js";
 import writeToCanvas from "@utils/media/write_to_canvas.js";
 
 import Reply from "@icons/context/Reply.svg?react";
+import Edit from "@icons/context/EditText.svg?react";
 import Copy from "@icons/context/Copy.svg?react";
 import Forward from "@icons/context/Forward.svg?react";
 import Select from "@icons/context/Select.svg?react";
@@ -124,6 +125,21 @@ export default function MessageActions({ listOfIds }) {
             location.pathname + location.hash,
             `/forward?mids=[${message._id}]`
           );
+        }}
+      />
+    ),
+    messageEdit: (
+      <ContextLink
+        key={"messageEdit"}
+        text="Edit"
+        icon={<Edit />}
+        onClick={() => {
+          dispatch(
+            addExternalProps({
+              [selectedCID]: { draft_edited_mid: message._id },
+            })
+          );
+          draftService.saveDraft(selectedCID, { edited_mid: message._id });
         }}
       />
     ),

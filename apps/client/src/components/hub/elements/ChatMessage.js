@@ -49,6 +49,7 @@ export default function ChatMessage({
     message;
   const isCurrentUser = from === currentUserId;
   const isForwardMessage = !!message.forwarded_message_id;
+  const isEdited = message.created_at !== message.updated_at;
 
   const timeSend = useMemo(() => {
     const time = new Date(t * 1000);
@@ -88,6 +89,7 @@ export default function ChatMessage({
 
     const list = [
       "messageReply",
+      message.body && isCurrentUser ? "messageEdit" : null,
       copyOption,
       isAttachment ? "messageSaveAs" : null,
       "messageForward",
@@ -294,10 +296,21 @@ export default function ChatMessage({
                 attachments?.length && !body
                   ? "!absolute bottom-[16px] right-[16px] p-[8px] rounded-lg bg-(--color-black-50) self-end"
                   : ""
-              } flex items-center justify-center ${
+              } flex items-end justify-center gap-[3px] ${
                 isCurrentUser ? "pr-[28px]" : ""
               }`}
             >
+              {isEdited ? (
+                <span
+                  className={`text-(--color-text-dark) leading-[18px] text-span ${
+                    (attachments?.length && !body) || isCurrentUser
+                      ? "text-white"
+                      : ""
+                  }`}
+                >
+                  edited
+                </span>
+              ) : null}
               <div
                 className={`text-(--color-text-dark) text-span ${
                   (attachments?.length && !body) || isCurrentUser
