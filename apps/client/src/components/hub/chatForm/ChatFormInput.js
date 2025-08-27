@@ -251,7 +251,7 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
     const inputValue = inputRef.current.value.trim();
     if (!inputValue.length) {
       const { isConfirm } = await confirmWindow({
-        title: "Are you shure to delete message?",
+        title: "Are you sure you want to delete the message?",
         confirmText: "Delete",
         cancelText: "Cancel",
       });
