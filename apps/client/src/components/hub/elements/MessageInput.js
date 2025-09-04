@@ -22,11 +22,13 @@ import { KEY_CODES } from "@utils/global/keyCodes";
 
 import Attach from "@icons/options/Attach.svg?react";
 import Send from "@icons/options/Send.svg?react";
+import Confirm from "@icons/options/ConfirmAccent.svg?react";
 
 export default function MessageInput({
   inputTextRef,
   onSubmitFunc,
   isBlockedConv,
+  isEditAction,
   isSending = false,
 }) {
   const location = useLocation();
@@ -80,7 +82,7 @@ export default function MessageInput({
     const message = location.hash.includes("/attach")
       ? ""
       : draftService.getDraftMessage(selectedConversationId);
-    if (message) {
+    if (message && !isEditAction) {
       if (inputTextRef.current) {
         inputTextRef.current.value = message || "";
         inputTextRef.current.style.height = `${calcInputHeight(
@@ -171,6 +173,13 @@ export default function MessageInput({
             height={35}
             customClassName="mr-[10px] px-[8px] self-center"
           />
+        ) : isEditAction ? (
+          <m.span whileTap={{ translateX: 10, scale: 0.9 }}>
+            <Confirm
+              className="mr-[15px] px-[8px] !w-[50px] !h-[50px] cursor-pointer"
+              onClick={onSubmitFunc}
+            />
+          </m.span>
         ) : (
           <m.span whileTap={{ translateX: 10, scale: 0.9 }}>
             <Send

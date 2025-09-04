@@ -10,6 +10,7 @@ import {
   addMessages,
   markMessagesAsRead,
   removeMessage,
+  upsertMessage,
   upsertMessages,
 } from "@store/values/Messages";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
@@ -99,6 +100,13 @@ class MessagesService {
           })
         );
       }
+    };
+
+    api.onMessageEditListener = async (message) => {
+      const { id, body } = message;
+      store.dispatch(
+        upsertMessage({ _id: id, body, updated_at: new Date().toISOString() })
+      );
     };
 
     api.onUserTypingListener = (data) => {
@@ -243,6 +251,17 @@ class MessagesService {
     }
 
     return mObject;
+  }
+
+  async sendEditMessage(mid, newFields) {
+    await api.messageEdit({ mid, body: newFields.body });
+    store.dispatch(
+      upsertMessage({
+        _id: mid,
+        body: newFields.body,
+        updated_at: new Date().toISOString(),
+      })
+    );
   }
 
   async processMessages(newMessages, additionalOptions) {

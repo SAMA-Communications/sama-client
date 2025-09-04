@@ -9,6 +9,7 @@ import { selectParticipantsEntities } from "@store/values/Participants.js";
 import getUserFullName from "@utils/user/get_user_full_name.js";
 
 import Forward from "@icons/context/ForwardGray.svg?react";
+import Edit from "@icons/context/EditTextGray.svg?react";
 import Reply from "@icons/context/ReplyGray.svg?react";
 import Close from "@icons/options/Close.svg?react";
 
@@ -30,6 +31,7 @@ export default function AdditionalMessages({
     error,
   } = message || messages[0] || {};
   const isReply = type === "reply";
+  const isEdit = type === "edit";
 
   const { bodyColor, bgColor, userNameColor } = useMemo(() => {
     switch (color) {
@@ -100,7 +102,9 @@ export default function AdditionalMessages({
     >
       {isPreview ? (
         <span>
-          {isReply ? (
+          {isEdit ? (
+            <Edit className="w-[25px] h-[25px]" />
+          ) : isReply ? (
             <Reply className="w-[25px] h-[25px]" />
           ) : (
             <Forward className="w-[25px] h-[25px]" />
@@ -116,8 +120,14 @@ export default function AdditionalMessages({
         <p
           className={`${userNameColor} !font-normal overflow-hidden text-ellipsis whitespace-nowrap`}
         >
-          {isPreview && isReply ? "Reply to " : ""}
-          {getUserFullName(participants[senderId])}
+          {isEdit ? (
+            "Edit message"
+          ) : (
+            <>
+              {isPreview && isReply ? "Reply to " : ""}
+              {getUserFullName(participants[senderId])}
+            </>
+          )}
         </p>
         <p
           className={`${bodyColor} overflow-hidden text-ellipsis whitespace-nowrap`}
