@@ -9,7 +9,10 @@ import AnimatedBGmini from "@components/auth/animations/AnimatedBGmini.js";
 
 import PasswordInput from "@components/auth/elements/PasswordInput";
 import UserNameInput from "@components/auth/elements/UserNameInput";
+import EmailInput from "@components/auth/elements/EmailInput";
 import ConfirmButton from "@components/auth/elements/ConfirmButton";
+
+import ResetPasswordModal from "@components/modals/ResetPasswordModal.js";
 
 import { getIsMobileView } from "@store/values/IsMobileView.js";
 
@@ -31,6 +34,9 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
 
   const isLoginPage = page === "login";
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => setIsModalOpen(!!localStorage.getItem("reset_email")), []);
   useEffect(() => setTriggerBGAnimation(false));
   const triggerExitAnimation = () => {
     animate([
@@ -89,7 +95,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
               {isLoginPage ? "Don`t have account?" : "Already have an account?"}
               &nbsp;
               <span
-                className="text-(--color-accent-dark) !font-normal cursor-pointer hover:text-(--color-accent-light-50) transition-colors duration-200"
+                className="text-accent-dark !font-normal cursor-pointer hover:text-(--color-accent-light-50) transition-colors duration-200"
                 onClick={() => setPage(isLoginPage ? "signup" : "login")}
               >
                 {isLoginPage ? "Sign up" : "Log in"}
@@ -109,7 +115,19 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
           ) : null}
           <div className="sm:mt-[25px] flex-1 flex flex-col gap-[15px]">
             <UserNameInput setState={setContent} />
+            {isLoginPage ? null : <EmailInput setState={setContent} />}
             <PasswordInput setState={setContent} />
+            {isLoginPage ? (
+              <div className="flex gap-[7px]">
+                <p>Forgot your password?</p>
+                <span
+                  onClick={() => setIsModalOpen(true)}
+                  className="text-accent-dark cursor-pointer !font-normal"
+                >
+                  Reset Password
+                </span>
+              </div>
+            ) : null}
             <ConfirmButton
               page={page}
               content={content}
@@ -203,6 +221,10 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
           </div>
         </div>
       </m.div>
+      <ResetPasswordModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </section>
   );
 }

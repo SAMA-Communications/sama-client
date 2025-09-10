@@ -108,6 +108,54 @@ class AutoLoginService {
       showCustomAlert(error.message, "warning");
     }
   }
+
+  async sendOtpToken(email) {
+    try {
+      await api.userSendOTPToken({ email });
+      localStorage.setItem("reset_email", email);
+      showCustomAlert(
+        `We have sent a verification code to ${email}`,
+        "success"
+      );
+    } catch (err) {
+      showCustomAlert(err.message || "Incorrect email format.", "warning");
+      return false;
+    }
+    return true;
+  }
+
+  async resendOtpToken(email) {
+    try {
+      await api.userSendOTPToken({ email });
+      showCustomAlert("Token sent.", "success");
+    } catch (err) {
+      showCustomAlert(
+        err.message || "Failed to resend token. Try again.",
+        "warning"
+      );
+      return false;
+    }
+    return true;
+  }
+
+  async sendResetPassword(email, token, newPassword) {
+    try {
+      await api.userResetPassword({
+        email,
+        token: +token,
+        new_password: newPassword,
+      });
+      localStorage.removeItem("reset_email");
+      showCustomAlert("Password successfully changed.", "success");
+    } catch (err) {
+      showCustomAlert(
+        err.message || "Failed to reset password. Try again.",
+        "warning"
+      );
+      return false;
+    }
+    return true;
+  }
 }
 
 const autoLoginService = new AutoLoginService();
