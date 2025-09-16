@@ -4,7 +4,7 @@ import api from "@api/api";
 import DownloadManager from "@lib/downloadManager";
 
 import store from "@store/store";
-import { addUser } from "@store/values/Participants";
+import { addUser, upsertUsers } from "@store/values/Participants";
 import {
   addMessage,
   addMessages,
@@ -18,7 +18,6 @@ import { setSelectedConversation } from "@store/values/SelectedConversation";
 import {
   markConversationAsRead,
   removeChat,
-  removeLastMessage,
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
@@ -199,14 +198,15 @@ class MessagesService {
           .getParticipantsByCids({
             cids: [cid],
           })
-          .then(({ users }) =>
+          .then(({ users }) => {
             store.dispatch(
               upsertParticipants({
                 cid,
                 participants: users.map((obj) => obj._id),
               })
-            )
-          );
+            );
+            store.dispatch(upsertUsers(users));
+          });
       }
     } catch (err) {
       store.dispatch(removeChat(cid));
