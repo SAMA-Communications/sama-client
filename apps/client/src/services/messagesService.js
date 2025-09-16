@@ -18,9 +18,11 @@ import { setSelectedConversation } from "@store/values/SelectedConversation";
 import {
   markConversationAsRead,
   removeChat,
+  removeLastMessage,
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
+  setLastMessageField,
 } from "@store/values/Conversations";
 
 import navigateTo from "@utils/navigation/navigate_to";
@@ -272,6 +274,19 @@ class MessagesService {
   async sendMessageDelete(cid, mids, type) {
     await api.messageDelete({ cid, mids, type });
     store.dispatch(removeMessages(mids));
+
+    const conversation = store.getState().conversations.entities?.[cid];
+    const oldMessagesIds = conversation?.messagesIds || [];
+    const isUpdateLastMessage = mids.includes(oldMessagesIds.at(-1));
+    const newMessagesIds = oldMessagesIds.filter((mid) => !mids.includes(mid));
+
+    store.dispatch(upsertChat({ _id: cid, messagesIds: newMessagesIds }));
+
+    if (isUpdateLastMessage) {
+      const lastMessage =
+        store.getState().messages.entities?.[newMessagesIds.at(-1)];
+      store.dispatch(setLastMessageField({ cid, msg: lastMessage }));
+    }
   }
 
   async processMessages(newMessages, additionalOptions) {

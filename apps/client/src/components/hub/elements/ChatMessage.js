@@ -93,7 +93,7 @@ export default function ChatMessage({
       copyOption,
       isAttachment ? "messageSaveAs" : null,
       "messageForward",
-      isCurrentUser ? "messageDelete" : null,
+      "messageDelete",
       "messageSelect",
     ].filter(Boolean);
 
