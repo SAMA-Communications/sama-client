@@ -1,5 +1,5 @@
 import variant from "https://esm.sh/@jitl/quickjs-ng-wasmfile-release-sync";
-import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@latest";
+import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@latest?deps=memfs@4.0.0";
 
 import api from "@api/api.js";
 
