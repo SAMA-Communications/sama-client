@@ -1,5 +1,5 @@
-import variant from "https://esm.sh/@jitl/quickjs-ng-wasmfile-release-sync";
-import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@latest";
+// import variant from "https://esm.sh/@jitl/quickjs-ng-wasmfile-release-sync";
+// import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@latest";
 
 import api from "@api/api.js";
 
@@ -19,7 +19,7 @@ class ConversationHandlerService {
 
   async initializeSandbox() {
     try {
-      this.#sandBox = await loadQuickJs(variant);
+      // this.#sandBox = await loadQuickJs(variant);
     } catch (error) {
       console.error("Failed to initialize sandbox:", error);
     }
