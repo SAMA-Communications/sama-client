@@ -161,8 +161,9 @@ export default function MessageActions({ listOfIds }) {
             cancelText: "Cancel",
             action: "messageDelete",
           });
-          const { _id, cid } = message;
-          isConfirm && messagesService.sendMessageDelete(cid, [_id], data.type);
+          const { _id } = message;
+          isConfirm &&
+            messagesService.sendMessageDelete(selectedCID, [_id], data.type);
         }}
       />
     ),

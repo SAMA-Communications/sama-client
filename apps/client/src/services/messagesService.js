@@ -32,6 +32,23 @@ class MessagesService {
   typingTimers = {};
 
   constructor() {
+    this.updateConversationAfterDeleteMessages = (cid, mids) => {
+      const conversation = store.getState().conversations.entities?.[cid];
+      if (conversation) {
+        const oldMessagesIds = conversation.messagesIds || [];
+        const isUpdateLastMessage = mids.includes(oldMessagesIds.at(-1));
+        const newMessagesIds = oldMessagesIds.filter(
+          (mid) => !mids.includes(mid)
+        );
+        store.dispatch(upsertChat({ _id: cid, messagesIds: newMessagesIds }));
+        if (isUpdateLastMessage) {
+          const lastMessage =
+            store.getState().messages.entities?.[newMessagesIds.at(-1)];
+          store.dispatch(setLastMessageField({ cid, msg: lastMessage }));
+        }
+      }
+    };
+
     api.onMessageStatusListener = (message) => {
       store.dispatch(markMessagesAsRead(message.ids));
       store.dispatch(
@@ -113,6 +130,7 @@ class MessagesService {
 
     api.onMessageDeleteListener = async (message) => {
       store.dispatch(removeMessages(message.ids));
+      this.updateConversationAfterDeleteMessages(message.cid, message.ids);
     };
 
     api.onUserTypingListener = (data) => {
@@ -274,19 +292,7 @@ class MessagesService {
   async sendMessageDelete(cid, mids, type) {
     await api.messageDelete({ cid, mids, type });
     store.dispatch(removeMessages(mids));
-
-    const conversation = store.getState().conversations.entities?.[cid];
-    const oldMessagesIds = conversation?.messagesIds || [];
-    const isUpdateLastMessage = mids.includes(oldMessagesIds.at(-1));
-    const newMessagesIds = oldMessagesIds.filter((mid) => !mids.includes(mid));
-
-    store.dispatch(upsertChat({ _id: cid, messagesIds: newMessagesIds }));
-
-    if (isUpdateLastMessage) {
-      const lastMessage =
-        store.getState().messages.entities?.[newMessagesIds.at(-1)];
-      store.dispatch(setLastMessageField({ cid, msg: lastMessage }));
-    }
+    this.updateConversationAfterDeleteMessages(cid, mids);
   }
 
   async processMessages(newMessages, additionalOptions) {
