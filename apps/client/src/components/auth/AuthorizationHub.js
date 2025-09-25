@@ -119,12 +119,11 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
             <PasswordInput setState={setContent} />
             {isLoginPage ? (
               <div className="flex gap-[7px]">
-                <p>Forgot your password?</p>
                 <span
                   onClick={() => setIsModalOpen(true)}
                   className="text-accent-dark cursor-pointer !font-normal"
                 >
-                  Reset Password
+                  Forgot password
                 </span>
               </div>
             ) : null}

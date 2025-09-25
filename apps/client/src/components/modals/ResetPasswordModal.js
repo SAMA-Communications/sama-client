@@ -13,6 +13,14 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  const [resendTimer, setResendTimer] = useState(0);
+  useEffect(() => {
+    let timer;
+    resendTimer > 0 &&
+      (timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000));
+    return () => clearTimeout(timer);
+  }, [resendTimer]);
+
   useEffect(() => {
     if (isOpen) {
       const savedEmail = localStorage.getItem("reset_email");
@@ -28,10 +36,6 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
   }, [isOpen]);
 
   const handleSendOTP = async () => {
-    if (!data.email?.length) {
-      showCustomAlert("Incorrect email address.", "warning");
-      return;
-    }
     setLoading(true);
     const isSuccess = await autoLoginService.sendOtpToken(data.email?.trim());
     isSuccess && setStep(2);
@@ -39,10 +43,6 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
   };
 
   const handleResetPassword = async () => {
-    if (!data.token?.length || !data.new_password?.length) {
-      showCustomAlert("Incorrect token or password.", "warning");
-      return;
-    }
     setLoading(true);
     const isSuccess = await autoLoginService.sendResetPassword(
       data.email,
@@ -61,6 +61,13 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
     setLoading(true);
     await autoLoginService.resendOtpToken(data.email?.trim());
     setLoading(false);
+    setResendTimer(90);
+  };
+
+  const formatTimer = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, "0")}`;
   };
 
   const handleClose = () => {
@@ -85,15 +92,19 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <p className="!text-h5 !font-normal text-black mb-[10px]">
-              {step === 1 ? "Reset Password" : "Enter Token & New Password"}
+            <p className="!text-h5 !font-normal text-black mb-[5px]">
+              Reset Password
             </p>
             {step === 1 && (
               <>
+                <p className="mb-[5px]">
+                  To reset your password, enter the email that you used assigned
+                  to your account.
+                </p>
                 <EmailInput setState={setData} />
                 <button
                   className="w-full mt-[10px] py-[14px] px-[14px] flex justify-center text-white bg-(--color-accent-dark) hover:bg-(--color-accent-dark)/80 transition-colors rounded-lg cursor-pointer"
-                  disabled={loading}
+                  disabled={loading || !data.email?.length}
                   onClick={handleSendOTP}
                 >
                   {loading ? "Sending..." : "Confirm"}
@@ -102,10 +113,14 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
             )}
             {step === 2 && (
               <>
+                <p className="mb-[5px]">
+                  We have sent a verification code to{" "}
+                  <span className="text-accent-dark">{data.email}</span>.
+                </p>
                 <CustomInput
                   setState={setData}
                   name="token"
-                  placeholder="Enter token.."
+                  placeholder="Enter the 6 digit OTP sent to your email.."
                 />
                 <CustomInput
                   setState={setData}
@@ -114,17 +129,23 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
                 />
                 <button
                   className="w-full mt-[10px] py-[14px] px-[14px] flex justify-center text-white bg-(--color-accent-dark) hover:bg-(--color-accent-dark)/80 transition-colors rounded-lg cursor-pointer"
-                  disabled={loading}
+                  disabled={
+                    loading || !data.token?.length || !data.new_password?.length
+                  }
                   onClick={handleResetPassword}
                 >
                   {loading ? "Confirming..." : "Confirm"}
                 </button>
                 <button
                   onClick={handleResendOTP}
-                  disabled={loading}
+                  disabled={loading || resendTimer}
                   className="py-[14px] px-[14px] flex justify-center text-white bg-(--color-accent-dark) hover:bg-(--color-accent-dark)/80 transition-colors rounded-lg cursor-pointer"
                 >
-                  Resend token
+                  {loading
+                    ? "..."
+                    : resendTimer
+                    ? formatTimer(resendTimer)
+                    : "Resend OTP"}
                 </button>
               </>
             )}

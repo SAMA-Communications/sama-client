@@ -113,12 +113,11 @@ class AutoLoginService {
     try {
       await api.userSendOTPToken({ email });
       localStorage.setItem("reset_email", email);
-      showCustomAlert(
-        `We have sent a verification code to ${email}`,
-        "success"
-      );
     } catch (err) {
-      showCustomAlert(err.message || "Incorrect email format.", "warning");
+      showCustomAlert(
+        err.message || "We couldn’t find an account with this email.",
+        "warning"
+      );
       return false;
     }
     return true;
