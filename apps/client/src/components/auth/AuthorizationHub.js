@@ -123,7 +123,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
                   onClick={() => setIsModalOpen(true)}
                   className="text-accent-dark cursor-pointer !font-normal"
                 >
-                  Forgot password
+                  Forgot password?
                 </span>
               </div>
             ) : null}
