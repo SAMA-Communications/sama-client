@@ -115,7 +115,7 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
               <>
                 <p className="mb-[5px]">
                   We have sent a verification code to{" "}
-                  <span className="text-accent-dark">{data.email}</span>.
+                  <span className="text-accent-dark">{data.email}</span>
                 </p>
                 <CustomInput
                   setState={setData}

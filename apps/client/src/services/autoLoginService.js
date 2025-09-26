@@ -126,7 +126,7 @@ class AutoLoginService {
   async resendOtpToken(email) {
     try {
       await api.userSendOTPToken({ email });
-      showCustomAlert("Token sent.", "success");
+      showCustomAlert("OTP sent.", "success");
     } catch (err) {
       showCustomAlert(
         err.message || "Failed to resend token. Try again.",
