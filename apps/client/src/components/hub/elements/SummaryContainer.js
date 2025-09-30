@@ -11,7 +11,7 @@ import OvalLoader from "@components/_helpers/OvalLoader.js";
 import globalConstants from "@utils/global/constants.js";
 
 import Close from "@icons/actions/Close.svg?react";
-import MagicWand from "@icons/ai/MagicWand.svg?react";
+import MagicWand from "@icons/ai/MagicWandWhite.svg?react";
 
 export default function SummaryContainer({ summaryContent }) {
   const dispatch = useDispatch();

@@ -33,10 +33,13 @@ export default function MagicButton({ inputTextRef }) {
       </button>
     ));
 
-  const summarizeActionOnClick = async (filter) =>
+  const summarizeActionOnClick = async (filter) => {
+    setIsOpen(false);
     await aiService.summarizeMessages({ cid: selectedCID, filter });
+  };
 
   const changeToneActionOnClick = async (tone) => {
+    setIsOpen(false);
     const body = inputTextRef.current.value;
     if (!body.length) {
       showCustomAlert("No text to change.");
