@@ -144,7 +144,7 @@ export default function ChatForm() {
     <m.div
       key="chatForm"
       id="chatFormContainer"
-      className={`max-xl:max-w-full ${
+      className={`relative max-xl:max-w-full ${
         location.pathname.includes("/profile")
           ? "xl:max-w-full"
           : "xl:max-w-[calc(100%-420px)]"

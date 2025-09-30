@@ -88,6 +88,7 @@ main {
   cursor: pointer;
 }
 
+.magic-wand .editor-tooltip-style,
 .editor-helper .editor-tooltip-style,
 .editor-validation .editor-tooltip-style {
   padding: 15px 30px !important;
@@ -96,8 +97,11 @@ main {
   border-radius: 8px;
   background-color: var(--color-white);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+
+  z-index: 50;
 }
 
+.magic-wand .editor-tooltip-arrow,
 .editor-helper .editor-tooltip-arrow,
 .editor-validation .editor-tooltip-arrow {
   background-color: var(--color-accent-dark);

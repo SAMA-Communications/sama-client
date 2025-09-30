@@ -1,3 +1,4 @@
+import { AnimatePresence } from "motion/react";
 import { useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 
@@ -7,6 +8,7 @@ import ChatFormInput from "@components/hub/chatForm/ChatFormInput.js";
 import ChatFormInputContent from "@components/hub/chatForm/ChatFormInputContent.js";
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import MessagesList from "@components/hub/elements/MessagesList";
+import SummaryContainer from "@components/hub/elements/SummaryContainer.js";
 
 import { getConverastionById } from "@store/values/Conversations.js";
 import { selectMessagesEntities } from "@store/values/Messages.js";
@@ -67,6 +69,9 @@ export default function ChatFormContent() {
 
   return (
     <>
+      <AnimatePresence>
+        <SummaryContainer summaryContent={selectedConversation?.summary} />
+      </AnimatePresence>
       {chatContentView}
       <ChatFormInputContent
         editedMessage={draftEditedMessage}
