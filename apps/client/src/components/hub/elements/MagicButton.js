@@ -82,12 +82,12 @@ export default function MagicButton({ inputTextRef }) {
                 customStyle: "!pb-[5px] !text-left !text-black/80 !cursor-auto",
                 icon: <Summarize className="w-[15px] h-[15px]" />,
               },
-              {
-                label: "- unreads",
-                onClick: async () => await summarizeActionOnClick("unreads"),
-                customStyle:
-                  "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-dark",
-              },
+              // {
+              //   label: "- unreads",
+              //   onClick: async () => await summarizeActionOnClick("unreads"),
+              //   customStyle:
+              //     "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-dark",
+              // },
               {
                 label: "- last day",
                 onClick: async () => await summarizeActionOnClick("last-day"),
