@@ -17,6 +17,7 @@ import conversationService from "@services/conversationsService";
 import messagesService from "@services/messagesService";
 
 import BetterSuspense from "@hooks/BetterSuspense.js";
+import ConfirmWindowProvider from "@hooks/useConfirmWindow.js";
 
 import ContextMenuHub from "@components/context/ContextMenuHub";
 
@@ -162,41 +163,43 @@ export default function App() {
         }
         fallbackMinDurationMs={isUserLoggedIn ? 700 : 400}
       >
-        {isContextClicked && (
-          <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
-        )}
-        <AnimatePresence mode="wait">
-          <Routes location={history.location} key={routePathKey}>
-            <Route
-              path="/authorization"
-              element={
-                <m.div key={routePathKey} exit={exitAnimation}>
-                  <AuthorizationHub />
-                </m.div>
-              }
-            />
-            <Route
-              path="/demo"
-              element={
-                <m.div key={routePathKey} exit={exitAnimation}>
-                  <AuthorizationHub showDemoMessage={true} />
-                </m.div>
-              }
-            />
-            <Route
-              path="/*"
-              element={
-                <m.div
-                  key={routePathKey}
-                  className="w-dvw h-dvh flex overflow-hidden"
-                  exit={exitAnimation}
-                >
-                  <Main isNeedToAnimate={isNeedToAnimateMain} />
-                </m.div>
-              }
-            />
-          </Routes>
-        </AnimatePresence>
+        <ConfirmWindowProvider>
+          {isContextClicked && (
+            <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />
+          )}
+          <AnimatePresence mode="wait">
+            <Routes location={history.location} key={routePathKey}>
+              <Route
+                path="/authorization"
+                element={
+                  <m.div key={routePathKey} exit={exitAnimation}>
+                    <AuthorizationHub />
+                  </m.div>
+                }
+              />
+              <Route
+                path="/demo"
+                element={
+                  <m.div key={routePathKey} exit={exitAnimation}>
+                    <AuthorizationHub showDemoMessage={true} />
+                  </m.div>
+                }
+              />
+              <Route
+                path="/*"
+                element={
+                  <m.div
+                    key={routePathKey}
+                    className="w-dvw h-dvh flex overflow-hidden"
+                    exit={exitAnimation}
+                  >
+                    <Main isNeedToAnimate={isNeedToAnimateMain} />
+                  </m.div>
+                }
+              />
+            </Routes>
+          </AnimatePresence>
+        </ConfirmWindowProvider>
       </BetterSuspense>
     </LazyMotion>
   );

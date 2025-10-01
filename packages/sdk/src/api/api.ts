@@ -13,6 +13,7 @@ class SAMAClient {
 
   public onMessageListener: ((message: IMessage) => void) | null = null;
   public onMessageEditListener?: ((messageEdit: any) => void);
+  public onMessageDeleteListener?: ((messageDelete: any) => void);
   public onMessageStatusListener: ((status: any) => void) | null = null;
   public onUserActivityListener: ((activity: any) => void) | null = null;
   public onUserTypingListener: ((typing: any) => void) | null = null;
@@ -80,6 +81,11 @@ class SAMAClient {
 
         if (message.message_edit) {
           this.onMessageEditListener?.(message.message_edit)
+          return
+        }
+
+        if (message.message_delete) {
+          this.onMessageDeleteListener?.(message.message_delete)
           return
         }
 
@@ -302,6 +308,10 @@ class SAMAClient {
 
   async messageEdit(data: { mid: string, body: string }): Promise<any> {
     return this.sendRequest("message_edit", { id: data.mid, body: data.body });
+  }
+
+  async messageDelete(data: { cid: string, mids?: string[], type?: string }): Promise<any> {
+    return this.sendRequest("message_delete", { cid: data.cid, ids: data.mids, type: data.type ?? "myself" });
   }
 
   async messageList(data: { cid: string; ids?: string[]; limit?: number; updated_at?: string }): Promise<IMessage[]> {
