@@ -251,6 +251,18 @@ class SAMAClient {
     return await this.sendHttpPromise("POST", "logout", null);
   }
 
+  async userSendOTPToken(data: { email: string }): Promise<any> {
+    const requestData: { organization_id: string, device_id: string | null; email: string; } = { organization_id: this.organizationId, device_id: this.deviceId, email: data.email };
+
+    return this.sendRequest("user_send_otp", requestData);
+  }
+
+  async userResetPassword(data: { email: string, token: number, new_password: string }): Promise<any> {
+    const requestData: { organization_id: string, device_id: string | null; email: string; token: number; new_password: string } = { organization_id: this.organizationId, device_id: this.deviceId, email: data.email, token: data.token, new_password: data.new_password };
+
+    return this.sendRequest("user_reset_password", requestData);
+  }
+
   async userDelete(): Promise<any> {
     localStorage.removeItem("sessionId");
     return this.sendRequest("user_delete");
