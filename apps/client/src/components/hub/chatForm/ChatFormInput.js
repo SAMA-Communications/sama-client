@@ -257,8 +257,6 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
       });
       isConfirm &&
         messagesService.sendMessageDelete(selectedCID, [eMid], "all");
-      return;
-    }
     if (editedMessage.body !== inputRef.current.value) {
       await messagesService.sendEditMessage(editedMessage._id, {
         body: inputRef.current.value,
