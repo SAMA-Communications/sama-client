@@ -5,6 +5,8 @@ import draftService from "@services/tools/draftService.js";
 import messagesService from "@services/messagesService";
 import DownloadManager from "../../../lib/downloadManager.js";
 
+import { useConfirmWindow } from "@hooks/useConfirmWindow.js";
+
 import MessageInput from "@components/hub/elements/MessageInput";
 
 import {
@@ -37,6 +39,8 @@ import calcInputHeight from "@utils/text/calc_input_height.js";
 
 export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
   const dispatch = useDispatch();
+
+  const confirmWindow = useConfirmWindow();
 
   const connectState = useSelector(getNetworkState);
   const currentUserId = useSelector(selectCurrentUserId);
@@ -243,11 +247,16 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
   };
 
   const editMessageFunc = async () => {
-    if (!inputRef.current.value.trim().length) {
-      showCustomAlert("Message cann't be empty", "warning");
-      //delete message
-      return;
-    }
+    const eMid = editedMessage._id;
+    const inputValue = inputRef.current.value.trim();
+    if (!inputValue.length) {
+      const { isConfirm } = await confirmWindow({
+        title: "Are you sure you want to delete the message?",
+        confirmText: "Delete",
+        cancelText: "Cancel",
+      });
+      isConfirm &&
+        messagesService.sendMessageDelete(selectedCID, [eMid], "all");
     if (editedMessage.body !== inputRef.current.value) {
       await messagesService.sendEditMessage(editedMessage._id, {
         body: inputRef.current.value,
@@ -264,6 +273,7 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
         draftService.saveLastInputText(selectedCID, inputRef.current.value);
       draftService.saveDraft(selectedCID, { text: editedMessage.body });
       inputRef.current.value = editedMessage.body;
+      inputRef.current.focus();
     } else {
       inputRef.current.value = draftService.getLastInputText(selectedCID);
       draftService.saveDraft(selectedCID, { text: inputRef.current.value });
