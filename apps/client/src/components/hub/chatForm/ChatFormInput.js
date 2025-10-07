@@ -266,51 +266,51 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
       draftService.removeDraftWithOptions(selectedCID, "edited_mid");
       inputRef.current.value = draftService.getLastInputText(selectedCID);
     }
+  };
 
-    useEffect(() => {
-      if (editedMessage) {
-        inputRef.current.value &&
-          draftService.saveLastInputText(selectedCID, inputRef.current.value);
-        draftService.saveDraft(selectedCID, { text: editedMessage.body });
-        inputRef.current.value = editedMessage.body;
-        inputRef.current.focus();
-      } else {
-        inputRef.current.value = draftService.getLastInputText(selectedCID);
-        draftService.saveDraft(selectedCID, { text: inputRef.current.value });
-      }
-    }, [editedMessage]);
+  useEffect(() => {
+    if (editedMessage) {
+      inputRef.current.value &&
+        draftService.saveLastInputText(selectedCID, inputRef.current.value);
+      draftService.saveDraft(selectedCID, { text: editedMessage.body });
+      inputRef.current.value = editedMessage.body;
+      inputRef.current.focus();
+    } else {
+      inputRef.current.value = draftService.getLastInputText(selectedCID);
+      draftService.saveDraft(selectedCID, { text: inputRef.current.value });
+    }
+  }, [editedMessage]);
 
-    useEffect(() => {
-      if (inputRef.current) {
-        const draftText = draftService.getDraftMessage(selectedCID) || "";
-        inputRef.current.value = draftText;
-        inputRef.current.style.height = `${calcInputHeight(draftText)}px`;
-      }
-    }, [selectedCID]);
+  useEffect(() => {
+    if (inputRef.current) {
+      const draftText = draftService.getDraftMessage(selectedCID) || "";
+      inputRef.current.value = draftText;
+      inputRef.current.style.height = `${calcInputHeight(draftText)}px`;
+    }
+  }, [selectedCID]);
 
-    useEffect(() => {
-      draftExtenralProps[selectedCID]?.draft_replied_mid &&
-        inputRef.current.focus();
-    }, [draftExtenralProps]);
+  useEffect(() => {
+    draftExtenralProps[selectedCID]?.draft_replied_mid &&
+      inputRef.current.focus();
+  }, [draftExtenralProps]);
 
-    const isBlockedConv = useMemo(() => {
-      const { type, owner_id, opponent_id } = selectedConversation;
-
-      return (
-        type === "u" &&
-        (!participants[opponent_id]?.login || !participants[owner_id]?.login)
-      );
-    }, [selectedConversation, participants]);
+  const isBlockedConv = useMemo(() => {
+    const { type, owner_id, opponent_id } = selectedConversation;
 
     return (
-      <MessageInput
-        inputTextRef={inputRef}
-        isBlockedConv={isBlockedConv}
-        isEditAction={!!editedMessage}
-        isSending={isSendMessageDisable}
-        onSubmitFunc={editedMessage ? editMessageFunc : createAndSendMessage}
-        chatMessagesBlockRef={chatMessagesBlockRef}
-      />
+      type === "u" &&
+      (!participants[opponent_id]?.login || !participants[owner_id]?.login)
     );
-  };
+  }, [selectedConversation, participants]);
+
+  return (
+    <MessageInput
+      inputTextRef={inputRef}
+      isBlockedConv={isBlockedConv}
+      isEditAction={!!editedMessage}
+      isSending={isSendMessageDisable}
+      onSubmitFunc={editedMessage ? editMessageFunc : createAndSendMessage}
+      chatMessagesBlockRef={chatMessagesBlockRef}
+    />
+  );
 }
