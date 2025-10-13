@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import globalConstants from "@utils/global/constants.js";
-import formatFileSize from "@utils/media/format_file_size.js";
+import { formatFileSize } from "@utils/MediaUtils.js";
 
 import File from "@icons/media/File.svg?react";
 import Refresh from "@icons/options/Refresh.svg?react";

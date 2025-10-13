@@ -13,10 +13,10 @@ import draftService from "@services/tools/draftService.js";
 
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 
-import extractFilesFromClipboard from "@utils/media/extract_files_from_clipboard.js";
 import globalConstants from "@utils/global/constants.js";
 import { addSuffix } from "@utils/NavigationUtils.js";
 import { calcInputHeight } from "@utils/FormatedUtils.js";
+import { extractFilesFromClipboard } from "@utils/MediaUtils.js";
 import { isMobile } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 

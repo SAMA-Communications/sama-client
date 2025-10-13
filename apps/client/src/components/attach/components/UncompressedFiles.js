@@ -2,8 +2,7 @@ import { useMemo, useState } from "react";
 
 import ItemLoader from "@components/attach/elements/ItemLoader";
 
-import getFileSize from "@utils/media/get_file_size";
-import getFileType from "@utils/media/get_file_type";
+import { getFileType, getFileSize } from "@utils/MediaUtils.js";
 
 import CloseIcon from "@icons/actions/CloseGray.svg?react";
 

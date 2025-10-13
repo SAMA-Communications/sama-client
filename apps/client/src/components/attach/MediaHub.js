@@ -8,7 +8,7 @@ import { useTouchScreen } from "@hooks/useTouchScreen";
 import ImageView from "./components/ImageView.js";
 import VideoView from "./components/VideoView.js";
 
-import getFileType from "@utils/media/get_file_type";
+import { getFileType } from "@utils/MediaUtils.js";
 import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 

@@ -14,7 +14,7 @@ import { getSelectedConversationId } from "@store/values/SelectedConversation.js
 import { selectContextExternalProps } from "@store/values/ContextMenu.js";
 
 import { addSuffix, upsertMidsInPath } from "@utils/NavigationUtils.js";
-import writeToCanvas from "@utils/media/write_to_canvas.js";
+import { writeToCanvas } from "@utils/MediaUtils.js";
 
 import Reply from "@icons/context/Reply.svg?react";
 import Edit from "@icons/context/EditText.svg?react";

@@ -1,7 +1,6 @@
 import MediaAttachment from "./MediaAttachment.js";
 
-import chunkMedia from "@utils/media/chunk_media.js";
-import normalizeRatio from "@utils/media/normalize_ratio.js";
+import { chunkMedia, normalizeRatio } from "@utils/MediaUtils.js";
 
 export default function MediaAttachments({
   maxWidth = null,

@@ -4,7 +4,7 @@ import { default as EventEmitter } from "@lib/eventEmitter";
 
 import { default as store } from "@store/store";
 
-import getFileType from "@utils/media/get_file_type";
+import { getFileType } from "@utils/MediaUtils.js";
 import { urlBase64ToUint8Array } from "@utils/NavigationUtils.js";
 
 let sw = null;
