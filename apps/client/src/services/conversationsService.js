@@ -29,7 +29,7 @@ import { history } from "@utils/history.js";
 
 import { notificationQueueByCid } from "@services/tools/notifications";
 
-import validateFieldLength from "@validations/validateFieldLength";
+import { validateFieldLength } from "@utils/ValidationGeneral.js";
 
 class ConversationsService {
   userIsLoggedIn = false;

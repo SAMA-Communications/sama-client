@@ -5,13 +5,14 @@ import { useMonaco } from "@monaco-editor/react";
 import { useSelector, useDispatch } from "react-redux";
 
 import conversationHandlerService from "@services/conversationHandlerService.js";
-import { debounce } from "@hooks/debounce.js";
 
 import OvalLoader from "@components/_helpers/OvalLoader.js";
 
 import { getCurrentUserFromParticipants } from "@store/values/Participants.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
 import { updateHandler } from "@store/values/Conversations.js";
+
+import { debounce } from "@utils/debounce.js";
 
 import Debug from "@icons/editor/Debug.svg?react";
 import Fail from "@icons/status/Fail.svg?react";
