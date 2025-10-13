@@ -1,4 +1,4 @@
-import showCustomAlert from "@utils/show_alert";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 
 export default function validateEmail(email) {
   if (

@@ -1,6 +1,6 @@
 import globalConstants from "@utils/global/constants";
 
-export default function getLastUpdateTime(updatedAt, lastMessageObject) {
+export function getLastUpdateTime(updatedAt, lastMessageObject) {
   const t = new Date(
     lastMessageObject
       ? lastMessageObject.t / 1000000000 < 10
@@ -29,4 +29,16 @@ export default function getLastUpdateTime(updatedAt, lastMessageObject) {
     : t.getHours() +
         ":" +
         (t.getMinutes() < 10 ? "0" + t.getMinutes() : t.getMinutes());
+}
+
+export function extractForwardedMids(hash) {
+  if (typeof hash !== "string") return [];
+
+  const match = hash.match(/mids=\[([^\]]+)\]/);
+  if (!match || !match[1]) return [];
+
+  return match[1]
+    .split(",")
+    .map((mid) => mid.trim())
+    .filter(Boolean);
 }

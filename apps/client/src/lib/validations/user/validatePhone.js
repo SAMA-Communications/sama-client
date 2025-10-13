@@ -1,4 +1,4 @@
-import showCustomAlert from "@utils/show_alert";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 
 export default function validatePhone(phone) {
   if (phone && !/^(\+\d{2,14}|\d{3,15})$/.test(phone)) {

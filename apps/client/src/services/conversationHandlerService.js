@@ -6,7 +6,7 @@ import api from "@api/api.js";
 import store from "@store/store.js";
 import { updateHandler, upsertChat } from "@store/values/Conversations.js";
 
-import showCustomAlert from "@utils/show_alert.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 import globalConstants from "@utils/global/constants.js";
 
 class ConversationHandlerService {

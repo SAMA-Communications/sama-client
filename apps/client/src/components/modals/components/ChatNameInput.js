@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 
 import globalConstants from "@utils/global/constants";
-import showCustomAlert from "@utils/show_alert";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 import ImageMedium from "@icons/media/ImageBig.svg?react";

@@ -10,7 +10,7 @@ import draftService from "@services/tools/draftService.js";
 
 import { updateWithDrafts } from "@store/values/Conversations.js";
 
-import getLastUpdateTime from "@utils/conversation/get_last_update_time";
+import { getLastUpdateTime } from "@utils/ConversationUtils.js";
 
 import Group from "@icons/users/Group.svg?react";
 import GroupMini from "@icons/users/GroupMini.svg?react";

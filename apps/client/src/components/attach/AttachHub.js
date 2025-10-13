@@ -29,9 +29,9 @@ import { getIsMobileView } from "@store/values/IsMobileView";
 
 import globalConstants from "@utils/global/constants";
 import processFile from "@utils/media/process_file";
-import showCustomAlert from "@utils/show_alert";
 import extractFilesFromClipboard from "@utils/media/extract_files_from_clipboard.js";
 import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 export default function AttachHub() {

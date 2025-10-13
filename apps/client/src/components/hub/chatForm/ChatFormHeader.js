@@ -26,7 +26,7 @@ import {
   removeSectionAndNavigate,
   removeAndNavigateLastSection,
 } from "@utils/NavigationUtils.js";
-import showCustomAlert from "@utils/show_alert";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 import getLastVisitTime from "@utils/user/get_last_visit_time";
 import getUserFullName from "@utils/user/get_user_full_name";
 import { KEY_CODES } from "@utils/global/keyCodes.js";

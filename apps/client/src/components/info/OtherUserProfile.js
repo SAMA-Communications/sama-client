@@ -25,7 +25,7 @@ import {
 } from "@utils/NavigationUtils.js";
 import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
 import getUserFullName from "@utils/user/get_user_full_name";
-import showCustomAlert from "@utils/show_alert";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 import {

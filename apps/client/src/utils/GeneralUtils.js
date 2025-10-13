@@ -19,9 +19,11 @@ const themes = {
   },
 };
 
+export const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
 const toastTimers = new Map();
 
-export default function showCustomAlert(message, themeStyle) {
+export function showCustomAlert(message, themeStyle) {
   createAndShowAlert(message, themeStyle);
 }
 

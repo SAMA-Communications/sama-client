@@ -1,4 +1,4 @@
-import showCustomAlert from "@utils/show_alert";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 
 export default function validateFieldLength(value, min, max, fieldName) {
   const length = value?.trim().length;

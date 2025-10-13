@@ -13,11 +13,11 @@ import draftService from "@services/tools/draftService.js";
 
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 
-import { addSuffix } from "@utils/NavigationUtils.js";
-import isMobile from "@utils/get_device_type";
-import calcInputHeight from "@utils/text/calc_input_height.js";
 import extractFilesFromClipboard from "@utils/media/extract_files_from_clipboard.js";
 import globalConstants from "@utils/global/constants.js";
+import { addSuffix } from "@utils/NavigationUtils.js";
+import { calcInputHeight } from "@utils/FormatedUtils.js";
+import { isMobile } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 import Attach from "@icons/options/Attach.svg?react";

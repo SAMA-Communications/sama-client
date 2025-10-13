@@ -11,7 +11,7 @@ import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { upsertUser } from "@store/values/Participants";
 
 import { navigateTo } from "@utils/NavigationUtils.js";
-import showCustomAlert from "@utils/show_alert";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { history } from "@utils/global/history";
 
 class AutoLoginService {

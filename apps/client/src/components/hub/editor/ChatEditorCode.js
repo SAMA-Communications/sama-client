@@ -1,13 +1,16 @@
 import Editor, { useMonaco } from "@monaco-editor/react";
-import conversationHandlerService from "@services/conversationHandlerService.js";
-import getFormatedTime from "@utils/time/get_formated_time.js";
-import getUserFullName from "@utils/user/get_user_full_name.js";
-import globalConstants from "@utils/global/constants.js";
 import { constrainedEditor } from "constrained-editor-plugin";
-import { getConverastionById } from "@store/values/Conversations.js";
-import { selectParticipantsEntities } from "@store/values/Participants.js";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+
+import conversationHandlerService from "@services/conversationHandlerService.js";
+
+import { getConverastionById } from "@store/values/Conversations.js";
+import { selectParticipantsEntities } from "@store/values/Participants.js";
+
+import getUserFullName from "@utils/user/get_user_full_name.js";
+import globalConstants from "@utils/global/constants.js";
+import { getFormatedTime } from "@utils/FormatedUtils.js";
 
 export default function ChatEditorCode() {
   const monaco = useMonaco();

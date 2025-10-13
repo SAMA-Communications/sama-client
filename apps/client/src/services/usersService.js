@@ -2,12 +2,12 @@ import DownloadManager from "@lib/downloadManager";
 
 import api from "@api/api";
 
-import isHeic from "@utils/media/is_heic";
-import processFile from "@utils/media/process_file";
-import showCustomAlert from "@utils/show_alert";
-
 import store from "@store/store";
 import { upsertUser } from "@store/values/Participants";
+
+import isHeic from "@utils/media/is_heic";
+import processFile from "@utils/media/process_file";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 
 import validateEmail from "@validations/user/validateEmail";
 import validateFieldLength from "@validations/validateFieldLength";

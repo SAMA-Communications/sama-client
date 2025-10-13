@@ -15,7 +15,7 @@ import { upsertChat } from "@store/values/Conversations";
 import { upsertUser } from "@store/values/Participants";
 
 import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
-import showCustomAlert from "@utils/show_alert";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 export default function EditModalHub() {

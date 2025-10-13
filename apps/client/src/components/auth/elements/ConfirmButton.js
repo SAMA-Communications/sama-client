@@ -16,7 +16,7 @@ import { upsertUser } from "@store/values/Participants";
 import { getIsMobileView } from "@store/values/IsMobileView.js";
 
 import { navigateTo } from "@utils/NavigationUtils.js";
-import showCustomAlert from "@utils/show_alert";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 export default function ConfirmButton({ page, content, onClickEvent }) {
