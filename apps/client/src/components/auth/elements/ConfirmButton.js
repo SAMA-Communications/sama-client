@@ -15,7 +15,7 @@ import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { upsertUser } from "@store/values/Participants";
 import { getIsMobileView } from "@store/values/IsMobileView.js";
 
-import navigateTo from "@utils/navigation/navigate_to";
+import { navigateTo } from "@utils/NavigationUtils.js";
 import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@utils/global/keyCodes";
 

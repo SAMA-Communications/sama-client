@@ -10,8 +10,7 @@ import { addUsers } from "@store/values/Participants";
 
 import getUserFullName from "@utils/user/get_user_full_name";
 import getUserInitials from "@utils/user/get_user_initials";
-import navigateTo from "@utils/navigation/navigate_to";
-import addSuffix from "@utils/navigation/add_suffix";
+import { addSuffix, navigateTo } from "@utils/NavigationUtils.js";
 
 import Selected from "@icons/status/Selected.svg?react";
 

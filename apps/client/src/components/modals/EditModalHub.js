@@ -14,7 +14,7 @@ import UserNameInputs from "@components/modals/components/UserNameInputs";
 import { upsertChat } from "@store/values/Conversations";
 import { upsertUser } from "@store/values/Participants";
 
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 import showCustomAlert from "@utils/show_alert";
 import { KEY_CODES } from "@utils/global/keyCodes";
 

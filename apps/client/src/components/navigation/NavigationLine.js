@@ -16,9 +16,8 @@ import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 
-import addPrefix from "@utils/navigation/add_prefix";
+import { addPrefix, navigateTo } from "@utils/NavigationUtils.js";
 import getUserInitials from "@utils/user/get_user_initials";
-import navigateTo from "@utils/navigation/navigate_to";
 
 import { showItem, showLogoOptions } from "@animations/aNavigationLine.js";
 

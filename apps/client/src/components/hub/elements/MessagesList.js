@@ -19,7 +19,7 @@ import {
 import { getConverastionById } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 
-import upsertMidsInPath from "@utils/navigation/upasert_mids_in_path.js";
+import { upsertMidsInPath } from "@utils/NavigationUtils.js";
 
 import ArrowBottom from "@icons/options/ArrowBottom.svg?react";
 

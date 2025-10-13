@@ -20,14 +20,16 @@ import { setAllParams } from "@store/values/ContextMenu";
 import { useKeyDown } from "@hooks/useKeyDown.js";
 import { useConfirmWindow } from "@hooks/useConfirmWindow.js";
 
-import { KEY_CODES } from "@utils/global/keyCodes.js";
-import addSuffix from "@utils/navigation/add_suffix";
+import {
+  addSuffix,
+  navigateTo,
+  removeSectionAndNavigate,
+  removeAndNavigateLastSection,
+} from "@utils/NavigationUtils.js";
 import showCustomAlert from "@utils/show_alert";
 import getLastVisitTime from "@utils/user/get_last_visit_time";
 import getUserFullName from "@utils/user/get_user_full_name";
-import navigateTo from "@utils/navigation/navigate_to.js";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import removeSectionAndNavigate from "@utils/navigation/remove_section.js";
+import { KEY_CODES } from "@utils/global/keyCodes.js";
 
 import BackBtn from "@icons/options/Back.svg?react";
 import More from "@icons/options/More.svg?react";

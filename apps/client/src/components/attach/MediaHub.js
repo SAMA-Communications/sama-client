@@ -9,7 +9,7 @@ import ImageView from "./components/ImageView.js";
 import VideoView from "./components/VideoView.js";
 
 import getFileType from "@utils/media/get_file_type";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
+import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 import { getIsMobileView } from "@store/values/IsMobileView";

@@ -23,9 +23,9 @@ import {
 
 import getOpponentId from "@utils/user/get_opponent_id";
 import isHeic from "@utils/media/is_heic";
-import navigateTo from "@utils/navigation/navigate_to";
 import processFile from "@utils/media/process_file";
 import showCustomAlert from "@utils/show_alert";
+import { navigateTo } from "@utils/NavigationUtils.js";
 import { history } from "@utils/global/history";
 
 import { notificationQueueByCid } from "@services/tools/notifications";

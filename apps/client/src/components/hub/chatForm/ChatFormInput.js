@@ -33,7 +33,7 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 
-import navigateTo from "@utils/navigation/navigate_to";
+import { navigateTo } from "@utils/NavigationUtils.js";
 import showCustomAlert from "@utils/show_alert";
 import calcInputHeight from "@utils/text/calc_input_height.js";
 

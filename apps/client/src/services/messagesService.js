@@ -24,7 +24,7 @@ import {
   setLastMessageField,
 } from "@store/values/Conversations";
 
-import navigateTo from "@utils/navigation/navigate_to";
+import { navigateTo } from "@utils/NavigationUtils.js";
 import globalConstants from "@utils/global/constants.js";
 
 class MessagesService {

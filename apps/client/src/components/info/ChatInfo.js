@@ -15,10 +15,9 @@ import { getIsTabletView } from "@store/values/IsTabletView";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 
-import addSuffix from "@utils/navigation/add_suffix";
+import { addSuffix, removeAndNavigateSubLink } from "@utils/NavigationUtils.js";
 import conversationService from "@services/conversationsService";
 import globalConstants from "@utils/global/constants";
-import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 import {

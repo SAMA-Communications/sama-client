@@ -15,10 +15,12 @@ import { getIsMobileView } from "@store/values/IsMobileView";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 
-import addSuffix from "@utils/navigation/add_suffix";
+import {
+  addSuffix,
+  navigateTo,
+  removeAndNavigateSubLink,
+} from "@utils/NavigationUtils.js";
 import globalConstants from "@utils/global/constants";
-import navigateTo from "@utils/navigation/navigate_to";
-import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 import {

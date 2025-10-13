@@ -16,7 +16,7 @@ import MessageLinkPreview from "@components/hub/elements/MessageLinkPreview.js";
 import { addExternalProps } from "@store/values/ContextMenu.js";
 import { setAllParams } from "@store/values/ContextMenu.js";
 
-import addSuffix from "@utils/navigation/add_suffix";
+import { addSuffix } from "@utils/NavigationUtils.js";
 import getUserFullName from "@utils/user/get_user_full_name";
 import globalConstants from "@utils/global/constants.js";
 

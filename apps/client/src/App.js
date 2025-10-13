@@ -29,8 +29,10 @@ import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { updateNetworkState } from "@store/values/NetworkState";
 
 import globalConstants from "@utils/global/constants";
-import navigateTo from "@utils/navigation/navigate_to";
-import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
+import {
+  removeAndNavigateSubLink,
+  navigateTo,
+} from "@utils/NavigationUtils.js";
 import { history } from "@utils/global/history";
 
 import SMain from "@skeletons/SMain";

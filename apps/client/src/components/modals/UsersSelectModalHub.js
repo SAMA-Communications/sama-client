@@ -12,9 +12,11 @@ import UserSelectorBlock from "@components/modals/components/UserSelectorBlock";
 import { getConverastionById } from "@store/values/Conversations";
 import { selectParticipantsEntities } from "@store/values/Participants";
 
-import navigateTo from "@utils/navigation/navigate_to";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
+import {
+  navigateTo,
+  removeAndNavigateSubLink,
+  removeAndNavigateLastSection,
+} from "@utils/NavigationUtils.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 
 export default function UsersSelectModalHub({ type }) {

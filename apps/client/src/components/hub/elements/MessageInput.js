@@ -13,7 +13,7 @@ import draftService from "@services/tools/draftService.js";
 
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 
-import addSuffix from "@utils/navigation/add_suffix";
+import { addSuffix } from "@utils/NavigationUtils.js";
 import isMobile from "@utils/get_device_type";
 import calcInputHeight from "@utils/text/calc_input_height.js";
 import extractFilesFromClipboard from "@utils/media/extract_files_from_clipboard.js";

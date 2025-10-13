@@ -7,8 +7,7 @@ import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import { setAllParams } from "@store/values/ContextMenu";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 
-import addPrefix from "@utils/navigation/add_prefix";
-import addSuffix from "@utils/navigation/add_suffix";
+import { addPrefix, addSuffix } from "@utils/NavigationUtils.js";
 import getUserFullName from "@utils/user/get_user_full_name";
 import getUserInitials from "@utils/user/get_user_initials";
 

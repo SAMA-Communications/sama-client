@@ -5,7 +5,7 @@ import { useLocation } from "react-router";
 import ImageView from "@components/attach/components/ImageView.js";
 import VideoView from "@components/attach/components/VideoView.js";
 
-import addSuffix from "@utils/navigation/add_suffix";
+import { addSuffix } from "@utils/NavigationUtils.js";
 import getFileType from "@utils/media/get_file_type.js";
 
 import Delete from "@icons/options/Delete.svg?react";
