@@ -8,9 +8,9 @@ import conversationHandlerService from "@services/conversationHandlerService.js"
 import { getConverastionById } from "@store/values/Conversations.js";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 
-import globalConstants from "@utils/global/constants.js";
 import { getFormatedTime } from "@utils/FormatedUtils.js";
 import { getUserFullName } from "@utils/UserUtils.js";
+import { DEFAULT_EDITOR_CODE } from "@utils/constants.js";
 
 export default function ChatEditorCode() {
   const monaco = useMonaco();
@@ -18,8 +18,7 @@ export default function ChatEditorCode() {
   const selectedConversation = useSelector(getConverastionById);
   const selectedCid = selectedConversation._id;
   const [editorCode, setEditorCode] = useState(
-    selectedConversation.handler_options?.content ||
-      globalConstants.defaultEditorCode
+    selectedConversation.handler_options?.content || DEFAULT_EDITOR_CODE
   );
 
   useEffect(() => {

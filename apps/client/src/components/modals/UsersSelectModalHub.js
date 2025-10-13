@@ -17,7 +17,7 @@ import {
   removeAndNavigateSubLink,
   removeAndNavigateLastSection,
 } from "@utils/NavigationUtils.js";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { KEY_CODES } from "@utils/constants.js";
 
 export default function UsersSelectModalHub({ type }) {
   const selectedConversation = useSelector(getConverastionById);

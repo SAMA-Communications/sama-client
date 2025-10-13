@@ -20,8 +20,7 @@ import {
   navigateTo,
   removeAndNavigateSubLink,
 } from "@utils/NavigationUtils.js";
-import globalConstants from "@utils/global/constants";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { KEY_CODES, ALLOWED_AVATAR_FORMATS } from "@utils/constants.js";
 
 import {
   showUserProfileContainer,
@@ -121,7 +120,7 @@ export default function UserProfile({ triggerExitEvent, shareRef }) {
               onChange={(e) =>
                 sendChangeAvatarRequest(Array.from(e.target.files).at(0))
               }
-              accept={globalConstants.allowedAvatarFormats}
+              accept={ALLOWED_AVATAR_FORMATS}
               multiple
             />
           </m.div>

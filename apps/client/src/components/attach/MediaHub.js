@@ -10,7 +10,7 @@ import VideoView from "./components/VideoView.js";
 
 import { getFileType } from "@utils/MediaUtils.js";
 import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { KEY_CODES } from "@utils/constants.js";
 
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getMessageById } from "@store/values/Messages";

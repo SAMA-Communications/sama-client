@@ -17,7 +17,7 @@ import { getIsMobileView } from "@store/values/IsMobileView.js";
 
 import { navigateTo } from "@utils/NavigationUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { KEY_CODES } from "@utils/constants.js";
 
 export default function ConfirmButton({ page, content, onClickEvent }) {
   const dispatch = useDispatch();

@@ -36,8 +36,7 @@ import { addExternalProps, setClicked } from "@store/values/ContextMenu";
 import { getIsMobileView } from "@store/values/IsMobileView.js";
 
 import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
-import { CHAT_CONTENT_TABS } from "@utils/global/chatContentTabs.js";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { KEY_CODES, CHAT_CONTENT_TABS } from "@utils/constants.js";
 
 export default function ChatForm() {
   const dispatch = useDispatch();

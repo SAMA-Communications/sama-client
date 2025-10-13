@@ -3,6 +3,8 @@ import { useLocation } from "react-router";
 import { useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 
+import conversationService from "@services/conversationsService";
+
 import { useKeyDown } from "@hooks/useKeyDown";
 
 import CustomScrollBar from "@components/_helpers/CustomScrollBar";
@@ -16,9 +18,7 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 
 import { addSuffix, removeAndNavigateSubLink } from "@utils/NavigationUtils.js";
-import conversationService from "@services/conversationsService";
-import globalConstants from "@utils/global/constants";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { KEY_CODES, ALLOWED_AVATAR_FORMATS } from "@utils/constants.js";
 
 import {
   showChatInfoContainer,
@@ -150,7 +150,7 @@ export default function ChatInfo({ shareRef }) {
               onChange={(e) =>
                 sendChangeAvatarRequest(Array.from(e.target.files).at(0))
               }
-              accept={globalConstants.allowedAvatarFormats}
+              accept={ALLOWED_AVATAR_FORMATS}
               multiple
             />
           </m.div>

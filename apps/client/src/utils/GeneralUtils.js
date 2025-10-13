@@ -1,23 +1,4 @@
-import globalConstants from "./global/constants.js";
-
-const themes = {
-  default: {
-    textColor: "#fff",
-    bgColor: "#6c757d",
-  },
-  success: {
-    textColor: "#fff",
-    bgColor: "#198754",
-  },
-  danger: {
-    textColor: "#fff",
-    bgColor: "#dc3545",
-  },
-  warning: {
-    textColor: "#000",
-    bgColor: "#ffc107",
-  },
-};
+import { MAX_TTOASTS, TOAST_THEME } from "@utils/constants.js";
 
 export const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
@@ -28,7 +9,7 @@ export function showCustomAlert(message, themeStyle) {
 }
 
 function createAndShowAlert(message, themeStyle) {
-  const theme = themes[themeStyle] || themes.default;
+  const theme = TOAST_THEME[themeStyle] || TOAST_THEME.default;
 
   const customAlert = document.createElement("div");
   customAlert.className =
@@ -72,7 +53,7 @@ function removeToast(toast) {
 
 function cleanupOldToasts() {
   const toasts = Array.from(document.querySelectorAll(".custom-toast"));
-  while (toasts.length > globalConstants.maxTtoasts) {
+  while (toasts.length > MAX_TTOASTS) {
     const oldest = toasts.pop();
     clearTimeout(toastTimers.get(oldest));
     toastTimers.delete(oldest);

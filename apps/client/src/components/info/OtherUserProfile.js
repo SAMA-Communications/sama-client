@@ -25,7 +25,7 @@ import {
   removeAndNavigateLastSection,
 } from "@utils/NavigationUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { KEY_CODES } from "@utils/constants.js";
 
 import {
   showOtherUserProfileContainer,

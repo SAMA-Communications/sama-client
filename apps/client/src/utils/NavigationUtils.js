@@ -1,4 +1,4 @@
-import { history } from "@utils/global/history";
+import { history } from "@utils/history.js";
 
 export function navigateTo(pathname) {
   history.navigate(pathname);

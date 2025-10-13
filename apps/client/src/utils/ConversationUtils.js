@@ -1,4 +1,4 @@
-import globalConstants from "@utils/global/constants";
+import { WEEK_DAYS } from "@utils/constants.js";
 
 export function getLastUpdateTime(updatedAt, lastMessageObject) {
   const t = new Date(
@@ -25,7 +25,7 @@ export function getLastUpdateTime(updatedAt, lastMessageObject) {
   }
 
   return tToday.getDay() - t.getDay()
-    ? globalConstants.weekDays[t.getDay()]
+    ? WEEK_DAYS[t.getDay()]
     : t.getHours() +
         ":" +
         (t.getMinutes() < 10 ? "0" + t.getMinutes() : t.getMinutes());

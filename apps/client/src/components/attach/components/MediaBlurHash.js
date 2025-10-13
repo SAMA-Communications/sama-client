@@ -1,7 +1,7 @@
 import { Blurhash } from "react-blurhash";
 import { Oval } from "react-loader-spinner";
 
-import globalConstants from "@utils/global/constants.js";
+import { DEFAULT_BLUR_HASH } from "@utils/constants.js";
 
 import Error from "@icons/options/Error.svg?react";
 
@@ -9,7 +9,7 @@ export default function MediaBlurHash({ status, blurHash }) {
   return (
     <div className="w-full h-full object-cover absolute inset-0">
       <Blurhash
-        hash={blurHash || globalConstants.defaultBlurHash}
+        hash={blurHash || DEFAULT_BLUR_HASH}
         style={{
           width: "100%",
           height: "100%",

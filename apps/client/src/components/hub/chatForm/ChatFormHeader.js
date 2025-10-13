@@ -28,7 +28,7 @@ import {
 } from "@utils/NavigationUtils.js";
 import { getLastVisitTime, getUserFullName } from "@utils/UserUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
-import { KEY_CODES } from "@utils/global/keyCodes.js";
+import { KEY_CODES } from "@utils/constants.js";
 
 import BackBtn from "@icons/options/Back.svg?react";
 import More from "@icons/options/More.svg?react";

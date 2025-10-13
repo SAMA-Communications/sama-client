@@ -16,9 +16,9 @@ import MessageLinkPreview from "@components/hub/elements/MessageLinkPreview.js";
 import { addExternalProps } from "@store/values/ContextMenu.js";
 import { setAllParams } from "@store/values/ContextMenu.js";
 
-import globalConstants from "@utils/global/constants.js";
 import { addSuffix } from "@utils/NavigationUtils.js";
 import { getUserFullName } from "@utils/UserUtils.js";
+import { SWIPE_THRESHOLD, ALLOWED_FORMATS_TO_COPY } from "@utils/constants.js";
 
 import Selected from "@icons/status/Selected.svg?react";
 import CornerLight from "@icons/_helpers/CornerLight.svg?react";
@@ -79,7 +79,7 @@ export default function ChatMessage({
     const isAttachment = copyType === "Attachment";
     const isCopyableAttachment =
       isAttachment &&
-      globalConstants.allowedFormatsToCopy.includes(
+      ALLOWED_FORMATS_TO_COPY.includes(
         externalProps?.attachment?.file_content_type
       );
     const copyOption =
@@ -167,7 +167,7 @@ export default function ChatMessage({
         dragDirectionLock
         dragConstraints={{ left: 0, right: 0 }}
         onDragEnd={(e, info) => {
-          if (info.offset.x < -globalConstants.swipeThreshold) {
+          if (info.offset.x < -SWIPE_THRESHOLD) {
             dispatch(
               addExternalProps({ [message.cid]: { draft_replied_mid: _id } })
             );

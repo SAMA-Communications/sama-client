@@ -1,7 +1,7 @@
 import imageCompression from "browser-image-compression";
 import { encode } from "blurhash";
 
-import globalConstants from "@utils/global/constants";
+import { ALLOWED_FILE_FORMATS, DEFAULT_BLUR_HASH } from "@utils/constants.js";
 
 const imageMimeTypes = [
   "image/jpeg",
@@ -120,7 +120,7 @@ export async function processFile(fileObj, maxSizeMB, maxWidthOrHeight) {
   const fileExtension = file.name.split(".").slice(-1)[0];
 
   if (
-    !globalConstants.allowedFileFormats.includes(file.type) &&
+    !ALLOWED_FILE_FORMATS.includes(file.type) &&
     !["heic", "HEIC"].includes(fileExtension)
   ) {
     throw new Error("Please select an image file.", {
@@ -149,9 +149,9 @@ export async function processFile(fileObj, maxSizeMB, maxWidthOrHeight) {
       const firstFrameUrl = await extractFirstFrame(file);
       file.blurHash = firstFrameUrl
         ? await encodeImageToBlurhash(firstFrameUrl)
-        : globalConstants.defaultBlurHash;
+        : DEFAULT_BLUR_HASH;
     } catch (e) {
-      file.blurHash = globalConstants.defaultBlurHash;
+      file.blurHash = DEFAULT_BLUR_HASH;
     }
 
     const video = document.createElement("video");
@@ -176,7 +176,7 @@ async function compressAndHashFile(file, maxSizeMB, maxWidthOrHeight) {
   try {
     file.blurHash = await encodeImageToBlurhash(localFileUrl);
   } catch (e) {
-    file.blurHash = globalConstants.defaultBlurHash;
+    file.blurHash = DEFAULT_BLUR_HASH;
   }
 
   return file;

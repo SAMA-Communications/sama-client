@@ -13,12 +13,11 @@ import draftService from "@services/tools/draftService.js";
 
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 
-import globalConstants from "@utils/global/constants.js";
 import { addSuffix } from "@utils/NavigationUtils.js";
 import { calcInputHeight } from "@utils/FormatedUtils.js";
 import { extractFilesFromClipboard } from "@utils/MediaUtils.js";
 import { isMobile } from "@utils/GeneralUtils.js";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { KEY_CODES, TYPING_DURATION_MS } from "@utils/constants.js";
 
 import Attach from "@icons/options/Attach.svg?react";
 import Send from "@icons/options/Send.svg?react";
@@ -40,7 +39,7 @@ export default function MessageInput({
   const handleInput = (e) => {
     const text = e.target.value;
     if (text.length > 0) {
-      const typingDuration = globalConstants.typingDurationMs;
+      const typingDuration = TYPING_DURATION_MS;
       if (
         Date.now() - lastTypingRequestTime.current > typingDuration - 1000 ||
         !lastTypingRequestTime.current

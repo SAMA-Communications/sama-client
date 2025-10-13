@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import globalConstants from "@utils/global/constants.js";
 import { formatFileSize } from "@utils/MediaUtils.js";
+import { SUPPORTED_DOCUMENT_PREVIEW_REGEX } from "@utils/constants.js";
 
 import File from "@icons/media/File.svg?react";
 import Refresh from "@icons/options/Refresh.svg?react";
@@ -21,7 +21,7 @@ export default function MessageLinkPreview({ refreshFunc, urlData, color }) {
   } = urlData;
   const [imageError, setImageError] = useState(false);
 
-  const isDocument = globalConstants.supportedDocumentPreviewRegex.test(url);
+  const isDocument = SUPPORTED_DOCUMENT_PREVIEW_REGEX.test(url);
 
   const bgClass = color === "white" ? "bg-accent-light/20" : "bg-hover-dark/5";
   const textClass = color === "white" ? "text-gray-200" : "text-gray-500";

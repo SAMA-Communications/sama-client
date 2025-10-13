@@ -12,7 +12,7 @@ import { upsertUser } from "@store/values/Participants";
 
 import { navigateTo } from "@utils/NavigationUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
-import { history } from "@utils/global/history";
+import { history } from "@utils/history.js";
 
 class AutoLoginService {
   constructor() {

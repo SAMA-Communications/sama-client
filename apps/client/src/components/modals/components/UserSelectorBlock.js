@@ -3,7 +3,7 @@ import OvalLoader from "@components/_helpers/OvalLoader";
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchInput";
 import UserInfo from "@components/modals/elements/UserInfo";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { KEY_CODES } from "@utils/constants.js";
 import { useEffect, useMemo, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 

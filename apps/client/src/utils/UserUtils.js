@@ -1,4 +1,4 @@
-import globalConstants from "@utils/global/constants";
+import { DAY_IN_MS, YEAR_IN_MS } from "@utils/constants.js";
 
 const cut = (text) => (text.length > 8 ? text.slice(0, 6) + "..." : text);
 
@@ -31,8 +31,8 @@ export function getLastVisitTime(timestamp, userLocale) {
   timestamp *= 1000;
   const now = Math.round(Date.now() / 1000) * 1000;
   const todayStart = new Date().setHours(0, 0, 0, 0);
-  const yesterdayStart = todayStart - globalConstants.dayInMs;
-  const yearToStart = todayStart - globalConstants.yearInMs;
+  const yesterdayStart = todayStart - DAY_IN_MS;
+  const yearToStart = todayStart - YEAR_IN_MS;
   const visitDate = new Date(timestamp);
 
   let baseMessage = "Last seen ";

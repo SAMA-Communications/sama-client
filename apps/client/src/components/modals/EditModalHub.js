@@ -16,7 +16,7 @@ import { upsertUser } from "@store/values/Participants";
 
 import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { KEY_CODES } from "@utils/constants.js";
 
 export default function EditModalHub() {
   const dispatch = useDispatch();

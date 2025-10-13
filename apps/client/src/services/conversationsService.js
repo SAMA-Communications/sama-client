@@ -25,7 +25,7 @@ import { getOpponentId } from "@utils/ConversationUtils.js";
 import { navigateTo } from "@utils/NavigationUtils.js";
 import { processFile, isHeic } from "@utils/MediaUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
-import { history } from "@utils/global/history";
+import { history } from "@utils/history.js";
 
 import { notificationQueueByCid } from "@services/tools/notifications";
 

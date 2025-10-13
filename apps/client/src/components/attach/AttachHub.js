@@ -27,11 +27,10 @@ import {
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { getIsMobileView } from "@store/values/IsMobileView";
 
-import globalConstants from "@utils/global/constants";
 import { processFile, extractFilesFromClipboard } from "@utils/MediaUtils.js";
 import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { KEY_CODES, ALLOWED_FILE_FORMATS } from "@utils/constants.js";
 
 export default function AttachHub() {
   const dispatch = useDispatch();
@@ -348,7 +347,7 @@ export default function AttachHub() {
         ref={inputFilesRef}
         type="file"
         onChange={(e) => addFiles(Array.from(e.target.files))}
-        accept={globalConstants.allowedFileFormats}
+        accept={ALLOWED_FILE_FORMATS}
         multiple
       />
       <div className="absolute top-[0px] p-[10px] w-dvw h-dvh bg-(--color-black-50) z-[200] flex items-center justify-center">
