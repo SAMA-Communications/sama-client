@@ -6,7 +6,7 @@ import DotsLoader from "./DotsLoader.js";
 
 import { selectParticipantsEntities } from "@store/values/Participants";
 
-import getLastMessageUserName from "@utils/user/get_last_message_user_name";
+import { getLastMessageUserName } from "@utils/UserUtils.js";
 
 export default function TypingLine({
   userIds,

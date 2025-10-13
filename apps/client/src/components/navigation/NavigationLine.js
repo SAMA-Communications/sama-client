@@ -17,7 +17,7 @@ import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 
 import { addPrefix, navigateTo } from "@utils/NavigationUtils.js";
-import getUserInitials from "@utils/user/get_user_initials";
+import { getUserInitials } from "@utils/UserUtils.js";
 
 import { showItem, showLogoOptions } from "@animations/aNavigationLine.js";
 

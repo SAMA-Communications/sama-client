@@ -19,12 +19,11 @@ import {
 } from "@store/values/Participants.js";
 import { getIsMobileView } from "@store/values/IsMobileView";
 
+import { extractUserIdFromUrl, getUserFullName } from "@utils/UserUtils.js";
 import {
   navigateTo,
   removeAndNavigateLastSection,
 } from "@utils/NavigationUtils.js";
-import extractUserIdFromUrl from "@utils/user/extract_user_id_from_url";
-import getUserFullName from "@utils/user/get_user_full_name";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/global/keyCodes";
 

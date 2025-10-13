@@ -21,9 +21,9 @@ import {
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
 
-import getOpponentId from "@utils/user/get_opponent_id";
 import isHeic from "@utils/media/is_heic";
 import processFile from "@utils/media/process_file";
+import { getOpponentId } from "@utils/ConversationUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { navigateTo } from "@utils/NavigationUtils.js";
 import { history } from "@utils/global/history";

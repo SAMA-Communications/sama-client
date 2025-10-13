@@ -8,9 +8,8 @@ import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 
 import { addUsers } from "@store/values/Participants";
 
-import getUserFullName from "@utils/user/get_user_full_name";
-import getUserInitials from "@utils/user/get_user_initials";
 import { addSuffix, navigateTo } from "@utils/NavigationUtils.js";
+import { getUserFullName, getUserInitials } from "@utils/UserUtils.js";
 
 import Selected from "@icons/status/Selected.svg?react";
 

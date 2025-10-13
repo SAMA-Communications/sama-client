@@ -8,9 +8,9 @@ import conversationHandlerService from "@services/conversationHandlerService.js"
 import { getConverastionById } from "@store/values/Conversations.js";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 
-import getUserFullName from "@utils/user/get_user_full_name.js";
 import globalConstants from "@utils/global/constants.js";
 import { getFormatedTime } from "@utils/FormatedUtils.js";
+import { getUserFullName } from "@utils/UserUtils.js";
 
 export default function ChatEditorCode() {
   const monaco = useMonaco();

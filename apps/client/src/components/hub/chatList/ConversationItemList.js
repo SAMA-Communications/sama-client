@@ -16,9 +16,8 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 
+import { getLastMessageUserName, getUserFullName } from "@utils/UserUtils.js";
 import { navigateTo } from "@utils/NavigationUtils.js";
-import getLastMessageUserName from "@utils/user/get_last_message_user_name";
-import getUserFullName from "@utils/user/get_user_full_name";
 
 export default function ConversationItemList({
   conversations,

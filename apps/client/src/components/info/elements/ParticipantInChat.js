@@ -8,8 +8,7 @@ import { setAllParams } from "@store/values/ContextMenu";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 
 import { addPrefix, addSuffix } from "@utils/NavigationUtils.js";
-import getUserFullName from "@utils/user/get_user_full_name";
-import getUserInitials from "@utils/user/get_user_initials";
+import { getUserFullName, getUserInitials } from "@utils/UserUtils.js";
 
 export default function ParticipantInChat({
   userObject,
