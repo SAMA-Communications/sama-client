@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { useMemo } from "react";
 
-import TypingLine from "@components/_helpers/TypingLine";
+import { TypingLine } from "@sama-communications.ui-kit";
 
 import messagesService from "@services/messagesService.js";
 
@@ -26,7 +26,11 @@ import {
   removeSectionAndNavigate,
   removeAndNavigateLastSection,
 } from "@utils/NavigationUtils.js";
-import { getLastVisitTime, getUserFullName } from "@utils/UserUtils.js";
+import {
+  getLastVisitTime,
+  getLastMessageUserName,
+  getUserFullName,
+} from "@utils/UserUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/constants.js";
 
@@ -96,6 +100,8 @@ export default function ChatFormHeader({ closeFormFunc }) {
             userIds={selectedConversation.typing_users}
             displayBackground={isGroupChat}
             displayUserNames={isGroupChat}
+            participants={participants}
+            getUserName={getLastMessageUserName}
           />
         </div>
       );

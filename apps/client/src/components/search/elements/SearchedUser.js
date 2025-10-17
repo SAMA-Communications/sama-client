@@ -4,7 +4,7 @@ import { useLocation } from "react-router";
 
 import conversationService from "@services/conversationsService";
 
-import DynamicAvatar from "@components/info/elements/DynamicAvatar";
+import { DynamicAvatar } from "@sama-communications.ui-kit";
 
 import { addUsers } from "@store/values/Participants";
 

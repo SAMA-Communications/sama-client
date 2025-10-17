@@ -6,9 +6,11 @@ import { useRef } from "react";
 import usersService from "@services/usersService";
 import { useKeyDown } from "@hooks/useKeyDown";
 
-import CustomScrollBar from "@components/_helpers/CustomScrollBar";
-import InfoBox from "@components/info/elements/InfoBox";
-import DynamicAvatar from "@components/info/elements//DynamicAvatar";
+import {
+  CustomScrollBar,
+  InfoBox,
+  DynamicAvatar,
+} from "@sama-communications.ui-kit";
 
 import { getCurrentUserFromParticipants } from "@store/values/Participants";
 import { getIsMobileView } from "@store/values/IsMobileView";
@@ -20,12 +22,11 @@ import {
   navigateTo,
   removeAndNavigateSubLink,
 } from "@utils/NavigationUtils.js";
-import { KEY_CODES, ALLOWED_AVATAR_FORMATS } from "@utils/constants.js";
-
 import {
   showUserProfileContainer,
   showUserProfileContent,
-} from "@animations/aUserProfile.js";
+} from "@utils/AnimationUtils.js";
+import { KEY_CODES, ALLOWED_AVATAR_FORMATS } from "@utils/constants.js";
 
 import BackBtn from "@icons/options/Back.svg?react";
 import Close from "@icons/actions/CloseGray.svg?react";

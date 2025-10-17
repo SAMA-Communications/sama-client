@@ -7,7 +7,8 @@ import { useSelector } from "react-redux";
 import api from "@api/api";
 
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
-import OvalLoader from "@components/_helpers/OvalLoader";
+
+import { OvalLoader } from "@sama-communications.ui-kit";
 
 import draftService from "@services/tools/draftService.js";
 

@@ -1,4 +1,4 @@
-import DynamicAvatar from "@components/info/elements/DynamicAvatar";
+import { DynamicAvatar } from "@sama-communications.ui-kit";
 
 import { getUserInitials } from "@utils/UserUtils.js";
 

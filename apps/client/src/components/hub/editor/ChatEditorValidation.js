@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import conversationHandlerService from "@services/conversationHandlerService.js";
 
-import OvalLoader from "@components/_helpers/OvalLoader.js";
+import { OvalLoader } from "@sama-communications.ui-kit";
 
 import { getCurrentUserFromParticipants } from "@store/values/Participants.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";

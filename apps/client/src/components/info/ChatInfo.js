@@ -7,9 +7,9 @@ import conversationService from "@services/conversationsService";
 
 import { useKeyDown } from "@hooks/useKeyDown";
 
-import CustomScrollBar from "@components/_helpers/CustomScrollBar";
-import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import ParticipantInChat from "@components/info/elements/ParticipantInChat";
+
+import { CustomScrollBar, DynamicAvatar } from "@sama-communications.ui-kit";
 
 import { getConverastionById } from "@store/values/Conversations";
 import { getIsMobileView } from "@store/values/IsMobileView";
@@ -18,12 +18,11 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 
 import { addSuffix, removeAndNavigateSubLink } from "@utils/NavigationUtils.js";
-import { KEY_CODES, ALLOWED_AVATAR_FORMATS } from "@utils/constants.js";
-
 import {
   showChatInfoContainer,
   showChatInfoContent,
-} from "@animations/aChatInfo.js";
+} from "@utils/AnimationUtils.js";
+import { KEY_CODES, ALLOWED_AVATAR_FORMATS } from "@utils/constants.js";
 
 import AddParticipants from "@icons/AddParticipants.svg?react";
 import BackBtn from "@icons/options/Back.svg?react";

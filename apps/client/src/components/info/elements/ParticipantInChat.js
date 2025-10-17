@@ -2,7 +2,7 @@ import * as m from "motion/react-m";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 
-import DynamicAvatar from "@components/info/elements/DynamicAvatar";
+import { DynamicAvatar } from "@sama-communications.ui-kit";
 
 import { setAllParams } from "@store/values/ContextMenu";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";

@@ -107,7 +107,7 @@ export function upsertMidsInPath(currentPath, mids = [], action = "add") {
   history.navigate(newPath);
 }
 
-export default function urlBase64ToUint8Array(base64String) {
+export function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding)
     .replace(/\-/g, "+")
@@ -116,7 +116,7 @@ export default function urlBase64ToUint8Array(base64String) {
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);
 
-  for (const i = 0; i < rawData.length; ++i) {
+  for (let i = 0; i < rawData.length; ++i) {
     outputArray[i] = rawData.charCodeAt(i);
   }
   return outputArray;

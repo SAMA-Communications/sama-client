@@ -9,9 +9,11 @@ import activityService from "@services/activityService";
 import conversationService from "@services/conversationsService";
 import { useKeyDown } from "@hooks/useKeyDown";
 
-import CustomScrollBar from "@components/_helpers/CustomScrollBar";
-import InfoBox from "@components/info/elements/InfoBox";
-import DynamicAvatar from "@components/info/elements/DynamicAvatar";
+import {
+  CustomScrollBar,
+  InfoBox,
+  DynamicAvatar,
+} from "@sama-communications.ui-kit";
 
 import {
   addUser,
@@ -24,13 +26,12 @@ import {
   navigateTo,
   removeAndNavigateLastSection,
 } from "@utils/NavigationUtils.js";
-import { showCustomAlert } from "@utils/GeneralUtils.js";
-import { KEY_CODES } from "@utils/constants.js";
-
 import {
   showOtherUserProfileContainer,
   showOtherUserProfileContent,
-} from "@animations/aOtherUserProfile.js";
+} from "@utils/AnimationUtils.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { KEY_CODES } from "@utils/constants.js";
 
 import Close from "@icons/actions/CloseGray.svg?react";
 import LinkTo from "@icons/options/LinkTo.svg?react";

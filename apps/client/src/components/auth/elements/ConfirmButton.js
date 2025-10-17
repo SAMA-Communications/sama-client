@@ -7,7 +7,7 @@ import subscribeForNotifications from "@services/tools/notifications";
 import usersService from "@services/usersService";
 import { useKeyDown } from "@hooks/useKeyDown";
 
-import DotsLoader from "@components/_helpers/DotsLoader";
+import { DotsLoader } from "@sama-communications.ui-kit";
 
 import { setCurrentUserId } from "@store/values/CurrentUserId";
 import { setSelectedConversation } from "@store/values/SelectedConversation";

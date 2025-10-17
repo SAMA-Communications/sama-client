@@ -10,8 +10,9 @@ import DownloadManager from "@lib/downloadManager";
 import { useKeyDown } from "@hooks/useKeyDown";
 
 import MediaAttachments from "@components/message/elements/MediaAttachments.js";
-import OvalLoader from "@components/_helpers/OvalLoader";
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
+
+import { OvalLoader } from "@sama-communications.ui-kit";
 
 import { getNetworkState } from "@store/values/NetworkState";
 import {

@@ -2,8 +2,7 @@ import * as m from "motion/react-m";
 
 import { useLocation } from "react-router";
 
-import ImageView from "@components/attach/components/ImageView.js";
-import VideoView from "@components/attach/components/VideoView.js";
+import { ImageView, VideoView } from "@sama-communications.ui-kit";
 
 import { addSuffix } from "@utils/NavigationUtils.js";
 import { getFileType } from "@utils/MediaUtils.js";

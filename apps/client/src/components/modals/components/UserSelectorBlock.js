@@ -1,11 +1,14 @@
-import CustomScrollBar from "@components/_helpers/CustomScrollBar";
-import OvalLoader from "@components/_helpers/OvalLoader";
+import { useEffect, useMemo, useState } from "react";
+
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchInput";
 import UserInfo from "@components/modals/elements/UserInfo";
-import { KEY_CODES } from "@utils/constants.js";
-import { useEffect, useMemo, useState } from "react";
+
+import { OvalLoader, CustomScrollBar } from "@sama-communications.ui-kit";
+
 import { useKeyDown } from "@hooks/useKeyDown";
+
+import { KEY_CODES } from "@utils/constants.js";
 
 export default function UserSelectorBlock({
   initSelectedUsers,

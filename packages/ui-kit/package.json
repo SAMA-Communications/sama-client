@@ -1,0 +1,73 @@
+{
+  "name": "@sama-communications/ui-kit",
+  "description": "A UI component library for building SAMA chat interfaces in Web applications.",
+  "version": "0.11.0",
+  "keywords": [
+    "chat",
+    "chat-application",
+    "client",
+    "client-app",
+    "ui",
+    "ui-kit",
+    "SAMAuikit"
+  ],
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/SAMA-Communications/sama-client/blob/main/packages/ui-kit/README.md",
+  "bugs": {
+    "url": "https://github.com/SAMA-Communications/sama-client/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SAMA-Communications/sama-client.git"
+  },
+  "author": "Igor Khomenko",
+  "contributors": [
+    {
+      "name": "Igor Khomenko",
+      "email": "khomenkoigor+1@gmail.com"
+    },
+    {
+      "name": "Oleksandr Chabaniuk",
+      "email": "olexander11441144@gmail.com"
+    }
+  ],
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/sama-ui-kit.cjs.js",
+  "module": "./dist/sama-ui-kit.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/sama-ui-kit.es.js",
+      "require": "./dist/sama-ui-kit.cjs.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "@tailwindcss/oxide": "^4.1.14",
+    "@tailwindcss/vite": "^4.1.14",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.545.0",
+    "motion": "^12.9.2",
+    "react": "^18.3.0",
+    "react-blurhash": "^0.3.0",
+    "react-custom-scrollbars-2": "^4.5.0",
+    "react-dom": "^18.3.0",
+    "react-loader-spinner": "^7.0.3",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.1.14",
+    "vite-plugin-dts": "^4.5.4"
+  },
+  "optionalDependencies": {
+    "@tailwindcss/oxide-linux-x64-gnu": "^4.0.1",
+    "lightningcss-linux-x64-gnu": "^1.29.1"
+  }
+}

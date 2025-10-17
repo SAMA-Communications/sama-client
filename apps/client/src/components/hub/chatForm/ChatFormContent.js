@@ -5,8 +5,9 @@ import draftService from "@services/tools/draftService.js";
 
 import ChatFormInput from "@components/hub/chatForm/ChatFormInput.js";
 import ChatFormInputContent from "@components/hub/chatForm/ChatFormInputContent.js";
-import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import MessagesList from "@components/hub/elements/MessagesList";
+
+import { CustomScrollBar } from "@sama-communications.ui-kit";
 
 import { getConverastionById } from "@store/values/Conversations.js";
 import { selectMessagesEntities } from "@store/values/Messages.js";

@@ -43,7 +43,7 @@ export function extractForwardedMids(hash) {
     .filter(Boolean);
 }
 
-export default function getOpponentId(chatObject, currentUserId) {
+export function getOpponentId(chatObject, currentUserId) {
   return chatObject.opponent_id === currentUserId
     ? chatObject.owner_id
     : chatObject.opponent_id;

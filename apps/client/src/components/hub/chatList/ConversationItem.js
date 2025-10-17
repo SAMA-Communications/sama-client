@@ -1,15 +1,17 @@
 import * as m from "motion/react-m";
 import { useEffect, useMemo } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import LastMessage from "@components/message/LastMessage";
-import TypingLine from "@components/_helpers/TypingLine";
-import DynamicAvatar from "@components/info/elements/DynamicAvatar";
+
+import { TypingLine, DynamicAvatar } from "@sama-communications.ui-kit";
 
 import draftService from "@services/tools/draftService.js";
 
 import { updateWithDrafts } from "@store/values/Conversations.js";
+import { selectParticipantsEntities } from "@store/values/Participants.js";
 
+import { getLastMessageUserName } from "@utils/UserUtils.js";
 import { getLastUpdateTime } from "@utils/ConversationUtils.js";
 
 import Group from "@icons/users/Group.svg?react";
@@ -37,6 +39,8 @@ export default function ConversationItem({
   } = chatObject;
 
   const dispatch = useDispatch();
+
+  const participants = useSelector(selectParticipantsEntities);
 
   const isGroup = type === "g";
 
@@ -99,7 +103,12 @@ export default function ConversationItem({
         </div>
         <div className="flex gap-[12px] items-center justify-between h-[32px]">
           {typing_users?.length && !isSelected ? (
-            <TypingLine userIds={typing_users} displayUserNames={isGroup} />
+            <TypingLine
+              userIds={typing_users}
+              displayUserNames={isGroup}
+              participants={participants}
+              getUserName={getLastMessageUserName}
+            />
           ) : (
             <LastMessage
               message={last_message}

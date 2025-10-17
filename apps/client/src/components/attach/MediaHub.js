@@ -5,8 +5,7 @@ import { useRef, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useTouchScreen } from "@hooks/useTouchScreen";
 
-import ImageView from "./components/ImageView.js";
-import VideoView from "./components/VideoView.js";
+import { ImageView, VideoView } from "@sama-communications.ui-kit";
 
 import { getFileType } from "@utils/MediaUtils.js";
 import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
