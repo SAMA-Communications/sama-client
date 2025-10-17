@@ -62,10 +62,14 @@ class UsersService {
   }
 
   async create(data) {
-    const { login, password } = data;
+    const { login, email, password } = data;
 
     if (!login?.length || !password?.length) {
       throw new Error("Username and Password cannot be blank.");
+    }
+
+    if (!email?.length) {
+      throw new Error("Email cannot be blank.");
     }
 
     if (!validateLogin(login)) {
@@ -82,6 +86,7 @@ class UsersService {
 
     return await api.userCreate({
       login: login.trim().toLowerCase(),
+      email: login.trim(),
       password: password.trim(),
     });
   }

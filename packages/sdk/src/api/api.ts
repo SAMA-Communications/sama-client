@@ -229,8 +229,8 @@ class SAMAClient {
     return this.sendRequest("user_logout");
   }
 
-  async userCreate(data: { login: string; password: string }): Promise<IUser> {
-    return this.sendRequest("user_create", { organization_id: this.organizationId, login: data.login, password: data.password }, "user");
+  async userCreate(data: { login: string; email: string; password: string }): Promise<IUser> {
+    return this.sendRequest("user_create", { organization_id: this.organizationId, login: data.login, email: data.email, password: data.password }, "user");
   }
 
   async userEdit(data: { [key: string]: any }): Promise<IUser> {
