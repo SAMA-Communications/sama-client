@@ -8,6 +8,7 @@ import DownloadManager from "../../../lib/downloadManager.js";
 import { useConfirmWindow } from "@hooks/useConfirmWindow.js";
 
 import MessageInput from "@components/hub/elements/MessageInput";
+import MagicButton from "@components/hub/elements/MagicButton.js";
 
 import {
   addMessage,
@@ -304,13 +305,16 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
   }, [selectedConversation, participants]);
 
   return (
-    <MessageInput
-      inputTextRef={inputRef}
-      isBlockedConv={isBlockedConv}
-      isEditAction={!!editedMessage}
-      isSending={isSendMessageDisable}
-      onSubmitFunc={editedMessage ? editMessageFunc : createAndSendMessage}
-      chatMessagesBlockRef={chatMessagesBlockRef}
-    />
+    <div className="w-full flex items-end gap-[8px]">
+      <MessageInput
+        inputTextRef={inputRef}
+        isBlockedConv={isBlockedConv}
+        isEditAction={!!editedMessage}
+        isSending={isSendMessageDisable}
+        onSubmitFunc={editedMessage ? editMessageFunc : createAndSendMessage}
+        chatMessagesBlockRef={chatMessagesBlockRef}
+      />
+      <MagicButton inputTextRef={inputRef} />
+    </div>
   );
 }

@@ -336,6 +336,14 @@ class SAMAClient {
     return this.sendRequest("message_list", messageParams, "messages");
   }
 
+  async messageSummary(data: { cid: string, filter: string }): Promise<any> {
+    return this.sendRequest("message_summary", { cid: data.cid, filter: data.filter }, "message");
+  }
+
+  async messageTone(data: { body: string, tone: string }): Promise<any> {
+    return this.sendRequest("message_tone", { body: data.body, tone: data.tone }, "message");
+  }
+
   async markConversationAsRead(data: { cid: string }): Promise<any> {
     return this.sendRequest("message_read", { cid: data.cid });
   }
