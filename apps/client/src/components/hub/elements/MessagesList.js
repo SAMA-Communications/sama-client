@@ -18,14 +18,16 @@ import {
 } from "@store/values/Participants";
 import { getConverastionById } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
+import { getIsMobileView } from "@store/values/IsMobileView.js";
 
 import upsertMidsInPath from "@utils/navigation/upasert_mids_in_path.js";
 
 import ArrowBottom from "@icons/options/ArrowBottom.svg?react";
-
 export default function MessagesList({ scrollRef: scrollableContainer }) {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
+
+  const isMobile = useSelector(getIsMobileView);
 
   const timer = useRef(null);
 
@@ -353,6 +355,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
           repliedMessage={repliedMessage}
           sender={participants[from]}
           currentUserId={currentUserId}
+          isMobile={isMobile}
           isSelected={isSelected}
           isSelectionMode={isSelectionMode}
           isPrevMesssageYours={isPrevMesssageYours}
