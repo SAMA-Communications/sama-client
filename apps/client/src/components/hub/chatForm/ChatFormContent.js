@@ -32,6 +32,10 @@ export default function ChatFormContent() {
       draftService.getDraftRepliedMessageId(selectedCID);
     return messagesEntities[repliedMessageId];
   }, [selectedConversation, draftExtenralProps, messagesEntities]);
+  const draftForwardedMessage = useMemo(() => {
+    const forwardedMessageId = selectedConversation?.draft?.forwarded_mids;
+    return forwardedMessageId?.map((mid) => messagesEntities[mid]);
+  }, [selectedConversation, draftExtenralProps, messagesEntities]);
 
   const draftForwardedMessage = useMemo(() => {
     const forwardedMessageId = selectedConversation?.draft?.forwarded_mids;

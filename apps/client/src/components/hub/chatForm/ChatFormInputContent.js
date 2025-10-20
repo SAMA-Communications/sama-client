@@ -23,6 +23,9 @@ export default function ChatFormInputContent({
     if (editedMessage) {
       dispatch(addExternalProps({ [editedMessage.cid]: {} }));
       draftService.removeDraftWithOptions(editedMessage.cid, "edited_mid");
+    if (repliedMessage) {
+      dispatch(addExternalProps({ [repliedMessage.cid]: {} }));
+      draftService.removeDraftWithOptions(repliedMessage.cid, "replied_mid");
     } else if (forwardedMessages.length) {
       dispatch(
         removeDraftField({ cid: selectedCID, fields: ["forwarded_mids"] })

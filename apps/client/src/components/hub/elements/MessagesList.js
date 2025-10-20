@@ -23,6 +23,7 @@ import { getIsMobileView } from "@store/values/IsMobileView.js";
 import upsertMidsInPath from "@utils/navigation/upasert_mids_in_path.js";
 
 import ArrowBottom from "@icons/options/ArrowBottom.svg?react";
+
 export default function MessagesList({ scrollRef: scrollableContainer }) {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
