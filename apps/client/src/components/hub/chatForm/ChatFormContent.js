@@ -36,12 +36,6 @@ export default function ChatFormContent() {
     const forwardedMessageId = selectedConversation?.draft?.forwarded_mids;
     return forwardedMessageId?.map((mid) => messagesEntities[mid]);
   }, [selectedConversation, draftExtenralProps, messagesEntities]);
-
-  const draftForwardedMessage = useMemo(() => {
-    const forwardedMessageId = selectedConversation?.draft?.forwarded_mids;
-    return forwardedMessageId?.map((mid) => messagesEntities[mid]);
-  }, [selectedConversation, draftExtenralProps, messagesEntities]);
-
   const draftEditedMessage = useMemo(() => {
     const editedMessageId =
       draftExtenralProps[selectedCID]?.draft_edited_mid ||
