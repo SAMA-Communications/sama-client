@@ -90,7 +90,9 @@ export default function ChatMessage({
 
     const list = [
       "messageReply",
-      message.body && isCurrentUser ? "messageEdit" : null,
+      message.body && isCurrentUser && !message.forwarded_message_id
+        ? "messageEdit"
+        : null,
       copyOption,
       isAttachment ? "messageSaveAs" : null,
       "messageForward",
