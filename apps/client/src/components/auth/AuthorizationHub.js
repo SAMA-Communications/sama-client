@@ -134,6 +134,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
               page={page}
               content={content}
               onClickEvent={triggerExitAnimation}
+              isResetModalOpen={isModalOpen}
             />
           </div>
           <div className="w-full flex flex-row items-center gap-[10px]">

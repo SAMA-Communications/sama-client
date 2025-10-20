@@ -5,8 +5,9 @@ import { AnimatePresence } from "motion/react";
 import EmailInput from "@components/auth/elements/EmailInput.js";
 import CustomInput from "@components/auth/elements/CustomInput.js";
 
-import showCustomAlert from "@utils/show_alert.js";
 import autoLoginService from "@services/autoLoginService.js";
+
+import showCustomAlert from "@utils/show_alert.js";
 
 export default function ResetPasswordModal({ isOpen, onClose }) {
   const [data, setData] = useState({});
@@ -37,6 +38,10 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
 
   const handleSendOTP = async () => {
     setLoading(true);
+    if (!data.email?.length) {
+      showCustomAlert("No email to resend token.", "warning");
+      return;
+    }
     const isSuccess = await autoLoginService.sendOtpToken(data.email?.trim());
     isSuccess && setStep(2);
     setLoading(false);
@@ -54,7 +59,7 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
   };
 
   const handleResendOTP = async () => {
-    if (!data.email) {
+    if (!data.email?.length) {
       showCustomAlert("No email to resend token.", "warning");
       return;
     }
