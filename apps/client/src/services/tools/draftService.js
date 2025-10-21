@@ -2,16 +2,21 @@ import store from "@store/store.js";
 import { updateWithDrafts } from "@store/values/Conversations.js";
 
 class DraftService {
-  #allowedDraftFields = ["text", "replied_mid"];
+  #allowedDraftFields = ["text", "replied_mid", "edited_mid"];
 
   #getDraftKey(cid) {
     return `draft_${cid}`;
+  }
+
+  #getLastInputDraftKey(cid) {
+    return `draft_last_input_${cid}`;
   }
 
   saveDraft(cid, options) {
     const draftParams = { updated_at: Math.floor(Date.now() / 1000) };
     options.text && (draftParams.text = options.text);
     options.replied_mid && (draftParams.replied_mid = options.replied_mid);
+    options.edited_mid && (draftParams.edited_mid = options.edited_mid);
 
     const oldDraft = this.getDraft(cid);
     const newDraft = { ...oldDraft, ...draftParams };
@@ -30,6 +35,10 @@ class DraftService {
 
   getDraftRepliedMessageId(cid) {
     return this.getDraft(cid).replied_mid;
+  }
+
+  getDraftEditedMessageId(cid) {
+    return this.getDraft(cid).edited_mid;
   }
 
   removeDraft(cid) {
@@ -66,6 +75,18 @@ class DraftService {
       localStorage.setItem(draftKey, JSON.stringify(draft));
       store.dispatch(updateWithDrafts({ cid, draft }));
     }
+  }
+
+  saveLastInputText(cid, text) {
+    const draftKey = this.#getLastInputDraftKey(cid);
+    localStorage.setItem(draftKey, text);
+  }
+
+  getLastInputText(cid) {
+    const draftKey = this.#getLastInputDraftKey(cid);
+    const lastInputText = localStorage.getItem(draftKey);
+    localStorage.removeItem(draftKey);
+    return lastInputText;
   }
 }
 

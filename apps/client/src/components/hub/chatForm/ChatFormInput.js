@@ -5,7 +5,10 @@ import draftService from "@services/tools/draftService.js";
 import messagesService from "@services/messagesService";
 import DownloadManager from "../../../lib/downloadManager.js";
 
+import { useConfirmWindow } from "@hooks/useConfirmWindow.js";
+
 import MessageInput from "@components/hub/elements/MessageInput";
+import MagicButton from "@components/hub/elements/MagicButton.js";
 
 import {
   addMessage,
@@ -35,8 +38,10 @@ import navigateTo from "@utils/navigation/navigate_to";
 import showCustomAlert from "@utils/show_alert";
 import calcInputHeight from "@utils/text/calc_input_height.js";
 
-export default function ChatFormInput({ chatMessagesBlockRef }) {
+export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
   const dispatch = useDispatch();
+
+  const confirmWindow = useConfirmWindow();
 
   const connectState = useSelector(getNetworkState);
   const currentUserId = useSelector(selectCurrentUserId);
@@ -216,7 +221,7 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
 
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
-    inputRef.current.focus();
+    setTimeout(() => inputRef.current.focus(), 50);
 
     const mObject = {
       mid: msg._id,
@@ -242,6 +247,42 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
     inputRef.current.style.height = `55px`;
   };
 
+  const editMessageFunc = async () => {
+    const eMid = editedMessage._id;
+    const inputValue = inputRef.current.value.trim();
+    if (!inputValue.length) {
+      const { isConfirm } = await confirmWindow({
+        title: "Are you sure you want to delete the message?",
+        confirmText: "Delete",
+        cancelText: "Cancel",
+      });
+      isConfirm &&
+        messagesService.sendMessageDelete(selectedCID, [eMid], "all");
+      return;
+    }
+    if (editedMessage.body !== inputRef.current.value) {
+      await messagesService.sendMessageEdit(editedMessage._id, {
+        body: inputRef.current.value,
+      });
+    }
+    dispatch(addExternalProps({ [selectedCID]: {} }));
+    draftService.removeDraftWithOptions(selectedCID, "edited_mid");
+    inputRef.current.value = draftService.getLastInputText(selectedCID);
+  };
+
+  useEffect(() => {
+    if (editedMessage) {
+      inputRef.current.value &&
+        draftService.saveLastInputText(selectedCID, inputRef.current.value);
+      draftService.saveDraft(selectedCID, { text: editedMessage.body });
+      inputRef.current.value = editedMessage.body;
+      inputRef.current.focus();
+    } else {
+      inputRef.current.value = draftService.getLastInputText(selectedCID);
+      draftService.saveDraft(selectedCID, { text: inputRef.current.value });
+    }
+  }, [editedMessage]);
+
   useEffect(() => {
     if (inputRef.current) {
       const draftText = draftService.getDraftMessage(selectedCID) || "";
@@ -265,12 +306,16 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
   }, [selectedConversation, participants]);
 
   return (
-    <MessageInput
-      inputTextRef={inputRef}
-      isBlockedConv={isBlockedConv}
-      isSending={isSendMessageDisable}
-      onSubmitFunc={createAndSendMessage}
-      chatMessagesBlockRef={chatMessagesBlockRef}
-    />
+    <div className="w-full flex items-end gap-[8px]">
+      <MessageInput
+        inputTextRef={inputRef}
+        isBlockedConv={isBlockedConv}
+        isEditAction={!!editedMessage}
+        isSending={isSendMessageDisable}
+        onSubmitFunc={editedMessage ? editMessageFunc : createAndSendMessage}
+        chatMessagesBlockRef={chatMessagesBlockRef}
+      />
+      <MagicButton inputTextRef={inputRef} />
+    </div>
   );
 }

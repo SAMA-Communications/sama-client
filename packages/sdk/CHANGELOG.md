@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.16.0
+
+### Features
+
+- Added public listener `onMessageDeleteListener` for messages
+- Added public listener `onMessageEditListener` for messages
+- Added support for `message_delete` request
+- Added support for `message_edit` request
+- Implemented methods for the reset password feature
+- Implemented methods for the AI agent to change the tone of messages and summarize them
+
+### Updates
+
+- The `email` field is now required when creating a user
+
 ## 0.15.0
 
 ### Features

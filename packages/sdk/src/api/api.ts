@@ -12,6 +12,8 @@ class SAMAClient {
   private deviceId: string | null = null;
 
   public onMessageListener: ((message: IMessage) => void) | null = null;
+  public onMessageEditListener?: ((messageEdit: any) => void);
+  public onMessageDeleteListener?: ((messageDelete: any) => void);
   public onMessageStatusListener: ((status: any) => void) | null = null;
   public onUserActivityListener: ((activity: any) => void) | null = null;
   public onUserTypingListener: ((typing: any) => void) | null = null;
@@ -74,8 +76,17 @@ class SAMAClient {
 
         if (message.message_read) {
           this.onMessageStatusListener?.(message.message_read);
-
           return;
+        }
+
+        if (message.message_edit) {
+          this.onMessageEditListener?.(message.message_edit)
+          return
+        }
+
+        if (message.message_delete) {
+          this.onMessageDeleteListener?.(message.message_delete)
+          return
         }
 
         if (message.message) {
@@ -218,8 +229,8 @@ class SAMAClient {
     return this.sendRequest("user_logout");
   }
 
-  async userCreate(data: { login: string; password: string }): Promise<IUser> {
-    return this.sendRequest("user_create", { organization_id: this.organizationId, login: data.login, password: data.password }, "user");
+  async userCreate(data: { login: string; email: string; password: string }): Promise<IUser> {
+    return this.sendRequest("user_create", { organization_id: this.organizationId, login: data.login, email: data.email, password: data.password }, "user");
   }
 
   async userEdit(data: { [key: string]: any }): Promise<IUser> {
@@ -244,6 +255,18 @@ class SAMAClient {
 
   async userLogout(): Promise<any> {
     return await this.sendHttpPromise("POST", "logout", null);
+  }
+
+  async userSendOTPToken(data: { email: string }): Promise<any> {
+    const requestData: { organization_id: string, device_id: string | null; email: string; } = { organization_id: this.organizationId, device_id: this.deviceId, email: data.email };
+
+    return this.sendRequest("user_send_otp", requestData);
+  }
+
+  async userResetPassword(data: { email: string, token: number, new_password: string }): Promise<any> {
+    const requestData: { organization_id: string, device_id: string | null; email: string; token: number; new_password: string } = { organization_id: this.organizationId, device_id: this.deviceId, email: data.email, token: data.token, new_password: data.new_password };
+
+    return this.sendRequest("user_reset_password", requestData);
   }
 
   async userDelete(): Promise<any> {
@@ -295,6 +318,14 @@ class SAMAClient {
     });
   }
 
+  async messageEdit(data: { mid: string, body: string }): Promise<any> {
+    return this.sendRequest("message_edit", { id: data.mid, body: data.body });
+  }
+
+  async messageDelete(data: { cid: string, mids?: string[], type?: string }): Promise<any> {
+    return this.sendRequest("message_delete", { cid: data.cid, ids: data.mids, type: data.type ?? "myself" });
+  }
+
   async messageList(data: { cid: string; ids?: string[]; limit?: number; updated_at?: string }): Promise<IMessage[]> {
     const messageParams = {
       cid: data.cid,
@@ -303,6 +334,14 @@ class SAMAClient {
       ...(data.updated_at && { updated_at: data.updated_at }),
     };
     return this.sendRequest("message_list", messageParams, "messages");
+  }
+
+  async messageSummary(data: { cid: string, filter: string }): Promise<any> {
+    return this.sendRequest("message_summary", { cid: data.cid, filter: data.filter }, "message");
+  }
+
+  async messageTone(data: { body: string, tone: string }): Promise<any> {
+    return this.sendRequest("message_tone", { body: data.body, tone: data.tone }, "message");
   }
 
   async markConversationAsRead(data: { cid: string }): Promise<any> {

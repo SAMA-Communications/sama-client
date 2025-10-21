@@ -5,6 +5,8 @@ import { useMemo } from "react";
 
 import TypingLine from "@components/_helpers/TypingLine";
 
+import messagesService from "@services/messagesService.js";
+
 import {
   getConverastionById,
   selectConversationsEntities,
@@ -16,6 +18,8 @@ import { selectParticipantsEntities } from "@store/values/Participants";
 import { setAllParams } from "@store/values/ContextMenu";
 
 import { useKeyDown } from "@hooks/useKeyDown.js";
+import { useConfirmWindow } from "@hooks/useConfirmWindow.js";
+
 
 import { KEY_CODES } from "@utils/global/keyCodes.js";
 import addSuffix from "@utils/navigation/add_suffix";
@@ -29,9 +33,13 @@ import removeSectionAndNavigate from "@utils/navigation/remove_section.js";
 import BackBtn from "@icons/options/Back.svg?react";
 import More from "@icons/options/More.svg?react";
 import Forward from "@icons/context/ForwardWhiteBold.svg?react";
+import Delete from "@icons/context/DeleteWhite.svg?react";
+
 
 export default function ChatFormHeader({ closeFormFunc }) {
   const dispatch = useDispatch();
+
+  const confirmWindow = useConfirmWindow();
 
   const isMobile = useSelector(getIsMobileView);
   const isTablet = useSelector(getIsTabletView);
@@ -172,14 +180,19 @@ export default function ChatFormHeader({ closeFormFunc }) {
     );
   };
 
-  const countOfSelectedMessages = useMemo(() => {
-    const match = hash.match(/mids=\[([^\]]*)\]/);
-    if (!match?.[1]) return null;
-    return match[1]
-      .split(",")
-      .map((id) => id.trim())
-      .filter(Boolean).length;
-  }, [hash]);
+  const { countOfSelectedMessages, midsArrayOfSelectedMessages } =
+    useMemo(() => {
+      const match = hash.match(/mids=\[([^\]]*)\]/);
+      if (!match?.[1]) return null;
+      const mids = match[1]
+        .split(",")
+        .map((id) => id.trim())
+        .filter(Boolean);
+      return {
+        countOfSelectedMessages: mids.length,
+        midsArrayOfSelectedMessages: mids,
+      };
+    }, [hash]) || {};
 
   const closeSelectionMode = () =>
     removeSectionAndNavigate(pathname + hash, "/selection");
@@ -187,7 +200,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
   useKeyDown(KEY_CODES.ESCAPE, closeSelectionMode);
 
   return isSelectionMode ? (
-    <div className="flex justify-between items-center shrink pb-[15px] pt-[5px] max-w-full">
+    <div className="flex justify-between items-center shrink gap-[10px] pb-[15px] pt-[5px] max-w-full">
       <button
         className="px-[16px] py-[8px] flex items-center gap-[7px] !font-normal text-white bg-accent-dark rounded-md cursor-pointer"
         onClick={async () => {
@@ -196,6 +209,25 @@ export default function ChatFormHeader({ closeFormFunc }) {
       >
         <Forward />
         Forward
+        <span className="text-white/75">{countOfSelectedMessages}</span>
+      </button>
+      <button
+        className="mr-auto px-[16px] py-[8px] flex items-center gap-[7px] !font-normal text-white bg-accent-dark rounded-md cursor-pointer"
+        onClick={async () => {
+          const mids = midsArrayOfSelectedMessages;
+          const { isConfirm, data } = await confirmWindow({
+            title: `Delete selected message${mids.length > 1 ? "s" : ""}?`,
+            confirmText: "Delete",
+            cancelText: "Cancel",
+            action: "messageDelete",
+          });
+          isConfirm &&
+            messagesService.sendMessageDelete(selectedCID, mids, data.type);
+          removeAndNavigateLastSection(pathname + hash);
+        }}
+      >
+        <Delete />
+        Delete
         <span className="text-white/75">{countOfSelectedMessages}</span>
       </button>
       <button

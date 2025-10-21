@@ -42,6 +42,11 @@ const globalConstants = {
     5: "Fr",
     6: "Sa",
   },
+  summaryFilterMessage: {
+    "last-7-days": "About last 7 days",
+    "last-day": "About last day",
+    unreads: "About unread messages",
+  },
   defaultEditorCode: `// vvv Don\`t remove or change the line below! vvv
 const handler = async (message, user, accept, resolve, reject, fetch) => {
     const body = message.body;

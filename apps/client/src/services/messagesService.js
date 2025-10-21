@@ -4,12 +4,14 @@ import api from "@api/api";
 import DownloadManager from "@lib/downloadManager";
 
 import store from "@store/store";
-import { addUser } from "@store/values/Participants";
+import { addUser, upsertUsers } from "@store/values/Participants";
 import {
   addMessage,
   addMessages,
   markMessagesAsRead,
   removeMessage,
+  removeMessages,
+  upsertMessage,
   upsertMessages,
 } from "@store/values/Messages";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
@@ -19,6 +21,7 @@ import {
   updateLastMessageField,
   upsertChat,
   upsertParticipants,
+  setLastMessageField,
 } from "@store/values/Conversations";
 
 import navigateTo from "@utils/navigation/navigate_to";
@@ -29,6 +32,23 @@ class MessagesService {
   typingTimers = {};
 
   constructor() {
+    this.updateConversationAfterDeleteMessages = (cid, mids) => {
+      const conversation = store.getState().conversations.entities?.[cid];
+      if (conversation) {
+        const oldMessagesIds = conversation.messagesIds || [];
+        const isUpdateLastMessage = mids.includes(oldMessagesIds.at(-1));
+        const newMessagesIds = oldMessagesIds.filter(
+          (mid) => !mids.includes(mid)
+        );
+        store.dispatch(upsertChat({ _id: cid, messagesIds: newMessagesIds }));
+        if (isUpdateLastMessage) {
+          const lastMessage =
+            store.getState().messages.entities?.[newMessagesIds.at(-1)];
+          store.dispatch(setLastMessageField({ cid, msg: lastMessage }));
+        }
+      }
+    };
+
     api.onMessageStatusListener = (message) => {
       store.dispatch(markMessagesAsRead(message.ids));
       store.dispatch(
@@ -99,6 +119,18 @@ class MessagesService {
           })
         );
       }
+    };
+
+    api.onMessageEditListener = async (message) => {
+      const { id, body } = message;
+      store.dispatch(
+        upsertMessage({ _id: id, body, updated_at: new Date().toISOString() })
+      );
+    };
+
+    api.onMessageDeleteListener = async (message) => {
+      store.dispatch(removeMessages(message.ids));
+      this.updateConversationAfterDeleteMessages(message.cid, message.ids);
     };
 
     api.onUserTypingListener = (data) => {
@@ -184,14 +216,15 @@ class MessagesService {
           .getParticipantsByCids({
             cids: [cid],
           })
-          .then(({ users }) =>
+          .then(({ users }) => {
             store.dispatch(
               upsertParticipants({
                 cid,
                 participants: users.map((obj) => obj._id),
               })
-            )
-          );
+            );
+            store.dispatch(upsertUsers(users));
+          });
       }
     } catch (err) {
       store.dispatch(removeChat(cid));
@@ -243,6 +276,23 @@ class MessagesService {
     }
 
     return mObject;
+  }
+
+  async sendMessageEdit(mid, newFields) {
+    await api.messageEdit({ mid, body: newFields.body });
+    store.dispatch(
+      upsertMessage({
+        _id: mid,
+        body: newFields.body,
+        updated_at: new Date().toISOString(),
+      })
+    );
+  }
+
+  async sendMessageDelete(cid, mids, type) {
+    await api.messageDelete({ cid, mids, type });
+    store.dispatch(removeMessages(mids));
+    this.updateConversationAfterDeleteMessages(cid, mids);
   }
 
   async processMessages(newMessages, additionalOptions) {
