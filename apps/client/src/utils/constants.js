@@ -83,6 +83,12 @@ export const WEEK_DAYS = {
   6: "Sa",
 };
 
+export const SUMMART_FILTER_MESSAGE = {
+  "last-7-days": "About last 7 days",
+  "last-day": "About last day",
+  unreads: "About unread messages",
+};
+
 export const DEFAULT_EDITOR_CODE = `// vvv Don\`t remove or change the line below! vvv
 const handler = async (message, user, accept, resolve, reject, fetch) => {
         const body = message.body;

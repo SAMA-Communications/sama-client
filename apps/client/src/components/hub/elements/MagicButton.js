@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 
 import aiService from "@services/tools/AIService.js";
 
-import OvalLoader from "@components/_helpers/OvalLoader.js";
+import { OvalLoader } from "@sama-communications.ui-kit";
 
 import { getConverastionById } from "@store/values/Conversations.js";
 
-import showCustomAlert from "@utils/show_alert.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 
 import MagicWand from "@icons/ai/MagicWand.svg?react";
 import Summarize from "@icons/ai/Summarize.svg?react";

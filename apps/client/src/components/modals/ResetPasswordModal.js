@@ -7,8 +7,6 @@ import autoLoginService from "@services/autoLoginService.js";
 import EmailInput from "@components/auth/elements/EmailInput.js";
 import CustomInput from "@components/auth/elements/CustomInput.js";
 
-import autoLoginService from "@services/autoLoginService.js";
-
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 
 export default function ResetPasswordModal({ isOpen, onClose }) {
