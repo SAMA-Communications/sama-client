@@ -8,7 +8,7 @@ export interface VideoData {
 
 export interface VideoViewProps {
   video?: VideoData;
-  onClickFunc?: () => void;
+  onClick?: () => void;
   isFullSize?: boolean;
   removePlayButton?: boolean;
   enableControls?: boolean;

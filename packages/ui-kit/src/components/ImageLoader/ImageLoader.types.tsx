@@ -1,4 +1,4 @@
-export interface ItemLoaderProps {
+export interface ImageLoaderProps {
   blurHash?: string;
   isShowLoader?: boolean;
 }

@@ -8,7 +8,7 @@ export interface ImageData {
 
 export interface ImageViewProps {
   image?: ImageData;
-  onClickFunc?: () => void;
+  onClick?: () => void;
   isFullSize?: boolean;
   mediaBlurHashProps?: Partial<MediaBlurHashProps>;
 }

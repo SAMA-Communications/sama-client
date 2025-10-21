@@ -1,4 +1,4 @@
-export interface ConnectLineProps {
+export interface SocketConnectingLineProps {
     isSocketConnected: boolean
     /**
      * @default "Connecting..."

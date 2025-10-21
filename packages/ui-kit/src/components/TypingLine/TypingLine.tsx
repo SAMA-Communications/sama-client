@@ -2,18 +2,8 @@ import { FC, useMemo } from "react";
 import { motion } from "framer-motion";
 import clsx from "clsx";
 
-import { TypingLineProps } from "./TypingLine.types";
+import { TypingLineInternalProps } from "./TypingLine.types";
 import { DotsLoader } from "../DotsLoader";
-
-interface Participant {
-  id: string;
-  name?: string;
-}
-
-interface TypingLineInternalProps extends TypingLineProps {
-  participants?: Record<string, Participant>;
-  getUserName?: (user: Participant) => string;
-}
 
 export const TypingLine: FC<TypingLineInternalProps> = ({
   userIds,
@@ -22,7 +12,7 @@ export const TypingLine: FC<TypingLineInternalProps> = ({
   textColor = "var(--color-accent-dark)",
   className,
   participants = {},
-  getUserName = (u) => u?.name || "Unknown",
+  getUserName = (u) => u?.login || "Unknown",
 }) => {
   const usersNameView = useMemo(() => {
     if (!displayUserNames || !userIds?.length) return null;

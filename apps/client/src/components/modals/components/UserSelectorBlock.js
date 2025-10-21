@@ -120,7 +120,7 @@ export default function UserSelectorBlock({
           Cancel
         </p>
         {isLoading ? (
-          <OvalLoader customClassName="!p-[0px]" height={60} width={23} />
+          <OvalLoader wrapperClassName="!p-[0px]" height={60} width={23} />
         ) : (
           <p
             className="text-h6 text-(--color-accent-dark) !forn-light cursor-pointer"

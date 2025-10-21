@@ -6,7 +6,7 @@ import { PlayButton } from "./PlayButton";
 
 export const VideoView: FC<VideoViewProps> = ({
   video,
-  onClickFunc,
+  onClick,
   isFullSize = true,
   removePlayButton = false,
   enableControls = false,
@@ -21,7 +21,7 @@ export const VideoView: FC<VideoViewProps> = ({
   const preloaderView = useMemo(() => {
     if (loadStatus === "success") {
       if (enableControls || removePlayButton) return null;
-      return <PlayButton onClickFunc={onClickFunc} />;
+      return <PlayButton onClick={onClick} />;
     }
     return (
       <MediaBlurHash
@@ -35,7 +35,7 @@ export const VideoView: FC<VideoViewProps> = ({
     file_blur_hash,
     enableControls,
     removePlayButton,
-    onClickFunc,
+    onClick,
     mediaBlurHashProps,
   ]);
 
@@ -66,7 +66,7 @@ export const VideoView: FC<VideoViewProps> = ({
         autoPlay={enableControls}
         src={file_url ? `${file_url}#t=0.1` : undefined}
         poster={file_name}
-        onClick={onClickFunc}
+        onClick={onClick}
       />
       {preloaderView}
     </>

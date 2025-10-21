@@ -2,14 +2,14 @@ import { FC, useMemo } from "react";
 
 import { DynamicAvatarProps } from "./DynamicAvatar.types";
 import { AvatarWithFallback } from "./AvatarWithFallback";
-import { ItemLoader } from "../ItemLoader";
+import { ImageLoader } from "../ImageLoader";
 
 export const DynamicAvatar: FC<DynamicAvatarProps> = ({
   avatarUrl,
   avatarBlurHash,
   defaultIcon,
   altText,
-  itemLoaderProps = {},
+  imageLoaderProps = {},
 }) => {
   const avatarView = useMemo(() => {
     if (avatarUrl) {
@@ -23,11 +23,11 @@ export const DynamicAvatar: FC<DynamicAvatarProps> = ({
     }
 
     return avatarBlurHash ? (
-      <ItemLoader blurHash={avatarBlurHash} {...itemLoaderProps} />
+      <ImageLoader blurHash={avatarBlurHash} {...imageLoaderProps} />
     ) : (
       defaultIcon
     );
-  }, [avatarBlurHash, avatarUrl, defaultIcon, altText, itemLoaderProps]);
+  }, [avatarBlurHash, avatarUrl, defaultIcon, altText, imageLoaderProps]);
 
   return <>{avatarView}</>;
 };

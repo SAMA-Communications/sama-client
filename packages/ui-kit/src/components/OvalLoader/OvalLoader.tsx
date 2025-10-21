@@ -6,10 +6,10 @@ export const OvalLoader: FC<OvalLoaderProps> = ({
   height = 32,
   width = 32,
   color = "#ffffff",
-  customClassName = "",
+  wrapperClassName = "",
 }) => {
   return (
-    <div className={customClassName}>
+    <div className={wrapperClassName}>
       <Oval
         height={height}
         width={width}

@@ -4,7 +4,7 @@ export interface UserAvatarProps {
   avatarUrl?: string;
   avatarBlurHash?: string;
   defaultIcon?: ReactNode;
-  className?: string;
+  wrapperClassName?: string;
   height?: number;
   width?: number;
   alt?: string;

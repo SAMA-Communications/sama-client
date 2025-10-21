@@ -132,7 +132,7 @@ export default function AttachHub() {
   const attachListView = useMemo(() => {
     if (isPending) {
       return (
-        <OvalLoader width={80} height={80} customClassName="self-center" />
+        <OvalLoader width={80} height={80} wrapperClassName="self-center" />
       );
     }
 

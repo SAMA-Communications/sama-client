@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
-import { ItemLoaderProps } from "../ItemLoader";
+import { ImageLoaderProps } from "../ImageLoader";
 
 export interface DynamicAvatarProps {
   avatarUrl?: string;
   avatarBlurHash?: string;
   defaultIcon?: ReactNode;
   altText?: string;
-  itemLoaderProps?: Partial<ItemLoaderProps>;
+  imageLoaderProps?: Partial<ImageLoaderProps>;
 }

@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router";
 
 import App from "@src/App";
 
-import SocketConnectLine from "@components/_helpers/SocketConnectLine.js";
+import ConnectingLine from "@components/connection/ConnectingLine.js";
 
 import store from "@store/store";
 
@@ -17,7 +17,7 @@ root.render(
     <BrowserRouter
       future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
-      <SocketConnectLine />
+      <ConnectingLine />
       <App />
     </BrowserRouter>
   </Provider>

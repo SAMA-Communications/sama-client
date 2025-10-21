@@ -58,9 +58,9 @@ export default function AttachmentCompressed({
       onContextMenu={onContextMenu}
     >
       {isVideo ? (
-        <VideoView video={attachment} onClickFunc={openMediaWindow} />
+        <VideoView video={attachment} onClick={openMediaWindow} />
       ) : (
-        <ImageView image={attachment} onClickFunc={openMediaWindow} />
+        <ImageView image={attachment} onClick={openMediaWindow} />
       )}
       {removeFileFunc && (
         <div

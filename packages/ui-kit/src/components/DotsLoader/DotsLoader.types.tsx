@@ -1,5 +1,5 @@
 export interface DotsLoaderProps {
-  customClassName?: string;
+  wrapperClassName?: string;
   mainColor?: string;
   width?: number;
   height?: number;

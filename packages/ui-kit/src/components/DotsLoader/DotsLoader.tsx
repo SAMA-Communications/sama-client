@@ -4,7 +4,7 @@ import { ThreeDots } from "react-loader-spinner";
 import { DotsLoaderProps } from "./DotsLoader.types";
 
 export const DotsLoader: FC<DotsLoaderProps> = ({
-  customClassName = "",
+  wrapperClassName = "",
   mainColor = "var(--color-accent-dark)",
   width = 16,
   height = 22,
@@ -17,7 +17,7 @@ export const DotsLoader: FC<DotsLoaderProps> = ({
       color={mainColor}
       radius="9"
       ariaLabel="three-dots-loading"
-      wrapperClass={customClassName}
+      wrapperClass={wrapperClassName}
     />
   );
 };

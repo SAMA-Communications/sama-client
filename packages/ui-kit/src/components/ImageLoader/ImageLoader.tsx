@@ -1,9 +1,9 @@
 import { FC } from "react";
 import { Blurhash } from "react-blurhash";
-import { ItemLoaderProps } from "./ItemLoader.types";
+import { ImageLoaderProps } from "./ImageLoader.types";
 import { OvalLoader } from "../OvalLoader";
 
-export const ItemLoader: FC<ItemLoaderProps> = ({
+export const ImageLoader: FC<ImageLoaderProps> = ({
   blurHash = "LEHLk~WB2yk8pyo0adR*.7kCMdnj",
   isShowLoader = true,
 }) => {

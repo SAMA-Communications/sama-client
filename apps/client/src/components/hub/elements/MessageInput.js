@@ -171,7 +171,7 @@ export default function MessageInput({
           <OvalLoader
             width={35}
             height={35}
-            customClassName="mr-[10px] px-[8px] self-center"
+            wrapperClassName="mr-[10px] px-[8px] self-center"
           />
         ) : isEditAction ? (
           <m.span whileTap={{ translateX: 10, scale: 0.9 }}>

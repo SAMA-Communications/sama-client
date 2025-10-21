@@ -9,7 +9,7 @@ export const UserAvatar: FC<UserAvatarProps> = ({
   avatarUrl,
   avatarBlurHash,
   defaultIcon,
-  className,
+  wrapperClassName,
   height = 64,
   width = 64,
   alt = "User's profile picture",
@@ -40,7 +40,7 @@ export const UserAvatar: FC<UserAvatarProps> = ({
             punch={1}
           />
           <OvalLoader
-            customClassName="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            wrapperClassName="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             height={30}
             width={30}
           />
@@ -59,7 +59,10 @@ export const UserAvatar: FC<UserAvatarProps> = ({
 
   return (
     <div
-      className={clsx("relative overflow-hidden rounded-full", className)}
+      className={clsx(
+        "relative overflow-hidden rounded-full",
+        wrapperClassName
+      )}
       style={{ width, height }}
     >
       {avatarView}

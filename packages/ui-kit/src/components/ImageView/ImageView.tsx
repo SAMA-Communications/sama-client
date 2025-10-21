@@ -5,7 +5,7 @@ import { MediaBlurHash } from "../MediaBlurHash";
 
 export const ImageView: FC<ImageViewProps> = ({
   image,
-  onClickFunc,
+  onClick,
   isFullSize = true,
   mediaBlurHashProps = {},
 }) => {
@@ -47,7 +47,7 @@ export const ImageView: FC<ImageViewProps> = ({
         } object-cover`}
         onLoad={() => setLoadStatus("success")}
         onError={() => setLoadStatus("error")}
-        onClick={loadStatus !== "error" ? onClickFunc : undefined}
+        onClick={loadStatus !== "error" ? onClick : undefined}
         alt={file_name}
         src={file_url}
       />

@@ -2,9 +2,9 @@ import { motion as m } from "framer-motion";
 import { AnimatePresence } from "motion/react";
 import { FC } from "react";
 
-import { ConnectLineProps } from "./ConnectLine.types";
+import { SocketConnectingLineProps } from "./SocketConnectingLine.types";
 
-export const ConnectLine: FC<ConnectLineProps> = ({
+export const SocketConnectingLine: FC<SocketConnectingLineProps> = ({
   isSocketConnected,
   message = "Connecting...",
 }) => {
