@@ -22,10 +22,10 @@ import Medium from "@icons/socials/MediumIcon.svg?react";
 import GitHub from "@icons/socials/GitHubIcon.png";
 
 export default function AuthorizationHub({ showDemoMessage = false }) {
+  const [content, setContent] = useState({});
   const [page, setPage] = useState(
     localStorage.getItem("isUsedBefore") ? "login" : "signup"
   );
-  const [content, setContent] = useState({});
 
   const [scope, animate] = useAnimate();
   const [triggerBGAnimation, setTriggerBGAnimation] = useState(false);
@@ -114,7 +114,10 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
             </div>
           ) : null}
           <div className="sm:mt-[25px] flex-1 flex flex-col gap-[15px]">
-            <UserNameInput setState={setContent} />
+            <UserNameInput
+              setState={setContent}
+              isResetModalOpen={isModalOpen}
+            />
             {isLoginPage ? null : <EmailInput setState={setContent} />}
             <PasswordInput setState={setContent} />
             {isLoginPage ? (
@@ -131,6 +134,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
               page={page}
               content={content}
               onClickEvent={triggerExitAnimation}
+              isResetModalOpen={isModalOpen}
             />
           </div>
           <div className="w-full flex flex-row items-center gap-[10px]">

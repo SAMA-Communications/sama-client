@@ -44,16 +44,6 @@ export default function ChatEditorHelper() {
     dispatch(updateHandler({ _id: selectedCid, not_saved: null }));
   };
 
-  const renderTooltipContent = (tips) =>
-    tips.map((tip, index) => (
-      <div key={index}>
-        <p>{tip.label}</p>
-        <p className="text-cyan-700 !font-normal">
-          &nbsp;&nbsp;&nbsp;&nbsp;{tip.code}
-        </p>
-      </div>
-    ));
-
   const renderActions = (actions, customStyle = "") =>
     actions.map((action, index) => (
       <button

@@ -193,7 +193,7 @@ export default function MessageInput({
   }, [location, isBlockedConv, isSending, onSubmitFunc]);
 
   return (
-    <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden z-5">
+    <div className="min-h-[60px] py-[3px] w-full flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden z-5">
       {inputsView}
     </div>
   );

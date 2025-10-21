@@ -19,7 +19,12 @@ import { navigateTo } from "@utils/NavigationUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/constants.js";
 
-export default function ConfirmButton({ page, content, onClickEvent }) {
+export default function ConfirmButton({
+  page,
+  content,
+  onClickEvent,
+  isResetModalOpen,
+}) {
   const dispatch = useDispatch();
 
   const [isPending, startTransition] = useTransition();
@@ -29,6 +34,7 @@ export default function ConfirmButton({ page, content, onClickEvent }) {
   const isLoginPage = page === "login";
 
   const sendRequest = useCallback(() => {
+    if (isResetModalOpen) return;
     startTransition(async () => {
       let userData = null;
       try {
@@ -61,7 +67,7 @@ export default function ConfirmButton({ page, content, onClickEvent }) {
         localStorage.setItem("isUsedBefore", true);
       }
     });
-  }, [content, isAutoAuth, isLoginPage]);
+  }, [content, isAutoAuth, isLoginPage, isResetModalOpen]);
 
   useKeyDown(KEY_CODES.ENTER, sendRequest);
 

@@ -229,8 +229,8 @@ class SAMAClient {
     return this.sendRequest("user_logout");
   }
 
-  async userCreate(data: { login: string; password: string }): Promise<IUser> {
-    return this.sendRequest("user_create", { organization_id: this.organizationId, login: data.login, password: data.password }, "user");
+  async userCreate(data: { login: string; email: string; password: string }): Promise<IUser> {
+    return this.sendRequest("user_create", { organization_id: this.organizationId, login: data.login, email: data.email, password: data.password }, "user");
   }
 
   async userEdit(data: { [key: string]: any }): Promise<IUser> {
@@ -334,6 +334,14 @@ class SAMAClient {
       ...(data.updated_at && { updated_at: data.updated_at }),
     };
     return this.sendRequest("message_list", messageParams, "messages");
+  }
+
+  async messageSummary(data: { cid: string, filter: string }): Promise<any> {
+    return this.sendRequest("message_summary", { cid: data.cid, filter: data.filter }, "message");
+  }
+
+  async messageTone(data: { body: string, tone: string }): Promise<any> {
+    return this.sendRequest("message_tone", { body: data.body, tone: data.tone }, "message");
   }
 
   async markConversationAsRead(data: { cid: string }): Promise<any> {

@@ -125,7 +125,7 @@ export default function AdditionalMessages({
           ) : (
             <>
               {isPreview && isReply ? "Reply to " : ""}
-              {getUserFullName(participants[senderId])}
+              {senderId && getUserFullName(participants[senderId])}
             </>
           )}
         </p>

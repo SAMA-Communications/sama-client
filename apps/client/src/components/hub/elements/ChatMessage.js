@@ -36,6 +36,7 @@ export default function ChatMessage({
   onSelectClick = () => {},
   onUnselectClick = () => {},
   onReplyClickFunc,
+  isMobile,
   isSelected,
   isSelectionMode = false,
   isPrevMesssageYours: prev,
@@ -89,7 +90,9 @@ export default function ChatMessage({
 
     const list = [
       "messageReply",
-      message.body && isCurrentUser ? "messageEdit" : null,
+      message.body && isCurrentUser && !message.forwarded_message_id
+        ? "messageEdit"
+        : null,
       copyOption,
       isAttachment ? "messageSaveAs" : null,
       "messageForward",
@@ -163,7 +166,7 @@ export default function ChatMessage({
         className={`relative ${width} flex flex-row gap-[16px] ${
           prev ? "" : "mt-[8px]"
         }`}
-        drag="x"
+        drag={isMobile ? "x" : false}
         dragDirectionLock
         dragConstraints={{ left: 0, right: 0 }}
         onDragEnd={(e, info) => {
@@ -206,11 +209,15 @@ export default function ChatMessage({
           } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""} ${
             isSelected ? "!bg-(--color-accent-dark)/50" : ""
           }`}
-          whileTap={{ scale: 0.95, transition: { duration: 0.3, delay: 0.05 } }}
-          onClick={handleClick}
-          onPointerDown={handlePointerDown}
-          onPointerUp={handlePointerUp}
-          onPointerLeave={handlePointerUp}
+          whileTap={
+            isMobile
+              ? { scale: 0.95, transition: { duration: 0.3, delay: 0.05 } }
+              : null
+          }
+          onClick={isMobile ? handleClick : null}
+          onPointerDown={isMobile ? handlePointerDown : null}
+          onPointerUp={isMobile ? handlePointerUp : null}
+          onPointerLeave={isMobile ? handlePointerUp : null}
           onContextMenu={
             isSelectionMode
               ? openSelectionContextMenu

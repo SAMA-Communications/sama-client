@@ -1,3 +1,4 @@
+import { AnimatePresence } from "motion/react";
 import { useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 
@@ -6,6 +7,7 @@ import draftService from "@services/tools/draftService.js";
 import ChatFormInput from "@components/hub/chatForm/ChatFormInput.js";
 import ChatFormInputContent from "@components/hub/chatForm/ChatFormInputContent.js";
 import MessagesList from "@components/hub/elements/MessagesList";
+import SummaryContainer from "@components/hub/elements/SummaryContainer.js";
 
 import { CustomScrollBar } from "@sama-communications.ui-kit";
 
@@ -31,12 +33,10 @@ export default function ChatFormContent() {
       draftService.getDraftRepliedMessageId(selectedCID);
     return messagesEntities[repliedMessageId];
   }, [selectedConversation, draftExtenralProps, messagesEntities]);
-
   const draftForwardedMessage = useMemo(() => {
     const forwardedMessageId = selectedConversation?.draft?.forwarded_mids;
     return forwardedMessageId?.map((mid) => messagesEntities[mid]);
   }, [selectedConversation, draftExtenralProps, messagesEntities]);
-
   const draftEditedMessage = useMemo(() => {
     const editedMessageId =
       draftExtenralProps[selectedCID]?.draft_edited_mid ||
@@ -68,6 +68,9 @@ export default function ChatFormContent() {
 
   return (
     <>
+      <AnimatePresence>
+        <SummaryContainer summaryContent={selectedConversation?.summary} />
+      </AnimatePresence>
       {chatContentView}
       <ChatFormInputContent
         editedMessage={draftEditedMessage}
