@@ -7,7 +7,7 @@
 - Implemented the option to edit messages
 - Implemented the option to delete messages
 - Implemented reset password feature
-  -Integrated AI agent for changing tone of messages and summarizing them
+- Integrated AI agent for changing tone of messages and summarizing them
 
 ### Bug Fixes:
 
