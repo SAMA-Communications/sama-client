@@ -9,7 +9,7 @@ export const OvalLoader: FC<OvalLoaderProps> = ({
   wrapperClassName = "",
 }) => {
   return (
-    <div className={wrapperClassName}>
+    <div data-testid="oval-loader" className={wrapperClassName}>
       <Oval
         height={height}
         width={width}

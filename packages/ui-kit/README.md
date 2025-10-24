@@ -2,6 +2,8 @@
 
 A UI component library for building SAMA chat interfaces in Web applications.
 
+This library provides reusable React components such as avatars, typing indicators, video/image views, scrollbars, loaders, and more, optimized for chat UIs.
+
 ## API documentation
 
 ...
@@ -15,7 +17,17 @@ npm install @sama-communications/ui-kit
 ## Usage
 
 ```js
+import { TypingLine, UserAvatar, VideoView } from "@sama-communications/ui-kit";
 
+function ChatExample() {
+  return (
+    <div>
+      <TypingLine userIds={["user1", "user2"]} />
+      <UserAvatar avatarUrl="https://example.com/avatar.jpg" />
+      <VideoView video={{ file_url: "https://example.com/video.mp4" }} />
+    </div>
+  );
+}
 ```
 
 ## Have an issue?

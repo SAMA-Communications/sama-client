@@ -27,6 +27,7 @@ export const AvatarWithFallback: FC<AvatarWithFallbackProps> = ({
     img.onload = () =>
       setComponent(
         <img
+          data-testid="avatar-with-fallback"
           className="w-full h-full object-cover"
           src={avatarUrl}
           alt={altText}

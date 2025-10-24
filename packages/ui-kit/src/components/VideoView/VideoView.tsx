@@ -59,6 +59,7 @@ export const VideoView: FC<VideoViewProps> = ({
     <>
       <video
         ref={videoRef}
+        data-testid="video"
         className={`${
           isFullSize ? "w-full h-full" : "max-w-full max-h-full"
         } object-cover`}

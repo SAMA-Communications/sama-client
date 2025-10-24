@@ -8,7 +8,10 @@ export const ImageLoader: FC<ImageLoaderProps> = ({
   isShowLoader = true,
 }) => {
   return (
-    <div className="relative w-full h-full overflow-hidden rounded-lg">
+    <div
+      data-testid="image-loader"
+      className="relative w-full h-full overflow-hidden rounded-lg"
+    >
       <Blurhash
         hash={blurHash}
         width={"100%"}

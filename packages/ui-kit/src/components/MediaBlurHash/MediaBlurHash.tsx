@@ -15,7 +15,10 @@ export const MediaBlurHash: FC<MediaBlurHashProps> = ({
   loaderSize = 50,
 }) => {
   return (
-    <div className="w-full h-full object-cover absolute inset-0">
+    <div
+      data-testid="media-blurhash"
+      className="w-full h-full object-cover absolute inset-0"
+    >
       <Blurhash
         hash={blurHash || DEFAULT_BLUR_HASH}
         style={{
