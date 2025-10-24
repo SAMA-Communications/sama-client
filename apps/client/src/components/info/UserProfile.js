@@ -6,25 +6,27 @@ import { useRef } from "react";
 import usersService from "@services/usersService";
 import { useKeyDown } from "@hooks/useKeyDown";
 
-import CustomScrollBar from "@components/_helpers/CustomScrollBar";
-import InfoBox from "@components/info/elements/InfoBox";
-import DynamicAvatar from "@components/info/elements//DynamicAvatar";
+import {
+  CustomScrollBar,
+  InfoBox,
+  DynamicAvatar,
+} from "@sama-communications.ui-kit";
 
 import { getCurrentUserFromParticipants } from "@store/values/Participants";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 
-import addSuffix from "@utils/navigation/add_suffix";
-import globalConstants from "@utils/global/constants";
-import navigateTo from "@utils/navigation/navigate_to";
-import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
-import { KEY_CODES } from "@utils/global/keyCodes";
-
+import {
+  addSuffix,
+  navigateTo,
+  removeAndNavigateSubLink,
+} from "@utils/NavigationUtils.js";
 import {
   showUserProfileContainer,
   showUserProfileContent,
-} from "@animations/aUserProfile.js";
+} from "@utils/AnimationUtils.js";
+import { KEY_CODES, ALLOWED_AVATAR_FORMATS } from "@utils/constants.js";
 
 import BackBtn from "@icons/options/Back.svg?react";
 import Close from "@icons/actions/CloseGray.svg?react";
@@ -119,7 +121,7 @@ export default function UserProfile({ triggerExitEvent, shareRef }) {
               onChange={(e) =>
                 sendChangeAvatarRequest(Array.from(e.target.files).at(0))
               }
-              accept={globalConstants.allowedAvatarFormats}
+              accept={ALLOWED_AVATAR_FORMATS}
               multiple
             />
           </m.div>

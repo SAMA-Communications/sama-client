@@ -7,7 +7,7 @@ import { useMemo } from "react";
 import usersService from "@services/usersService";
 
 import SAMALogo from "@components/static/SAMALogo";
-import DynamicAvatar from "@components/info/elements/DynamicAvatar";
+import { DynamicAvatar } from "@sama-communications.ui-kit";
 
 import { getCurrentUserFromParticipants } from "@store/values/Participants";
 import { getIsMobileView } from "@store/values/IsMobileView";
@@ -16,11 +16,9 @@ import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 
-import addPrefix from "@utils/navigation/add_prefix";
-import getUserInitials from "@utils/user/get_user_initials";
-import navigateTo from "@utils/navigation/navigate_to";
-
-import { showItem, showLogoOptions } from "@animations/aNavigationLine.js";
+import { addPrefix, navigateTo } from "@utils/NavigationUtils.js";
+import { getUserInitials } from "@utils/UserUtils.js";
+import { showItem, showLogoOptions } from "@utils/AnimationUtils.js";
 
 import List from "@icons/Conversations.svg?react";
 import Create from "@icons/AddConversation.svg?react";

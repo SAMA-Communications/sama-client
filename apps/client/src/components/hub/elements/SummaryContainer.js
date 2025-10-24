@@ -6,9 +6,9 @@ import {
   upsertChat,
 } from "@store/values/Conversations.js";
 
-import OvalLoader from "@components/_helpers/OvalLoader.js";
+import { OvalLoader } from "@sama-communications.ui-kit";
 
-import globalConstants from "@utils/global/constants.js";
+import { SUMMART_FILTER_MESSAGE } from "@utils/constants.js";
 
 import Close from "@icons/actions/Close.svg?react";
 import MagicWand from "@icons/ai/MagicWandWhite.svg?react";
@@ -57,7 +57,7 @@ export default function SummaryContainer({ summaryContent }) {
         )}
       </div>
       <span className="mt-[9px] ml-auto text-span text-gray-300">
-        {globalConstants.summaryFilterMessage[filter] || ""}
+        {SUMMART_FILTER_MESSAGE[filter] || ""}
       </span>
     </m.div>
   );

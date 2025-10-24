@@ -24,8 +24,8 @@ import {
   setLastMessageField,
 } from "@store/values/Conversations";
 
-import navigateTo from "@utils/navigation/navigate_to";
-import globalConstants from "@utils/global/constants.js";
+import { navigateTo } from "@utils/NavigationUtils.js";
+import { TYPING_DURATION_MS } from "@utils/constants.js";
 
 class MessagesService {
   currentChatId;
@@ -149,7 +149,7 @@ class MessagesService {
       const { clearTypingStatus, lastRequestTime } =
         this.typingTimers[cid] || {};
 
-      const typingDuration = globalConstants.typingDurationMs;
+      const typingDuration = TYPING_DURATION_MS;
       const now = Date.now();
       if (clearTypingStatus && now - lastRequestTime > typingDuration - 1000) {
         clearTimeout(clearTypingStatus);

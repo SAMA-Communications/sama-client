@@ -1,13 +1,13 @@
 import variant from "https://esm.sh/@jitl/quickjs-ng-wasmfile-release-sync";
-import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@latest?deps=memfs@4.0.0";
+import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@3.0.0?deps=memfs@4.0.0";
 
 import api from "@api/api.js";
 
 import store from "@store/store.js";
 import { updateHandler, upsertChat } from "@store/values/Conversations.js";
 
-import showCustomAlert from "@utils/show_alert.js";
-import globalConstants from "@utils/global/constants.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { EDITOR_FETCH_ERROR_MESSAGE } from "@utils/constants.js";
 
 class ConversationHandlerService {
   #options = { allowFetch: true, allowFs: false, executionTimeout: 3000 };
@@ -47,7 +47,7 @@ class ConversationHandlerService {
             text: async () => JSON.stringify(data),
           };
         } catch (e) {
-          errorMessage = globalConstants.editorFetchErrorMessage;
+          errorMessage = EDITOR_FETCH_ERROR_MESSAGE;
           return {
             ok: false,
             status: 500,

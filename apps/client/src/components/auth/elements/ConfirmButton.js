@@ -7,7 +7,7 @@ import subscribeForNotifications from "@services/tools/notifications";
 import usersService from "@services/usersService";
 import { useKeyDown } from "@hooks/useKeyDown";
 
-import DotsLoader from "@components/_helpers/DotsLoader";
+import { DotsLoader } from "@sama-communications.ui-kit";
 
 import { setCurrentUserId } from "@store/values/CurrentUserId";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
@@ -15,9 +15,9 @@ import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { upsertUser } from "@store/values/Participants";
 import { getIsMobileView } from "@store/values/IsMobileView.js";
 
-import navigateTo from "@utils/navigation/navigate_to";
-import showCustomAlert from "@utils/show_alert";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { navigateTo } from "@utils/NavigationUtils.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { KEY_CODES } from "@utils/constants.js";
 
 export default function ConfirmButton({
   page,

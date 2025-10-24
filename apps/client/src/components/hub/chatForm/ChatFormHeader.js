@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { useMemo } from "react";
 
-import TypingLine from "@components/_helpers/TypingLine";
+import { TypingLine } from "@sama-communications.ui-kit";
 
 import messagesService from "@services/messagesService.js";
 
@@ -20,21 +20,24 @@ import { setAllParams } from "@store/values/ContextMenu";
 import { useKeyDown } from "@hooks/useKeyDown.js";
 import { useConfirmWindow } from "@hooks/useConfirmWindow.js";
 
-
-import { KEY_CODES } from "@utils/global/keyCodes.js";
-import addSuffix from "@utils/navigation/add_suffix";
-import showCustomAlert from "@utils/show_alert";
-import getLastVisitTime from "@utils/user/get_last_visit_time";
-import getUserFullName from "@utils/user/get_user_full_name";
-import navigateTo from "@utils/navigation/navigate_to.js";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import removeSectionAndNavigate from "@utils/navigation/remove_section.js";
+import {
+  addSuffix,
+  navigateTo,
+  removeSectionAndNavigate,
+  removeAndNavigateLastSection,
+} from "@utils/NavigationUtils.js";
+import {
+  getLastVisitTime,
+  getLastMessageUserName,
+  getUserFullName,
+} from "@utils/UserUtils.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { KEY_CODES } from "@utils/constants.js";
 
 import BackBtn from "@icons/options/Back.svg?react";
 import More from "@icons/options/More.svg?react";
 import Forward from "@icons/context/ForwardWhiteBold.svg?react";
 import Delete from "@icons/context/DeleteWhite.svg?react";
-
 
 export default function ChatFormHeader({ closeFormFunc }) {
   const dispatch = useDispatch();
@@ -97,6 +100,8 @@ export default function ChatFormHeader({ closeFormFunc }) {
             userIds={selectedConversation.typing_users}
             displayBackground={isGroupChat}
             displayUserNames={isGroupChat}
+            participants={participants}
+            getUserName={getLastMessageUserName}
           />
         </div>
       );

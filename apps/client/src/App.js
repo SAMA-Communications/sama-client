@@ -28,10 +28,12 @@ import { setIsTabInFocus } from "@store/values/IsTabInFocus";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { updateNetworkState } from "@store/values/NetworkState";
 
-import globalConstants from "@utils/global/constants";
-import navigateTo from "@utils/navigation/navigate_to";
-import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
-import { history } from "@utils/global/history";
+import {
+  removeAndNavigateSubLink,
+  navigateTo,
+} from "@utils/NavigationUtils.js";
+import { history } from "@utils/history.js";
+import { MOBILE_VIEW_WIDTH, TABLET_VIEW_WIDTH } from "@utils/constants.js";
 
 import SMain from "@skeletons/SMain";
 import SPageLoader from "@skeletons/SPageLoader";
@@ -64,7 +66,7 @@ export default function App() {
     );
     window.addEventListener("online", () => dispatch(updateNetworkState(true)));
     window.addEventListener("resize", () => {
-      const isMobileView = window.innerWidth <= globalConstants.mobileViewWidth;
+      const isMobileView = window.innerWidth <= MOBILE_VIEW_WIDTH;
       if (isMobileView !== isMobileViewRef.current) {
         isMobileView === true &&
           removeAndNavigateSubLink(
@@ -76,8 +78,8 @@ export default function App() {
       }
 
       const isTabletView =
-        window.innerWidth <= globalConstants.tabletViewWidth &&
-        window.innerWidth > globalConstants.mobileViewWidth;
+        window.innerWidth <= TABLET_VIEW_WIDTH &&
+        window.innerWidth > MOBILE_VIEW_WIDTH;
       if (isTabletView !== isTabletViewRef.current) {
         isTabletView === true &&
           removeAndNavigateSubLink(
@@ -102,13 +104,11 @@ export default function App() {
     document.addEventListener("click", handleClick);
 
     dispatch(setIsTabInFocus(true));
-    dispatch(
-      setIsMobileView(window.innerWidth <= globalConstants.mobileViewWidth)
-    );
+    dispatch(setIsMobileView(window.innerWidth <= MOBILE_VIEW_WIDTH));
     dispatch(
       setIsTabletView(
-        window.innerWidth <= globalConstants.tabletViewWidth &&
-          window.innerWidth > globalConstants.mobileViewWidth
+        window.innerWidth <= TABLET_VIEW_WIDTH &&
+          window.innerWidth > MOBILE_VIEW_WIDTH
       )
     );
 

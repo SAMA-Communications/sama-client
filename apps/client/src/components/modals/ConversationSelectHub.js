@@ -11,8 +11,8 @@ import {
   updateWithDrafts,
 } from "@store/values/Conversations.js";
 
-import extractForwardedMids from "@utils/conversation/extract_forwarded_mids.js";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page.js";
+import { extractForwardedMids } from "@utils/ConversationUtils.js";
+import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 
 import Close from "@icons/options/Close.svg?react";
 

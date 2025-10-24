@@ -1,6 +1,6 @@
 import { Blurhash } from "react-blurhash";
 
-import getFileType from "@utils/media/get_file_type";
+import { getFileType } from "@utils/MediaUtils.js";
 
 import Image from "@icons/media/Image.svg?react";
 import Video from "@icons/media/Video.svg?react";

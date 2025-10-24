@@ -2,15 +2,21 @@ import * as m from "motion/react-m";
 import { AnimatePresence } from "motion/react";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { useLocation } from "react-router";
 
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchInput";
-import MenuButtons from "../info/elements/MenuButtons.js";
+
+import { MenuButtons } from "@sama-communications.ui-kit";
 
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView } from "@store/values/IsTabletView.js";
 
+import { addPrefix } from "@utils/NavigationUtils.js";
+
 export default function EmptyHub() {
+  const { pathname, hash } = useLocation();
+
   const [inputText, setInputText] = useState(null);
 
   const isMobileView = useSelector(getIsMobileView);
@@ -18,7 +24,12 @@ export default function EmptyHub() {
 
   return (
     <>
-      {isMobileView ? <MenuButtons /> : null}
+      {isMobileView ? (
+        <MenuButtons
+          onProfileClick={() => addPrefix(pathname + hash, "/profile")}
+          onCreateClick={() => addPrefix(pathname + hash, "/create")}
+        />
+      ) : null}
       <m.div
         className={`flex flex-1 flex-col gap-[20px] items-center justify-center rounded-[48px] max-md:w-full max-md:mt-[35px] max-md:rounded-[0]`}
       >

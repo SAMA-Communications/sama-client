@@ -4,7 +4,7 @@ import { useAnimate } from "motion/react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import CustomScrollBar from "@components/_helpers/CustomScrollBar";
+import { CustomScrollBar } from "@sama-communications.ui-kit";
 
 import { getIsMobileView } from "@store/values/IsMobileView.js";
 

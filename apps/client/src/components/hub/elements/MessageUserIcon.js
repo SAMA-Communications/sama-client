@@ -1,5 +1,6 @@
-import DynamicAvatar from "@components/info/elements/DynamicAvatar";
-import getUserInitials from "@utils/user/get_user_initials";
+import { DynamicAvatar } from "@sama-communications.ui-kit";
+
+import { getUserInitials } from "@utils/UserUtils.js";
 
 import UserIconBlack from "@icons/users/UserIconBlack.svg?react";
 import UserIconWhite from "@icons/users/UserIconWhite.svg?react";

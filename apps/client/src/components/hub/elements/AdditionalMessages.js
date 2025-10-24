@@ -6,7 +6,7 @@ import MediaAttachment from "@components/message/elements/MediaAttachment.js";
 
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 
-import getUserFullName from "@utils/user/get_user_full_name.js";
+import { getUserFullName } from "@utils/UserUtils.js";
 
 import Forward from "@icons/context/ForwardGray.svg?react";
 import Edit from "@icons/context/EditTextGray.svg?react";

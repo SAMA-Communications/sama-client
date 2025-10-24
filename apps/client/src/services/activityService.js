@@ -5,7 +5,8 @@ import api from "@api/api";
 import store from "@store/store";
 import { upsertUser } from "@store/values/Participants";
 
-import getLastVisitTime from "@utils/user/get_last_visit_time";
+import { getLastVisitTime } from "@utils/UserUtils.js";
+
 class ActivityService {
   currentChatId;
   activeChat;

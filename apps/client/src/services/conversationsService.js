@@ -21,16 +21,15 @@ import {
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
 
-import getOpponentId from "@utils/user/get_opponent_id";
-import isHeic from "@utils/media/is_heic";
-import navigateTo from "@utils/navigation/navigate_to";
-import processFile from "@utils/media/process_file";
-import showCustomAlert from "@utils/show_alert";
-import { history } from "@utils/global/history";
+import { getOpponentId } from "@utils/ConversationUtils.js";
+import { navigateTo } from "@utils/NavigationUtils.js";
+import { processFile, isHeic } from "@utils/MediaUtils.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { history } from "@utils/history.js";
 
 import { notificationQueueByCid } from "@services/tools/notifications";
 
-import validateFieldLength from "@validations/validateFieldLength";
+import { validateFieldLength } from "@utils/ValidationGeneral.js";
 
 class ConversationsService {
   userIsLoggedIn = false;
