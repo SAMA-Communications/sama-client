@@ -1,0 +1,96 @@
+name: Create UI Kit Release from PR
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  publish-ui-kit:
+    if: |
+      contains(github.event.pull_request.title, 'release') == true &&
+      contains(github.event.pull_request.title, 'ui-kit') == true &&
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'main'
+    
+    runs-on: ubuntu-latest
+            
+    steps:
+                    
+      - name: Checkout code
+        uses: actions/checkout@v4
+            
+      - name: Install node
+        uses: actions/setup-node@v4
+        with:
+            node-version: '20.x'
+            registry-url: 'https://registry.npmjs.org'
+            
+      - name: Run npm install
+        run: npm install
+        working-directory: packages/ui-kit
+            
+      - name: Run npm build
+        run: npm run build
+        working-directory: packages/ui-kit
+    
+      - name: Publish
+        run: npm publish --access public
+        working-directory: packages/ui-kit
+        env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    
+
+  create-release:
+    if: |
+      contains(github.event.pull_request.title, 'release') == true &&
+      contains(github.event.pull_request.title, 'ui-kit') == true &&
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'main'
+    needs: publish-ui-kit
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Extract Version
+        id: extract-version
+        run: |
+          # Use grep to find the first occurrence of the version number matching "## 0.0.0" pattern
+          version=$(grep -m 1 -oP '## \d+\.\d+\.\d+' packages/ui-kit/CHANGELOG.md | cut -d ' ' -f 2)
+          echo "version=$version" >> $GITHUB_ENV
+
+      - name: Extract Changelog
+        id: extract-changelog
+        run: |
+          # Extract the content between the last two version headers
+          changelog=$(awk '/^## [0-9]+\.[0-9]+\.[0-9]+/{if (!version) {version=$0; next}} /^## [0-9]+\.[0-9]+\.[0-9]+/{exit} {if (version) description = description ORS $0} END {if (version) print description}' packages/ui-kit/CHANGELOG.md | sed -e '/^## [0-9]+\.[0-9]+\.[0-9]+/d; s/^# //' > changelog.txt)
+          echo "changelog_file=changelog.txt" >> $GITHUB_ENV
+          
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ui-kit-${{ env.version }}
+          release_name: ui-kit-${{ env.version }}
+          body_path: ${{ env.changelog_file }}
+          draft: false
+          prerelease: false
+
+      - name: Post to a Slack channel
+        if: success()
+        id: slack
+        uses: slackapi/slack-github-action@v1.24.0
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          REPOSITORY_NAME: ${{ github.repository }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          REVIEWERS: ${{ join(github.event.pull_request.requested_reviewers.*.login, ', ') }}
+          RELEASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/ui-kit-${{ env.version }}
+        with:
+          # You can pass in multiple channels to post to by providing a comma-delimited list of channel IDs.
+          channel-id: 'git-releases'
+          payload-file-path: "./.github/slack/payload-slack-content.json"
