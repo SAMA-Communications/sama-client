@@ -44,10 +44,19 @@ jobs:
           package_version=$(grep -oP '"version": "\K[0-9]+\.[0-9]+\.[0-9]+' packages/ui-kit/package.json)
           echo "package_version=$package_version" >> $GITHUB_ENV
 
+      - name: Get version from package-lock.json
+        id: get-package-lock-version
+        run: |
+          package_lock_version=$(grep -oP '"version": "\K[0-9]+\.[0-9]+\.[0-9]+' packages/ui-kit/package-lock.json | head -n 1)
+          echo "package_lock_version=$package_lock_version" >> $GITHUB_ENV
+  
       - name: Compare Versions
         run: |
           if [ "$version" != "$package_version" ]; then
             echo "Version mismatch: CHANGELOG version ($version) does not match package.json version ($package_version)"
+            exit 1
+          elif [ "$version" != "$package_lock_version" ]; then
+            echo "Version mismatch: CHANGELOG version ($version) does not match package-lock.json version ($package_lock_version)"
             exit 1
           else
             echo "Versions match: $version"
