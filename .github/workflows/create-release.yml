@@ -9,6 +9,7 @@ jobs:
   create-release:
     if: |
       contains(github.event.pull_request.title, 'release') == true &&
+      contains(github.event.pull_request.title, 'client') == true &&
       github.event.pull_request.merged == true &&
       github.event.pull_request.base.ref == 'main'
     runs-on: self-hosted
@@ -37,8 +38,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.version }}
-          release_name: ${{ env.version }}
+          tag_name: client-${{ env.version }}
+          release_name: client-${{ env.version }}
           body_path: ${{ env.changelog_file }}
           draft: false
           prerelease: false
@@ -52,7 +53,7 @@ jobs:
           REPOSITORY_NAME: ${{ github.repository }}
           AUTHOR: ${{ github.event.pull_request.user.login }}
           REVIEWERS: ${{ join(github.event.pull_request.requested_reviewers.*.login, ', ') }}
-          RELEASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ env.version }}
+          RELEASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/client-${{ env.version }}
         with:
           # You can pass in multiple channels to post to by providing a comma-delimited list of channel IDs.
           channel-id: 'git-releases'
@@ -61,6 +62,7 @@ jobs:
   deploy:
     if: |
       contains(github.event.pull_request.title, 'release') == true &&
+      contains(github.event.pull_request.title, 'client') == true &&
       github.event.pull_request.merged == true &&
       github.event.pull_request.base.ref == 'main'
     needs: [create-release]
