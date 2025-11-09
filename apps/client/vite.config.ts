@@ -35,6 +35,9 @@ export default defineConfig({
       "@validations": createPath("src/lib/validations"),
 
       "@hooks": createPath("src/hooks"),
+
+      "@sama-communications.sdk": createPath("../../packages/sdk/dist/@sama-communications.sdk.es.js"),
+      "@sama-communications.ui-kit": createPath("../../packages/ui-kit/dist/@sama-communications.ui-kit.es.js")
     },
   },
   esbuild: {

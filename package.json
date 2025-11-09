@@ -19,7 +19,8 @@
   "private": true,
   "workspaces": [
     "apps/client",
-    "packages/sdk"
+    "packages/sdk",
+    "packages/ui-kit"
   ],
   "repository": {
     "type": "git",

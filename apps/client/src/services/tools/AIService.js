@@ -3,7 +3,7 @@ import api from "@api/api.js";
 import store from "@store/store.js";
 import { upsertChat } from "@store/values/Conversations.js";
 
-import showCustomAlert from "@utils/show_alert.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 
 class AIService {
   async summarizeMessages({ cid, filter }) {
