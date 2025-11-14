@@ -1,7 +1,7 @@
 import * as m from "motion/react-m";
 import { useLocation } from "react-router";
 
-import addSuffix from "@utils/navigation/add_suffix";
+import { addSuffix } from "@utils/NavigationUtils.js";
 
 export default function InformativeMessage({
   text,

@@ -7,18 +7,18 @@ import { useSelector } from "react-redux";
 import api from "@api/api";
 
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
-import OvalLoader from "@components/_helpers/OvalLoader";
+
+import { OvalLoader } from "@sama-communications.ui-kit";
 
 import draftService from "@services/tools/draftService.js";
 
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 
-import addSuffix from "@utils/navigation/add_suffix";
-import isMobile from "@utils/get_device_type";
-import calcInputHeight from "@utils/text/calc_input_height.js";
-import extractFilesFromClipboard from "@utils/media/extract_files_from_clipboard.js";
-import globalConstants from "@utils/global/constants.js";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { addSuffix } from "@utils/NavigationUtils.js";
+import { calcInputHeight } from "@utils/FormatedUtils.js";
+import { extractFilesFromClipboard } from "@utils/MediaUtils.js";
+import { isMobile } from "@utils/GeneralUtils.js";
+import { KEY_CODES, TYPING_DURATION_MS } from "@utils/constants.js";
 
 import Attach from "@icons/options/Attach.svg?react";
 import Send from "@icons/options/Send.svg?react";
@@ -40,7 +40,7 @@ export default function MessageInput({
   const handleInput = (e) => {
     const text = e.target.value;
     if (text.length > 0) {
-      const typingDuration = globalConstants.typingDurationMs;
+      const typingDuration = TYPING_DURATION_MS;
       if (
         Date.now() - lastTypingRequestTime.current > typingDuration - 1000 ||
         !lastTypingRequestTime.current
@@ -171,7 +171,7 @@ export default function MessageInput({
           <OvalLoader
             width={35}
             height={35}
-            customClassName="mr-[10px] px-[8px] self-center"
+            wrapperClassName="mr-[10px] px-[8px] self-center"
           />
         ) : isEditAction ? (
           <m.span whileTap={{ translateX: 10, scale: 0.9 }}>

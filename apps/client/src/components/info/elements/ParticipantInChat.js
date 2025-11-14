@@ -2,15 +2,13 @@ import * as m from "motion/react-m";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 
-import DynamicAvatar from "@components/info/elements/DynamicAvatar";
+import { DynamicAvatar } from "@sama-communications.ui-kit";
 
 import { setAllParams } from "@store/values/ContextMenu";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 
-import addPrefix from "@utils/navigation/add_prefix";
-import addSuffix from "@utils/navigation/add_suffix";
-import getUserFullName from "@utils/user/get_user_full_name";
-import getUserInitials from "@utils/user/get_user_initials";
+import { addPrefix, addSuffix } from "@utils/NavigationUtils.js";
+import { getUserFullName, getUserInitials } from "@utils/UserUtils.js";
 
 export default function ParticipantInChat({
   userObject,

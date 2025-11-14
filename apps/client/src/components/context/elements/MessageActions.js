@@ -13,9 +13,8 @@ import { addExternalProps } from "@store/values/ContextMenu.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
 import { selectContextExternalProps } from "@store/values/ContextMenu.js";
 
-import addSuffix from "@utils/navigation/add_suffix.js";
-import upsertMidsInPath from "@utils/navigation/upasert_mids_in_path.js";
-import writeToCanvas from "@utils/media/write_to_canvas.js";
+import { addSuffix, upsertMidsInPath } from "@utils/NavigationUtils.js";
+import { writeToCanvas } from "@utils/MediaUtils.js";
 
 import Reply from "@icons/context/Reply.svg?react";
 import Edit from "@icons/context/EditText.svg?react";

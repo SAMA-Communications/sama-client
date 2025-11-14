@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from "react";
 
 import { useKeyDown } from "@hooks/useKeyDown.js";
 
-import { KEY_CODES } from "@utils/global/keyCodes.js";
+import { KEY_CODES } from "@utils/constants.js";
 
 const ConfirmContext = createContext(null);
 

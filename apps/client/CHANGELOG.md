@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.12.0
+
+### Features
+
+- Migrated components to the newly created UI kit
+
 ## 1.11.0
 
 ### Features

@@ -8,7 +8,7 @@ import { getConversationHandler } from "@store/values/Conversations.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
 import { updateHandler, upsertChat } from "@store/values/Conversations.js";
 
-import globalConstants from "@utils/global/constants.js";
+import { DEFAULT_EDITOR_CODE } from "@utils/constants.js";
 
 import Help from "@icons/editor/Help.svg?react";
 import Options from "@icons/editor/Options.svg?react";
@@ -31,7 +31,7 @@ export default function ChatEditorHelper() {
 
   const deleteConversationHandler = async () => {
     if (window.confirm("Are you sure you want to delete the handler?")) {
-      resetEditorContent(globalConstants.defaultEditorCode);
+      resetEditorContent(DEFAULT_EDITOR_CODE);
       dispatch(upsertChat({ _id: selectedCid, handler_options: null }));
       await conversationHandlerService.deleteConversationHandler(selectedCid);
     }
@@ -39,7 +39,7 @@ export default function ChatEditorHelper() {
 
   const undoHandlerChanges = () => {
     resetEditorContent(
-      selectedConversationScheme?.content || globalConstants.defaultEditorCode
+      selectedConversationScheme?.content || DEFAULT_EDITOR_CODE
     );
     dispatch(updateHandler({ _id: selectedCid, not_saved: null }));
   };

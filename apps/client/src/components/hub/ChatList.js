@@ -1,19 +1,24 @@
 import * as m from "motion/react-m";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { useLocation } from "react-router";
 
 import ConversationItemList from "@components/hub/chatList/ConversationItemList";
-import CustomScrollBar from "@components/_helpers/CustomScrollBar";
-import MenuButtons from "@components/info/elements/MenuButtons";
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchInput";
 
+import { CustomScrollBar, MenuButtons } from "@sama-communications.ui-kit";
+
 import SChatList from "@skeletons/hub/SChatList";
+
+import { addPrefix } from "@utils/NavigationUtils.js";
 
 import { getDisplayableConversations } from "@store/values/Conversations.js";
 import { getIsMobileView } from "@store/values/IsMobileView";
 
 export default function ChatList() {
+  const { pathname, hash } = useLocation();
+
   const [inputText, setInputText] = useState(null);
 
   const isMobileView = useSelector(getIsMobileView);
@@ -58,7 +63,12 @@ export default function ChatList() {
       }}
       transition={{ delay: 0.3, duration: 0.5 }}
     >
-      {isMobileView ? <MenuButtons /> : null}
+      {isMobileView ? (
+        <MenuButtons
+          onProfileClick={() => addPrefix(pathname + hash, "/profile")}
+          onCreateClick={() => addPrefix(pathname + hash, "/create")}
+        />
+      ) : null}
       <SearchInput
         customClassName="sm:max-w-full max-sm:max-w-[calc(100%-60px)]"
         shadowText={"Search"}

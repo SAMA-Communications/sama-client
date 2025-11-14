@@ -2,19 +2,21 @@ import DownloadManager from "@lib/downloadManager";
 
 import api from "@api/api";
 
-import isHeic from "@utils/media/is_heic";
-import processFile from "@utils/media/process_file";
-import showCustomAlert from "@utils/show_alert";
-
 import store from "@store/store";
 import { upsertUser } from "@store/values/Participants";
 
-import validateEmail from "@validations/user/validateEmail";
-import validateFieldLength from "@validations/validateFieldLength";
-import validateIsEmptyObject from "@validations/validateIsEmtpyObject";
-import validateLogin from "@validations/user/validateLogin";
-import validatePassword from "@validations/user/validatePassword";
-import validatePhone from "@validations/user/validatePhone";
+import { processFile, isHeic } from "@utils/MediaUtils.js";
+import {
+  validateEmail,
+  validateLogin,
+  validatePassword,
+  validatePhone,
+} from "@utils/ValidationUser.js";
+import {
+  validateIsEmptyObject,
+  validateFieldLength,
+} from "@utils/ValidationGeneral.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 
 class UsersService {
   async login(data) {

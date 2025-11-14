@@ -7,8 +7,9 @@ import conversationService from "@services/conversationsService";
 import usersService from "@services/usersService";
 
 import ChatList from "@components/search/lists/ChatList";
-import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import SearchedUser from "@components/search/elements/SearchedUser";
+
+import { CustomScrollBar } from "@sama-communications.ui-kit";
 
 import { selectConversationsEntities } from "@store/values/Conversations";
 

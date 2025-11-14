@@ -3,18 +3,20 @@ import localforage from "localforage";
 import store from "@store/store.js";
 import { upsertMessage } from "@store/values/Messages.js";
 
-import globalConstants from "@utils/global/constants";
+import {
+  LINKS_REGEXP,
+  URL_METADATA_EXPIRE,
+  URL_MAX_PARALLEL_REQUESTS,
+} from "@utils/constants.js";
 
 class UrlMetaService {
   urlMetaTimers = {};
-  URL_META_EXPIRE_MS = globalConstants.urlMetaDataExpire;
   urlMetaQueue = [];
   activeRequests = 0;
-  MAX_PARALLEL_REQUESTS = globalConstants.urlMaxParallelRequests;
 
   processQueue() {
     while (
-      this.activeRequests < this.MAX_PARALLEL_REQUESTS &&
+      this.activeRequests < URL_MAX_PARALLEL_REQUESTS &&
       this.urlMetaQueue.length > 0
     ) {
       const { mid, url, resolve } = this.urlMetaQueue.shift();
@@ -52,7 +54,7 @@ class UrlMetaService {
         if (
           cached?.data &&
           cached?.created_at &&
-          now - cached.created_at < this.URL_META_EXPIRE_MS
+          now - cached.created_at < URL_METADATA_EXPIRE
         ) {
           if (mid)
             store.dispatch(
@@ -101,8 +103,8 @@ class UrlMetaService {
   }
 
   urlify(mid, inputText, color = "black", isNeedToLoadUrl = false) {
-    const matches = inputText.match(globalConstants.linksRegExp) || [];
-    const parts = inputText.split(globalConstants.linksRegExp);
+    const matches = inputText.match(LINKS_REGEXP) || [];
+    const parts = inputText.split(LINKS_REGEXP);
 
     if (isNeedToLoadUrl && matches.length && !this.urlMetaTimers[mid]) {
       this.tryLoadFirstValidUrl(mid, matches);

@@ -2,9 +2,8 @@ import { useCallback, useRef, useState } from "react";
 
 import { useKeyDown } from "@hooks/useKeyDown";
 
-import globalConstants from "@utils/global/constants";
-import showCustomAlert from "@utils/show_alert";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { KEY_CODES, ALLOWED_AVATAR_FORMATS } from "@utils/constants.js";
 
 import ImageMedium from "@icons/media/ImageBig.svg?react";
 
@@ -63,7 +62,7 @@ export default function ChatNameInput({ setState, setImage, closeWindow }) {
               setImage(file);
               setLcalUrlImage(URL.createObjectURL(file));
             }}
-            accept={globalConstants.allowedAvatarFormats}
+            accept={ALLOWED_AVATAR_FORMATS}
             multiple
           />
         </div>

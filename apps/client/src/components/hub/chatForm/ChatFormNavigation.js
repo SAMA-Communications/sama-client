@@ -1,6 +1,6 @@
 import * as m from "motion/react-m";
 
-import { CHAT_CONTENT_TABS } from "@utils/global/chatContentTabs.js";
+import { CHAT_CONTENT_TABS } from "@utils/constants.js";
 
 import Messages from "@icons/chat/Messages.svg?react";
 import Apps from "@icons/chat/Apps.svg?react";

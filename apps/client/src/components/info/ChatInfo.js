@@ -3,11 +3,13 @@ import { useLocation } from "react-router";
 import { useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 
+import conversationService from "@services/conversationsService";
+
 import { useKeyDown } from "@hooks/useKeyDown";
 
-import CustomScrollBar from "@components/_helpers/CustomScrollBar";
-import DynamicAvatar from "@components/info/elements/DynamicAvatar";
 import ParticipantInChat from "@components/info/elements/ParticipantInChat";
+
+import { CustomScrollBar, DynamicAvatar } from "@sama-communications.ui-kit";
 
 import { getConverastionById } from "@store/values/Conversations";
 import { getIsMobileView } from "@store/values/IsMobileView";
@@ -15,16 +17,12 @@ import { getIsTabletView } from "@store/values/IsTabletView";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 
-import addSuffix from "@utils/navigation/add_suffix";
-import conversationService from "@services/conversationsService";
-import globalConstants from "@utils/global/constants";
-import removeAndNavigateSubLink from "@utils/navigation/remove_prefix";
-import { KEY_CODES } from "@utils/global/keyCodes";
-
+import { addSuffix, removeAndNavigateSubLink } from "@utils/NavigationUtils.js";
 import {
   showChatInfoContainer,
   showChatInfoContent,
-} from "@animations/aChatInfo.js";
+} from "@utils/AnimationUtils.js";
+import { KEY_CODES, ALLOWED_AVATAR_FORMATS } from "@utils/constants.js";
 
 import AddParticipants from "@icons/AddParticipants.svg?react";
 import BackBtn from "@icons/options/Back.svg?react";
@@ -151,7 +149,7 @@ export default function ChatInfo({ shareRef }) {
               onChange={(e) =>
                 sendChangeAvatarRequest(Array.from(e.target.files).at(0))
               }
-              accept={globalConstants.allowedAvatarFormats}
+              accept={ALLOWED_AVATAR_FORMATS}
               multiple
             />
           </m.div>
