@@ -11,13 +11,15 @@ import {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import "@lib/samaAdapter";
+
 import autoLoginService from "@services/autoLoginService";
 import activityService from "@services/activityService";
 import conversationService from "@services/conversationsService";
 import messagesService from "@services/messagesService";
 
-import BetterSuspense from "@hooks/BetterSuspense.js";
-import ConfirmWindowProvider from "@hooks/useConfirmWindow.js";
+import BetterSuspense from "@hooks/tools/BetterSuspense.js";
+import ConfirmWindowProvider from "@hooks/tools/useConfirmWindow.js";
 
 import ContextMenuHub from "@components/context/ContextMenuHub";
 

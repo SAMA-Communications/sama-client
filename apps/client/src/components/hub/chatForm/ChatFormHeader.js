@@ -17,8 +17,8 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setAllParams } from "@store/values/ContextMenu";
 
-import { useKeyDown } from "@hooks/useKeyDown.js";
-import { useConfirmWindow } from "@hooks/useConfirmWindow.js";
+import { useKeyDown } from "@hooks/tools/useKeyDown.js";
+import { useConfirmWindow } from "@hooks/tools/useConfirmWindow.js";
 
 import {
   addSuffix,
@@ -97,11 +97,9 @@ export default function ChatFormHeader({ closeFormFunc }) {
       return (
         <div className="text-(--color-text-light) mb-[9px]">
           <TypingLine
-            userIds={selectedConversation.typing_users}
-            displayBackground={isGroupChat}
-            displayUserNames={isGroupChat}
-            participants={participants}
-            getUserName={getLastMessageUserName}
+            typingUserIds={selectedConversation.typing_users}
+            isDisplayBackground={isGroupChat}
+            isDisplayUserNames={isGroupChat}
           />
         </div>
       );

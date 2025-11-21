@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import conversationService from "@services/conversationsService";
-import { useKeyDown } from "@hooks/useKeyDown";
+import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import ChatNameInput from "@components/modals/components/ChatNameInput";
 import UserSelectorBlock from "@components/modals/components/UserSelectorBlock";

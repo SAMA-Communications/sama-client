@@ -1,4 +1,4 @@
-import ConversationItemList from "@components/hub/chatList/ConversationItemList";
+import { ConversationItemList } from "@sama-communications.ui-kit";
 
 export default function ChatList({
   conversations,
@@ -16,7 +16,7 @@ export default function ChatList({
       ) : null}
       <ConversationItemList
         conversations={conversations}
-        isHideDeletedUsers={isHideDeletedUsers}
+        // isHideDeletedUsers={isHideDeletedUsers}
         additionalOnClickfunc={additionalOnClickfunc}
       />
       <p className="text-center text-h6 text-(--color-text-dark)">

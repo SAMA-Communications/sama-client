@@ -7,7 +7,7 @@ import messagesService from "@services/messagesService.js";
 
 import ContextLink from "@components/context/elements/ContextLink";
 
-import { useConfirmWindow } from "@hooks/useConfirmWindow.js";
+import { useConfirmWindow } from "@hooks/tools/useConfirmWindow.js";
 
 import { addExternalProps } from "@store/values/ContextMenu.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";

@@ -7,7 +7,7 @@ import api from "@api/api";
 
 import activityService from "@services/activityService";
 import conversationService from "@services/conversationsService";
-import { useKeyDown } from "@hooks/useKeyDown";
+import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import {
   CustomScrollBar,

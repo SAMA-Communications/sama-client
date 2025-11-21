@@ -5,7 +5,7 @@ import draftService from "@services/tools/draftService.js";
 import messagesService from "@services/messagesService";
 import DownloadManager from "../../../lib/downloadManager.js";
 
-import { useConfirmWindow } from "@hooks/useConfirmWindow.js";
+import { useConfirmWindow } from "@hooks/tools/useConfirmWindow.js";
 
 import MessageInput from "@components/hub/elements/MessageInput";
 import MagicButton from "@components/hub/elements/MagicButton.js";

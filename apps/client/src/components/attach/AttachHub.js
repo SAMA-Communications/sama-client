@@ -7,7 +7,7 @@ import draftService from "@services/tools/draftService.js";
 import messagesService from "@services/messagesService.js";
 
 import DownloadManager from "@lib/downloadManager";
-import { useKeyDown } from "@hooks/useKeyDown";
+import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import MediaAttachments from "@components/message/elements/MediaAttachments.js";
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
