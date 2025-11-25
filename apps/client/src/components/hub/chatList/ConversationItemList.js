@@ -16,11 +16,14 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 
-import getLastMessageUserName from "@utils/user/get_last_message_user_name";
-import getUserFullName from "@utils/user/get_user_full_name";
-import navigateTo from "@utils/navigation/navigate_to";
+import { getLastMessageUserName, getUserFullName } from "@utils/UserUtils.js";
+import { navigateTo } from "@utils/NavigationUtils.js";
 
-export default function ConversationItemList({ conversations }) {
+export default function ConversationItemList({
+  conversations,
+  additionalOnClickfunc,
+  isHideDeletedUsers = false,
+}) {
   const dispatch = useDispatch();
 
   const participants = useSelector(selectParticipantsEntities);
@@ -31,6 +34,7 @@ export default function ConversationItemList({ conversations }) {
   const convItemOnClickFunc = (id) => {
     dispatch(setSelectedConversation({ id }));
     navigateTo(`/#${id}`);
+    additionalOnClickfunc && additionalOnClickfunc(id);
   };
 
   const needToGetMoreChats = useRef(true);
@@ -71,6 +75,8 @@ export default function ConversationItemList({ conversations }) {
               obj.owner_id === currentUserId ? obj.opponent_id : obj.owner_id;
             const chatParticipant = participants[chatParticipantId] || {};
             const chatName = obj.name || getUserFullName(chatParticipant);
+
+            if (isHideDeletedUsers && !chatName) return null;
 
             const showLastMsgUser = isGroup;
             //!obj.last_message?.x replace with better checker for event message

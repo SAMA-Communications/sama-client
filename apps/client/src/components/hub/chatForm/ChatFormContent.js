@@ -1,3 +1,4 @@
+import { AnimatePresence } from "motion/react";
 import { useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 
@@ -5,8 +6,10 @@ import draftService from "@services/tools/draftService.js";
 
 import ChatFormInput from "@components/hub/chatForm/ChatFormInput.js";
 import ChatFormInputContent from "@components/hub/chatForm/ChatFormInputContent.js";
-import CustomScrollBar from "@components/_helpers/CustomScrollBar";
 import MessagesList from "@components/hub/elements/MessagesList";
+import SummaryContainer from "@components/hub/elements/SummaryContainer.js";
+
+import { CustomScrollBar } from "@sama-communications.ui-kit";
 
 import { getConverastionById } from "@store/values/Conversations.js";
 import { selectMessagesEntities } from "@store/values/Messages.js";
@@ -18,16 +21,27 @@ export default function ChatFormContent() {
   const chatMessagesBlock = useRef(null);
 
   const selectedConversation = useSelector(getConverastionById);
+  const selectedCID = selectedConversation?._id;
   const messagesEntities = useSelector(selectMessagesEntities);
   const messages = Object.values(messagesEntities);
 
   const draftExtenralProps = useSelector(selectContextExternalProps);
+
   const draftRepliedMessage = useMemo(() => {
-    const selectedCID = selectedConversation?._id;
     const repliedMessageId =
       draftExtenralProps[selectedCID]?.draft_replied_mid ||
       draftService.getDraftRepliedMessageId(selectedCID);
     return messagesEntities[repliedMessageId];
+  }, [selectedConversation, draftExtenralProps, messagesEntities]);
+  const draftForwardedMessage = useMemo(() => {
+    const forwardedMessageId = selectedConversation?.draft?.forwarded_mids;
+    return forwardedMessageId?.map((mid) => messagesEntities[mid]);
+  }, [selectedConversation, draftExtenralProps, messagesEntities]);
+  const draftEditedMessage = useMemo(() => {
+    const editedMessageId =
+      draftExtenralProps[selectedCID]?.draft_edited_mid ||
+      draftService.getDraftEditedMessageId(selectedCID);
+    return messagesEntities[editedMessageId];
   }, [selectedConversation, draftExtenralProps, messagesEntities]);
 
   const chatContentView = useMemo(() => {
@@ -54,9 +68,19 @@ export default function ChatFormContent() {
 
   return (
     <>
+      <AnimatePresence>
+        <SummaryContainer summaryContent={selectedConversation?.summary} />
+      </AnimatePresence>
       {chatContentView}
-      <ChatFormInputContent message={draftRepliedMessage} />
-      <ChatFormInput chatMessagesBlockRef={chatMessagesBlock} />
+      <ChatFormInputContent
+        editedMessage={draftEditedMessage}
+        repliedMessage={draftRepliedMessage}
+        forwardedMessages={draftForwardedMessage}
+      />
+      <ChatFormInput
+        chatMessagesBlockRef={chatMessagesBlock}
+        editedMessage={draftEditedMessage}
+      />
     </>
   );
 }

@@ -5,12 +5,11 @@ import { useRef, useState } from "react";
 import { useKeyDown } from "@hooks/useKeyDown";
 import { useTouchScreen } from "@hooks/useTouchScreen";
 
-import ImageView from "./components/ImageView.js";
-import VideoView from "./components/VideoView.js";
+import { ImageView, VideoView } from "@sama-communications.ui-kit";
 
-import getFileType from "@utils/media/get_file_type";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { getFileType } from "@utils/MediaUtils.js";
+import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
+import { KEY_CODES } from "@utils/constants.js";
 
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getMessageById } from "@store/values/Messages";

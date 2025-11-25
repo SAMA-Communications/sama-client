@@ -11,6 +11,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import api from "@api/api";
 
+import draftService from "@services/tools/draftService.js";
+
 import { useKeyDown } from "@hooks/useKeyDown";
 
 import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
@@ -30,12 +32,11 @@ import {
   clearSelectedConversation,
   setSelectedConversation,
 } from "@store/values/SelectedConversation";
-import { setClicked } from "@store/values/ContextMenu";
+import { addExternalProps, setClicked } from "@store/values/ContextMenu";
 import { getIsMobileView } from "@store/values/IsMobileView.js";
 
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import { CHAT_CONTENT_TABS } from "@utils/global/chatContentTabs.js";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
+import { KEY_CODES, CHAT_CONTENT_TABS } from "@utils/constants.js";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -66,6 +67,12 @@ export default function ChatForm() {
     }
 
     if (!selectedCID) {
+      return;
+    }
+
+    if (draftService.getDraftEditedMessageId(selectedCID)) {
+      dispatch(addExternalProps({ [selectedCID]: {} }));
+      draftService.removeDraftWithOptions(selectedCID, "edited_mid");
       return;
     }
 
@@ -136,7 +143,7 @@ export default function ChatForm() {
     <m.div
       key="chatForm"
       id="chatFormContainer"
-      className={`max-xl:max-w-full ${
+      className={`relative max-xl:max-w-full ${
         location.pathname.includes("/profile")
           ? "xl:max-w-full"
           : "xl:max-w-[calc(100%-420px)]"

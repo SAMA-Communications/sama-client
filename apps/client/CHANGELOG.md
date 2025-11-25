@@ -1,5 +1,33 @@
 # Changelog
 
+## 1.12.0
+
+### Features
+
+- Migrated components to the newly created UI kit
+
+## 1.11.0
+
+### Features
+
+- Implemented the option to edit messages
+- Implemented the option to delete messages
+- Implemented reset password feature
+- Integrated AI agent for changing tone of messages and summarizing them
+
+### Bug Fixes:
+
+- Fixed a missing `}` error
+- Fixed hidden input container
+- Blocked drag message option for web
+- Fixed focus on login form when modal reset window is open
+
+## 1.10.0
+
+### Features
+
+- Implemented the option to forward messages
+
 ## 1.9.0
 
 ### Features

@@ -87,13 +87,11 @@ class SAMAClient {
 
         if (message.message_read) {
           this.onMessageStatusListener?.(message.message_read);
-
           return;
         }
 
         if (message.message_edit) {
           this.onMessageEditListener?.(message.message_edit)
-
           return
         }
 
@@ -237,8 +235,8 @@ class SAMAClient {
     return this.sendRequest("user_logout");
   }
 
-  async userCreate(data: { login: string; password: string }): Promise<IUser> {
-    return this.sendRequest("user_create", { organization_id: this.organizationId, login: data.login, password: data.password }, "user");
+  async userCreate(data: { login: string; email: string; password: string }): Promise<IUser> {
+    return this.sendRequest("user_create", { organization_id: this.organizationId, login: data.login, email: data.email, password: data.password }, "user");
   }
 
   async userEdit(data: { [key: string]: any }): Promise<IUser> {
@@ -263,6 +261,18 @@ class SAMAClient {
 
   async userLogout(): Promise<any> {
     return await this.sendHttpPromise("POST", "logout", null);
+  }
+
+  async userSendOTPToken(data: { email: string }): Promise<any> {
+    const requestData: { organization_id: string, device_id?: string; email: string; } = { organization_id: this.organizationId, device_id: this.deviceId, email: data.email };
+
+    return this.sendRequest("user_send_otp", requestData);
+  }
+
+  async userResetPassword(data: { email: string, token: number, new_password: string }): Promise<any> {
+    const requestData: { organization_id: string, device_id?: string; email: string; token: number; new_password: string } = { organization_id: this.organizationId, device_id: this.deviceId, email: data.email, token: data.token, new_password: data.new_password };
+
+    return this.sendRequest("user_reset_password", requestData);
   }
 
   async userDelete(): Promise<any> {
@@ -296,7 +306,7 @@ class SAMAClient {
     return this.sendRequest("get_file_urls", { file_ids: data.file_ids }, "file_urls");
   }
 
-  async messageCreate(data: { mid: string; body: string; cid: string; x?: { [key: string]: any }, attachments?: any[], replied_message_id: string }): Promise<IMessageCreateAck> {
+  async messageCreate(data: { mid: string; body: string; cid: string; x?: { [key: string]: any }, attachments?: any[], replied_message_id?: string, forwarded_message_id?: string }): Promise<IMessageCreateAck> {
     return new Promise((resolve, reject) => {
       const requestData = {
         message: {
@@ -305,7 +315,8 @@ class SAMAClient {
           cid: data.cid,
           x: data.x,
           attachments: data.attachments,
-          replied_message_id: data.replied_message_id
+          replied_message_id: data.replied_message_id,
+          forwarded_message_id: data.forwarded_message_id
         },
       };
       this.responsesPromises[requestData.message.id] = { resolve, reject };

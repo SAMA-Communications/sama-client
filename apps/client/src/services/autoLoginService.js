@@ -1,14 +1,18 @@
 import api from "@api/api";
-import navigateTo from "@utils/navigation/navigate_to";
-import showCustomAlert from "@utils/show_alert";
-import store from "@store/store";
-import subscribeForNotifications from "@services/tools/notifications";
+
 import { default as EventEmitter } from "@lib/eventEmitter";
-import { history } from "@utils/global/history";
+
+import subscribeForNotifications from "@services/tools/notifications";
+
+import store from "@store/store";
 import { setCurrentUserId } from "@store/values/CurrentUserId";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { upsertUser } from "@store/values/Participants";
+
+import { navigateTo } from "@utils/NavigationUtils.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { history } from "@utils/history.js";
 
 class AutoLoginService {
   constructor() {
@@ -107,6 +111,53 @@ class AutoLoginService {
       handleLoginFailure();
       showCustomAlert(error.message, "warning");
     }
+  }
+
+  async sendOtpToken(email) {
+    try {
+      await api.userSendOTPToken({ email });
+      localStorage.setItem("reset_email", email);
+    } catch (err) {
+      showCustomAlert(
+        err.message || "We couldn’t find an account with this email.",
+        "warning"
+      );
+      return false;
+    }
+    return true;
+  }
+
+  async resendOtpToken(email) {
+    try {
+      await api.userSendOTPToken({ email });
+      showCustomAlert("OTP sent.", "success");
+    } catch (err) {
+      showCustomAlert(
+        err.message || "Failed to resend token. Try again.",
+        "warning"
+      );
+      return false;
+    }
+    return true;
+  }
+
+  async sendResetPassword(email, token, newPassword) {
+    try {
+      await api.userResetPassword({
+        email,
+        token: +token,
+        new_password: newPassword,
+      });
+      localStorage.removeItem("reset_email");
+      showCustomAlert("Password successfully changed.", "success");
+    } catch (err) {
+      showCustomAlert(
+        err.message || "Failed to reset password. Try again.",
+        "warning"
+      );
+      return false;
+    }
+    return true;
   }
 }
 

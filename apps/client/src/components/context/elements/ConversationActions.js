@@ -13,9 +13,7 @@ import {
   selectAllConversations,
 } from "@store/values/Conversations.js";
 
-import addPrefix from "@utils/navigation/add_prefix";
-import addSuffix from "@utils/navigation/add_suffix";
-import navigateTo from "@utils/navigation/navigate_to";
+import { addPrefix, addSuffix, navigateTo } from "@utils/NavigationUtils.js";
 
 import Info from "@icons/context/Info.svg?react";
 import Edit from "@icons/context/Edit.svg?react";

@@ -4,7 +4,8 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router";
 
 import App from "@src/App";
-import ConnectLine from "@components/_helpers/ConnectLine";
+
+import ConnectingLine from "@components/connection/ConnectingLine.js";
 
 import store from "@store/store";
 
@@ -16,7 +17,7 @@ root.render(
     <BrowserRouter
       future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
-      <ConnectLine />
+      <ConnectingLine />
       <App />
     </BrowserRouter>
   </Provider>

@@ -1,7 +1,6 @@
 import { useState } from "react";
 
-import getUserFullName from "@utils/user/get_user_full_name";
-import getUserInitials from "@utils/user/get_user_initials";
+import { getUserFullName, getUserInitials } from "@utils/UserUtils.js";
 
 import Unselect from "@icons/status/Unselect.svg?react";
 

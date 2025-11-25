@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { useMemo } from "react";
 
-import TypingLine from "@components/_helpers/TypingLine";
+import { TypingLine } from "@sama-communications.ui-kit";
+
+import messagesService from "@services/messagesService.js";
 
 import {
   getConverastionById,
@@ -15,18 +17,32 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setAllParams } from "@store/values/ContextMenu";
 
-import addSuffix from "@utils/navigation/add_suffix";
-import getLastVisitTime from "@utils/user/get_last_visit_time";
-import getUserFullName from "@utils/user/get_user_full_name";
-import removeAndNavigateLastSection from "@utils/navigation/get_prev_page";
-import showCustomAlert from "@utils/show_alert";
+import { useKeyDown } from "@hooks/useKeyDown.js";
+import { useConfirmWindow } from "@hooks/useConfirmWindow.js";
+
+import {
+  addSuffix,
+  navigateTo,
+  removeSectionAndNavigate,
+  removeAndNavigateLastSection,
+} from "@utils/NavigationUtils.js";
+import {
+  getLastVisitTime,
+  getLastMessageUserName,
+  getUserFullName,
+} from "@utils/UserUtils.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { KEY_CODES } from "@utils/constants.js";
 
 import BackBtn from "@icons/options/Back.svg?react";
 import More from "@icons/options/More.svg?react";
-import { AnimatePresence } from "motion/react";
+import Forward from "@icons/context/ForwardWhiteBold.svg?react";
+import Delete from "@icons/context/DeleteWhite.svg?react";
 
 export default function ChatFormHeader({ closeFormFunc }) {
   const dispatch = useDispatch();
+
+  const confirmWindow = useConfirmWindow();
 
   const isMobile = useSelector(getIsMobileView);
   const isTablet = useSelector(getIsTabletView);
@@ -45,6 +61,7 @@ export default function ChatFormHeader({ closeFormFunc }) {
   const isGroupChat = selectedConversation.type === "g";
   const isCurrentUserCantLeave =
     participants[currentUserId].login.startsWith("sama-user-");
+  const isSelectionMode = hash.includes("/selection");
 
   const opponentId = useMemo(() => {
     const conversation = conversations[selectedCID];
@@ -83,6 +100,8 @@ export default function ChatFormHeader({ closeFormFunc }) {
             userIds={selectedConversation.typing_users}
             displayBackground={isGroupChat}
             displayUserNames={isGroupChat}
+            participants={participants}
+            getUserName={getLastMessageUserName}
           />
         </div>
       );
@@ -166,7 +185,64 @@ export default function ChatFormHeader({ closeFormFunc }) {
     );
   };
 
-  return (
+  const { countOfSelectedMessages, midsArrayOfSelectedMessages } =
+    useMemo(() => {
+      const match = hash.match(/mids=\[([^\]]*)\]/);
+      if (!match?.[1]) return null;
+      const mids = match[1]
+        .split(",")
+        .map((id) => id.trim())
+        .filter(Boolean);
+      return {
+        countOfSelectedMessages: mids.length,
+        midsArrayOfSelectedMessages: mids,
+      };
+    }, [hash]) || {};
+
+  const closeSelectionMode = () =>
+    removeSectionAndNavigate(pathname + hash, "/selection");
+
+  useKeyDown(KEY_CODES.ESCAPE, closeSelectionMode);
+
+  return isSelectionMode ? (
+    <div className="flex justify-between items-center shrink gap-[10px] pb-[15px] pt-[5px] max-w-full">
+      <button
+        className="px-[16px] py-[8px] flex items-center gap-[7px] !font-normal text-white bg-accent-dark rounded-md cursor-pointer"
+        onClick={async () => {
+          navigateTo((pathname + hash).replace("selection", "forward"));
+        }}
+      >
+        <Forward />
+        Forward
+        <span className="text-white/75">{countOfSelectedMessages}</span>
+      </button>
+      <button
+        className="mr-auto px-[16px] py-[8px] flex items-center gap-[7px] !font-normal text-white bg-accent-dark rounded-md cursor-pointer"
+        onClick={async () => {
+          const mids = midsArrayOfSelectedMessages;
+          const { isConfirm, data } = await confirmWindow({
+            title: `Delete selected message${mids.length > 1 ? "s" : ""}?`,
+            confirmText: "Delete",
+            cancelText: "Cancel",
+            action: "messageDelete",
+          });
+          isConfirm &&
+            messagesService.sendMessageDelete(selectedCID, mids, data.type);
+          removeAndNavigateLastSection(pathname + hash);
+        }}
+      >
+        <Delete />
+        Delete
+        <span className="text-white/75">{countOfSelectedMessages}</span>
+      </button>
+      <button
+        className="px-[16px] py-[8px] !font-normal text-accent-dark cursor-pointer"
+        onClick={closeSelectionMode}
+      >
+        Cancel
+      </button>
+    </div>
+  ) : (
     <div
       className="flex shrink pb-[10px] h-max max-w-full"
       onClick={viewChatOrPaticipantInfo}

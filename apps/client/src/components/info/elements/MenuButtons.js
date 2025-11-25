@@ -1,6 +1,6 @@
 import { useLocation } from "react-router";
 
-import addPrefix from "@utils/navigation/add_prefix";
+import { addPrefix } from "@utils/NavigationUtils.js";
 
 import AccountIcon from "@icons/Menu.svg?react";
 import CreateChat from "@icons/AddConversationBlack.svg?react";

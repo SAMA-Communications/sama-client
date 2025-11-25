@@ -3,8 +3,7 @@ import { default as reduxStore } from "@store/store";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 import { updateNetworkState } from "@store/values/NetworkState";
 
-// import { SAMAClient } from "@sama-communications/sdk";
-import { SAMAClient } from "../../../../packages/sdk/dist/@sama-communications.sdk.es.js";
+import { SAMAClient } from "@sama-communications.sdk";
 
 const onConnect = () => {
   EventEmitter.emit("onConnect");

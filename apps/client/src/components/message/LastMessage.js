@@ -1,7 +1,7 @@
 import LastMessageMedia from "@components/message/lastMessage/LastMessageMedia";
 import LastMessageStatus from "@components/message/lastMessage/LastMessageStatus";
 
-import getFileType from "@utils/media/get_file_type";
+import { getFileType } from "@utils/MediaUtils.js";
 
 import Reply from "@icons/context/ReplyAccent.svg?react";
 

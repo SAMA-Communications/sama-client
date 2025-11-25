@@ -18,17 +18,23 @@ import {
 } from "@store/values/Participants";
 import { getConverastionById } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
+import { getIsMobileView } from "@store/values/IsMobileView.js";
+
+import { upsertMidsInPath } from "@utils/NavigationUtils.js";
 
 import ArrowBottom from "@icons/options/ArrowBottom.svg?react";
 
 export default function MessagesList({ scrollRef: scrollableContainer }) {
   const dispatch = useDispatch();
-  const location = useLocation();
+  const { pathname, hash } = useLocation();
+
+  const isMobile = useSelector(getIsMobileView);
 
   const timer = useRef(null);
 
   const [isScrolling, setIsScrolling] = useState(true);
   const [isScrollToBottomVisible, setIsScrollToBottomVisible] = useState(false);
+  const isSelectionMode = hash.includes("/selection");
 
   const participants = useSelector(selectParticipantsEntities);
   const currentUserId = useSelector(selectCurrentUserId);
@@ -44,6 +50,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     [messagesEntites]
   );
   const [messagesFetchFunc, setMessagesFetchFunc] = useState({});
+  const [forwardedMids, setForwardedMids] = useState([]);
 
   const updateParticipantsFromMessages = (messageArray) => {
     messageArray ??= messages;
@@ -68,6 +75,18 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
   useEffect(() => updateParticipantsFromMessages(), []);
 
   useEffect(() => {
+    const midsRegex = /mids=\[([^\]]*)\]/;
+    const match = hash.match(midsRegex);
+
+    setForwardedMids(
+      match && hash.includes("/selection")
+        ? match[1]
+            .split(",")
+            .map((id) => id.trim())
+            .filter(Boolean)
+        : []
+    );
+
     if (!scrollableContainer.current) return;
     const container = scrollableContainer.current;
     const savedScrollFromBottom = localStorage.getItem(
@@ -87,7 +106,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     };
 
     setTimeout(restoreScrollPosition, 150);
-  }, [location]);
+  }, [pathname, hash]);
 
   const scrollToBottom = () => {
     setIsScrolling(true);
@@ -138,6 +157,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
       newMessages.length < +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD
     ) {
       newAnchorMessage && removeFetchFuncFromMessage(newAnchorMessage);
+      anchorMid === lastMessage._id && removeFetchFuncFromMessage(lastMessage);
       return;
     }
 
@@ -156,7 +176,10 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     setMessagesFetchFunc((prev) => ({
       ...prev,
       [lastMessage._id]: () => {
-        fetchOnViewMessage({ updated_at: { lt: lastMessage.created_at } });
+        fetchOnViewMessage(
+          { updated_at: { lt: lastMessage.created_at } },
+          lastMessage._id
+        );
         setMessagesFetchFunc((prev2) => {
           const { [lastMessage._id]: _, ...rest } = prev2;
           return rest;
@@ -279,6 +302,15 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     }
   };
 
+  const selectMessageFunc = (mid) => {
+    setForwardedMids((prev) => [...new Set([...prev, mid])]);
+    upsertMidsInPath(pathname + hash, [mid], "add");
+  };
+  const unselectMessageFunc = (mid) => {
+    setForwardedMids((prev) => prev.filter((id) => id !== mid));
+    upsertMidsInPath(pathname + hash, [mid], "remove");
+  };
+
   const messagesView = useMemo(() => {
     return messages.map((msg, i) => {
       const { _id, old_id, body, from, replied_message_id, x } = msg;
@@ -300,6 +332,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
           ? messages[i].from === messages[i + 1].from &&
             !messages[i + 1].x?.type
           : false;
+      const isSelected = forwardedMids.includes(_id);
 
       return x?.type ? (
         <InformativeMessage
@@ -315,16 +348,23 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
           id={key}
           message={msg}
           onViewFunc={isScrolling ? null : messagesFetchFunc[msg._id]}
+          onSelectClick={
+            !isSelected && forwardedMids.length < 20 ? selectMessageFunc : null
+          }
+          onUnselectClick={isSelected ? unselectMessageFunc : null}
           onReplyClickFunc={() => onReplyClick(repliedMessage)}
           repliedMessage={repliedMessage}
           sender={participants[from]}
           currentUserId={currentUserId}
+          isMobile={isMobile}
+          isSelected={isSelected}
+          isSelectionMode={isSelectionMode}
           isPrevMesssageYours={isPrevMesssageYours}
           isNextMessageYours={isNextMessageYours}
         />
       );
     });
-  }, [isScrolling, messages, messagesFetchFunc]);
+  }, [isScrolling, messages, messagesFetchFunc, forwardedMids, hash]);
 
   return (
     <div className="relative pb-[10px] flex flex-grow overflow-hidden">

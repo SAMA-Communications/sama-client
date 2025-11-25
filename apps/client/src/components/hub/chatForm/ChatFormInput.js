@@ -3,18 +3,25 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import draftService from "@services/tools/draftService.js";
 import messagesService from "@services/messagesService";
+import DownloadManager from "../../../lib/downloadManager.js";
+
+import { useConfirmWindow } from "@hooks/useConfirmWindow.js";
 
 import MessageInput from "@components/hub/elements/MessageInput";
+import MagicButton from "@components/hub/elements/MagicButton.js";
 
 import {
   addMessage,
   removeMessage,
+  upsertMessage,
+  selectMessagesEntities,
   selectActiveConversationMessages,
 } from "@store/values/Messages";
 import {
   getConverastionById,
   removeChat,
   removeLastMessage,
+  removeDraftField,
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
@@ -27,15 +34,18 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 
-import navigateTo from "@utils/navigation/navigate_to";
-import showCustomAlert from "@utils/show_alert";
-import calcInputHeight from "@utils/text/calc_input_height.js";
+import { calcInputHeight } from "@utils/FormatedUtils.js";
+import { navigateTo } from "@utils/NavigationUtils.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 
-export default function ChatFormInput({ chatMessagesBlockRef }) {
+export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
   const dispatch = useDispatch();
+
+  const confirmWindow = useConfirmWindow();
 
   const connectState = useSelector(getNetworkState);
   const currentUserId = useSelector(selectCurrentUserId);
+  const messagesEntities = useSelector(selectMessagesEntities);
   const messages = useSelector(selectActiveConversationMessages);
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
@@ -54,65 +64,178 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
     }
   };
 
+  const createLocalMessage = ({
+    body,
+    attachments = [],
+    forwardedMessageId,
+    repliedMessageId,
+  }) => {
+    const mid = currentUserId + Date.now();
+    return {
+      _id: mid,
+      body,
+      attachments,
+      from: currentUserId,
+      t: Date.now(),
+      ...(forwardedMessageId && { forwarded_message_id: forwardedMessageId }),
+      ...(repliedMessageId && { replied_message_id: repliedMessageId }),
+    };
+  };
+
+  const prepareAttachmentMetadata = (attachments, originalAttachments = []) =>
+    attachments.map((file, i) => ({
+      file_id: file.file_id,
+      file_name: file.file_name,
+      file_url: originalAttachments[i].file_url,
+      file_blur_hash: originalAttachments[i]?.file_blur_hash,
+      file_content_type: originalAttachments[i]?.file_content_type,
+      file_width: originalAttachments[i]?.file_width,
+      file_height: originalAttachments[i]?.file_height,
+    }));
+
+  const sendMessageToServer = async (mObject, originalAttachments = []) => {
+    const serverMessage = await messagesService.sendMessage(mObject);
+    const serverAttachments = mObject.attachments?.length
+      ? prepareAttachmentMetadata(mObject.attachments, originalAttachments)
+      : [];
+    dispatch(
+      upsertMessage({ _id: serverMessage._id, attachments: serverAttachments })
+    );
+  };
+
+  const handleError = async (e, cid, lastMsg) => {
+    showCustomAlert(
+      e.message || "The server connection is unavailable.",
+      "warning"
+    );
+    dispatch(setLastMessageField({ cid, msg: messages[messages.length - 1] }));
+    dispatch(removeLastMessage({ cid }));
+    dispatch(removeMessage(lastMsg._id || lastMsg.mid));
+    setIsSendMessageDisable(false);
+
+    if (e.status === 403) {
+      dispatch(removeChat(cid));
+      dispatch(setSelectedConversation({}));
+      navigateTo("/");
+    }
+  };
+
+  const sendForwardMessages = async (forwardedMids) => {
+    if (!connectState) {
+      showCustomAlert("No internet connection…", "warning");
+      return;
+    }
+
+    const forwardedMessages = forwardedMids.map((mid) => messagesEntities[mid]);
+    if (!forwardedMessages.length) return;
+
+    let lastMessage = null;
+
+    try {
+      for (let i = 0; i < forwardedMessages.length; i++) {
+        const message = forwardedMessages[i];
+        const isLast = i === forwardedMessages.length - 1;
+
+        if (isSendMessageDisable) return;
+        setIsSendMessageDisable(true);
+
+        const localMsg = createLocalMessage({
+          body: message.body,
+          attachments: message.attachments,
+          forwardedMessageId: message._id,
+        });
+
+        lastMessage = localMsg;
+
+        dispatch(addMessage(localMsg));
+        if (isLast)
+          dispatch(updateLastMessageField({ cid: selectedCID, msg: localMsg }));
+
+        const mObject = {
+          mid: localMsg._id,
+          body: localMsg.body,
+          cid: selectedCID,
+          from: currentUserId,
+          forwarded_message_id: message._id,
+        };
+
+        let originalAttachments = message.attachments;
+        if (message.attachments?.length) {
+          const files = await DownloadManager.getFileObjectsFromUrls(
+            message.attachments.map((att) => ({
+              url: att.file_url,
+              fileName: att.file_name,
+              contentType: att.file_content_type,
+            }))
+          );
+          mObject.attachments = files.map((att, i) => {
+            const { file_url, _id, ...rest } = originalAttachments[i];
+            const newAtt = { ...rest, ...att };
+            delete newAtt.file_url;
+            return newAtt;
+          });
+        }
+
+        await sendMessageToServer(mObject, originalAttachments);
+      }
+    } catch (err) {
+      await handleError(err, selectedCID, lastMessage);
+      return;
+    }
+
+    dispatch(
+      removeDraftField({
+        cid: forwardedMessages[0].cid,
+        fields: ["forwarded_mids"],
+      })
+    );
+    setIsSendMessageDisable(false);
+    draftService.removeDraft(selectedCID);
+    dispatch(addExternalProps({ [selectedCID]: {} }));
+    chatMessagesBlockRef.current.scrollTop =
+      chatMessagesBlockRef.current.scrollHeight;
+  };
+
   const createAndSendMessage = async () => {
     if (!connectState) {
       showCustomAlert("No internet connection…", "warning");
       return;
     }
 
-    const body = inputRef.current.value.trim();
-    if (body.length === 0 || isSendMessageDisable) {
-      return;
+    const forwardedMessages = selectedConversation.draft?.forwarded_mids;
+    if (forwardedMessages) {
+      await sendForwardMessages(forwardedMessages);
     }
+
+    const body = inputRef.current.value.trim();
+    if (body.length === 0 || isSendMessageDisable) return;
 
     setIsSendMessageDisable(true);
     inputRef.current.value = "";
-    const mid = currentUserId + Date.now();
-    const msg = {
-      _id: mid,
-      body,
-      from: currentUserId,
-      t: Date.now(),
-    };
 
-    const repliedMid = draftExtenralProps[selectedCID]?.draft_replied_mid;
-    repliedMid && (msg["replied_message_id"] = repliedMid);
+    const repliedMid =
+      draftExtenralProps[selectedCID]?.draft_replied_mid ||
+      selectedConversation?.draft?.replied_mid;
+
+    const msg = createLocalMessage({ body, repliedMessageId: repliedMid });
 
     dispatch(addMessage(msg));
     dispatch(updateLastMessageField({ cid: selectedCID, msg }));
+    setTimeout(() => inputRef.current.focus(), 50);
 
     const mObject = {
-      mid,
-      body,
+      mid: msg._id,
+      body: msg.body,
       cid: selectedCID,
       from: currentUserId,
-      replied_message_id: repliedMid,
+      ...(repliedMid && { replied_message_id: repliedMid }),
     };
-    inputRef.current.focus(); //care..
 
     try {
-      await messagesService.sendMessage(mObject);
+      await sendMessageToServer(mObject);
     } catch (e) {
-      showCustomAlert(
-        e.message || "The server connection is unavailable.",
-        "warning"
-      );
-      dispatch(
-        setLastMessageField({
-          cid: selectedCID,
-          msg: messages[messages.length - 1],
-        })
-      );
-      dispatch(removeLastMessage({ cid: selectedCID }));
-      dispatch(removeMessage(mObject.mid));
+      await handleError(e, selectedCID, msg);
       inputRef.current.value = body;
-      setIsSendMessageDisable(false);
-
-      if (e.status === 403) {
-        dispatch(removeChat(selectedCID));
-        dispatch(setSelectedConversation({}));
-        navigateTo("/");
-      }
       return;
     }
 
@@ -121,10 +244,44 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
     dispatch(addExternalProps({ [selectedCID]: {} }));
     chatMessagesBlockRef.current.scrollTop =
       chatMessagesBlockRef.current.scrollHeight;
-    // inputRef.current.focus(); //care..
-    // window.scrollTo(0, document.body.scrollHeight - 200);
     inputRef.current.style.height = `55px`;
   };
+
+  const editMessageFunc = async () => {
+    const eMid = editedMessage._id;
+    const inputValue = inputRef.current.value.trim();
+    if (!inputValue.length) {
+      const { isConfirm } = await confirmWindow({
+        title: "Are you sure you want to delete the message?",
+        confirmText: "Delete",
+        cancelText: "Cancel",
+      });
+      isConfirm &&
+        messagesService.sendMessageDelete(selectedCID, [eMid], "all");
+      return;
+    }
+    if (editedMessage.body !== inputRef.current.value) {
+      await messagesService.sendMessageEdit(editedMessage._id, {
+        body: inputRef.current.value,
+      });
+    }
+    dispatch(addExternalProps({ [selectedCID]: {} }));
+    draftService.removeDraftWithOptions(selectedCID, "edited_mid");
+    inputRef.current.value = draftService.getLastInputText(selectedCID);
+  };
+
+  useEffect(() => {
+    if (editedMessage) {
+      inputRef.current.value &&
+        draftService.saveLastInputText(selectedCID, inputRef.current.value);
+      draftService.saveDraft(selectedCID, { text: editedMessage.body });
+      inputRef.current.value = editedMessage.body;
+      inputRef.current.focus();
+    } else {
+      inputRef.current.value = draftService.getLastInputText(selectedCID);
+      draftService.saveDraft(selectedCID, { text: inputRef.current.value });
+    }
+  }, [editedMessage]);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -149,11 +306,16 @@ export default function ChatFormInput({ chatMessagesBlockRef }) {
   }, [selectedConversation, participants]);
 
   return (
-    <MessageInput
-      inputTextRef={inputRef}
-      isBlockedConv={isBlockedConv}
-      onSubmitFunc={createAndSendMessage}
-      chatMessagesBlockRef={chatMessagesBlockRef}
-    />
+    <div className="w-full flex items-end gap-[8px]">
+      <MessageInput
+        inputTextRef={inputRef}
+        isBlockedConv={isBlockedConv}
+        isEditAction={!!editedMessage}
+        isSending={isSendMessageDisable}
+        onSubmitFunc={editedMessage ? editMessageFunc : createAndSendMessage}
+        chatMessagesBlockRef={chatMessagesBlockRef}
+      />
+      <MagicButton inputTextRef={inputRef} />
+    </div>
   );
 }

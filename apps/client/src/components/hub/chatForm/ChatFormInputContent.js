@@ -1,27 +1,49 @@
 import { AnimatePresence } from "motion/react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import draftService from "@services/tools/draftService.js";
 
-import RepliedMessage from "@components/hub/elements/RepliedMessage.js";
+import AdditionalMessages from "@components/hub/elements/AdditionalMessages.js";
 
+import {
+  removeDraftField,
+  getConverastionById,
+} from "@store/values/Conversations.js";
 import { addExternalProps } from "@store/values/ContextMenu.js";
 
-export default function ChatFormInputContent({ message }) {
+export default function ChatFormInputContent({
+  editedMessage,
+  repliedMessage,
+  forwardedMessages = [],
+}) {
+  const selectedCID = useSelector(getConverastionById)._id;
   const dispatch = useDispatch();
+
+  const handleClose = () => {
+    if (editedMessage) {
+      dispatch(addExternalProps({ [editedMessage.cid]: {} }));
+      draftService.removeDraftWithOptions(editedMessage.cid, "edited_mid");
+    } else if (forwardedMessages.length) {
+      dispatch(
+        removeDraftField({ cid: selectedCID, fields: ["forwarded_mids"] })
+      );
+    } else if (repliedMessage) {
+      dispatch(addExternalProps({ [repliedMessage.cid]: {} }));
+      draftService.removeDraftWithOptions(repliedMessage.cid, "replied_mid");
+    }
+  };
 
   return (
     <AnimatePresence mode="exit">
-      {message ? (
-        <RepliedMessage
-          message={message}
+      {(repliedMessage || forwardedMessages.length || editedMessage) && (
+        <AdditionalMessages
+          type={editedMessage ? "edit" : repliedMessage ? "reply" : "forward"}
+          message={editedMessage || repliedMessage}
+          messages={forwardedMessages}
           isPreview={true}
-          onCloseFunc={() => {
-            dispatch(addExternalProps({ [message.cid]: {} }));
-            draftService.removeDraftWithOptions(message.cid, "replied_mid");
-          }}
+          onCloseFunc={handleClose}
         />
-      ) : null}
+      )}
     </AnimatePresence>
   );
 }

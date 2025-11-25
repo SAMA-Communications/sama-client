@@ -1,7 +1,6 @@
 import MediaAttachment from "./MediaAttachment.js";
 
-import chunkMedia from "@utils/media/chunk_media.js";
-import normalizeRatio from "@utils/media/normalize_ratio.js";
+import { chunkMedia, normalizeRatio } from "@utils/MediaUtils.js";
 
 export default function MediaAttachments({
   maxWidth = null,
@@ -10,6 +9,7 @@ export default function MediaAttachments({
   mid,
   removeFileFunc,
   disableAnimation = false,
+  onContextMenu,
 }) {
   if (!attachments?.length) return null;
 
@@ -21,7 +21,7 @@ export default function MediaAttachments({
         maxWidth ? `max-w-[${maxWidth}]` : "max-w-[550px]"
       } ${maxHeight ? `max-h-[${maxHeight}]` : "max-h-[660px]"} ${
         maxHeight ? `max-sm:max-h-${maxHeight}]` : "max-sm:max-h-[440px]"
-      } min-h-[350px] min-w-[300px] flex flex-col gap-1 overflow-hidden rounded-lg`}
+      } min-h-[350px] sm:min-w-[300px] flex flex-col gap-1 overflow-hidden rounded-lg`}
     >
       {rows.map((row, rowIndex) => {
         const totalRatio = row.reduce(
@@ -47,6 +47,7 @@ export default function MediaAttachments({
                   flexGrow={flexGrow}
                   removeFileFunc={removeFileFunc}
                   disableAnimation={disableAnimation}
+                  onContextMenu={(e) => onContextMenu(e, att)}
                 />
               );
             })}

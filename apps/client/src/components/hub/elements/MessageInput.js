@@ -8,24 +8,28 @@ import api from "@api/api";
 
 import TextAreaInput from "@components/hub/elements/TextAreaInput";
 
+import { OvalLoader } from "@sama-communications.ui-kit";
+
 import draftService from "@services/tools/draftService.js";
 
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 
-import addSuffix from "@utils/navigation/add_suffix";
-import isMobile from "@utils/get_device_type";
-import calcInputHeight from "@utils/text/calc_input_height.js";
-import extractFilesFromClipboard from "@utils/media/extract_files_from_clipboard.js";
-import globalConstants from "@utils/global/constants.js";
-import { KEY_CODES } from "@utils/global/keyCodes";
+import { addSuffix } from "@utils/NavigationUtils.js";
+import { calcInputHeight } from "@utils/FormatedUtils.js";
+import { extractFilesFromClipboard } from "@utils/MediaUtils.js";
+import { isMobile } from "@utils/GeneralUtils.js";
+import { KEY_CODES, TYPING_DURATION_MS } from "@utils/constants.js";
 
 import Attach from "@icons/options/Attach.svg?react";
 import Send from "@icons/options/Send.svg?react";
+import Confirm from "@icons/options/ConfirmAccent.svg?react";
 
 export default function MessageInput({
   inputTextRef,
   onSubmitFunc,
   isBlockedConv,
+  isEditAction,
+  isSending = false,
 }) {
   const location = useLocation();
 
@@ -36,7 +40,7 @@ export default function MessageInput({
   const handleInput = (e) => {
     const text = e.target.value;
     if (text.length > 0) {
-      const typingDuration = globalConstants.typingDurationMs;
+      const typingDuration = TYPING_DURATION_MS;
       if (
         Date.now() - lastTypingRequestTime.current > typingDuration - 1000 ||
         !lastTypingRequestTime.current
@@ -78,7 +82,7 @@ export default function MessageInput({
     const message = location.hash.includes("/attach")
       ? ""
       : draftService.getDraftMessage(selectedConversationId);
-    if (message) {
+    if (message && !isEditAction) {
       if (inputTextRef.current) {
         inputTextRef.current.value = message || "";
         inputTextRef.current.style.height = `${calcInputHeight(
@@ -127,7 +131,7 @@ export default function MessageInput({
       document.removeEventListener("drop", handleInput);
       document.removeEventListener("paste", handleInput);
     };
-  }, [selectedConversationId]);
+  }, [selectedConversationId, location]);
 
   const inputsView = useMemo(() => {
     if (isBlockedConv) {
@@ -144,10 +148,14 @@ export default function MessageInput({
         <m.span whileTap={{ scale: 0.8 }}>
           <Attach
             className="w-[55px] h-[45px] pl-[10px] pb-[12px] cursor-pointer"
-            onClick={() => {
-              addSuffix(location.pathname + location.hash, "/attach");
-              storeInputText();
-            }}
+            onClick={
+              isSending
+                ? null
+                : () => {
+                    addSuffix(location.pathname + location.hash, "/attach");
+                    storeInputText();
+                  }
+            }
           />
         </m.span>
         <TextAreaInput
@@ -155,22 +163,37 @@ export default function MessageInput({
           customClassName="max-h-full grow py-[12px] text-black !font-light  resize-none max-xl:disabled:!p-[9px] placeholder:text-(--color-text-dark) placeholder:text-p [&::-webkit-scrollbar]:hidden"
           handleInput={handleInput}
           handeOnKeyDown={handeOnKeyDown}
-          isDisabled={false}
+          isDisabled={isSending}
           isMobile={isMobile}
           placeholder={"Type your message..."}
         />
-        <m.span whileTap={{ translateX: 10, scale: 0.9 }}>
-          <Send
-            className="mr-[10px] px-[8px] !w-[55px] !h-[55px] cursor-pointer"
-            onClick={onSubmitFunc}
+        {isSending ? (
+          <OvalLoader
+            width={35}
+            height={35}
+            wrapperClassName="mr-[10px] px-[8px] self-center"
           />
-        </m.span>
+        ) : isEditAction ? (
+          <m.span whileTap={{ translateX: 10, scale: 0.9 }}>
+            <Confirm
+              className="mr-[15px] px-[8px] !w-[50px] !h-[50px] cursor-pointer"
+              onClick={onSubmitFunc}
+            />
+          </m.span>
+        ) : (
+          <m.span whileTap={{ translateX: 10, scale: 0.9 }}>
+            <Send
+              className="mr-[10px] px-[8px] !w-[55px] !h-[55px] cursor-pointer"
+              onClick={onSubmitFunc}
+            />
+          </m.span>
+        )}
       </>
     );
-  }, [location, isBlockedConv, onSubmitFunc]);
+  }, [location, isBlockedConv, isSending, onSubmitFunc]);
 
   return (
-    <div className="min-h-[60px] py-[3px] shrink flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden z-5">
+    <div className="min-h-[60px] py-[3px] w-full flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden z-5">
       {inputsView}
     </div>
   );
