@@ -1,8 +1,8 @@
+import path from "path";
 import { defineConfig } from "vite";
+import dts from 'vite-plugin-dts'
 import react from '@vitejs/plugin-react'
 import tailwindcss from "@tailwindcss/vite";
-import dts from 'vite-plugin-dts'
-import path from "path";
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), dts({ insertTypesEntry: true })],
@@ -10,8 +10,12 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/index.js"),
       name: "SAMAuikit",
-      fileName: (format) => `@sama-communications.ui-kit.${format}.js`,
-      formats: ["es", "cjs"],
+      fileName: (format) => {
+        if (format === "es") return `@sama-communications.ui-kit.mjs`
+        if (format === "cjs") return `@sama-communications.ui-kit.cjs`
+        return `@sama-communications.ui-kit.js`
+      },
+      formats: ["es", "cjs", "umd"],
     },
     rollupOptions: {
       external: ['react', 'react-dom'],

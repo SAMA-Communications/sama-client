@@ -29,10 +29,7 @@ class SAMAClient {
   public onSystemMessageEvent?: ((message: IMessage) => void);
   public onDisconnectEvent?: (() => void);
 
-  constructor(
-    { endpoint: { ws, http }, organization_id }
-    : { endpoint: { ws: string; http: string }, organization_id: string }
-  ) {
+  constructor({ endpoint: { ws, http }, organization_id }: { endpoint: { ws: string; http: string }, organization_id: string }) {
     this.wsEndpoint = ws;
     this.httpEndpoint = http;
     this.organizationId = organization_id;
@@ -50,8 +47,6 @@ class SAMAClient {
 
       this.socket.onmessage = (e: MessageEvent) => {
         const message = JSON.parse(e.data);
-        this.onMessageListener?.(message);
-
         console.log("[socket.message]", message);
 
         if (message.typing) {
@@ -112,6 +107,7 @@ class SAMAClient {
             this.responsesPromises[Object.keys(this.responsesPromises).slice(-1)[0]].reject(message.message.error);
             return;
           }
+          this.onMessageListener?.(message.message);
           if (message.message.from.toString() !== this.currentUserId) {
             this.onMessageEvent?.(message.message);
           }
@@ -163,9 +159,28 @@ class SAMAClient {
       this.socket.onclose = () => {
         console.log("[socket.close]");
         this.onDisconnectEvent?.();
+        this.reconnect();
       };
     });
   }
+
+  private reconnect() {
+    const reConnect = () => {
+      if (navigator.onLine && document.visibilityState === "visible") {
+        this.connect();
+        window.removeEventListener("online", reConnect);
+        document.removeEventListener("visibilitychange", reConnect);
+      }
+    };
+
+    if (navigator.onLine && document.visibilityState === "visible") {
+      this.connect();
+    } else {
+      window.addEventListener("online", reConnect);
+      document.addEventListener("visibilitychange", reConnect);
+    }
+  }
+
 
   public async disconnect(): Promise<void> {
     return this.socket?.close()
@@ -223,12 +238,12 @@ class SAMAClient {
     return responseData;
   }
 
-  async socketLogin(data: { user: { userId: UserId, login: string, password: string, }, deviceId?: string, token?: string }): Promise<any> {
-    return this.sendRequest("user_login", { organization_id: this.organizationId, ...data.user, device_id: data.deviceId ?? this.deviceId, token: data.token }, "user");
-  }
-
   async connectSocket(data: { token: string; deviceId: string }): Promise<any> {
     return this.sendRequest("connect", { token: data.token, device_id: data.deviceId ?? this.deviceId });
+  }
+
+  async socketLogin(data: { user: { userId: UserId, login: string, password: string, }, deviceId?: string, token?: string }): Promise<any> {
+    return this.sendRequest("user_login", { organization_id: this.organizationId, ...data.user, device_id: data.deviceId ?? this.deviceId, token: data.token }, "user");
   }
 
   async disconnectSocket(): Promise<any> {
@@ -325,7 +340,7 @@ class SAMAClient {
     });
   }
 
-  async messageSystem(data: { mid: string; uids?: string[], cid?: string; x: { [key: string]: any }}): Promise<IMessageCreateAck> {
+  async messageSystem(data: { mid: string; uids?: string[], cid?: string; x: { [key: string]: any } }): Promise<IMessageCreateAck> {
     return new Promise((resolve, reject) => {
       const requestData = {
         system_message: {
@@ -350,7 +365,15 @@ class SAMAClient {
     };
     return this.sendRequest("message_list", messageParams, "messages");
   }
-  
+
+  async messageSummary(data: { cid: string, filter: string }): Promise<any> {
+    return this.sendRequest("message_summary", { cid: data.cid, filter: data.filter }, "message");
+  }
+
+  async messageTone(data: { body: string, tone: string }): Promise<any> {
+    return this.sendRequest("message_tone", { body: data.body, tone: data.tone }, "message");
+  }
+
   async markConversationAsRead(data: { cid: string, mids?: string[] }): Promise<any> {
     return this.sendRequest("message_read", { cid: data.cid, ids: data.mids });
   }
