@@ -27,7 +27,9 @@ const config = {
   organization_id: import.meta.env.VITE_ORGANIZATION_ID,
 };
 const api = new SAMAClient(config);
-api.deviceId = (await getBrowserFingerprint({ hardwareOnly: true })).toString();
+getBrowserFingerprint({ hardwareOnly: true }).then(
+  (deviceId) => (api.deviceId = deviceId.toString())
+);
 
 api.onConnectEvent = onConnect;
 api.onDisconnectEvent = onDisconnect;
