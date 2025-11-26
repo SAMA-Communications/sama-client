@@ -47,7 +47,7 @@
   "scripts": {
     "clean": "rm -rf ./dist",
     "build:ui-kit": "vite build --config vite.config.ts",
-    "build": "npm run clean && npm run build:sdk",
+    "build": "npm run clean && npm run build:ui-kit",
     "test": "vitest"
   },
   "devDependencies": {
