@@ -26,10 +26,10 @@ export const LastMessage = ({
   if ((dText || dRepliedMid) && countOfUnreadMessages < 1) {
     return (
       <div className="flex flex-1 items-center gap-[5px] overflow-y-hidden">
-        <p className="flex items-center gap-[3px] text-accent-dark text-nowrap font-light!">
+        <p className="flex items-center gap-[3px] text-(--color-accent-dark) text-nowrap font-light!">
           {dRepliedMid && <Reply strokeWidth={2} />} Draft:
         </p>
-        <p className="w-full font-light! text-text-dark overflow-hidden text-ellipsis whitespace-nowrap">
+        <p className="w-full font-light! text-(--color-text-dark) overflow-hidden text-ellipsis whitespace-nowrap">
           {dText}
         </p>
       </div>
@@ -62,17 +62,20 @@ export const LastMessage = ({
     <>
       <div className="flex flex-1 items-center gap-[5px] overflow-y-hidden">
         {isShowUserName ? (
-          <p className="text-accent-dark text-nowrap font-light!">
+          <p className="text-(--color-accent-dark) text-nowrap font-light!">
             {displayName}:
           </p>
         ) : null}
         {lastAtt ? <LastMessageMedia attachment={lastAtt} /> : null}
-        <p className="w-full font-light! text-text-dark overflow-hidden text-ellipsis whitespace-nowrap">
+        <p className="w-full font-light! text-(--color-text-dark) overflow-hidden text-ellipsis whitespace-nowrap">
           {buildLastMessageText(body, lastAtt)}
         </p>
       </div>
       {countOfUnreadMessages > 0 ? (
-        <div className="px-[6px] py-[4px] font-light! text-white rounded-[12px] bg-accent-dark">
+        <div
+          className="px-[6px] py-[4px] !font-light text-white rounded-[12px] bg-accent-dark"
+          style={{ padding: "4px 6px" }}
+        >
           {countOfUnreadMessages}
         </div>
       ) : (

@@ -17,13 +17,12 @@ export const LastMessageStatus = ({
 
   const { status } = message as { status: "sent" | "read" };
 
-  const iconColorClass =
-    type === "white" ? "text-white" : "text-(--color-accent)";
+  const iconColorClass = type === "white" ? "white" : "#7678e5";
 
   const icons = {
-    sent: <Check className={iconColorClass} strokeWidth={1.5} />,
-    read: <CheckCheck className={iconColorClass} strokeWidth={1.5} />,
-    default: <Loader className={iconColorClass} strokeWidth={1.5} />,
+    sent: <Check color={iconColorClass} strokeWidth={1.5} />,
+    read: <CheckCheck color={iconColorClass} strokeWidth={1.5} />,
+    default: <Loader color={iconColorClass} strokeWidth={1.5} />,
   };
 
   return icons[status || "default"];

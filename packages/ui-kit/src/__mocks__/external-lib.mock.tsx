@@ -1,4 +1,6 @@
 import { vi } from "vitest";
+import { participantsMock } from "./participants.mock";
+import { setAdapters } from "../adapters";
 
 vi.mock("framer-motion", async () => {
   const actual = await vi.importActual("framer-motion");
@@ -12,6 +14,7 @@ vi.mock("framer-motion", async () => {
 
 vi.mock("motion/react", () => ({
   AnimatePresence: ({ children }: any) => <>{children} </>,
+  div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
 }));
 
 vi.mock("react-loader-spinner", () => ({
@@ -40,10 +43,77 @@ vi.mock("react-blurhash", () => ({
 }));
 
 vi.mock("lucide-react", () => ({
-  User: (props: any) => <div data-testid="icon-user" {...props} />,
-  Mail: (props: any) => <div data-testid="icon-mail" {...props} />,
-  Phone: (props: any) => <div data-testid="icon-phone" {...props} />,
   AlertCircle: ({ className, color }: any) => (
     <div data-testid="alert-circle" data-color={color} className={className} />
   ),
+  Check: (props: any) => <div data-testid="icon-check" {...props} />,
+  CheckCheck: (props: any) => <div data-testid="icon-check-check" {...props} />,
+  CircleQuestionMark: () => <div data-testid="icon-question" />,
+  ImageIcon: (props: any) => <div data-testid="icon-image" {...props} />,
+  Loader: (props: any) => <div data-testid="icon-loader" {...props} />,
+  Mail: (props: any) => <div data-testid="icon-mail" {...props} />,
+  Phone: (props: any) => <div data-testid="icon-phone" {...props} />,
+  Reply: (props: any) => <div data-testid="reply-icon" {...props} />,
+  User: (props: any) => <div data-testid="icon-user" {...props} />,
+  Users: (props: any) => <div data-testid="icon-users" {...props} />,
+  VideoIcon: (props: any) => <div data-testid="icon-video" {...props} />,
 }));
+
+const useParticipants = () => {
+  return {
+    getParticipantsByIdsAsList: (ids: string[]) =>
+      ids?.length
+        ? ids.map(
+            (id) =>
+              Object.values(participantsMock).find((u) => u._id === id) || {
+                _id: id,
+                first_name: id,
+              }
+          )
+        : [],
+    getCurrentUser: () => ({ _id: "u1" }),
+    getUserById: (id: string) =>
+      Object.values(participantsMock).find((u) => u._id === id) || null,
+  };
+};
+
+const userUtils = {
+  getLastMessageUserName: (user: any) => {
+    if (!user) return "Unknown";
+    return user.first_name || user.login || "Unknown";
+  },
+  getUserFullName: (user: any) => {
+    if (!user) return null;
+    return [user.first_name, user.last_name].filter(Boolean).join(" ") || null;
+  },
+};
+
+const mediaUtils = {
+  getFileType: (name?: string, contentType?: string) => {
+    if (!name && !contentType) return "";
+    if (
+      contentType?.startsWith("image") ||
+      (name && /\.(jpg|jpeg|png|gif)$/i.test(name))
+    )
+      return "Image";
+    if (
+      contentType?.startsWith("video") ||
+      (name && /\.(mp4|mov|webm)$/i.test(name))
+    )
+      return "Video";
+    return "File";
+  },
+};
+
+const useDrafts = () => ({
+  syncDraftByCid: vi.fn(),
+});
+
+const getAdaptersMock = () => ({
+  useParticipants,
+  userUtils,
+  mediaUtils,
+  useDrafts,
+});
+
+setAdapters(getAdaptersMock());

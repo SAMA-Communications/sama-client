@@ -85,11 +85,11 @@ export const ConversationItem = ({
           }
           defaultIcon={
             isGroup ? (
-              <Users strokeWidth={1.5} />
+              <Users size={32} strokeWidth={1} />
             ) : displayName ? (
               displayName.slice(0, 2).toUpperCase()
             ) : (
-              <CircleQuestionMark strokeWidth={1.5} />
+              <CircleQuestionMark size={32} strokeWidth={1} />
             )
           }
           altText={isGroup ? "Chat Group" : "User's Profile"}
@@ -97,8 +97,9 @@ export const ConversationItem = ({
       </div>
       <div className="max-w-[calc(100%-90px)] max-h-[70px] flex-1 flex gap-[7px] flex-col overflow-hidden">
         <div className="flex gap-[12px] items-center justify-between">
-          <p className="!font-medium flex flex-nowrap items-center gap-[7px] text-black text-h6 overflow-hidden text-ellipsis whitespace-nowrap no-underline">
-            &zwnj;{isGroup && <Users className="-ml-[7px]" strokeWidth={1.5} />}
+          <p className="!font-normal flex flex-nowrap items-center gap-[7px] text-black text-h6 overflow-hidden text-ellipsis whitespace-nowrap no-underline">
+            {/* {&zwnj; */}
+            {isGroup && <Users className="-ml-[7px]" strokeWidth={1} />}
             {displayName}
           </p>
           <div className="!font-light text-(--color-text-light)">{tView}</div>

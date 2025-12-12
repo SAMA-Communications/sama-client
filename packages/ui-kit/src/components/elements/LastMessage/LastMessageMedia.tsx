@@ -22,16 +22,17 @@ export const LastMessageMedia = ({
   ///  getFileType(attachment.file_name, attachment.file_content_type)
 
   const icons = {
-    Image: <ImageIcon className="w-4 h-4 text-text-light)" strokeWidth={2} />,
-    Video: <VideoIcon className="w-4 h-4 text-text-light)" strokeWidth={2} />,
+    Image: <ImageIcon color={"#6d6d6d"} size={16} strokeWidth={1} />,
+    Video: <VideoIcon color={"#6d6d6d"} size={16} strokeWidth={1} />,
   };
 
   return (
-    <div className="w-auto max-w-[24px] h-[16px] flex items-center justify-center">
+    <div className="w-[16px] h-[16px] flex items-center justify-center">
       {attachment.file_blur_hash ? (
         <Blurhash
           hash={attachment.file_blur_hash}
-          className="w-4! h-4! rounded-[3px] overflow-hidden"
+          className="!w-[16px] !h-[16px] rounded-[3px] overflow-hidden"
+          style={{ width: 16, height: 16, borderRadius: 3, overflow: "hidden" }} //tmp
           resolutionX={32}
           resolutionY={32}
         />
