@@ -1,5 +1,11 @@
 export type UserId = string | number
 
+export interface Config {
+  endpoint: { ws: string; http: string }
+  organization_id: string
+  disableAutoReconnect?: boolean
+}
+
 export interface ISocketRequest<T> {
   request: {
     [key: string]: any;
