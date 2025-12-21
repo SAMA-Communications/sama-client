@@ -6,7 +6,7 @@ import UserInfo from "@components/modals/elements/UserInfo";
 
 import { OvalLoader, CustomScrollBar } from "@sama-communications.ui-kit";
 
-import { useKeyDown } from "@hooks/useKeyDown";
+import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import { KEY_CODES } from "@utils/constants.js";
 

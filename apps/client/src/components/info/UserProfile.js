@@ -4,7 +4,7 @@ import { useLocation } from "react-router";
 import { useRef } from "react";
 
 import usersService from "@services/usersService";
-import { useKeyDown } from "@hooks/useKeyDown";
+import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import {
   CustomScrollBar,

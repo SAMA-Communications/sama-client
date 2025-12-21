@@ -12,12 +12,10 @@ export function extractUserIdFromUrl(url) {
   return matches && matches.length > 1 ? matches[1] : null;
 }
 
-export function getLastMessageUserName(userObject) {
-  if (!userObject) {
-    return null;
-  }
+export function getLastMessageUserName(user) {
+  if (!user) return null;
 
-  const { first_name, last_name, login } = userObject;
+  const { first_name, last_name, login } = user;
 
   if (!first_name && !last_name) {
     return login ? cut(login[0].toUpperCase() + login.slice(1)) : undefined;
@@ -64,12 +62,10 @@ export function getLastVisitTime(timestamp, userLocale) {
   return baseMessage;
 }
 
-export function getUserFullName(userObject) {
-  if (!userObject) {
-    return null;
-  }
+export function getUserFullName(user) {
+  if (!user) return "";
 
-  const { first_name, last_name, login } = userObject;
+  const { first_name, last_name, login } = user;
   if (!first_name && !last_name) {
     return login ? login[0].toUpperCase() + login.slice(1) : undefined;
   }

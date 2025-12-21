@@ -5,7 +5,7 @@ import { useLocation } from "react-router";
 
 import conversationService from "@services/conversationsService";
 import usersService from "@services/usersService";
-import { useKeyDown } from "@hooks/useKeyDown";
+import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import GroupDetailsInputs from "@components/modals/components/GroupDetailsInputs";
 import UserContactsInput from "@components/modals/components/UserContactsInput";

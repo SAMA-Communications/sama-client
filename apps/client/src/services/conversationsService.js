@@ -151,7 +151,14 @@ class ConversationsService {
 
     const chat = await api.conversationCreate(requestData);
     userObject && store.dispatch(addUsers([userObject]));
-    store.dispatch(upsertChat({ ...chat, messagesIds: null }));
+    const existingChat = store.getState().conversations.entities[chat._id];
+    store.dispatch(
+      upsertChat(
+        existingChat && existingChat.messagesIds?.length
+          ? { ...chat }
+          : { ...chat, messagesIds: null }
+      )
+    );
     store.dispatch(setSelectedConversation({ id: chat._id }));
 
     return chat._id;

@@ -1,12 +1,12 @@
 import { WEEK_DAYS } from "@utils/constants.js";
 
-export function getLastUpdateTime(updatedAt, lastMessageObject) {
+export function getLastUpdateTime(convUpdatedAt, lastMessageTime) {
   const t = new Date(
-    lastMessageObject
-      ? lastMessageObject.t / 1000000000 < 10
-        ? lastMessageObject.t * 1000
-        : lastMessageObject.t
-      : Date.parse(updatedAt)
+    lastMessageTime
+      ? lastMessageTime / 1000000000 < 10
+        ? lastMessageTime * 1000
+        : lastMessageTime
+      : Date.parse(convUpdatedAt)
   );
   const tToday = new Date(Date.now());
 

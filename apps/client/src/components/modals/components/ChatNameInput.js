@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 
-import { useKeyDown } from "@hooks/useKeyDown";
+import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES, ALLOWED_AVATAR_FORMATS } from "@utils/constants.js";

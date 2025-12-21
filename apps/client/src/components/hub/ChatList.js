@@ -3,7 +3,8 @@ import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 
-import ConversationItemList from "@components/hub/chatList/ConversationItemList";
+import { ConversationItemList } from "@sama-communications.ui-kit";
+
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchInput";
 

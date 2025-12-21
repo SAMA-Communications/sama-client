@@ -13,7 +13,7 @@ import api from "@api/api";
 
 import draftService from "@services/tools/draftService.js";
 
-import { useKeyDown } from "@hooks/useKeyDown";
+import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
 import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";

@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 import conversationService from "@services/conversationsService";
 
-import { useKeyDown } from "@hooks/useKeyDown";
+import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import ParticipantInChat from "@components/info/elements/ParticipantInChat";
 

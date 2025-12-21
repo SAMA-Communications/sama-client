@@ -2,8 +2,8 @@ import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
 import { useRef, useState } from "react";
 
-import { useKeyDown } from "@hooks/useKeyDown";
-import { useTouchScreen } from "@hooks/useTouchScreen";
+import { useKeyDown } from "@hooks/tools/useKeyDown";
+import { useTouchScreen } from "@hooks/tools/useTouchScreen";
 
 import { ImageView, VideoView } from "@sama-communications.ui-kit";
 

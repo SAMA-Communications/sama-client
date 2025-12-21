@@ -2,7 +2,7 @@ import * as m from "motion/react-m";
 import { AnimatePresence } from "motion/react";
 import { createContext, useContext, useState } from "react";
 
-import { useKeyDown } from "@hooks/useKeyDown.js";
+import { useKeyDown } from "@hooks/tools/useKeyDown.js";
 
 import { KEY_CODES } from "@utils/constants.js";
 
