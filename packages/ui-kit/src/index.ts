@@ -1,5 +1,7 @@
 import "./index.css";
 
+import "./index.css";
+
 export { SocketConnectingLine } from "./components/SocketConnectingLine";
 export { CustomScrollBar } from "./components/CustomScrollBar";
 export { DotsLoader } from "./components/DotsLoader";
