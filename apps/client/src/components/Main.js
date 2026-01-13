@@ -4,23 +4,28 @@ import { cloneElement, useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
 
+import { EditModalContainer, ChatInfo } from "@sama-communications.ui-kit";
+
 import ChatForm from "@components/hub/ChatForm";
-import ChatInfo from "@components/info/ChatInfo";
 import ChatList from "@components/hub/ChatList";
 
 import AttachHub from "@components/attach/AttachHub";
 import ConversationSelectHub from "@components/modals/ConversationSelectHub.js";
-import EditModalHub from "@components/modals/EditModalHub";
 import EmptyHub from "@components/hub/EmptyHub";
 import MediaHub from "@components/attach/MediaHub";
 import NavigationLine from "@components/navigation/NavigationLine";
 import OtherUserProfile from "@components/info/OtherUserProfile";
-import UserProfile from "@components/info/UserProfile";
+import UserProfileContainer from "@components/info/UserProfile.js";
 import UsersSelectModalHub from "@components/modals/UsersSelectModalHub";
 
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView } from "@store/values/IsTabletView";
-import { selectConversationsEntities } from "@store/values/Conversations";
+import {
+  getConverastionById,
+  selectConversationsEntities,
+} from "@store/values/Conversations";
+
+import { getEditWindowTypeFromUrl } from "@utils/NavigationUtils.js";
 
 import SHub from "@skeletons/hub/SHub";
 
@@ -33,7 +38,7 @@ const blockMap = {
   "/create": <UsersSelectModalHub />,
   "/attach": <AttachHub />,
   "/media": <MediaHub />,
-  "/edit": <EditModalHub />,
+  "/edit": <EditModalContainer />,
   "/forward": <ConversationSelectHub title="Forward to..." />,
 };
 
@@ -45,6 +50,7 @@ export default function Main({ isNeedToAnimate }) {
 
   const conversations = useSelector(selectConversationsEntities);
   const conversationsArray = conversations && Object.values(conversations);
+  const selectedConversation = useSelector(getConverastionById);
 
   const [mainContainerRef, animateMainContainer] = useAnimate();
   const [userProfileRef, animateUserProfileContainer] = useAnimate();
@@ -105,12 +111,27 @@ export default function Main({ isNeedToAnimate }) {
     const { pathname, hash } = location;
 
     const isChatInfo = hash.includes("/info");
+    const isEditModal = (pathname + hash).includes("/edit");
+
     const allBlocks = Object.entries(blockMap)
       .filter(([key, _]) => pathname.includes(key) || hash.includes(key))
       .map(([key, component]) =>
         cloneElement(component, {
           key,
-          ...(isChatInfo ? { shareRef: chatInfoeRef } : {}),
+          ...(isChatInfo
+            ? {
+                conversation: selectedConversation,
+                isMobile: isMobileView,
+                shareRef: chatInfoeRef,
+              }
+            : {}),
+          ...(isEditModal
+            ? {
+                type: getEditWindowTypeFromUrl(
+                  location.pathname + location.hash + location.search
+                ),
+              }
+            : {}),
         })
       );
 
@@ -178,7 +199,7 @@ export default function Main({ isNeedToAnimate }) {
 
   const additionalContainerLeft = useMemo(() => {
     return location.pathname.includes("/profile") ? (
-      <UserProfile
+      <UserProfileContainer
         key="userProfile"
         shareRef={userProfileRef}
         triggerExitEvent={triggerExitAnimation}

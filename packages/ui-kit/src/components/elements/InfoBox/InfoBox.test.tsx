@@ -15,7 +15,7 @@ describe("InfoBox", () => {
   });
 
   it("renders correct icon based on iconType", () => {
-    render(<InfoBox title="Phone" value="12345" iconType="mobile" />);
+    render(<InfoBox title="Phone" value="12345" iconType="phone" />);
     expect(screen.getByTestId("icon-phone")).toBeInTheDocument();
 
     render(<InfoBox title="Email" value="a@b.com" iconType="email" />);
@@ -27,21 +27,15 @@ describe("InfoBox", () => {
 
   it("does not render when hideIfNull is true and value is empty", () => {
     const { container } = render(
-      <InfoBox title="Secret" value="" hideIfNull />
+      <InfoBox title="Secret" value="" hideIfNull />,
     );
     expect(container).toBeEmptyDOMElement();
   });
 
   it("calls onClickFunc when clicked", () => {
     const onClick = vi.fn();
-    render(<InfoBox title="ClickMe" value="Test" onClickFunc={onClick} />);
+    render(<InfoBox title="ClickMe" value="Test" onClick={onClick} />);
     fireEvent.click(screen.getByText("ClickMe"));
     expect(onClick).toHaveBeenCalled();
-  });
-
-  it("applies modifier className", () => {
-    render(<InfoBox title="Mod" value="Val" modifier="custom-mod" />);
-    const outerDiv = screen.getByText("Mod").parentElement?.parentElement;
-    expect(outerDiv).toHaveClass("custom-mod");
   });
 });

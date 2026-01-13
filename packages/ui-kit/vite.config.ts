@@ -5,7 +5,7 @@ import dts from "vite-plugin-dts";
 import path from "path";
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(), dts({ insertTypesEntry: true })],
+  plugins: [react(), dts({ insertTypesEntry: true }), tailwindcss()],
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.js"),

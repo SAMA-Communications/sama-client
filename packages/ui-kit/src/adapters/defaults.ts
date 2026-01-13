@@ -28,7 +28,7 @@ const useDrafts = () => {
   const syncDraftByCid = (
     cid: string,
     oldDraft: object,
-    convUpdatedAt: string
+    convUpdatedAt: string,
   ) => ({});
   return { syncDraftByCid };
 };
@@ -39,11 +39,33 @@ const useParticipants = () => {
   const getCurrentUser = () => defaultuser;
   const getUserById = (uid: string) => defaultuser;
 
+  const updateCurrentUserAvatar = (file: File) => {};
+  const updateCurrentUserPassword = (
+    currentPassword: string,
+    newPassword: string,
+  ) => {};
+  const updateCurrentUserFields = (data: {
+    email?: string;
+    phone?: string;
+    first_name?: string;
+    last_name?: string;
+  }) => {
+    return true;
+  };
+
+  const deleteCurrentUser = async () => true;
+
   return {
     getParticipantsByIdsAsObject,
     getParticipantsByIdsAsList,
     getCurrentUser,
     getUserById,
+
+    updateCurrentUserAvatar,
+    updateCurrentUserPassword,
+    updateCurrentUserFields,
+
+    deleteCurrentUser,
   };
 };
 
@@ -53,6 +75,11 @@ const useConversations = () => {
   const setSelectedConversation = (cid: string) => {};
   const fetchConversations = () => [defaultconversation];
   const storeNewConversations = (conversations: Conversation[]) => {};
+  const updateChatImage = (file: File) => {};
+  const updateNameAndDescription = (data: {
+    name: string;
+    description: string;
+  }) => true;
 
   return {
     getConversationById,
@@ -60,17 +87,50 @@ const useConversations = () => {
     setSelectedConversation,
     fetchConversations,
     storeNewConversations,
+    updateChatImage,
+    updateNameAndDescription,
   };
 };
+
+function useHistory() {
+  const openProfileById = (uid: string) => {};
+  const openCurrentUserProfile = () => {};
+  const openContextMenuWithParams = (params: any) => {};
+  const undoLastSection = (params: any) => {};
+  const openAddParticipantsWindow = () => {};
+  const closeChatInfoPage = () => {};
+  const openEditUserProfileWindow = () => {};
+  const openEditConversationWindow = () => {};
+  const closeCurrentUserProfile = () => {};
+  const navigateToAuthPage = () => {};
+
+  return {
+    openProfileById,
+    openContextMenuWithParams,
+    undoLastSection,
+
+    closeChatInfoPage,
+    closeCurrentUserProfile,
+
+    openCurrentUserProfile,
+    openAddParticipantsWindow,
+    openEditUserProfileWindow,
+    openEditConversationWindow,
+
+    navigateToAuthPage,
+  };
+}
 
 export const defaultAdapters: SamaAdapters = {
   useDrafts,
   useParticipants,
   useConversations,
+  useHistory,
 
   userUtils: {
     getLastMessageUserName: (user) => "",
     getUserFullName: (user) => "",
+    getUserInitials: (user) => "",
   },
   conversationUtils: {
     getLastUpdateTime: (convUpdatedAt, lastMessageTime) => "",
