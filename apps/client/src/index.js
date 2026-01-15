@@ -9,6 +9,8 @@ import ConnectingLine from "@components/connection/ConnectingLine.js";
 
 import store from "@store/store";
 
+import "@sama-communications.ui-kit.css";
+
 import "@styles/index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

@@ -2,6 +2,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Krona+One&display=swap");
 @import "tailwindcss";
 
+@tailwind utilities;
+
 @theme {
   --accent-font: "Krona One", sans-serif;
 
