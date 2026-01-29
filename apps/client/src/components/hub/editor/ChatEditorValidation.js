@@ -1,4 +1,3 @@
-import * as m from "motion/react-m";
 import { Tooltip } from "react-tooltip";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMonaco } from "@monaco-editor/react";
@@ -14,10 +13,7 @@ import { updateHandler } from "@store/values/Conversations.js";
 
 import { debounce } from "@utils/debounce.js";
 
-import Debug from "@icons/editor/Debug.svg?react";
-import Fail from "@icons/status/Fail.svg?react";
-import Save from "@icons/editor/Save.svg?react";
-import Success from "@icons/status/Success.svg?react";
+import { Check, RefreshCw, Save, SearchCode, X } from "lucide-react";
 
 export default function ChatEditorValidation({ setLogs }) {
   const monaco = useMonaco();
@@ -29,18 +25,12 @@ export default function ChatEditorValidation({ setLogs }) {
   const [validationChecks, setValidationChecks] = useState({});
 
   const getEditorCode = useCallback(() => {
-    const model = conversationHandlerService.getHandlerModelByCid(
-      monaco,
-      selectedCid
-    );
+    const model = conversationHandlerService.getHandlerModelByCid(monaco, selectedCid);
     return model?.getValue();
   }, [monaco, selectedCid]);
 
   const saveSchemeCode = async () => {
-    await conversationHandlerService.saveHandlerByConversation(
-      selectedCid,
-      getEditorCode()
-    );
+    await conversationHandlerService.saveHandlerByConversation(selectedCid, getEditorCode());
   };
 
   const validateCode = useCallback(async () => {
@@ -49,24 +39,21 @@ export default function ChatEditorValidation({ setLogs }) {
     const editorCodeSplit = editorCode?.split("\n").slice(0, -3).join("\n");
 
     try {
-      const validationResult = await conversationHandlerService.validateHandler(
-        editorCodeSplit,
-        editorCode
-      );
+      const validationResult = await conversationHandlerService.validateHandler(editorCodeSplit, editorCode);
       setValidationChecks(validationResult);
 
       const compilationResult = await conversationHandlerService.runHandler(
         editorCode,
         { body: testMessage.current.value || "message" },
-        currentUser
+        currentUser,
       );
 
       setLogs(
         compilationResult.error
           ? JSON.stringify(compilationResult.error, null, 2)
           : compilationResult.data
-          ? JSON.stringify(compilationResult.data, null, 2)
-          : "//The code is done without any logs"
+            ? JSON.stringify(compilationResult.data, null, 2)
+            : "//The code is done without any logs",
       );
 
       setValidationChecks((prevChecks) => ({
@@ -78,9 +65,7 @@ export default function ChatEditorValidation({ setLogs }) {
       setValidationStatus(allChecksPassed && compilationResult.ok);
     } catch (error) {
       const isSyntaxError = error.name === "SyntaxError";
-      setLogs(
-        `${isSyntaxError ? "Syntax" : "Runtime"} Error: ${error.message}`
-      );
+      setLogs(`${isSyntaxError ? "Syntax" : "Runtime"} Error: ${error.message}`);
       setValidationStatus(false);
     }
   }, [getEditorCode, currentUser, testMessage, setLogs]);
@@ -98,10 +83,7 @@ export default function ChatEditorValidation({ setLogs }) {
           setValidationStatus(null);
           const editorCode = getEditorCode();
           if (!editorCode) return;
-          localStorage.setItem(
-            `conversation_handler_${selectedCid}`,
-            editorCode
-          );
+          localStorage.setItem(`conversation_handler_${selectedCid}`, editorCode);
           dispatch(updateHandler({ _id: selectedCid, not_saved: true }));
           validateCode();
         }, timeout);
@@ -113,16 +95,15 @@ export default function ChatEditorValidation({ setLogs }) {
   }, [monaco, selectedCid, validateCode, getEditorCode]);
 
   const statusView = useMemo(() => {
-    const style = "w-[25px] h-[25px]";
     switch (validationStatus) {
       case "pending":
-        return <OvalLoader width={20} height={20} />;
+        return <OvalLoader width={28} height={28} />;
       case true:
-        return <Success className={style} />;
+        return <Check size={28} color="green" />;
       case false:
-        return <Fail className={style} />;
+        return <X size={28} color="red" />;
       default:
-        return <Debug className={style} />;
+        return <RefreshCw size={28} color="var(--color-text-dark)" />;
     }
   }, [validationStatus]);
 
@@ -136,18 +117,10 @@ export default function ChatEditorValidation({ setLogs }) {
     ];
 
     return (
-      <Tooltip
-        id="editor-status-tooltip"
-        className="editor-tooltip-style"
-        classNameArrow="editor-tooltip-arrow"
-      >
+      <Tooltip id="editor-status-tooltip" className="editor-tooltip-style" classNameArrow="editor-tooltip-arrow">
         {checks.map(({ key, label }) => (
-          <div key={key} className="h-[25px] flex gap-2 items-center">
-            {validationChecks[key] ? (
-              <Success className="w-[20px] h-[20px]" />
-            ) : (
-              <Fail className="w-[20px] h-[20px]" />
-            )}
+          <div key={key} className="flex h-6.25 items-center gap-2">
+            {validationChecks[key] ? <Check size={20} color="green" /> : <X size={20} color="red" />}
             {label}
           </div>
         ))}
@@ -156,42 +129,37 @@ export default function ChatEditorValidation({ setLogs }) {
   }, [validationChecks]);
 
   return (
-    <div className="h-full flex gap-2.5">
-      <div className="editor-validation h-full px-3 py-2 flex items-center gap-2 bg-[#f6f6f6] rounded-lg">
-        <div
-          data-tooltip-id="editor-status-tooltip"
-          data-tooltip-delay-hide={500}
-          className="px-1 flex items-center"
-        >
+    <>
+      <div className="editor-validation border-text-dark flex h-full grow items-center justify-end gap-2.75 rounded-xl border p-2">
+        <div data-tooltip-id="editor-status-tooltip" data-tooltip-delay-hide={500} className="flex items-center px-1">
           {statusView}
         </div>
         {tooltipView}
-        <span className="w-[1px] h-full bg-gray-300"></span>
+        <span className="h-full w-px bg-gray-300"></span>
         <input
           ref={testMessage}
-          className="h-full w-[140px] px-1 text-black focus:outline-none"
+          className="bg-hover-light h-full w-40 rounded-sm px-2 text-black focus:outline-none"
           placeholder="message"
           defaultValue={"message"}
         />
       </div>
-      <m.button
-        className="h-full mr-6.5 px-5 bg-[var(--color-accent-dark)] rounded-lg text-white cursor-pointer"
+      <button
+        className="bg-accent-500 flex h-11.5 cursor-pointer items-center gap-1.75 self-end rounded-xl border p-2 text-base text-white"
         onClick={validateCode}
-        whileTap={{ scale: 0.8 }}
       >
+        <SearchCode size={24} color="white" />
         Check
-      </m.button>
-      <m.button
-        className={`h-full px-5 rounded-lg text-white cursor-pointer ${
-          validationStatus ? "bg-[var(--color-accent-dark)]" : "bg-gray-500"
-        } flex items-center gap-2`}
+      </button>
+      <button
+        className={`flex h-11.5 cursor-pointer items-center gap-1.75 self-end rounded-xl border p-2 text-base text-white ${
+          validationStatus ? "bg-accent-500" : "bg-gray-500"
+        } `}
         disabled={validationStatus !== true}
         onClick={saveSchemeCode}
-        whileTap={{ scale: 0.8 }}
       >
-        <Save />
+        <Save size={24} color="white" />
         Save
-      </m.button>
-    </div>
+      </button>
+    </>
   );
 }

@@ -10,8 +10,7 @@ import { updateHandler, upsertChat } from "@store/values/Conversations.js";
 
 import { DEFAULT_EDITOR_CODE } from "@utils/constants.js";
 
-import Help from "@icons/editor/Help.svg?react";
-import Options from "@icons/editor/Options.svg?react";
+import { Info, ListStart } from "lucide-react";
 
 export default function ChatEditorHelper() {
   const monaco = useMonaco();
@@ -21,10 +20,7 @@ export default function ChatEditorHelper() {
   const selectedConversationScheme = useSelector(getConversationHandler);
 
   const resetEditorContent = (content) => {
-    const model = conversationHandlerService.getHandlerModelByCid(
-      monaco,
-      selectedCid
-    );
+    const model = conversationHandlerService.getHandlerModelByCid(monaco, selectedCid);
     if (model) model.setValue(content);
     localStorage.removeItem(`conversation_handler_${selectedCid}`);
   };
@@ -38,9 +34,7 @@ export default function ChatEditorHelper() {
   };
 
   const undoHandlerChanges = () => {
-    resetEditorContent(
-      selectedConversationScheme?.content || DEFAULT_EDITOR_CODE
-    );
+    resetEditorContent(selectedConversationScheme?.content || DEFAULT_EDITOR_CODE);
     dispatch(updateHandler({ _id: selectedCid, not_saved: null }));
   };
 
@@ -48,7 +42,7 @@ export default function ChatEditorHelper() {
     actions.map((action, index) => (
       <button
         key={index}
-        className={`text-black/40 underline underline-offset-4 cursor-pointer ${customStyle}`}
+        className={`cursor-pointer text-black/40 underline underline-offset-4 ${customStyle}`}
         onClick={action.onClick}
       >
         {action.label}
@@ -56,19 +50,20 @@ export default function ChatEditorHelper() {
     ));
 
   return (
-    <div className="editor-helper h-full py-3 flex items-center xl:gap-2 max-xl:gap-[16px] xl:gap-4">
+    <div className="editor-helper border-text-dark flex h-full items-center gap-2.75 rounded-xl border p-2">
       <a
         href="https://oleksandr-ch.notion.site/Programmable-Chat-feature-1ffe3b41e4ae804da619f63b706e7263"
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Help className="mr-auto h-[30px] w-[30px]" />
+        <Info size={28} color="var(--color-text-dark)" />
       </a>
-      <span className="w-[1px] h-full bg-gray-400"></span>
-      <Options
+      <span className="h-full w-px bg-gray-400"></span>
+      <ListStart
+        color="var(--color-text-dark)"
         data-tooltip-id="editor-options-tooltip"
         data-tooltip-delay-hide={500}
-        className="mr-auto h-[30px] w-[30px]"
+        size={28}
       />
       <Tooltip
         clickable
@@ -85,7 +80,7 @@ export default function ChatEditorHelper() {
               },
               { label: "Undo", onClick: undoHandlerChanges },
             ],
-            "!no-underline text-p !text-(--color-text-dark)"
+            "!no-underline text-p !text-(--color-text-dark)",
           )}
         </div>
       </Tooltip>

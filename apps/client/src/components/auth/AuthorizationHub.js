@@ -23,9 +23,7 @@ import GitHub from "@icons/socials/GitHubIcon.png";
 
 export default function AuthorizationHub({ showDemoMessage = false }) {
   const [content, setContent] = useState({});
-  const [page, setPage] = useState(
-    localStorage.getItem("isUsedBefore") ? "login" : "signup"
-  );
+  const [page, setPage] = useState(localStorage.getItem("isUsedBefore") ? "login" : "signup");
 
   const [scope, animate] = useAnimate();
   const [triggerBGAnimation, setTriggerBGAnimation] = useState(false);
@@ -39,30 +37,25 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
   useEffect(() => setIsModalOpen(!!localStorage.getItem("reset_email")), []);
   useEffect(() => setTriggerBGAnimation(false));
   const triggerExitAnimation = () => {
-    animate([
-      [scope.current, { opacity: 0, scale: [1, 1.05, 0.6] }, { duration: 0.4 }],
-    ]);
+    animate([[scope.current, { opacity: 0, scale: [1, 1.05, 0.6] }, { duration: 0.4 }]]);
     setTriggerBGAnimation(true);
   };
 
   return (
-    <section className="w-dvw h-dvh flex flex-col justify-center items-center overflow-hidden">
-      <AnimatedBGbig
-        customClassName="absolute w-dvw h-dvh overflow-hidden z-0"
-        isTriggered={triggerBGAnimation}
-      />
+    <section className="flex h-full w-full flex-col items-center justify-center overflow-hidden">
+      <AnimatedBGbig customClassName="absolute w-dvw h-dvh overflow-hidden z-0" isTriggered={triggerBGAnimation} />
       <m.div
         ref={scope}
-        className={` relative max-w-[95dvw] w-[1200px] max-lg:w-[min(600px,95dvw)] max-h-[95dvh] h-[800px] max-lg:h-max max-lg:py-[4dvh] p-[20px] flex flex-row justify-center gap-[20px] rounded-[32px] bg-(--color-bg-light) shadow-lg shadow-white-100/90`}
+        className={`shadow-white-100/90 relative flex h-[800px] max-h-[95dvh] w-[1200px] max-w-[95dvw] flex-row justify-center gap-[20px] rounded-[32px] bg-(--color-bg-light) p-[20px] shadow-lg max-lg:h-max max-lg:w-[min(600px,95dvw)] max-lg:py-[4dvh]`}
         initial={{ scale: 0 }}
         animate={{
           scale: [0, 1.1, 1],
           transition: { delay: 0.1, duration: 0.9 },
         }}
       >
-        <HeaderWaves className="lg:hidden absolute w-full top-0 rounded-t-[32px]" />
+        <HeaderWaves className="absolute top-0 w-full rounded-t-[32px] lg:hidden" />
         <m.div
-          className=" w-1/2 max-lg:w-full self-center flex flex-col gap-[20px] justify-center px-[70px] max-xl:p-[18px] max-sm:p-[5px] z-10"
+          className="z-10 flex w-1/2 flex-col justify-center gap-[20px] self-center px-[70px] max-xl:p-[18px] max-lg:w-full max-sm:p-[5px]"
           initial={{ opacity: 0 }}
           animate={{
             opacity: 1,
@@ -72,7 +65,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
         >
           <SAMALogo
             customClassName={
-              "lg:hidden w-[190px] max-sm:w-[130px] bg-(--color-bg-light-90) p-[25px] max-sm:p-[20px] rounded-[60px] max-sm:rounded-full self-center -mt-[120px] max-sm:-mt-[90px] shadow-md z-20"
+              "lg:hidden w-[190px] max-sm:w-[130px] bg-bg-light/90 p-[25px] max-sm:p-[20px] rounded-[60px] max-sm:rounded-full self-center -mt-[120px] max-sm:-mt-[90px] shadow-md z-20"
             }
             initial={{ opacity: 0, scale: 0 }}
             animate={{
@@ -95,7 +88,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
               {isLoginPage ? "Don`t have account?" : "Already have an account?"}
               &nbsp;
               <span
-                className="text-accent-dark !font-normal cursor-pointer hover:text-(--color-accent-light-50) transition-colors duration-200"
+                className="text-accent-500 cursor-pointer !font-normal transition-colors duration-200 hover:text-(--color-accent-200)"
                 onClick={() => setPage(isLoginPage ? "signup" : "login")}
               >
                 {isLoginPage ? "Sign up" : "Log in"}
@@ -103,29 +96,22 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
             </p>
           </m.div>
           {showDemoMessage ? (
-            <div className="py-[10px] px-[20px] text-white text-center rounded-lg bg-(--color-accent-dark) ">
-              <p className="!font-light text-h6">Welcome to the SAMA demo.</p>
+            <div className="rounded-lg bg-(--color-accent-500) px-[20px] py-[10px] text-center text-white">
+              <p className="text-h6 !font-light">Welcome to the SAMA demo.</p>
               <p className="mt-[10px]">
                 You can connect using the following credentials:
                 <br></br>
-                <b>sama-user-1</b> or <b>sama-user-2</b> and{" "}
-                <b>demo-password</b>
+                <b>sama-user-1</b> or <b>sama-user-2</b> and <b>demo-password</b>
               </p>
             </div>
           ) : null}
-          <div className="sm:mt-[25px] flex-1 flex flex-col gap-[15px]">
-            <UserNameInput
-              setState={setContent}
-              isResetModalOpen={isModalOpen}
-            />
+          <div className="flex flex-1 flex-col gap-[15px] sm:mt-[25px]">
+            <UserNameInput setState={setContent} isResetModalOpen={isModalOpen} />
             {isLoginPage ? null : <EmailInput setState={setContent} />}
             <PasswordInput setState={setContent} />
             {isLoginPage ? (
               <div className="flex gap-[7px]">
-                <span
-                  onClick={() => setIsModalOpen(true)}
-                  className="text-accent-dark cursor-pointer !font-normal"
-                >
+                <span onClick={() => setIsModalOpen(true)} className="text-accent-500 cursor-pointer !font-normal">
                   Forgot password?
                 </span>
               </div>
@@ -137,46 +123,46 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
               isResetModalOpen={isModalOpen}
             />
           </div>
-          <div className="w-full flex flex-row items-center gap-[10px]">
-            <span className="flex-1 h-[1px] rounded-[2px] bg-gray-700/30"></span>
+          <div className="flex w-full flex-row items-center gap-[10px]">
+            <span className="h-[1px] flex-1 rounded-[2px] bg-gray-700/30"></span>
             <p className="text-gray-700/80">Our socials</p>
-            <span className="flex-1 h-[1px] rounded-[2px] bg-gray-700/30"></span>
+            <span className="h-[1px] flex-1 rounded-[2px] bg-gray-700/30"></span>
           </div>
-          <div className="grid sm:grid-cols-3 max-sm:grid-cols-2 flex-row gap-[15px]">
+          <div className="grid flex-row gap-[15px] max-sm:grid-cols-2 sm:grid-cols-3">
             <a
               href="https://discord.gg/WSCQhFg65J"
               target="_blank"
               rel="noopener noreferrer"
-              className="col-span-1 flex flex-row gap-[10px] justify-center items-center py-[7px] px-[14px] border border-gray-700/30 rounded-lg hover:bg-(--color-hover-light) transition-colors cursor-pointer"
+              className="col-span-1 flex cursor-pointer flex-row items-center justify-center gap-[10px] rounded-lg border border-gray-700/30 px-[14px] py-[7px] transition-colors hover:bg-(--color-hover-light)"
             >
-              <Discord className="w-[28px] h-[28px]" />
+              <Discord className="h-[28px] w-[28px]" />
               <p className="!font-light">Discord</p>
             </a>
             <a
               href="https://medium.com/sama-communications"
               target="_blank"
               rel="noopener noreferrer"
-              className="col-span-1 flex flex-row gap-[10px] justify-center items-center py-[7px] px-[14px] border border-gray-700/30 rounded-lg hover:bg-(--color-hover-light) transition-colors cursor-pointer"
+              className="col-span-1 flex cursor-pointer flex-row items-center justify-center gap-[10px] rounded-lg border border-gray-700/30 px-[14px] py-[7px] transition-colors hover:bg-(--color-hover-light)"
             >
-              <Medium className="w-[28px] h-[28px]" />
+              <Medium className="h-[28px] w-[28px]" />
               <p className="!font-light">Medium</p>
             </a>
             <a
               href="https://github.com/SAMA-Communications"
               target="_blank"
               rel="noopener noreferrer"
-              className="sm:col-span-1 max-sm:col-span-2 flex flex-row gap-[10px] justify-center items-center py-[7px] px-[14px] border border-gray-700/30 rounded-lg hover:bg-(--color-hover-light) transition-colors cursor-pointer"
+              className="flex cursor-pointer flex-row items-center justify-center gap-[10px] rounded-lg border border-gray-700/30 px-[14px] py-[7px] transition-colors hover:bg-(--color-hover-light) max-sm:col-span-2 sm:col-span-1"
             >
-              <img className="w-[28px] h-[28px]" src={GitHub} alt="" />
+              <img className="h-[28px] w-[28px]" src={GitHub} alt="" />
               <p className="!font-light">GitHub</p>
             </a>
           </div>
         </m.div>
-        <div className="relative max-lg:hidden w-1/2 flex flex-col items-center justify-center rounded-[24px] py-[10px] px-[20px] overflow-hidden">
+        <div className="relative flex w-1/2 flex-col items-center justify-center overflow-hidden rounded-[24px] px-[20px] py-[10px] max-lg:hidden">
           <AnimatedBGmini customClassName="absolute w-full h-full top-0 left-0 z-0" />
-          <div className="w-full flex flex-row justify-center items-center z-10">
+          <div className="z-10 flex w-full flex-row items-center justify-center">
             <m.p
-              className="text-h3 text-stone-900/60 !font-(family-name:--accent-font)"
+              className="text-h3 !font-(family-name:--font-accent) text-stone-900/60"
               initial={{ opacity: 0, y: -20 }}
               animate={{
                 opacity: 1,
@@ -187,9 +173,9 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
               SAMA
             </m.p>
           </div>
-          <div className="flex-1 pt-[50px] z-10">
+          <div className="z-10 flex-1 pt-[50px]">
             <SAMALogo
-              customClassName="w-[250px] bg-(--color-bg-light-50) p-[35px] rounded-[112px]"
+              customClassName="w-[250px] bg-bg-light/50 p-[35px] rounded-[112px]"
               initial={{ opacity: 0, scale: 0 }}
               animate={{
                 opacity: 1,
@@ -198,9 +184,9 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
               }}
             />
           </div>
-          <div className="flex flex-col items-center justify-center gap-[30px] z-10">
+          <div className="z-10 flex flex-col items-center justify-center gap-[30px]">
             <m.div
-              className="text-center text-white text-h4"
+              className="text-h4 text-center text-white"
               initial={{ opacity: 0, y: 20 }}
               animate={{
                 opacity: 1,
@@ -212,7 +198,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
               <p>Messaging Alternative</p>
             </m.div>
             <m.div
-              className="w-[120px] h-[6px] mb-[15px] rounded-full bg-gray-300/50"
+              className="mb-[15px] h-[6px] w-[120px] rounded-full bg-gray-300/50"
               initial={{ opacity: 0, y: 20 }}
               animate={{
                 opacity: 1,
@@ -224,10 +210,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
           </div>
         </div>
       </m.div>
-      <ResetPasswordModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      <ResetPasswordModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   );
 }

@@ -25,10 +25,7 @@ import {
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations";
-import {
-  addExternalProps,
-  selectContextExternalProps,
-} from "@store/values/ContextMenu.js";
+import { addExternalProps, selectContextExternalProps } from "@store/values/ContextMenu.js";
 import { getNetworkState } from "@store/values/NetworkState";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectParticipantsEntities } from "@store/values/Participants";
@@ -64,12 +61,7 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
     }
   };
 
-  const createLocalMessage = ({
-    body,
-    attachments = [],
-    forwardedMessageId,
-    repliedMessageId,
-  }) => {
+  const createLocalMessage = ({ body, attachments = [], forwardedMessageId, repliedMessageId }) => {
     const mid = currentUserId + Date.now();
     return {
       _id: mid,
@@ -98,16 +90,11 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
     const serverAttachments = mObject.attachments?.length
       ? prepareAttachmentMetadata(mObject.attachments, originalAttachments)
       : [];
-    dispatch(
-      upsertMessage({ _id: serverMessage._id, attachments: serverAttachments })
-    );
+    dispatch(upsertMessage({ _id: serverMessage._id, attachments: serverAttachments }));
   };
 
   const handleError = async (e, cid, lastMsg) => {
-    showCustomAlert(
-      e.message || "The server connection is unavailable.",
-      "warning"
-    );
+    showCustomAlert(e.message || "The server connection is unavailable.", "warning");
     dispatch(setLastMessageField({ cid, msg: messages[messages.length - 1] }));
     dispatch(removeLastMessage({ cid }));
     dispatch(removeMessage(lastMsg._id || lastMsg.mid));
@@ -148,8 +135,7 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
         lastMessage = localMsg;
 
         dispatch(addMessage(localMsg));
-        if (isLast)
-          dispatch(updateLastMessageField({ cid: selectedCID, msg: localMsg }));
+        if (isLast) dispatch(updateLastMessageField({ cid: selectedCID, msg: localMsg }));
 
         const mObject = {
           mid: localMsg._id,
@@ -166,7 +152,7 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
               url: att.file_url,
               fileName: att.file_name,
               contentType: att.file_content_type,
-            }))
+            })),
           );
           mObject.attachments = files.map((att, i) => {
             const { file_url, _id, ...rest } = originalAttachments[i];
@@ -187,13 +173,12 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
       removeDraftField({
         cid: forwardedMessages[0].cid,
         fields: ["forwarded_mids"],
-      })
+      }),
     );
     setIsSendMessageDisable(false);
     draftService.removeDraft(selectedCID);
     dispatch(addExternalProps({ [selectedCID]: {} }));
-    chatMessagesBlockRef.current.scrollTop =
-      chatMessagesBlockRef.current.scrollHeight;
+    chatMessagesBlockRef.current.scrollTop = chatMessagesBlockRef.current.scrollHeight;
   };
 
   const createAndSendMessage = async () => {
@@ -213,9 +198,7 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
     setIsSendMessageDisable(true);
     inputRef.current.value = "";
 
-    const repliedMid =
-      draftExtenralProps[selectedCID]?.draft_replied_mid ||
-      selectedConversation?.draft?.replied_mid;
+    const repliedMid = draftExtenralProps[selectedCID]?.draft_replied_mid || selectedConversation?.draft?.replied_mid;
 
     const msg = createLocalMessage({ body, repliedMessageId: repliedMid });
 
@@ -242,8 +225,7 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
     setIsSendMessageDisable(false);
     draftService.removeDraft(selectedCID);
     dispatch(addExternalProps({ [selectedCID]: {} }));
-    chatMessagesBlockRef.current.scrollTop =
-      chatMessagesBlockRef.current.scrollHeight;
+    chatMessagesBlockRef.current.scrollTop = chatMessagesBlockRef.current.scrollHeight;
     inputRef.current.style.height = `55px`;
   };
 
@@ -256,8 +238,7 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
         confirmText: "Delete",
         cancelText: "Cancel",
       });
-      isConfirm &&
-        messagesService.sendMessageDelete(selectedCID, [eMid], "all");
+      isConfirm && messagesService.sendMessageDelete(selectedCID, [eMid], "all");
       return;
     }
     if (editedMessage.body !== inputRef.current.value) {
@@ -271,9 +252,9 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
   };
 
   useEffect(() => {
+    if (!inputRef.current) return;
     if (editedMessage) {
-      inputRef.current.value &&
-        draftService.saveLastInputText(selectedCID, inputRef.current.value);
+      inputRef.current.value && draftService.saveLastInputText(selectedCID, inputRef.current.value);
       draftService.saveDraft(selectedCID, { text: editedMessage.body });
       inputRef.current.value = editedMessage.body;
       inputRef.current.focus();
@@ -292,21 +273,17 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
   }, [selectedCID]);
 
   useEffect(() => {
-    draftExtenralProps[selectedCID]?.draft_replied_mid &&
-      inputRef.current.focus();
+    draftExtenralProps[selectedCID]?.draft_replied_mid && inputRef.current.focus();
   }, [draftExtenralProps]);
 
   const isBlockedConv = useMemo(() => {
     const { type, owner_id, opponent_id } = selectedConversation;
 
-    return (
-      type === "u" &&
-      (!participants[opponent_id]?.login || !participants[owner_id]?.login)
-    );
+    return type === "u" && (!participants[opponent_id]?.login || !participants[owner_id]?.login);
   }, [selectedConversation, participants]);
 
   return (
-    <div className="w-full flex items-end gap-[8px]">
+    <div className="flex w-full items-end gap-2.5 self-center pb-3.5 lg:max-w-300">
       <MessageInput
         inputTextRef={inputRef}
         isBlockedConv={isBlockedConv}
@@ -315,7 +292,7 @@ export default function ChatFormInput({ chatMessagesBlockRef, editedMessage }) {
         onSubmitFunc={editedMessage ? editMessageFunc : createAndSendMessage}
         chatMessagesBlockRef={chatMessagesBlockRef}
       />
-      <MagicButton inputTextRef={inputRef} />
+      <MagicButton isBlockedConv={isBlockedConv} inputTextRef={inputRef} />
     </div>
   );
 }

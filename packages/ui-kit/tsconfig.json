@@ -18,10 +18,10 @@
     "strict": true,
 
     "paths": {
-      "@/*": ["./*"],
       "@src": ["src"],
       "@elements": ["src/components/elements"],
       "@composite": ["src/components/composite"],
+      "@adapters": ["src/adapters"],
       "@types": ["src/types"],
       "@utils": ["src/utils"]
     }

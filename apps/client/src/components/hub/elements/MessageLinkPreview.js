@@ -23,7 +23,7 @@ export default function MessageLinkPreview({ refreshFunc, urlData, color }) {
 
   const isDocument = SUPPORTED_DOCUMENT_PREVIEW_REGEX.test(url);
 
-  const bgClass = color === "white" ? "bg-accent-light/20" : "bg-hover-dark/5";
+  const bgClass = color === "white" ? "bg-accent-100/20" : "bg-hover-dark/5";
   const textClass = color === "white" ? "text-gray-200" : "text-gray-500";
 
   if (isDocument) {

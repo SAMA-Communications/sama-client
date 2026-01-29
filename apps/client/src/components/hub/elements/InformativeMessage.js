@@ -1,29 +1,19 @@
-import * as m from "motion/react-m";
 import { useLocation } from "react-router";
 
 import { addSuffix } from "@utils/NavigationUtils.js";
 
-export default function InformativeMessage({
-  text,
-  params,
-  isPrevMesssageUsers,
-}) {
+export default function InformativeMessage({ text, params, isNextMesssageUsers }) {
   const { pathname, hash } = useLocation();
 
   return (
-    <m.div
-      whileInView={{ y: 0 }}
-      initial={{ y: 5 }}
-      transition={{ duration: 0.3, delay: 0.03 }}
+    <div
       className={
-        "self-center py-[6px] px-[18px] rounded-[16px] bg-(--color-hover-light) cursor-pointer text-gray-500" +
-        (isPrevMesssageUsers ? " mt-[10px]" : "")
+        "bg-hover-light cursor-pointer self-center rounded-xl px-3 py-2 text-gray-500" +
+        (isNextMesssageUsers ? " mb-1.5" : "")
       }
-      onClick={() =>
-        addSuffix(pathname + hash, `/user?uid=${params?.user?._id}`)
-      }
+      onClick={() => addSuffix(pathname + hash, `/user?uid=${params?.user?._id}`)}
     >
-      <p>{text}</p>
-    </m.div>
+      <p className="font-light">{text}</p>
+    </div>
   );
 }

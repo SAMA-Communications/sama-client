@@ -5,9 +5,9 @@ export const KEY_CODES = {
   ARROW_LEFT: 37,
 };
 
-export const ALLOWED_AVATAR_FORMATS = [
-  ".heic",
-  ".HEIC",
-  "image/jpeg",
-  "image/png",
-];
+export const ALLOWED_AVATAR_FORMATS = [".heic", ".HEIC", "image/jpeg", "image/png"];
+
+export const CHAT_CONTENT_TABS = {
+  MESSAGES: "messages",
+  APPS: "apps",
+};

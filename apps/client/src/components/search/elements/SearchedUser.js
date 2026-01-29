@@ -76,7 +76,7 @@ export default function SearchedUser({
           altText={"User's Profile"}
         />
         {isSelected ? (
-          <div className="absolute bottom-[3px] right-[3px] w-[20px] h-[20px] rounded-full bg-(--color-accent-dark) flex items-center justify-center z-10">
+          <div className="absolute bottom-[3px] right-[3px] w-[20px] h-[20px] rounded-full bg-(--color-accent-500) flex items-center justify-center z-10">
             <Selected />
           </div>
         ) : null}

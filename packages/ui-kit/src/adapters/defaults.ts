@@ -25,11 +25,7 @@ const defaultconversation = {
 };
 
 const useDrafts = () => {
-  const syncDraftByCid = (
-    cid: string,
-    oldDraft: object,
-    convUpdatedAt: string,
-  ) => ({});
+  const syncDraftByCid = (cid: string, oldDraft: object, convUpdatedAt: string) => ({});
   return { syncDraftByCid };
 };
 
@@ -40,10 +36,7 @@ const useParticipants = () => {
   const getUserById = (uid: string) => defaultuser;
 
   const updateCurrentUserAvatar = (file: File) => {};
-  const updateCurrentUserPassword = (
-    currentPassword: string,
-    newPassword: string,
-  ) => {};
+  const updateCurrentUserPassword = (currentPassword: string, newPassword: string) => {};
   const updateCurrentUserFields = (data: {
     email?: string;
     phone?: string;
@@ -53,7 +46,7 @@ const useParticipants = () => {
     return true;
   };
 
-  const deleteCurrentUser = async () => true;
+  const deleteCurrentUser = () => true;
 
   return {
     getParticipantsByIdsAsObject,
@@ -73,13 +66,12 @@ const useConversations = () => {
   const getConversationById = (cid: string) => defaultconversation;
   const getSelectedConversation = () => defaultconversation;
   const setSelectedConversation = (cid: string) => {};
-  const fetchConversations = () => [defaultconversation];
+  const fetchConversations = async (): Promise<Conversation[]> => {
+    return Promise.resolve([defaultconversation]);
+  };
   const storeNewConversations = (conversations: Conversation[]) => {};
   const updateChatImage = (file: File) => {};
-  const updateNameAndDescription = (data: {
-    name: string;
-    description: string;
-  }) => true;
+  const updateNameAndDescription = (data: { name?: string; description?: string }) => true;
 
   return {
     getConversationById,
@@ -96,7 +88,7 @@ function useHistory() {
   const openProfileById = (uid: string) => {};
   const openCurrentUserProfile = () => {};
   const openContextMenuWithParams = (params: any) => {};
-  const undoLastSection = (params: any) => {};
+  const undoLastSection = () => {};
   const openAddParticipantsWindow = () => {};
   const closeChatInfoPage = () => {};
   const openEditUserProfileWindow = () => {};

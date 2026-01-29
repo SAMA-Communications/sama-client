@@ -1,10 +1,13 @@
 import { useCallback, useState } from "react";
 
-import { EditModalContainerProps } from "./EditModalContainer.types";
 import { getAdapters } from "../../../adapters";
 
 import { UserInputsGroup } from "./UserInputsGroup";
 import { ConversationInputsGroup } from "./ConversationInputsGroup";
+
+import { Save } from "lucide-react";
+
+import { EditModalContainerProps } from "./EditModalContainer.types";
 
 export const EditModalContainer = ({ type }: EditModalContainerProps) => {
   const { useParticipants, useConversations, useHistory } = getAdapters();
@@ -23,8 +26,7 @@ export const EditModalContainer = ({ type }: EditModalContainerProps) => {
     }>
   >({});
 
-  const addFieldToEdit = (field: string, value: string) =>
-    setContent((prev) => ({ ...prev, [field]: value?.trim() }));
+  const addFieldToEdit = (field: string, value: string) => setContent((prev) => ({ ...prev, [field]: value?.trim() }));
 
   const types = {
     conversation: {
@@ -51,47 +53,28 @@ export const EditModalContainer = ({ type }: EditModalContainerProps) => {
           });
 
     if (isSuccess) undoLastSection();
-  }, [
-    undoLastSection,
-    content,
-    type,
-    updateNameAndDescription,
-    updateCurrentUserFields,
-  ]);
+  }, [undoLastSection, content, type, updateNameAndDescription, updateCurrentUserFields]);
 
   //   useKeyDown(KEY_CODES.ENTER, sendRequest);
   //   useKeyDown(KEY_CODES.ESCAPE, onClose);
 
   return (
-    <div
-      className="absolute top-0 z-10 flex h-dvh w-dvw items-center justify-center bg-(--color-black-50)"
-      //   initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
-      //   animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-      //   exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
-      //   transition={{ duration: 0.2 }}
-    >
+    <div className="ui:absolute ui:top-0 ui:z-10 ui:flex ui:h-dvh ui:w-dvw ui:items-center ui:justify-center ui:bg-black/50">
       <div
-        style={{ width: "min(540px,94%)" }}
-        className={`flex flex-col rounded-[32px] bg-(--color-bg-light) p-[30px] max-md:w-[94svw] max-md:p-[20px]`}
-        // initial={{ scale: 0.8, opacity: 0 }}
-        // animate={{ scale: 1, opacity: 1, transition: { delay: 0.1 } }}
-        // exit={{ scale: 0.8, opacity: 0 }}
-        // transition={{ duration: 0.2 }}
+        className={`ui:flex ui:flex-col ui:gap-2.75 ui:rounded-2xl ui:bg-bg-light ui:px-7 ui:py-3.5 ui:max-md:w-[94svw] ui:md:w-100`}
       >
-        <p className="text-h4 text-center !font-normal text-black">{title}</p>
-        <div className="my-[10px] flex flex-col">{component}</div>
-        <div className="mt-auto flex items-center justify-between gap-[30px]">
-          <p
-            className="text-h6 !forn-light cursor-pointer text-(--color-accent-dark)"
-            onClick={undoLastSection}
-          >
+        <p className="ui:text-center ui:text-xl">{title}</p>
+        <div className="ui:mt-3.5 ui:flex ui:flex-col ui:gap-2.75">{component}</div>
+        <div className="ui:mt-3.5 ui:flex ui:items-center ui:justify-between ui:gap-2.75">
+          <p className="ui:cursor-pointer ui:rounded-xl ui:p-2 ui:text-text-dark" onClick={undoLastSection}>
             Cancel
           </p>
           <p
-            className="text-h6 !forn-light cursor-pointer text-(--color-accent-dark)"
+            className="ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75 ui:rounded-xl ui:border ui:border-accent-500 ui:p-2 ui:text-accent-500"
             onClick={sendRequest}
           >
-            Save Changes
+            Save
+            <Save size={18} color="var(--color-accent-500)" />
           </p>
         </div>
       </div>

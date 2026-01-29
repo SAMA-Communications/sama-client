@@ -10,11 +10,9 @@ import { getConverastionById } from "@store/values/Conversations.js";
 
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 
-import MagicWand from "@icons/ai/MagicWand.svg?react";
-import Summarize from "@icons/ai/Summarize.svg?react";
-import ChangeTone from "@icons/ai/ChangeTone.svg?react";
+import { WandSparkles, CloudFog, ScrollText } from "lucide-react";
 
-export default function MagicButton({ inputTextRef }) {
+export default function MagicButton({ inputTextRef, isBlockedConv }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,7 +23,7 @@ export default function MagicButton({ inputTextRef }) {
     actions.map((action, index) => (
       <button
         key={index}
-        className={`flex items-center gap-[7px] cursor-pointer z-6 ${customStyle} ${action.customStyle}`}
+        className={`z-6 flex cursor-pointer items-center gap-[7px] ${customStyle} ${action.customStyle}`}
         onClick={action.onClick}
       >
         {action.icon}
@@ -55,14 +53,16 @@ export default function MagicButton({ inputTextRef }) {
   };
 
   return (
-    <div className="magic-wand w-[60px] h-[60px] flex justify-center items-center rounded-[16px] bg-(--color-hover-light)">
+    <div className="magic-wand border-text-dark flex items-center justify-center rounded-xl border p-2">
       {isLoading ? (
-        <OvalLoader width={27} height={27} />
+        <OvalLoader width={28} height={28} />
       ) : (
-        <MagicWand
+        <WandSparkles
+          size={28}
           data-tooltip-id="editor-options-tooltip"
           data-tooltip-delay-hide={500}
-          className="w-[27px] h-[27px] cursor-pointer"
+          color="var(--color-text-dark)"
+          className="cursor-pointer"
           onClick={() => setIsOpen((s) => !s)}
         />
       )}
@@ -74,58 +74,56 @@ export default function MagicButton({ inputTextRef }) {
         className="editor-tooltip-style"
         classNameArrow="editor-tooltip-arrow"
       >
-        <div className="flex flex-col justify-start gap-2 z-10">
+        <div className="z-10 flex flex-col justify-start gap-2">
           {renderActions(
             [
               {
                 label: "Get summary:",
                 customStyle: "!pb-[5px] !text-left !text-black/80 !cursor-auto",
-                icon: <Summarize className="w-[15px] h-[15px]" />,
+                icon: <ScrollText className="h-3.75 w-3.75" />,
               },
               // {
               //   label: "- unreads",
               //   onClick: async () => await summarizeActionOnClick("unreads"),
               //   customStyle:
-              //     "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-dark",
+              //     "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-500",
               // },
               {
                 label: "- last day",
                 onClick: async () => await summarizeActionOnClick("last-day"),
-                customStyle:
-                  "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-dark",
+                customStyle: "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-500",
               },
               {
                 label: "- last 7 days",
-                onClick: async () =>
-                  await summarizeActionOnClick("last-7-days"),
-                customStyle:
-                  "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-dark",
+                onClick: async () => await summarizeActionOnClick("last-7-days"),
+                customStyle: "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-500",
               },
-              {
-                label: "Change tone:",
-                customStyle: "!pb-[5px] !text-left !text-black/80 !cursor-auto",
-                icon: <ChangeTone className="w-[15px] h-[15px]" />,
-              },
-              {
-                label: "- positive",
-                onClick: async () => await changeToneActionOnClick("positive"),
-                customStyle:
-                  "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-dark",
-              },
-              {
-                label: "- negative",
-                onClick: async () => await changeToneActionOnClick("negative"),
-                customStyle:
-                  "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-dark",
-              },
-              {
-                label: "- cringe",
-                onClick: async () => await changeToneActionOnClick("cringe"),
-                customStyle:
-                  "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-dark",
-              },
+              ...(isBlockedConv
+                ? []
+                : [
+                    {
+                      label: "Change tone:",
+                      customStyle: "!pb-[5px] !text-left !text-black/80 !cursor-auto",
+                      icon: <CloudFog className="h-3.75 w-3.75" />,
+                    },
+                    {
+                      label: "- positive",
+                      onClick: async () => await changeToneActionOnClick("positive"),
+                      customStyle: "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-500",
+                    },
+                    {
+                      label: "- negative",
+                      onClick: async () => await changeToneActionOnClick("negative"),
+                      customStyle: "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-500",
+                    },
+                    {
+                      label: "- cringe",
+                      onClick: async () => await changeToneActionOnClick("cringe"),
+                      customStyle: "!-mt-[10px] !ml-[10px] !text-left hover:!text-accent-500",
+                    },
+                  ]),
             ],
-            "text-p !text-(--color-text-dark)"
+            "text-p !text-(--color-text-dark)",
           )}
         </div>
       </Tooltip>

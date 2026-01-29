@@ -9,9 +9,10 @@ import draftService from "@services/tools/draftService.js";
 
 import AdditionalMessages from "./AdditionalMessages.js";
 import MediaAttachments from "@components/message/elements/MediaAttachments";
-import MessageStatus from "@components/message/elements/MessageStatus";
 import MessageUserIcon from "@components/hub/elements/MessageUserIcon";
 import MessageLinkPreview from "@components/hub/elements/MessageLinkPreview.js";
+
+import { MessageStatus } from "@sama-communications.ui-kit";
 
 import { addExternalProps } from "@store/values/ContextMenu.js";
 import { setAllParams } from "@store/values/ContextMenu.js";
@@ -20,12 +21,7 @@ import { addSuffix } from "@utils/NavigationUtils.js";
 import { getUserFullName } from "@utils/UserUtils.js";
 import { SWIPE_THRESHOLD, ALLOWED_FORMATS_TO_COPY } from "@utils/constants.js";
 
-import Selected from "@icons/status/Selected.svg?react";
-import CornerLight from "@icons/_helpers/CornerLight.svg?react";
-import CornerAccent from "@icons/_helpers/CornerAccent.svg?react";
-import CornerSelected from "@icons/_helpers/CornerSelected.svg?react";
-import ForwardWhite from "@icons/context/ForwardWhiteBold.svg?react";
-import ForwardAccent from "@icons/context/ForwardAccentBold.svg?react";
+import { Check, Forward } from "lucide-react";
 
 export default function ChatMessage({
   sender,
@@ -46,21 +42,18 @@ export default function ChatMessage({
   const { pathname, hash } = useLocation();
 
   const messageRef = useRef(null);
-  const { _id, old_id, body, from, attachments, status, t, url_preview } =
-    message;
+  const { _id, old_id, body, from, attachments, status, t, url_preview } = message;
   const isCurrentUser = from === currentUserId;
   const isForwardMessage = !!message.forwarded_message_id;
   const isEdited = message.created_at !== message.updated_at;
+  const isAttachments = attachments?.length;
 
   const timeSend = useMemo(() => {
     const time = new Date(t * 1000);
-    return `${time.getHours()}:${
-      time.getMinutes() > 9 ? time.getMinutes() : "0" + time.getMinutes()
-    }`;
+    return `${time.getHours()}:${time.getMinutes() > 9 ? time.getMinutes() : "0" + time.getMinutes()}`;
   }, [t]);
 
-  const openUserProfile = (uid) =>
-    sender ? addSuffix(pathname + hash, `/user?uid=${uid}`) : {};
+  const openUserProfile = (uid) => (sender ? addSuffix(pathname + hash, `/user?uid=${uid}`) : {});
 
   const linkColor = isCurrentUser ? "white" : "black";
 
@@ -70,7 +63,7 @@ export default function ChatMessage({
   };
 
   const width = useMemo(() => {
-    if (attachments?.length || url_preview) return "w-[min(85%,540px)]";
+    if (isAttachments || url_preview) return "w-[min(85%,540px)]";
     return "w-max max-2xl:max-w-[min(85%,680px)] 2xl:max-w-[min(60%,680px)]";
   }, [attachments, url_preview]);
 
@@ -79,20 +72,12 @@ export default function ChatMessage({
     e.stopPropagation();
     const isAttachment = copyType === "Attachment";
     const isCopyableAttachment =
-      isAttachment &&
-      ALLOWED_FORMATS_TO_COPY.includes(
-        externalProps?.attachment?.file_content_type
-      );
-    const copyOption =
-      (isCopyableAttachment && "messageCopyAttachment") ||
-      (message.body && "messageCopyText") ||
-      null;
+      isAttachment && ALLOWED_FORMATS_TO_COPY.includes(externalProps?.attachment?.file_content_type);
+    const copyOption = (isCopyableAttachment && "messageCopyAttachment") || (message.body && "messageCopyText") || null;
 
     const list = [
       "messageReply",
-      message.body && isCurrentUser && !message.forwarded_message_id
-        ? "messageEdit"
-        : null,
+      message.body && isCurrentUser && !message.forwarded_message_id ? "messageEdit" : null,
       copyOption,
       isAttachment ? "messageSaveAs" : null,
       "messageForward",
@@ -107,7 +92,7 @@ export default function ChatMessage({
         coords: { x: e.pageX, y: e.pageY },
         clicked: true,
         externalProps: { message, ...externalProps },
-      })
+      }),
     );
   };
 
@@ -121,7 +106,7 @@ export default function ChatMessage({
         coords: { x: e.pageX, y: e.pageY },
         clicked: true,
         externalProps: { message },
-      })
+      }),
     );
   };
 
@@ -149,214 +134,157 @@ export default function ChatMessage({
 
   return (
     <div
-      className="w-full flex flex-row justify-between items-end gap-[7px] flex-nowrap"
-      onClick={
-        isSelectionMode
-          ? isSelected
-            ? () => onUnselectClick(_id)
-            : () => onSelectClick(_id)
-          : null
-      }
+      className={`flex w-full flex-row flex-nowrap items-end gap-2.75 ${isCurrentUser ? "justify-end" : "justify-start"}`}
+      onClick={isSelectionMode ? (isSelected ? () => onUnselectClick(_id) : () => onSelectClick(_id)) : null}
       onContextMenu={openSelectionContextMenu}
     >
+      {isSelectionMode && (
+        <div className={`flex h-11.5 w-11.5 items-center justify-center ${isCurrentUser ? "mr-auto" : ""}`}>
+          {isSelected ? (
+            <span className="bg-accent-500/70 flex h-5.5 w-5.5 items-center justify-center rounded-full">
+              <Check size={14} color="white" />
+            </span>
+          ) : (
+            <span className="h-5.5 w-5.5 rounded-full border border-black/50"></span>
+          )}
+        </div>
+      )}
       <m.div
         ref={messageRef}
         key={old_id || _id}
         data-message-id={_id}
-        className={`relative ${width} flex flex-row gap-[16px] ${
-          prev ? "" : "mt-[8px]"
-        }`}
+        className={`relative ${width} flex flex-row gap-2.75 ${next ? "" : "mb-1.5"}`}
         drag={isMobile ? "x" : false}
         dragDirectionLock
         dragConstraints={{ left: 0, right: 0 }}
         onDragEnd={(e, info) => {
           if (info.offset.x < -SWIPE_THRESHOLD) {
-            dispatch(
-              addExternalProps({ [message.cid]: { draft_replied_mid: _id } })
-            );
+            dispatch(addExternalProps({ [message.cid]: { draft_replied_mid: _id } }));
             draftService.saveDraft(message.cid, { replied_mid: _id });
           }
         }}
         whileDrag={{ scale: 0.9 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        initial={{ opacity: 0, x: -7 }}
-        transition={{ duration: 0.3, delay: 0.03 }}
       >
-        <div
-          className={`min-w-[46px] flex items-end ${
-            sender ? "cursor-pointer" : ""
-          }`}
-        >
-          {next ? null : (
+        <div className={`flex min-w-11.5 items-end`}>
+          {next || isCurrentUser ? null : (
             <div
-              className={`w-[46px] h-[46px] uppercase text-black rounded-[16px] bg-(--color-hover-light) flex items-center justify-center ${
-                isCurrentUser ? "!text-white !bg-(--color-accent-dark)" : ""
-              } ${
-                isSelected ? "!bg-(--color-accent-dark)/45" : ""
-              } overflow-hidden`}
+              className={`bg-hover-light flex h-11.5 w-11.5 cursor-pointer items-center justify-center rounded-xl text-black uppercase ${
+                isCurrentUser ? "bg-accent-500! text-white!" : ""
+              } ${isSelected ? "bg-accent-500/45!" : ""} overflow-hidden`}
               onClick={() => openUserProfile(from)}
             >
-              <MessageUserIcon
-                userObject={sender}
-                isCurrentUser={isCurrentUser}
-              />
+              <MessageUserIcon userObject={sender} isCurrentUser={isCurrentUser} />
             </div>
           )}
         </div>
-        <m.div
-          className={`relative max-w-full w-fit min-h-[46px] p-[15px] flex flex-col gap-[5px] rounded-[16px] bg-(--color-hover-light) ${
-            next ? "" : "rounded-bl-none"
-          } ${isCurrentUser ? "!bg-(--color-accent-dark)" : ""} ${
-            isSelected ? "!bg-(--color-accent-dark)/50" : ""
-          }`}
-          whileTap={
-            isMobile
-              ? { scale: 0.95, transition: { duration: 0.3, delay: 0.05 } }
-              : null
-          }
-          onClick={isMobile ? handleClick : null}
-          onPointerDown={isMobile ? handlePointerDown : null}
-          onPointerUp={isMobile ? handlePointerUp : null}
-          onPointerLeave={isMobile ? handlePointerUp : null}
-          onContextMenu={
-            isSelectionMode
-              ? openSelectionContextMenu
-              : (e) => openContextMenu(e, message.body ? "Text" : null)
-          }
-        >
-          {next ? null : isSelected ? (
-            <CornerSelected className="absolute -left-[16px] bottom-[0px]" />
-          ) : isCurrentUser ? (
-            <CornerAccent className="absolute -left-[16px] bottom-[0px]" />
-          ) : (
-            <CornerLight className="absolute -left-[16px] bottom-[0px]" />
-          )}
-          {prev || isForwardMessage ? null : (
-            <div
-              className={`text-(--color-accent-dark) !font-medium ${
-                sender ? "cursor-pointer" : ""
-              } ${isCurrentUser ? "!text-white" : ""}`}
-              onClick={() => openUserProfile(from)}
-            >
-              &zwnj;{getUserFullName(sender) || "Deleted account"}
+        <div className="flex flex-col">
+          {isForwardMessage && (
+            <div className="bg-accent-500/65 -mb-3 flex flex-row flex-nowrap items-center gap-1.75 rounded-t-xl px-1 pt-0.5 pb-3">
+              <Forward size={18} color={isCurrentUser ? "white" : "var(--color-accent-500)"} />
+              <p className={`text-sm font-medium italic ${isCurrentUser ? "text-white" : "text-accent-500"}`}>
+                Forwarded
+              </p>
             </div>
           )}
           {repliedMessage && (
             <AdditionalMessages
               type={"reply"}
+              color={isCurrentUser ? "white" : "accent"}
               message={repliedMessage}
               onClickFunc={onReplyClickFunc}
-              color={isCurrentUser ? "accent" : "light"}
             />
           )}
-          {isForwardMessage && (
-            <div className="flex flex-row gap-[7px] items-center flex-nowrap">
-              {isCurrentUser ? (
-                <ForwardWhite className="w-[18px] h-[12px]" />
-              ) : (
-                <ForwardAccent className="w-[18px] h-[12px]" />
-              )}
-              <p
-                className={`!font-medium ${
-                  isCurrentUser ? "text-white" : "text-accent-dark"
-                }`}
-              >
-                Forwarded
-              </p>
-            </div>
-          )}
-          <div
-            className={`flex flex-wrap items-end gap-y-[8px] gap-x-[15px] ${
-              attachments?.length ? "w-auto !flex-col items-start" : ""
-            }  ${url_preview ? "flex-col" : "flex-row"}`}
+          <m.div
+            className={`relative flex min-h-11.5 w-full max-w-full min-w-28 flex-col justify-between gap-1 rounded-xl p-3 ${
+              next ? "" : isCurrentUser ? "rounded-br-none" : "rounded-bl-none"
+            } ${isCurrentUser ? "bg-accent-500" : "bg-hover-light"} ${isSelected ? "bg-accent-200!" : ""}`}
+            whileTap={isMobile ? { scale: 0.95, transition: { duration: 0.3, delay: 0.05 } } : null}
+            onClick={isMobile ? handleClick : null}
+            onPointerDown={isMobile ? handlePointerDown : null}
+            onPointerUp={isMobile ? handlePointerUp : null}
+            onPointerLeave={isMobile ? handlePointerUp : null}
+            onContextMenu={
+              isSelectionMode ? openSelectionContextMenu : (e) => openContextMenu(e, message.body ? "Text" : null)
+            }
           >
-            {attachments?.length ? (
-              <MediaAttachments
-                onContextMenu={
-                  isSelectionMode
-                    ? openSelectionContextMenu
-                    : (e, att) =>
-                        openContextMenu(e, "Attachment", { attachment: att })
-                }
-                attachments={attachments}
-                mid={message._id}
-              />
-            ) : null}
-            {body ? (
+            {prev || isForwardMessage ? null : (
               <div
-                className={`max-w-full whitespace-pre-wrap text-black wrap-break-word ${
-                  isCurrentUser ? "!text-white" : ""
-                }`}
-                style={{ wordBreak: "break-word", inlineSize: "auto" }}
+                className={`text-accent-500 font-medium ${
+                  sender ? "cursor-pointer" : ""
+                } ${isCurrentUser ? "text-white!" : ""}`}
+                onClick={() => openUserProfile(from)}
               >
-                <p>{urlify(_id, body, linkColor, !url_preview)}</p>
-                {!attachments?.length && (
-                  <MessageLinkPreview
-                    urlData={url_preview}
-                    color={linkColor}
-                    refreshFunc={refreshLinkPreview}
-                  />
-                )}
+                &zwnj;{getUserFullName(sender) || "Deleted account"}
               </div>
-            ) : null}
+            )}
             <div
-              className={`relative grow justify-end self-end ${
-                attachments?.length && !body
-                  ? "!absolute bottom-[16px] right-[16px] p-[8px] rounded-lg bg-(--color-black-50) self-end"
-                  : ""
-              } flex items-end justify-center gap-[3px] ${
-                isCurrentUser ? "pr-[28px]" : ""
-              }`}
+              className={`flex flex-wrap items-end gap-x-1.75 gap-y-0.75 ${
+                isAttachments ? "w-auto flex-col! items-start" : ""
+              } ${url_preview ? "flex-col" : "flex-row"}`}
             >
-              {isEdited ? (
-                <span
-                  className={`text-(--color-text-dark) leading-[18px] text-span ${
-                    (attachments?.length && !body) || isCurrentUser
-                      ? "text-white"
-                      : ""
-                  }`}
-                >
-                  edited
-                </span>
+              {isAttachments ? (
+                <MediaAttachments
+                  onContextMenu={
+                    isSelectionMode
+                      ? openSelectionContextMenu
+                      : (e, att) => openContextMenu(e, "Attachment", { attachment: att })
+                  }
+                  attachments={attachments}
+                  mid={message._id}
+                />
               ) : null}
-              <div
-                className={`text-(--color-text-dark) text-span ${
-                  (attachments?.length && !body) || isCurrentUser
-                    ? "text-white"
-                    : ""
-                }`}
-              >
-                {timeSend}
-              </div>
-              {isCurrentUser ? (
+              {body ? (
                 <div
-                  className={`absolute right-[3px] flex ${
-                    attachments?.length && !body
-                      ? "bottom-[5px]"
-                      : "-bottom-[3px]"
-                  }`}
+                  className={`max-w-full font-light wrap-break-word whitespace-pre-wrap ${isCurrentUser ? "text-white" : ""}`}
+                  style={{ wordBreak: "break-word", inlineSize: "auto" }}
                 >
-                  <MessageStatus
-                    status={status}
-                    type={isCurrentUser ? "white" : "accent"}
-                  />
+                  <p>{urlify(_id, body, linkColor, !url_preview)}</p>
+                  {!isAttachments && (
+                    <MessageLinkPreview urlData={url_preview} color={linkColor} refreshFunc={refreshLinkPreview} />
+                  )}
                 </div>
               ) : null}
+              <div
+                className={`relative flex grow items-end justify-end gap-0.75 self-end ${
+                  isAttachments && !body ? "absolute! right-4 bottom-4 self-end rounded-lg bg-black/50 p-2" : ""
+                } `}
+              >
+                {isEdited ? (
+                  <span
+                    className={`text-text-dark text-xs leading-4.5 ${
+                      (isAttachments && !body) || isCurrentUser ? "text-white" : ""
+                    }`}
+                  >
+                    edited
+                  </span>
+                ) : null}
+                <div
+                  className={`text-text-dark text-xs ${(isAttachments && !body) || isCurrentUser ? "text-white" : ""}`}
+                >
+                  {timeSend}
+                </div>
+                {isCurrentUser ? (
+                  <div className={`-mb-0.5`}>
+                    <MessageStatus status={status} color="white" />
+                  </div>
+                ) : null}
+              </div>
             </div>
-          </div>
-        </m.div>
-      </m.div>
-      {isSelectionMode && (
-        <div className="flex 2xl:mr-[calc(100%-min(85%,680px))] max-2xl:mr-[15px]">
-          {isSelected ? (
-            <span className="w-[22px] h-[22px] bg-accent-dark/70 rounded-full flex items-center justify-center">
-              <Selected className="w-[14px] h-[14px]" />
-            </span>
-          ) : (
-            <span className="w-[22px] h-[22px] border-black/50 border-[1px] border-solid rounded-full"></span>
+          </m.div>
+        </div>
+        <div className={`flex min-w-11.5 items-end`}>
+          {next || !isCurrentUser ? null : (
+            <div
+              className={`bg-hover-light flex h-11.5 w-11.5 cursor-pointer items-center justify-center rounded-xl text-black uppercase ${
+                isCurrentUser ? "bg-accent-500! text-white!" : ""
+              } ${isSelected ? "bg-accent-500/45!" : ""} overflow-hidden`}
+              onClick={() => openUserProfile(from)}
+            >
+              <MessageUserIcon userObject={sender} isCurrentUser={isCurrentUser} />
+            </div>
           )}
         </div>
-      )}
+      </m.div>
     </div>
   );
 }

@@ -4,11 +4,7 @@ import { useSelector } from "react-redux";
 import ConversationActions from "@components/context/elements/ConversationActions.js";
 import MessageActions from "@components/context/elements/MessageActions.js";
 
-import {
-  selectContextListCategory,
-  selectContextList,
-  selectCoords,
-} from "@store/values/ContextMenu";
+import { selectContextListCategory, selectContextList, selectCoords } from "@store/values/ContextMenu";
 
 export default function ContextMenuHub() {
   const category = useSelector(selectContextListCategory);
@@ -28,7 +24,7 @@ export default function ContextMenuHub() {
 
   return (
     <div
-      className="absolute left-[10px] w-[240px] py-[10px] px-[4px] flex flex-col gap-px rounded-[12px] shadow-md bg-(--color-bg-light) z-50"
+      className="bg-bg-light border-text-dark absolute left-2.5 z-50 flex w-50 flex-col gap-px rounded-xl border p-3 shadow-md"
       style={{ top, left }}
     >
       {listView}

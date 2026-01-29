@@ -40,7 +40,7 @@ export default function ChatNameInput({ setState, setImage, closeWindow }) {
           onClick={pickFileClick}
         >
           <span
-            className="absolute w-full h-full bg-(--color-bg-light-25) rounded-[24px] opacity-0 transition-opacity duration-300 hover:opacity-100"
+            className="absolute w-full h-full bg-bg-light/25 rounded-[24px] opacity-0 transition-opacity duration-300 hover:opacity-100"
             aria-hidden="true"
           ></span>
           {localUrlImage ? (
@@ -78,13 +78,13 @@ export default function ChatNameInput({ setState, setImage, closeWindow }) {
       </div>
       <div className="mt-auto justify-end gap-[30px] flex items-center">
         <p
-          className="text-h6 text-(--color-accent-dark) !forn-light cursor-pointer"
+          className="text-h6 text-(--color-accent-500) !forn-light cursor-pointer"
           onClick={closeWindow}
         >
           Cancel
         </p>
         <p
-          className="text-h6 text-(--color-accent-dark) !forn-light cursor-pointer"
+          className="text-h6 text-(--color-accent-500) !forn-light cursor-pointer"
           onClick={confirmChatName}
         >
           Continue

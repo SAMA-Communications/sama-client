@@ -1,15 +1,13 @@
-import { InfoBox } from "../../../components/elements/InfoBox";
-
 import { getAdapters } from "../../../adapters";
+
+import { InfoBox } from "../../../components/elements/InfoBox";
 import { ConversationInfoAvatar } from "../../../components/elements/ConversationInfoAvatar";
 
 interface ConversationInputsGroupProps {
   onChageValue: (name: string, value: string) => void;
 }
 
-export const ConversationInputsGroup = ({
-  onChageValue,
-}: ConversationInputsGroupProps) => {
+export const ConversationInputsGroup = ({ onChageValue }: ConversationInputsGroupProps) => {
   const { useConversations } = getAdapters();
   const { getSelectedConversation } = useConversations();
 
@@ -17,10 +15,7 @@ export const ConversationInputsGroup = ({
 
   return (
     <div className="flex flex-row gap-[12px]">
-      <ConversationInfoAvatar
-        conversation={selectedConversation}
-        isEditDisabled={false}
-      />
+      <ConversationInfoAvatar conversation={selectedConversation} isEditDisabled={false} />
       <div className="flex grow flex-col">
         <InfoBox
           title={"Group name"}

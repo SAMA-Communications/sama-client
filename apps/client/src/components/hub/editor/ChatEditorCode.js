@@ -17,16 +17,11 @@ export default function ChatEditorCode() {
   const participants = useSelector(selectParticipantsEntities);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCid = selectedConversation._id;
-  const [editorCode, setEditorCode] = useState(
-    selectedConversation.handler_options?.content || DEFAULT_EDITOR_CODE
-  );
+  const [editorCode, setEditorCode] = useState(selectedConversation.handler_options?.content || DEFAULT_EDITOR_CODE);
 
   useEffect(() => {
     const fetchAndSyncHandler = async () => {
-      const localStorageCode =
-        await conversationHandlerService.getHandlerFromLocalStorage(
-          selectedCid
-        );
+      const localStorageCode = await conversationHandlerService.getHandlerFromLocalStorage(selectedCid);
       if (localStorageCode) {
         setEditorCode(localStorageCode);
       } else {
@@ -40,10 +35,7 @@ export default function ChatEditorCode() {
     if (!monaco) return;
 
     const updateModelValue = async () => {
-      const localStorageCode =
-        await conversationHandlerService.getHandlerFromLocalStorage(
-          selectedCid
-        );
+      const localStorageCode = await conversationHandlerService.getHandlerFromLocalStorage(selectedCid);
       const uri = monaco.Uri.parse(`file://${selectedCid}`);
       const model = monaco.editor.getModel(uri);
 
@@ -114,7 +106,7 @@ export default function ChatEditorCode() {
 
   return (
     <div className="relative flex grow-3 items-end">
-      <div className="absolute top-0 left-0 h-[calc(100%)] w-full pt-4 pb-4 !font-normal">
+      <div className="absolute top-0 left-1/2 h-full w-full -translate-x-1/2 py-3.5 font-normal lg:max-w-300">
         <Editor
           height="100%"
           theme="custom"
@@ -132,7 +124,7 @@ export default function ChatEditorCode() {
             quickSuggestions: true,
           }}
         />
-        <div className="w-full h-[25px] mt-[-25px] text-end">
+        <div className="-mt-6.25 h-6.25 w-full text-end lg:max-w-300">
           <p className="text-gray-400">Recent changes - {codeStatusView}</p>
         </div>
       </div>

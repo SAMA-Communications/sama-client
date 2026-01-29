@@ -1,6 +1,6 @@
-import { InfoBox } from "../../../components/elements/InfoBox";
-
 import { getAdapters } from "../../../adapters";
+
+import { InfoBox } from "../../../components/elements/InfoBox";
 import { UserProfileAvatar } from "../../../components/elements/UserProfileAvatar";
 
 interface UserInputsGroupProps {

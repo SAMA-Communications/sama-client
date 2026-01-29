@@ -13,12 +13,8 @@ export const ConversationItemList = ({
 }: // isHideDeletedUsers = false,
 ConversationItemListProps) => {
   const { useConversations } = getAdapters();
-  const {
-    getSelectedConversation,
-    setSelectedConversation,
-    storeNewConversations,
-    fetchConversations,
-  } = useConversations();
+  const { getSelectedConversation, setSelectedConversation, storeNewConversations, fetchConversations } =
+    useConversations();
 
   const selectedConversation = getSelectedConversation();
 
@@ -50,8 +46,6 @@ ConversationItemListProps) => {
       scrollableTarget="conversationItemsScrollable"
       loader={undefined}
     >
-      {/* <LazyMotion features={domMax}>
-        <LayoutGroup id="conversationItemListLayoutGroup"> */}
       {conversations.map((obj) => (
         <ConversationItem
           key={obj._id}
@@ -60,8 +54,6 @@ ConversationItemListProps) => {
           isSelected={selectedConversation?._id === obj._id}
         />
       ))}
-      {/* </LayoutGroup>
-      </LazyMotion> */}
     </InfiniteScroll>
   );
 };

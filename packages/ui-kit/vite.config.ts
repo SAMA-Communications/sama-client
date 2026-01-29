@@ -16,6 +16,8 @@ export default defineConfig({
       "@elements": createPath("src/components/elements"),
       "@composite": createPath("src/components/composite"),
 
+      "@adapters": createPath("src/adapters"),
+
       "@types": createPath("src/types"),
 
       "@utils": createPath("src/utils"),

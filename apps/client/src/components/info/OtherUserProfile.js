@@ -9,27 +9,14 @@ import activityService from "@services/activityService";
 import conversationService from "@services/conversationsService";
 import { useKeyDown } from "@hooks/tools/useKeyDown";
 
-import {
-  CustomScrollBar,
-  InfoBox,
-  DynamicAvatar,
-} from "@sama-communications.ui-kit";
+import { CustomScrollBar, InfoBox, DynamicAvatar } from "@sama-communications.ui-kit";
 
-import {
-  addUser,
-  selectParticipantsEntities,
-} from "@store/values/Participants.js";
+import { addUser, selectParticipantsEntities } from "@store/values/Participants.js";
 import { getIsMobileView } from "@store/values/IsMobileView";
 
 import { extractUserIdFromUrl, getUserFullName } from "@utils/UserUtils.js";
-import {
-  navigateTo,
-  removeAndNavigateLastSection,
-} from "@utils/NavigationUtils.js";
-import {
-  showOtherUserProfileContainer,
-  showOtherUserProfileContent,
-} from "@utils/AnimationUtils.js";
+import { navigateTo, removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
+import { showOtherUserProfileContainer, showOtherUserProfileContent } from "@utils/AnimationUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/constants.js";
 
@@ -71,18 +58,13 @@ export default function OtherUserProfile() {
   }, [pathname, hash, search, participants]);
 
   useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
-  useKeyDown(KEY_CODES.ESCAPE, () =>
-    removeAndNavigateLastSection(pathname + hash, "/profile")
-  );
+  useKeyDown(KEY_CODES.ESCAPE, () => removeAndNavigateLastSection(pathname + hash, "/profile"));
 
-  const viewStatusActivity = useMemo(
-    () => activityService.getUserLastActivity(userId),
-    [userId, participants]
-  );
+  const viewStatusActivity = useMemo(() => activityService.getUserLastActivity(userId), [userId, participants]);
 
   return (
     <m.div
-      className="absolute top-[0px] left-[0px] p-[30px] w-dvw h-dvh flex flex-col justify-start items-center bg-(--color-black)/50 z-[200] max-md:p-[0px] max-md:bg-(--color-bg-dark) overflow-hidden"
+      className="absolute top-[0px] left-[0px] z-[200] flex h-dvh w-dvw flex-col items-center justify-start overflow-hidden bg-(--color-black)/50 p-[30px] max-md:bg-(--color-bg-dark) max-md:p-[0px]"
       variants={showOtherUserProfileContainer(isMobileView)}
       initial="hidden"
       animate="visible"
@@ -90,7 +72,7 @@ export default function OtherUserProfile() {
       transition="transition"
     >
       <m.div
-        className="w-[400px] h-full mr-[15px] max-md:w-dvw max-md:h-dvh max-md:mr-[0px]"
+        className="mr-[15px] h-full w-[400px] max-md:mr-[0px] max-md:h-dvh max-md:w-dvw"
         variants={showOtherUserProfileContent(isMobileView)}
         initial="hidden"
         animate="visible"
@@ -98,10 +80,10 @@ export default function OtherUserProfile() {
         transition="transition"
       >
         <CustomScrollBar childrenClassName="py-[20px] flex flex-col gap-[15px] max-md:py-[0px]">
-          <div className="relative flex flex-col justify-center items-center py-[40px] gap-[20px] rounded-[32px] bg-(--color-accent-light) max-md:rounded-t-[0px]">
+          <div className="relative flex flex-col items-center justify-center gap-[20px] rounded-[32px] bg-(--color-accent-100) py-[40px] max-md:rounded-t-[0px]">
             {isMobileView ? (
               <BackBtn
-                className="absolute right-[30px] top-[30px] cursor-pointer max-md:left-[4svw] max-md:top-[34px]"
+                className="absolute top-[30px] right-[30px] cursor-pointer max-md:top-[34px] max-md:left-[4svw]"
                 onClick={() => removeAndNavigateLastSection(pathname + hash)}
               />
             ) : (
@@ -110,7 +92,7 @@ export default function OtherUserProfile() {
                 onClick={() => removeAndNavigateLastSection(pathname + hash)}
               />
             )}
-            <div className="relative w-[160px] h-[160px] rounded-[24px] bg-(--color-bg-light) flex justify-center items-center cursor-pointer overflow-hidden">
+            <div className="relative flex h-[160px] w-[160px] cursor-pointer items-center justify-center overflow-hidden rounded-[24px] bg-(--color-bg-light)">
               <DynamicAvatar
                 avatarUrl={userObject.avatar_url}
                 avatarBlurHash={userObject.avatar_object?.file_blur_hash}
@@ -119,18 +101,14 @@ export default function OtherUserProfile() {
               />
             </div>
             <div className="w-[90%]">
-              <p className="mt-[-5px] text-center !font-medium text-h3 text-black overflow-hidden text-ellipsis whitespace-nowrap">
+              <p className="mt-[-5px] overflow-hidden text-center text-2xl font-medium text-ellipsis whitespace-nowrap text-black">
                 {getUserFullName(userObject)}
               </p>
-              <p className="mt-[10px] mb-[-10px] text-center text-h6">
-                {viewStatusActivity}
-              </p>
+              <p className="text-h6 mt-[10px] mb-[-10px] text-center">{viewStatusActivity}</p>
             </div>
           </div>
-          <div className="py-[30px] px-[20px] flex flex-col rounded-[32px] bg-(--color-bg-light) max-md:flex-1 max-md:rounded-b-[0px]">
-            <p className="text-center !font-normal text-h5 text-(--color-text-dark) mb-[10px]">
-              Personal information
-            </p>
+          <div className="flex flex-col rounded-[32px] bg-(--color-bg-light) px-[20px] py-[30px] max-md:flex-1 max-md:rounded-b-[0px]">
+            <p className="mb-[10px] text-center text-xl !font-normal text-(--color-text-dark)">Personal information</p>
             <InfoBox
               modifier={"!cursor-default"}
               iconType={"login"}
@@ -152,14 +130,12 @@ export default function OtherUserProfile() {
               value={email}
               hideIfNull={true}
             />
-            <div className="flex items-center gap-[10px] px-[10px] cursor-pointer mt-[10px]">
+            <div className="mt-[10px] flex cursor-pointer items-center gap-[10px] px-[10px]">
               <LinkTo />
               <p
-                className="text-(--color-accent-dark) text-h6"
+                className="text-h6 text-(--color-accent-500)"
                 onClick={async () => {
-                  const chatId = await conversationService.createPrivateChat(
-                    userId
-                  );
+                  const chatId = await conversationService.createPrivateChat(userId);
                   navigateTo(`/#${chatId}`);
                 }}
               >

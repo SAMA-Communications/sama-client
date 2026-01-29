@@ -1,4 +1,3 @@
-import * as m from "motion/react-m";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
@@ -8,7 +7,7 @@ import { ConversationItemList } from "@sama-communications.ui-kit";
 import SearchBlock from "@components/search/SearchBlock";
 import SearchInput from "@components/static/SearchInput";
 
-import { CustomScrollBar, MenuButtons } from "@sama-communications.ui-kit";
+import { CustomScrollBar } from "@sama-communications.ui-kit";
 
 import SChatList from "@skeletons/hub/SChatList";
 
@@ -17,8 +16,11 @@ import { addPrefix } from "@utils/NavigationUtils.js";
 import { getDisplayableConversations } from "@store/values/Conversations.js";
 import { getIsMobileView } from "@store/values/IsMobileView";
 
+import { Settings, MessageCirclePlus } from "lucide-react";
+
 export default function ChatList() {
   const { pathname, hash } = useLocation();
+  const currentPath = pathname + hash;
 
   const [inputText, setInputText] = useState(null);
 
@@ -32,52 +34,36 @@ export default function ChatList() {
     }
 
     if (!filteredConversations.length) {
-      return (
-        <p className="mt-[10px] text-center text-[23px] text-(--color-text-light)">
-          No chats are available.
-        </p>
-      );
+      return <p className="text-text-dark text-center text-lg">No chats are available.</p>;
     }
 
-    return (
-      <ConversationItemList
-        id="conversationItemsScrollable"
-        conversations={filteredConversations}
-      />
-    );
+    return <ConversationItemList id="conversationItemsScrollable" conversations={filteredConversations} />;
   }, [filteredConversations]);
 
   return (
-    <m.div
-      key="chaList"
-      className="flex flex-col relative gap-[10px] justify-start sm:items-center max-sm:items-end max-xl:flex-1 xl:w-[400px] md:max-xl:mb-[20px]"
-      initial={{ scale: 1, opacity: 0 }}
-      animate={{
-        scale: [1.02, 1],
-        y: [3, 0],
-        opacity: 1,
-      }}
-      exit={{
-        opacity: [1, 0],
-        x: [0, 15],
-        transition: { duration: 0.5 },
-      }}
-      transition={{ delay: 0.3, duration: 0.5 }}
-    >
-      {isMobileView ? (
-        <MenuButtons
-          onProfileClick={() => addPrefix(pathname + hash, "/profile")}
-          onCreateClick={() => addPrefix(pathname + hash, "/create")}
-        />
-      ) : null}
-      <SearchInput
-        customClassName="sm:max-w-full max-sm:max-w-[calc(100%-60px)]"
-        shadowText={"Search"}
-        setState={setInputText}
-      />
+    <section key="chaList" className="relative overflow-hidden xl:w-100">
+      <div
+        className="from-bg-light/90 absolute top-0 left-0 z-1 h-17 w-full bg-linear-to-b from-50% to-transparent"
+        style={{ pointerEvents: "none" }}
+      ></div>
+      <div className="absolute top-3.5 left-0 z-2 flex w-full items-center gap-2.5 px-3.5">
+        <button
+          onClick={() => addPrefix(currentPath, "/profile")}
+          className="border-text-dark cursor-pointer rounded-xl border p-2"
+        >
+          <Settings size={18} />
+        </button>
+        <SearchInput customClassName="flex-1" shadowText={"Search"} setState={setInputText} />
+        <button
+          onClick={() => addPrefix(pathname + hash, "/create")}
+          className="border-text-dark cursor-pointer rounded-xl border p-2"
+        >
+          <MessageCirclePlus size={18} />
+        </button>
+      </div>
       {inputText ? (
         <SearchBlock
-          customClassName="w-full md:max-xl:!w-[400px] max-xl:px-[2svw] max-xl:pt-[2swh] max-xl:pb-[2px]"
+          customClassName="w-full md:max-xl:!w-[400px] max-xl:px-[2svw]  max-xl:pt-[2swh] max-xl:pb-[2px]"
           searchText={inputText}
           isClearInputText={true}
           clearInputText={() => setInputText(null)}
@@ -85,18 +71,15 @@ export default function ChatList() {
       ) : (
         <CustomScrollBar
           customId={"conversationItemsScrollable"}
-          customClassName="rounded-[8px] max-md:rounded-t-[16px] max-md:rounded-b-[0px] max-xl:rounded-[32px]"
-          childrenClassName="flex flex-col gap-[5px] max-md:py-[0px] "
+          customClassName="cut-scrollbar-height rounded-3xl h-[calc(100%+9px)]!"
+          childrenClassName="pt-15 pb-1.5"
           onScrollStop={(container) =>
-            localStorage.setItem(
-              `scroll_pos_conversationItemsScrollable`,
-              container.current.view.scrollTop
-            )
+            localStorage.setItem(`scroll_pos_conversationItemsScrollable`, container.current.view.scrollTop)
           }
         >
           {chatsList}
         </CustomScrollBar>
       )}
-    </m.div>
+    </section>
   );
 }

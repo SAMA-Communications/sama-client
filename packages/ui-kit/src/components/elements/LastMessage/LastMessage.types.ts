@@ -1,4 +1,4 @@
-import { Message } from "types/samaWssModels";
+import { Message } from "../../../types/samaWssModels";
 
 export interface LastMessageProps {
   message?: Message;
@@ -6,6 +6,7 @@ export interface LastMessageProps {
     text?: string;
     replied_mid?: string;
   };
+  isSelected: boolean;
   countOfUnreadMessages: number;
   isShowUserName?: boolean;
 }

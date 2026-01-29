@@ -2,29 +2,18 @@ import { UserProfileProps } from "./UserProfile.types";
 
 import { getAdapters } from "../../../adapters";
 
-import { Pencil, RotateCcwKey, LogOut, Trash, X, Undo2 } from "lucide-react";
-
-import { CustomScrollBar } from "./../../CustomScrollBar";
+import { CustomScrollBar } from "../CustomScrollBar";
 import { InfoBox } from "../../elements/InfoBox";
-
 import { UserProfileAvatar } from "../../../components/elements/UserProfileAvatar";
 
 // import { useKeyDown } from "../../../utils/tools/useKeyDown";
 
-export const UserProfile = ({
-  user,
-  isMobile,
-  shareRef,
-  onLogout,
-  triggerExitEvent,
-}: UserProfileProps) => {
+import { Pencil, RotateCcwKey, LogOut, Trash, ChevronLeft } from "lucide-react";
+
+export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
   const { useParticipants, useHistory } = getAdapters();
   const { updateCurrentUserPassword, deleteCurrentUser } = useParticipants();
-  const {
-    openEditUserProfileWindow,
-    closeCurrentUserProfile,
-    navigateToAuthPage,
-  } = useHistory();
+  const { openEditUserProfileWindow, closeCurrentUserProfile, navigateToAuthPage } = useHistory();
 
   const { login, email, phone, first_name, last_name } = user;
 
@@ -33,81 +22,55 @@ export const UserProfile = ({
   // useKeyDown(KEY_CODES.ESCAPE, closeCurrentUserProfile);
 
   return (
-    <section
-      ref={shareRef}
-      className="h-full overflow-hidden max-md:h-dvh max-md:!w-dvw md:mr-[15px] md:w-[400px]"
-    >
-      <CustomScrollBar childrenClassName="py-[20px] flex flex-col gap-[15px] max-md:py-[0px]">
-        <div className="relative flex flex-col items-center justify-center gap-[12px] rounded-[32px] bg-(--color-accent-light) p-[30px] max-md:rounded-t-[0px]">
-          {isMobile ? (
-            <Undo2
-              strokeWidth={1}
-              size={25}
-              className="absolute top-[30px] right-[30px] cursor-pointer max-md:top-[34px] max-md:left-[4svw]"
-              onClick={closeCurrentUserProfile}
-            />
-          ) : (
-            <X
-              strokeWidth={1}
-              size={25}
-              className="absolute top-[30px] right-[30px] cursor-pointer"
-              onClick={closeCurrentUserProfile}
-            />
-          )}
-
+    <section className="ui:h-full ui:w-full ui:gap-2.75 ui:p-3.5 ui:md:w-100">
+      <CustomScrollBar childrenClassName="ui:flex ui:flex-col">
+        <div className="ui:relative ui:flex ui:flex-col ui:items-center ui:justify-center ui:gap-2.75">
+          <button className="ui:mb-1.5 ui:cursor-pointer ui:self-start ui:rounded-xl ui:border ui:border-text-dark ui:p-2">
+            <ChevronLeft size={18} color="var(--color-text-dark)" onClick={closeCurrentUserProfile} />
+          </button>
           <UserProfileAvatar />
-          <div className="flex w-[90%] flex-nowrap items-center justify-center gap-[12px] overflow-hidden !font-normal text-ellipsis whitespace-nowrap">
-            {first_name ? (
-              <p className="text-h4 !font-normal text-black">{first_name}</p>
-            ) : null}
+          <div className="ui:flex ui:w-4/5 ui:flex-nowrap ui:items-center ui:justify-center ui:gap-2.75">
+            {first_name ? <p className="ui:text-2xl">{first_name}</p> : null}
             {last_name ? (
-              <p className="text-h4 !font-normal text-black">{last_name}</p>
+              <p className="ui:overflow-hidden ui:text-2xl ui:text-ellipsis ui:whitespace-nowrap">{last_name}</p>
             ) : null}
           </div>
-          <div
-            className="text-h6 flex w-full cursor-pointer items-center justify-center gap-[8px] rounded-[12px] bg-(--color-accent-dark) py-[6px] !font-normal text-white"
+          <button
+            className="ui:mt-2.75 ui:flex ui:w-full ui:cursor-pointer ui:items-center ui:justify-center ui:gap-2.75 ui:rounded-xl ui:border ui:border-accent-500 ui:p-2 ui:text-accent-500"
             onClick={openEditUserProfileWindow}
           >
-            Edit Profile <Pencil strokeWidth={1} size={18} color="white" />
-          </div>
+            Edit Profile <Pencil size={18} color="var(--color-accent-500)" />
+          </button>
         </div>
-        <div className="flex flex-1 flex-col rounded-[32px] bg-(--color-bg-light) px-[20px] py-[30px] max-md:flex-1 max-md:rounded-b-[0px]">
-          <p className="text-h5 mb-[10px] !font-normal text-(--color-text-dark)">
-            Personal information
-          </p>
+        <hr className="ui:mt-5 ui:mb-2.5 ui:h-0.5 ui:text-text-dark/40" />
+        <div className="ui:flex ui:flex-1 ui:flex-col ui:gap-2.75">
+          <p className="ui:mb-2.75 ui:text-xl">Personal information</p>
+          <InfoBox title="Username" value={login} iconType="login" />
           <InfoBox
-            title="Username"
-            value={login}
-            iconType="login"
-            isEnableToEdit={false}
-          />
-          <InfoBox
-            title="Phone"
+            title="Phone number"
             value={phone}
             iconType="phone"
             placeholder={"Enter your phone number"}
             onClick={openEditUserProfileWindow}
+            isEnableToEdit={true}
           />
           <InfoBox
-            title="Email"
+            title="Email address"
             value={email}
             iconType="email"
             placeholder={"Enter your email address"}
             onClick={openEditUserProfileWindow}
+            isEnableToEdit={true}
           />
 
-          <hr style={{ borderColor: "lightgray", marginBlock: 20 }} />
-          <p className="text-h5 mb-[10px] !font-normal text-(--color-text-dark)">
-            Settings
-          </p>
+          <hr className="ui:mt-5 ui:mb-2.5 ui:h-0.5 ui:text-text-dark/40" />
+          <p className="ui:mb-2.75 ui:text-xl">Settings</p>
           {isCurrentUserCantLeave ? null : (
-            <div className="flex cursor-pointer items-center gap-[10px] px-[10px]">
-              <RotateCcwKey strokeWidth={1} size={18} />
+            <button className="ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75 ui:text-text-dark">
+              <RotateCcwKey size={18} color="var(--color-text-dark)" />
               <p
                 onClick={() => {
-                  const currentPassword = window.prompt(
-                    "Enter your current password:",
-                  );
+                  const currentPassword = window.prompt("Enter your current password:");
                   if (!currentPassword) return;
 
                   const newPassword = window.prompt("Enter a new password:");
@@ -116,41 +79,40 @@ export const UserProfile = ({
                   updateCurrentUserPassword(currentPassword, newPassword);
                 }}
               >
-                Change password...
+                Change password
               </p>
-            </div>
+            </button>
           )}
-          {isMobile ? (
-            <div className="mt-[30px] flex cursor-pointer items-center gap-[10px] px-[10px] max-md:mt-[20px]">
-              <LogOut strokeWidth={1} size={18} />
-              <p
-                onClick={() => {
-                  navigateToAuthPage();
-                  triggerExitEvent();
-                  onLogout();
-                }}
-              >
-                Log out
-              </p>
-            </div>
-          ) : null}
           {isCurrentUserCantLeave ? null : (
-            <div className="mt-auto flex cursor-pointer items-center gap-[10px] px-[10px]">
-              <Trash strokeWidth={1} size={18} color="var(--color-red)" />
+            <button className="ui:mt-2.75 ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75">
+              <Trash size={18} color="var(--color-danger)" />
               <p
-                className="text-(--color-red)"
+                className="ui:text-danger"
                 onClick={async () => {
                   const isSuccess = await deleteCurrentUser();
                   if (isSuccess) {
                     navigateToAuthPage();
-                    triggerExitEvent();
                   }
                 }}
               >
                 Delete account
               </p>
-            </div>
+            </button>
           )}
+
+          <hr className="ui:mt-auto ui:mb-2.5 ui:h-0.5 ui:text-text-dark/40" />
+          <button className="ui:mt-2.75 ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75 ui:rounded-xl ui:border ui:border-accent-500 ui:p-2">
+            <LogOut size={18} color="var(--color-accent-500)" />
+            <p
+              className="ui:text-accent-500"
+              onClick={() => {
+                navigateToAuthPage();
+                onLogout();
+              }}
+            >
+              Log out
+            </p>
+          </button>
         </div>
       </CustomScrollBar>
     </section>

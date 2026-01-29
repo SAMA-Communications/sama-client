@@ -20,17 +20,9 @@ import { extractFilesFromClipboard } from "@utils/MediaUtils.js";
 import { isMobile } from "@utils/GeneralUtils.js";
 import { KEY_CODES, TYPING_DURATION_MS } from "@utils/constants.js";
 
-import Attach from "@icons/options/Attach.svg?react";
-import Send from "@icons/options/Send.svg?react";
-import Confirm from "@icons/options/ConfirmAccent.svg?react";
+import { Paperclip, Send, Check } from "lucide-react";
 
-export default function MessageInput({
-  inputTextRef,
-  onSubmitFunc,
-  isBlockedConv,
-  isEditAction,
-  isSending = false,
-}) {
+export default function MessageInput({ inputTextRef, onSubmitFunc, isBlockedConv, isEditAction, isSending = false }) {
   const location = useLocation();
 
   const lastTypingRequestTime = useRef(null);
@@ -41,10 +33,7 @@ export default function MessageInput({
     const text = e.target.value;
     if (text.length > 0) {
       const typingDuration = TYPING_DURATION_MS;
-      if (
-        Date.now() - lastTypingRequestTime.current > typingDuration - 1000 ||
-        !lastTypingRequestTime.current
-      ) {
+      if (Date.now() - lastTypingRequestTime.current > typingDuration - 1000 || !lastTypingRequestTime.current) {
         api.sendTypingStatus({ cid: selectedConversationId });
         lastTypingRequestTime.current = Date.now();
       }
@@ -60,10 +49,7 @@ export default function MessageInput({
   };
 
   const handeOnKeyDown = (e) => {
-    if (
-      e.keyCode === KEY_CODES.ENTER &&
-      ((!isMobile && !e.shiftKey) || (isMobile && e.shiftKey))
-    ) {
+    if (e.keyCode === KEY_CODES.ENTER && ((!isMobile && !e.shiftKey) || (isMobile && e.shiftKey))) {
       e.preventDefault();
       onSubmitFunc();
     }
@@ -74,20 +60,16 @@ export default function MessageInput({
     if (inputText) {
       draftService.saveDraft(selectedConversationId, { text: inputText });
       inputTextRef.current.value = "";
-      inputTextRef.current.style.height = `55px`;
+      inputTextRef.current.style.height = `28px`;
     }
   };
 
   const syncInputText = () => {
-    const message = location.hash.includes("/attach")
-      ? ""
-      : draftService.getDraftMessage(selectedConversationId);
+    const message = location.hash.includes("/attach") ? "" : draftService.getDraftMessage(selectedConversationId);
     if (message && !isEditAction) {
       if (inputTextRef.current) {
         inputTextRef.current.value = message || "";
-        inputTextRef.current.style.height = `${calcInputHeight(
-          message || ""
-        )}px`;
+        inputTextRef.current.style.height = `${calcInputHeight(message || "")}px`;
         inputTextRef.current.scrollTop = inputTextRef.current.scrollHeight;
       }
     }
@@ -133,68 +115,49 @@ export default function MessageInput({
     };
   }, [selectedConversationId, location]);
 
-  const inputsView = useMemo(() => {
-    if (isBlockedConv) {
-      return (
-        <p className="self-center ml-[15px] mr-[15px]">
-          The user you are currently chatting with has deleted their account.
-          You can no longer continue the chat.
-        </p>
-      );
-    }
-
-    return (
-      <>
-        <m.span whileTap={{ scale: 0.8 }}>
-          <Attach
-            className="w-[55px] h-[45px] pl-[10px] pb-[12px] cursor-pointer"
-            onClick={
-              isSending
-                ? null
-                : () => {
-                    addSuffix(location.pathname + location.hash, "/attach");
-                    storeInputText();
-                  }
-            }
-          />
-        </m.span>
+  return isBlockedConv ? (
+    <div className="border-text-dark flex h-11.5 grow items-center overflow-hidden rounded-xl border p-2">
+      <p className="text-text-dark text-base">
+        The user you are currently chatting with has deleted their account. You can no longer continue the chat.
+      </p>
+    </div>
+  ) : (
+    <div className="flex w-full gap-2.5 overflow-hidden">
+      <div className="border-text-dark h-max self-end rounded-xl border p-2">
+        <Paperclip
+          size={28}
+          color="var(--color-text-dark)"
+          className="cursor-pointer self-center"
+          onClick={
+            isSending
+              ? null
+              : () => {
+                  addSuffix(location.pathname + location.hash, "/attach");
+                  storeInputText();
+                }
+          }
+        />
+      </div>
+      <div className="border-text-dark flex grow rounded-xl border p-2">
         <TextAreaInput
           inputRef={inputTextRef}
-          customClassName="max-h-full grow py-[12px] text-black !font-light  resize-none max-xl:disabled:!p-[9px] placeholder:text-(--color-text-dark) placeholder:text-p [&::-webkit-scrollbar]:hidden"
+          customClassName="max-h-full grow font-light text-base resize-none max-xl:disabled:p-2.25 placeholder:text-base [&::-webkit-scrollbar]:hidden"
           handleInput={handleInput}
           handeOnKeyDown={handeOnKeyDown}
           isDisabled={isSending}
           isMobile={isMobile}
           placeholder={"Type your message..."}
         />
+      </div>
+      <div className="border-text-dark h-max self-end rounded-xl border p-2">
         {isSending ? (
-          <OvalLoader
-            width={35}
-            height={35}
-            wrapperClassName="mr-[10px] px-[8px] self-center"
-          />
+          <OvalLoader width={28} height={28} />
         ) : isEditAction ? (
-          <m.span whileTap={{ translateX: 10, scale: 0.9 }}>
-            <Confirm
-              className="mr-[15px] px-[8px] !w-[50px] !h-[50px] cursor-pointer"
-              onClick={onSubmitFunc}
-            />
-          </m.span>
+          <Check size={28} color="var(--color-text-dark)" className="cursor-pointer" onClick={onSubmitFunc} />
         ) : (
-          <m.span whileTap={{ translateX: 10, scale: 0.9 }}>
-            <Send
-              className="mr-[10px] px-[8px] !w-[55px] !h-[55px] cursor-pointer"
-              onClick={onSubmitFunc}
-            />
-          </m.span>
+          <Send size={28} color="var(--color-text-dark)" className="cursor-pointer" onClick={onSubmitFunc} />
         )}
-      </>
-    );
-  }, [location, isBlockedConv, isSending, onSubmitFunc]);
-
-  return (
-    <div className="min-h-[60px] py-[3px] w-full flex items-end gap-[5px] rounded-[16px] bg-(--color-hover-light) overflow-hidden z-5">
-      {inputsView}
+      </div>
     </div>
   );
 }

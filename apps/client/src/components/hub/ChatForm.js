@@ -1,11 +1,5 @@
 import * as m from "motion/react-m";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -28,10 +22,7 @@ import {
   getConverastionById,
   selectConversationsEntities,
 } from "@store/values/Conversations";
-import {
-  clearSelectedConversation,
-  setSelectedConversation,
-} from "@store/values/SelectedConversation";
+import { clearSelectedConversation, setSelectedConversation } from "@store/values/SelectedConversation";
 import { addExternalProps, setClicked } from "@store/values/ContextMenu";
 import { getIsMobileView } from "@store/values/IsMobileView.js";
 
@@ -56,8 +47,7 @@ export default function ChatForm() {
   const isOwner = currentUserId === conversationOwner;
 
   const [currentTab, setCurrentTab] = useState(CHAT_CONTENT_TABS.MESSAGES);
-  const isEnableProgrammableChat =
-    import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true" && !isMobileView;
+  const isEnableProgrammableChat = import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true" && !isMobileView;
 
   const closeForm = (e) => {
     const { pathname, hash } = location;
@@ -121,10 +111,7 @@ export default function ChatForm() {
 
   useKeyDown(KEY_CODES.ESCAPE, closeForm);
 
-  useLayoutEffect(
-    () => setCurrentTab(CHAT_CONTENT_TABS.MESSAGES),
-    [selectedCID]
-  );
+  useLayoutEffect(() => setCurrentTab(CHAT_CONTENT_TABS.MESSAGES), [selectedCID]);
 
   const formComponent = useMemo(() => {
     if (!selectedCID) return null;
@@ -140,40 +127,18 @@ export default function ChatForm() {
   }, [selectedCID, currentTab]);
 
   return (
-    <m.div
-      key="chatForm"
-      id="chatFormContainer"
-      className={`relative max-xl:max-w-full ${
-        location.pathname.includes("/profile")
-          ? "xl:max-w-full"
-          : "xl:max-w-[calc(100%-420px)]"
-      } flex flex-col flex-grow md:max-xl:p-[10px] md:rounded-[32px]`}
-      // layout
-      initial={{ scale: 1, opacity: 0 }}
-      animate={{ scale: [1.02, 1], y: [3, 0], opacity: [0, 1] }}
-      transition={{ delay: 0.3, duration: 0.5 }}
-    >
+    <section key="chatForm" id="chatFormContainer" className={`relative flex grow flex-col gap-1.25 rounded-3xl`}>
       {selectedCID ? (
         <>
-          <ChatFormHeader closeFormFunc={closeForm} />
-          {isGroup && isOwner && isEnableProgrammableChat ? (
-            <ChatFormNavigation
-              currentTab={currentTab}
-              changeTabFunc={setCurrentTab}
-            />
-          ) : null}
+          <ChatFormHeader closeFormFunc={closeForm} currentTab={currentTab} changeTabFunc={setCurrentTab} />
+          {/* {isGroup && isOwner && isEnableProgrammableChat ? null : null} */}
           {formComponent}
         </>
       ) : (
-        <m.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="mt-auto mb-auto text-center font-light text-[58px] !text-(--color-text-light)"
-        >
+        <p className="text-text-dark my-auto self-center text-4xl font-light">
           Select a conversation to start chatting
-        </m.p>
+        </p>
       )}
-    </m.div>
+    </section>
   );
 }

@@ -12,25 +12,20 @@ import InformativeMessage from "@components/hub/elements/InformativeMessage";
 import ChatMessage from "@components/hub/elements/ChatMessage";
 
 import { selectActiveConversationMessagesEntities } from "@store/values/Messages";
-import {
-  addUsers,
-  selectParticipantsEntities,
-} from "@store/values/Participants";
+import { addUsers, selectParticipantsEntities } from "@store/values/Participants";
 import { getConverastionById } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { getIsMobileView } from "@store/values/IsMobileView.js";
 
 import { upsertMidsInPath } from "@utils/NavigationUtils.js";
 
-import ArrowBottom from "@icons/options/ArrowBottom.svg?react";
+import { ChevronDown } from "lucide-react";
 
 export default function MessagesList({ scrollRef: scrollableContainer }) {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
   const isMobile = useSelector(getIsMobileView);
-
-  const timer = useRef(null);
 
   const [isScrolling, setIsScrolling] = useState(true);
   const [isScrollToBottomVisible, setIsScrollToBottomVisible] = useState(false);
@@ -47,7 +42,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
       Object.entries(messagesEntites)
         .filter(([key]) => key !== "not_visible_messages")
         .map(([, value]) => value),
-    [messagesEntites]
+    [messagesEntites],
   );
   const [messagesFetchFunc, setMessagesFetchFunc] = useState({});
   const [forwardedMids, setForwardedMids] = useState([]);
@@ -66,9 +61,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     });
 
     if (usersToUpdate.size) {
-      api
-        .getUsersByIds({ ids: [...usersToUpdate] })
-        .then((users) => dispatch(addUsers(users)));
+      api.getUsersByIds({ ids: [...usersToUpdate] }).then((users) => dispatch(addUsers(users)));
     }
   };
 
@@ -84,21 +77,16 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
             .split(",")
             .map((id) => id.trim())
             .filter(Boolean)
-        : []
+        : [],
     );
 
     if (!scrollableContainer.current) return;
     const container = scrollableContainer.current;
-    const savedScrollFromBottom = localStorage.getItem(
-      `scroll_pos_${selectedCID}`
-    );
+    const savedScrollFromBottom = localStorage.getItem(`scroll_pos_${selectedCID}`);
 
     const restoreScrollPosition = () => {
       if (savedScrollFromBottom !== null) {
-        container.scrollTop =
-          container.scrollHeight -
-          container.clientHeight -
-          Number(savedScrollFromBottom);
+        container.scrollTop = container.scrollHeight - container.clientHeight - Number(savedScrollFromBottom);
       } else {
         container.scrollTop = container.scrollHeight;
       }
@@ -136,35 +124,25 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     });
 
     if (newMessages.length) {
-      container.scrollTop =
-        prevScrollTop + (container.scrollHeight - prevScrollHeight);
+      container.scrollTop = prevScrollTop + (container.scrollHeight - prevScrollHeight);
     }
 
     if (!messagesIds?.length) return;
 
-    const lastMessage = isInsertBefore
-      ? newMessages[newMessages.length - 1]
-      : newMessages[0];
+    const lastMessage = isInsertBefore ? newMessages[newMessages.length - 1] : newMessages[0];
     const lastMessageIndex = messagesIds.indexOf(lastMessage._id);
 
-    const newAnchorMessageId = isInsertBefore
-      ? messagesIds[lastMessageIndex - 1]
-      : messagesIds[lastMessageIndex + 1];
+    const newAnchorMessageId = isInsertBefore ? messagesIds[lastMessageIndex - 1] : messagesIds[lastMessageIndex + 1];
     const newAnchorMessage = messagesEntites[newAnchorMessageId];
 
-    if (
-      !newAnchorMessage ||
-      newMessages.length < +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD
-    ) {
+    if (!newAnchorMessage || newMessages.length < +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD) {
       newAnchorMessage && removeFetchFuncFromMessage(newAnchorMessage);
       anchorMid === lastMessage._id && removeFetchFuncFromMessage(lastMessage);
       return;
     }
 
     let gt, lt;
-    isInsertBefore
-      ? (gt = newAnchorMessage.created_at)
-      : (lt = newAnchorMessage.created_at);
+    isInsertBefore ? (gt = newAnchorMessage.created_at) : (lt = newAnchorMessage.created_at);
 
     addFetchFuncToMessage(lastMessage, timeParam, gt, lt);
   };
@@ -176,10 +154,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     setMessagesFetchFunc((prev) => ({
       ...prev,
       [lastMessage._id]: () => {
-        fetchOnViewMessage(
-          { updated_at: { lt: lastMessage.created_at } },
-          lastMessage._id
-        );
+        fetchOnViewMessage({ updated_at: { lt: lastMessage.created_at } }, lastMessage._id);
         setMessagesFetchFunc((prev2) => {
           const { [lastMessage._id]: _, ...rest } = prev2;
           return rest;
@@ -207,7 +182,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
               ...(gt ? { gt } : {}),
             },
           },
-          message._id
+          message._id,
         );
         setMessagesFetchFunc((prev2) => {
           const { [message._id]: _, ...rest } = prev2;
@@ -227,9 +202,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     const scrollToMessage = (message) => {
       const container = scrollableContainer.current;
       if (container) {
-        const messageElement = container.querySelector(
-          `[data-message-id="${message._id}"]`
-        );
+        const messageElement = container.querySelector(`[data-message-id="${message._id}"]`);
         if (messageElement) {
           messageElement.scrollIntoView({ block: "center" });
           setIsScrolling(false);
@@ -258,16 +231,10 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     const newMessages = [...prevMessages, rMessage, ...nextMessages];
 
     updateParticipantsFromMessages(newMessages);
-    const { messagesIds: newMessagesIds } =
-      await messagesService.processMessages(newMessages, {});
+    const { messagesIds: newMessagesIds } = await messagesService.processMessages(newMessages, {});
 
     if (newMessages.length) {
-      const syncFetchFunc = (
-        message,
-        timeParam,
-        newMessages,
-        newMessagesIds
-      ) => {
+      const syncFetchFunc = (message, timeParam, newMessages, newMessagesIds) => {
         const isInsertBefore = timeParam === "lt";
         const lastMessageIndex = newMessagesIds.indexOf(message._id);
 
@@ -276,18 +243,13 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
           : newMessagesIds[lastMessageIndex + 1];
         const newAnchorMessage = messagesEntites[newAnchorMessageId];
 
-        if (
-          !newAnchorMessage ||
-          newMessages.length < +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD
-        ) {
+        if (!newAnchorMessage || newMessages.length < +import.meta.env.VITE_MESSAGES_COUNT_TO_PRELOAD) {
           newAnchorMessage && removeFetchFuncFromMessage(newAnchorMessage);
           return;
         }
 
         let gt, lt;
-        isInsertBefore
-          ? (gt = newAnchorMessage.created_at)
-          : (lt = newAnchorMessage.created_at);
+        isInsertBefore ? (gt = newAnchorMessage.created_at) : (lt = newAnchorMessage.created_at);
 
         addFetchFuncToMessage(message, timeParam, gt, lt);
       };
@@ -317,40 +279,23 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
 
       const key = old_id || _id;
 
-      const repliedMessage =
-        messagesEntites[replied_message_id] ||
-        additionalMessages?.[replied_message_id];
+      const repliedMessage = messagesEntites[replied_message_id] || additionalMessages?.[replied_message_id];
 
       const isPrevMesssageUsers = i > 0 ? !messages[i - 1].x?.type : false;
-      const isPrevMesssageYours =
-        i > 0
-          ? messages[i - 1].from === messages[i].from &&
-            !messages[i - 1].x?.type
-          : false;
+      const isPrevMesssageYours = i > 0 ? messages[i - 1].from === messages[i].from && !messages[i - 1].x?.type : false;
       const isNextMessageYours =
-        i < messages.length - 1
-          ? messages[i].from === messages[i + 1].from &&
-            !messages[i + 1].x?.type
-          : false;
+        i < messages.length - 1 ? messages[i].from === messages[i + 1].from && !messages[i + 1].x?.type : false;
       const isSelected = forwardedMids.includes(_id);
 
       return x?.type ? (
-        <InformativeMessage
-          key={key}
-          id={key}
-          params={x}
-          text={body}
-          isPrevMesssageUsers={isPrevMesssageUsers}
-        />
+        <InformativeMessage key={key} id={key} params={x} text={body} isNextMesssageUsers={isNextMessageYours} />
       ) : (
         <ChatMessage
           key={key}
           id={key}
           message={msg}
           onViewFunc={isScrolling ? null : messagesFetchFunc[msg._id]}
-          onSelectClick={
-            !isSelected && forwardedMids.length < 20 ? selectMessageFunc : null
-          }
+          onSelectClick={!isSelected && forwardedMids.length < 20 ? selectMessageFunc : null}
           onUnselectClick={isSelected ? unselectMessageFunc : null}
           onReplyClickFunc={() => onReplyClick(repliedMessage)}
           repliedMessage={repliedMessage}
@@ -366,47 +311,109 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     });
   }, [isScrolling, messages, messagesFetchFunc, forwardedMids, hash]);
 
+  const savePosTimer = useRef(null);
+
+  //* custom scroll bar for messages *//
+  const scrollbarTrackRef = useRef(null);
+  const scrollbarThumbRef = useRef(null);
+
+  const hideTimer = useRef(null);
+  const [scrollbarVisible, setScrollbarVisible] = useState(false);
+
+  const handleScroll = () => {
+    const container = scrollableContainer.current;
+    const thumb = scrollbarThumbRef.current;
+    const track = scrollbarTrackRef.current;
+    if (!container || !thumb || !track) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = container;
+
+    const thumbHeight = Math.max((clientHeight / scrollHeight) * track.clientHeight, 30);
+
+    const thumbTop = (scrollTop / (scrollHeight - clientHeight)) * (track.clientHeight - thumbHeight);
+
+    thumb.style.height = `${thumbHeight}px`;
+    thumb.style.transform = `translateY(${thumbTop}px)`;
+
+    // Показати scrollbar
+    setScrollbarVisible(true);
+
+    // Автохайд через 2 сек
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    hideTimer.current = setTimeout(() => {
+      setScrollbarVisible(false);
+    }, 800);
+
+    if (savePosTimer.current !== null) clearTimeout(savePosTimer.current);
+    savePosTimer.current = setTimeout(() => {
+      const container = scrollableContainer.current;
+      if (!container) return;
+      const scrollFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+      localStorage.setItem(`scroll_pos_${selectedCID}`, scrollFromBottom);
+      setIsScrollToBottomVisible(scrollFromBottom > 200);
+    }, 150);
+  };
+
+  const startDrag = (e) => {
+    e.preventDefault();
+
+    const container = scrollableContainer.current;
+    const track = scrollbarTrackRef.current;
+    const startY = e.clientY;
+    const startScroll = container.scrollTop;
+
+    const onMove = (ev) => {
+      const delta = (ev.clientY - startY) * (container.scrollHeight / track.clientHeight);
+      container.scrollTop = startScroll + delta;
+    };
+
+    const onUp = () => {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+    };
+
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+  };
+  //* custom scroll bar for messages *//
+
   return (
-    <div className="relative pb-[10px] flex flex-grow overflow-hidden">
+    <div className="relative flex w-full grow flex-col self-center overflow-hidden lg:max-w-300">
       <div
-        className="flex flex-col flex-grow justify-end overflow-auto"
+        className="h-full overflow-y-scroll [&::-webkit-scrollbar]:hidden"
         id="chatMessagesScrollable"
         ref={scrollableContainer}
-        onScroll={() => {
-          if (timer.current !== null) clearTimeout(timer.current);
-          timer.current = setTimeout(() => {
-            const container = scrollableContainer.current;
-            if (!container) return;
-            const scrollFromBottom =
-              container.scrollHeight -
-              container.scrollTop -
-              container.clientHeight;
-            localStorage.setItem(`scroll_pos_${selectedCID}`, scrollFromBottom);
-            setIsScrollToBottomVisible(scrollFromBottom > 200);
-          }, 150);
-        }}
+        onScroll={handleScroll}
       >
-        <div className="h-full py-[15px] flex flex-col gap-[7px]">
-          <LazyMotion features={domMax}>
-            <LayoutGroup id="chatMessagesListLayoutGroup">
-              {messagesView}
-            </LayoutGroup>
-          </LazyMotion>
-        </div>
+        <div className="flex h-full flex-col gap-0.75">{messagesView}</div>
       </div>
-      <AnimatePresence>
-        {isScrollToBottomVisible && (
-          <m.div
-            initial={{ y: 65 }}
-            animate={{ y: 0 }}
-            exit={{ y: 65 }}
-            className="w-[41px] h-[40px] absolute right-4 bottom-4 flex items-center justify-center rounded-full bg-hover-light cursor-pointer z-4"
-            onClick={scrollToBottom}
-          >
-            <ArrowBottom />
-          </m.div>
-        )}
-      </AnimatePresence>
+      <div
+        className={`absolute top-0 right-1 h-full w-1.5 transition-opacity duration-250 ${scrollbarVisible ? "" : "opacity-0"}`}
+        onMouseEnter={() => {
+          if (hideTimer.current) clearTimeout(hideTimer.current);
+          setScrollbarVisible(true);
+        }}
+        onMouseLeave={() => {
+          hideTimer.current = setTimeout(() => {
+            setScrollbarVisible(false);
+          }, 2000);
+        }}
+        ref={scrollbarTrackRef}
+      >
+        <div
+          className="absolute top-0 w-full rounded-full bg-black/30"
+          ref={scrollbarThumbRef}
+          onMouseDown={startDrag}
+        />
+      </div>
+      {isScrollToBottomVisible && (
+        <div
+          className="bg-bg-light/90 border-text-dark absolute right-2.25 bottom-4 z-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border"
+          onClick={scrollToBottom}
+        >
+          <ChevronDown size={24} />
+        </div>
+      )}
     </div>
   );
 }

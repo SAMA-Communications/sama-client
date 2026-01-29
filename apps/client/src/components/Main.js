@@ -1,5 +1,3 @@
-import * as m from "motion/react-m";
-import { AnimatePresence, useAnimate } from "motion/react";
 import { cloneElement, useCallback, useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
@@ -11,23 +9,16 @@ import ChatList from "@components/hub/ChatList";
 
 import AttachHub from "@components/attach/AttachHub";
 import ConversationSelectHub from "@components/modals/ConversationSelectHub.js";
-import EmptyHub from "@components/hub/EmptyHub";
 import MediaHub from "@components/attach/MediaHub";
-import NavigationLine from "@components/navigation/NavigationLine";
 import OtherUserProfile from "@components/info/OtherUserProfile";
-import UserProfileContainer from "@components/info/UserProfile.js";
+import UserProfileContainer from "@components/info/UserProfileContainer.js";
 import UsersSelectModalHub from "@components/modals/UsersSelectModalHub";
 
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView } from "@store/values/IsTabletView";
-import {
-  getConverastionById,
-  selectConversationsEntities,
-} from "@store/values/Conversations";
+import { getConverastionById, selectConversationsEntities } from "@store/values/Conversations";
 
 import { getEditWindowTypeFromUrl } from "@utils/NavigationUtils.js";
-
-import SHub from "@skeletons/hub/SHub";
 
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -52,61 +43,6 @@ export default function Main({ isNeedToAnimate }) {
   const conversationsArray = conversations && Object.values(conversations);
   const selectedConversation = useSelector(getConverastionById);
 
-  const [mainContainerRef, animateMainContainer] = useAnimate();
-  const [userProfileRef, animateUserProfileContainer] = useAnimate();
-  const [chatInfoeRef, animateChatInfoContainer] = useAnimate();
-  const [navigationLineRef, animateNavigationLineContainer] = useAnimate();
-
-  useEffect(() => {
-    if (!isNeedToAnimate || !mainContainerRef.current) return;
-    animateMainContainer([
-      [
-        mainContainerRef.current,
-        { scale: [0.6, 1.01, 1], opacity: [0, 0.3, 1] },
-        { duration: 0.8 },
-      ],
-    ]);
-  }, []);
-
-  const triggerExitAnimation = useCallback(() => {
-    chatInfoeRef.current &&
-      animateChatInfoContainer([
-        [
-          chatInfoeRef.current,
-          { scale: [1, 1.02, 0.8], opacity: [1, 0.3, 0] },
-          { duration: 0.4 },
-        ],
-      ]);
-    userProfileRef.current &&
-      animateUserProfileContainer([
-        [
-          userProfileRef.current,
-          {
-            scale: isMobileView ? [1, 0.6] : [1, 1.02, 0.8],
-            opacity: [1, 0.3, 0],
-            ...(isMobileView ? { borderRadius: [0, 48, 48] } : {}),
-          },
-          { duration: 0.4 },
-        ],
-      ]);
-    navigationLineRef.current &&
-      animateNavigationLineContainer?.([
-        [
-          navigationLineRef.current,
-          { x: -64, opacity: [1, 0] },
-          { duration: 0.4 },
-        ],
-      ]);
-    mainContainerRef.current &&
-      animateMainContainer([
-        [
-          mainContainerRef.current,
-          { scale: [1, 1.02, 0.8], opacity: [1, 0.3, 0] },
-          { duration: 0.4 },
-        ],
-      ]);
-  }, [mainContainerRef, userProfileRef, navigationLineRef, chatInfoeRef]);
-
   const additionalContainerRight = useMemo(() => {
     const { pathname, hash } = location;
 
@@ -122,41 +58,24 @@ export default function Main({ isNeedToAnimate }) {
             ? {
                 conversation: selectedConversation,
                 isMobile: isMobileView,
-                shareRef: chatInfoeRef,
               }
             : {}),
           ...(isEditModal
             ? {
-                type: getEditWindowTypeFromUrl(
-                  location.pathname + location.hash + location.search
-                ),
+                type: getEditWindowTypeFromUrl(location.pathname + location.hash + location.search),
               }
             : {}),
-        })
+        }),
       );
 
     return isMobileView ? allBlocks.slice(-2) : allBlocks;
   }, [location, isMobileView]);
 
   const hubContainer = useMemo(() => {
-    if (!conversations) return <SHub />;
-
-    if (
-      !location.hash &&
-      !conversationsArray?.filter((obj) => obj.type === "g" || obj.last_message)
-        .length
-    ) {
-      if (isMobileView)
-        return location.pathname.includes("/profile") ? null : <EmptyHub />;
-      return <EmptyHub />;
-    }
-
     if (isMobileView) {
       const keys = additionalContainerRight.map((el) => el.key);
       if (!!location.hash) {
-        return keys.includes("/user") || keys.includes("/info") ? null : (
-          <ChatForm />
-        );
+        return keys.includes("/user") || keys.includes("/info") ? null : <ChatForm />;
       }
       return location.pathname.includes("/profile") ? null : <ChatList />;
     }
@@ -167,7 +86,7 @@ export default function Main({ isNeedToAnimate }) {
 
     return (
       <>
-        {!location.pathname.includes("/profile") && <ChatList />}
+        {location.pathname.includes("/profile") ? <UserProfileContainer key="userProfile" /> : <ChatList />}
         <ChatForm />
       </>
     );
@@ -176,53 +95,26 @@ export default function Main({ isNeedToAnimate }) {
   const mainContent = useMemo(() => {
     const shouldRenderContent = isMobileView
       ? !(!!location.hash
-          ? additionalContainerRight.some(
-              (el) => el.key === "/user" || el.key === "/info"
-            )
+          ? additionalContainerRight.some((el) => el.key === "/user" || el.key === "/info")
           : location.pathname.includes("/profile"))
       : true;
 
     if (!shouldRenderContent) return null;
 
     return (
-      <AnimatePresence initial={isNeedToAnimate}>
-        <m.section
-          ref={mainContainerRef}
-          className="max-xl:p-[20px] p-[30px] md:mr-[20px] md:my-[20px] flex flex-1 flex-row justify-center gap-[15px] md:rounded-[48px] bg-(--color-bg-light) overflow-hidden"
-          initial={{ opacity: isMobileView || !isNeedToAnimate ? 1 : 0 }}
-        >
-          <AnimatePresence>{hubContainer}</AnimatePresence>
-        </m.section>
-      </AnimatePresence>
+      <>
+        {/* {isMobileView ? null : (
+          <NavigationLine key="navigationLine" disableAnimation={!isNeedToAnimate} isShareExitEvent={true} />
+        )} */}
+        {hubContainer}
+      </>
     );
   }, [hubContainer]);
 
-  const additionalContainerLeft = useMemo(() => {
-    return location.pathname.includes("/profile") ? (
-      <UserProfileContainer
-        key="userProfile"
-        shareRef={userProfileRef}
-        triggerExitEvent={triggerExitAnimation}
-      />
-    ) : null;
-  }, [location]);
-
   return (
     <>
-      <AnimatePresence>
-        {isMobileView ? null : (
-          <NavigationLine
-            key="navigationLine"
-            disableAnimation={!isNeedToAnimate}
-            isShareExitEvent={true}
-            shareRef={navigationLineRef}
-            triggerExitEvent={triggerExitAnimation}
-          />
-        )}
-      </AnimatePresence>
-      <AnimatePresence mode="wait">{additionalContainerLeft}</AnimatePresence>
-      <AnimatePresence>{mainContent}</AnimatePresence>
-      <AnimatePresence>{additionalContainerRight}</AnimatePresence>
+      {mainContent}
+      {additionalContainerRight}
     </>
   );
 }

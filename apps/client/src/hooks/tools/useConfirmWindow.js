@@ -64,7 +64,7 @@ export default function ConfirmWindowProvider({ children }) {
       <AnimatePresence>
         {isOpen && (
           <m.div
-            className="fixed inset-0 flex items-center justify-center bg-(--color-black-50) z-50"
+            className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
             initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
             animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
             exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
@@ -92,13 +92,13 @@ export default function ConfirmWindowProvider({ children }) {
 
               <div className="mt-2 justify-end gap-[30px] flex items-center">
                 <p
-                  className="text-h6 text-(--color-accent-dark) !forn-light cursor-pointer"
+                  className="text-h6 text-(--color-accent-500) !forn-light cursor-pointer"
                   onClick={() => handleClose(false)}
                 >
                   {options.cancelText || "Cancel"}
                 </p>
                 <p
-                  className="text-h6 text-(--color-accent-dark) !forn-light cursor-pointer"
+                  className="text-h6 text-(--color-accent-500) !forn-light cursor-pointer"
                   onClick={() => handleClose(true)}
                 >
                   {options.confirmText || "Confirm"}

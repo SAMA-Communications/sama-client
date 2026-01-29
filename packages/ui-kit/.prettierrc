@@ -10,5 +10,6 @@
   "quoteProps": "as-needed",
   "useTabs": false,
   "singleQuote": false,
+  "tailwindStylesheet": "./src/index.css",
   "plugins": ["prettier-plugin-tailwindcss"]
 }

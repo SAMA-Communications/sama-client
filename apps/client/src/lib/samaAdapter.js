@@ -5,11 +5,7 @@ import useParticipants from "@hooks/useParticipants.js";
 import useConversations from "@hooks/useConversations.js";
 import useHistory from "@hooks/useHistory.js";
 
-import {
-  getLastMessageUserName,
-  getUserFullName,
-  getUserInitials,
-} from "@utils/UserUtils.js";
+import { getLastMessageUserName, getUserFullName, getUserInitials } from "@utils/UserUtils.js";
 import { getLastUpdateTime } from "@utils/ConversationUtils.js";
 import { getFileType } from "@utils/MediaUtils.js";
 

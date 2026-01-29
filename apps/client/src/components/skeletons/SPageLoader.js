@@ -9,12 +9,12 @@ export default function SPageLoader() {
         <Oval
           height={100}
           width={100}
-          color="var(--color-accent-dark)"
+          color="var(--color-accent-500)"
           wrapperStyle={{}}
           wrapperClass={{}}
           visible={true}
           ariaLabel="oval-loading"
-          secondaryColor="var(--color-accent-dark)"
+          secondaryColor="var(--color-accent-500)"
           strokeWidth={2}
           strokeWidthSecondary={3}
         />
