@@ -6,6 +6,7 @@ export { ChatInfo } from "./components/composites/ChatInfo";
 export { ConversationItemList } from "./components/composites/ConversationItemList";
 export { EditModalContainer } from "./components/composites/EditModalContainer";
 export { UserProfile } from "./components/composites/UserProfile";
+export { ConversationHeader } from "./components/composites/ConversationHeader";
 
 export { ConversationItem } from "./components/elements/ConversationItem";
 export { CustomScrollBar } from "./components/composites/CustomScrollBar";

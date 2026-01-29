@@ -13,7 +13,7 @@ import SChatList from "@skeletons/hub/SChatList";
 
 import { addPrefix } from "@utils/NavigationUtils.js";
 
-import { getDisplayableConversations } from "@store/values/Conversations.js";
+import { getDisplayableConversations, getConverastionById } from "@store/values/Conversations.js";
 import { getIsMobileView } from "@store/values/IsMobileView";
 
 import { Settings, MessageCirclePlus } from "lucide-react";
@@ -26,6 +26,7 @@ export default function ChatList() {
 
   const isMobileView = useSelector(getIsMobileView);
 
+  const selectedConversation = useSelector(getConverastionById);
   const filteredConversations = useSelector(getDisplayableConversations);
 
   const chatsList = useMemo(() => {
@@ -37,8 +38,14 @@ export default function ChatList() {
       return <p className="text-text-dark text-center text-lg">No chats are available.</p>;
     }
 
-    return <ConversationItemList id="conversationItemsScrollable" conversations={filteredConversations} />;
-  }, [filteredConversations]);
+    return (
+      <ConversationItemList
+        id="conversationItemsScrollable"
+        selectedConversation={selectedConversation}
+        conversations={filteredConversations}
+      />
+    );
+  }, [filteredConversations, selectedConversation]);
 
   return (
     <section key="chaList" className="relative overflow-hidden xl:w-100">

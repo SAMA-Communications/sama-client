@@ -1,14 +1,13 @@
-import { FC } from "react";
 import { ThreeDots } from "react-loader-spinner";
 
 import { DotsLoaderProps } from "./DotsLoader.types";
 
-export const DotsLoader: FC<DotsLoaderProps> = ({
+export const DotsLoader = ({
   wrapperClassName = "",
   mainColor = "var(--color-accent-500)",
   width = 16,
   height = 22,
-}) => {
+}: DotsLoaderProps) => {
   return (
     <ThreeDots
       visible={true}

@@ -1,4 +1,5 @@
 import { setAllParams } from "@store/values/ContextMenu.js";
+
 import {
   addPrefix,
   addSuffix,
@@ -60,6 +61,25 @@ export default function useHistory() {
     undoSubLink("/profile");
   };
 
+  const openForwardSection = () => {
+    navigateTo((pathname + hash).replace("selection", "forward"));
+  };
+
+  const closeSelectionMode = () => {
+    removeSectionAndNavigate(pathname + hash, "/selection");
+  };
+
+  const openChatOrPaticipantInfo = (conversation, participant) => {
+    const path = conversation?.type === "g" ? "/info" : "/user?uid=" + participant?._id;
+
+    const tmpPath =
+      tore.getState()?.isTablet?.value && path === "/info" && pathname.includes("/profile")
+        ? currentPath.replace("/profile", "")
+        : currentPath;
+
+    (tmpPath.includes(path) ? removeAndNavigateLastSection : addSuffix)(tmpPath, path);
+  };
+
   return {
     openProfileById,
     openContextMenuWithParams,
@@ -68,11 +88,14 @@ export default function useHistory() {
 
     closeChatInfoPage,
     closeCurrentUserProfile,
+    closeSelectionMode,
 
     openCurrentUserProfile,
     openAddParticipantsWindow,
     openEditUserProfileWindow,
     openEditConversationWindow,
+    openForwardSection,
+    openChatOrPaticipantInfo,
 
     navigateToAuthPage,
   };

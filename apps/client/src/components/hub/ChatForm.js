@@ -1,4 +1,3 @@
-import * as m from "motion/react-m";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,9 +8,9 @@ import draftService from "@services/tools/draftService.js";
 
 import { useKeyDown } from "@hooks/tools/useKeyDown";
 
+import { ConversationHeader } from "@sama-communications.ui-kit";
+
 import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
-import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
-import ChatFormNavigation from "@components/hub/chatForm/ChatFormNavigation.js";
 import ChatFormEditor from "@components/hub/chatForm/ChatFormEditor.js";
 
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
@@ -130,7 +129,13 @@ export default function ChatForm() {
     <section key="chatForm" id="chatFormContainer" className={`relative flex grow flex-col gap-1.25 rounded-3xl`}>
       {selectedCID ? (
         <>
-          <ChatFormHeader closeFormFunc={closeForm} currentTab={currentTab} changeTabFunc={setCurrentTab} />
+          <ConversationHeader
+            conversation={selectedConversation}
+            isSelectionMode={location.hash.includes("/selection")}
+            currentTab={currentTab}
+            changeTabFunc={setCurrentTab}
+            closeFormFunc={closeForm}
+          />
           {/* {isGroup && isOwner && isEnableProgrammableChat ? null : null} */}
           {formComponent}
         </>

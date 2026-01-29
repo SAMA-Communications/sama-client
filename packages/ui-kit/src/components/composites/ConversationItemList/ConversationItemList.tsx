@@ -9,14 +9,12 @@ import { ConversationItemListProps } from "./ConversationItemList.types";
 
 export const ConversationItemList = ({
   conversations,
+  selectedConversation,
   additionalOnClickfunc,
 }: // isHideDeletedUsers = false,
 ConversationItemListProps) => {
   const { useConversations } = getAdapters();
-  const { getSelectedConversation, setSelectedConversation, storeNewConversations, fetchConversations } =
-    useConversations();
-
-  const selectedConversation = getSelectedConversation();
+  const { setSelectedConversation, storeNewConversations, fetchConversations } = useConversations();
 
   const convItemOnClickFunc = (cid: string) => {
     setSelectedConversation(cid);

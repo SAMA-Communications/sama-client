@@ -1,4 +1,4 @@
-import { Conversation } from "types/samaWssModels";
+import { Conversation, User } from "types/samaWssModels";
 
 import { SamaAdapters } from "./types";
 
@@ -8,6 +8,7 @@ const defaultuser = {
   login: "default_login",
   updated_at: "default_updated_at",
   created_at: "default_created_at",
+  recent_activity: 0,
 };
 
 const defaultconversation = {
@@ -34,6 +35,7 @@ const useParticipants = () => {
   const getParticipantsByIdsAsList = (uids: string[]) => [];
   const getCurrentUser = () => defaultuser;
   const getUserById = (uid: string) => defaultuser;
+  const getOpponentByCid = (cid: string, currentUserId: string) => defaultuser || null;
 
   const updateCurrentUserAvatar = (file: File) => {};
   const updateCurrentUserPassword = (currentPassword: string, newPassword: string) => {};
@@ -53,6 +55,7 @@ const useParticipants = () => {
     getParticipantsByIdsAsList,
     getCurrentUser,
     getUserById,
+    getOpponentByCid,
 
     updateCurrentUserAvatar,
     updateCurrentUserPassword,
@@ -88,28 +91,55 @@ function useHistory() {
   const openProfileById = (uid: string) => {};
   const openCurrentUserProfile = () => {};
   const openContextMenuWithParams = (params: any) => {};
-  const undoLastSection = () => {};
   const openAddParticipantsWindow = () => {};
-  const closeChatInfoPage = () => {};
   const openEditUserProfileWindow = () => {};
   const openEditConversationWindow = () => {};
+  const openForwardSection = () => {};
+  const openChatOrPaticipantInfo = (conversation?: Conversation, participant?: User | null | undefined) => {};
+
+  const undoLastSection = () => {};
+
+  const closeChatInfoPage = () => {};
   const closeCurrentUserProfile = () => {};
+  const closeSelectionMode = () => {};
+
   const navigateToAuthPage = () => {};
 
   return {
     openProfileById,
     openContextMenuWithParams,
-    undoLastSection,
-
-    closeChatInfoPage,
-    closeCurrentUserProfile,
-
     openCurrentUserProfile,
     openAddParticipantsWindow,
     openEditUserProfileWindow,
     openEditConversationWindow,
+    openForwardSection,
+    openChatOrPaticipantInfo,
+
+    undoLastSection,
+
+    closeChatInfoPage,
+    closeCurrentUserProfile,
+    closeSelectionMode,
 
     navigateToAuthPage,
+  };
+}
+
+function useMessages() {
+  const deleteSelectedMessages = async (selectedCID: string, mids: string[]) => {};
+  const getSelectedMessages = () => ({ countOfSelectedMessages: 0, midsArrayOfSelectedMessages: [""] });
+
+  return {
+    deleteSelectedMessages,
+    getSelectedMessages,
+  };
+}
+
+function useContextMenu() {
+  const openContextMenu = (category: string, list: string[], coords: { x: number; y: number }) => {};
+
+  return {
+    openContextMenu,
   };
 }
 
@@ -118,11 +148,14 @@ export const defaultAdapters: SamaAdapters = {
   useParticipants,
   useConversations,
   useHistory,
+  useMessages,
+  useContextMenu,
 
   userUtils: {
     getLastMessageUserName: (user) => "",
     getUserFullName: (user) => "",
     getUserInitials: (user) => "",
+    getLastVisitTime: (timestamp, userLocale) => "",
   },
   conversationUtils: {
     getLastUpdateTime: (convUpdatedAt, lastMessageTime) => "",

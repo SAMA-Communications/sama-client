@@ -7,10 +7,7 @@ import { upsertUser } from "@store/values/Participants.js";
 
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { isHeic, processFile } from "@utils/MediaUtils.js";
-import {
-  validateFieldLength,
-  validateIsEmptyObject,
-} from "@utils/ValidationGeneral.js";
+import { validateFieldLength, validateIsEmptyObject } from "@utils/ValidationGeneral.js";
 import { validateEmail, validatePhone } from "@utils/ValidationUser.js";
 
 export default function useParticipants() {
@@ -22,13 +19,11 @@ export default function useParticipants() {
     return uids.reduce(
       (acc, uid) => {
         if (participants[uid]) {
-          asObject
-            ? (acc[uid] = participants[uid])
-            : acc.push(participants[uid]);
+          asObject ? (acc[uid] = participants[uid]) : acc.push(participants[uid]);
         }
         return acc;
       },
-      asObject ? {} : []
+      asObject ? {} : [],
     );
   };
 
@@ -59,7 +54,7 @@ export default function useParticipants() {
       upsertUser({
         _id: currentUserId,
         avatar_url: isHeic(file.name) ? null : URL.createObjectURL(file),
-      })
+      }),
     );
 
     const avatarFile = await processFile(file, 0.2, 300);
@@ -69,9 +64,7 @@ export default function useParticipants() {
       return;
     }
 
-    const avatarObject = (
-      await DownloadManager.getFileObjects([avatarFile])
-    ).at(0);
+    const avatarObject = (await DownloadManager.getFileObjects([avatarFile])).at(0);
     const requestData = {
       avatar_object: {
         file_id: avatarObject.file_id,
@@ -144,11 +137,21 @@ export default function useParticipants() {
     }
   };
 
+  const getOpponentByCid = (cid, currentUserId) => {
+    const conversation = store.getState()?.conversations.entities[cid];
+
+    if (!conversation || conversation.type === "g") return null;
+
+    const { owner_id, opponent_id } = conversation;
+    return store.getState()?.participants.entities[owner_id === currentUserId ? opponent_id : owner_id];
+  };
+
   return {
     getParticipantsByIdsAsObject,
     getParticipantsByIdsAsList,
     getCurrentUser,
     getUserById,
+    getOpponentByCid,
 
     updateCurrentUserAvatar,
     updateCurrentUserPassword,
