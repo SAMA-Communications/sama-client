@@ -3,7 +3,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import draftService from "@services/tools/draftService.js";
 import messagesService from "@services/messagesService";
-import DownloadManager from "../../../lib/downloadManager.js";
+
+import DownloadManager from "@lib/downloadManager.js";
 
 import { useConfirmWindow } from "@hooks/tools/useConfirmWindow.js";
 

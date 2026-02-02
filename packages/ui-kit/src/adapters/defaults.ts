@@ -27,7 +27,30 @@ const defaultconversation = {
 
 const useDrafts = () => {
   const syncDraftByCid = (cid: string, oldDraft: object, convUpdatedAt: string) => ({});
-  return { syncDraftByCid };
+  const saveDraft = (cid: string, options: { text?: string; replied_mid?: string; edited_mid?: string }) => {};
+  const saveLastInputText = (cid: string, text: string) => {};
+
+  const removeDraft = (cid: string) => {};
+  const removeDraftWithOptions = (cid: string, fields: string | string[]) => {};
+
+  const getDraft = (cid: string) => ({ text: "", replied_mid: "", edited_mid: "", updated_at: 0 });
+  const getDraftMessage = (cid: string) => "";
+  const getLastInputText = (cid: string) => "";
+  const getExternalProps = () => ({});
+
+  return {
+    syncDraftByCid,
+    saveDraft,
+    saveLastInputText,
+
+    removeDraft,
+    removeDraftWithOptions,
+
+    getDraft,
+    getDraftMessage,
+    getLastInputText,
+    getExternalProps,
+  };
 };
 
 const useParticipants = () => {
@@ -66,24 +89,32 @@ const useParticipants = () => {
 };
 
 const useConversations = () => {
+  const setSelectedConversation = (cid: string) => {};
+  const storeNewConversations = (conversations: Conversation[]) => {};
+
   const getConversationById = (cid: string) => defaultconversation;
   const getSelectedConversation = () => defaultconversation;
-  const setSelectedConversation = (cid: string) => {};
   const fetchConversations = async (): Promise<Conversation[]> => {
     return Promise.resolve([defaultconversation]);
   };
-  const storeNewConversations = (conversations: Conversation[]) => {};
+
   const updateChatImage = (file: File) => {};
   const updateNameAndDescription = (data: { name?: string; description?: string }) => true;
 
+  const sendTypingStatus = (cid: string) => {};
+
   return {
+    storeNewConversations,
+    setSelectedConversation,
+
     getConversationById,
     getSelectedConversation,
-    setSelectedConversation,
     fetchConversations,
-    storeNewConversations,
+
     updateChatImage,
     updateNameAndDescription,
+
+    sendTypingStatus,
   };
 };
 
@@ -96,12 +127,15 @@ function useHistory() {
   const openEditConversationWindow = () => {};
   const openForwardSection = () => {};
   const openChatOrPaticipantInfo = (conversation?: Conversation, participant?: User | null | undefined) => {};
+  const openAttachmentHub = () => {};
 
   const undoLastSection = () => {};
 
   const closeChatInfoPage = () => {};
   const closeCurrentUserProfile = () => {};
   const closeSelectionMode = () => {};
+
+  const isLocationIncludeAttach = () => true;
 
   const navigateToAuthPage = () => {};
 
@@ -114,12 +148,15 @@ function useHistory() {
     openEditConversationWindow,
     openForwardSection,
     openChatOrPaticipantInfo,
+    openAttachmentHub,
 
     undoLastSection,
 
     closeChatInfoPage,
     closeCurrentUserProfile,
     closeSelectionMode,
+
+    isLocationIncludeAttach,
 
     navigateToAuthPage,
   };
@@ -129,9 +166,29 @@ function useMessages() {
   const deleteSelectedMessages = async (selectedCID: string, mids: string[]) => {};
   const getSelectedMessages = () => ({ countOfSelectedMessages: 0, midsArrayOfSelectedMessages: [""] });
 
+  const summarizeMessages = async (selectedCID: string, filter: string) => {};
+  const changeMessageTone = async (body: string, tone: string) => "";
+
+  const editMessage = async (inputRef: HTMLInputElement, editedMessage: { _id: string; body: string }) => {};
+  const createAndSendMessage = async (
+    inputRef: HTMLInputElement,
+    selectedConversation: Conversation,
+    draftExtenralProps: Record<string, { draft_replied_mid?: boolean }>,
+    isSendMessageDisable: boolean,
+    disableInput: Function,
+    enableInput: Function,
+    onSend: Function,
+  ) => {};
+
   return {
     deleteSelectedMessages,
     getSelectedMessages,
+
+    summarizeMessages,
+    changeMessageTone,
+
+    editMessage,
+    createAndSendMessage,
   };
 }
 
@@ -162,5 +219,10 @@ export const defaultAdapters: SamaAdapters = {
   },
   mediaUtils: {
     getFileType: (fileName, fileContentType) => "",
+    extractFilesFromClipboard: (clipboardItems) => [],
+  },
+  formatedUtils: {
+    getFormatedTime: (dateParams) => "string",
+    calcInputHeight: (text) => 0,
   },
 };

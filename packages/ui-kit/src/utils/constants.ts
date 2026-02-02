@@ -11,3 +11,5 @@ export const CHAT_CONTENT_TABS = {
   MESSAGES: "messages",
   APPS: "apps",
 };
+
+export const TYPING_DURATION_MS = 6000;

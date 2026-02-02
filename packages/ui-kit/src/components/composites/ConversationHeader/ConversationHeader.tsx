@@ -106,8 +106,9 @@ export const ConversationHeader = ({
       { x: e.pageX, y: e.pageY },
     );
   };
+  console.log(1, getSelectedMessages());
 
-  const { countOfSelectedMessages, midsArrayOfSelectedMessages } = getSelectedMessages();
+  const { countOfSelectedMessages, midsArrayOfSelectedMessages } = getSelectedMessages() || {};
 
   //   useKeyDown(KEY_CODES.ESCAPE, closeSelectionMode);
 

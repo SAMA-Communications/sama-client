@@ -7,6 +7,7 @@ export { ConversationItemList } from "./components/composites/ConversationItemLi
 export { EditModalContainer } from "./components/composites/EditModalContainer";
 export { UserProfile } from "./components/composites/UserProfile";
 export { ConversationHeader } from "./components/composites/ConversationHeader";
+export { ConversationInput } from "./components/composites/ConversationInput";
 
 export { ConversationItem } from "./components/elements/ConversationItem";
 export { CustomScrollBar } from "./components/composites/CustomScrollBar";
@@ -22,5 +23,7 @@ export { SocketConnectingLine } from "./components/elements/SocketConnectingLine
 export { TypingLine } from "./components/elements/TypingLine";
 export { UserAvatar } from "./components/elements/UserAvatar";
 export { VideoView } from "./components/elements/VideoView";
+export { MagicButton } from "./components/elements/MagicButton";
+export { MessageInput } from "./components/elements/MessageInput";
 
 export { setAdapters } from "./adapters";

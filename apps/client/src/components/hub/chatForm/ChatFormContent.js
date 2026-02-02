@@ -9,7 +9,7 @@ import ChatFormInputContent from "@components/hub/chatForm/ChatFormInputContent.
 import MessagesList from "@components/hub/elements/MessagesList";
 import SummaryContainer from "@components/hub/elements/SummaryContainer.js";
 
-import { CustomScrollBar } from "@sama-communications.ui-kit";
+import { CustomScrollBar, ConversationInput } from "@sama-communications.ui-kit";
 
 import { getConverastionById } from "@store/values/Conversations.js";
 import { selectMessagesEntities } from "@store/values/Messages.js";
@@ -77,7 +77,7 @@ export default function ChatFormContent() {
         repliedMessage={draftRepliedMessage}
         forwardedMessages={draftForwardedMessage}
       />
-      <ChatFormInput chatMessagesBlockRef={chatMessagesBlock} editedMessage={draftEditedMessage} />
+      <ConversationInput chatMessagesBlockRef={chatMessagesBlock} editedMessage={draftEditedMessage} />
     </>
   );
 }

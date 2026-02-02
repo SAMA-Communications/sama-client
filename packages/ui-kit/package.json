@@ -79,6 +79,7 @@
     "@tailwindcss/oxide": "^4.1.18",
     "@tailwindcss/vite": "^4.1.18",
     "clsx": "^2.1.1",
+    "localforage": "^1.10.0",
     "lucide-react": "^0.545.0",
     "motion": "^12.9.2",
     "react": "^18.3.0",
@@ -87,6 +88,7 @@
     "react-dom": "^18.3.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-loader-spinner": "^7.0.3",
+    "react-tooltip": "^5.30.0",
     "tailwind-merge": "^3.3.1"
   },
   "optionalDependencies": {

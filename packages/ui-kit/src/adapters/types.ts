@@ -2,6 +2,16 @@ import { Conversation, User } from "types/samaWssModels";
 
 export interface useDraftsProps {
   syncDraftByCid: (cid: string, oldDraft: object, convUpdatedAt: string) => void;
+  saveDraft: (cid: string, options: { text?: string; replied_mid?: string; edited_mid?: string }) => any;
+  saveLastInputText: (cid: string, text: string) => void;
+
+  getDraft: (cid: string) => { text: string; replied_mid: string; edited_mid: string; updated_at: number };
+  getDraftMessage: (cid: string) => string;
+  getLastInputText: (cid: string) => string;
+  getExternalProps: () => Record<string, { draft_replied_mid?: boolean }>;
+
+  removeDraft: (cid: string) => void;
+  removeDraftWithOptions: (cid: string, fields: string | string[]) => void;
 }
 
 export interface useParticipantsProps {
@@ -24,17 +34,17 @@ export interface useParticipantsProps {
 }
 
 export interface useConversationsProps {
+  setSelectedConversation: (cid: string) => void;
+  storeNewConversations: (conversations: Conversation[]) => void;
+
   getConversationById: (cid: string) => Conversation;
   getSelectedConversation: () => Conversation;
-
-  setSelectedConversation: (cid: string) => void;
-
   fetchConversations: ({ updated_at: { lt } }: { updated_at: { lt: string } }) => Promise<Conversation[]>;
-
-  storeNewConversations: (conversations: Conversation[]) => void;
 
   updateChatImage: (file: File) => void;
   updateNameAndDescription: (data: { name?: string; description?: string }) => boolean;
+
+  sendTypingStatus: (cid: string) => void;
 }
 
 export interface useHistoryProps {
@@ -46,6 +56,7 @@ export interface useHistoryProps {
   openEditConversationWindow: () => void;
   openForwardSection: () => void;
   openChatOrPaticipantInfo: (conversation?: Conversation, participant?: User | null) => void;
+  openAttachmentHub: () => void;
 
   undoLastSection: () => void;
 
@@ -53,12 +64,28 @@ export interface useHistoryProps {
   closeCurrentUserProfile: () => void;
   closeSelectionMode: () => void;
 
+  isLocationIncludeAttach: () => boolean;
+
   navigateToAuthPage: () => void;
 }
 
 export interface useMessagesProps {
   deleteSelectedMessages: (selectedCID: string, mids: string[]) => void;
   getSelectedMessages: () => { countOfSelectedMessages: number; midsArrayOfSelectedMessages: string[] };
+
+  summarizeMessages: (selectedCID: string, filter: string) => void;
+  changeMessageTone: (body: string, tone: string) => Promise<string>;
+
+  editMessage: (inputRef: HTMLInputElement, editedMessage: { _id: string; body: string }) => void;
+  createAndSendMessage: (
+    inputRef: HTMLInputElement,
+    selectedConversation: Conversation,
+    draftExtenralProps: Record<string, { draft_replied_mid?: boolean }>,
+    isSendMessageDisable: boolean,
+    disableInput: Function,
+    enableInput: Function,
+    onSend: Function,
+  ) => void;
 }
 
 export interface useContextMenuProps {
@@ -78,6 +105,12 @@ export interface conversationUtilsProps {
 
 export interface mediaUtilsProps {
   getFileType: (fileName?: string, fileContentType?: string) => string;
+  extractFilesFromClipboard: (clipboardItems: any) => File[];
+}
+
+export interface formatedUtilsProps {
+  getFormatedTime: (dateParams: string) => string;
+  calcInputHeight: (text: string) => number;
 }
 
 export interface SamaAdapters {
@@ -91,4 +124,5 @@ export interface SamaAdapters {
   userUtils: userUtilsProps;
   conversationUtils: conversationUtilsProps;
   mediaUtils: mediaUtilsProps;
+  formatedUtils: formatedUtilsProps;
 }

@@ -1,4 +1,5 @@
 import { setAllParams } from "@store/values/ContextMenu.js";
+import store from "@store/store.js";
 
 import {
   addPrefix,
@@ -73,11 +74,19 @@ export default function useHistory() {
     const path = conversation?.type === "g" ? "/info" : "/user?uid=" + participant?._id;
 
     const tmpPath =
-      tore.getState()?.isTablet?.value && path === "/info" && pathname.includes("/profile")
-        ? currentPath.replace("/profile", "")
-        : currentPath;
+      store.getState()?.isTablet?.value && path === "/info" && pathname.includes("/profile")
+        ? url.replace("/profile", "")
+        : url;
 
     (tmpPath.includes(path) ? removeAndNavigateLastSection : addSuffix)(tmpPath, path);
+  };
+
+  const openAttachmentHub = () => {
+    addSuffix(location.pathname + location.hash, "/attach");
+  };
+
+  const isLocationIncludeAttach = () => {
+    return location.hash.includes("/attach");
   };
 
   return {
@@ -96,6 +105,9 @@ export default function useHistory() {
     openEditConversationWindow,
     openForwardSection,
     openChatOrPaticipantInfo,
+    openAttachmentHub,
+
+    isLocationIncludeAttach,
 
     navigateToAuthPage,
   };
