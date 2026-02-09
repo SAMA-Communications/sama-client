@@ -32,7 +32,7 @@ export const ParticipantInChat = ({ user, isOwner, isCurrentUserOwner }: Partici
         });
       }}
     >
-      <div className="ui:flex ui:h-15 ui:w-15 ui:items-center ui:justify-center ui:overflow-hidden ui:rounded-2xl ui:bg-bg-dark ui:text-3xl ui:font-light ui:text-text-dark">
+      <div className="ui:flex ui:h-15 ui:w-15 ui:items-center ui:justify-center ui:overflow-hidden ui:rounded-2xl ui:bg-bg-dark ui:text-2xl ui:font-light ui:text-text-dark/75 ui:corner-squircle">
         <DynamicAvatar
           avatarUrl={user.avatar_url}
           avatarBlurHash={user.avatar_object?.file_blur_hash}

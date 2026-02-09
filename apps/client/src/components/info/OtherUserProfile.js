@@ -104,7 +104,7 @@ export default function OtherUserProfile() {
               <p className="mt-[-5px] overflow-hidden text-center text-2xl font-medium text-ellipsis whitespace-nowrap text-black">
                 {getUserFullName(userObject)}
               </p>
-              <p className="text-h6 mt-[10px] mb-[-10px] text-center">{viewStatusActivity}</p>
+              <p className="text-md text-text-dark mt-[10px] mb-[-10px] text-center font-light">{viewStatusActivity}</p>
             </div>
           </div>
           <div className="flex flex-col rounded-[32px] bg-(--color-bg-light) px-[20px] py-[30px] max-md:flex-1 max-md:rounded-b-[0px]">

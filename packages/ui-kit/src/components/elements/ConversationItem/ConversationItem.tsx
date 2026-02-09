@@ -65,16 +65,12 @@ export const ConversationItem = ({ conversation, isSelected, ...rest }: Conversa
       } `}
       {...rest}
     >
-      <div className="ui:flex ui:h-15 ui:w-15 ui:items-center ui:justify-center ui:overflow-hidden ui:rounded-2xl ui:bg-bg-dark ui:text-3xl ui:font-light ui:text-text-dark">
+      <div className="ui:flex ui:h-15 ui:w-15 ui:items-center ui:justify-center ui:overflow-hidden ui:rounded-2xl ui:bg-bg-dark ui:text-2xl ui:font-light ui:text-text-dark/75 ui:corner-squircle">
         <DynamicAvatar
           avatarUrl={image_url || participant?.avatar_url}
           avatarBlurHash={image_object?.file_blur_hash || participant?.avatar_object?.file_blur_hash}
           defaultIcon={
-            isGroup || displayName ? (
-              displayName.slice(0, 2).toUpperCase()
-            ) : (
-              <CircleQuestionMark size={32} strokeWidth={1} />
-            )
+            isGroup || displayName ? displayName.slice(0, 2).toUpperCase() : <CircleQuestionMark size={32} />
           }
           altText={isGroup ? "Chat Group" : "User's Profile"}
         />
@@ -82,13 +78,15 @@ export const ConversationItem = ({ conversation, isSelected, ...rest }: Conversa
       <div className="ui:flex ui:max-h-17.5 ui:max-w-[calc(100%-60px)] ui:flex-1 ui:flex-col ui:justify-between ui:overflow-hidden">
         <div className="ui:flex ui:items-center ui:justify-between ui:gap-3">
           <p
-            className={`ui:flex ui:flex-nowrap ui:items-center ui:gap-1.75 ui:overflow-hidden ui:text-lg ui:text-ellipsis ui:whitespace-nowrap ${isSelected ? "ui:text-white" : "ui:text-black"}`}
+            className={`ui:flex ui:flex-nowrap ui:items-center ui:gap-1.5 ui:overflow-hidden ui:text-lg ui:text-ellipsis ui:whitespace-nowrap ${isSelected ? "ui:text-white" : "ui:text-black"}`}
           >
             {/* {&zwnj; */}
             {isGroup && <Users color={isSelected ? "white" : "black"} size={18} />}
             {displayName}
           </p>
-          <div className={`ui:font-light ui:text-text-dark ${isSelected ? "ui:text-white" : "ui:text-text-dark"}`}>
+          <div
+            className={`ui:text-md ui:font-light ui:text-text-dark/60 ui:ordinal! ${isSelected ? "ui:text-white" : "ui:text-text-dark"}`}
+          >
             {tView}
           </div>
         </div>

@@ -140,7 +140,7 @@ export default function ChatForm() {
           {formComponent}
         </>
       ) : (
-        <p className="text-text-dark my-auto self-center text-4xl font-light">
+        <p className="text-text-dark/60 my-auto self-center text-4xl font-extralight">
           Select a conversation to start chatting
         </p>
       )}

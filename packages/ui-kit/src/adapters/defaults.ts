@@ -169,16 +169,20 @@ function useMessages() {
   const summarizeMessages = async (selectedCID: string, filter: string) => {};
   const changeMessageTone = async (body: string, tone: string) => "";
 
-  const editMessage = async (inputRef: HTMLInputElement, editedMessage: { _id: string; body: string }) => {};
+  const editMessage = async (
+    inputValue: string,
+    selectedConversation: Conversation,
+    editedMessage: { _id: string; body: string },
+  ) => "";
   const createAndSendMessage = async (
-    inputRef: HTMLInputElement,
+    inputValue: string,
     selectedConversation: Conversation,
     draftExtenralProps: Record<string, { draft_replied_mid?: boolean }>,
     isSendMessageDisable: boolean,
     disableInput: Function,
     enableInput: Function,
     onSend: Function,
-  ) => {};
+  ) => "";
 
   return {
     deleteSelectedMessages,

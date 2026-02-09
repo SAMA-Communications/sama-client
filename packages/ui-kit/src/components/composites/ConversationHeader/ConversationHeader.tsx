@@ -76,7 +76,7 @@ export const ConversationHeader = ({
 
     const count = selectedConversation.participants?.length || 0;
     return (
-      <p className="ui:text-sm ui:text-text-light">
+      <p className="ui:text-sm ui:font-light ui:text-text-light">
         {count} member{count > 1 ? "s" : ""}
       </p>
     );
@@ -106,7 +106,6 @@ export const ConversationHeader = ({
       { x: e.pageX, y: e.pageY },
     );
   };
-  console.log(1, getSelectedMessages());
 
   const { countOfSelectedMessages, midsArrayOfSelectedMessages } = getSelectedMessages() || {};
 
@@ -140,7 +139,7 @@ export const ConversationHeader = ({
   ) : (
     <div className="ui:flex ui:h-16 ui:w-full ui:gap-2.5 ui:rounded-xl ui:pt-2 ui:pb-1">
       <button
-        className="ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:border ui:border-text-dark ui:p-2"
+        className="ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:duration-150 ui:hover:bg-text-dark/15"
         onClick={closeFormFunc}
       >
         <ChevronLeft size={18} />
@@ -158,7 +157,7 @@ export const ConversationHeader = ({
       {isCurrentUserOwner && isGroupChat ? (
         <div className="flex gap-1.5">
           <button
-            className={`ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:border ui:p-2 ui:focus:outline-none ${currentTab === "apps" ? "ui:border-accent-500 ui:bg-accent-500" : "ui:border-text-dark ui:bg-transparent"}`}
+            className={`ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:border ui:p-2 ui:duration-150 ui:hover:bg-text-dark/15 ui:focus:outline-none ${currentTab === "apps" ? "ui:border-accent-500 ui:bg-accent-500" : "ui:border-text-dark ui:bg-transparent"}`}
             onClick={() =>
               changeTabFunc(currentTab === "messages" ? CHAT_CONTENT_TABS.APPS : CHAT_CONTENT_TABS.MESSAGES)
             }
@@ -168,7 +167,7 @@ export const ConversationHeader = ({
         </div>
       ) : null}
       <button
-        className="ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:border ui:border-text-dark ui:p-2"
+        className="ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:duration-150 ui:hover:bg-text-dark/15"
         onContextMenu={onContextMenu}
         onClick={onContextMenu}
       >

@@ -76,16 +76,20 @@ export interface useMessagesProps {
   summarizeMessages: (selectedCID: string, filter: string) => void;
   changeMessageTone: (body: string, tone: string) => Promise<string>;
 
-  editMessage: (inputRef: HTMLInputElement, editedMessage: { _id: string; body: string }) => void;
+  editMessage: (
+    inputValue: string,
+    selectedConversation: Conversation,
+    editedMessage: { _id: string; body: string },
+  ) => Promise<string | null>;
   createAndSendMessage: (
-    inputRef: HTMLInputElement,
+    inputValue: string,
     selectedConversation: Conversation,
     draftExtenralProps: Record<string, { draft_replied_mid?: boolean }>,
     isSendMessageDisable: boolean,
     disableInput: Function,
     enableInput: Function,
     onSend: Function,
-  ) => void;
+  ) => Promise<string | null>;
 }
 
 export interface useContextMenuProps {

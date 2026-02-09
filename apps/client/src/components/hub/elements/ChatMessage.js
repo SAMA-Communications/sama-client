@@ -179,9 +179,11 @@ export default function ChatMessage({
         </div>
         <div className="flex flex-col">
           {isForwardMessage && (
-            <div className="bg-accent-500/65 -mb-3 flex flex-row flex-nowrap items-center gap-1.75 rounded-t-xl px-1 pt-0.5 pb-3">
-              <Forward size={18} color={isCurrentUser ? "white" : "var(--color-accent-500)"} />
-              <p className={`text-sm font-medium italic ${isCurrentUser ? "text-white" : "text-accent-500"}`}>
+            <div
+              className={`-mb-3 flex flex-row flex-nowrap items-center gap-1.75 rounded-t-xl px-1 pt-0.5 pb-3 ${isCurrentUser ? "bg-accent-500/65" : "bg-bg-dark/15"}`}
+            >
+              <Forward size={18} color={isCurrentUser ? "white" : "var(--color-text-dark)"} />
+              <p className={`text-sm font-medium italic ${isCurrentUser ? "text-white" : "text-black/35"}`}>
                 Forwarded
               </p>
             </div>

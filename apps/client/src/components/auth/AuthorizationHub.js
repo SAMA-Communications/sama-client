@@ -81,14 +81,14 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
             exit={{ scale: [1, 1.02] }}
             transition={{ duration: 0.2 }}
           >
-            <p className="text-h1 max-md:text-h2 max-sm:text-h3 !font-medium">
+            <p className="text-[48px] font-medium max-md:text-[40px] max-sm:text-[33px]">
               {isLoginPage ? "Welcome back!" : "Create an account"}
             </p>
-            <p className="text-h6">
+            <p className="text-[19px] font-extralight">
               {isLoginPage ? "Don`t have account?" : "Already have an account?"}
               &nbsp;
               <span
-                className="text-accent-500 cursor-pointer !font-normal transition-colors duration-200 hover:text-(--color-accent-200)"
+                className="text-accent-500 hover:text-accent-200 cursor-pointer font-normal transition-colors duration-200"
                 onClick={() => setPage(isLoginPage ? "signup" : "login")}
               >
                 {isLoginPage ? "Sign up" : "Log in"}
@@ -111,7 +111,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
             <PasswordInput setState={setContent} />
             {isLoginPage ? (
               <div className="flex gap-[7px]">
-                <span onClick={() => setIsModalOpen(true)} className="text-accent-500 cursor-pointer !font-normal">
+                <span onClick={() => setIsModalOpen(true)} className="text-accent-500 cursor-pointer font-normal">
                   Forgot password?
                 </span>
               </div>
@@ -125,7 +125,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
           </div>
           <div className="flex w-full flex-row items-center gap-[10px]">
             <span className="h-[1px] flex-1 rounded-[2px] bg-gray-700/30"></span>
-            <p className="text-gray-700/80">Our socials</p>
+            <p className="font-extralight text-gray-700/80">Our socials</p>
             <span className="h-[1px] flex-1 rounded-[2px] bg-gray-700/30"></span>
           </div>
           <div className="grid flex-row gap-[15px] max-sm:grid-cols-2 sm:grid-cols-3">
@@ -162,7 +162,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
           <AnimatedBGmini customClassName="absolute w-full h-full top-0 left-0 z-0" />
           <div className="z-10 flex w-full flex-row items-center justify-center">
             <m.p
-              className="text-h3 !font-(family-name:--font-accent) text-stone-900/60"
+              className="font-accent! text-[33px] text-stone-900/60"
               initial={{ opacity: 0, y: -20 }}
               animate={{
                 opacity: 1,
@@ -186,7 +186,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
           </div>
           <div className="z-10 flex flex-col items-center justify-center gap-[30px]">
             <m.div
-              className="text-h4 text-center text-white"
+              className="text-center text-[28px] font-extralight text-white"
               initial={{ opacity: 0, y: 20 }}
               animate={{
                 opacity: 1,

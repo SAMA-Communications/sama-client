@@ -76,25 +76,34 @@ export default function useMessages() {
 
   const _handleMessageError = async (e, cid, lastMsg, disableInput) => {
     showCustomAlert(e.message || "The server connection is unavailable.", "warning");
-    dispatch(setLastMessageField({ cid, msg: messages[messages.length - 1] }));
-    dispatch(removeLastMessage({ cid }));
-    dispatch(removeMessage(lastMsg._id || lastMsg.mid));
+    store.dispatch(setLastMessageField({ cid, msg: messages[messages.length - 1] }));
+    store.dispatch(removeLastMessage({ cid }));
+    store.dispatch(removeMessage(lastMsg._id || lastMsg.mid));
     disableInput?.();
 
     if (e.status === 403) {
-      dispatch(removeChat(cid));
-      dispatch(setSelectedConversation({}));
+      store.dispatch(removeChat(cid));
+      store.dispatch(setSelectedConversation({}));
       navigateTo("/");
     }
   };
 
-  const _sendForwardMessages = async (forwardedMids, disableInput, enableInput, onSend) => {
+  const _sendForwardMessages = async (
+    forwardedMids,
+    selectedCID,
+    isSendMessageDisable,
+    disableInput,
+    enableInput,
+    onSend,
+  ) => {
     if (!store.getState().networkState.value) {
       showCustomAlert("No internet connection…", "warning");
       return;
     }
 
     const forwardedMessages = forwardedMids.map((mid) => messagesEntities[mid]);
+    console.log(forwardedMessages);
+
     if (!forwardedMessages.length) return;
 
     let lastMessage = null;
@@ -107,12 +116,15 @@ export default function useMessages() {
         if (isSendMessageDisable) return;
         disableInput?.();
 
+        console.log(i);
+
         const localMsg = _createLocalMessage({
           body: message.body,
           attachments: message.attachments,
           forwardedMessageId: message._id,
         });
 
+        console.log(localMsg);
         lastMessage = localMsg;
 
         store.dispatch(addMessage(localMsg));
@@ -194,9 +206,8 @@ export default function useMessages() {
     return await aiService.changeMessageTone({ body, tone });
   };
 
-  //needs to be optimized for ui-kit | -inputRef
   const createAndSendMessage = async (
-    inputRef,
+    inputValue,
     selectedConversation,
     draftExtenralProps,
     isSendMessageDisable,
@@ -214,14 +225,21 @@ export default function useMessages() {
 
     const forwardedMessages = selectedConversation.draft?.forwarded_mids;
     if (forwardedMessages) {
-      await _sendForwardMessages(forwardedMessages, disableInput, enableInput, onSend);
+      await _sendForwardMessages(
+        forwardedMessages,
+        selectedCID,
+        isSendMessageDisable,
+        disableInput,
+        enableInput,
+        onSend,
+      );
     }
 
-    const body = inputRef.current.value.trim();
+    const body = inputValue;
     if (body.length === 0) return; //isSendMessageDisable
 
     disableInput?.();
-    inputRef.current.value = "";
+    // inputRef.current.value = "";
 
     const repliedMid = draftExtenralProps[selectedCID]?.draft_replied_mid || selectedConversation?.draft?.replied_mid;
 
@@ -229,7 +247,6 @@ export default function useMessages() {
 
     store.dispatch(addMessage(msg));
     store.dispatch(updateLastMessageField({ cid: selectedCID, msg }));
-    setTimeout(() => inputRef.current.focus(), 50);
 
     const mObject = {
       mid: msg._id,
@@ -243,8 +260,7 @@ export default function useMessages() {
       await _sendMessageToServer(mObject);
     } catch (e) {
       await _handleMessageError(e, selectedCID, msg);
-      inputRef.current.value = body;
-      return;
+      return body;
     }
 
     enableInput?.();
@@ -253,9 +269,10 @@ export default function useMessages() {
     onSend?.();
   };
 
-  const editMessage = async (inputRef, editedMessage) => {
+  const editMessage = async (inputValue, selectedConversation, editedMessage) => {
+    const selectedCID = selectedConversation._id;
+
     const eMid = editedMessage._id;
-    const inputValue = inputRef.current.value.trim();
     if (!inputValue.length) {
       const { isConfirm } = await confirmWindow({
         title: "Are you sure you want to delete the message?",
@@ -265,14 +282,14 @@ export default function useMessages() {
       isConfirm && messagesService.sendMessageDelete(selectedCID, [eMid], "all");
       return;
     }
-    if (editedMessage.body !== inputRef.current.value) {
+    if (editedMessage.body !== inputValue) {
       await messagesService.sendMessageEdit(editedMessage._id, {
-        body: inputRef.current.value,
+        body: inputValue,
       });
     }
     store.dispatch(addExternalProps({ [selectedCID]: {} }));
     await draftService.removeDraftWithOptions(selectedCID, "edited_mid");
-    inputRef.current.value = draftService.getLastInputText(selectedCID);
+    return draftService.getLastInputText(selectedCID);
   };
 
   return {

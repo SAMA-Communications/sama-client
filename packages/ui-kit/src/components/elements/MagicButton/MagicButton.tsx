@@ -63,7 +63,7 @@ export const MagicButton = ({ inputTextRef, isBlockedConv }: MagicButtonProps) =
   };
 
   return (
-    <div className="magic-wand ui:flex ui:items-center ui:justify-center ui:rounded-xl ui:border ui:border-text-dark ui:p-2">
+    <div className="magic-wand ui:flex ui:items-center ui:justify-center ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:duration-150 ui:hover:bg-text-dark/15">
       {isLoading ? (
         <OvalLoader width={28} height={28} />
       ) : (

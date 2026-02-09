@@ -125,7 +125,7 @@ export const MessageInput = ({
     </div>
   ) : (
     <div className="ui:flex ui:w-full ui:gap-2.5 ui:overflow-hidden">
-      <div className="ui:h-max ui:self-end ui:rounded-xl ui:border ui:border-text-dark ui:p-2">
+      <div className="ui:h-max ui:self-end ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:duration-150 ui:hover:bg-text-dark/15">
         <Paperclip
           size={28}
           color="var(--color-text-dark)"
@@ -151,7 +151,7 @@ export const MessageInput = ({
           placeholder={"Type your message..."}
         />
       </div>
-      <div className="ui:h-max ui:self-end ui:rounded-xl ui:border ui:border-text-dark ui:p-2">
+      <div className="ui:h-max ui:self-end ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:duration-150 ui:hover:bg-text-dark/15">
         {isSending ? (
           <OvalLoader width={28} height={28} />
         ) : isEditAction ? (

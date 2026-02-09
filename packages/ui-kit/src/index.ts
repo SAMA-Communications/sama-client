@@ -2,7 +2,7 @@ import "./index.css";
 
 // import "./styles/theme.css";
 
-export { ChatInfo } from "./components/composites/ChatInfo";
+export { ConversationInfo } from "./components/composites/ConversationInfo";
 export { ConversationItemList } from "./components/composites/ConversationItemList";
 export { EditModalContainer } from "./components/composites/EditModalContainer";
 export { UserProfile } from "./components/composites/UserProfile";

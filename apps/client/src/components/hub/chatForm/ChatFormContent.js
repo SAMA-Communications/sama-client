@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 
 import draftService from "@services/tools/draftService.js";
 
-import ChatFormInput from "@components/hub/chatForm/ChatFormInput.js";
 import ChatFormInputContent from "@components/hub/chatForm/ChatFormInputContent.js";
 import MessagesList from "@components/hub/elements/MessagesList";
 import SummaryContainer from "@components/hub/elements/SummaryContainer.js";

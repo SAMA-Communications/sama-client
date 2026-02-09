@@ -1,4 +1,5 @@
 @import "tailwindcss" prefix(ui);
+@plugin "@toolwind/corner-shape";
 
 @theme {
   --font-base: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;

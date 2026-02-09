@@ -109,8 +109,8 @@ export default function App() {
   useLayoutEffect(() => {
     const mainElement = document.getElementsByTagName("main")[0];
     const bodyElement = document.getElementsByTagName("body")[0];
-    // mainElement.style.backgroundColor = routePathKey === "/*" ? "#1b1b1d" : "#DBDCFC";
-    // bodyElement.style.backgroundColor = routePathKey === "/*" ? "#1b1b1d" : "#DBDCFC";
+    mainElement.style.backgroundColor = routePathKey === "/*" ? "#f6f6f6" : "#DBDCFC";
+    bodyElement.style.backgroundColor = routePathKey === "/*" ? "#1b1b1d" : "#DBDCFC";
   }, [routePathKey]);
 
   const exitAnimation = {

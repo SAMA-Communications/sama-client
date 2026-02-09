@@ -56,14 +56,14 @@ export default function ChatList() {
       <div className="absolute top-3.5 left-0 z-2 flex w-full items-center gap-2.5 px-3.5">
         <button
           onClick={() => addPrefix(currentPath, "/profile")}
-          className="border-text-dark cursor-pointer rounded-xl border p-2"
+          className="border-text-dark hover:bg-text-dark/15 cursor-pointer rounded-xl border p-2 backdrop-blur-sm duration-150"
         >
           <Settings size={18} />
         </button>
         <SearchInput customClassName="flex-1" shadowText={"Search"} setState={setInputText} />
         <button
           onClick={() => addPrefix(pathname + hash, "/create")}
-          className="border-text-dark cursor-pointer rounded-xl border p-2"
+          className="border-text-dark hover:bg-text-dark/15 cursor-pointer rounded-xl border p-2 backdrop-blur-sm duration-150"
         >
           <MessageCirclePlus size={18} />
         </button>
@@ -78,7 +78,7 @@ export default function ChatList() {
       ) : (
         <CustomScrollBar
           customId={"conversationItemsScrollable"}
-          customClassName="cut-scrollbar-height rounded-3xl h-[calc(100%+9px)]!"
+          customClassName="cut-scrollbar-height h-[calc(100%+9px)]! "
           childrenClassName="pt-15 pb-1.5"
           onScrollStop={(container) =>
             localStorage.setItem(`scroll_pos_conversationItemsScrollable`, container.current.view.scrollTop)

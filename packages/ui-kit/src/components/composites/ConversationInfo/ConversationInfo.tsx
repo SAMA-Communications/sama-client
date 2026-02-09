@@ -3,14 +3,14 @@ import { useMemo } from "react";
 import { getAdapters } from "../../../adapters";
 
 import { CustomScrollBar } from "../CustomScrollBar";
-import { ParticipantInChat } from "../../../components/elements/ParticipantInChat";
-import { ConversationInfoAvatar } from "../../../components/elements/ConversationInfoAvatar";
+import { ParticipantInChat } from "../../elements/ParticipantInChat";
+import { ConversationInfoAvatar } from "../../elements/ConversationInfoAvatar";
 
 import { UserPlus, X, Pencil, Users } from "lucide-react";
 
-import { ChatInfoProps } from "./ChatInfo.types";
+import { ConversationInfoProps } from "./ConversationInfo.types";
 
-export const ChatInfo = ({ conversation, isMobile }: ChatInfoProps) => {
+export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoProps) => {
   const { useParticipants, useHistory } = getAdapters();
   const { getParticipantsByIdsAsObject, getCurrentUser } = useParticipants();
   const { openEditConversationWindow, openAddParticipantsWindow, closeChatInfoPage } = useHistory();
@@ -47,8 +47,8 @@ export const ChatInfo = ({ conversation, isMobile }: ChatInfoProps) => {
     <div className="ui:h-full ui:w-full ui:gap-2.75 ui:p-3.5 ui:md:w-100">
       <CustomScrollBar childrenClassName="ui:flex ui:flex-col">
         <div className="ui:relative ui:flex ui:flex-col ui:items-center ui:justify-center ui:gap-2.75">
-          <button className="ui:mb-1.5 ui:cursor-pointer ui:self-end ui:rounded-xl ui:border ui:border-text-dark ui:p-2">
-            <X size={18} color="var(--color-text-dark)" onClick={closeChatInfoPage} />
+          <button className="ui:mb-1.5 ui:cursor-pointer ui:self-end ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:duration-150 ui:hover:bg-text-dark/15">
+            <X size={18} onClick={closeChatInfoPage} />
           </button>
           <ConversationInfoAvatar conversation={conversation} isEditDisabled={!isCurrentUserOwner} />
           <div className="ui:flex ui:w-4/5 ui:flex-col ui:gap-2.75">
@@ -63,7 +63,7 @@ export const ChatInfo = ({ conversation, isMobile }: ChatInfoProps) => {
           </div>
           {isCurrentUserOwner ? (
             <button
-              className="ui:mt-2.75 ui:flex ui:w-full ui:cursor-pointer ui:items-center ui:justify-center ui:gap-2.75 ui:rounded-xl ui:border ui:border-accent-500 ui:p-2 ui:text-accent-500"
+              className="ui:mt-2.75 ui:flex ui:w-full ui:cursor-pointer ui:items-center ui:justify-center ui:gap-2.75 ui:rounded-xl ui:border ui:border-accent-500 ui:p-2 ui:text-accent-500 ui:duration-150 ui:hover:bg-accent-500/15"
               onClick={openEditConversationWindow}
             >
               Edit Information
@@ -82,7 +82,7 @@ export const ChatInfo = ({ conversation, isMobile }: ChatInfoProps) => {
               </p>
             </div>
             {isCurrentUserOwner ? (
-              <button className="ui:cursor-pointer ui:rounded-xl ui:border ui:border-accent-500 ui:p-2">
+              <button className="ui:cursor-pointer ui:rounded-xl ui:border ui:border-accent-500 ui:p-2 ui:duration-150 ui:hover:bg-accent-500/15">
                 <UserPlus
                   size={18}
                   color="var(--color-accent-500)"

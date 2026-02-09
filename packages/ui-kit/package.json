@@ -78,6 +78,7 @@
   "dependencies": {
     "@tailwindcss/oxide": "^4.1.18",
     "@tailwindcss/vite": "^4.1.18",
+    "@toolwind/corner-shape": "^0.0.8-3",
     "clsx": "^2.1.1",
     "localforage": "^1.10.0",
     "lucide-react": "^0.545.0",

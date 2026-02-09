@@ -31,7 +31,7 @@ export const LastMessage = ({
         <p className="ui:flex ui:items-center ui:gap-0.75 ui:font-light ui:text-nowrap ui:text-accent-500">
           {dRepliedMid && <Reply strokeWidth={2} />} Draft:
         </p>
-        <p className="ui:w-full ui:overflow-hidden ui:font-light ui:text-ellipsis ui:whitespace-nowrap ui:text-text-dark">
+        <p className="ui:w-full ui:overflow-hidden ui:font-extralight ui:text-ellipsis ui:whitespace-nowrap ui:text-text-dark">
           {dText}
         </p>
       </div>
@@ -66,16 +66,13 @@ export const LastMessage = ({
         ) : null}
         {lastAtt ? <LastMessageMedia isSelected={isSelected} attachment={lastAtt} /> : null}
         <p
-          className={`ui:w-full ui:overflow-hidden ui:font-light ui:text-ellipsis ui:whitespace-nowrap ${isSelected ? "ui:text-white" : "ui:text-black"}`}
+          className={`ui:w-full ui:overflow-hidden ui:font-extralight ui:text-ellipsis ui:whitespace-nowrap ${isSelected ? "ui:text-white" : "ui:text-text-dark"}`}
         >
           {buildLastMessageText(body, lastAtt)}
         </p>
       </div>
       {countOfUnreadMessages > 0 ? (
-        <div
-          className="ui:rounded-xl ui:bg-accent-500 ui:px-1.5 ui:py-1 ui:font-light ui:text-white"
-          style={{ padding: "4px 6px" }}
-        >
+        <div className="ui:text-md ui:rounded-lg ui:bg-accent-500 ui:px-1.5 ui:py-0.5 ui:font-light ui:text-white">
           {countOfUnreadMessages}
         </div>
       ) : isAuthorCurrentUser ? (

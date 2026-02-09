@@ -1,8 +1,8 @@
-import { cloneElement, useCallback, useEffect, useMemo } from "react";
+import { cloneElement, useMemo } from "react";
 import { useLocation } from "react-router";
 import { useSelector } from "react-redux";
 
-import { EditModalContainer, ChatInfo } from "@sama-communications.ui-kit";
+import { EditModalContainer, ConversationInfo } from "@sama-communications.ui-kit";
 
 import ChatForm from "@components/hub/ChatForm";
 import ChatList from "@components/hub/ChatList";
@@ -23,7 +23,7 @@ import { getEditWindowTypeFromUrl } from "@utils/NavigationUtils.js";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const blockMap = {
-  "/info": <ChatInfo />,
+  "/info": <ConversationInfo />,
   "/user": <OtherUserProfile />,
   "/add": <UsersSelectModalHub type={"add_participants"} />,
   "/create": <UsersSelectModalHub />,
@@ -101,14 +101,7 @@ export default function Main({ isNeedToAnimate }) {
 
     if (!shouldRenderContent) return null;
 
-    return (
-      <>
-        {/* {isMobileView ? null : (
-          <NavigationLine key="navigationLine" disableAnimation={!isNeedToAnimate} isShareExitEvent={true} />
-        )} */}
-        {hubContainer}
-      </>
-    );
+    return hubContainer;
   }, [hubContainer]);
 
   return (

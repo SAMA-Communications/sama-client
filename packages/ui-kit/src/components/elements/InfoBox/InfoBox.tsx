@@ -27,7 +27,7 @@ export const InfoBox = ({
       className={`ui:flex ui:flex-col ui:gap-0.75 ui:rounded-xl ${onClick && "ui:cursor-pointer"}`}
       onClick={onClick}
     >
-      <p className="ui:text-text-dark">{title}</p>
+      <p className="ui:font-light ui:text-text-dark">{title}</p>
       <div className="ui:flex ui:items-center ui:gap-2.75 ui:rounded-xl ui:border ui:border-text-dark ui:p-2">
         {isIconEnable ? infoIcons[iconType] : null}
         {onChangeValue && systemTitle ? (

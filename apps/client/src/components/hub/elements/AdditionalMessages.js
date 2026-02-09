@@ -61,7 +61,7 @@ export default function AdditionalMessages({
       ) : null}
       <div className="flex w-[calc(100%-2.25rem)] grow flex-col">
         <p
-          className={`text-accent-500 overflow-hidden font-medium text-ellipsis whitespace-nowrap ${isAccent ? "" : "text-white"}`}
+          className={`text-accent-500 overflow-hidden font-medium text-ellipsis whitespace-nowrap ${isAccent ? "var(--color-text-dark)" : "text-white"}`}
         >
           {isEdit ? (
             "Edit message"

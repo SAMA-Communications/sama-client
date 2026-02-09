@@ -27,13 +27,44 @@ export const ConversationInput = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
-  window.onresize = function () {
-    if (inputRef.current) {
-      inputRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
+  useEffect(() => {
+    const handleResize = () => {
+      if (inputRef.current) {
+        inputRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "end",
+        });
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const onSubmitFunc = async () => {
+    const inputValue = inputRef.current?.value?.trim();
+    if (inputValue === undefined) return;
+    let body;
+    if (editedMessage) {
+      body = await editMessage(inputValue, selectedConversation, editedMessage);
+    } else {
+      body = await createAndSendMessage(
+        inputValue,
+        selectedConversation,
+        draftExtenralProps,
+        isSendMessageDisable,
+        disableInput,
+        enableInput,
+        () => {
+          chatMessagesBlockRef.current.scrollTop = chatMessagesBlockRef.current.scrollHeight;
+          if (inputRef.current) {
+            inputRef.current.style.height = `28px`;
+          }
+        },
+      );
+      setTimeout(() => inputRef.current?.focus(), 50);
     }
+    inputRef.current && (inputRef.current.value = body || "");
   };
 
   const disableInput = () => setIsSendMessageDisable(true);
@@ -78,22 +109,7 @@ export const ConversationInput = ({
         isEditAction={!!editedMessage}
         isSending={isSendMessageDisable}
         isMobile={false}
-        onSubmitFunc={() => {
-          editedMessage
-            ? editMessage(inputRef, editedMessage)
-            : createAndSendMessage(
-                inputRef,
-                selectedConversation,
-                draftExtenralProps,
-                isSendMessageDisable,
-                disableInput,
-                enableInput,
-                () => {
-                  chatMessagesBlockRef.current.scrollTop = chatMessagesBlockRef.current.scrollHeight;
-                  inputRef.current && (inputRef.current.style.height = `55px`);
-                },
-              );
-        }}
+        onSubmitFunc={onSubmitFunc}
       />
       {isEnableMagicButton ? <MagicButton isBlockedConv={isBlockedConv} inputTextRef={inputRef} /> : null}
     </div>
