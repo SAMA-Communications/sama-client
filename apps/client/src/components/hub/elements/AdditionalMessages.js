@@ -37,7 +37,7 @@ export default function AdditionalMessages({
       className={`flex shrink items-center lg:max-w-272 ${
         isPreview
           ? "border-text-dark w-[calc(100%-7rem)] gap-2.75 self-center rounded-xl border px-2 py-1"
-          : `-mb-3 flex cursor-pointer flex-row flex-nowrap items-center gap-1.75 rounded-t-xl pt-0.5 pr-3 pb-3 pl-1 ${isAccent ? "bg-bg-dark/15" : "bg-accent-500/65"}`
+          : `-mb-3 flex cursor-pointer flex-row flex-nowrap items-center gap-1.75 rounded-t-xl pt-0.5 pr-3 pb-3 pl-1 ${isAccent ? "bg-bg-dark/5" : "bg-accent-500/65"}`
       }`}
       onClick={onClickFunc}
     >

@@ -13,9 +13,9 @@ export const MessageStatus = ({ status, message, color = "accent" }: MessageStat
   const iconColor = color === "white" ? "white" : "#7678e5";
 
   const icons = {
-    sent: <Check size={24} color={iconColor} />,
-    read: <CheckCheck size={24} color={iconColor} />,
-    default: <Clock size={24} color={iconColor} />,
+    sent: <Check size={18} color={iconColor} />,
+    read: <CheckCheck size={18} color={iconColor} />,
+    default: <Clock size={18} color={iconColor} />,
   };
 
   return icons[messageStatus || "default"];

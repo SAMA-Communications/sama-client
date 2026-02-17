@@ -20,10 +20,11 @@ import { showOtherUserProfileContainer, showOtherUserProfileContent } from "@uti
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/constants.js";
 
+import { User, Reply } from "lucide-react";
+
 import Close from "@icons/actions/CloseGray.svg?react";
 import LinkTo from "@icons/options/LinkTo.svg?react";
 import BackBtn from "@icons/options/Back.svg?react";
-import UserIcon from "@icons/users/ProfileIcon.svg?react";
 
 export default function OtherUserProfile() {
   const dispatch = useDispatch();
@@ -92,14 +93,13 @@ export default function OtherUserProfile() {
                 onClick={() => removeAndNavigateLastSection(pathname + hash)}
               />
             )}
-            <div className="relative flex h-[160px] w-[160px] cursor-pointer items-center justify-center overflow-hidden rounded-[24px] bg-(--color-bg-light)">
-              <DynamicAvatar
-                avatarUrl={userObject.avatar_url}
-                avatarBlurHash={userObject.avatar_object?.file_blur_hash}
-                defaultIcon={<UserIcon />}
-                altText={"User's Profile"}
-              />
-            </div>
+            <DynamicAvatar
+              size={160}
+              avatarUrl={userObject.avatar_url}
+              avatarBlurHash={userObject.avatar_object?.file_blur_hash}
+              defaultIcon={<User size={80} color="white" />}
+              altText={"User's Profile"}
+            />
             <div className="w-[90%]">
               <p className="mt-[-5px] overflow-hidden text-center text-2xl font-medium text-ellipsis whitespace-nowrap text-black">
                 {getUserFullName(userObject)}
@@ -130,10 +130,10 @@ export default function OtherUserProfile() {
               value={email}
               hideIfNull={true}
             />
-            <div className="mt-[10px] flex cursor-pointer items-center gap-[10px] px-[10px]">
-              <LinkTo />
+            <div className="mt-[10px] flex cursor-pointer items-center gap-[10px] px-2">
+              <Reply size={18} color="var(--color-accent-500)" />
               <p
-                className="text-h6 text-(--color-accent-500)"
+                className="text-h6 text-accent-500"
                 onClick={async () => {
                   const chatId = await conversationService.createPrivateChat(userId);
                   navigateTo(`/#${chatId}`);

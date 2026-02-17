@@ -46,7 +46,7 @@ export default function ChatFormContent() {
       return (
         <CustomScrollBar
           customId={"chatMessagesScrollable"}
-          customClassName="cut-scrollbar-height rounded-3xl h-[calc(100%+9px)]!"
+          customClassName="rounded-3xl h-[calc(100%+9px)]!"
           childrenClassName="py-1.5"
         >
           <SMessageList />

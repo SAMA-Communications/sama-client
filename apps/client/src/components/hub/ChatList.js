@@ -48,22 +48,22 @@ export default function ChatList() {
   }, [filteredConversations, selectedConversation]);
 
   return (
-    <section key="chaList" className="relative overflow-hidden xl:w-100">
-      <div
+    <section key="chaList" className="relative h-dvh overflow-hidden xl:w-100">
+      {/* <div
         className="from-bg-light/90 absolute top-0 left-0 z-1 h-17 w-full bg-linear-to-b from-50% to-transparent"
         style={{ pointerEvents: "none" }}
-      ></div>
-      <div className="absolute top-3.5 left-0 z-2 flex w-full items-center gap-2.5 px-3.5">
+      ></div> */}
+      <div className="flex h-16 w-full items-center gap-2.5 px-3.5">
         <button
           onClick={() => addPrefix(currentPath, "/profile")}
-          className="border-text-dark hover:bg-text-dark/15 cursor-pointer rounded-xl border p-2 backdrop-blur-sm duration-150"
+          className="hover:bg-bg-dark shadow-btn cursor-pointer rounded-xl bg-white p-2 duration-150 hover:text-white"
         >
           <Settings size={18} />
         </button>
         <SearchInput customClassName="flex-1" shadowText={"Search"} setState={setInputText} />
         <button
           onClick={() => addPrefix(pathname + hash, "/create")}
-          className="border-text-dark hover:bg-text-dark/15 cursor-pointer rounded-xl border p-2 backdrop-blur-sm duration-150"
+          className="hover:bg-bg-dark shadow-btn cursor-pointer rounded-xl bg-white p-2 duration-150 hover:text-white"
         >
           <MessageCirclePlus size={18} />
         </button>
@@ -78,8 +78,8 @@ export default function ChatList() {
       ) : (
         <CustomScrollBar
           customId={"conversationItemsScrollable"}
-          customClassName="cut-scrollbar-height h-[calc(100%+9px)]! "
-          childrenClassName="pt-15 pb-1.5"
+          customClassName="h-full" //h-[calc(100%+9px)]!
+          childrenClassName="px-1"
           onScrollStop={(container) =>
             localStorage.setItem(`scroll_pos_conversationItemsScrollable`, container.current.view.scrollTop)
           }

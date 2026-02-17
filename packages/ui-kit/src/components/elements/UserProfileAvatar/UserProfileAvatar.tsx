@@ -27,9 +27,10 @@ export const UserProfileAvatar = ({ swapAccentAndMainColor }: UserProfileAvatarP
         className={`ui:flex ui:h-full ui:w-full ui:items-center ui:justify-center ui:gap-2.75 ui:overflow-hidden ui:rounded-full ui:bg-hover-light ${swapAccentAndMainColor ? "ui:bg-accent-100" : "ui:bg-bg-light"} `}
       >
         <DynamicAvatar
+          size={120}
           avatarUrl={avatar_url}
           avatarBlurHash={avatar_blur_hash}
-          defaultIcon={<User size={80} color="var(--color-text-dark)" />}
+          defaultIcon={<User size={80} color="white" />}
           altText="User profile"
         />
         <input

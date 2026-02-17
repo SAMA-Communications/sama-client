@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { getAdapters } from "../../../adapters";
 
-import { MagicButton } from "../../elements/MagicButton";
 import { MessageInput } from "../../elements/MessageInput";
 
 import { ConversationInputProps } from "./ConversationInput.type";
@@ -102,16 +101,16 @@ export const ConversationInput = ({
   }, [selectedConversation, getUserById]);
 
   return (
-    <div className="flex w-full items-end gap-2.5 self-center pb-3.5 lg:max-w-300">
+    <div className="ui:flex ui:w-full ui:items-end ui:gap-2.5 ui:self-center ui:pb-3.5 ui:lg:max-w-300">
       <MessageInput
         inputTextRef={inputRef}
         isBlockedConv={isBlockedConv}
         isEditAction={!!editedMessage}
         isSending={isSendMessageDisable}
         isMobile={false}
+        isEnableMagicButton={isEnableMagicButton}
         onSubmitFunc={onSubmitFunc}
       />
-      {isEnableMagicButton ? <MagicButton isBlockedConv={isBlockedConv} inputTextRef={inputRef} /> : null}
     </div>
   );
 };

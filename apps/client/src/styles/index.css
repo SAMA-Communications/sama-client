@@ -27,6 +27,12 @@
   --color-indicator: #68174d;
 }
 
+@utility shadow-btn {
+  box-shadow:
+    rgba(50, 50, 105, 0.15) 0px 2px 5px 0px,
+    rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
+}
+
 *:not(i) {
   font-family: var(--font-base);
   font-variant-numeric: tabular-nums;
@@ -45,8 +51,10 @@ body {
 }
 
 .lucide {
-  color: black;
   stroke-width: 1px;
+  transition:
+    color 0.15s linear,
+    transform 0.15s linear;
 }
 
 /* scroll */
@@ -109,12 +117,6 @@ body {
 #conversationItemsScrollable .infinite-scroll-component {
   display: flex;
   flex-direction: column;
-}
-
-/* conversations list scrollbar height cut */
-.cut-scrollbar-height > div:nth-child(3) {
-  padding-top: 62px;
-  padding-bottom: 12px;
 }
 
 /* auth form checkbox */

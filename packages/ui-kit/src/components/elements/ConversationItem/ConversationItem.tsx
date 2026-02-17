@@ -6,7 +6,7 @@ import { TypingLine } from "../TypingLine";
 import { DynamicAvatar } from "../DynamicAvatar";
 import { LastMessage } from "../LastMessage/LastMessage";
 
-import { Users, CircleQuestionMark } from "lucide-react";
+import { Users, UserRoundX } from "lucide-react";
 
 import { ConversationItemProps } from "./ConversationItem.types";
 
@@ -34,6 +34,8 @@ export const ConversationItem = ({ conversation, isSelected, ...rest }: Conversa
 
   const currentUserId = getCurrentUser()._id;
 
+  const opponentId = currentUserId === owner_id ? opponent_id : owner_id;
+
   const participant = useMemo(() => {
     if (isGroup) return null;
 
@@ -60,35 +62,35 @@ export const ConversationItem = ({ conversation, isSelected, ...rest }: Conversa
 
   return (
     <div
-      className={`ui:relative ui:flex ui:w-full ui:cursor-pointer ui:items-center ui:gap-3.75 ui:rounded-xl ui:px-3.5 ui:py-2.5 ui:duration-100 ui:focus:outline-none ${
-        isSelected ? "ui:bg-accent-500" : "ui:hover:bg-accent-500/20"
+      className={`ui:relative ui:flex ui:w-full ui:cursor-pointer ui:items-center ui:gap-3.75 ui:rounded-2xl ui:px-2.5 ui:py-2.5 ui:duration-100 ui:focus:outline-none ${
+        isSelected ? "ui:bg-accent-100 ui:shadow-btn" : "ui:hover:bg-accent-100/50"
       } `}
       {...rest}
     >
-      <div className="ui:flex ui:h-15 ui:w-15 ui:items-center ui:justify-center ui:overflow-hidden ui:rounded-2xl ui:bg-bg-dark ui:text-2xl ui:font-light ui:text-text-dark/75 ui:corner-squircle">
-        <DynamicAvatar
-          avatarUrl={image_url || participant?.avatar_url}
-          avatarBlurHash={image_object?.file_blur_hash || participant?.avatar_object?.file_blur_hash}
-          defaultIcon={
-            isGroup || displayName ? displayName.slice(0, 2).toUpperCase() : <CircleQuestionMark size={32} />
-          }
-          altText={isGroup ? "Chat Group" : "User's Profile"}
-        />
-      </div>
+      <DynamicAvatar
+        size={60}
+        avatarUrl={image_url || participant?.avatar_url}
+        avatarBlurHash={image_object?.file_blur_hash || participant?.avatar_object?.file_blur_hash}
+        defaultIcon={
+          isGroup || displayName !== "Deleted account" ? (
+            displayName.slice(0, 2).toUpperCase()
+          ) : (
+            <UserRoundX size={32} />
+          )
+        }
+        altText={isGroup ? "Chat Group" : "User's Profile"}
+        bgColorKey={isGroup ? cid : opponentId}
+      />
       <div className="ui:flex ui:max-h-17.5 ui:max-w-[calc(100%-60px)] ui:flex-1 ui:flex-col ui:justify-between ui:overflow-hidden">
         <div className="ui:flex ui:items-center ui:justify-between ui:gap-3">
           <p
-            className={`ui:flex ui:flex-nowrap ui:items-center ui:gap-1.5 ui:overflow-hidden ui:text-lg ui:text-ellipsis ui:whitespace-nowrap ${isSelected ? "ui:text-white" : "ui:text-black"}`}
+            className={`ui:flex ui:flex-nowrap ui:items-center ui:gap-1.5 ui:overflow-hidden ui:text-lg ui:text-ellipsis ui:whitespace-nowrap`}
           >
             {/* {&zwnj; */}
-            {isGroup && <Users color={isSelected ? "white" : "black"} size={18} />}
+            {isGroup && <Users size={18} />}
             {displayName}
           </p>
-          <div
-            className={`ui:text-md ui:font-light ui:text-text-dark/60 ui:ordinal! ${isSelected ? "ui:text-white" : "ui:text-text-dark"}`}
-          >
-            {tView}
-          </div>
+          <div className={`ui:text-md ui:font-light ui:text-text-dark/60 ui:ordinal!`}>{tView}</div>
         </div>
         <div className="ui:flex ui:h-8 ui:items-center ui:justify-between ui:gap-3">
           {typing_users?.length && !isSelected ? (

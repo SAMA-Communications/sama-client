@@ -28,7 +28,7 @@ export const InfoBox = ({
       onClick={onClick}
     >
       <p className="ui:font-light ui:text-text-dark">{title}</p>
-      <div className="ui:flex ui:items-center ui:gap-2.75 ui:rounded-xl ui:border ui:border-text-dark ui:p-2">
+      <div className="ui:flex ui:items-center ui:gap-2.75 ui:rounded-xl ui:bg-text-dark/5 ui:p-2">
         {isIconEnable ? infoIcons[iconType] : null}
         {onChangeValue && systemTitle ? (
           <input

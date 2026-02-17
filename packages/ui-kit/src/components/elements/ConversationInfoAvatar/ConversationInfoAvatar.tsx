@@ -23,12 +23,13 @@ export const ConversationInfoAvatar = ({ conversation, isEditDisabled }: Convers
   return (
     <div className="ui:relative ui:h-30 ui:w-30 ui:self-center">
       <div
-        className={`ui:flex ui:h-full ui:w-full ui:items-center ui:justify-center ui:gap-2.75 ui:overflow-hidden ui:rounded-2xl ui:bg-hover-light`}
+        className={`ui:flex ui:h-full ui:w-full ui:items-center ui:justify-center ui:gap-2.75 ui:overflow-hidden ui:rounded-3xl ui:bg-hover-light`}
       >
         <DynamicAvatar
+          size={120}
           avatarUrl={conversation.image_url}
           avatarBlurHash={conversation.image_object?.file_blur_hash}
-          defaultIcon={<Image strokeWidth={1} size={80} color="var(--color-text-dark)" />}
+          defaultIcon={<Image size={80} color="white" />}
           altText="Chat Group"
         />
         <input
@@ -46,7 +47,7 @@ export const ConversationInfoAvatar = ({ conversation, isEditDisabled }: Convers
           className="ui:absolute ui:-right-1.25 ui:-bottom-1.25 ui:flex ui:cursor-pointer ui:items-center ui:justify-center ui:rounded-full ui:border-4 ui:border-bg-light ui:bg-accent-500 ui:p-2"
           onClick={pickFileClick}
         >
-          <Camera strokeWidth={1} size={28} color="white" />
+          <Camera size={28} color="white" />
         </div>
       )}
     </div>

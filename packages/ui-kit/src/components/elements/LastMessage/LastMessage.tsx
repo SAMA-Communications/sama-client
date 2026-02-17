@@ -59,15 +59,9 @@ export const LastMessage = ({
   return (
     <>
       <div className="ui:flex ui:flex-1 ui:items-center ui:gap-1.25 ui:overflow-y-hidden">
-        {isShowUserName ? (
-          <p className={`ui:font-light ui:text-nowrap ${isSelected ? "ui:text-white" : "ui:text-accent-500"}`}>
-            {displayName}:
-          </p>
-        ) : null}
+        {isShowUserName ? <p className={`ui:font-light ui:text-nowrap ui:text-accent-500`}>{displayName}:</p> : null}
         {lastAtt ? <LastMessageMedia isSelected={isSelected} attachment={lastAtt} /> : null}
-        <p
-          className={`ui:w-full ui:overflow-hidden ui:font-extralight ui:text-ellipsis ui:whitespace-nowrap ${isSelected ? "ui:text-white" : "ui:text-text-dark"}`}
-        >
+        <p className={`ui:w-full ui:overflow-hidden ui:font-extralight ui:text-ellipsis ui:whitespace-nowrap`}>
           {buildLastMessageText(body, lastAtt)}
         </p>
       </div>
@@ -76,7 +70,7 @@ export const LastMessage = ({
           {countOfUnreadMessages}
         </div>
       ) : isAuthorCurrentUser ? (
-        <MessageStatus message={message} color={isSelected ? "white" : "accent"} />
+        <MessageStatus message={message} color={"accent"} />
       ) : null}
     </>
   );

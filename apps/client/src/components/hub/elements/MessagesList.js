@@ -287,26 +287,46 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
         i < messages.length - 1 ? messages[i].from === messages[i + 1].from && !messages[i + 1].x?.type : false;
       const isSelected = forwardedMids.includes(_id);
 
+      const isLongTimeBetweenMessages =
+        i < messages.length - 1
+          ? +(Date.parse(messages[i + 1].created_at) - Date.parse(msg.created_at)) / 60000 > 5
+          : true;
+      const isSameDayAsPrevMessage =
+        i > 0 ? new Date(msg.created_at).toDateString() === new Date(messages[i - 1].created_at).toDateString() : false;
+
       return x?.type ? (
         <InformativeMessage key={key} id={key} params={x} text={body} isNextMesssageUsers={isNextMessageYours} />
       ) : (
-        <ChatMessage
-          key={key}
-          id={key}
-          message={msg}
-          onViewFunc={isScrolling ? null : messagesFetchFunc[msg._id]}
-          onSelectClick={!isSelected && forwardedMids.length < 20 ? selectMessageFunc : null}
-          onUnselectClick={isSelected ? unselectMessageFunc : null}
-          onReplyClickFunc={() => onReplyClick(repliedMessage)}
-          repliedMessage={repliedMessage}
-          sender={participants[from]}
-          currentUserId={currentUserId}
-          isMobile={isMobile}
-          isSelected={isSelected}
-          isSelectionMode={isSelectionMode}
-          isPrevMesssageYours={isPrevMesssageYours}
-          isNextMessageYours={isNextMessageYours}
-        />
+        <>
+          {!isSameDayAsPrevMessage && (
+            <div key={key + "day_time"} className="flex justify-center py-2">
+              <span className="text-text-dark/40 mb-1.25 p-2 font-light">
+                {new Date(msg.created_at).toLocaleDateString("en-US", {
+                  day: "numeric",
+                  month: "short",
+                })}
+              </span>
+            </div>
+          )}
+          <ChatMessage
+            key={key}
+            id={key}
+            message={msg}
+            onViewFunc={isScrolling ? null : messagesFetchFunc[msg._id]}
+            onSelectClick={!isSelected && forwardedMids.length < 20 ? selectMessageFunc : null}
+            onUnselectClick={isSelected ? unselectMessageFunc : null}
+            onReplyClickFunc={() => onReplyClick(repliedMessage)}
+            repliedMessage={repliedMessage}
+            sender={participants[from]}
+            currentUserId={currentUserId}
+            isMobile={isMobile}
+            isSelected={isSelected}
+            isSelectionMode={isSelectionMode}
+            isPrevMesssageYours={isPrevMesssageYours}
+            isNextMessageYours={isNextMessageYours}
+            isLongTimeBetweenMessages={isLongTimeBetweenMessages}
+          />
+        </>
       );
     });
   }, [isScrolling, messages, messagesFetchFunc, forwardedMids, hash]);
@@ -385,7 +405,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
         ref={scrollableContainer}
         onScroll={handleScroll}
       >
-        <div className="flex h-full flex-col gap-0.75">{messagesView}</div>
+        <div className="flex h-full flex-col gap-1.75">{messagesView}</div>
       </div>
       <div
         className={`absolute top-0 right-1 h-full w-1.5 transition-opacity duration-250 ${scrollbarVisible ? "" : "opacity-0"}`}

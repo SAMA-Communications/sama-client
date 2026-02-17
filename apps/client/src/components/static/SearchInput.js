@@ -22,7 +22,7 @@ export default function SearchInput({
 
   return (
     <div
-      className={`border-text-dark relative flex h-9 cursor-text flex-row items-center gap-1.5 rounded-xl border px-2.5 backdrop-blur-sm ${customClassName}`}
+      className={`shadow-btn relative flex h-9 cursor-text flex-row items-center gap-1.5 rounded-xl bg-white px-2.5 backdrop-blur-sm ${customClassName}`}
       onClick={() => inputRef.current.focus()}
     >
       <Search size={isLargeSize ? 24 : 18} />

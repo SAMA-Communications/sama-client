@@ -6,7 +6,7 @@ import { CustomScrollBar } from "../CustomScrollBar";
 import { ParticipantInChat } from "../../elements/ParticipantInChat";
 import { ConversationInfoAvatar } from "../../elements/ConversationInfoAvatar";
 
-import { UserPlus, X, Pencil, Users } from "lucide-react";
+import { UserPlus, X, Pencil, Users, LogOut } from "lucide-react";
 
 import { ConversationInfoProps } from "./ConversationInfo.types";
 
@@ -44,59 +44,70 @@ export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoPro
   const participantsCount = participantsList?.length || 0;
 
   return (
-    <div className="ui:h-full ui:w-full ui:gap-2.75 ui:p-3.5 ui:md:w-100">
-      <CustomScrollBar childrenClassName="ui:flex ui:flex-col">
-        <div className="ui:relative ui:flex ui:flex-col ui:items-center ui:justify-center ui:gap-2.75">
-          <button className="ui:mb-1.5 ui:cursor-pointer ui:self-end ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:duration-150 ui:hover:bg-text-dark/15">
-            <X size={18} onClick={closeChatInfoPage} />
+    <div className="ui:flex ui:h-full ui:w-full ui:flex-col ui:gap-2.75 ui:p-3.5 ui:md:w-100">
+      <div className="ui:relative ui:flex ui:flex-col ui:items-center ui:justify-center ui:gap-2.75">
+        <div className="ui:flex ui:w-full ui:justify-between ui:gap-2.5">
+          <button
+            className="ui:mb-1.5 ui:cursor-pointer ui:self-end ui:rounded-xl ui:bg-white ui:p-2 ui:shadow-btn ui:duration-150 ui:hover:bg-bg-dark ui:hover:text-white"
+            onClick={closeChatInfoPage}
+          >
+            <X size={18} />
           </button>
-          <ConversationInfoAvatar conversation={conversation} isEditDisabled={!isCurrentUserOwner} />
-          <div className="ui:flex ui:w-4/5 ui:flex-col ui:gap-2.75">
-            <p className="ui:overflow-hidden ui:text-center ui:text-2xl ui:font-medium ui:text-ellipsis ui:whitespace-nowrap">
-              {conversation.name || "Group name"}
+        </div>
+        <ConversationInfoAvatar conversation={conversation} isEditDisabled={!isCurrentUserOwner} />
+        <div className="ui:flex ui:w-4/5 ui:flex-col ui:gap-2.75">
+          <p className="ui:overflow-hidden ui:text-center ui:text-2xl ui:font-medium ui:text-ellipsis ui:whitespace-nowrap">
+            {conversation.name || "Group name"}
+          </p>
+          {conversation.description ? (
+            <p className="ui:line-clamp-2 ui:max-h-12 ui:overflow-hidden ui:text-text-dark">
+              (<span className="">{conversation.description}</span>)
             </p>
-            {conversation.description ? (
-              <p className="ui:line-clamp-2 ui:max-h-12 ui:overflow-hidden ui:text-sm ui:text-text-dark">
-                (<span className="">{conversation.description}</span>)
-              </p>
-            ) : null}
+          ) : null}
+          {isCurrentUserOwner ? (
+            <p
+              className="ui:-mt-1.75 ui:cursor-pointer ui:text-center ui:text-lg ui:text-accent-500"
+              onClick={openEditConversationWindow}
+            >
+              Edit Group Info
+            </p>
+          ) : null}
+        </div>
+      </div>
+
+      <hr className="ui:mt-5 ui:mb-2.5 ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
+      <div className="ui:flex ui:flex-1 ui:flex-col ui:gap-2.75">
+        <div className="ui:flex ui:justify-between ui:gap-2.75">
+          <div className="ui:flex ui:items-center ui:gap-1.75 ui:rounded-xl ui:bg-bg-dark/5 ui:p-2 ui:text-text-dark">
+            <Users size={18} />
+            <p className="ui:text-sm">
+              {participantsCount} member{participantsCount > 1 ? "s" : ""}
+            </p>
           </div>
           {isCurrentUserOwner ? (
             <button
-              className="ui:mt-2.75 ui:flex ui:w-full ui:cursor-pointer ui:items-center ui:justify-center ui:gap-2.75 ui:rounded-xl ui:border ui:border-accent-500 ui:p-2 ui:text-accent-500 ui:duration-150 ui:hover:bg-accent-500/15"
-              onClick={openEditConversationWindow}
+              className="ui:cursor-pointer ui:rounded-xl ui:bg-hover-light ui:p-2 ui:duration-150 ui:hover:bg-accent-500 ui:hover:text-white"
+              onClick={openAddParticipantsWindow}
             >
-              Edit Information
-              <Pencil size={18} color="var(--color-accent-500)" />
+              <UserPlus size={18} />
             </button>
           ) : null}
         </div>
+        <CustomScrollBar autoHeight={isMobile ? true : false} autoHeightMax={isMobile ? 400 : 0}>
+          {participantsList}
+        </CustomScrollBar>
+      </div>
 
-        <hr className="ui:mt-5 ui:mb-2.5 ui:h-0.5 ui:text-text-dark/40" />
-        <div className="ui:flex ui:flex-1 ui:flex-col ui:gap-2.75">
-          <div className="ui:flex ui:justify-between ui:gap-2.75">
-            <div className="ui:flex ui:items-center ui:gap-1.75 ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:text-text-dark">
-              <Users size={18} />
-              <p className="ui:text-sm">
-                {participantsCount} member{participantsCount > 1 ? "s" : ""}
-              </p>
-            </div>
-            {isCurrentUserOwner ? (
-              <button className="ui:cursor-pointer ui:rounded-xl ui:border ui:border-accent-500 ui:p-2 ui:duration-150 ui:hover:bg-accent-500/15">
-                <UserPlus
-                  size={18}
-                  color="var(--color-accent-500)"
-                  className="cursor-pointer"
-                  onClick={openAddParticipantsWindow}
-                />
-              </button>
-            ) : null}
-          </div>
-          <CustomScrollBar autoHeight={isMobile ? true : false} autoHeightMax={isMobile ? 400 : 0}>
-            {participantsList}
-          </CustomScrollBar>
-        </div>
-      </CustomScrollBar>
+      <hr className="ui:mt-auto ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
+      <button
+        className="ui:mt-2.75 ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75 ui:rounded-xl ui:bg-white ui:p-2 ui:text-danger ui:shadow-btn ui:duration-150 ui:hover:bg-danger ui:hover:text-white"
+        onClick={() => {
+          // navigateToAuthPage();
+          // onLogout();
+        }}
+      >
+        <LogOut size={18} /> Leave Group
+      </button>
     </div>
   );
 };

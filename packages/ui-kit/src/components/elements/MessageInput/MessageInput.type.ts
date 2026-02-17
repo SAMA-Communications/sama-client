@@ -4,5 +4,6 @@ export interface MessageInputProps {
   isEditAction: boolean;
   isMobile: boolean;
   isSending: boolean;
+  isEnableMagicButton: boolean;
   onSubmitFunc: React.MouseEventHandler<SVGSVGElement>;
 }

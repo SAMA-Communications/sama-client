@@ -112,7 +112,7 @@ export const ConversationHeader = ({
   //   useKeyDown(KEY_CODES.ESCAPE, closeSelectionMode);
 
   return isSelectionMode ? (
-    <div className="ui:pt-3.5ui: pb-1 ui:flex ui:h-16 ui:w-full ui:gap-2.5 ui:rounded-xl">
+    <div className="ui:flex ui:h-16 ui:w-full ui:gap-2.5 ui:rounded-xl ui:pt-3.5 ui:pb-1">
       <button
         className="ui:flex ui:h-max ui:cursor-pointer ui:items-center ui:gap-1.5 ui:self-center ui:rounded-xl ui:bg-accent-500 ui:px-2.5 ui:py-1.5 ui:text-white"
         onClick={openForwardSection}
@@ -139,7 +139,7 @@ export const ConversationHeader = ({
   ) : (
     <div className="ui:flex ui:h-16 ui:w-full ui:gap-2.5 ui:rounded-xl ui:pt-2 ui:pb-1">
       <button
-        className="ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:duration-150 ui:hover:bg-text-dark/15"
+        className="ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:bg-white ui:p-2 ui:shadow-btn ui:duration-150 ui:hover:bg-bg-dark ui:hover:text-white"
         onClick={closeFormFunc}
       >
         <ChevronLeft size={18} />
@@ -157,17 +157,17 @@ export const ConversationHeader = ({
       {isCurrentUserOwner && isGroupChat ? (
         <div className="flex gap-1.5">
           <button
-            className={`ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:border ui:p-2 ui:duration-150 ui:hover:bg-text-dark/15 ui:focus:outline-none ${currentTab === "apps" ? "ui:border-accent-500 ui:bg-accent-500" : "ui:border-text-dark ui:bg-transparent"}`}
+            className={`ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:bg-white ui:p-2 ui:shadow-btn ui:duration-150 ui:hover:bg-bg-dark ui:hover:text-white ui:focus:outline-none ${currentTab === "apps" ? "ui:bg-bg-dark ui:text-white" : ""}`}
             onClick={() =>
               changeTabFunc(currentTab === "messages" ? CHAT_CONTENT_TABS.APPS : CHAT_CONTENT_TABS.MESSAGES)
             }
           >
-            <Code size={18} color={currentTab === "apps" ? "white" : "black"} />
+            <Code size={18} />
           </button>
         </div>
       ) : null}
       <button
-        className="ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:duration-150 ui:hover:bg-text-dark/15"
+        className="ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:bg-white ui:p-2 ui:shadow-btn ui:duration-150 ui:hover:bg-bg-dark ui:hover:text-white"
         onContextMenu={onContextMenu}
         onClick={onContextMenu}
       >

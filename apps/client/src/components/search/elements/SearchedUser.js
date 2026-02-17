@@ -47,10 +47,7 @@ export default function SearchedUser({
       return;
     }
 
-    const chatId = await conversationService.createPrivateChat(
-      uObject._id,
-      uObject
-    );
+    const chatId = await conversationService.createPrivateChat(uObject._id, uObject);
     navigateTo(`/#${chatId}`);
 
     additionalOnClickfunc && additionalOnClickfunc(chatId);
@@ -58,7 +55,7 @@ export default function SearchedUser({
 
   return (
     <m.div
-      className="w-[400px] p-[10px] gap-[15px] justify-start rounded-[12px] flex items-center hover:bg-(--color-hover-light) max-md:w-full cursor-pointer"
+      className="flex w-[400px] cursor-pointer items-center justify-start gap-[15px] rounded-[12px] p-[10px] hover:bg-(--color-hover-light) max-md:w-full"
       onClick={onClickFunc}
       initial={{ opacity: 0, x: -10 }}
       exit={{ x: 10, opacity: 0 }}
@@ -68,20 +65,19 @@ export default function SearchedUser({
       transition={{ duration: 0.2, delay: index * 0.05 }}
       layout
     >
-      <div className="relative w-[70px] h-[70px] !font-light text-h4 rounded-[8px] bg-(--color-bg-dark) flex items-center justify-center text-(--color-text-dark) overflow-hidden">
-        <DynamicAvatar
-          avatarUrl={uObject.avatar_url}
-          avatarBlurHash={uObject.avatar_object?.file_blur_hash}
-          defaultIcon={getUserInitials(uObject)}
-          altText={"User's Profile"}
-        />
-        {isSelected ? (
-          <div className="absolute bottom-[3px] right-[3px] w-[20px] h-[20px] rounded-full bg-(--color-accent-500) flex items-center justify-center z-10">
-            <Selected />
-          </div>
-        ) : null}
-      </div>
-      <p className="flex-1 text-h6 !font-medium text-black overflow-hidden overflow-ellipsis whitespace-nowrap">
+      <DynamicAvatar
+        size={70}
+        avatarUrl={uObject.avatar_url}
+        avatarBlurHash={uObject.avatar_object?.file_blur_hash}
+        defaultIcon={getUserInitials(uObject)}
+        altText={"User's Profile"}
+      />
+      {isSelected ? (
+        <div className="absolute right-[3px] bottom-[3px] z-10 flex h-[20px] w-[20px] items-center justify-center rounded-full bg-(--color-accent-500)">
+          <Selected />
+        </div>
+      ) : null}
+      <p className="text-h6 flex-1 overflow-hidden !font-medium overflow-ellipsis whitespace-nowrap text-black">
         {getUserFullName(uObject)}
       </p>
     </m.div>

@@ -5,7 +5,7 @@ import { getAdapters } from "../../../adapters";
 
 import { OvalLoader } from "../OvalLoader";
 
-import { WandSparkles, CloudFog, ScrollText } from "lucide-react";
+import { Sparkles, CloudFog, ScrollText } from "lucide-react";
 
 import { MagicButtonProps } from "./MagicButton.type";
 
@@ -63,15 +63,15 @@ export const MagicButton = ({ inputTextRef, isBlockedConv }: MagicButtonProps) =
   };
 
   return (
-    <div className="magic-wand ui:flex ui:items-center ui:justify-center ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:duration-150 ui:hover:bg-text-dark/15">
+    <div className="magic-wand ui:flex ui:items-center ui:justify-center ui:rounded-xl">
       {isLoading ? (
         <OvalLoader width={28} height={28} />
       ) : (
-        <WandSparkles
+        <Sparkles
           size={28}
           data-tooltip-id="editor-options-tooltip"
           data-tooltip-delay-hide={500}
-          color="var(--color-text-dark)"
+          color="var(--color-accent-500)"
           className="ui:cursor-pointer"
           onClick={() => setIsOpen((s) => !s)}
         />
