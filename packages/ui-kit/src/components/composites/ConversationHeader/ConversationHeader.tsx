@@ -114,7 +114,7 @@ export const ConversationHeader = ({
   return isSelectionMode ? (
     <div className="ui:flex ui:h-16 ui:w-full ui:gap-2.5 ui:rounded-xl ui:pt-3.5 ui:pb-1">
       <button
-        className="ui:flex ui:h-max ui:cursor-pointer ui:items-center ui:gap-1.5 ui:self-center ui:rounded-xl ui:bg-accent-500 ui:px-2.5 ui:py-1.5 ui:text-white"
+        className="ui:flex ui:h-max ui:cursor-pointer ui:items-center ui:gap-1.5 ui:self-center ui:rounded-xl ui:bg-accent-500 ui:px-2.5 ui:py-1.5 ui:text-white ui:shadow-btn"
         onClick={openForwardSection}
       >
         <Forward size={18} color="white" />
@@ -122,7 +122,7 @@ export const ConversationHeader = ({
         <span className="ui:text-white/75">{countOfSelectedMessages}</span>
       </button>
       <button
-        className="ui:flex ui:h-max ui:cursor-pointer ui:items-center ui:gap-1.5 ui:self-center ui:rounded-xl ui:bg-accent-500 ui:px-2.5 ui:py-1.5 ui:text-white"
+        className="ui:flex ui:h-max ui:cursor-pointer ui:items-center ui:gap-1.5 ui:self-center ui:rounded-xl ui:bg-accent-500 ui:px-2.5 ui:py-1.5 ui:text-white ui:shadow-btn"
         onClick={async () => await deleteSelectedMessages(selectedCID, midsArrayOfSelectedMessages)}
       >
         <Trash size={18} color="white" />
@@ -157,7 +157,7 @@ export const ConversationHeader = ({
       {isCurrentUserOwner && isGroupChat ? (
         <div className="flex gap-1.5">
           <button
-            className={`ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:bg-white ui:p-2 ui:shadow-btn ui:duration-150 ui:hover:bg-bg-dark ui:hover:text-white ui:focus:outline-none ${currentTab === "apps" ? "ui:bg-bg-dark ui:text-white" : ""}`}
+            className={`ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:bg-white ui:p-2 ui:shadow-btn ui:duration-150 ui:hover:bg-bg-dark ui:hover:text-white ui:focus:outline-none ${currentTab === "apps" ? "ui:bg-bg-dark! ui:text-white" : ""}`}
             onClick={() =>
               changeTabFunc(currentTab === "messages" ? CHAT_CONTENT_TABS.APPS : CHAT_CONTENT_TABS.MESSAGES)
             }

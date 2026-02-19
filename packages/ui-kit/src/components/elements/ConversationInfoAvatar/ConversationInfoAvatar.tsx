@@ -31,6 +31,7 @@ export const ConversationInfoAvatar = ({ conversation, isEditDisabled }: Convers
           avatarBlurHash={conversation.image_object?.file_blur_hash}
           defaultIcon={<Image size={80} color="white" />}
           altText="Chat Group"
+          bgColorKey={conversation._id}
         />
         <input
           id="inputFile"

@@ -20,6 +20,7 @@ import { getIsMobileView } from "@store/values/IsMobileView.js";
 import { upsertMidsInPath } from "@utils/NavigationUtils.js";
 
 import { ChevronDown } from "lucide-react";
+import InteractiveDate from "./InteractiveDate.js";
 
 export default function MessagesList({ scrollRef: scrollableContainer }) {
   const dispatch = useDispatch();
@@ -292,22 +293,13 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
           ? +(Date.parse(messages[i + 1].created_at) - Date.parse(msg.created_at)) / 60000 > 5
           : true;
       const isSameDayAsPrevMessage =
-        i > 0 ? new Date(msg.created_at).toDateString() === new Date(messages[i - 1].created_at).toDateString() : false;
+        i > 0 ? new Date(msg.t * 1000).toDateString() === new Date(messages[i - 1].t * 1000).toDateString() : false;
 
       return x?.type ? (
         <InformativeMessage key={key} id={key} params={x} text={body} isNextMesssageUsers={isNextMessageYours} />
       ) : (
         <>
-          {!isSameDayAsPrevMessage && (
-            <div key={key + "day_time"} className="flex justify-center py-2">
-              <span className="text-text-dark/40 mb-1.25 p-2 font-light">
-                {new Date(msg.created_at).toLocaleDateString("en-US", {
-                  day: "numeric",
-                  month: "short",
-                })}
-              </span>
-            </div>
-          )}
+          {!isSameDayAsPrevMessage && <InteractiveDate key={key + "_interactive_date"} date={msg.t} />}
           <ChatMessage
             key={key}
             id={key}
@@ -428,7 +420,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
       </div>
       {isScrollToBottomVisible && (
         <div
-          className="bg-bg-light/90 border-text-dark absolute right-2.25 bottom-4 z-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border"
+          className="shadow-btn absolute right-0.75 bottom-4 z-4 flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl bg-white"
           onClick={scrollToBottom}
         >
           <ChevronDown size={24} />

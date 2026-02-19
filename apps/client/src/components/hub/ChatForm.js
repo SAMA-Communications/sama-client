@@ -129,7 +129,7 @@ export default function ChatForm() {
     <section
       key="chatForm"
       id="chatFormContainer"
-      className={`relative flex grow flex-col gap-1.25 px-3.5 shadow-[inset_7px_0_14px_-3px_rgba(0,0,0,0.05),inset_-7px_0_14px_-3px_rgba(0,0,0,0.05)]`}
+      className={`relative flex flex-1 flex-col gap-1.25 px-3.5 shadow-[inset_7px_0_14px_-3px_rgba(0,0,0,0.05),inset_-7px_0_14px_-3px_rgba(0,0,0,0.05)]`}
     >
       {selectedCID ? (
         <>

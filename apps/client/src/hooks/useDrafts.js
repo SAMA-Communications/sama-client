@@ -52,11 +52,21 @@ export default function useDrafts() {
     const fieldsArray = Array.isArray(fields) ? fields : [fields];
 
     let modified = false;
+
     for (const field of fieldsArray) {
       if (_allowedDraftFields.includes(field) && draft.hasOwnProperty(field)) {
         delete draft[field];
         modified = true;
       }
+    }
+
+    if (!modified) return;
+
+    if (Object.keys(draft).length <= 1) {
+      removeDraft(cid);
+    } else {
+      localStorage.setItem(draftKey, JSON.stringify(draft));
+      store.dispatch(updateWithDrafts({ cid, draft }));
     }
   };
 

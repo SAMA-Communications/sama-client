@@ -50,7 +50,7 @@ export default function ChatEditorHelper() {
     ));
 
   return (
-    <div className="editor-helper border-text-dark flex h-full items-center gap-2.75 rounded-xl border p-2">
+    <div className="editor-helper shadow-btn flex h-full items-center gap-2.75 rounded-xl bg-white p-2">
       <a
         href="https://oleksandr-ch.notion.site/Programmable-Chat-feature-1ffe3b41e4ae804da619f63b706e7263"
         target="_blank"

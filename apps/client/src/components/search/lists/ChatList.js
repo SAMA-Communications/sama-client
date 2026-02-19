@@ -10,7 +10,7 @@ export default function ChatList({
   return (
     <>
       {isShowTitle ? (
-        <div className="py-[6px] px-[18px] my-[3px] text-black text-p rounded-[8px] bg-(--color-hover-light)">
+        <div className="text-p my-[3px] rounded-[8px] bg-(--color-hover-light) px-[18px] py-[6px] text-black">
           Chats
         </div>
       ) : null}
@@ -19,9 +19,7 @@ export default function ChatList({
         // isHideDeletedUsers={isHideDeletedUsers}
         additionalOnClickfunc={additionalOnClickfunc}
       />
-      <p className="text-center text-h6 text-(--color-text-dark)">
-        {isChatSearched}
-      </p>
+      <p className="text-h6 text-center text-(--color-text-dark)">{isChatSearched}</p>
     </>
   );
 }

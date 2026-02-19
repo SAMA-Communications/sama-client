@@ -52,16 +52,16 @@ export default function AdditionalMessages({
           )}
         </span>
       ) : isReply ? (
-        <Reply size={19} color={isAccent ? "var(--color-text-dark)" : "white"} />
+        <Reply size={19} color={isAccent ? "var(--color-text-dark)" : "white"} className="min-w-4.75" />
       ) : null}
       {attachments?.length ? (
-        <div className="flex h-11 w-11 overflow-hidden rounded-lg object-cover">
+        <div className="flex h-10 w-10 min-w-10 overflow-hidden rounded-lg object-cover">
           <MediaAttachment attachment={attachments[0]} flexGrow={1} />
         </div>
       ) : null}
       <div className="flex w-[calc(100%-2.25rem)] grow flex-col">
         <p
-          className={`text-accent-500 overflow-hidden font-medium text-ellipsis whitespace-nowrap ${isAccent ? "var(--color-text-dark)" : "text-white"}`}
+          className={`text-accent-500 w-[calc(100%-40px)] overflow-hidden font-medium text-ellipsis whitespace-nowrap ${isAccent ? "var(--color-text-dark)" : "text-white"}`}
         >
           {isEdit ? (
             "Edit message"
@@ -72,7 +72,9 @@ export default function AdditionalMessages({
             </>
           )}
         </p>
-        <p className={`overflow-hidden font-light text-ellipsis whitespace-nowrap ${isAccent ? "" : "text-white"}`}>
+        <p
+          className={`w-[calc(100%-40px)] overflow-hidden font-light text-ellipsis whitespace-nowrap ${isAccent ? "" : "text-white"}`}
+        >
           {isReply || messages?.length < 2 ? body : messages?.length + " forwarded messages"}
         </p>
       </div>

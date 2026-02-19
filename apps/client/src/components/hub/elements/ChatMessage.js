@@ -56,17 +56,12 @@ export default function ChatMessage({
 
   const openUserProfile = (uid) => (sender ? addSuffix(pathname + hash, `/user?uid=${uid}`) : {});
 
-  const linkColor = isCurrentUser ? "white" : "black";
+  const linkColor = "text-accent-500";
 
   const refreshLinkPreview = (event, url) => {
     event.preventDefault();
     hardUrlify(_id, url);
   };
-
-  const width = useMemo(() => {
-    if (isAttachments || url_preview) return "w-[min(85%,540px)]";
-    return "w-max max-2xl:max-w-[min(85%,680px)] 2xl:max-w-[min(60%,680px)]";
-  }, [attachments, url_preview]);
 
   const openContextMenu = (e, copyType, externalProps) => {
     e.preventDefault();
@@ -135,7 +130,7 @@ export default function ChatMessage({
 
   return (
     <div
-      className={`flex w-full flex-row flex-nowrap items-end gap-2.75 ${isCurrentUser ? "justify-end" : "justify-start"}`}
+      className={`flex flex-row flex-nowrap items-end gap-2.75 ${isCurrentUser ? "justify-end" : "justify-start"}`}
       onClick={isSelectionMode ? (isSelected ? () => onUnselectClick(_id) : () => onSelectClick(_id)) : null}
       onContextMenu={openSelectionContextMenu}
     >
@@ -154,7 +149,7 @@ export default function ChatMessage({
         ref={messageRef}
         key={old_id || _id}
         data-message-id={_id}
-        className={`relative ${width} flex flex-row gap-2.75 ${next ? "" : "mb-1.5"}`}
+        className={`relative flex flex-row gap-2.75 ${next ? "" : "mb-1.5"}`}
         drag={isMobile ? "x" : false}
         dragDirectionLock
         dragConstraints={{ left: 0, right: 0 }}
@@ -166,17 +161,19 @@ export default function ChatMessage({
         }}
         whileDrag={{ scale: 0.9 }}
       >
-        <div className={`flex min-w-11.5 items-end`}>
+        <div className="flex min-w-11.5 items-end">
           {next || isCurrentUser ? null : (
             <button onClick={() => openUserProfile(from)}>
               <MessageUserIcon userObject={sender} isCurrentUser={isCurrentUser} />
             </button>
           )}
         </div>
-        <div className="flex flex-col">
-          {prev || isForwardMessage ? null : (
+        <div
+          className={`flex flex-col max-2xl:max-w-[min(85%,520px)] 2xl:max-w-[min(60%,520px)] ${isCurrentUser ? "ml-auto" : "mr-auto"}`}
+        >
+          {prev ? null : (
             <div
-              className={`text-text-dark/60 mb-1.25 font-medium ${sender ? "cursor-pointer" : ""} ${isCurrentUser ? "" : ""}`}
+              className={`text-text-dark/60 mb-1.25 ${sender ? "cursor-pointer" : ""} ${isCurrentUser ? "" : ""}`}
               onClick={() => openUserProfile(from)}
             >
               &zwnj;{getUserFullName(sender) || "Deleted account"}
@@ -185,26 +182,26 @@ export default function ChatMessage({
           <div
             className={`shadow-btn flex flex-col rounded-xl ${next ? "" : isCurrentUser ? "rounded-br-none" : "rounded-bl-none"}`}
           >
-            {isForwardMessage && (
+            {isForwardMessage ? (
               <div
-                className={`-mb-3 flex flex-row flex-nowrap items-center gap-1.75 rounded-t-xl px-1 pt-0.5 pb-3 ${isCurrentUser ? "bg-accent-500/65" : "bg-bg-dark/15"}`}
+                className={`-mb-3 flex flex-row flex-nowrap items-center gap-1.75 rounded-t-xl px-1 pt-0.5 pb-3 ${isCurrentUser ? "bg-accent-500/65" : "bg-bg-dark/5"}`}
               >
                 <Forward size={18} color={isCurrentUser ? "white" : "var(--color-text-dark)"} />
                 <p className={`text-sm font-medium ${isCurrentUser ? "text-white" : "text-black/35"}`}>Forwarded</p>
               </div>
-            )}
-            {repliedMessage && (
+            ) : null}
+            {repliedMessage ? (
               <AdditionalMessages
                 type={"reply"}
                 color={isCurrentUser ? "white" : "accent"}
                 message={repliedMessage}
                 onClickFunc={onReplyClickFunc}
               />
-            )}
+            ) : null}
             <m.div
-              className={`relative flex min-h-11.5 w-full max-w-full flex-col justify-between gap-1 rounded-xl p-3 ${
+              className={`relative flex min-h-11.5 w-full max-w-full flex-col justify-between gap-1 rounded-xl p-1 ${isCurrentUser ? "bg-accent-100" : "bg-white"} ${
                 next ? "" : isCurrentUser ? "rounded-br-none" : "rounded-bl-none"
-              } ${isCurrentUser ? "bg-accent-100" : "bg-white"} ${isSelected ? "bg-accent-200!" : ""} ${isForwardMessage ? "min-w-28" : "min-w-14"}`}
+              } ${isForwardMessage ? "min-w-28" : "min-w-14"} ${isSelected ? "bg-accent-200!" : ""}`}
               whileTap={isMobile ? { scale: 0.95, transition: { duration: 0.3, delay: 0.05 } } : null}
               onClick={isMobile ? handleClick : null}
               onPointerDown={isMobile ? handlePointerDown : null}
@@ -214,11 +211,7 @@ export default function ChatMessage({
                 isSelectionMode ? openSelectionContextMenu : (e) => openContextMenu(e, message.body ? "Text" : null)
               }
             >
-              <div
-                className={`flex flex-wrap items-end gap-x-1.75 gap-y-0.75 ${
-                  isAttachments ? "w-auto flex-col! items-start" : ""
-                } ${url_preview ? "flex-col" : "flex-row"}`}
-              >
+              <div className="flex flex-col flex-wrap">
                 {isAttachments ? (
                   <MediaAttachments
                     onContextMenu={
@@ -231,47 +224,35 @@ export default function ChatMessage({
                   />
                 ) : null}
                 {body ? (
-                  <div
-                    className={`max-w-full font-light wrap-break-word whitespace-pre-wrap ${isCurrentUser ? "text-black" : ""}`}
-                  >
-                    <p>{urlify(_id, body, linkColor, !url_preview)}</p>
+                  <>
+                    <p className="max-w-full p-2 font-light wrap-break-word whitespace-pre-wrap">
+                      {urlify(_id, body, linkColor, !url_preview)}
+                    </p>
                     {!isAttachments && (
-                      <MessageLinkPreview urlData={url_preview} color={linkColor} refreshFunc={refreshLinkPreview} />
+                      <MessageLinkPreview
+                        urlData={url_preview}
+                        color={isCurrentUser ? "accent" : "white"}
+                        refreshFunc={refreshLinkPreview}
+                      />
                     )}
-                  </div>
+                  </>
                 ) : null}
               </div>
             </m.div>
           </div>
-          <div
-            className={`relative flex w-full flex-row items-center gap-0.75 self-end ${
-              isAttachments && !body ? "absolute! right-4 bottom-4 self-end rounded-lg bg-black/50 p-2" : ""
-            } ${isCurrentUser ? "justify-end" : "justify-start"} ${isLongTimeBetweenMessages ? "mt-1.25 mb-0.5" : ""}`}
-          >
-            {isEdited ? (
-              <span
-                className={`text-text-dark text-xs leading-4.5 ${
-                  (isAttachments && !body) || isCurrentUser ? "text-text-dark/60" : ""
-                }`}
-              >
-                edited
-              </span>
-            ) : null}
-            {isLongTimeBetweenMessages ? (
-              <>
-                <div
-                  className={`text-text-dark/60 text-xs ${(isAttachments && !body) || isCurrentUser ? "text-black" : ""}`}
-                >
-                  {timeSend}
-                </div>
-                {isCurrentUser ? (
-                  <div className={`-mb-0.5`}>
-                    <MessageStatus status={status} />
-                  </div>
-                ) : null}
-              </>
-            ) : null}
-          </div>
+          {isEdited || isLongTimeBetweenMessages || !next ? (
+            <div
+              className={`relative mt-1.25 mb-0.5 flex w-full flex-row items-center gap-0.75 self-end ${isCurrentUser ? "justify-end" : "justify-start"}`}
+            >
+              {isEdited ? <span className="text-text-dark text-xs leading-4.5">edited</span> : null}
+              {isLongTimeBetweenMessages || !next ? (
+                <>
+                  <div className="text-text-dark/60 text-xs">{timeSend}</div>
+                  {isCurrentUser ? <MessageStatus status={status} /> : null}
+                </>
+              ) : null}
+            </div>
+          ) : null}
         </div>
         <div className={`flex min-w-11.5 items-end`}>
           {next || !isCurrentUser ? null : (

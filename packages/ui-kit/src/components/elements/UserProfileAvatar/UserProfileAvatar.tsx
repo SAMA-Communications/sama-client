@@ -10,10 +10,10 @@ import { Camera, User } from "lucide-react";
 
 import { UserProfileAvatarProps } from "./UserProfileAvatar.types";
 
-export const UserProfileAvatar = ({ swapAccentAndMainColor }: UserProfileAvatarProps) => {
+export const UserProfileAvatar = ({ user, swapAccentAndMainColor }: UserProfileAvatarProps) => {
   const { useParticipants } = getAdapters();
-  const { getCurrentUser, updateCurrentUserAvatar } = useParticipants();
-  const { avatar_url, avatar_blur_hash } = getCurrentUser();
+  const { updateCurrentUserAvatar } = useParticipants();
+  const { avatar_url, avatar_blur_hash, _id } = user;
 
   const inputFilesRef = useRef<HTMLInputElement | null>(null);
 
@@ -32,6 +32,7 @@ export const UserProfileAvatar = ({ swapAccentAndMainColor }: UserProfileAvatarP
           avatarBlurHash={avatar_blur_hash}
           defaultIcon={<User size={80} color="white" />}
           altText="User profile"
+          bgColorKey={_id}
         />
         <input
           id="inputFile"

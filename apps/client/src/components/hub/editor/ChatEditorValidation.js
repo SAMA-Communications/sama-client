@@ -130,7 +130,7 @@ export default function ChatEditorValidation({ setLogs }) {
 
   return (
     <>
-      <div className="editor-validation border-text-dark flex h-full grow items-center justify-end gap-2.75 rounded-xl border p-2">
+      <div className="editor-validation shadow-btn flex h-full grow items-center justify-end gap-2.75 rounded-xl bg-white p-2">
         <div data-tooltip-id="editor-status-tooltip" data-tooltip-delay-hide={500} className="flex items-center px-1">
           {statusView}
         </div>
@@ -138,7 +138,7 @@ export default function ChatEditorValidation({ setLogs }) {
         <span className="h-full w-px bg-gray-300"></span>
         <input
           ref={testMessage}
-          className="bg-hover-light h-full w-40 rounded-sm px-2 text-black focus:outline-none"
+          className="bg-hover-light/50 h-full w-40 rounded-sm px-2 font-light text-black focus:outline-none"
           placeholder="message"
           defaultValue={"message"}
         />

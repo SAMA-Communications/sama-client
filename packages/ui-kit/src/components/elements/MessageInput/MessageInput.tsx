@@ -119,13 +119,7 @@ export const MessageInput = ({
     };
   }, [selectedConversationId]);
 
-  return isBlockedConv ? (
-    <div className="ui:flex ui:h-11.5 ui:grow ui:items-center ui:overflow-hidden ui:rounded-xl ui:bg-white ui:p-2 ui:shadow-btn">
-      <p className="ui:text-base ui:text-text-dark">
-        The user you are currently chatting with has deleted their account. You can no longer continue the chat.
-      </p>
-    </div>
-  ) : (
+  return (
     <div className="ui:flex ui:w-full ui:gap-2.5">
       <button
         className="ui:h-max ui:cursor-pointer ui:self-end ui:rounded-xl ui:bg-white ui:p-2 ui:text-text-dark ui:shadow-btn ui:duration-150 ui:hover:bg-bg-dark ui:hover:text-white"
@@ -150,7 +144,6 @@ export const MessageInput = ({
           disabled={isSending}
           placeholder={"Type your message..."}
         />
-
         {isEnableMagicButton ? <MagicButton isBlockedConv={isBlockedConv} inputTextRef={inputTextRef} /> : null}
       </div>
       <button

@@ -96,9 +96,18 @@ export const ConversationInput = ({
 
   const isBlockedConv = useMemo(() => {
     const { type, owner_id, opponent_id } = selectedConversation;
-
     return type === "u" && !getUserById(opponent_id || owner_id)?.login;
   }, [selectedConversation, getUserById]);
+
+  if (isBlockedConv) {
+    return (
+      <div className="ui:mb-3.5 ui:flex ui:min-h-11 ui:w-full ui:justify-center ui:gap-2.5 ui:self-center ui:overflow-hidden ui:p-2 ui:lg:max-w-300">
+        <p className="ui:font-light ui:text-text-dark">
+          The user you are currently chatting with has deleted their account. You can no longer continue the chat.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="ui:flex ui:w-full ui:items-end ui:gap-2.5 ui:self-center ui:pb-3.5 ui:lg:max-w-300">

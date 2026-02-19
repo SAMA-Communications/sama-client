@@ -7,7 +7,7 @@ import { UserProfileAvatar } from "../../../components/elements/UserProfileAvata
 
 // import { useKeyDown } from "../../../utils/tools/useKeyDown";
 
-import { Pencil, RotateCcwKey, LogOut, Trash, ChevronLeft } from "lucide-react";
+import { RotateCcwKey, LogOut, Trash, ChevronLeft } from "lucide-react";
 
 export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
   const { useParticipants, useHistory } = getAdapters();
@@ -31,7 +31,7 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
             <ChevronLeft size={18} />
           </button>
         </div>
-        <UserProfileAvatar />
+        <UserProfileAvatar user={user} />
         <div className="ui:flex ui:w-4/5 ui:flex-nowrap ui:items-center ui:justify-center ui:gap-2.75">
           {first_name ? <p className="ui:text-2xl">{first_name}</p> : null}
           {last_name ? (
@@ -102,7 +102,7 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
 
         <hr className="ui:mt-auto ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
         <button
-          className="ui:mt-2.75 ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75 ui:rounded-xl ui:bg-white ui:p-2 ui:text-accent-500 ui:shadow-btn ui:duration-150 ui:hover:bg-accent-500 ui:hover:text-white"
+          className="ui:mt-2.75 ui:flex ui:cursor-pointer ui:items-center ui:justify-center ui:gap-2.75 ui:rounded-xl ui:bg-white ui:p-2 ui:text-accent-500 ui:shadow-btn ui:duration-150 ui:hover:bg-accent-500 ui:hover:text-white"
           onClick={() => {
             navigateToAuthPage();
             onLogout();

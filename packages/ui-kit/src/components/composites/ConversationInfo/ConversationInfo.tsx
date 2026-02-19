@@ -44,7 +44,7 @@ export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoPro
   const participantsCount = participantsList?.length || 0;
 
   return (
-    <div className="ui:flex ui:h-full ui:w-full ui:flex-col ui:gap-2.75 ui:p-3.5 ui:md:w-100">
+    <div className="ui:flex ui:h-full ui:w-100 ui:flex-col ui:gap-2.75 ui:p-3.5 ui:max-md:w-full">
       <div className="ui:relative ui:flex ui:flex-col ui:items-center ui:justify-center ui:gap-2.75">
         <div className="ui:flex ui:w-full ui:justify-between ui:gap-2.5">
           <button
@@ -100,7 +100,7 @@ export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoPro
 
       <hr className="ui:mt-auto ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
       <button
-        className="ui:mt-2.75 ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75 ui:rounded-xl ui:bg-white ui:p-2 ui:text-danger ui:shadow-btn ui:duration-150 ui:hover:bg-danger ui:hover:text-white"
+        className="ui:mt-2.75 ui:flex ui:cursor-pointer ui:items-center ui:justify-center ui:gap-2.75 ui:rounded-xl ui:bg-white ui:p-2 ui:text-danger ui:shadow-btn ui:duration-150 ui:hover:bg-danger ui:hover:text-white"
         onClick={() => {
           // navigateToAuthPage();
           // onLogout();
