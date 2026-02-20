@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 
 import conversationService from "@services/conversationsService";
 
+import { useConfirmWindow } from "@sama-communications.ui-kit";
+
 import ContextLink from "@components/context/elements/ContextLink";
 
 import { selectContextExternalProps } from "@store/values/ContextMenu.js";
@@ -12,9 +14,11 @@ import { getConverastionById, selectAllConversations } from "@store/values/Conve
 
 import { addPrefix, addSuffix, navigateTo } from "@utils/NavigationUtils.js";
 
-import { Info, MessageSquareMore, SquarePen, Trash, UserMinus, UserPlus } from "lucide-react";
+import { Info, MessageCircleOff, MessageSquareMore, SquarePen, Trash, UserMinus, UserPlus } from "lucide-react";
 
 export default function ConversationActions({ listOfIds }) {
+  const confirm = useConfirmWindow();
+
   const { pathname, hash } = useLocation();
   const { type, opponent_id, owner_id } = useSelector(getConverastionById) || {};
 
@@ -53,6 +57,12 @@ export default function ConversationActions({ listOfIds }) {
         icon={<Trash size={18} color="red" />}
         isDangerStyle={true}
         onClick={async () => {
+          const { isConfirm } = await confirm({
+            title: "Delate And Leave",
+            description: `Do you want to delete this chat?`,
+            icon: <MessageCircleOff size={40} color="red" strokeWidth={2} />,
+          });
+          if (!isConfirm) return;
           navigateTo("/");
           await conversationService.deleteConversation();
         }}

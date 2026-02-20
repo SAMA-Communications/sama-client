@@ -103,6 +103,8 @@ const useConversations = () => {
 
   const sendTypingStatus = (cid: string) => {};
 
+  const deleteAndLevae = () => {};
+
   return {
     storeNewConversations,
     setSelectedConversation,
@@ -115,6 +117,8 @@ const useConversations = () => {
     updateNameAndDescription,
 
     sendTypingStatus,
+
+    deleteAndLevae,
   };
 };
 

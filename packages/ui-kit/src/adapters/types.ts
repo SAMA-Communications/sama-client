@@ -45,6 +45,8 @@ export interface useConversationsProps {
   updateNameAndDescription: (data: { name?: string; description?: string }) => boolean;
 
   sendTypingStatus: (cid: string) => void;
+
+  deleteAndLevae: () => void;
 }
 
 export interface useHistoryProps {

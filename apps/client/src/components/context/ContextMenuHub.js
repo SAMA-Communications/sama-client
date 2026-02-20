@@ -24,7 +24,7 @@ export default function ContextMenuHub() {
 
   return (
     <div
-      className="bg-bg-light border-text-dark absolute left-2.5 z-50 flex w-50 flex-col gap-px rounded-xl border p-3 shadow-md"
+      className="absolute left-2.5 z-50 flex w-50 flex-col gap-px rounded-xl bg-white p-3 shadow-md"
       style={{ top, left }}
     >
       {listView}

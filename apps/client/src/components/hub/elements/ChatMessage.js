@@ -225,7 +225,7 @@ export default function ChatMessage({
                 ) : null}
                 {body ? (
                   <>
-                    <p className="max-w-full p-2 font-light wrap-break-word whitespace-pre-wrap">
+                    <p className="max-w-full p-2 font-light wrap-break-word whitespace-pre-wrap normal-nums!">
                       {urlify(_id, body, linkColor, !url_preview)}
                     </p>
                     {!isAttachments && (

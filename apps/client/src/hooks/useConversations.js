@@ -112,6 +112,11 @@ export default function useConversations() {
     api.sendTypingStatus({ cid });
   };
 
+  const deleteAndLevae = async (cid) => {
+    navigateTo("/");
+    await conversationService.deleteConversation();
+  };
+
   return {
     storeNewConversations,
     setSelectedConversation,
@@ -124,5 +129,7 @@ export default function useConversations() {
     updateNameAndDescription,
 
     sendTypingStatus,
+
+    deleteAndLevae,
   };
 }

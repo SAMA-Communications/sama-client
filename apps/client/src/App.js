@@ -12,7 +12,8 @@ import conversationService from "@services/conversationsService";
 import messagesService from "@services/messagesService";
 
 import BetterSuspense from "@hooks/tools/BetterSuspense.js";
-import ConfirmWindowProvider from "@hooks/tools/useConfirmWindow.js";
+// import ConfirmWindowProvider from "@hooks/tools/useConfirmWindow.js";
+import { ConfirmWindowProvider } from "@sama-communications.ui-kit";
 
 import ContextMenuHub from "@components/context/ContextMenuHub";
 

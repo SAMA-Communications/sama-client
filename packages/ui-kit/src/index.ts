@@ -27,3 +27,5 @@ export { MagicButton } from "./components/elements/MagicButton";
 export { MessageInput } from "./components/elements/MessageInput";
 
 export { setAdapters } from "./adapters";
+
+export { ConfirmWindowProvider, useConfirmWindow } from "./hooks/useConfirmWindow";

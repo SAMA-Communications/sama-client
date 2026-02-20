@@ -7,7 +7,7 @@ import messagesService from "@services/messagesService.js";
 
 import ContextLink from "@components/context/elements/ContextLink";
 
-import { useConfirmWindow } from "@hooks/tools/useConfirmWindow.js";
+import { useConfirmWindow } from "@sama-communications.ui-kit";
 
 import { addExternalProps } from "@store/values/ContextMenu.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
@@ -16,7 +16,7 @@ import { selectContextExternalProps } from "@store/values/ContextMenu.js";
 import { addSuffix, upsertMidsInPath } from "@utils/NavigationUtils.js";
 import { writeToCanvas } from "@utils/MediaUtils.js";
 
-import { ArrowDownToLine, CircleCheck, Copy, Forward, Reply, Trash, SquarePen } from "lucide-react";
+import { ArrowDownToLine, CircleCheck, Copy, Forward, Reply, Trash, SquarePen, MessageCircleX } from "lucide-react";
 
 export default function MessageActions({ listOfIds }) {
   const dispatch = useDispatch();
@@ -143,12 +143,24 @@ export default function MessageActions({ listOfIds }) {
         onClick={async () => {
           const { isConfirm, data } = await confirmWindow({
             title: "Delete selected message?",
+            icon: <MessageCircleX size={40} color="red" strokeWidth={2} />,
             confirmText: "Delete",
             cancelText: "Cancel",
-            action: "messageDelete",
+            actions: [
+              ({ data, setData }) => (
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={data.scope === "all"}
+                    onChange={(e) => setData({ scope: e.target.checked ? "all" : "self" })}
+                  />
+                  <span>Delete for everyone</span>
+                </label>
+              ),
+            ],
           });
           const { _id } = message;
-          isConfirm && messagesService.sendMessageDelete(selectedCID, [_id], data.type);
+          isConfirm && messagesService.sendMessageDelete(selectedCID, [_id], data.type || "self");
         }}
       />
     ),

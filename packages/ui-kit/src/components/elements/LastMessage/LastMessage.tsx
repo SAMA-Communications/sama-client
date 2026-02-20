@@ -61,7 +61,9 @@ export const LastMessage = ({
       <div className="ui:flex ui:flex-1 ui:items-center ui:gap-1.25 ui:overflow-y-hidden">
         {isShowUserName ? <p className={`ui:font-light ui:text-nowrap ui:text-accent-500`}>{displayName}:</p> : null}
         {lastAtt ? <LastMessageMedia isSelected={isSelected} attachment={lastAtt} /> : null}
-        <p className={`ui:w-full ui:overflow-hidden ui:font-extralight ui:text-ellipsis ui:whitespace-nowrap`}>
+        <p
+          className={`ui:w-full ui:overflow-hidden ui:font-extralight ui:text-ellipsis ui:whitespace-nowrap ui:normal-nums!`}
+        >
           {buildLastMessageText(body, lastAtt)}
         </p>
       </div>

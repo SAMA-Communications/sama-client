@@ -2,18 +2,23 @@ import { useMemo } from "react";
 
 import { getAdapters } from "../../../adapters";
 
+import { useConfirmWindow } from "../../../hooks/useConfirmWindow";
+
 import { CustomScrollBar } from "../CustomScrollBar";
 import { ParticipantInChat } from "../../elements/ParticipantInChat";
 import { ConversationInfoAvatar } from "../../elements/ConversationInfoAvatar";
 
-import { UserPlus, X, Pencil, Users, LogOut } from "lucide-react";
+import { UserPlus, X, Users, LogOut, MessageCircleOff } from "lucide-react";
 
 import { ConversationInfoProps } from "./ConversationInfo.types";
 
 export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoProps) => {
-  const { useParticipants, useHistory } = getAdapters();
+  const { useParticipants, useHistory, useConversations } = getAdapters();
   const { getParticipantsByIdsAsObject, getCurrentUser } = useParticipants();
   const { openEditConversationWindow, openAddParticipantsWindow, closeChatInfoPage } = useHistory();
+  const { deleteAndLevae } = useConversations();
+
+  const confirm = useConfirmWindow();
 
   const participants = getParticipantsByIdsAsObject(conversation.participants || []);
   const currentUserId = getCurrentUser()._id;
@@ -42,6 +47,16 @@ export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoPro
   }, [conversation, participants, currentUserId]);
 
   const participantsCount = participantsList?.length || 0;
+
+  const onDeleteConversation = async () => {
+    const { isConfirm } = await confirm<{}>({
+      title: "Delate And Leave",
+      description: `Do you want to delete this chat?`,
+      icon: <MessageCircleOff size={40} color="red" strokeWidth={2} />,
+    });
+    if (!isConfirm) return;
+    deleteAndLevae();
+  };
 
   return (
     <div className="ui:flex ui:h-full ui:w-100 ui:flex-col ui:gap-2.75 ui:p-3.5 ui:max-md:w-full">
@@ -101,10 +116,7 @@ export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoPro
       <hr className="ui:mt-auto ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
       <button
         className="ui:mt-2.75 ui:flex ui:cursor-pointer ui:items-center ui:justify-center ui:gap-2.75 ui:rounded-xl ui:bg-white ui:p-2 ui:text-danger ui:shadow-btn ui:duration-150 ui:hover:bg-danger ui:hover:text-white"
-        onClick={() => {
-          // navigateToAuthPage();
-          // onLogout();
-        }}
+        onClick={onDeleteConversation}
       >
         <LogOut size={18} /> Leave Group
       </button>

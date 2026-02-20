@@ -2,10 +2,11 @@ import { useSelector } from "react-redux";
 
 import messagesService from "@services/messagesService.js";
 import draftService from "@services/tools/draftService.js";
+import aiService from "@services/tools/AIService.js";
 
 import DownloadManager from "@lib/downloadManager.js";
 
-import { useConfirmWindow } from "@hooks/tools/useConfirmWindow.js";
+import { useConfirmWindow } from "@sama-communications.ui-kit";
 
 import store from "@store/store.js";
 import { addExternalProps } from "@store/values/ContextMenu.js";

@@ -89,8 +89,8 @@ export const MagicButton = ({ inputTextRef, isBlockedConv }: MagicButtonProps) =
             [
               {
                 label: "Get summary:",
-                customStyle: "ui:pb-1.25 ui:text-left! ui:text-black/80! ui:cursor-auto!",
-                icon: <ScrollText size={15} />,
+                customStyle: "ui:pb-1.25 ui:text-left! ui:text-lg! ui:text-black/80! ui:cursor-auto!",
+                icon: <ScrollText size={18} />,
               },
               // {
               //   label: "- unreads",
@@ -101,35 +101,40 @@ export const MagicButton = ({ inputTextRef, isBlockedConv }: MagicButtonProps) =
               {
                 label: "- last day",
                 onClick: async () => await summarizeActionOnClick("last-day"),
-                customStyle: "ui:-mt-2.5! ui:ml-2.5! ui:text-left! ui:hover:text-accent-500!",
+                customStyle:
+                  "ui:-mt-2.5! ui:ml-2.5! ui:text-left! ui:text-base! ui:font-light! ui:hover:text-accent-500!",
               },
               {
                 label: "- last 7 days",
                 onClick: async () => await summarizeActionOnClick("last-7-days"),
-                customStyle: "ui:-mt-2.5! ui:ml-2.5! ui:text-left! ui:hover:text-accent-500!",
+                customStyle:
+                  "ui:-mt-2.5! ui:ml-2.5! ui:text-left! ui:text-base! ui:font-light! ui:hover:text-accent-500!",
               },
               ...(isBlockedConv
                 ? []
                 : [
                     {
                       label: "Change tone:",
-                      customStyle: "ui:pb-1.25 ui:text-left! ui:text-black/80! ui:cursor-auto!",
-                      icon: <CloudFog size={15} />,
+                      customStyle: "ui:pb-1.25 ui:text-left! ui:text-lg! ui:text-black/80! ui:cursor-auto!",
+                      icon: <CloudFog size={18} />,
                     },
                     {
                       label: "- positive",
                       onClick: async () => await changeToneActionOnClick("positive"),
-                      customStyle: "ui:-mt-2.5! ui:ml-2.5! ui:text-left! ui:hover:text-accent-500!",
+                      customStyle:
+                        "ui:-mt-2.5! ui:ml-2.5! ui:text-left! ui:text-base! ui:font-light! ui:hover:text-accent-500!",
                     },
                     {
                       label: "- negative",
                       onClick: async () => await changeToneActionOnClick("negative"),
-                      customStyle: "ui:-mt-2.5! ui:ml-2.5! ui:text-left! ui:hover:text-accent-500!",
+                      customStyle:
+                        "ui:-mt-2.5! ui:ml-2.5! ui:text-left! ui:text-base! ui:font-light! ui:hover:text-accent-500!",
                     },
                     {
                       label: "- cringe",
                       onClick: async () => await changeToneActionOnClick("cringe"),
-                      customStyle: "ui:-mt-2.5! ui:ml-2.5! ui:text-left! ui:hover:text-accent-500!",
+                      customStyle:
+                        "ui:-mt-2.5! ui:ml-2.5! ui:text-left! ui:text-base! ui:font-light! ui:hover:text-accent-500!",
                     },
                   ]),
             ],

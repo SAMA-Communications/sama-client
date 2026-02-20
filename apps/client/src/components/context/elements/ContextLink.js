@@ -4,7 +4,7 @@ export default function ContextLink({ text, icon, onClick, isDangerStyle }) {
   return (
     <m.div
       key={text}
-      className={`hover:bg-hover-light flex cursor-pointer items-center gap-1.75 rounded-lg p-1.25 ${
+      className={`hover:bg-hover-light/45 flex cursor-pointer items-center gap-1.75 rounded-lg p-1.25 ${
         isDangerStyle ? "mt-1.25" : ""
       }`}
       onClick={onClick}

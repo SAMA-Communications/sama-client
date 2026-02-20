@@ -6,19 +6,33 @@ import { InfoBox } from "../../elements/InfoBox";
 import { UserProfileAvatar } from "../../../components/elements/UserProfileAvatar";
 
 // import { useKeyDown } from "../../../utils/tools/useKeyDown";
+import { useConfirmWindow } from "../../../hooks/useConfirmWindow";
 
-import { RotateCcwKey, LogOut, Trash, ChevronLeft } from "lucide-react";
+import { RotateCcwKey, LogOut, Trash, ChevronLeft, UserRoundX } from "lucide-react";
 
 export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
   const { useParticipants, useHistory } = getAdapters();
   const { updateCurrentUserPassword, deleteCurrentUser } = useParticipants();
   const { openEditUserProfileWindow, closeCurrentUserProfile, navigateToAuthPage } = useHistory();
 
+  const confirm = useConfirmWindow();
+
   const { login, email, phone, first_name, last_name } = user;
 
   const isCurrentUserCantLeave = login?.startsWith("sama-user-"); // ...
 
   // useKeyDown(KEY_CODES.ESCAPE, closeCurrentUserProfile);
+
+  const onDeleteUserFunc = async () => {
+    const { isConfirm } = await confirm<{}>({
+      title: "Delete User",
+      description: `You're going to delete your "Account"`,
+      icon: <UserRoundX size={40} color="red" strokeWidth={2} />,
+    });
+    if (!isConfirm) return;
+    const isSuccess = await deleteCurrentUser();
+    if (isSuccess) navigateToAuthPage();
+  };
 
   return (
     <section className="ui:flex ui:h-full ui:w-full ui:flex-col ui:gap-2.75 ui:p-3.5 ui:md:w-100">
@@ -88,12 +102,7 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
         {isCurrentUserCantLeave ? null : (
           <button
             className="ui:mt-2.75 ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75"
-            onClick={async () => {
-              const isSuccess = await deleteCurrentUser();
-              if (isSuccess) {
-                navigateToAuthPage();
-              }
-            }}
+            onClick={onDeleteUserFunc}
           >
             <Trash size={18} color="var(--color-danger)" />
             <p className="ui:font-light ui:text-danger">Delete account</p>

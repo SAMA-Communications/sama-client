@@ -121,18 +121,14 @@ export default function useParticipants() {
   };
 
   const deleteCurrentUser = async () => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      try {
-        await api.userDelete();
-        store.dispatch({ type: "RESET_STORE" });
-        localStorage.clear();
-        localStorage.setItem("isUsedBefore", true);
-        return true;
-      } catch (err) {
-        showCustomAlert(err.message, "danger");
-        return false;
-      }
-    } else {
+    try {
+      await api.userDelete();
+      store.dispatch({ type: "RESET_STORE" });
+      localStorage.clear();
+      localStorage.setItem("isUsedBefore", true);
+      return true;
+    } catch (err) {
+      showCustomAlert(err.message, "danger");
       return false;
     }
   };
