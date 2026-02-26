@@ -59,7 +59,7 @@ export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoPro
   };
 
   return (
-    <div className="ui:flex ui:h-full ui:w-100 ui:flex-col ui:gap-2.75 ui:p-3.5 ui:max-md:w-full">
+    <section className="ui:flex ui:h-full ui:w-100 ui:flex-col ui:gap-2.75 ui:p-3.5 ui:max-md:w-full">
       <div className="ui:relative ui:flex ui:flex-col ui:items-center ui:justify-center ui:gap-2.75">
         <div className="ui:flex ui:w-full ui:justify-between ui:gap-2.5">
           <button
@@ -120,6 +120,6 @@ export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoPro
       >
         <LogOut size={18} /> Leave Group
       </button>
-    </div>
+    </section>
   );
 };

@@ -78,7 +78,7 @@ export default function ChatList() {
       ) : (
         <CustomScrollBar
           customId={"conversationItemsScrollable"}
-          customClassName="h-full" //h-[calc(100%+9px)]!
+          customClassName="h-[calc(100%-64px)]!" //h-[calc(100%+9px)]!
           childrenClassName="px-1"
           onScrollStop={(container) =>
             localStorage.setItem(`scroll_pos_conversationItemsScrollable`, container.current.view.scrollTop)

@@ -180,7 +180,7 @@ export default function ChatMessage({
             </div>
           )}
           <div
-            className={`shadow-btn flex flex-col rounded-xl ${next ? "" : isCurrentUser ? "rounded-br-none" : "rounded-bl-none"}`}
+            className={`shadow-btn flex w-max max-w-full flex-col self-end rounded-xl ${next ? "" : isCurrentUser ? "rounded-br-none" : "rounded-bl-none"}`}
           >
             {isForwardMessage ? (
               <div
@@ -199,9 +199,9 @@ export default function ChatMessage({
               />
             ) : null}
             <m.div
-              className={`relative flex min-h-11.5 w-full max-w-full flex-col justify-between gap-1 rounded-xl p-1 ${isCurrentUser ? "bg-accent-100" : "bg-white"} ${
+              className={`relative flex min-h-11.5 max-w-full flex-col justify-between gap-1 rounded-xl p-1 ${isCurrentUser ? "bg-accent-100" : "bg-white"} ${
                 next ? "" : isCurrentUser ? "rounded-br-none" : "rounded-bl-none"
-              } ${isForwardMessage ? "min-w-28" : "min-w-14"} ${isSelected ? "bg-accent-200!" : ""}`}
+              } ${isForwardMessage ? "min-w-28" : "min-w-14"} ${isSelected ? "bg-accent-200!" : ""} ${repliedMessage ? "w-full" : "w-max"}`}
               whileTap={isMobile ? { scale: 0.95, transition: { duration: 0.3, delay: 0.05 } } : null}
               onClick={isMobile ? handleClick : null}
               onPointerDown={isMobile ? handlePointerDown : null}

@@ -15,22 +15,16 @@ export const MediaBlurHash = ({
   loaderSize = 50,
 }: MediaBlurHashProps) => {
   return (
-    <div data-testid="ui:media-blurhash" className="h-full ui:absolute ui:inset-0 ui:w-full ui:object-cover">
+    <div data-testid="media-blurhash" className="ui:h-75 ui:w-87.5 ui:object-cover">
       <Blurhash
+        className="ui:static! ui:h-75! ui:w-87.5! ui:flex-1 ui:object-cover"
         hash={blurHash || DEFAULT_BLUR_HASH}
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          position: "absolute",
-          inset: 0,
-        }}
         resolutionX={32}
         resolutionY={32}
       />
       <div className="ui:absolute ui:inset-0 ui:flex ui:h-full ui:w-full ui:items-center ui:justify-center">
         {status === "error" ? (
-          <AlertCircle className="w-[50px] h-[50px]" color="#f87171" />
+          <AlertCircle className="ui:h-12.5 ui:w-12.5" color="#f87171" />
         ) : (
           <Oval
             height={loaderSize}
