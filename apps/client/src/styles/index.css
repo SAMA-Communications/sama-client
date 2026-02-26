@@ -1,89 +1,72 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Krona+One&display=swap");
 @import "tailwindcss";
+@plugin "@toolwind/corner-shape";
+
+@tailwind utilities;
 
 @theme {
-  --accent-font: "Krona One", sans-serif;
+  --font-base: -apple-system, BlinkMacSystemFont, "Inter", Roboto, sans-serif, sans-serif;
+  --font-accent: "Krona One", sans-serif;
 
-  --text-h1: 48px;
-  --text-h2: 40px;
-  --text-h3: 33px;
-  --text-h4: 28px;
-  --text-h5: 23px;
-  --text-h6: 19px;
-  --text-p: 16px;
-  --text-span: 13px;
-  --text-indicator: 12px;
+  --color-danger: #df2e38;
 
-  --color-white: #fff;
-  --color-black: #000;
-  --color-black-25: rgba(0, 0, 0, 0.25);
-  --color-black-50: rgba(0, 0, 0, 0.5);
-  --color-black-75: rgba(0, 0, 0, 0.75);
-  --color-black-90: rgba(0, 0, 0, 0.9);
-  --color-grey-50: rgba(26, 26, 26, 0.5);
-  --color-red: #df2e38;
   --color-bg-light: #f6f6f6;
-  --color-bg-light-25: rgba(246, 246, 246, 0.25);
-  --color-bg-light-50: rgba(246, 246, 246, 0.5);
-  --color-bg-light-90: rgba(246, 246, 246, 0.9);
   --color-bg-dark: #1b1b1d;
+
   --color-text-light: #b0b0b0;
   --color-text-dark: #6d6d6d;
+
   --color-hover-light: #e7e7e7;
   --color-hover-dark: #3f3f3f;
-  --color-accent-light: #dbdcfc;
-  --color-accent-light-50: #babbf2;
-  --color-accent-dark: #7678e5;
+
+  --color-accent-100: #dbdcfc;
+  --color-accent-200: #babbf2;
+  --color-accent-500: #7678e5;
+
   --color-indicator: #68174d;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-li,
-span {
-  font-family: "Inter", sans-serif;
-  font-weight: 200;
+@utility shadow-btn {
+  box-shadow:
+    rgba(50, 50, 105, 0.15) 0px 2px 5px 0px,
+    rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
+}
+
+*:not(i) {
+  font-family: var(--font-base);
   font-variant-numeric: tabular-nums;
 }
 
 body {
+  /* background-image: url("../assets/background.png") !important; */
   background-color: var(--color-bg-dark);
-}
-
-main {
-  width: 100dvw;
-  height: 100dvh;
-
-  display: flex;
-
-  transition: background-color 0.7s;
-}
-
-@media screen and (max-width: 767px) {
-  main {
-    padding: 0;
-  }
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .monaco-editor span {
   font-family: Consolas, "Courier New", monospace;
 }
 
-*::-webkit-scrollbar {
+.lucide {
+  stroke-width: 1px;
+  transition:
+    color 0.15s linear,
+    transform 0.15s linear;
+}
+
+/* scroll */
+::-webkit-scrollbar {
   width: 6px;
 }
-*::-webkit-scrollbar-track {
-  background-color: none;
+::-webkit-scrollbar-track {
+  background-color: transparent;
 }
-*::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   border-radius: 3px;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.3);
 
   cursor: pointer;
 }
@@ -95,7 +78,7 @@ main {
   color: black;
 
   border-radius: 8px;
-  background-color: var(--color-white);
+  background-color: rgba(255, 255, 255, 1);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
 
   z-index: 50;
@@ -104,7 +87,7 @@ main {
 .magic-wand .editor-tooltip-arrow,
 .editor-helper .editor-tooltip-arrow,
 .editor-validation .editor-tooltip-arrow {
-  background-color: var(--color-accent-dark);
+  background-color: var(--color-accent-500);
 }
 
 #logo-icon-line {
@@ -125,15 +108,6 @@ main {
   border-radius: 3px !important;
 }
 
-#chatMessagesScrollable .infinite-scroll-component {
-  padding-top: 15px !important;
-  padding-bottom: 15px !important;
-
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-
 #chatFormContainer .scroll-bar__outer-container > div:nth-child(3) {
   display: flex;
   flex-direction: column-reverse;
@@ -142,9 +116,9 @@ main {
 #conversationItemsScrollable .infinite-scroll-component {
   display: flex;
   flex-direction: column;
-  gap: 3px;
 }
 
+/* auth form checkbox */
 input[type="checkbox"] {
   appearance: none;
   width: 16px;
@@ -153,8 +127,11 @@ input[type="checkbox"] {
   border-radius: 4px;
   background-color: transparent;
   cursor: pointer;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 input[type="checkbox"]:checked {
   background-color: #7678e5;

@@ -1,10 +1,8 @@
-import * as motion from "motion/react-m";
-import clsx from "clsx";
 import { useMemo } from "react";
 
 import { getAdapters } from "../../../adapters";
 
-import { DotsLoader } from "../../DotsLoader";
+import { DotsLoader } from "../DotsLoader";
 
 import { TypingLineInternalProps } from "./TypingLine.types";
 
@@ -17,9 +15,8 @@ export const TypingLine = ({
   const { getParticipantsByIdsAsList } = useParticipants();
 
   const typingUsers = useMemo(
-    () =>
-      typingUserIds?.length ? getParticipantsByIdsAsList(typingUserIds) : [],
-    [typingUserIds, getParticipantsByIdsAsList]
+    () => (typingUserIds?.length ? getParticipantsByIdsAsList(typingUserIds) : []),
+    [typingUserIds, getParticipantsByIdsAsList],
   );
 
   const usersNameView = useMemo(() => {
@@ -41,20 +38,9 @@ export const TypingLine = ({
   }, [typingUsers, isDisplayUserNames, userUtils]);
 
   return (
-    <motion.div
-      className={clsx(
-        "ml-[5px] flex items-center gap-[10px]",
-        isDisplayBackground
-          ? "py-[2px] px-[10px] rounded-2xl bg-accent-dark/10"
-          : ""
-      )}
-      initial={{ y: -8, opacity: 0.7 }}
-      animate={{ y: 0, opacity: 1, transition: { duration: 0.2 } }}
-    >
+    <div className={`ui:flex ui:items-center ui:gap-2.5`}>
       <DotsLoader height={22} width={16} />
-      <p style={{ color: "var(--color-accent-dark)" }} className="!font-light">
-        {usersNameView}typing
-      </p>
-    </motion.div>
+      <p className="ui:font-light ui:text-accent-500">{usersNameView}typing</p>
+    </div>
   );
 };

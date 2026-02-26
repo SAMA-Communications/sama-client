@@ -76,7 +76,7 @@ export default function UsersSelectModalHub({ type }) {
 
   return (
     <m.div
-      className="absolute top-[0px] w-dvw h-dvh bg-(--color-black-50) flex items-center justify-center z-10"
+      className="absolute top-[0px] w-dvw h-dvh bg-black/50 flex items-center justify-center z-10"
       initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
       animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
       exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
@@ -90,8 +90,8 @@ export default function UsersSelectModalHub({ type }) {
           type === "add_participants"
             ? "addParticipants"
             : chatName
-            ? "userSelectorBlock"
-            : "chatNameInput"
+              ? "userSelectorBlock"
+              : "chatNameInput"
         }
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1, transition: { delay: 0.1 } }}

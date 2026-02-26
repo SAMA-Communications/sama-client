@@ -8,10 +8,13 @@ import UserIconWhite from "@icons/users/UserIconWhite.svg?react";
 export default function MessageUserIcon({ userObject, isCurrentUser }) {
   return userObject && !!Object.keys(userObject).length ? (
     <DynamicAvatar
+      size={46}
       avatarUrl={userObject.avatar_url}
       avatarBlurHash={userObject.avatar_object?.file_blur_hash}
       defaultIcon={getUserInitials(userObject)}
       altText={"User's Profile"}
+      bgColorKey={userObject._id}
+      customClassName="rounded-xl cursor-pointer"
     />
   ) : isCurrentUser ? (
     <UserIconWhite />

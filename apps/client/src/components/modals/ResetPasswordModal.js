@@ -84,7 +84,7 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
     <AnimatePresence>
       {isOpen ? (
         <m.div
-          className="fixed inset-0 flex items-center justify-center bg-(--color-black-50) z-50"
+          className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
           initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
           animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
           exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
@@ -108,7 +108,7 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
                 </p>
                 <EmailInput setState={setData} />
                 <button
-                  className="w-full mt-[10px] py-[14px] px-[14px] flex justify-center text-white bg-(--color-accent-dark) hover:bg-(--color-accent-dark)/80 transition-colors rounded-lg cursor-pointer"
+                  className="w-full mt-[10px] py-[14px] px-[14px] flex justify-center text-white bg-(--color-accent-500) hover:bg-(--color-accent-500)/80 transition-colors rounded-lg cursor-pointer"
                   disabled={loading || !data.email?.length}
                   onClick={handleSendOTP}
                 >
@@ -120,7 +120,7 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
               <>
                 <p className="mb-[5px]">
                   We have sent a verification code to{" "}
-                  <span className="text-accent-dark">{data.email}</span>
+                  <span className="text-accent-500">{data.email}</span>
                 </p>
                 <CustomInput
                   setState={setData}
@@ -133,7 +133,7 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
                   placeholder="Enter new password.."
                 />
                 <button
-                  className="w-full mt-[10px] py-[14px] px-[14px] flex justify-center text-white bg-(--color-accent-dark) hover:bg-(--color-accent-dark)/80 transition-colors rounded-lg cursor-pointer"
+                  className="w-full mt-[10px] py-[14px] px-[14px] flex justify-center text-white bg-(--color-accent-500) hover:bg-(--color-accent-500)/80 transition-colors rounded-lg cursor-pointer"
                   disabled={
                     loading || !data.token?.length || !data.new_password?.length
                   }
@@ -144,13 +144,13 @@ export default function ResetPasswordModal({ isOpen, onClose }) {
                 <button
                   onClick={handleResendOTP}
                   disabled={loading || resendTimer}
-                  className="py-[14px] px-[14px] flex justify-center text-white bg-(--color-accent-dark) hover:bg-(--color-accent-dark)/80 transition-colors rounded-lg cursor-pointer"
+                  className="py-[14px] px-[14px] flex justify-center text-white bg-(--color-accent-500) hover:bg-(--color-accent-500)/80 transition-colors rounded-lg cursor-pointer"
                 >
                   {loading
                     ? "..."
                     : resendTimer
-                    ? formatTimer(resendTimer)
-                    : "Resend OTP"}
+                      ? formatTimer(resendTimer)
+                      : "Resend OTP"}
                 </button>
               </>
             )}

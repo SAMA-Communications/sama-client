@@ -1,0 +1,33 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true,
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": ["./tsconfig.json"],
+  },
+  "plugins": ["@typescript-eslint", "react", "react-hooks", "tailwindcss"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier",
+  ],
+  "settings": {
+    "react": { "version": "detect" },
+  },
+  "rules": {
+    "no-unused-vars": "warn",
+    "react/react-in-jsx-scope": "off",
+    // "tailwindcss": {
+    // 		"callees": ["cn", "cva"],
+    // 		"config": "tailwind.config.cjs",
+    // 	},
+  },
+  "ignorePatterns": ["dist", "node_modules"],
+}

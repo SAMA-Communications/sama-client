@@ -4,20 +4,13 @@ export default function ContextLink({ text, icon, onClick, isDangerStyle }) {
   return (
     <m.div
       key={text}
-      className={`py-[3px] px-[13px] flex gap-[15px] items-center rounded-[8px] cursor-pointer hover:bg-(--color-hover-light) ${
-        isDangerStyle ? "mt-[5px]" : ""
+      className={`hover:bg-hover-light/45 flex cursor-pointer items-center gap-1.75 rounded-lg p-1.25 ${
+        isDangerStyle ? "mt-1.25" : ""
       }`}
       onClick={onClick}
       animate={{ height: [0, 35], opacity: [0, 1] }}
     >
-      {icon}{" "}
-      <p
-        className={`text-black text-h6 text-nowrap ${
-          isDangerStyle ? "!text-(--color-red)" : ""
-        }`}
-      >
-        {text}
-      </p>
+      {icon} <p className={`text-text-dark text-nowrap ${isDangerStyle ? "text-danger!" : ""}`}>{text}</p>
     </m.div>
   );
 }

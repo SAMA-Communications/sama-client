@@ -1,13 +1,14 @@
 export interface User {
   _id: string;
   organization_id: string;
-  recent_activity?: number;
+  recent_activity: number;
   login: string;
   first_name?: string;
   last_name?: string;
   email?: string;
   phone?: string;
   avatar_url?: string;
+  avatar_blur_hash?: string;
   avatar_object?: {
     file_id: string;
     file_name: string;
@@ -74,6 +75,7 @@ export interface Conversation {
   image_url?: string;
   owner_id: string;
   opponent_id?: string;
+  participants?: string[];
   subscribers_count?: string;
   typing_users?: string[];
   draft: any; //todo: add more

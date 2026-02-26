@@ -3,11 +3,7 @@ import localforage from "localforage";
 import store from "@store/store.js";
 import { upsertMessage } from "@store/values/Messages.js";
 
-import {
-  LINKS_REGEXP,
-  URL_METADATA_EXPIRE,
-  URL_MAX_PARALLEL_REQUESTS,
-} from "@utils/constants.js";
+import { LINKS_REGEXP, URL_METADATA_EXPIRE, URL_MAX_PARALLEL_REQUESTS } from "@utils/constants.js";
 
 class UrlMetaService {
   urlMetaTimers = {};
@@ -15,10 +11,7 @@ class UrlMetaService {
   activeRequests = 0;
 
   processQueue() {
-    while (
-      this.activeRequests < URL_MAX_PARALLEL_REQUESTS &&
-      this.urlMetaQueue.length > 0
-    ) {
+    while (this.activeRequests < URL_MAX_PARALLEL_REQUESTS && this.urlMetaQueue.length > 0) {
       const { mid, url, resolve } = this.urlMetaQueue.shift();
       this.activeRequests++;
       this.getAndStoreUrlMetaData(mid, url).then((data) => {
@@ -51,15 +44,8 @@ class UrlMetaService {
     if (!force) {
       try {
         const cached = await localforage.getItem(cacheKey);
-        if (
-          cached?.data &&
-          cached?.created_at &&
-          now - cached.created_at < URL_METADATA_EXPIRE
-        ) {
-          if (mid)
-            store.dispatch(
-              upsertMessage({ _id: mid, url_preview: cached.data })
-            );
+        if (cached?.data && cached?.created_at && now - cached.created_at < URL_METADATA_EXPIRE) {
+          if (mid) store.dispatch(upsertMessage({ _id: mid, url_preview: cached.data }));
           return this.isValidMetaData(cached.data) ? "ok" : "invalid";
         }
         if (cached) await localforage.removeItem(cacheKey);
@@ -67,17 +53,14 @@ class UrlMetaService {
     }
 
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_URL_PREVIEW_CONNECT}/unfurl`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Session-Token": token,
-          },
-          body: JSON.stringify({ url }),
-        }
-      );
+      const res = await fetch(`${import.meta.env.VITE_URL_PREVIEW_CONNECT}/unfurl`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Session-Token": token,
+        },
+        body: JSON.stringify({ url }),
+      });
       const data = await res.json();
 
       if (mid) store.dispatch(upsertMessage({ _id: mid, url_preview: data }));
@@ -102,7 +85,7 @@ class UrlMetaService {
     }
   }
 
-  urlify(mid, inputText, color = "black", isNeedToLoadUrl = false) {
+  urlify(mid, inputText, color, isNeedToLoadUrl = false) {
     const matches = inputText.match(LINKS_REGEXP) || [];
     const parts = inputText.split(LINKS_REGEXP);
 
@@ -115,14 +98,9 @@ class UrlMetaService {
 
       if (i < matches.length) {
         result.push(
-          <a
-            className={`text-${color} underline`}
-            href={matches[i]}
-            target="_blank"
-            key={i}
-          >
+          <a className={`${color} underline`} href={matches[i]} target="_blank" key={i}>
             {matches[i]}
-          </a>
+          </a>,
         );
       }
 

@@ -2,8 +2,7 @@ import * as m from "motion/react-m";
 import { useRef, useState } from "react";
 import { AnimatePresence } from "motion/react";
 
-import Search from "@icons/actions/Search.svg?react";
-import Close from "@icons/options/Close.svg?react";
+import { Search, X } from "lucide-react";
 
 export default function SearchInput({
   shadowText,
@@ -21,78 +20,22 @@ export default function SearchInput({
     setState && setState(null);
   };
 
-  const hideIcon = (reverseDirection = false) => {
-    const marginKey = reverseDirection ? "marginRight" : "marginLeft";
-    const size = isLargeSize ? 24 : 18;
-
-    return {
-      hidden: { width: 0, [marginKey]: -10 },
-      visible: { width: size, [marginKey]: 0 },
-      exit: { width: 0, [marginKey]: -10 },
-      transition: { duration: 0.3 },
-    };
-  };
-
   return (
-    <m.div
-      className={`relative flex flex-row gap-[10px] items-center bg-(--color-hover-light) rounded-[12px] ${
-        isLargeSize
-          ? "w-[500px] h-[60px] px-[20px]"
-          : "w-[360px] h-[46px] px-[15px]"
-      } ${customClassName}`}
-      initial={
-        disableAnimation ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }
-      }
-      animate={{ opacity: 1, scale: 1 }}
-      exit={
-        disableAnimation ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }
-      }
-      transition={{ duration: 0.3, delay: 0.3 }}
+    <div
+      className={`shadow-btn relative flex h-9 cursor-text flex-row items-center gap-1.5 rounded-xl bg-white px-2.5 backdrop-blur-sm ${customClassName}`}
+      onClick={() => inputRef.current.focus()}
     >
-      <AnimatePresence>
-        {isTextInInput ? null : (
-          <m.div
-            key="searchInputSearchIcon"
-            className="overflow-hidden"
-            variants={hideIcon(false)}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition="transition"
-          >
-            <Search className={isLargeSize ? "w-[24px]" : "w-[18px]"} />
-          </m.div>
-        )}
-      </AnimatePresence>
+      <Search size={isLargeSize ? 24 : 18} />
       <input
         ref={inputRef}
-        className={`flex-1 text-black !font-light focus:outline-hidden ${
-          isLargeSize ? `text-h6` : "text-p"
-        }`}
+        className={`flex-1 font-light text-black focus:outline-hidden ${isLargeSize ? `text-h6` : "text-base"}`}
         placeholder={shadowText}
         onChange={(e) => {
           setIsTextInInput(!!e.target.value);
           setState && setState(e.target.value);
         }}
       />
-      <AnimatePresence>
-        {isTextInInput ? (
-          <m.div
-            key="searchInputClosehIcon"
-            className="overflow-hidden cursor-pointer"
-            variants={hideIcon(true)}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition="transition"
-          >
-            <Close
-              className={isLargeSize ? "w-[24px]" : "w-[18px]"}
-              onClick={onClear}
-            />
-          </m.div>
-        ) : null}
-      </AnimatePresence>
-    </m.div>
+      {isTextInInput ? <X className="cursor-pointer" size={isLargeSize ? 24 : 18} onClick={onClear} /> : null}
+    </div>
   );
 }

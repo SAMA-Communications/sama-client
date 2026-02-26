@@ -1,18 +1,20 @@
+import { useMemo } from "react";
+
 import { getAdapters } from "../../../adapters";
 
-import { LastMessageStatus } from "./LastMessageStatus";
+import { MessageStatus } from "../MessageStatus";
 import { LastMessageMedia } from "./LastMessageMedia";
 
 import { Reply } from "lucide-react";
 
 import { LastMessageProps } from "./LastMessage.types";
-import { useMemo } from "react";
 
 export const LastMessage = ({
   message,
   draft,
   countOfUnreadMessages,
   isShowUserName,
+  isSelected = false,
 }: LastMessageProps) => {
   const { mediaUtils, userUtils, useParticipants } = getAdapters();
   const { getCurrentUser, getUserById } = useParticipants();
@@ -25,11 +27,11 @@ export const LastMessage = ({
 
   if ((dText || dRepliedMid) && countOfUnreadMessages < 1) {
     return (
-      <div className="flex flex-1 items-center gap-[5px] overflow-y-hidden">
-        <p className="flex items-center gap-[3px] text-(--color-accent-dark) text-nowrap font-light!">
+      <div className="ui:flex ui:flex-1 ui:items-center ui:gap-1.25 ui:overflow-y-hidden">
+        <p className="ui:flex ui:items-center ui:gap-0.75 ui:font-light ui:text-nowrap ui:text-accent-500">
           {dRepliedMid && <Reply strokeWidth={2} />} Draft:
         </p>
-        <p className="w-full font-light! text-(--color-text-dark) overflow-hidden text-ellipsis whitespace-nowrap">
+        <p className="ui:w-full ui:overflow-hidden ui:font-extralight ui:text-ellipsis ui:whitespace-nowrap ui:text-text-dark">
           {dText}
         </p>
       </div>
@@ -39,13 +41,9 @@ export const LastMessage = ({
   const { attachments, body } = message || {};
   const lastAtt = attachments?.slice(-1)[0];
 
-  const buildLastMessageText = (
-    text: string | undefined,
-    att?: { file_name?: string; file_content_type?: string }
-  ) => {
+  const buildLastMessageText = (text: string | undefined, att?: { file_name?: string; file_content_type?: string }) => {
     if (text) return text;
-    if (att?.file_name || att?.file_content_type)
-      return mediaUtils.getFileType(att.file_name, att.file_content_type);
+    if (att?.file_name || att?.file_content_type) return mediaUtils.getFileType(att.file_name, att.file_content_type);
     return "";
   };
 
@@ -60,30 +58,22 @@ export const LastMessage = ({
 
   return (
     <>
-      <div className="flex flex-1 items-center gap-[5px] overflow-y-hidden">
-        {isShowUserName ? (
-          <p className="text-(--color-accent-dark) text-nowrap font-light!">
-            {displayName}:
-          </p>
-        ) : null}
-        {lastAtt ? <LastMessageMedia attachment={lastAtt} /> : null}
-        <p className="w-full font-light! text-(--color-text-dark) overflow-hidden text-ellipsis whitespace-nowrap">
+      <div className="ui:flex ui:flex-1 ui:items-center ui:gap-1.25 ui:overflow-y-hidden">
+        {isShowUserName ? <p className={`ui:font-light ui:text-nowrap ui:text-accent-500`}>{displayName}:</p> : null}
+        {lastAtt ? <LastMessageMedia isSelected={isSelected} attachment={lastAtt} /> : null}
+        <p
+          className={`ui:w-full ui:overflow-hidden ui:font-extralight ui:text-ellipsis ui:whitespace-nowrap ui:normal-nums!`}
+        >
           {buildLastMessageText(body, lastAtt)}
         </p>
       </div>
       {countOfUnreadMessages > 0 ? (
-        <div
-          className="px-[6px] py-[4px] !font-light text-white rounded-[12px] bg-accent-dark"
-          style={{ padding: "4px 6px" }}
-        >
+        <div className="ui:text-md ui:rounded-lg ui:bg-accent-500 ui:px-1.5 ui:py-0.5 ui:font-light ui:text-white">
           {countOfUnreadMessages}
         </div>
-      ) : (
-        <LastMessageStatus
-          message={message}
-          isCurrentUser={isAuthorCurrentUser}
-        />
-      )}
+      ) : isAuthorCurrentUser ? (
+        <MessageStatus message={message} color={"accent"} />
+      ) : null}
     </>
   );
 };

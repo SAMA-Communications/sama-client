@@ -32,13 +32,7 @@ vi.mock("react-loader-spinner", () => ({
 
 vi.mock("react-blurhash", () => ({
   Blurhash: ({ hash, width, height, style }: any) => (
-    <div
-      data-testid="blurhash"
-      data-hash={hash}
-      data-width={width}
-      data-height={height}
-      style={style}
-    />
+    <div data-testid="blurhash" data-hash={hash} data-width={width} data-height={height} style={style} />
   ),
 }));
 
@@ -68,12 +62,15 @@ const useParticipants = () => {
               Object.values(participantsMock).find((u) => u._id === id) || {
                 _id: id,
                 first_name: id,
-              }
+              },
           )
         : [],
     getCurrentUser: () => ({ _id: "u1" }),
-    getUserById: (id: string) =>
-      Object.values(participantsMock).find((u) => u._id === id) || null,
+    getUserById: (id: string) => Object.values(participantsMock).find((u) => u._id === id) || null,
+    updateCurrentUserAvatar: vi.fn(),
+    updateCurrentUserPassword: vi.fn(),
+    updateCurrentUserFields: vi.fn(),
+    deleteCurrentUser: vi.fn(),
   };
 };
 
@@ -91,16 +88,8 @@ const userUtils = {
 const mediaUtils = {
   getFileType: (name?: string, contentType?: string) => {
     if (!name && !contentType) return "";
-    if (
-      contentType?.startsWith("image") ||
-      (name && /\.(jpg|jpeg|png|gif)$/i.test(name))
-    )
-      return "Image";
-    if (
-      contentType?.startsWith("video") ||
-      (name && /\.(mp4|mov|webm)$/i.test(name))
-    )
-      return "Video";
+    if (contentType?.startsWith("image") || (name && /\.(jpg|jpeg|png|gif)$/i.test(name))) return "Image";
+    if (contentType?.startsWith("video") || (name && /\.(mp4|mov|webm)$/i.test(name))) return "Video";
     return "File";
   },
 };
@@ -116,4 +105,5 @@ const getAdaptersMock = () => ({
   useDrafts,
 });
 
+// @ts-expect-error: Ignore type validation for this line
 setAdapters(getAdaptersMock());

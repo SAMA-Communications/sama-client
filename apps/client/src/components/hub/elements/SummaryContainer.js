@@ -1,17 +1,13 @@
 import * as m from "motion/react-m";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  getConverastionById,
-  upsertChat,
-} from "@store/values/Conversations.js";
+import { getConverastionById, upsertChat } from "@store/values/Conversations.js";
 
 import { OvalLoader } from "@sama-communications.ui-kit";
 
 import { SUMMART_FILTER_MESSAGE } from "@utils/constants.js";
 
-import Close from "@icons/actions/Close.svg?react";
-import MagicWand from "@icons/ai/MagicWandWhite.svg?react";
+import { WandSparkles, X } from "lucide-react";
 
 export default function SummaryContainer({ summaryContent }) {
   const dispatch = useDispatch();
@@ -22,43 +18,30 @@ export default function SummaryContainer({ summaryContent }) {
 
   const { isLoading, text, filter } = summaryContent;
 
-  const onClose = () =>
-    dispatch(upsertChat({ _id: selectedConversation._id, summary: null }));
+  const onClose = () => dispatch(upsertChat({ _id: selectedConversation._id, summary: null }));
 
   return (
     <m.div
-      className="absolute right-[10px] top-1/2 -translate-y-1/2 max-w-[350px] p-[15px] rounded-[16px] bg-black/65 text-white text-end z-45"
+      className="absolute top-1/2 right-2.5 z-45 max-w-87.5 -translate-y-1/2 rounded-2xl bg-black/85 p-3 text-end text-white"
       initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
-      animate={{ backgroundColor: "rgba(0, 0, 0, 0.65)" }}
+      animate={{ backgroundColor: "rgba(0, 0, 0, 0.85)" }}
       exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
       transition={{ duration: 0.2 }}
     >
-      <div className="flex justify-between items-center">
-        <span className="text-span text-gray-300">
-          Only you can see this summary
-        </span>
-        <Close className="w-[15px] h-[15px] cursor-pointer" onClick={onClose} />
+      <div className="flex items-center justify-between">
+        <span className="text-span text-gray-300">Only you can see this summary</span>
+        <X color="white" size={16} className="cursor-pointer" onClick={onClose} />
       </div>
-      <div className="flex items-center gap-[7px]">
-        <MagicWand className="w-[22px] h-[22px]" />
-        <p className="text-h6 my-[8px]">
+      <div className="flex items-center gap-1.75">
+        <WandSparkles size={22} color="white" />
+        <p className="my-2 text-xl">
           <b>Here's what you missed: </b>
         </p>
       </div>
-      <div className="max-h-[400px] rounded-[8px] flex flex-col text-left overflow-auto">
-        {isLoading ? (
-          <OvalLoader
-            width={35}
-            height={35}
-            customClassName="my-[10px] self-center"
-          />
-        ) : (
-          <p>{text}</p>
-        )}
+      <div className="flex max-h-100 flex-col overflow-auto rounded-lg text-left">
+        {isLoading ? <OvalLoader width={35} height={35} customClassName="my-[10px] self-center" /> : <p>{text}</p>}
       </div>
-      <span className="mt-[9px] ml-auto text-span text-gray-300">
-        {SUMMART_FILTER_MESSAGE[filter] || ""}
-      </span>
+      <span className="text-span mt-2.25 ml-auto text-gray-300">{SUMMART_FILTER_MESSAGE[filter] || ""}</span>
     </m.div>
   );
 }

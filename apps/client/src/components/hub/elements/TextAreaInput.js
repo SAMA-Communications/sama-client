@@ -11,7 +11,7 @@ export default function TextAreaInput({
   return (
     <textarea
       id={customId}
-      className={`focus:outline-hidden !font-light ${customClassName}`}
+      className={`font-light focus:outline-hidden ${customClassName}`}
       ref={inputRef}
       onInput={handleInput}
       onKeyDown={handeOnKeyDown}

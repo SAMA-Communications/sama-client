@@ -2,16 +2,31 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "baseUrl": "./src",
+
     "declaration": true,
+    "declarationDir": "dist",
     "emitDeclarationOnly": false,
     "outDir": "dist",
-    "moduleResolution": "bundler",
-    "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./src"
+
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+
+    "strict": true,
+
+    "paths": {
+      "@src": ["src"],
+      "@elements": ["src/components/elements"],
+      "@composite": ["src/components/composite"],
+      "@adapters": ["src/adapters"],
+      "@types": ["src/types"],
+      "@utils": ["src/utils"]
+    }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "tests"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -4,12 +4,11 @@ import { useSelector } from "react-redux";
 
 import draftService from "@services/tools/draftService.js";
 
-import ChatFormInput from "@components/hub/chatForm/ChatFormInput.js";
 import ChatFormInputContent from "@components/hub/chatForm/ChatFormInputContent.js";
 import MessagesList from "@components/hub/elements/MessagesList";
 import SummaryContainer from "@components/hub/elements/SummaryContainer.js";
 
-import { CustomScrollBar } from "@sama-communications.ui-kit";
+import { CustomScrollBar, ConversationInput } from "@sama-communications.ui-kit";
 
 import { getConverastionById } from "@store/values/Conversations.js";
 import { selectMessagesEntities } from "@store/values/Messages.js";
@@ -29,8 +28,7 @@ export default function ChatFormContent() {
 
   const draftRepliedMessage = useMemo(() => {
     const repliedMessageId =
-      draftExtenralProps[selectedCID]?.draft_replied_mid ||
-      draftService.getDraftRepliedMessageId(selectedCID);
+      draftExtenralProps[selectedCID]?.draft_replied_mid || draftService.getDraftRepliedMessageId(selectedCID);
     return messagesEntities[repliedMessageId];
   }, [selectedConversation, draftExtenralProps, messagesEntities]);
   const draftForwardedMessage = useMemo(() => {
@@ -39,15 +37,18 @@ export default function ChatFormContent() {
   }, [selectedConversation, draftExtenralProps, messagesEntities]);
   const draftEditedMessage = useMemo(() => {
     const editedMessageId =
-      draftExtenralProps[selectedCID]?.draft_edited_mid ||
-      draftService.getDraftEditedMessageId(selectedCID);
+      draftExtenralProps[selectedCID]?.draft_edited_mid || draftService.getDraftEditedMessageId(selectedCID);
     return messagesEntities[editedMessageId];
   }, [selectedConversation, draftExtenralProps, messagesEntities]);
 
   const chatContentView = useMemo(() => {
     if (!messages) {
       return (
-        <CustomScrollBar customId={"chatMessagesScrollable"}>
+        <CustomScrollBar
+          customId={"chatMessagesScrollable"}
+          customClassName="rounded-3xl h-[calc(100%+9px)]!"
+          childrenClassName="py-1.5"
+        >
           <SMessageList />
         </CustomScrollBar>
       );
@@ -58,10 +59,8 @@ export default function ChatFormContent() {
     }
 
     return (
-      <div className="flex flex-grow items-end pb-[15px]">
-        <p className="font-light text-[23px] text-(--color-text-light)">
-          Write the first message...
-        </p>
+      <div className="flex w-full grow items-end self-center pb-1.5 lg:max-w-300">
+        <p className="text-text-light text-xl font-light">Write the first message...</p>
       </div>
     );
   }, [messages, chatMessagesBlock]);
@@ -77,10 +76,7 @@ export default function ChatFormContent() {
         repliedMessage={draftRepliedMessage}
         forwardedMessages={draftForwardedMessage}
       />
-      <ChatFormInput
-        chatMessagesBlockRef={chatMessagesBlock}
-        editedMessage={draftEditedMessage}
-      />
+      <ConversationInput chatMessagesBlockRef={chatMessagesBlock} editedMessage={draftEditedMessage} />
     </>
   );
 }

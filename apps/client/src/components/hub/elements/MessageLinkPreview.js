@@ -3,45 +3,29 @@ import { useState } from "react";
 import { formatFileSize } from "@utils/MediaUtils.js";
 import { SUPPORTED_DOCUMENT_PREVIEW_REGEX } from "@utils/constants.js";
 
-import File from "@icons/media/File.svg?react";
-import Refresh from "@icons/options/Refresh.svg?react";
+import { RefreshCcw, File } from "lucide-react";
 
 export default function MessageLinkPreview({ refreshFunc, urlData, color }) {
   if (!urlData) return null;
 
-  const {
-    url,
-    title,
-    siteName,
-    description,
-    images = [],
-    favicons = [],
-    file_name,
-    size,
-  } = urlData;
+  const { url, title, siteName, description, images = [], favicons = [], file_name, size } = urlData;
   const [imageError, setImageError] = useState(false);
 
   const isDocument = SUPPORTED_DOCUMENT_PREVIEW_REGEX.test(url);
 
-  const bgClass = color === "white" ? "bg-accent-light/20" : "bg-hover-dark/5";
+  const bgClass = color === "white" ? "bg-bg-dark/5" : "bg-accent-500/20";
   const textClass = color === "white" ? "text-gray-200" : "text-gray-500";
 
   if (isDocument) {
     return (
       <a href={url} target="_blank" rel="noopener noreferrer">
-        <div
-          className={`flex flex-row gap-[10px] p-[5px] mt-[5px] ${bgClass} rounded-lg`}
-        >
-          <div
-            className={`w-[45px] h-[55px] px-[7px] flex items-center justify-center ${bgClass} rounded-md`}
-          >
-            <File className="w-[24px] h-[36px]" />
+        <div className={`mt-1.25 flex flex-row gap-2.5 p-1.25 ${bgClass} rounded-lg`}>
+          <div className={`bg-bg-dark/15 flex h-13.75 w-11.25 items-center justify-center rounded-md px-1.75`}>
+            <File size={36} color="white" />
           </div>
           <div className="flex flex-col justify-center">
-            <p className="!font-light line-clamp-1 overflow-hidden text-ellipsis">
-              {file_name}
-            </p>
-            <p className={textClass}>{formatFileSize(Number(size))}</p>
+            <p className="line-clamp-1 overflow-hidden font-light text-ellipsis">{file_name}</p>
+            <p className={`text-text-dark font-light ${textClass}`}>{formatFileSize(Number(size))}</p>
           </div>
         </div>
       </a>
@@ -52,37 +36,23 @@ export default function MessageLinkPreview({ refreshFunc, urlData, color }) {
 
   return (
     <a href={url} target="_blank" rel="noopener noreferrer">
-      <div className={`flex flex-col p-[10px] mt-[5px] ${bgClass} rounded-lg`}>
-        <div className="flex flex-row gap-[5px] items-center">
-          {favicons[0] && (
-            <img
-              src={favicons[0]}
-              alt="Preview"
-              className="w-[10px] h-[10px] object-contain rounded-md"
-            />
-          )}
-          <div className="flex flex-col flex-1">
-            {siteName && (
-              <p className="!font-normal line-clamp-1 overflow-hidden text-ellipsis">
-                {siteName}
-              </p>
-            )}
-            <p className="!font-normal line-clamp-1 overflow-hidden text-ellipsis">
-              {title}
-            </p>
+      <div className={`mt-1.25 flex flex-col p-2.5 ${bgClass} rounded-lg`}>
+        <div className="flex flex-row items-center gap-1.25">
+          {favicons[0] && <img src={favicons[0]} alt="Preview" className="h-2.5 w-2.5 rounded-md object-contain" />}
+          <div className="flex flex-1 flex-col">
+            {siteName && <p className="line-clamp-1 overflow-hidden text-ellipsis">{siteName}</p>}
+            <p className="line-clamp-1 overflow-hidden text-ellipsis">{title}</p>
           </div>
-          <Refresh onClick={(e) => refreshFunc(e, url)} className={"h-[10px"} />
+          <RefreshCcw size={18} color="var(--color-hover-dark)" onClick={(e) => refreshFunc(e, url)} />
         </div>
         {description && (
-          <p className="line-clamp-2 overflow-hidden text-ellipsis mt-[2px]">
-            {description}
-          </p>
+          <p className="text-text-dark mt-0.5 line-clamp-2 overflow-hidden font-light text-ellipsis">{description}</p>
         )}
         {images[0] && !imageError && (
           <img
             src={images[0]}
             alt="Preview"
-            className="w-full max-h-[240px] h-full object-cover rounded-md mt-[4px]"
+            className="mt-1 h-full max-h-60 w-full rounded-md object-cover"
             onError={() => setImageError(true)}
           />
         )}
