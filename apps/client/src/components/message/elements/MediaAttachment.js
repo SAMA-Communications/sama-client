@@ -22,8 +22,7 @@ export default function AttachmentCompressed({
 
   const { file_name, file_url, file_content_type } = attachment;
 
-  const isVideo =
-    getFileType(file_name || file_url, file_content_type) === "Video";
+  const isVideo = getFileType(file_name || file_url, file_content_type) === "Video";
 
   const openMediaWindow = () => {
     mid ? addSuffix(pathname + hash, `/media?mid=${mid}=${index}`) : {};
@@ -53,7 +52,7 @@ export default function AttachmentCompressed({
       initial="hidden"
       animate="visible"
       key={file_name || file_url}
-      className={`relative overflow-hidden flex justify-center items-center`}
+      className={`relative flex items-center justify-center overflow-hidden rounded-sm`}
       style={{ flexGrow, flexBasis: 0 }}
       onContextMenu={onContextMenu}
     >
@@ -64,7 +63,7 @@ export default function AttachmentCompressed({
       )}
       {removeFileFunc && (
         <div
-          className="absolute right-[3px] top-[3px] p-[3px] bg-(--color-bg-dark)/50 rounded-sm cursor-pointer"
+          className="absolute top-[3px] right-[3px] cursor-pointer rounded-sm bg-(--color-bg-dark)/50 p-[3px]"
           onClick={() => removeFileFunc(index)}
         >
           <Delete />

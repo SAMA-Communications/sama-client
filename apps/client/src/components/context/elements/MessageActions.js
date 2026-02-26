@@ -7,7 +7,7 @@ import messagesService from "@services/messagesService.js";
 
 import ContextLink from "@components/context/elements/ContextLink";
 
-import { useConfirmWindow } from "@hooks/tools/useConfirmWindow.js";
+import { useConfirmWindow } from "@sama-communications.ui-kit";
 
 import { addExternalProps } from "@store/values/ContextMenu.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
@@ -16,13 +16,7 @@ import { selectContextExternalProps } from "@store/values/ContextMenu.js";
 import { addSuffix, upsertMidsInPath } from "@utils/NavigationUtils.js";
 import { writeToCanvas } from "@utils/MediaUtils.js";
 
-import Reply from "@icons/context/Reply.svg?react";
-import Edit from "@icons/context/EditText.svg?react";
-import Copy from "@icons/context/Copy.svg?react";
-import Forward from "@icons/context/Forward.svg?react";
-import Select from "@icons/context/Select.svg?react";
-import Download from "@icons/context/Download.svg?react";
-import Delete from "@icons/context/Delete.svg?react";
+import { ArrowDownToLine, CircleCheck, Copy, Forward, Reply, Trash, SquarePen, MessageCircleX } from "lucide-react";
 
 export default function MessageActions({ listOfIds }) {
   const dispatch = useDispatch();
@@ -47,9 +41,7 @@ export default function MessageActions({ listOfIds }) {
               {
                 description: "All Files",
                 accept: {
-                  [blob.type]: [
-                    `.${attachment.file_content_type.split("/").pop()}`,
-                  ],
+                  [blob.type]: [`.${attachment.file_content_type.split("/").pop()}`],
                 },
               },
             ],
@@ -71,9 +63,7 @@ export default function MessageActions({ listOfIds }) {
       if (!attachment.file_url) return;
       try {
         const blob = await writeToCanvas(attachment.file_url);
-        await navigator.clipboard.write([
-          new ClipboardItem({ [blob.type]: blob }),
-        ]);
+        await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
       } catch {}
     },
   };
@@ -83,12 +73,12 @@ export default function MessageActions({ listOfIds }) {
       <ContextLink
         key={"messageReply"}
         text="Reply"
-        icon={<Reply />}
+        icon={<Reply size={18} />}
         onClick={() => {
           dispatch(
             addExternalProps({
               [selectedCID]: { draft_replied_mid: message._id },
-            })
+            }),
           );
           draftService.saveDraft(selectedCID, { replied_mid: message._id });
         }}
@@ -98,7 +88,7 @@ export default function MessageActions({ listOfIds }) {
       <ContextLink
         key={"messageSaveAs"}
         text={`Save${window.showSaveFilePicker ? " As" : ""}`}
-        icon={<Download />}
+        icon={<ArrowDownToLine />}
         onClick={linksAction.messageSaveAs}
       />
     ),
@@ -106,7 +96,7 @@ export default function MessageActions({ listOfIds }) {
       <ContextLink
         key={"messageCopyText"}
         text="Copy Text"
-        icon={<Copy />}
+        icon={<Copy size={18} />}
         onClick={() => {
           message?.body && navigator.clipboard.writeText(message.body);
         }}
@@ -116,7 +106,7 @@ export default function MessageActions({ listOfIds }) {
       <ContextLink
         key={"messageCopyAttachment"}
         text="Copy Media"
-        icon={<Copy />}
+        icon={<Copy size={18} />}
         onClick={linksAction.messageCopyAttachment}
       />
     ),
@@ -124,12 +114,9 @@ export default function MessageActions({ listOfIds }) {
       <ContextLink
         key={"messageForward"}
         text="Forward"
-        icon={<Forward />}
+        icon={<Forward size={18} />}
         onClick={() => {
-          addSuffix(
-            location.pathname + location.hash,
-            `/forward?mids=[${message._id}]`
-          );
+          addSuffix(location.pathname + location.hash, `/forward?mids=[${message._id}]`);
         }}
       />
     ),
@@ -137,12 +124,12 @@ export default function MessageActions({ listOfIds }) {
       <ContextLink
         key={"messageEdit"}
         text="Edit"
-        icon={<Edit />}
+        icon={<SquarePen size={18} />}
         onClick={() => {
           dispatch(
             addExternalProps({
               [selectedCID]: { draft_edited_mid: message._id },
-            })
+            }),
           );
           draftService.saveDraft(selectedCID, { edited_mid: message._id });
         }}
@@ -152,17 +139,28 @@ export default function MessageActions({ listOfIds }) {
       <ContextLink
         key={"messageDelete"}
         text="Delete"
-        icon={<Delete />}
+        icon={<Trash size={18} />}
         onClick={async () => {
           const { isConfirm, data } = await confirmWindow({
             title: "Delete selected message?",
+            icon: <MessageCircleX size={40} color="red" strokeWidth={2} />,
             confirmText: "Delete",
             cancelText: "Cancel",
-            action: "messageDelete",
+            actions: [
+              ({ data, setData }) => (
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={data.scope === "all"}
+                    onChange={(e) => setData({ scope: e.target.checked ? "all" : "self" })}
+                  />
+                  <span>Delete for everyone</span>
+                </label>
+              ),
+            ],
           });
           const { _id } = message;
-          isConfirm &&
-            messagesService.sendMessageDelete(selectedCID, [_id], data.type);
+          isConfirm && messagesService.sendMessageDelete(selectedCID, [_id], data.type || "self");
         }}
       />
     ),
@@ -170,7 +168,7 @@ export default function MessageActions({ listOfIds }) {
       <ContextLink
         key={"messageSelect"}
         text="Select"
-        icon={<Select />}
+        icon={<CircleCheck size={18} />}
         onClick={() => {
           const isSelected = location.hash.includes("selection");
           const currentPath = location.pathname + location.hash;
@@ -182,8 +180,5 @@ export default function MessageActions({ listOfIds }) {
     ),
   };
 
-  return useMemo(
-    () => listOfIds.map((linkId) => links[linkId]).filter(Boolean),
-    [listOfIds]
-  );
+  return useMemo(() => listOfIds.map((linkId) => links[linkId]).filter(Boolean), [listOfIds]);
 }

@@ -23,14 +23,14 @@ export default function ChatFormEditor() {
 
   return (
     <>
-      <div className="w-full py-[10px] flex justify-center rounded-lg bg-(--color-accent-light)">
-        <p className="!font-light">
+      <div className="bg-accent-100 flex w-full justify-center rounded-lg py-2">
+        <p className="font-light">
           Please read the documentation before you start:{" "}
           <a
             href="https://oleksandr-ch.notion.site/Programmable-Chat-feature-1ffe3b41e4ae804da619f63b706e7263"
             target="_blank"
             rel="noopener noreferrer"
-            className="!font-normal cursor-pointer underline text-(--color-accent-dark)"
+            className="text-accent-500 cursor-pointer font-normal underline"
           >
             documentation
           </a>
@@ -38,7 +38,7 @@ export default function ChatFormEditor() {
       </div>
       <ChatEditorCode />
       <ChatEditorLogs logs={compilerLogs} setLogs={setCompilerLogs} />
-      <div className="h-[61px] px-5 py-2 flex-shrink-0 flex justify-between items-center rounded-2xl bg-[var(--color-hover-light)]">
+      <div className="flex w-full items-end gap-2.5 self-center pb-3.5 lg:max-w-300">
         <ChatEditorHelper />
         <ChatEditorValidation setLogs={setCompilerLogs} />
       </div>

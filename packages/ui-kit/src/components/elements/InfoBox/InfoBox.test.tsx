@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
+
 import { InfoBox } from "./InfoBox";
 
 describe("InfoBox", () => {
@@ -26,9 +27,7 @@ describe("InfoBox", () => {
   });
 
   it("does not render when hideIfNull is true and value is empty", () => {
-    const { container } = render(
-      <InfoBox title="Secret" value="" hideIfNull />,
-    );
+    const { container } = render(<InfoBox title="Secret" value="" hideIfNull />);
     expect(container).toBeEmptyDOMElement();
   });
 

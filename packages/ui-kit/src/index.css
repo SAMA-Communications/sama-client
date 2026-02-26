@@ -1,39 +1,51 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Krona+One&display=swap");
-@import "tailwindcss";
+@import "tailwindcss" prefix(ui);
+@plugin "@toolwind/corner-shape";
 
 @theme {
-  --accent-font: "Krona One", sans-serif;
+  --font-base: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-accent: var(--font-base);
 
-  --text-h1: 48px;
-  --text-h2: 40px;
-  --text-h3: 33px;
-  --text-h4: 28px;
-  --text-h5: 23px;
-  --text-h6: 19px;
-  --text-p: 16px;
-  --text-span: 13px;
-  --text-indicator: 12px;
+  --color-danger: #df2e38;
 
-  --color-white: #fff;
-  --color-black: #000;
-  --color-black-25: rgba(0, 0, 0, 0.25);
-  --color-black-50: rgba(0, 0, 0, 0.5);
-  --color-black-75: rgba(0, 0, 0, 0.75);
-  --color-black-90: rgba(0, 0, 0, 0.9);
-  --color-grey-50: rgba(26, 26, 26, 0.5);
-  --color-red: #df2e38;
   --color-bg-light: #f6f6f6;
-  --color-bg-light-25: rgba(246, 246, 246, 0.25);
-  --color-bg-light-50: rgba(246, 246, 246, 0.5);
-  --color-bg-light-90: rgba(246, 246, 246, 0.9);
   --color-bg-dark: #1b1b1d;
+
   --color-text-light: #b0b0b0;
   --color-text-dark: #6d6d6d;
+
   --color-hover-light: #e7e7e7;
   --color-hover-dark: #3f3f3f;
-  --color-accent-light: #dbdcfc;
-  --color-accent-light-50: #babbf2;
-  --color-accent-dark: #7678e5;
+
+  --color-accent-100: #dbdcfc;
+  --color-accent-200: #babbf2;
+  --color-accent-500: #7678e5;
+
   --color-indicator: #68174d;
 }
+
+@utility shadow-btn {
+  box-shadow:
+    rgba(50, 50, 105, 0.15) 0px 2px 5px 0px,
+    rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
+}
+
+.lucide {
+  stroke-width: 1px;
+  transition:
+    color 0.15s linear,
+    transform 0.15s linear;
+}
+
+/* scroll */
+/* ::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.3);
+
+  cursor: pointer;
+} */

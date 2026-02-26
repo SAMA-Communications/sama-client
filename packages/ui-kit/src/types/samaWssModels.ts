@@ -1,7 +1,7 @@
 export interface User {
   _id: string;
   organization_id: string;
-  recent_activity?: number;
+  recent_activity: number;
   login: string;
   first_name?: string;
   last_name?: string;

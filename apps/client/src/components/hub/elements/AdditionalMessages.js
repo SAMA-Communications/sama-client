@@ -1,5 +1,3 @@
-import * as m from "motion/react-m";
-import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import MediaAttachment from "@components/message/elements/MediaAttachment.js";
@@ -8,117 +6,62 @@ import { selectParticipantsEntities } from "@store/values/Participants.js";
 
 import { getUserFullName } from "@utils/UserUtils.js";
 
-import Forward from "@icons/context/ForwardGray.svg?react";
-import Edit from "@icons/context/EditTextGray.svg?react";
-import Reply from "@icons/context/ReplyGray.svg?react";
-import Close from "@icons/options/Close.svg?react";
+import { SquarePen, X, Reply, Forward } from "lucide-react";
 
 export default function AdditionalMessages({
   message,
   messages,
-  color,
   type,
   isPreview = false,
+  color = "accent",
   onCloseFunc,
   onClickFunc,
 }) {
   const participants = useSelector(selectParticipantsEntities);
 
-  const {
-    attachments,
-    body,
-    from: senderId,
-    error,
-  } = message || messages[0] || {};
+  const { attachments, body, from: senderId, error } = message || messages[0] || {};
   const isReply = type === "reply";
   const isEdit = type === "edit";
-
-  const { bodyColor, bgColor, userNameColor } = useMemo(() => {
-    switch (color) {
-      case "accent":
-        return {
-          bodyColor: "text-white",
-          bgColor: "bg-accent-light/30",
-          userNameColor: "text-white",
-        };
-      case "light":
-        return {
-          bodyColor: "text-black",
-          bgColor: "bg-hover-dark/5",
-          userNameColor: "text-accent-dark",
-        };
-      default:
-        return {
-          bodyColor: "text-black",
-          bgColor: "bg-hover-light/65",
-          userNameColor: "text-accent-dark",
-        };
-    }
-  }, [color]);
+  const isAccent = color === "accent";
 
   if (error) {
     return (
-      <div
-        className={`w-[calc(100%)] px-[10px] py-[7px] border-l-[3px] rounded-lg shrink ${bgColor}   ${
-          color === "accent" ? "border-l-accent-light" : "border-l-accent-dark"
-        }`}
-      >
-        <p className={`${bodyColor}`}>{error}</p>
+      <div className={`border-text-dark w-[calc(100%-7rem)] gap-2.75 self-center rounded-xl border p-2 lg:max-w-272`}>
+        <p>{error}</p>
       </div>
     );
   }
 
-  const animateInOut = isPreview && {
-    opacity: 0,
-    scale: 0.98,
-    y: 30,
-    height: 0,
-    marginTop: -5,
-  };
-
-  const animateVisible = isPreview && {
-    opacity: 1,
-    scale: [0.98, 1.005, 1],
-    y: 0,
-    height: 90,
-    marginTop: 0,
-  };
-
   return (
-    <m.div
-      initial={animateInOut}
-      animate={animateVisible}
-      exit={animateInOut}
-      className={`${
+    <div
+      className={`flex shrink items-center lg:max-w-272 ${
         isPreview
-          ? `!h-[73px] w-[calc(100%-20px)] -mb-[20px] pb-[20px] pt-[5px] px-[18px] rounded-[16px] gap-[15px] ${bgColor} z-1`
-          : `w-[calc(100%)] px-[10px] py-[7px] cursor-pointer border-l-[3px] rounded-lg gap-[10px] ${bgColor} ${
-              color === "accent"
-                ? "border-l-accent-light"
-                : "border-l-accent-dark"
-            }`
-      } shrink flex items-center self-center`}
+          ? "border-text-dark w-[calc(100%-7rem)] gap-2.75 self-center rounded-xl border px-2 py-1"
+          : `-mb-3 flex cursor-pointer flex-row flex-nowrap items-center gap-1.75 rounded-t-xl pt-0.5 pr-3 pb-3 pl-1 ${isAccent ? "bg-bg-dark/5" : "bg-accent-500/65"}`
+      }`}
       onClick={onClickFunc}
     >
       {isPreview ? (
         <span>
           {isEdit ? (
-            <Edit className="w-[25px] h-[25px]" />
+            <SquarePen size={28} color="var(--color-text-dark)" />
           ) : isReply ? (
-            <Reply className="w-[25px] h-[25px]" />
+            <Reply size={28} color={isAccent ? "var(--color-text-dark)" : "white"} />
           ) : (
-            <Forward className="w-[25px] h-[25px]" />
+            <Forward size={28} color="var(--color-text-dark)" />
           )}
         </span>
+      ) : isReply ? (
+        <Reply size={19} color={isAccent ? "var(--color-text-dark)" : "white"} className="min-w-4.75" />
       ) : null}
       {attachments?.length ? (
-        <div className="w-[45px] h-[45px] overflow-hidden rounded-lg object-cover flex">
+        <div className="flex h-10 w-10 min-w-10 overflow-hidden rounded-lg object-cover">
           <MediaAttachment attachment={attachments[0]} flexGrow={1} />
         </div>
       ) : null}
-      <div className="w-[calc(100%-160px)] flex flex-col grow">
+      <div className="flex w-[calc(100%-2.25rem)] grow flex-col">
         <p
-          className={`${userNameColor} !font-normal overflow-hidden text-ellipsis whitespace-nowrap`}
+          className={`text-accent-500 w-[calc(100%-40px)] overflow-hidden font-medium text-ellipsis whitespace-nowrap ${isAccent ? "var(--color-text-dark)" : "text-white"}`}
         >
           {isEdit ? (
             "Edit message"
@@ -130,21 +73,16 @@ export default function AdditionalMessages({
           )}
         </p>
         <p
-          className={`${bodyColor} overflow-hidden text-ellipsis whitespace-nowrap`}
+          className={`w-[calc(100%-40px)] overflow-hidden font-light text-ellipsis whitespace-nowrap ${isAccent ? "" : "text-white"}`}
         >
-          {isReply || messages?.length < 2
-            ? body
-            : messages?.length + " forwarded messages"}
+          {isReply || messages?.length < 2 ? body : messages?.length + " forwarded messages"}
         </p>
       </div>
       {onCloseFunc && (
         <span>
-          <Close
-            className="w-[20px] h-[20px] cursor-pointer"
-            onClick={onCloseFunc}
-          />
+          <X size={28} color="var(--color-text-dark)" className="cursor-pointer" onClick={onCloseFunc} />
         </span>
       )}
-    </m.div>
+    </div>
   );
 }

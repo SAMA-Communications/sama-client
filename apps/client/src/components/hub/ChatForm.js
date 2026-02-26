@@ -1,11 +1,4 @@
-import * as m from "motion/react-m";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -15,9 +8,9 @@ import draftService from "@services/tools/draftService.js";
 
 import { useKeyDown } from "@hooks/tools/useKeyDown";
 
+import { ConversationHeader } from "@sama-communications.ui-kit";
+
 import ChatFormContent from "@components/hub/chatForm/ChatFormContent.js";
-import ChatFormHeader from "@components/hub/chatForm/ChatFormHeader.js";
-import ChatFormNavigation from "@components/hub/chatForm/ChatFormNavigation.js";
 import ChatFormEditor from "@components/hub/chatForm/ChatFormEditor.js";
 
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
@@ -28,10 +21,7 @@ import {
   getConverastionById,
   selectConversationsEntities,
 } from "@store/values/Conversations";
-import {
-  clearSelectedConversation,
-  setSelectedConversation,
-} from "@store/values/SelectedConversation";
+import { clearSelectedConversation, setSelectedConversation } from "@store/values/SelectedConversation";
 import { addExternalProps, setClicked } from "@store/values/ContextMenu";
 import { getIsMobileView } from "@store/values/IsMobileView.js";
 
@@ -56,8 +46,7 @@ export default function ChatForm() {
   const isOwner = currentUserId === conversationOwner;
 
   const [currentTab, setCurrentTab] = useState(CHAT_CONTENT_TABS.MESSAGES);
-  const isEnableProgrammableChat =
-    import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true" && !isMobileView;
+  const isEnableProgrammableChat = import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true" && !isMobileView;
 
   const closeForm = (e) => {
     const { pathname, hash } = location;
@@ -121,10 +110,7 @@ export default function ChatForm() {
 
   useKeyDown(KEY_CODES.ESCAPE, closeForm);
 
-  useLayoutEffect(
-    () => setCurrentTab(CHAT_CONTENT_TABS.MESSAGES),
-    [selectedCID]
-  );
+  useLayoutEffect(() => setCurrentTab(CHAT_CONTENT_TABS.MESSAGES), [selectedCID]);
 
   const formComponent = useMemo(() => {
     if (!selectedCID) return null;
@@ -140,40 +126,28 @@ export default function ChatForm() {
   }, [selectedCID, currentTab]);
 
   return (
-    <m.div
+    <section
       key="chatForm"
       id="chatFormContainer"
-      className={`relative max-xl:max-w-full ${
-        location.pathname.includes("/profile")
-          ? "xl:max-w-full"
-          : "xl:max-w-[calc(100%-420px)]"
-      } flex flex-col flex-grow md:max-xl:p-[10px] md:rounded-[32px]`}
-      // layout
-      initial={{ scale: 1, opacity: 0 }}
-      animate={{ scale: [1.02, 1], y: [3, 0], opacity: [0, 1] }}
-      transition={{ delay: 0.3, duration: 0.5 }}
+      className={`relative flex flex-1 flex-col gap-1.25 px-3.5 shadow-[inset_7px_0_14px_-3px_rgba(0,0,0,0.05),inset_-7px_0_14px_-3px_rgba(0,0,0,0.05)]`}
     >
       {selectedCID ? (
         <>
-          <ChatFormHeader closeFormFunc={closeForm} />
-          {isGroup && isOwner && isEnableProgrammableChat ? (
-            <ChatFormNavigation
-              currentTab={currentTab}
-              changeTabFunc={setCurrentTab}
-            />
-          ) : null}
+          <ConversationHeader
+            conversation={selectedConversation}
+            isSelectionMode={location.hash.includes("/selection")}
+            currentTab={currentTab}
+            changeTabFunc={setCurrentTab}
+            closeFormFunc={closeForm}
+          />
+          {/* {isGroup && isOwner && isEnableProgrammableChat ? null : null} */}
           {formComponent}
         </>
       ) : (
-        <m.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="mt-auto mb-auto text-center font-light text-[58px] !text-(--color-text-light)"
-        >
+        <p className="text-text-dark/60 my-auto self-center text-4xl font-extralight">
           Select a conversation to start chatting
-        </m.p>
+        </p>
       )}
-    </m.div>
+    </section>
   );
 }

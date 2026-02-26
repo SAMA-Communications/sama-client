@@ -18,22 +18,17 @@ export default function MediaAttachments({
   return (
     <div
       className={`w-full ${
-        maxWidth ? `max-w-[${maxWidth}]` : "max-w-[550px]"
+        maxWidth ? `max-w-[${maxWidth}]` : "max-w-[520px]"
       } ${maxHeight ? `max-h-[${maxHeight}]` : "max-h-[660px]"} ${
         maxHeight ? `max-sm:max-h-${maxHeight}]` : "max-sm:max-h-[440px]"
-      } min-h-[350px] sm:min-w-[300px] flex flex-col gap-1 overflow-hidden rounded-lg`}
+      } flex min-h-[350px] flex-col gap-0.75 overflow-hidden rounded-lg sm:min-w-[300px]`}
     >
       {rows.map((row, rowIndex) => {
-        const totalRatio = row.reduce(
-          (acc, att) => acc + normalizeRatio(att.file_width / att.file_height),
-          0
-        );
+        const totalRatio = row.reduce((acc, att) => acc + normalizeRatio(att.file_width / att.file_height), 0);
         return (
           <div
             key={rowIndex}
-            className={`flex flex-row gap-1 flex-1 overflow-hidden ${
-              mid ? "cursor-pointer" : ""
-            }`}
+            className={`flex flex-1 flex-row gap-0.75 overflow-hidden ${mid ? "cursor-pointer" : ""}`}
           >
             {row.map((att, idx) => {
               const ratio = normalizeRatio(att.file_width / att.file_height);

@@ -114,7 +114,7 @@ export default function UserSelectorBlock({
       />
       <div className="mt-auto justify-end gap-[30px] flex items-center">
         <p
-          className="text-h6 text-(--color-accent-dark) !forn-light cursor-pointer"
+          className="text-h6 text-(--color-accent-500) !forn-light cursor-pointer"
           onClick={closeWindow}
         >
           Cancel
@@ -123,7 +123,7 @@ export default function UserSelectorBlock({
           <OvalLoader wrapperClassName="!p-[0px]" height={60} width={23} />
         ) : (
           <p
-            className="text-h6 text-(--color-accent-dark) !forn-light cursor-pointer"
+            className="text-h6 text-(--color-accent-500) !forn-light cursor-pointer"
             onClick={() => validateClick()}
           >
             {initSelectedUsers ? "Add" : "Create"}

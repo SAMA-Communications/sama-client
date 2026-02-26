@@ -9,18 +9,12 @@ import { ConversationItemListProps } from "./ConversationItemList.types";
 
 export const ConversationItemList = ({
   conversations,
+  selectedConversation,
   additionalOnClickfunc,
 }: // isHideDeletedUsers = false,
 ConversationItemListProps) => {
   const { useConversations } = getAdapters();
-  const {
-    getSelectedConversation,
-    setSelectedConversation,
-    storeNewConversations,
-    fetchConversations,
-  } = useConversations();
-
-  const selectedConversation = getSelectedConversation();
+  const { setSelectedConversation, storeNewConversations, fetchConversations } = useConversations();
 
   const convItemOnClickFunc = (cid: string) => {
     setSelectedConversation(cid);
@@ -50,8 +44,6 @@ ConversationItemListProps) => {
       scrollableTarget="conversationItemsScrollable"
       loader={undefined}
     >
-      {/* <LazyMotion features={domMax}>
-        <LayoutGroup id="conversationItemListLayoutGroup"> */}
       {conversations.map((obj) => (
         <ConversationItem
           key={obj._id}
@@ -60,8 +52,6 @@ ConversationItemListProps) => {
           isSelected={selectedConversation?._id === obj._id}
         />
       ))}
-      {/* </LayoutGroup>
-      </LazyMotion> */}
     </InfiniteScroll>
   );
 };

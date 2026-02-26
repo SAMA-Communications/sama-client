@@ -77,7 +77,7 @@ class ActivityService {
       store.getState().participants.entities[userId]?.recent_activity;
 
     return opponentLastActivity === 0 ? (
-      <span className="text-(--color-accent-dark) text-h5">online</span>
+      <span className="text-(--color-accent-500) text-h5">online</span>
     ) : (
       getLastVisitTime(opponentLastActivity)
     );

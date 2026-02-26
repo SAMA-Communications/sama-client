@@ -20,8 +20,7 @@ export default function useConversations() {
   };
 
   const getSelectedConversation = () => {
-    const selectedConversationId =
-      store.getState()?.selectedConversation.value.id;
+    const selectedConversationId = store.getState()?.selectedConversation.value.id;
 
     return getConversationById(selectedConversationId);
   };
@@ -36,12 +35,9 @@ export default function useConversations() {
   };
 
   const storeNewConversations = (conversations) => {
-    store.dispatch(
-      insertChats(conversations.map((obj) => ({ ...obj, participants: [] })))
-    );
+    store.dispatch(insertChats(conversations.map((obj) => ({ ...obj, participants: [] }))));
 
-    if (conversations.length > 0)
-      conversationService.getAndStoreParticipantsFromChats(conversations);
+    if (conversations.length > 0) conversationService.getAndStoreParticipantsFromChats(conversations);
   };
 
   const updateChatImage = async (file) => {
@@ -49,27 +45,22 @@ export default function useConversations() {
       return;
     }
 
-    const selectedConversationId =
-      store.getState().selectedConversation.value.id;
+    const selectedConversationId = store.getState().selectedConversation.value.id;
     store.dispatch(
       upsertChat({
         _id: selectedConversationId,
         image_url: isHeic(file.name) ? null : URL.createObjectURL(file),
-      })
+      }),
     );
 
     const imageFile = await processFile(file, 0.2, 300);
     if (!imageFile) {
-      store.dispatch(
-        upsertChat({ _id: selectedConversationId, image_url: undefined })
-      );
+      store.dispatch(upsertChat({ _id: selectedConversationId, image_url: undefined }));
       showCustomAlert("An error occured while processing the file.", "warning");
       return;
     }
 
-    const imageObject = (await DownloadManager.getFileObjects([imageFile])).at(
-      0
-    );
+    const imageObject = (await DownloadManager.getFileObjects([imageFile])).at(0);
     const requestData = {
       cid: selectedConversationId,
       image_object: {
@@ -117,13 +108,28 @@ export default function useConversations() {
     }
   };
 
+  const sendTypingStatus = (cid) => {
+    api.sendTypingStatus({ cid });
+  };
+
+  const deleteAndLevae = async (cid) => {
+    navigateTo("/");
+    await conversationService.deleteConversation();
+  };
+
   return {
+    storeNewConversations,
+    setSelectedConversation,
+
     getConversationById,
     getSelectedConversation,
-    setSelectedConversation,
     fetchConversations,
-    storeNewConversations,
+
     updateChatImage,
     updateNameAndDescription,
+
+    sendTypingStatus,
+
+    deleteAndLevae,
   };
 }

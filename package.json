@@ -25,5 +25,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SAMA-Communications/sama-client.git"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6"
   }
 }

@@ -351,7 +351,7 @@ export default function AttachHub() {
         accept={ALLOWED_FILE_FORMATS}
         multiple
       />
-      <div className="absolute top-[0px] p-[10px] w-dvw h-dvh bg-(--color-black-50) z-[200] flex items-center justify-center">
+      <div className="absolute top-[0px] p-[10px] w-dvw h-dvh bg-black/50 z-[200] flex items-center justify-center">
         <div className="p-[30px] w-[500px] max-h-[90svh] flex flex-col gap-[20px] rounded-[32px] bg-(--color-bg-light) max-sm:w-[94svw]">
           <p className="text-h5 !font-normal text-black">
             {files.length > 1
@@ -375,20 +375,20 @@ export default function AttachHub() {
           {isSendMessageDisable ? null : (
             <div className="mt-auto justify-end gap-[30px] flex items-center">
               <p
-                className="text-h6 text-(--color-accent-dark) !font-light cursor-pointer mr-auto"
+                className="text-h6 text-(--color-accent-500) !font-light cursor-pointer mr-auto"
                 onClick={pickFileClick}
               >
                 Add
               </p>
               <p
-                className="text-h6 text-(--color-accent-dark) !font-light cursor-pointer"
+                className="text-h6 text-(--color-accent-500) !font-light cursor-pointer"
                 onClick={closeModal}
               >
                 Cancel
               </p>
 
               <p
-                className="text-h6 text-(--color-accent-dark) !font-light cursor-pointer"
+                className="text-h6 text-(--color-accent-500) !font-light cursor-pointer"
                 onClick={sendMessage}
               >
                 Send

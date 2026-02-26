@@ -12,6 +12,7 @@ class DraftService {
     return `draft_last_input_${cid}`;
   }
 
+  //replaced
   saveDraft(cid, options) {
     const draftParams = { updated_at: Math.floor(Date.now() / 1000) };
     options.text && (draftParams.text = options.text);
@@ -23,12 +24,14 @@ class DraftService {
     localStorage.setItem(this.#getDraftKey(cid), JSON.stringify(newDraft));
   }
 
+  //repalced
   getDraft(cid) {
     const stringDraftParams = localStorage.getItem(this.#getDraftKey(cid));
     const draftParams = stringDraftParams ? JSON.parse(stringDraftParams) : {};
     return draftParams;
   }
 
+  //replaced
   getDraftMessage(cid) {
     return this.getDraft(cid).text;
   }
@@ -41,12 +44,14 @@ class DraftService {
     return this.getDraft(cid).edited_mid;
   }
 
+  //replaced
   removeDraft(cid) {
     const draftKey = this.#getDraftKey(cid);
     localStorage.removeItem(draftKey);
     store.dispatch(updateWithDrafts({ cid, isRemove: true }));
   }
 
+  //replaced
   removeDraftWithOptions(cid, fields) {
     const draftKey = this.#getDraftKey(cid);
     const draft = this.getDraft(cid);
@@ -58,10 +63,7 @@ class DraftService {
 
     let modified = false;
     for (const field of fieldsArray) {
-      if (
-        this.#allowedDraftFields.includes(field) &&
-        draft.hasOwnProperty(field)
-      ) {
+      if (this.#allowedDraftFields.includes(field) && draft.hasOwnProperty(field)) {
         delete draft[field];
         modified = true;
       }
@@ -77,11 +79,13 @@ class DraftService {
     }
   }
 
+  //replaced
   saveLastInputText(cid, text) {
     const draftKey = this.#getLastInputDraftKey(cid);
     localStorage.setItem(draftKey, text);
   }
 
+  //replaced
   getLastInputText(cid) {
     const draftKey = this.#getLastInputDraftKey(cid);
     const lastInputText = localStorage.getItem(draftKey);

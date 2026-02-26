@@ -1,6 +1,6 @@
-import { InfoBox } from "../../../components/elements/InfoBox";
-
 import { getAdapters } from "../../../adapters";
+
+import { InfoBox } from "../../../components/elements/InfoBox";
 import { UserProfileAvatar } from "../../../components/elements/UserProfileAvatar";
 
 interface UserInputsGroupProps {
@@ -10,11 +10,13 @@ interface UserInputsGroupProps {
 export const UserInputsGroup = ({ onChageValue }: UserInputsGroupProps) => {
   const { useParticipants } = getAdapters();
   const { getCurrentUser } = useParticipants();
-  const { first_name, last_name, email, phone } = getCurrentUser();
+
+  const user = getCurrentUser();
+  const { first_name, last_name, email, phone } = user;
 
   return (
     <>
-      <UserProfileAvatar swapAccentAndMainColor={true} />
+      <UserProfileAvatar user={user} swapAccentAndMainColor={true} />
       <InfoBox
         title={"First name"}
         value={first_name}

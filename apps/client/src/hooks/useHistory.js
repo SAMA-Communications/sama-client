@@ -1,4 +1,6 @@
 import { setAllParams } from "@store/values/ContextMenu.js";
+import store from "@store/store.js";
+
 import {
   addPrefix,
   addSuffix,
@@ -60,6 +62,33 @@ export default function useHistory() {
     undoSubLink("/profile");
   };
 
+  const openForwardSection = () => {
+    navigateTo((pathname + hash).replace("selection", "forward"));
+  };
+
+  const closeSelectionMode = () => {
+    removeSectionAndNavigate(pathname + hash, "/selection");
+  };
+
+  const openChatOrPaticipantInfo = (conversation, participant) => {
+    const path = conversation?.type === "g" ? "/info" : "/user?uid=" + participant?._id;
+
+    const tmpPath =
+      store.getState()?.isTablet?.value && path === "/info" && pathname.includes("/profile")
+        ? url.replace("/profile", "")
+        : url;
+
+    (tmpPath.includes(path) ? removeAndNavigateLastSection : addSuffix)(tmpPath, path);
+  };
+
+  const openAttachmentHub = () => {
+    addSuffix(location.pathname + location.hash, "/attach");
+  };
+
+  const isLocationIncludeAttach = () => {
+    return location.hash.includes("/attach");
+  };
+
   return {
     openProfileById,
     openContextMenuWithParams,
@@ -68,11 +97,17 @@ export default function useHistory() {
 
     closeChatInfoPage,
     closeCurrentUserProfile,
+    closeSelectionMode,
 
     openCurrentUserProfile,
     openAddParticipantsWindow,
     openEditUserProfileWindow,
     openEditConversationWindow,
+    openForwardSection,
+    openChatOrPaticipantInfo,
+    openAttachmentHub,
+
+    isLocationIncludeAttach,
 
     navigateToAuthPage,
   };

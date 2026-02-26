@@ -100,7 +100,7 @@ export default function ConfirmButton({
       <AnimatePresence mode="wait">
         <m.button
           key={isLoginPage ? "login" : "signup"}
-          className="w-full sm:mt-[25px] py-[7px] px-[14px] flex justify-center bg-(--color-accent-dark) hover:bg-(--color-accent-dark)/80 transition-colors  rounded-lg cursor-pointer"
+          className="w-full sm:mt-[25px] py-[7px] px-[14px] flex justify-center bg-(--color-accent-500) hover:bg-(--color-accent-500)/80 transition-colors  rounded-lg cursor-pointer"
           disabled={isPending}
           onClick={sendRequest}
           animate={{ opacity: [0.7, 1], scale: [1.02, 1] }}
@@ -111,7 +111,7 @@ export default function ConfirmButton({
             <DotsLoader
               height={40}
               width={40}
-              mainColor={"var(--color-accent-light)"}
+              mainColor={"var(--color-accent-100)"}
             />
           ) : (
             <p className="h-[40px] flex-1 text-center flex items-center justify-center !font-normal text-white ">
