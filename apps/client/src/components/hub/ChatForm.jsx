@@ -136,7 +136,7 @@ export default function ChatForm() {
     <section
       key="chatForm"
       id="chatFormContainer"
-      className={`relative flex flex-1 flex-col gap-1.25 px-3.5 shadow-[inset_7px_0_14px_-3px_rgba(0,0,0,0.05),inset_-7px_0_14px_-3px_rgba(0,0,0,0.05)]`}
+      className={`relative flex flex-1 flex-col gap-1.25 px-3.5 shadow-[inset_7px_0_14px_-3px_rgba(0,0,0,0.05),inset_-7px_0_14px_-3px_rgba(0,0,0,0.05)] max-md:w-dvw`}
     >
       {selectedCID ? (
         <>
@@ -154,7 +154,7 @@ export default function ChatForm() {
           {formComponent}
         </>
       ) : (
-        <p className="text-text-dark/60 my-auto self-center text-4xl font-extralight">
+        <p className="text-text-dark/60 my-auto self-center text-center text-4xl font-extralight max-xl:text-3xl">
           Select a conversation to start chatting
         </p>
       )}

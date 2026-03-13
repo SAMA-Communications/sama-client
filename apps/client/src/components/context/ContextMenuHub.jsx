@@ -26,9 +26,5 @@ export default function ContextMenuHub() {
 
   if (!listView) return null;
 
-  return (
-    <ContextMenu position={{ x: coords.x, y: coords.y }}>
-      {listView}
-    </ContextMenu>
-  );
+  return <ContextMenu position={{ x: coords.x, y: coords.y }}>{listView}</ContextMenu>;
 }

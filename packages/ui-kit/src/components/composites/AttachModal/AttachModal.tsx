@@ -25,22 +25,27 @@ export const AttachModal = ({
   className,
   ...rest
 }: AttachModalProps) => {
-  const resolvedTitle =
-    title ?? (files.length > 1 ? `Selected ${files.length} files` : "Send attachment");
+  const resolvedTitle = title ?? (files.length > 1 ? `Selected ${files.length} files` : "Send attachment");
 
   return (
-    <WrapperRoot className={clsx("ui:absolute ui:top-0 ui:z-[200] ui:flex ui:h-dvh ui:w-dvw ui:items-center ui:justify-center ui:bg-black/50 ui:p-2.5", className)} {...rest}>
+    <WrapperRoot
+      className={clsx(
+        "ui:absolute ui:top-0 ui:z-[200] ui:flex ui:h-dvh ui:w-dvw ui:items-center ui:justify-center ui:bg-black/50 ui:p-2.5",
+        className,
+      )}
+      {...rest}
+    >
       <div
         className={`ui:flex ui:max-h-[90svh] ui:w-[500px] ui:flex-col ui:gap-5 ui:rounded-[32px] ui:bg-bg-light ui:p-7 ui:max-sm:w-[94svw] ${contentClassName}`}
       >
         <p className="ui:text-h5 ui:font-normal ui:text-black">{resolvedTitle}</p>
 
         {isSending ? (
-          <p className="ui:self-center ui:py-2.5 ui:text-h5">Processing...</p>
+          <p className="ui:text-h5 ui:self-center ui:py-2.5">Processing...</p>
         ) : isPending && !files.length ? (
           <OvalLoader width={80} height={80} wrapperClassName="ui:self-center" />
         ) : !files.length ? (
-          <p className="ui:self-center ui:py-2.5 ui:text-h5">Select files</p>
+          <p className="ui:text-h5 ui:self-center ui:py-2.5">Select files</p>
         ) : (
           <MediaAttachments
             maxHeight={attachmentsMaxHeight}
@@ -51,7 +56,7 @@ export const AttachModal = ({
         )}
 
         <TextAreaInput
-          className="ui:min-h-10 ui:max-h-[140px] ui:resize-none ui:rounded-xl ui:bg-hover-light ui:px-3.5 ui:py-3 ui:text-black ui:[&::-webkit-scrollbar]:hidden"
+          className="ui:max-h-[140px] ui:min-h-10 ui:resize-none ui:rounded-xl ui:bg-hover-light ui:px-3.5 ui:py-3 ui:text-black ui:[&::-webkit-scrollbar]:hidden"
           inputRef={inputRef}
           onInput={onInput}
           onKeyDown={onKeyDown}
@@ -63,22 +68,13 @@ export const AttachModal = ({
 
         {!isSending && (
           <div className="ui:mt-auto ui:flex ui:items-center ui:justify-end ui:gap-7">
-            <p
-              className="ui:mr-auto ui:cursor-pointer ui:text-h6 ui:font-light ui:text-accent-500"
-              onClick={onAddMore}
-            >
+            <p className="ui:text-h6 ui:mr-auto ui:cursor-pointer ui:font-light ui:text-accent-500" onClick={onAddMore}>
               Add
             </p>
-            <p
-              className="ui:cursor-pointer ui:text-h6 ui:font-light ui:text-accent-500"
-              onClick={onCancel}
-            >
+            <p className="ui:text-h6 ui:cursor-pointer ui:font-light ui:text-accent-500" onClick={onCancel}>
               Cancel
             </p>
-            <p
-              className="ui:cursor-pointer ui:text-h6 ui:font-light ui:text-accent-500"
-              onClick={onSend}
-            >
+            <p className="ui:text-h6 ui:cursor-pointer ui:font-light ui:text-accent-500" onClick={onSend}>
               Send
             </p>
           </div>

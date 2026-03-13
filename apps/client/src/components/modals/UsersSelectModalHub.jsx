@@ -1,12 +1,6 @@
 import { useMemo, useCallback } from "react";
 
-import {
-  Modal,
-  ChatNameInput,
-  UserSelectorBlock,
-  useKeyDown,
-  KEY_CODES,
-} from "@sama-communications.ui-kit";
+import { Modal, ChatNameInput, UserSelectorBlock, useKeyDown, KEY_CODES } from "@sama-communications.ui-kit";
 
 import { SearchBlock, SearchInput } from "@sama-communications.ui-kit";
 
@@ -33,10 +27,13 @@ export default function UsersSelectModalHub({ type }) {
 
   const isAddParticipants = type === "add_participants";
 
-  const handleConfirmName = useCallback((name, image) => {
-    setChatName(name);
-    setChatImage(image);
-  }, [setChatName, setChatImage]);
+  const handleConfirmName = useCallback(
+    (name, image) => {
+      setChatName(name);
+      setChatImage(image);
+    },
+    [setChatName, setChatImage],
+  );
 
   const content = useMemo(() => {
     if (isAddParticipants) {
@@ -49,11 +46,7 @@ export default function UsersSelectModalHub({ type }) {
           onClose={closeAddParticipants}
           onCreate={sendEditRequest}
           searchInputSlot={
-            <SearchInput
-              customClassName="min-h-[48px] w-full"
-              placeholder="Enter a username"
-              setState={setInputText}
-            />
+            <SearchInput customClassName="min-h-[48px] w-full" placeholder="Enter a username" setState={setInputText} />
           }
           searchResultsSlot={
             <SearchBlock
@@ -61,9 +54,7 @@ export default function UsersSelectModalHub({ type }) {
               selectedUsers={selectedUsers}
               addUserToArray={addUser}
               removeUserFromArray={removeUser}
-              isClickDisabledFunc={(uObj) =>
-                initSelectedUsers?.some((u) => u._id === uObj._id)
-              }
+              isClickDisabledFunc={(uObj) => initSelectedUsers?.some((u) => u._id === uObj._id)}
               isMaxLimit={selectedUsers.length >= 50}
               isSelectUserToArray
               isSearchOnlyUsers
@@ -83,11 +74,7 @@ export default function UsersSelectModalHub({ type }) {
           onClose={closeModal}
           onCreate={sendCreateRequest}
           searchInputSlot={
-            <SearchInput
-              customClassName="min-h-[48px] w-full"
-              placeholder="Enter a username"
-              setState={setInputText}
-            />
+            <SearchInput customClassName="min-h-[48px] w-full" placeholder="Enter a username" setState={setInputText} />
           }
           searchResultsSlot={
             <SearchBlock
@@ -131,17 +118,10 @@ export default function UsersSelectModalHub({ type }) {
   const handleEscape = isAddParticipants ? closeAddParticipants : closeModal;
   useKeyDown(KEY_CODES.ESCAPE, handleEscape);
 
-  const contentKey = isAddParticipants
-    ? "addParticipants"
-    : chatName
-      ? "userSelectorBlock"
-      : "chatNameInput";
+  const contentKey = isAddParticipants ? "addParticipants" : chatName ? "userSelectorBlock" : "chatNameInput";
 
   return (
-    <Modal
-      tall={!!chatName || !!isAddParticipants}
-      contentKey={contentKey}
-    >
+    <Modal tall={!!chatName || !!isAddParticipants} contentKey={contentKey}>
       {content}
     </Modal>
   );

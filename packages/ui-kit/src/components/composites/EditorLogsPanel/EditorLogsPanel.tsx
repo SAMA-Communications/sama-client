@@ -9,7 +9,10 @@ export const EditorLogsPanel = ({ visible, onClose, children, className, ...rest
 
   return (
     <WrapperRoot
-      className={clsx("ui:relative ui:mb-2.5 ui:max-h-[min(400px,25svh)] ui:w-full ui:grow-2 ui:self-center ui:overflow-hidden ui:rounded-xl ui:border ui:border-dashed ui:border-gray-300 ui:lg:max-w-300", className)}
+      className={clsx(
+        "ui:relative ui:mb-2.5 ui:max-h-[min(400px,25svh)] ui:w-full ui:grow-2 ui:self-center ui:overflow-hidden ui:rounded-xl ui:border ui:border-dashed ui:border-gray-300 ui:lg:max-w-300",
+        className,
+      )}
       animate={{ opacity: [0, 1], scale: [0.8, 1.02, 1] }}
       exit={{ scale: [1, 0.8], opacity: [1, 0] }}
       transition={{ duration: 0.3 }}
@@ -21,9 +24,7 @@ export const EditorLogsPanel = ({ visible, onClose, children, className, ...rest
           <Minimize2 size={25} color="var(--color-text-dark)" />
         </button>
       </div>
-      <div className="ui:absolute ui:top-8.75 ui:left-0 ui:h-[calc(100%)] ui:w-full ui:pt-4 ui:pb-4">
-        {children}
-      </div>
+      <div className="ui:absolute ui:top-8.75 ui:left-0 ui:h-[calc(100%)] ui:w-full ui:pt-4 ui:pb-4">{children}</div>
     </WrapperRoot>
   );
 };

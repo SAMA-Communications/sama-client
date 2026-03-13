@@ -23,7 +23,6 @@ const initialSearchData = {
   isPending: false,
 };
 
-
 export default function SearchBlock({
   searchText,
   selectedUsers = [],
@@ -70,7 +69,7 @@ export default function SearchBlock({
       navigateTo(`/#${chatId}`);
       additionalOnClickfunc?.(chatId);
     },
-    [dispatch, pathname, hash, isPreviewUserProfile, additionalOnClickfunc]
+    [dispatch, pathname, hash, isPreviewUserProfile, additionalOnClickfunc],
   );
 
   const handleConversationClick = useCallback(
@@ -78,7 +77,7 @@ export default function SearchBlock({
       dispatch(setSelectedConversation({ id: cid }));
       additionalOnClickfunc?.(cid);
     },
-    [dispatch, additionalOnClickfunc]
+    [dispatch, additionalOnClickfunc],
   );
 
   return (
@@ -88,8 +87,8 @@ export default function SearchBlock({
       isShowDefaultConvs={isShowDefaultConvs}
       isSearchOnlyUsers={isSearchOnlyUsers}
       selectedUsers={selectedUsers}
-      onAddUser={addUserToArray ?? (() => { })}
-      onRemoveUser={removeUserFromArray ?? (() => { })}
+      onAddUser={addUserToArray ?? (() => {})}
+      onRemoveUser={removeUserFromArray ?? (() => {})}
       isClickDisabledFunc={isClickDisabledFunc}
       isMaxLimit={isMaxLimit}
       onClearInputText={clearInputText}

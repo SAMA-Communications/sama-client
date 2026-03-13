@@ -1,2 +1,2 @@
-export * from "./TypingLine"
-export * from "./TypingLine.types"
+export * from "./TypingLine";
+export * from "./TypingLine.types";

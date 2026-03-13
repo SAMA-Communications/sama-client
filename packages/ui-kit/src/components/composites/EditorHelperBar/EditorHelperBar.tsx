@@ -15,17 +15,18 @@ export const EditorHelperBar = ({
   ...rest
 }: EditorHelperBarProps) => {
   return (
-    <WrapperRoot className={clsx("ui:editor-helper ui:shadow-btn ui:flex ui:h-full ui:items-center ui:gap-2.75 ui:rounded-xl ui:bg-white ui:p-2", className)} {...rest}>
+    <WrapperRoot
+      className={clsx(
+        "ui:editor-helper ui:flex ui:h-full ui:items-center ui:gap-2.75 ui:rounded-xl ui:bg-white ui:p-2 ui:shadow-btn",
+        className,
+      )}
+      {...rest}
+    >
       <a href={docsHref} target="_blank" rel="noopener noreferrer">
         <Info size={28} color="var(--color-text-dark)" />
       </a>
-      <span className="ui:h-full ui:w-px ui:bg-gray-400" />
-      <ListStart
-        color="var(--color-text-dark)"
-        data-tooltip-id={tooltipId}
-        data-tooltip-delay-hide={500}
-        size={28}
-      />
+      <span className="ui:h-[30px] ui:w-px ui:bg-gray-400" />
+      <ListStart color="var(--color-text-dark)" data-tooltip-id={tooltipId} data-tooltip-delay-hide={500} size={28} />
       <Tooltip clickable id={tooltipId} className="editor-tooltip-style" classNameArrow="editor-tooltip-arrow">
         <div className="ui:flex ui:flex-col ui:gap-2">
           {actions.map((action, index) => (

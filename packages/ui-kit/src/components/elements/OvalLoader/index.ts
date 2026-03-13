@@ -1,2 +1,2 @@
-export * from "./OvalLoader"
-export * from "./OvalLoader.types"
+export * from "./OvalLoader";
+export * from "./OvalLoader.types";

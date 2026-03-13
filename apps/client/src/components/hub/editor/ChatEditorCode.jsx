@@ -14,8 +14,7 @@ export default function ChatEditorCode() {
   const monaco = useMonaco();
   const selectedConversation = useSelector(getConverastionById);
   const selectedCid = selectedConversation?._id;
-  const { editorCode, codeStatusText, handleEditorDidMount } =
-    useProgrammableEditorCode(selectedCid);
+  const { editorCode, codeStatusText, handleEditorDidMount } = useProgrammableEditorCode(selectedCid);
 
   useEffect(() => {
     if (!selectedCid || !monaco) return;

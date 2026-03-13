@@ -4,8 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
 
-const createPath = (dir: String) =>
-  fileURLToPath(new URL(`./${dir}`, import.meta.url));
+const createPath = (dir: String) => fileURLToPath(new URL(`./${dir}`, import.meta.url));
 
 export default defineConfig({
   plugins: [react(), svgr(), tailwindcss()],
@@ -37,7 +36,7 @@ export default defineConfig({
 
       "@sama-communications.sdk": createPath("../../packages/sdk/dist/@sama-communications.sdk.es.js"),
       "@sama-communications.ui-kit": createPath("../../packages/ui-kit/dist/@sama-communications.ui-kit.es.js"),
-      "@sama-communications.ui-kit.css": createPath("../../packages/ui-kit/dist/ui-kit.css")
+      "@sama-communications.ui-kit.css": createPath("../../packages/ui-kit/dist/ui-kit.css"),
     },
   },
   esbuild: {

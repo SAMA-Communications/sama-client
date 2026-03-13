@@ -107,7 +107,13 @@ export const ConversationInput = ({
 
   if (isBlockedConv) {
     return (
-      <WrapperRoot className={clsx("ui:mb-3.5 ui:flex ui:min-h-11 ui:w-full ui:justify-center ui:gap-2.5 ui:self-center ui:overflow-hidden ui:p-2 ui:lg:max-w-300", className)} {...rest}>
+      <WrapperRoot
+        className={clsx(
+          "ui:mb-3.5 ui:flex ui:min-h-11 ui:w-full ui:justify-center ui:gap-2.5 ui:self-center ui:overflow-hidden ui:p-2 ui:lg:max-w-300",
+          className,
+        )}
+        {...rest}
+      >
         <p className="ui:font-light ui:text-text-dark">
           The user you are currently chatting with has deleted their account. You can no longer continue the chat.
         </p>
@@ -116,7 +122,10 @@ export const ConversationInput = ({
   }
 
   return (
-    <WrapperRoot className={clsx("ui:flex ui:w-full ui:items-end ui:gap-2.5 ui:self-center ui:pb-3.5 ui:lg:max-w-300", className)} {...rest}>
+    <WrapperRoot
+      className={clsx("ui:flex ui:w-full ui:items-end ui:gap-2.5 ui:self-center ui:pb-3.5 ui:lg:max-w-300", className)}
+      {...rest}
+    >
       <MessageInput
         inputTextRef={inputRef}
         isBlockedConv={isBlockedConv}

@@ -21,7 +21,7 @@ export default function AnimatedBGbig({ customClassName = "", isTriggered }) {
     <div className={customClassName}>
       <svg
         ref={scope}
-        className="h-dvh w-auto absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 "
+        className="absolute top-1/2 left-1/2 h-dvh w-auto -translate-x-1/2 -translate-y-1/2 transform"
         width="1986"
         height="1200"
         viewBox="0 0 1986 1200"

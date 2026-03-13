@@ -30,21 +30,14 @@ export default function ConversationSelectHub({ title }) {
       };
       dispatch(updateWithDrafts({ cid: forwardToCid, draft: newDraft }));
     },
-    [hash, conversations, dispatch]
+    [hash, conversations, dispatch],
   );
 
-  const closeModal = useCallback(
-    () => removeAndNavigateLastSection(pathname + hash),
-    [pathname, hash]
-  );
+  const closeModal = useCallback(() => removeAndNavigateLastSection(pathname + hash), [pathname, hash]);
 
   return (
     <ConversationSelectModal title={title} onClose={closeModal}>
-      <SearchInput
-        customClassName="w-full"
-        placeholder="Search"
-        setState={setInputText}
-      />
+      <SearchInput customClassName="w-full" placeholder="Search" setState={setInputText} />
       <SearchBlock
         customClassName="w-full md:max-xl:!w-[400px] max-xl:px-[2svw] max-xl:pt-[2swh] max-xl:pb-[2px]"
         searchText={inputText}

@@ -1,9 +1,6 @@
 import { ProgrammableEditorDocsBannerProps } from "./ProgrammableEditorDocsBanner.types";
 
-export const ProgrammableEditorDocsBanner = ({
-  href,
-  label = "documentation",
-}: ProgrammableEditorDocsBannerProps) => {
+export const ProgrammableEditorDocsBanner = ({ href, label = "documentation" }: ProgrammableEditorDocsBannerProps) => {
   return (
     <div className="ui:flex ui:w-full ui:justify-center ui:rounded-lg ui:bg-accent-100 ui:py-2">
       <p className="ui:font-light">

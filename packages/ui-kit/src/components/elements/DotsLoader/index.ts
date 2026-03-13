@@ -1,2 +1,2 @@
-export * from "./DotsLoader"
-export * from "./DotsLoader.types"
+export * from "./DotsLoader";
+export * from "./DotsLoader.types";

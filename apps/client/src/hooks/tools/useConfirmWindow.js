@@ -10,13 +10,11 @@ const ConfirmContext = createContext(null);
 
 const ActionComponents = {
   messageDelete: ({ data, setData }) => (
-    <label className="flex items-center gap-2 cursor-pointer">
+    <label className="flex cursor-pointer items-center gap-2">
       <input
         type="checkbox"
         checked={data.type === "all"}
-        onChange={(e) =>
-          setData({ ...data, type: e.target.checked ? "all" : "myself" })
-        }
+        onChange={(e) => setData({ ...data, type: e.target.checked ? "all" : "myself" })}
       />
       <span>Delete for everyone</span>
     </label>
@@ -54,9 +52,7 @@ export default function ConfirmWindowProvider({ children }) {
 
   useKeyDown(KEY_CODES.ESCAPE, handleClose);
 
-  const ActionComponent = options.action
-    ? ActionComponents[options.action]
-    : null;
+  const ActionComponent = options.action ? ActionComponents[options.action] : null;
 
   return (
     <ConfirmContext.Provider value={{ requestConfirm }}>
@@ -64,41 +60,33 @@ export default function ConfirmWindowProvider({ children }) {
       <AnimatePresence>
         {isOpen && (
           <m.div
-            className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
             initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
             animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
             exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
             transition={{ duration: 0.2 }}
           >
             <div
-              className={`p-[30px] flex flex-col gap-[10px] rounded-[32px] bg-(--color-bg-light) w-[min(460px,100%)] max-md:w-[94svw] max-md:p-[20px] max-h-[80svh]`}
+              className={`flex max-h-[80svh] w-[min(460px,100%)] flex-col gap-[10px] rounded-[32px] bg-(--color-bg-light) p-[30px] max-md:w-[94svw] max-md:p-[20px]`}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1, transition: { delay: 0.1 } }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <p className="!text-h5 !font-normal text-black">
-                {options.title || "Confirm"}
-              </p>
-              {options.description && (
-                <p className="!text-h6 !font-normal text-black">
-                  {options.description}
-                </p>
-              )}
+              <p className="!text-h5 !font-normal text-black">{options.title || "Confirm"}</p>
+              {options.description && <p className="!text-h6 !font-normal text-black">{options.description}</p>}
 
-              {ActionComponent && (
-                <ActionComponent data={data} setData={setData} />
-              )}
+              {ActionComponent && <ActionComponent data={data} setData={setData} />}
 
-              <div className="mt-2 justify-end gap-[30px] flex items-center">
+              <div className="mt-2 flex items-center justify-end gap-[30px]">
                 <p
-                  className="text-h6 text-(--color-accent-500) !forn-light cursor-pointer"
+                  className="text-h6 !forn-light cursor-pointer text-(--color-accent-500)"
                   onClick={() => handleClose(false)}
                 >
                   {options.cancelText || "Cancel"}
                 </p>
                 <p
-                  className="text-h6 text-(--color-accent-500) !forn-light cursor-pointer"
+                  className="text-h6 !forn-light cursor-pointer text-(--color-accent-500)"
                   onClick={() => handleClose(true)}
                 >
                   {options.confirmText || "Confirm"}

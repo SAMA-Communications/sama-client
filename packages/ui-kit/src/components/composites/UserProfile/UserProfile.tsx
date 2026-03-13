@@ -5,8 +5,10 @@ import { getAdapters } from "../../../adapters";
 import { InfoBox } from "../../elements/InfoBox";
 import { UserProfileAvatar } from "../../../components/elements/UserProfileAvatar";
 
-// import { useKeyDown } from "../../../utils/tools/useKeyDown";
+import { useKeyDown } from "../../../hooks/useKeyDown";
 import { useConfirmWindow } from "../../../hooks/useConfirmWindow";
+
+import { KEY_CODES } from "../../../utils/constants";
 
 import { RotateCcwKey, LogOut, Trash, ChevronLeft, UserRoundX } from "lucide-react";
 
@@ -27,8 +29,6 @@ export const UserProfile = ({
 
   const isCurrentUserCantLeave = login?.startsWith("sama-user-"); // ...
 
-  // useKeyDown(KEY_CODES.ESCAPE, closeCurrentUserProfile);
-
   const onDeleteUserFunc = async () => {
     const { isConfirm } = await confirm<{}>({
       title: "Delete User",
@@ -39,6 +39,8 @@ export const UserProfile = ({
     const isSuccess = await deleteCurrentUser();
     if (isSuccess) onNavigateToAuth?.();
   };
+
+  useKeyDown(KEY_CODES.ESCAPE, onClose);
 
   return (
     <section className="ui:flex ui:h-full ui:w-full ui:flex-col ui:gap-2.75 ui:p-3.5 ui:md:w-100">
@@ -110,7 +112,7 @@ export const UserProfile = ({
             className="ui:mt-2.75 ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75"
             onClick={onDeleteUserFunc}
           >
-            <Trash size={18} color="var(--color-danger)" />
+            <Trash size={18} className="ui:text-danger" />
             <p className="ui:font-light ui:text-danger">Delete account</p>
           </button>
         )}

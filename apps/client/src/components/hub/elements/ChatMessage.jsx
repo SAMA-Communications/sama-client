@@ -59,8 +59,7 @@ export default function ChatMessage({
     const isAttachment = copyType === "Attachment";
     const isCopyableAttachment =
       isAttachment && ALLOWED_FORMATS_TO_COPY.includes(externalProps?.attachment?.file_content_type);
-    const copyOption =
-      (isCopyableAttachment && "messageCopyAttachment") || (message.body && "messageCopyText") || null;
+    const copyOption = (isCopyableAttachment && "messageCopyAttachment") || (message.body && "messageCopyText") || null;
 
     const list = [
       "messageReply",
@@ -105,12 +104,11 @@ export default function ChatMessage({
     }, 250);
   };
 
-  const bodyContent =
-    body ? (
-      <p className="max-w-full p-2 font-light wrap-break-word whitespace-pre-wrap normal-nums!">
-        {urlify(_id, body, linkColor, !url_preview)}
-      </p>
-    ) : null;
+  const bodyContent = body ? (
+    <p className="max-w-full p-2 font-light wrap-break-word whitespace-pre-wrap normal-nums!">
+      {urlify(_id, body, linkColor, !url_preview)}
+    </p>
+  ) : null;
 
   const attachmentsNode = attachments?.length ? (
     <MediaAttachments
@@ -144,6 +142,7 @@ export default function ChatMessage({
       bodyContent={bodyContent}
       attachmentsNode={attachmentsNode}
       linkPreviewNode={linkPreviewNode}
+      hideUserIcon={isMobile}
       onUserProfile={openUserProfile}
       onContextMenu={openContextMenu}
       onSelectClick={onSelectClick ? () => onSelectClick(_id) : null}

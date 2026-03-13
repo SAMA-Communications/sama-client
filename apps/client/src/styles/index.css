@@ -97,8 +97,6 @@ body {
   margin: 0 12px;
 }
 
-
-
 #conversationItemsScrollable .infinite-scroll-component {
   display: flex;
   flex-direction: column;

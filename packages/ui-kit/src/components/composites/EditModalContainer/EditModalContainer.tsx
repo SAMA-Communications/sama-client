@@ -3,6 +3,9 @@ import { clsx } from "clsx";
 
 import { getAdapters } from "../../../adapters";
 
+import { useKeyDown } from "../../../hooks/useKeyDown";
+import { KEY_CODES } from "../../../utils/constants";
+
 import { WrapperRoot } from "../../elements/WrapperRoot";
 import { UserInputsGroup } from "./UserInputsGroup";
 import { ConversationInputsGroup } from "./ConversationInputsGroup";
@@ -56,14 +59,18 @@ export const EditModalContainer = ({ type, onClose, className, ...rest }: EditMo
     if (isSuccess) onClose();
   }, [onClose, content, type, updateNameAndDescription, updateCurrentUserFields]);
 
-  //   useKeyDown(KEY_CODES.ENTER, sendRequest);
-  //   useKeyDown(KEY_CODES.ESCAPE, onClose);
+  useKeyDown(KEY_CODES.ENTER, sendRequest);
+  useKeyDown(KEY_CODES.ESCAPE, onClose);
 
   return (
-    <WrapperRoot className={clsx("ui:absolute ui:top-0 ui:z-10 ui:flex ui:h-dvh ui:w-dvw ui:items-center ui:justify-center ui:bg-black/50", className)} {...rest}>
-      <div
-        className="ui:flex ui:flex-col ui:gap-2.75 ui:rounded-2xl ui:bg-bg-light ui:px-7 ui:py-3.5 ui:max-md:w-[94svw] ui:md:w-100"
-      >
+    <WrapperRoot
+      className={clsx(
+        "ui:absolute ui:top-0 ui:z-10 ui:flex ui:h-dvh ui:w-dvw ui:items-center ui:justify-center ui:bg-black/50",
+        className,
+      )}
+      {...rest}
+    >
+      <div className="ui:flex ui:flex-col ui:gap-2.75 ui:rounded-2xl ui:bg-bg-light ui:px-7 ui:py-3.5 ui:max-md:w-[94svw] ui:md:w-100">
         <p className="ui:text-center ui:text-xl">{title}</p>
         <div className="ui:mt-3.5 ui:flex ui:flex-col ui:gap-2.75">{component}</div>
         <div className="ui:mt-3.5 ui:flex ui:items-center ui:justify-between ui:gap-2.75">

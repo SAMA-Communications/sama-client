@@ -175,14 +175,17 @@ export const CustomVerticalScrollbar = ({
 
   return (
     <WrapperRoot
-      className={clsx("custom-vertical-scrollbar ui:relative ui:flex ui:w-full ui:grow ui:flex-col ui:self-center ui:overflow-hidden", resolvedClassName)}
+      className={clsx(
+        "custom-vertical-scrollbar ui:relative ui:flex ui:w-full ui:grow ui:flex-col ui:self-center ui:overflow-hidden",
+        resolvedClassName,
+      )}
       style={Object.keys(outerStyle).length ? outerStyle : undefined}
       {...rest}
     >
       <div
         ref={containerRef}
         id={containerId}
-        className={`ui:h-full ui:overflow-y-scroll ui:[&::-webkit-scrollbar]:hidden ${resolvedContentClassName}`}
+        className={`ui:h-full ui:w-full ui:overflow-y-scroll ui:[&::-webkit-scrollbar]:hidden ${resolvedContentClassName}`}
         onScroll={handleScroll}
       >
         {children}

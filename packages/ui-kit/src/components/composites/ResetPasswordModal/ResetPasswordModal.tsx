@@ -96,83 +96,83 @@ export const ResetPasswordModal = ({
   return (
     <WrapperRoot className="ui:fixed ui:inset-0 ui:z-50 ui:flex ui:items-center ui:justify-center ui:bg-black/50">
       <div className="ui:flex ui:max-h-[80svh] ui:w-[min(460px,100%)] ui:flex-col ui:gap-[10px] ui:rounded-[32px] ui:bg-(--color-bg-light) ui:p-[30px] ui:max-md:w-[94svw] ui:max-md:p-[20px]">
-          <p className="ui:mb-[5px] ui:text-xl ui:font-medium ui:text-black">Reset Password</p>
-          {step === 1 && (
-            <>
-              <p className="ui:mb-[5px]">
-                To reset your password, enter the email that you used assigned to your account.
-              </p>
-              <div className="ui:flex ui:w-full ui:rounded-lg ui:bg-(--color-hover-light) ui:px-[14px] ui:py-[7px] ui:font-light">
-                <input
-                  className="ui:h-[40px] ui:flex-1 ui:bg-transparent ui:outline-none"
-                  onKeyDown={(e) => e.key === " " && e.preventDefault()}
-                  onChange={({ target }) => updateData("email", target.value)}
-                  placeholder="Enter your email"
-                  type="text"
-                  autoComplete="off"
-                  autoFocus
-                  value={data.email ?? ""}
-                />
-              </div>
-              <button
-                className="ui:mt-[10px] ui:flex ui:w-full ui:cursor-pointer ui:justify-center ui:rounded-lg ui:bg-(--color-accent-500) ui:px-[14px] ui:py-[14px] ui:text-white ui:transition-colors ui:hover:bg-(--color-accent-500)/80 ui:disabled:opacity-60"
-                disabled={loading || !data.email?.trim()?.length}
-                onClick={handleSendOTP}
-              >
-                {loading ? "Sending..." : "Confirm"}
-              </button>
-            </>
-          )}
-          {step === 2 && (
-            <>
-              <p className="ui:mb-[5px]">
-                We have sent a verification code to <span className="text-accent-500">{data.email}</span>
-              </p>
-              <div className="ui:flex ui:w-full ui:rounded-lg ui:bg-(--color-hover-light) ui:px-[14px] ui:py-[7px]">
-                <input
-                  className="ui:h-[40px] ui:flex-1 ui:bg-transparent ui:outline-none"
-                  onKeyDown={(e) => e.key === " " && e.preventDefault()}
-                  onChange={({ target }) => updateData("token", target.value)}
-                  placeholder="Enter the 6 digit OTP sent to your email.."
-                  type="text"
-                  autoComplete="off"
-                  value={data.token ?? ""}
-                />
-              </div>
-              <div className="ui:flex ui:w-full ui:rounded-lg ui:bg-(--color-hover-light) ui:px-[14px] ui:py-[7px]">
-                <input
-                  className="ui:h-[40px] ui:flex-1 ui:bg-transparent ui:outline-none"
-                  onKeyDown={(e) => e.key === " " && e.preventDefault()}
-                  onChange={({ target }) => updateData("new_password", target.value)}
-                  placeholder="Enter new password.."
-                  type="password"
-                  autoComplete="off"
-                  value={data.new_password ?? ""}
-                />
-              </div>
-              <button
-                className="ui:mt-[10px] ui:flex ui:w-full ui:cursor-pointer ui:justify-center ui:rounded-lg ui:bg-(--color-accent-500) ui:px-[14px] ui:py-[14px] ui:text-white ui:transition-colors ui:hover:bg-(--color-accent-500)/80 ui:disabled:opacity-60"
-                disabled={loading || !data.token?.length || !data.new_password?.length}
-                onClick={handleResetPassword}
-              >
-                {loading ? "Confirming..." : "Confirm"}
-              </button>
-              <button
-                onClick={handleResendOTP}
-                disabled={loading || resendTimer > 0}
-                className="ui:flex ui:cursor-pointer ui:justify-center ui:rounded-lg ui:bg-(--color-accent-500) ui:px-[14px] ui:py-[14px] ui:text-white ui:transition-colors ui:hover:bg-(--color-accent-500)/80 ui:disabled:opacity-60"
-              >
-                {loading ? "..." : resendTimer > 0 ? formatTimer(resendTimer) : "Resend OTP"}
-              </button>
-            </>
-          )}
-          <button
-            className="ui:flex ui:cursor-pointer ui:justify-center ui:rounded-lg ui:px-[14px] ui:py-[7px] ui:text-gray-500 ui:hover:text-black"
-            onClick={handleClose}
-          >
-            Cancel
-          </button>
-        </div>
+        <p className="ui:mb-[5px] ui:text-xl ui:font-medium ui:text-black">Reset Password</p>
+        {step === 1 && (
+          <>
+            <p className="ui:mb-[5px]">
+              To reset your password, enter the email that you used assigned to your account.
+            </p>
+            <div className="ui:flex ui:w-full ui:rounded-lg ui:bg-(--color-hover-light) ui:px-[14px] ui:py-[7px] ui:font-light">
+              <input
+                className="ui:h-[40px] ui:flex-1 ui:bg-transparent ui:outline-none"
+                onKeyDown={(e) => e.key === " " && e.preventDefault()}
+                onChange={({ target }) => updateData("email", target.value)}
+                placeholder="Enter your email"
+                type="text"
+                autoComplete="off"
+                autoFocus
+                value={data.email ?? ""}
+              />
+            </div>
+            <button
+              className="ui:mt-[10px] ui:flex ui:w-full ui:cursor-pointer ui:justify-center ui:rounded-lg ui:bg-(--color-accent-500) ui:px-[14px] ui:py-[14px] ui:text-white ui:transition-colors ui:hover:bg-(--color-accent-500)/80 ui:disabled:opacity-60"
+              disabled={loading || !data.email?.trim()?.length}
+              onClick={handleSendOTP}
+            >
+              {loading ? "Sending..." : "Confirm"}
+            </button>
+          </>
+        )}
+        {step === 2 && (
+          <>
+            <p className="ui:mb-[5px]">
+              We have sent a verification code to <span className="text-accent-500">{data.email}</span>
+            </p>
+            <div className="ui:flex ui:w-full ui:rounded-lg ui:bg-(--color-hover-light) ui:px-[14px] ui:py-[7px]">
+              <input
+                className="ui:h-[40px] ui:flex-1 ui:bg-transparent ui:outline-none"
+                onKeyDown={(e) => e.key === " " && e.preventDefault()}
+                onChange={({ target }) => updateData("token", target.value)}
+                placeholder="Enter the 6 digit OTP sent to your email.."
+                type="text"
+                autoComplete="off"
+                value={data.token ?? ""}
+              />
+            </div>
+            <div className="ui:flex ui:w-full ui:rounded-lg ui:bg-(--color-hover-light) ui:px-[14px] ui:py-[7px]">
+              <input
+                className="ui:h-[40px] ui:flex-1 ui:bg-transparent ui:outline-none"
+                onKeyDown={(e) => e.key === " " && e.preventDefault()}
+                onChange={({ target }) => updateData("new_password", target.value)}
+                placeholder="Enter new password.."
+                type="password"
+                autoComplete="off"
+                value={data.new_password ?? ""}
+              />
+            </div>
+            <button
+              className="ui:mt-[10px] ui:flex ui:w-full ui:cursor-pointer ui:justify-center ui:rounded-lg ui:bg-(--color-accent-500) ui:px-[14px] ui:py-[14px] ui:text-white ui:transition-colors ui:hover:bg-(--color-accent-500)/80 ui:disabled:opacity-60"
+              disabled={loading || !data.token?.length || !data.new_password?.length}
+              onClick={handleResetPassword}
+            >
+              {loading ? "Confirming..." : "Confirm"}
+            </button>
+            <button
+              onClick={handleResendOTP}
+              disabled={loading || resendTimer > 0}
+              className="ui:flex ui:cursor-pointer ui:justify-center ui:rounded-lg ui:bg-(--color-accent-500) ui:px-[14px] ui:py-[14px] ui:text-white ui:transition-colors ui:hover:bg-(--color-accent-500)/80 ui:disabled:opacity-60"
+            >
+              {loading ? "..." : resendTimer > 0 ? formatTimer(resendTimer) : "Resend OTP"}
+            </button>
+          </>
+        )}
+        <button
+          className="ui:flex ui:cursor-pointer ui:justify-center ui:rounded-lg ui:px-[14px] ui:py-[7px] ui:text-gray-500 ui:hover:text-black"
+          onClick={handleClose}
+        >
+          Cancel
+        </button>
+      </div>
     </WrapperRoot>
   );
 };

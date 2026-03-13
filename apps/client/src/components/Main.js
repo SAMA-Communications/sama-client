@@ -32,7 +32,7 @@ const blockMap = {
   "/forward": <ConversationSelectHub title="Forward to..." />,
 };
 
-export default function Main({ isNeedToAnimate }) {
+export default function Main({}) {
   const location = useLocation();
   const history = useHistory();
 
@@ -84,7 +84,8 @@ export default function Main({ isNeedToAnimate }) {
       if (!!location.hash) {
         return keys.includes("/user") || keys.includes("/info") ? null : <ChatForm />;
       }
-      return location.pathname.includes("/profile") ? null : <ChatList />;
+
+      return location.pathname.includes("/profile") ? <UserProfileContainer key="userProfile" /> : <ChatList />;
     }
 
     if (isTabletView) {
@@ -100,13 +101,13 @@ export default function Main({ isNeedToAnimate }) {
   }, [location, isMobileView, isTabletView, conversations]);
 
   const mainContent = useMemo(() => {
-    const shouldRenderContent = isMobileView
-      ? !(!!location.hash
-          ? additionalContainerRight.some((el) => el.key === "/user" || el.key === "/info")
-          : location.pathname.includes("/profile"))
-      : true;
+    // const shouldRenderContent = isMobileView
+    //   ? !(!!location.hash
+    //       ? additionalContainerRight.some((el) => el.key === "/user" || el.key === "/info")
+    //       : location.pathname.includes("/profile"))
+    //   : true;
 
-    if (!shouldRenderContent) return null;
+    // if (!shouldRenderContent) return null;
 
     return hubContainer;
   }, [hubContainer]);

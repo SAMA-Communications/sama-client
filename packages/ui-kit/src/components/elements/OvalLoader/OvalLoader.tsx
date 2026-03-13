@@ -14,11 +14,7 @@ export const OvalLoader = memo(function OvalLoader({
   ...rest
 }: OvalLoaderProps) {
   return (
-    <WrapperRoot
-      data-testid="oval-loader"
-      className={clsx(wrapperClassName, className)}
-      {...rest}
-    >
+    <WrapperRoot data-testid="oval-loader" className={clsx(wrapperClassName, className)} {...rest}>
       <Oval
         height={height}
         width={width}

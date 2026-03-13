@@ -6,11 +6,7 @@ import { WandSparkles, X } from "lucide-react";
 
 import { SummaryContainerProps } from "./SummaryContainer.types";
 
-export const SummaryContainer = ({
-  summaryContent,
-  onClose,
-  getFilterLabel,
-}: SummaryContainerProps) => {
+export const SummaryContainer = ({ summaryContent, onClose, getFilterLabel }: SummaryContainerProps) => {
   if (!summaryContent) return null;
 
   const { isLoading, text, filter } = summaryContent;
@@ -41,9 +37,7 @@ export const SummaryContainer = ({
         )}
       </div>
       {getFilterLabel && (
-        <span className="ui:text-span ui:mt-2.25 ui:ml-auto ui:text-gray-300">
-          {getFilterLabel(filter)}
-        </span>
+        <span className="ui:text-span ui:mt-2.25 ui:ml-auto ui:text-gray-300">{getFilterLabel(filter)}</span>
       )}
     </m.div>
   );

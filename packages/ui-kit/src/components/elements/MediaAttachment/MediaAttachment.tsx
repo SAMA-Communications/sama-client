@@ -8,8 +8,7 @@ import { WrapperRoot } from "../WrapperRoot";
 import { getFileType } from "../../../utils/mediaUtils";
 import type { MediaAttachmentProps } from "./MediaAttachment.types";
 
-const baseClassName =
-  "ui:relative ui:flex ui:items-center ui:justify-center ui:overflow-hidden ui:rounded-sm";
+const baseClassName = "ui:relative ui:flex ui:items-center ui:justify-center ui:overflow-hidden ui:rounded-sm";
 
 export const MediaAttachment = memo(function MediaAttachment({
   index,

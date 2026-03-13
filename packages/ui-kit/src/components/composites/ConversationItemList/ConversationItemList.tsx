@@ -41,22 +41,22 @@ export const ConversationItemList = ({
 
   return (
     <WrapperRoot className={clsx(className)} {...rest}>
-    <InfiniteScroll
-      dataLength={conversations.length}
-      next={lastConversationRef}
-      hasMore={true && needToGetMoreChats.current}
-      scrollableTarget="conversationItemsScrollable"
-      loader={undefined}
-    >
-      {conversations.map((obj) => (
-        <ConversationItem
-          key={obj._id}
-          conversation={obj}
-          onClick={() => convItemOnClickFunc(obj._id)}
-          isSelected={selectedConversation?._id === obj._id}
-        />
-      ))}
-    </InfiniteScroll>
+      <InfiniteScroll
+        dataLength={conversations.length}
+        next={lastConversationRef}
+        hasMore={true && needToGetMoreChats.current}
+        scrollableTarget="conversationItemsScrollable"
+        loader={undefined}
+      >
+        {conversations.map((obj) => (
+          <ConversationItem
+            key={obj._id}
+            conversation={obj}
+            onClick={() => convItemOnClickFunc(obj._id)}
+            isSelected={selectedConversation?._id === obj._id}
+          />
+        ))}
+      </InfiniteScroll>
     </WrapperRoot>
   );
 };

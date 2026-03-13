@@ -19,10 +19,7 @@ export function addSuffix(currentPath, pathname) {
     return;
   }
 
-  const filteredCurrentPath =
-    currentPath[currentPath.length - 1] === "/"
-      ? currentPath.slice(0, -1)
-      : currentPath;
+  const filteredCurrentPath = currentPath[currentPath.length - 1] === "/" ? currentPath.slice(0, -1) : currentPath;
 
   history.navigate(filteredCurrentPath + pathname);
 }
@@ -77,10 +74,7 @@ export function upsertMidsInPath(currentPath, mids = [], action = "add") {
 
   if (match) {
     if (updatedMids.length > 0) {
-      newPath = currentPath.replace(
-        midsRegex,
-        `mids=[${updatedMids.join(",")}]`
-      );
+      newPath = currentPath.replace(midsRegex, `mids=[${updatedMids.join(",")}]`);
     } else {
       newPath = currentPath.replace(/\/?selection\?mids=\[[^\]]*\]/, "");
     }
@@ -90,14 +84,9 @@ export function upsertMidsInPath(currentPath, mids = [], action = "add") {
       const midsString = `mids=[${updatedMids.join(",")}]`;
 
       if (currentPath.includes(insertBefore)) {
-        newPath = currentPath.replace(
-          insertBefore,
-          `${midsString}${insertBefore}`
-        );
+        newPath = currentPath.replace(insertBefore, `${midsString}${insertBefore}`);
       } else {
-        newPath = currentPath.endsWith("/")
-          ? currentPath + midsString
-          : currentPath + "/" + midsString;
+        newPath = currentPath.endsWith("/") ? currentPath + midsString : currentPath + "/" + midsString;
       }
     } else {
       newPath = currentPath;
@@ -109,9 +98,7 @@ export function upsertMidsInPath(currentPath, mids = [], action = "add") {
 
 export function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding)
-    .replace(/\-/g, "+")
-    .replace(/_/g, "/");
+  const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
 
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);

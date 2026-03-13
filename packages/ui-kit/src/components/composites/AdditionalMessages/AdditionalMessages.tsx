@@ -28,7 +28,13 @@ export const AdditionalMessages = ({
 
   if (error) {
     return (
-      <WrapperRoot className={clsx("ui:w-[calc(100%-7rem)] ui:gap-2.75 ui:self-center ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:lg:max-w-272", className)} {...rest}>
+      <WrapperRoot
+        className={clsx(
+          "ui:w-[calc(100%-7rem)] ui:gap-2.75 ui:self-center ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:lg:max-w-272",
+          className,
+        )}
+        {...rest}
+      >
         <p>{error}</p>
       </WrapperRoot>
     );
@@ -65,14 +71,10 @@ export const AdditionalMessages = ({
           )}
         </span>
       ) : isReply ? (
-        <Reply
-          size={19}
-          color={isAccent ? "var(--color-text-dark)" : "white"}
-          className="ui:min-w-4.75"
-        />
+        <Reply size={19} color={isAccent ? "var(--color-text-dark)" : "white"} className="ui:min-w-4.75" />
       ) : null}
       {attachments?.length && attachmentSlot ? (
-        <div className="ui:flex ui:h-10 ui:min-w-10 ui:w-10 ui:overflow-hidden ui:rounded-lg ui:object-cover">
+        <div className="ui:flex ui:h-10 ui:w-10 ui:min-w-10 ui:overflow-hidden ui:rounded-lg ui:object-cover">
           {attachmentSlot}
         </div>
       ) : null}
@@ -89,7 +91,13 @@ export const AdditionalMessages = ({
         </p>
       </div>
       {onCloseFunc && (
-        <span onClick={(e) => { e.stopPropagation(); onCloseFunc(); }} className="ui:cursor-pointer">
+        <span
+          onClick={(e) => {
+            e.stopPropagation();
+            onCloseFunc();
+          }}
+          className="ui:cursor-pointer"
+        >
           <X size={28} color="var(--color-text-dark)" />
         </span>
       )}

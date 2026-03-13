@@ -28,13 +28,9 @@ export const MessageLinkPreview = ({
             <File size={36} color="white" />
           </div>
           <div className="ui:flex ui:flex-col ui:justify-center">
-            <p className="ui:line-clamp-1 ui:overflow-hidden ui:font-light ui:text-ellipsis">
-              {file_name}
-            </p>
+            <p className="ui:line-clamp-1 ui:overflow-hidden ui:font-light ui:text-ellipsis">{file_name}</p>
             {formattedFileSize != null && (
-              <p className={`ui:font-light ui:text-text-dark ${textClass}`}>
-                {formattedFileSize}
-              </p>
+              <p className={`ui:font-light ui:text-text-dark ${textClass}`}>{formattedFileSize}</p>
             )}
           </div>
         </div>
@@ -45,20 +41,14 @@ export const MessageLinkPreview = ({
   if (!description && images.length === 0) return null;
 
   return (
-    <a href={url} target="_blank" rel="noopener noreferrer">
+    <a href={url} className="ui:max-w-full" target="_blank" rel="noopener noreferrer">
       <div className={`ui:mt-1.25 ui:flex ui:flex-col ui:rounded-lg ui:p-2.5 ${bgClass}`}>
         <div className="ui:flex ui:flex-row ui:items-center ui:gap-1.25">
           {favicons[0] && (
-            <img
-              src={favicons[0]}
-              alt="Preview"
-              className="ui:h-2.5 ui:w-2.5 ui:rounded-md ui:object-contain"
-            />
+            <img src={favicons[0]} alt="Preview" className="ui:h-2.5 ui:w-2.5 ui:rounded-md ui:object-contain" />
           )}
-          <div className="ui:flex ui:flex-1 ui:flex-col">
-            {siteName && (
-              <p className="ui:line-clamp-1 ui:overflow-hidden ui:text-ellipsis">{siteName}</p>
-            )}
+          <div className="ui:flex ui:w-full ui:flex-1 ui:flex-col">
+            {siteName && <p className="ui:line-clamp-1 ui:overflow-hidden ui:text-ellipsis">{siteName}</p>}
             <p className="ui:line-clamp-1 ui:overflow-hidden ui:text-ellipsis">{title}</p>
           </div>
           <RefreshCcw

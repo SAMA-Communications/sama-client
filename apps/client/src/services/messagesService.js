@@ -37,13 +37,10 @@ class MessagesService {
       if (conversation) {
         const oldMessagesIds = conversation.messagesIds || [];
         const isUpdateLastMessage = mids.includes(oldMessagesIds.at(-1));
-        const newMessagesIds = oldMessagesIds.filter(
-          (mid) => !mids.includes(mid)
-        );
+        const newMessagesIds = oldMessagesIds.filter((mid) => !mids.includes(mid));
         store.dispatch(upsertChat({ _id: cid, messagesIds: newMessagesIds }));
         if (isUpdateLastMessage) {
-          const lastMessage =
-            store.getState().messages.entities?.[newMessagesIds.at(-1)];
+          const lastMessage = store.getState().messages.entities?.[newMessagesIds.at(-1)];
           store.dispatch(setLastMessageField({ cid, msg: lastMessage }));
         }
       }
@@ -55,16 +52,14 @@ class MessagesService {
         markConversationAsRead({
           cid: message.cid,
           mid: Array.isArray(message.ids) ? message.ids[0] : message.ids,
-        })
+        }),
       );
     };
 
     api.onMessageListener = async (message) => {
       const attachments = message.attachments;
       if (attachments) {
-        const attachmentsIds = attachments
-          .filter((obj) => !obj.file_url && obj.file_id)
-          .map((obj) => obj.file_id);
+        const attachmentsIds = attachments.filter((obj) => !obj.file_url && obj.file_id).map((obj) => obj.file_id);
         if (attachmentsIds.length) {
           const urls = await api.getDownloadUrlForFiles({
             file_ids: attachmentsIds,
@@ -92,7 +87,7 @@ class MessagesService {
           cid: message.cid,
           msg: message,
           countOfNewMessages,
-        })
+        }),
       );
 
       const conv = store.getState().conversations.entities[message.cid];
@@ -103,29 +98,23 @@ class MessagesService {
           upsertChat({
             _id: message.cid,
             participants: [...(conv.participants || []), user._id],
-          })
+          }),
         );
       }
-      if (
-        conv &&
-        (message.x?.type === "removed_participant" ||
-          message.x?.type === "left_participants")
-      ) {
+      if (conv && (message.x?.type === "removed_participant" || message.x?.type === "left_participants")) {
         const user = message.x.user;
         store.dispatch(
           upsertChat({
             _id: message.cid,
             participants: conv.participants.filter((uId) => uId !== user._id),
-          })
+          }),
         );
       }
     };
 
     api.onMessageEditListener = async (message) => {
       const { id, body } = message;
-      store.dispatch(
-        upsertMessage({ _id: id, body, updated_at: new Date().toISOString() })
-      );
+      store.dispatch(upsertMessage({ _id: id, body, updated_at: new Date().toISOString() }));
     };
 
     api.onMessageDeleteListener = async (message) => {
@@ -143,11 +132,10 @@ class MessagesService {
         upsertChat({
           _id: cid,
           typing_users: newTypingUsersArray,
-        })
+        }),
       );
 
-      const { clearTypingStatus, lastRequestTime } =
-        this.typingTimers[cid] || {};
+      const { clearTypingStatus, lastRequestTime } = this.typingTimers[cid] || {};
 
       const typingDuration = TYPING_DURATION_MS;
       const now = Date.now();
@@ -161,10 +149,8 @@ class MessagesService {
           store.dispatch(
             upsertChat({
               _id: cid,
-              typing_users: conversation.typing_users?.filter(
-                (id) => id !== from
-              ),
-            })
+              typing_users: conversation.typing_users?.filter((id) => id !== from),
+            }),
           );
         }, +typingDuration),
         lastRequestTime: now,
@@ -175,10 +161,7 @@ class MessagesService {
       let previousValue = this.currentChatId;
       this.currentChatId = store.getState().selectedConversation.value.id;
 
-      if (
-        this.currentChatId &&
-        (!previousValue || previousValue !== this.currentChatId)
-      ) {
+      if (this.currentChatId && (!previousValue || previousValue !== this.currentChatId)) {
         this.syncData();
       }
     });
@@ -221,7 +204,7 @@ class MessagesService {
               upsertParticipants({
                 cid,
                 participants: users.map((obj) => obj._id),
-              })
+              }),
             );
             store.dispatch(upsertUsers(users));
           });
@@ -234,19 +217,9 @@ class MessagesService {
   }
 
   async sendMessage(message) {
-    const { server_mid, t, modified, bot_message } = await api.messageCreate(
-      message
-    );
+    const { server_mid, t, modified, bot_message } = await api.messageCreate(message);
 
-    const {
-      mid,
-      body,
-      cid,
-      from,
-      attachments,
-      replied_message_id,
-      forwarded_message_id,
-    } = message;
+    const { mid, body, cid, from, attachments, replied_message_id, forwarded_message_id } = message;
     const mObject = {
       _id: server_mid,
       old_id: mid,
@@ -260,9 +233,7 @@ class MessagesService {
     };
 
     store.dispatch(addMessage(mObject));
-    store.dispatch(
-      updateLastMessageField({ cid, resaveLastMessageId: mid, msg: mObject })
-    );
+    store.dispatch(updateLastMessageField({ cid, resaveLastMessageId: mid, msg: mObject }));
     store.dispatch(removeMessage(mid));
 
     if (bot_message) {
@@ -285,7 +256,7 @@ class MessagesService {
         _id: mid,
         body: newFields.body,
         updated_at: new Date().toISOString(),
-      })
+      }),
     );
   }
 
@@ -317,9 +288,7 @@ class MessagesService {
       }
     } else {
       updatedMessagesIds =
-        position === "reverseOld"
-          ? [...oldMessagesIds, ...newMessagesIds]
-          : [...newMessagesIds, ...oldMessagesIds];
+        position === "reverseOld" ? [...oldMessagesIds, ...newMessagesIds] : [...newMessagesIds, ...oldMessagesIds];
     }
     updatedMessagesIds = [...new Set(updatedMessagesIds)];
 
@@ -329,7 +298,7 @@ class MessagesService {
         _id: convId,
         messagesIds: updatedMessagesIds,
         activated: true,
-      })
+      }),
     );
 
     const mAttachments = {};
@@ -344,9 +313,7 @@ class MessagesService {
         }
 
         const mids = mAttachmentsObject._id;
-        mAttachments[obj.file_id]._id = Array.isArray(mids)
-          ? [mid, ...mids]
-          : [mid, mids];
+        mAttachments[obj.file_id]._id = Array.isArray(mids) ? [mid, ...mids] : [mid, mids];
       });
     };
 
@@ -365,17 +332,12 @@ class MessagesService {
         repliedMsgs.map((msg) => {
           msg.attachments && handleAttachments(msg._id, msg.attachments);
           return msg._id;
-        })
+        }),
       );
       repliedMsgs.length && store.dispatch(addMessages(repliedMsgs));
 
       const notReceived = repliedMids.filter((mid) => !receivedIds.has(mid));
-      notReceived.length &&
-        store.dispatch(
-          addMessages(
-            notReceived.map((_id) => ({ _id, error: "Message deleted" }))
-          )
-        );
+      notReceived.length && store.dispatch(addMessages(notReceived.map((_id) => ({ _id, error: "Message deleted" }))));
     }
 
     if (Object.keys(mAttachments).length > 0) {

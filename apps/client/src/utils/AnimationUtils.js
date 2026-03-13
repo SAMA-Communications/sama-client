@@ -46,9 +46,7 @@ export const showItem = (index, isReverse, disableAnimation) =>
   disableAnimation
     ? {}
     : {
-        hidden: isReverse
-          ? { scale: 1, opacity: 1 }
-          : { scale: 0.5, opacity: 0 },
+        hidden: isReverse ? { scale: 1, opacity: 1 } : { scale: 0.5, opacity: 0 },
         visible: {
           ...(isReverse
             ? { scale: 0.5, opacity: 0 }

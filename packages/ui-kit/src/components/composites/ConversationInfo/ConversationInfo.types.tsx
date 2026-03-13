@@ -15,5 +15,11 @@ export interface ConversationInfoProps extends Omit<WrapperRootProps<"section">,
   /** Called when a participant row is clicked (uid = participant id, or null for current user). */
   onParticipantOpenProfile?: (uid: string | null) => void;
   /** Called when context menu is requested on a participant. */
-  onParticipantContextMenu?: (params: { category: string; list: (string | null)[]; coords: { x: number; y: number }; externalProps?: { user: User }; clicked: boolean }) => void;
+  onParticipantContextMenu?: (params: {
+    category: string;
+    list: (string | null)[];
+    coords: { x: number; y: number };
+    externalProps?: { user: User };
+    clicked: boolean;
+  }) => void;
 }

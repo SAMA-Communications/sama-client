@@ -4,11 +4,7 @@ const PromiseThrower = () => {
   throw new Promise(() => {});
 };
 
-const FallbackDelayer = ({
-  fallback,
-  fallbackDelayMs = void 0,
-  onShowFallback,
-}) => {
+const FallbackDelayer = ({ fallback, fallbackDelayMs = void 0, onShowFallback }) => {
   const [showFallback, setShowFallback] = useState(false);
 
   useEffect(() => {
@@ -30,14 +26,8 @@ const FallbackDelayer = ({
   return showFallback ? fallback : null;
 };
 
-const BetterSuspense = ({
-  children,
-  fallback,
-  fallbackDelayMs = 0,
-  fallbackMinDurationMs = 0,
-}) => {
-  const [isWaitingFallbackMinDurationMs, setIsWaitingFallbackMinDurationMs] =
-    useState(false);
+const BetterSuspense = ({ children, fallback, fallbackDelayMs = 0, fallbackMinDurationMs = 0 }) => {
+  const [isWaitingFallbackMinDurationMs, setIsWaitingFallbackMinDurationMs] = useState(false);
 
   const timeoutIdRef = useRef(undefined);
 

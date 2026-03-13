@@ -45,18 +45,13 @@ class ActivityService {
   }
 
   async syncData() {
-    const userInfo = localStorage.getItem("sessionId")
-      ? jwtDecode(localStorage.getItem("sessionId"))
-      : null;
+    const userInfo = localStorage.getItem("sessionId") ? jwtDecode(localStorage.getItem("sessionId")) : null;
 
     if (!userInfo) {
       return;
     }
 
-    const uId =
-      this.activeChat.owner_id === userInfo._id
-        ? this.activeChat.opponent_id
-        : this.activeChat.owner_id;
+    const uId = this.activeChat.owner_id === userInfo._id ? this.activeChat.opponent_id : this.activeChat.owner_id;
 
     if (!uId) {
       return;
@@ -67,17 +62,16 @@ class ActivityService {
         upsertUser({
           _id: uId,
           recent_activity: activity[uId],
-        })
+        }),
       );
     });
   }
 
   getUserLastActivity(userId) {
-    const opponentLastActivity =
-      store.getState().participants.entities[userId]?.recent_activity;
+    const opponentLastActivity = store.getState().participants.entities[userId]?.recent_activity;
 
     return opponentLastActivity === 0 ? (
-      <span className="text-(--color-accent-500) text-h5">online</span>
+      <span className="text-h5 text-(--color-accent-500)">online</span>
     ) : (
       getLastVisitTime(opponentLastActivity)
     );

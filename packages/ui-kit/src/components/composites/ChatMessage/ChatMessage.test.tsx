@@ -7,9 +7,15 @@ import { chatMessageMessagesMock } from "../../../__mocks__/messages.mock";
 import { participantsMock } from "../../../__mocks__/participants.mock";
 
 vi.mock("motion/react-m", () => ({
-  div: ({ children, drag, dragDirectionLock, dragConstraints, whileTap, whileDrag, ...props }: React.PropsWithChildren<Record<string, unknown>>) => (
-    <div {...props}>{children}</div>
-  ),
+  div: ({
+    children,
+    drag,
+    dragDirectionLock,
+    dragConstraints,
+    whileTap,
+    whileDrag,
+    ...props
+  }: React.PropsWithChildren<Record<string, unknown>>) => <div {...props}>{children}</div>,
 }));
 
 const [defaultMessage] = chatMessageMessagesMock;
@@ -37,46 +43,24 @@ describe("ChatMessage", () => {
   });
 
   it("shows sender display name when not previous message from same sender", () => {
-    render(
-      <ChatMessage
-        {...defaultProps}
-        senderDisplayName="John Doe"
-        isPrevMessageYours={false}
-      />,
-    );
+    render(<ChatMessage {...defaultProps} senderDisplayName="John Doe" isPrevMessageYours={false} />);
     expect(screen.getByText(/\s*John Doe/)).toBeInTheDocument();
   });
 
   it("shows Deleted account when sender display name is empty and not prev", () => {
-    render(
-      <ChatMessage
-        {...defaultProps}
-        senderDisplayName=""
-        isPrevMessageYours={false}
-      />,
-    );
+    render(<ChatMessage {...defaultProps} senderDisplayName="" isPrevMessageYours={false} />);
     expect(screen.getByText(/\s*Deleted account/)).toBeInTheDocument();
   });
 
   it("does not show sender name when isPrevMessageYours is true", () => {
-    render(
-      <ChatMessage
-        {...defaultProps}
-        senderDisplayName="John Doe"
-        isPrevMessageYours={true}
-      />,
-    );
+    render(<ChatMessage {...defaultProps} senderDisplayName="John Doe" isPrevMessageYours={true} />);
     expect(screen.queryByText("John Doe")).not.toBeInTheDocument();
   });
 
   it("shows Forwarded label for forwarded messages", () => {
     const forwardedMessage = chatMessageMessagesMock.find((m) => m.forwarded_message_id);
     render(
-      <ChatMessage
-        {...defaultProps}
-        message={forwardedMessage!}
-        bodyContent={<span>{forwardedMessage!.body}</span>}
-      />,
+      <ChatMessage {...defaultProps} message={forwardedMessage!} bodyContent={<span>{forwardedMessage!.body}</span>} />,
     );
     expect(screen.getByText("Forwarded")).toBeInTheDocument();
     expect(screen.getByTestId("icon-forward")).toBeInTheDocument();
@@ -84,23 +68,12 @@ describe("ChatMessage", () => {
 
   it("shows edited label when message was edited", () => {
     const editedMessage = chatMessageMessagesMock.find((m) => m._id === "m-edited");
-    render(
-      <ChatMessage
-        {...defaultProps}
-        message={editedMessage!}
-        bodyContent={<span>{editedMessage!.body}</span>}
-      />,
-    );
+    render(<ChatMessage {...defaultProps} message={editedMessage!} bodyContent={<span>{editedMessage!.body}</span>} />);
     expect(screen.getByText("edited")).toBeInTheDocument();
   });
 
   it("shows time when isLongTimeBetweenMessages or last in group", () => {
-    render(
-      <ChatMessage
-        {...defaultProps}
-        isNextMessageYours={false}
-      />,
-    );
+    render(<ChatMessage {...defaultProps} isNextMessageYours={false} />);
     // Time is in a small text div next to optional "edited"
     const timeContainer = document.querySelector('[class*="text-text-dark"][class*="text-xs"]');
     expect(timeContainer).toBeInTheDocument();
@@ -131,39 +104,20 @@ describe("ChatMessage", () => {
   });
 
   it("shows selection checkbox when isSelectionMode is true", () => {
-    const { container } = render(
-      <ChatMessage
-        {...defaultProps}
-        isSelectionMode={true}
-        isSelected={false}
-      />,
-    );
+    const { container } = render(<ChatMessage {...defaultProps} isSelectionMode={true} isSelected={false} />);
     // When not selected, an empty circle (span with border) is shown
     const selectionCircle = container.querySelector('span[class*="rounded-full"][class*="border"]');
     expect(selectionCircle).toBeInTheDocument();
   });
 
   it("shows selected state when isSelected is true in selection mode", () => {
-    render(
-      <ChatMessage
-        {...defaultProps}
-        isSelectionMode={true}
-        isSelected={true}
-      />,
-    );
+    render(<ChatMessage {...defaultProps} isSelectionMode={true} isSelected={true} />);
     expect(screen.getByTestId("icon-check")).toBeInTheDocument();
   });
 
   it("calls onSelectClick when clicked in selection mode and not selected", () => {
     const onSelectClick = vi.fn();
-    render(
-      <ChatMessage
-        {...defaultProps}
-        isSelectionMode={true}
-        isSelected={false}
-        onSelectClick={onSelectClick}
-      />,
-    );
+    render(<ChatMessage {...defaultProps} isSelectionMode={true} isSelected={false} onSelectClick={onSelectClick} />);
     const wrapper = screen.getByText("Hello!").closest("[data-message-id]")?.parentElement;
     if (wrapper) {
       fireEvent.click(wrapper);
@@ -174,12 +128,7 @@ describe("ChatMessage", () => {
   it("calls onUnselectClick when clicked in selection mode and selected", () => {
     const onUnselectClick = vi.fn();
     render(
-      <ChatMessage
-        {...defaultProps}
-        isSelectionMode={true}
-        isSelected={true}
-        onUnselectClick={onUnselectClick}
-      />,
+      <ChatMessage {...defaultProps} isSelectionMode={true} isSelected={true} onUnselectClick={onUnselectClick} />,
     );
     const wrapper = screen.getByText("Hello!").closest("[data-message-id]")?.parentElement;
     if (wrapper) {
@@ -189,9 +138,7 @@ describe("ChatMessage", () => {
   });
 
   it("applies className to root", () => {
-    const { container } = render(
-      <ChatMessage {...defaultProps} className="custom-root" />,
-    );
+    const { container } = render(<ChatMessage {...defaultProps} className="custom-root" />);
     const root = container.firstChild as HTMLElement;
     expect(root).toHaveClass("custom-root");
   });
@@ -213,28 +160,19 @@ describe("ChatMessage", () => {
 
   it("renders linkPreviewNode when message has no attachments", () => {
     const linkPreviewNode = <div data-testid="link-preview">Link preview</div>;
-    render(
-      <ChatMessage
-        {...defaultProps}
-        linkPreviewNode={linkPreviewNode}
-      />,
-    );
+    render(<ChatMessage {...defaultProps} linkPreviewNode={linkPreviewNode} />);
     expect(screen.getByTestId("link-preview")).toBeInTheDocument();
     expect(screen.getByText("Link preview")).toBeInTheDocument();
   });
 
   it("renders with current user alignment", () => {
-    const { container } = render(
-      <ChatMessage {...defaultProps} isCurrentUser={true} />,
-    );
+    const { container } = render(<ChatMessage {...defaultProps} isCurrentUser={true} />);
     const root = container.firstChild as HTMLElement;
     expect(root).toHaveClass("ui:justify-end");
   });
 
   it("renders with other user alignment", () => {
-    const { container } = render(
-      <ChatMessage {...defaultProps} isCurrentUser={false} />,
-    );
+    const { container } = render(<ChatMessage {...defaultProps} isCurrentUser={false} />);
     const root = container.firstChild as HTMLElement;
     expect(root).toHaveClass("ui:justify-start");
   });

@@ -4,7 +4,16 @@ import type { WrapperRootProps } from "../../elements/WrapperRoot";
 
 export interface ChatMessageMessage extends Pick<
   Message,
-  "_id" | "body" | "from" | "attachments" | "status" | "t" | "created_at" | "updated_at" | "cid" | "forwarded_message_id"
+  | "_id"
+  | "body"
+  | "from"
+  | "attachments"
+  | "status"
+  | "t"
+  | "created_at"
+  | "updated_at"
+  | "cid"
+  | "forwarded_message_id"
 > {
   old_id?: string;
   url_preview?: unknown;
@@ -45,4 +54,6 @@ export interface ChatMessageProps extends Omit<WrapperRootProps<"div">, "as" | "
   onBubblePointerUp?: (e: React.PointerEvent) => void;
   onBubblePointerLeave?: (e: React.PointerEvent) => void;
   onBubbleClick?: (e: React.MouseEvent) => void;
+  /** When true, sender avatar (MessageUserIcon) is not rendered. Shown by default. */
+  hideUserIcon?: boolean;
 }

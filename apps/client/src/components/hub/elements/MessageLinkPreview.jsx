@@ -7,8 +7,7 @@ export default function MessageLinkPreview({ refreshFunc, urlData, color }) {
   if (!urlData) return null;
 
   const isDocument = SUPPORTED_DOCUMENT_PREVIEW_REGEX.test(urlData.url);
-  const formattedFileSize =
-    urlData.size != null ? formatFileSize(Number(urlData.size)) : undefined;
+  const formattedFileSize = urlData.size != null ? formatFileSize(Number(urlData.size)) : undefined;
 
   return (
     <UIMessageLinkPreview

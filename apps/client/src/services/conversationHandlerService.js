@@ -58,10 +58,7 @@ class ConversationHandlerService {
       },
     };
 
-    const result = await this.#sandBox.runSandboxed(
-      async ({ evalCode }) => evalCode(code),
-      { ...this.#options, env }
-    );
+    const result = await this.#sandBox.runSandboxed(async ({ evalCode }) => evalCode(code), { ...this.#options, env });
 
     return errorMessage ? { ...result, error: errorMessage } : result;
   }
@@ -75,18 +72,14 @@ class ConversationHandlerService {
   async validateHandler(code, originCode) {
     if (!this.#sandBox) throw new Error("Sandbox is not initialized");
 
-    const { ok } = await this.#sandBox.runSandboxed(async ({ validateCode }) =>
-      validateCode(code)
-    );
+    const { ok } = await this.#sandBox.runSandboxed(async ({ validateCode }) => validateCode(code));
 
     return {
       noSyntaxError: ok,
-      isExportHandler: /export\s+default\s+await\s+handler\s*\(.*\)/.test(
-        originCode
-      ),
+      isExportHandler: /export\s+default\s+await\s+handler\s*\(.*\)/.test(originCode),
       isHandlerHeader:
         /const\s+handler\s*=\s*async\s*\(message,\s*user,\s*accept,\s*resolve,\s*reject,\s*fetch\)\s*=>\s*\{/.test(
-          originCode
+          originCode,
         ),
     };
   }
@@ -102,7 +95,7 @@ class ConversationHandlerService {
           updated_by: currentUserId,
           updated_at: Date.now(),
           not_saved: undefined,
-        })
+        }),
       );
       localStorage.removeItem(`conversation_handler_${cid}`);
       showCustomAlert("The handler was successfully saved.", "success");
@@ -113,11 +106,8 @@ class ConversationHandlerService {
   }
 
   async getHandlerFromLocalStorage(cid) {
-    const localStoredHandlerContent = localStorage.getItem(
-      `conversation_handler_${cid}`
-    );
-    if (localStoredHandlerContent)
-      store.dispatch(updateHandler({ _id: cid, not_saved: true }));
+    const localStoredHandlerContent = localStorage.getItem(`conversation_handler_${cid}`);
+    if (localStoredHandlerContent) store.dispatch(updateHandler({ _id: cid, not_saved: true }));
     return localStoredHandlerContent;
   }
 
@@ -125,8 +115,7 @@ class ConversationHandlerService {
     // const localStoredHandlerContent = await this.getHandlerFromLocalStorage(cid);
     // if (localStoredHandlerContent) return;
 
-    const reduxStoredScheme =
-      store.getState().conversations.entities[cid]?.handler_options;
+    const reduxStoredScheme = store.getState().conversations.entities[cid]?.handler_options;
     if (reduxStoredScheme?.scheme) {
       store.dispatch(updateHandler({ _id: cid, ...reduxStoredScheme }));
       return;

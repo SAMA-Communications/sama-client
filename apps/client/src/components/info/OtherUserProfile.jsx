@@ -20,8 +20,7 @@ import { showOtherUserProfileContainer, showOtherUserProfileContent } from "@uti
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/constants.js";
 
-import Close from "@icons/actions/CloseGray.svg?react";
-import BackBtn from "@icons/options/Back.svg?react";
+import { ArrowLeft, X } from "lucide-react";
 
 export default function OtherUserProfile() {
   const dispatch = useDispatch();
@@ -95,8 +94,10 @@ export default function OtherUserProfile() {
           onBack={() => removeAndNavigateLastSection(pathname + hash)}
           onStartConversation={handleStartConversation}
           contentClassName="py-[20px] flex flex-col gap-[15px] max-md:py-[0px]"
-          closeButton={isMobileView ? null : <Close className="cursor-pointer" />}
-          backButton={isMobileView ? <BackBtn className="cursor-pointer max-md:top-[34px] max-md:left-[4svw]" /> : null}
+          closeButton={isMobileView ? null : <X className="cursor-pointer" />}
+          backButton={
+            isMobileView ? <ArrowLeft className="cursor-pointer max-md:top-[34px] max-md:left-[4svw]" /> : null
+          }
         />
       </m.div>
     </m.div>

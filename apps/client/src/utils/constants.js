@@ -38,7 +38,7 @@ export const DAY_IN_MS = 86400000;
 export const YEAR_IN_MS = 31556926000;
 
 export const MOBILE_VIEW_WIDTH = 767;
-export const TABLET_VIEW_WIDTH = 1279;
+export const TABLET_VIEW_WIDTH = 1023;
 
 export const LINKS_REGEXP = /https:\/\/\S+/g; // /(((https?:\/\/)|(www\.))[^\s]+)/g
 export const URL_METADATA_EXPIRE = 3600000;
@@ -55,23 +55,10 @@ export const ALLOWED_FILE_FORMATS = [
   "video/webm",
   "video/quicktime",
 ];
-export const ALLOWED_FORMATS_TO_COPY = [
-  ".heic",
-  ".HEIC",
-  "image/jpeg",
-  "image/png",
-  "image/gif",
-  "image/bmp",
-];
-export const ALLOWED_AVATAR_FORMATS = [
-  ".heic",
-  ".HEIC",
-  "image/jpeg",
-  "image/png",
-];
+export const ALLOWED_FORMATS_TO_COPY = [".heic", ".HEIC", "image/jpeg", "image/png", "image/gif", "image/bmp"];
+export const ALLOWED_AVATAR_FORMATS = [".heic", ".HEIC", "image/jpeg", "image/png"];
 
-export const SUPPORTED_DOCUMENT_PREVIEW_REGEX =
-  /\.(pdf|docx?|xlsx?|pptx?|txt|rtf|odt|ods|odp)(\?.*)?$/i;
+export const SUPPORTED_DOCUMENT_PREVIEW_REGEX = /\.(pdf|docx?|xlsx?|pptx?|txt|rtf|odt|ods|odp)(\?.*)?$/i;
 export const DEFAULT_BLUR_HASH = "U27nLE$*00_N^k,@s9xu#7$2$%xtVD-B-pkW";
 export const WEEK_DAYS = {
   0: "Su",

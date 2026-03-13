@@ -25,10 +25,7 @@ export const MediaViewer = ({
   const isFirstIndex = currentIndex === 0;
 
   const currentAttachment = attachments[currentIndex];
-  const currentFileType = getFileType(
-    currentAttachment?.file_name,
-    currentAttachment?.file_content_type
-  );
+  const currentFileType = getFileType(currentAttachment?.file_name, currentAttachment?.file_content_type);
 
   return (
     <WrapperRoot
@@ -68,7 +65,7 @@ export const MediaViewer = ({
 
       {!isFirstIndex && (
         <div
-          className="ui:absolute ui:top-0 ui:left-0 ui:flex ui:h-full ui:w-[max(8%,80px)] ui:cursor-pointer ui:select-none ui:items-center ui:justify-center ui:opacity-0 ui:duration-200 ui:hover:bg-bg-light/25 ui:md:opacity-100"
+          className="ui:absolute ui:top-0 ui:left-0 ui:flex ui:h-full ui:w-[max(8%,80px)] ui:cursor-pointer ui:items-center ui:justify-center ui:opacity-0 ui:duration-200 ui:select-none ui:hover:bg-bg-light/25 ui:md:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
             onIndexChange(currentIndex - 1);
@@ -80,7 +77,7 @@ export const MediaViewer = ({
 
       {!isLastIndex && (
         <div
-          className="ui:absolute ui:top-0 ui:right-0 ui:flex ui:h-full ui:w-[max(8%,80px)] ui:cursor-pointer ui:select-none ui:items-center ui:justify-center ui:opacity-0 ui:duration-200 ui:hover:bg-bg-light/25 ui:md:opacity-100"
+          className="ui:absolute ui:top-0 ui:right-0 ui:flex ui:h-full ui:w-[max(8%,80px)] ui:cursor-pointer ui:items-center ui:justify-center ui:opacity-0 ui:duration-200 ui:select-none ui:hover:bg-bg-light/25 ui:md:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
             onIndexChange(currentIndex + 1);

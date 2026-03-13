@@ -75,9 +75,9 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     setForwardedMids(
       match && hash.includes("/selection")
         ? match[1]
-          .split(",")
-          .map((id) => id.trim())
-          .filter(Boolean)
+            .split(",")
+            .map((id) => id.trim())
+            .filter(Boolean)
         : [],
     );
 
@@ -296,9 +296,12 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
         i > 0 ? new Date(msg.t * 1000).toDateString() === new Date(messages[i - 1].t * 1000).toDateString() : false;
 
       return x?.type ? (
-        <InformativeMessage key={key} text={body} isNextMesssageUsers={isNextMessageYours}
-          onClick={() => addSuffix(pathname + hash, `/user?uid=${x?.user?._id}`)} />
-
+        <InformativeMessage
+          key={key}
+          text={body}
+          isNextMesssageUsers={isNextMessageYours}
+          onClick={() => addSuffix(pathname + hash, `/user?uid=${x?.user?._id}`)}
+        />
       ) : (
         <Fragment key={key}>
           {!isSameDayAsPrevMessage && <InteractiveDate key={key + "_interactive_date"} date={msg.t} />}

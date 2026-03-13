@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { clsx } from "clsx";
 import * as m from "motion/react-m";
-import { Check, Forward } from "lucide-react";
+import { Check, Forward, UserRound } from "lucide-react";
 
 import { MessageUserIcon } from "../../elements/MessageUserIcon";
 import { MessageStatus } from "../../elements/MessageStatus";
@@ -39,6 +39,7 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
     onBubblePointerUp,
     onBubblePointerLeave,
     onBubbleClick,
+    hideUserIcon = false,
     className,
     ...rest
   },
@@ -69,17 +70,11 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
   return (
     <WrapperRoot
       className={clsx(
-        "ui:flex ui:flex-row ui:flex-nowrap ui:items-end ui:gap-2.75",
+        "ui:flex ui:w-full ui:flex-row ui:flex-nowrap ui:items-end ui:gap-2.75",
         isCurrentUser ? "ui:justify-end" : "ui:justify-start",
         className,
       )}
-      onClick={
-        isSelectionMode
-          ? isSelected
-            ? () => onUnselectClick?.()
-            : () => onSelectClick?.()
-          : undefined
-      }
+      onClick={isSelectionMode ? (isSelected ? () => onUnselectClick?.() : () => onSelectClick?.()) : undefined}
       onContextMenu={handleSelectionContextMenu}
       {...rest}
     >
@@ -109,30 +104,38 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
         }}
         whileDrag={{ scale: 0.9 }}
       >
-        <div className="ui:flex ui:min-w-11.5 ui:items-end">
-          {(next || isCurrentUser) ? null : (
-            <button type="button" onClick={() => openUserProfile(from)} className="ui:border-0 ui:bg-transparent ui:p-0 ui:cursor-pointer">
-              <MessageUserIcon user={sender} isCurrentUser={isCurrentUser} />
-            </button>
-          )}
-        </div>
+        {hideUserIcon ? null : (
+          <div className="ui:flex ui:min-w-11.5 ui:items-end">
+            {next || isCurrentUser ? null : (
+              <button
+                type="button"
+                onClick={() => openUserProfile(from)}
+                className="ui:cursor-pointer ui:border-0 ui:bg-transparent ui:p-0"
+              >
+                <MessageUserIcon
+                  user={sender}
+                  isCurrentUser={isCurrentUser}
+                  fallbackCurrentUser={<UserRound color="white" />}
+                  fallbackOtherUser={<UserRound color="black" />}
+                />
+              </button>
+            )}
+          </div>
+        )}
         <div
-          className={`ui:flex ui:flex-col ui:max-2xl:max-w-[min(85%,520px)] ui:2xl:max-w-[min(60%,520px)] ${
+          className={`ui:flex ui:flex-col ui:max-2xl:max-w-[min(80dvw,520px)] ui:2xl:max-w-[min(60%,520px)] ${
             isCurrentUser ? "ui:ml-auto" : "ui:mr-auto"
           }`}
         >
           {prev ? null : (
-            <div
-              className="ui:mb-1.25 ui:text-text-dark/60 ui:cursor-pointer"
-              onClick={() => openUserProfile(from)}
-            >
+            <div className="ui:mb-1.25 ui:cursor-pointer ui:text-text-dark/60" onClick={() => openUserProfile(from)}>
               &zwnj;{senderDisplayName || "Deleted account"}
             </div>
           )}
           <div
-            className={`ui:shadow-btn ui:flex ui:w-max ui:max-w-full ui:flex-col ui:self-end ui:rounded-xl ${
+            className={`ui:flex ui:w-max ui:max-w-full ui:flex-col ui:rounded-xl ui:shadow-btn ${
               next ? "" : isCurrentUser ? "ui:rounded-br-none" : "ui:rounded-bl-none"
-            }`}
+            } ${isCurrentUser ? "ui:self-end" : "ui:self-start"}`}
           >
             {isForwardMessage ? (
               <div
@@ -181,12 +184,10 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
                 isCurrentUser ? "ui:justify-end" : "ui:justify-start"
               }`}
             >
-              {isEdited ? (
-                <span className="ui:text-text-dark ui:text-xs ui:leading-4.5">edited</span>
-              ) : null}
+              {isEdited ? <span className="ui:text-xs ui:leading-4.5 ui:text-text-dark">edited</span> : null}
               {(isLongTimeBetweenMessages || !next) && (
                 <>
-                  <div className="ui:text-text-dark/60 ui:text-xs">{timeSend}</div>
+                  <div className="ui:text-xs ui:text-text-dark/60">{timeSend}</div>
                   {isCurrentUser ? (
                     <MessageStatus status={status === "sent" || status === "read" ? status : undefined} />
                   ) : null}
@@ -195,13 +196,24 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
             </div>
           )}
         </div>
-        <div className="ui:flex ui:min-w-11.5 ui:items-end">
-          {(next || !isCurrentUser) ? null : (
-            <button type="button" onClick={() => openUserProfile(from)} className="ui:border-0 ui:bg-transparent ui:p-0 ui:cursor-pointer">
-              <MessageUserIcon user={sender} isCurrentUser={isCurrentUser} />
-            </button>
-          )}
-        </div>
+        {hideUserIcon ? null : (
+          <div className="ui:flex ui:min-w-11.5 ui:items-end">
+            {next || !isCurrentUser ? null : (
+              <button
+                type="button"
+                onClick={() => openUserProfile(from)}
+                className="ui:cursor-pointer ui:border-0 ui:bg-transparent ui:p-0"
+              >
+                <MessageUserIcon
+                  user={sender}
+                  isCurrentUser={isCurrentUser}
+                  fallbackCurrentUser={<UserRound color="white" />}
+                  fallbackOtherUser={<UserRound color="black" />}
+                />
+              </button>
+            )}
+          </div>
+        )}
       </m.div>
     </WrapperRoot>
   );

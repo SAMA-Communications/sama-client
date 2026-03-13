@@ -1,15 +1,10 @@
-import {
-  createEntityAdapter,
-  createSelector,
-  createSlice,
-} from "@reduxjs/toolkit";
+import { createEntityAdapter, createSelector, createSlice } from "@reduxjs/toolkit";
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 
 export const conversationsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
   sortComparer: (a, b) =>
-    (b.last_message?.t * 1000 || Date.parse(b.updated_at)) -
-    (a.last_message?.t * 1000 || Date.parse(a.updated_at)),
+    (b.last_message?.t * 1000 || Date.parse(b.updated_at)) - (a.last_message?.t * 1000 || Date.parse(a.updated_at)),
 });
 
 export const {
@@ -23,21 +18,18 @@ export const getConverastionById = createSelector(
   [getSelectedConversationId, selectConversationsEntities],
   (id, conversations) => {
     return conversations && id ? conversations[id] : {};
-  }
+  },
 );
 
-export const getDisplayableConversations = createSelector(
-  [selectAllConversations],
-  (conversations) => {
-    return conversations.filter((obj) => obj.type === "g" || obj.last_message);
-  }
-);
+export const getDisplayableConversations = createSelector([selectAllConversations], (conversations) => {
+  return conversations.filter((obj) => obj.type === "g" || obj.last_message);
+});
 
 export const getConversationHandler = createSelector(
   [getSelectedConversationId, selectConversationsEntities],
   (id, conversations) => {
     return conversations && id ? conversations[id].handler_options : null;
-  }
+  },
 );
 
 export const conversations = createSlice({
@@ -76,10 +68,7 @@ export const conversations = createSlice({
 
     insertChat: (state, action) => {
       const conversation = action.payload;
-      conversationsAdapter.setAll(state, [
-        conversation,
-        ...Object.values(state.entities),
-      ]);
+      conversationsAdapter.setAll(state, [conversation, ...Object.values(state.entities)]);
     },
 
     upsertChat: (state, action) => {
@@ -88,8 +77,7 @@ export const conversations = createSlice({
         state.entities = {};
       }
 
-      const { messagesIds, unread_messages_count } =
-        state.entities[conversation._id] || {};
+      const { messagesIds, unread_messages_count } = state.entities[conversation._id] || {};
       // messagesIds && delete conversation.messagesIds;
       unread_messages_count && delete conversation.unread_messages_count;
 
@@ -111,8 +99,7 @@ export const conversations = createSlice({
       };
 
       if (!conv) {
-        countOfNewMessages &&
-          (updateParams.unread_messages_count = countOfNewMessages);
+        countOfNewMessages && (updateParams.unread_messages_count = countOfNewMessages);
         conversationsAdapter.upsertOne(state, updateParams);
         return;
       }
@@ -128,8 +115,7 @@ export const conversations = createSlice({
 
       updateParams.messagesIds = [...mids, msg._id];
       if (countOfNewMessages) {
-        updateParams.unread_messages_count =
-          (conv.unread_messages_count || 0) + countOfNewMessages;
+        updateParams.unread_messages_count = (conv.unread_messages_count || 0) + countOfNewMessages;
       }
 
       conversationsAdapter.upsertOne(state, updateParams);
@@ -149,8 +135,8 @@ export const conversations = createSlice({
           ...(isRemove
             ? { t: conv.last_message.old_t || conv.last_message.t, old_t: null }
             : draft.updated_at
-            ? { t: draft.updated_at, old_t: conv.last_message.t }
-            : {}),
+              ? { t: draft.updated_at, old_t: conv.last_message.t }
+              : {}),
         };
         if (isRemove) {
           updateParams.draft = null;
@@ -164,9 +150,7 @@ export const conversations = createSlice({
           updateParams.old_updated_at = null;
           updateParams.draft = null;
         } else if (draft.updated_at) {
-          updateParams.updated_at = new Date(
-            draft.updated_at * 1000
-          ).toISOString();
+          updateParams.updated_at = new Date(draft.updated_at * 1000).toISOString();
           updateParams.old_updated_at = conv.updated_at;
         }
       }
@@ -224,9 +208,7 @@ export const conversations = createSlice({
       const updateParams = {
         _id: cid,
         last_message: msg,
-        updated_at: msg
-          ? new Date(msg.t * 1000).toISOString()
-          : conv.created_at,
+        updated_at: msg ? new Date(msg.t * 1000).toISOString() : conv.created_at,
       };
       conversationsAdapter.upsertOne(state, updateParams);
     },
@@ -254,8 +236,7 @@ export const conversations = createSlice({
     },
 
     updateHandler: (state, action) => {
-      const { _id, content, updated_at, updated_by, not_saved } =
-        action.payload;
+      const { _id, content, updated_at, updated_by, not_saved } = action.payload;
       const conv = state.entities[_id];
 
       const existingHandlerOptions = conv?.handler_options || {};

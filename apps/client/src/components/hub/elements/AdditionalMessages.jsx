@@ -31,11 +31,7 @@ export default function AdditionalMessages({
       onCloseFunc={onCloseFunc}
       onClickFunc={onClickFunc}
       senderName={senderName}
-      attachmentSlot={
-        attachment ? (
-          <MediaAttachment index={0} attachment={attachment} flexGrow={1} />
-        ) : undefined
-      }
+      attachmentSlot={attachment ? <MediaAttachment index={0} attachment={attachment} flexGrow={1} /> : undefined}
     />
   );
 }

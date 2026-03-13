@@ -27,7 +27,10 @@ export const MediaAttachments = ({
 
   return (
     <WrapperRoot
-      className={clsx("ui:w-full ui:flex ui:min-h-[350px] ui:flex-col ui:gap-0.75 ui:overflow-hidden ui:rounded-lg ui:sm:min-w-[300px]", className)}
+      className={clsx(
+        "ui:flex ui:min-h-[350px] ui:w-full ui:flex-col ui:gap-0.75 ui:overflow-hidden ui:rounded-lg ui:sm:min-w-[300px]",
+        className,
+      )}
       style={{
         maxWidth: maxWidthStyle,
         maxHeight: maxHeightStyle,
