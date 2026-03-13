@@ -1,12 +1,14 @@
 import { memo, useMemo } from "react";
+
 import { clsx } from "clsx";
 import { Trash2 } from "lucide-react";
 
-import { ImageView } from "../ImageView";
-import { VideoView } from "../VideoView";
-import { WrapperRoot } from "../WrapperRoot";
-import { getFileType } from "../../../utils/mediaUtils";
-import type { MediaAttachmentProps } from "./MediaAttachment.types";
+import { ImageView } from "@elements/ImageView";
+import type { MediaAttachmentProps } from "@elements/MediaAttachment/MediaAttachment.types";
+import { VideoView } from "@elements/VideoView";
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { getFileType } from "@utils/mediaUtils";
 
 const baseClassName = "ui:relative ui:flex ui:items-center ui:justify-center ui:overflow-hidden ui:rounded-sm";
 

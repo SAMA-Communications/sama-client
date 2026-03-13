@@ -1,6 +1,6 @@
-import type { WrapperRootProps } from "../WrapperRoot";
-
 import type { User } from "types/samaWssModels";
+
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface ParticipantContextMenuParams {
   category: string;

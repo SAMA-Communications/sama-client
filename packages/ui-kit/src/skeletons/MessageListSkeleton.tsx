@@ -1,4 +1,4 @@
-import { ChatMessageSkeleton } from "./ChatMessageSkeleton";
+import { ChatMessageSkeleton } from "@src/skeletons/ChatMessageSkeleton";
 
 export interface MessageListSkeletonProps {
   /** Number of message skeletons to show (default 6) */

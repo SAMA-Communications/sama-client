@@ -1,9 +1,11 @@
 import { memo } from "react";
+
 import { clsx } from "clsx";
 
-import { WrapperRoot } from "../WrapperRoot";
-import { MENU_ITEM_ANIMATE } from "../../../utils/constants";
-import type { ContextMenuItemProps } from "./ContextMenuItem.types";
+import type { ContextMenuItemProps } from "@elements/ContextMenuItem/ContextMenuItem.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { MENU_ITEM_ANIMATE } from "@utils/constants";
 
 export const ContextMenuItem = memo(function ContextMenuItem({
   text,
@@ -33,3 +35,4 @@ export const ContextMenuItem = memo(function ContextMenuItem({
     </WrapperRoot>
   );
 });
+

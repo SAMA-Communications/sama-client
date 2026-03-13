@@ -1,12 +1,15 @@
 import { memo, useCallback, useRef } from "react";
+
 import { clsx } from "clsx";
-import { getAdapters } from "../../../adapters";
 import { Camera, User } from "lucide-react";
 
-import { DynamicAvatar } from "../DynamicAvatar";
-import { WrapperRoot } from "../WrapperRoot";
-import { ALLOWED_AVATAR_FORMATS } from "../../../utils/constants";
-import type { UserProfileAvatarProps } from "./UserProfileAvatar.types";
+import { getAdapters } from "@adapters";
+
+import { DynamicAvatar } from "@elements/DynamicAvatar";
+import type { UserProfileAvatarProps } from "@elements/UserProfileAvatar/UserProfileAvatar.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { ALLOWED_AVATAR_FORMATS } from "@utils/constants";
 
 export const UserProfileAvatar = memo(function UserProfileAvatar({
   user,

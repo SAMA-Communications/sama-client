@@ -1,6 +1,6 @@
-import "./index.css";
+import "@src/index.css";
+export { AdditionalMessages } from "@composites/AdditionalMessages";
 
-export { AdditionalMessages } from "./components/composites/AdditionalMessages";
 export { AttachModal } from "./components/composites/AttachModal";
 export { ChatMessage } from "./components/composites/ChatMessage";
 export { ChatNameInput } from "./components/composites/ChatNameInput";

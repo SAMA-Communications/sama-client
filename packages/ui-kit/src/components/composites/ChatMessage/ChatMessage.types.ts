@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
+
 import type { Message, User } from "types/samaWssModels";
-import type { WrapperRootProps } from "../../elements/WrapperRoot";
+
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface ChatMessageMessage extends Pick<
   Message,

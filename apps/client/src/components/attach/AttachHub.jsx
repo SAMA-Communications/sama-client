@@ -1,26 +1,30 @@
-import localforage from "localforage";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+
 import { useLocation } from "react-router";
 
-import draftService from "@services/tools/draftService.js";
-import messagesService from "@services/messagesService.js";
+import { useDispatch, useSelector } from "react-redux";
+
+import localforage from "localforage";
+
+import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import DownloadManager from "@lib/downloadManager";
-import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import { AttachModal } from "@sama-communications.ui-kit";
 
-import { getNetworkState } from "@store/values/NetworkState";
-import { addMessage, upsertMessage, selectAllMessages } from "@store/values/Messages";
+import messagesService from "@services/messagesService.js";
+import draftService from "@services/tools/draftService.js";
+
 import { getConverastionById, setLastMessageField, updateLastMessageField } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { getIsMobileView } from "@store/values/IsMobileView";
+import { addMessage, upsertMessage, selectAllMessages } from "@store/values/Messages";
+import { getNetworkState } from "@store/values/NetworkState";
 
+import { KEY_CODES, ALLOWED_FILE_FORMATS } from "@utils/constants.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { processFile, extractFilesFromClipboard } from "@utils/MediaUtils.js";
 import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
-import { showCustomAlert } from "@utils/GeneralUtils.js";
-import { KEY_CODES, ALLOWED_FILE_FORMATS } from "@utils/constants.js";
 
 export default function AttachHub() {
   const dispatch = useDispatch();

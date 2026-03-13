@@ -1,9 +1,11 @@
 import { clsx } from "clsx";
 
-import { MediaAttachment } from "../../elements/MediaAttachment";
-import { WrapperRoot } from "../../elements/WrapperRoot";
-import { chunkMedia, normalizeRatio } from "../../../utils/mediaUtils";
-import type { MediaAttachmentsProps } from "./MediaAttachments.types";
+import type { MediaAttachmentsProps } from "@composites/MediaAttachments/MediaAttachments.types";
+
+import { MediaAttachment } from "@elements/MediaAttachment";
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { chunkMedia, normalizeRatio } from "@utils/mediaUtils";
 
 export const MediaAttachments = ({
   attachments,

@@ -1,4 +1,4 @@
-import { InteractiveDateProps } from "./InteractiveDate.types";
+import { InteractiveDateProps } from "@elements/InteractiveDate/InteractiveDate.types";
 
 const defaultOptions: Intl.DateTimeFormatOptions = {
   weekday: "short",

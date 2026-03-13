@@ -1,12 +1,15 @@
 import { memo, useCallback, useRef } from "react";
+
 import { clsx } from "clsx";
-import { getAdapters } from "../../../adapters";
 import { Camera, Image } from "lucide-react";
 
-import { DynamicAvatar } from "../DynamicAvatar";
-import { WrapperRoot } from "../WrapperRoot";
-import { ALLOWED_AVATAR_FORMATS } from "../../../utils/constants";
-import type { ConversationInfoAvatarProps } from "./ConversationInfoAvatar.types";
+import { getAdapters } from "@adapters";
+
+import type { ConversationInfoAvatarProps } from "@elements/ConversationInfoAvatar/ConversationInfoAvatar.types";
+import { DynamicAvatar } from "@elements/DynamicAvatar";
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { ALLOWED_AVATAR_FORMATS } from "@utils/constants";
 
 export const ConversationInfoAvatar = memo(function ConversationInfoAvatar({
   conversation,

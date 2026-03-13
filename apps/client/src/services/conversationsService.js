@@ -1,12 +1,11 @@
 import api from "@api/api";
 
-import eventEmitter from "@lib/eventEmitter";
 import DownloadManager from "@lib/downloadManager";
+import eventEmitter from "@lib/eventEmitter";
 
-import draftService from "./tools/draftService.js";
+import { notificationQueueByCid } from "@services/tools/notifications";
 
 import store from "@store/store";
-import { addUsers, upsertUsers } from "@store/values/Participants";
 import {
   insertChat,
   insertChats,
@@ -15,18 +14,17 @@ import {
   upsertChats,
   upsertParticipants,
 } from "@store/values/Conversations";
-
+import { addUsers, upsertUsers } from "@store/values/Participants";
 import { clearSelectedConversation, setSelectedConversation } from "@store/values/SelectedConversation";
 
 import { getOpponentId } from "@utils/ConversationUtils.js";
-import { navigateTo } from "@utils/NavigationUtils.js";
-import { processFile, isHeic } from "@utils/MediaUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { history } from "@utils/history.js";
-
-import { notificationQueueByCid } from "@services/tools/notifications";
-
+import { processFile, isHeic } from "@utils/MediaUtils.js";
+import { navigateTo } from "@utils/NavigationUtils.js";
 import { validateFieldLength } from "@utils/ValidationGeneral.js";
+
+import draftService from "./tools/draftService.js";
 
 class ConversationsService {
   userIsLoggedIn = false;

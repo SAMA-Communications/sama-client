@@ -1,5 +1,5 @@
-import imageCompression from "browser-image-compression";
 import { encode } from "blurhash";
+import imageCompression from "browser-image-compression";
 
 import { ALLOWED_FILE_FORMATS, DEFAULT_BLUR_HASH } from "@utils/constants.js";
 

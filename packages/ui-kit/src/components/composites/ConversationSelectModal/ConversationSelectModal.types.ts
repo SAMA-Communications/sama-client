@@ -6,3 +6,4 @@ export interface ConversationSelectModalProps {
   /** Modal content (e.g. SearchInput + SearchBlock from client) */
   children: ReactNode;
 }
+

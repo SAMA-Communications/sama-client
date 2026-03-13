@@ -1,4 +1,4 @@
-import type { WrapperRootProps } from "../../elements/WrapperRoot";
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface ConversationInputProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   chatMessagesBlockRef: React.RefObject<HTMLDivElement>;
@@ -9,3 +9,4 @@ export interface ConversationInputProps extends Omit<WrapperRootProps<"div">, "a
   /** When true, draft is not restored (attach screen). Passed to MessageInput. */
   isLocationIncludeAttach?: boolean;
 }
+

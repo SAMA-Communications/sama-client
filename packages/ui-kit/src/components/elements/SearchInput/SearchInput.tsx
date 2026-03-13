@@ -1,9 +1,10 @@
 import { memo, useCallback, useRef, useState } from "react";
+
 import { clsx } from "clsx";
 import { Search, X } from "lucide-react";
 
-import { WrapperRoot } from "../WrapperRoot";
-import type { SearchInputProps } from "./SearchInput.types";
+import type { SearchInputProps } from "@elements/SearchInput/SearchInput.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 const baseClassName =
   "ui:relative ui:flex ui:h-9 ui:cursor-text ui:flex-row ui:items-center ui:gap-1.5 ui:rounded-xl ui:bg-white ui:px-2.5 ui:shadow-btn";

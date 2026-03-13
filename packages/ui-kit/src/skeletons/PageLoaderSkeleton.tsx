@@ -1,6 +1,6 @@
 import * as m from "motion/react-m";
 
-import { OvalLoader } from "../components/elements/OvalLoader";
+import { OvalLoader } from "@elements/OvalLoader";
 
 export interface PageLoaderSkeletonProps {
   /** Additional class for the wrapper */

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { RefreshCcw, File } from "lucide-react";
 
-import { MessageLinkPreviewProps } from "./MessageLinkPreview.types";
+import { MessageLinkPreviewProps } from "@elements/MessageLinkPreview/MessageLinkPreview.types";
 
 export const MessageLinkPreview = ({
   urlData,

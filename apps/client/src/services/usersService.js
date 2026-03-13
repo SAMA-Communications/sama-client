@@ -1,14 +1,14 @@
-import DownloadManager from "@lib/downloadManager";
-
 import api from "@api/api";
+
+import DownloadManager from "@lib/downloadManager";
 
 import store from "@store/store";
 import { upsertUser } from "@store/values/Participants";
 
-import { processFile, isHeic } from "@utils/MediaUtils.js";
-import { validateEmail, validateLogin, validatePassword, validatePhone } from "@utils/ValidationUser.js";
-import { validateIsEmptyObject, validateFieldLength } from "@utils/ValidationGeneral.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { processFile, isHeic } from "@utils/MediaUtils.js";
+import { validateIsEmptyObject, validateFieldLength } from "@utils/ValidationGeneral.js";
+import { validateEmail, validateLogin, validatePassword, validatePhone } from "@utils/ValidationUser.js";
 
 class UsersService {
   async login(data) {

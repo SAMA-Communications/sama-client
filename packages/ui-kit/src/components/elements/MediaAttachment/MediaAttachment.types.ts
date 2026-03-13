@@ -1,4 +1,4 @@
-import type { WrapperRootProps } from "../WrapperRoot";
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface MediaAttachmentData {
   file_id?: string;

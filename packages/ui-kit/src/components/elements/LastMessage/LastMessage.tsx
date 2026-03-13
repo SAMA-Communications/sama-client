@@ -1,13 +1,12 @@
 import { useMemo } from "react";
 
-import { getAdapters } from "../../../adapters";
-
-import { MessageStatus } from "../MessageStatus";
-import { LastMessageMedia } from "./LastMessageMedia";
-
 import { Reply } from "lucide-react";
 
-import { LastMessageProps } from "./LastMessage.types";
+import { getAdapters } from "@adapters";
+
+import { LastMessageProps } from "@elements/LastMessage/LastMessage.types";
+import { LastMessageMedia } from "@elements/LastMessage/LastMessageMedia";
+import { MessageStatus } from "@elements/MessageStatus";
 
 export const LastMessage = ({
   message,

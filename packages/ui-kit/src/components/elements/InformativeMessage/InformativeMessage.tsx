@@ -1,8 +1,9 @@
 import { memo, useCallback } from "react";
+
 import { clsx } from "clsx";
 
-import { WrapperRoot } from "../WrapperRoot";
-import type { InformativeMessageProps } from "./InformativeMessage.types";
+import type { InformativeMessageProps } from "@elements/InformativeMessage/InformativeMessage.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 const baseClassName =
   "ui:cursor-pointer ui:self-center ui:rounded-xl ui:bg-hover-light ui:px-3 ui:py-2 ui:text-gray-500";

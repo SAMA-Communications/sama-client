@@ -1,28 +1,30 @@
-import * as m from "motion/react-m";
-import { useAnimate } from "motion/react";
 import { useEffect, useState } from "react";
+
 import { useSelector } from "react-redux";
+
+import { useAnimate } from "motion/react";
+import * as m from "motion/react-m";
 
 import AnimatedBGbig from "@components/auth/animations/AnimatedBGbig.js";
 import AnimatedBGmini from "@components/auth/animations/AnimatedBGmini.js";
-
-import SAMALogo from "@components/auth/elements/SAMALogo";
-import PasswordInput from "@components/auth/elements/PasswordInput";
-import UserNameInput from "@components/auth/elements/UserNameInput";
-import EmailInput from "@components/auth/elements/EmailInput";
 import ConfirmButton from "@components/auth/elements/ConfirmButton";
+import EmailInput from "@components/auth/elements/EmailInput";
+import PasswordInput from "@components/auth/elements/PasswordInput";
+import SAMALogo from "@components/auth/elements/SAMALogo";
+import UserNameInput from "@components/auth/elements/UserNameInput";
+
+import HeaderWaves from "@icons/_helpers/HeaderWaves.svg?react";
+import Discord from "@icons/socials/DiscordIcon.svg?react";
+import GitHub from "@icons/socials/GitHubIcon.png";
+import Medium from "@icons/socials/MediumIcon.svg?react";
 
 import { ResetPasswordModal } from "@sama-communications.ui-kit";
 
 import autoLoginService from "@services/autoLoginService.js";
 
 import { getIsMobileView } from "@store/values/IsMobileView.js";
-import { showCustomAlert } from "@utils/GeneralUtils.js";
 
-import HeaderWaves from "@icons/_helpers/HeaderWaves.svg?react";
-import Discord from "@icons/socials/DiscordIcon.svg?react";
-import Medium from "@icons/socials/MediumIcon.svg?react";
-import GitHub from "@icons/socials/GitHubIcon.png";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 
 export default function AuthorizationHub({ showDemoMessage = false }) {
   const [content, setContent] = useState({});

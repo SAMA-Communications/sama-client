@@ -1,26 +1,27 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+
 import { useLocation } from "react-router";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import api from "@api/api";
 
-import messagesService from "@services/messagesService.js";
-
-import { InformativeMessage } from "@sama-communications.ui-kit";
 import ChatMessage from "@components/hub/elements/ChatMessage";
 
-import { selectActiveConversationMessagesEntities } from "@store/values/Messages";
-import { addUsers, selectParticipantsEntities } from "@store/values/Participants";
+import { InformativeMessage } from "@sama-communications.ui-kit";
+import { CustomVerticalScrollbar } from "@sama-communications.ui-kit";
+import { InteractiveDate } from "@sama-communications.ui-kit";
+
+import messagesService from "@services/messagesService.js";
+
 import { getConverastionById } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { getIsMobileView } from "@store/values/IsMobileView.js";
+import { selectActiveConversationMessagesEntities } from "@store/values/Messages";
+import { addUsers, selectParticipantsEntities } from "@store/values/Participants";
 
 import { upsertMidsInPath } from "@utils/NavigationUtils.js";
 import { addSuffix } from "@utils/NavigationUtils.js";
-
-import { CustomVerticalScrollbar } from "@sama-communications.ui-kit";
-
-import { InteractiveDate } from "@sama-communications.ui-kit";
 
 export default function MessagesList({ scrollRef: scrollableContainer }) {
   const dispatch = useDispatch();

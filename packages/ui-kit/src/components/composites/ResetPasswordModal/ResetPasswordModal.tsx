@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
+
 import { clsx } from "clsx";
 
-import { WrapperRoot } from "../../elements/WrapperRoot";
-import { ResetPasswordModalProps, ResetPasswordFormData } from "./ResetPasswordModal.types";
+import { ResetPasswordModalProps, ResetPasswordFormData } from "@composites/ResetPasswordModal/ResetPasswordModal.types";
+
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 function formatTimer(seconds: number): string {
   const m = Math.floor(seconds / 60);

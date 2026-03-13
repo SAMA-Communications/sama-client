@@ -1,8 +1,9 @@
 import { memo } from "react";
+
 import { clsx } from "clsx";
 
-import { WrapperRoot } from "../WrapperRoot";
-import type { SocketConnectingLineProps } from "./SocketConnectingLine.types";
+import type { SocketConnectingLineProps } from "@elements/SocketConnectingLine/SocketConnectingLine.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 const baseClassName =
   "ui:absolute ui:top-0 ui:z-100 ui:flex ui:h-7 ui:w-full ui:items-center ui:justify-center ui:bg-accent-500 ui:shadow-md";

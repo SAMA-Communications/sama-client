@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import type { WrapperRootProps } from "../WrapperRoot";
+
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface SearchInputProps extends Omit<WrapperRootProps<"div">, "as" | "children" | "onChange"> {
   /** Placeholder text. */
@@ -19,3 +20,4 @@ export interface SearchInputProps extends Omit<WrapperRootProps<"div">, "as" | "
   /** Optional ref for the input element. */
   inputRef?: React.RefObject<HTMLInputElement | null>;
 }
+

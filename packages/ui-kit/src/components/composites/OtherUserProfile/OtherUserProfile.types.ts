@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import type { WrapperRootProps } from "../../elements/WrapperRoot";
+
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface OtherUserProfileUser {
   _id?: string;

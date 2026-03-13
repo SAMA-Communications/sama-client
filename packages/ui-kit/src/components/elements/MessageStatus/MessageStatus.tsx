@@ -1,8 +1,9 @@
 import { memo } from "react";
+
 import { Check, CheckCheck, Clock } from "lucide-react";
 
-import { WrapperRoot } from "../WrapperRoot";
-import type { MessageStatusProps } from "./MessageStatus.types";
+import type { MessageStatusProps } from "@elements/MessageStatus/MessageStatus.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 const ICONS = {
   sent: Check,

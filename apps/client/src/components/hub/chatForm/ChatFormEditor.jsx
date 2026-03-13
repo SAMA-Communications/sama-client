@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useMonaco } from "@monaco-editor/react";
-
-import { ProgrammableEditorDocsBanner } from "@sama-communications.ui-kit";
 
 import ChatEditorCode from "@components/hub/editor/ChatEditorCode";
 import ChatEditorHelper from "@components/hub/editor/ChatEditorHelper";
 import ChatEditorLogs from "@components/hub/editor/ChatEditorLogs";
 import ChatEditorValidation from "@components/hub/editor/ChatEditorValidation";
+
+import { useMonaco } from "@monaco-editor/react";
+
+import { ProgrammableEditorDocsBanner } from "@sama-communications.ui-kit";
 
 const DOCS_HREF = "https://oleksandr-ch.notion.site/Programmable-Chat-feature-1ffe3b41e4ae804da619f63b706e7263";
 

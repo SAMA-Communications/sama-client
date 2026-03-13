@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 
-import { ConversationSelectModalProps } from "./ConversationSelectModal.types";
+import { ConversationSelectModalProps } from "@composites/ConversationSelectModal/ConversationSelectModal.types";
 
 export const ConversationSelectModal = ({ title, onClose, children }: ConversationSelectModalProps) => {
   return (
@@ -18,3 +18,4 @@ export const ConversationSelectModal = ({ title, onClose, children }: Conversati
     </div>
   );
 };
+

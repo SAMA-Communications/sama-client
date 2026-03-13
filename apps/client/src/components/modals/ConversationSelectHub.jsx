@@ -1,11 +1,13 @@
 import { useCallback, useState } from "react";
+
 import { useLocation } from "react-router";
+
 import { useDispatch, useSelector } from "react-redux";
 
-import { ConversationSelectModal } from "@sama-communications.ui-kit";
-
-import { SearchInput } from "@sama-communications.ui-kit";
 import SearchBlock from "@components/search/SearchBlock";
+
+import { ConversationSelectModal } from "@sama-communications.ui-kit";
+import { SearchInput } from "@sama-communications.ui-kit";
 
 import { selectConversationsEntities, updateWithDrafts } from "@store/values/Conversations.js";
 

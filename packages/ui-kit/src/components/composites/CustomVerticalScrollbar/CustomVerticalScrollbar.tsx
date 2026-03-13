@@ -1,16 +1,18 @@
 import { useRef, useState, useCallback, useEffect } from "react";
+
 import { clsx } from "clsx";
 import { ChevronDown } from "lucide-react";
+
+import type { CustomVerticalScrollbarProps } from "@composites/CustomVerticalScrollbar/CustomVerticalScrollbar.types";
+
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 import {
   SCROLL_STOP_DEBOUNCE_MS,
   SCROLLBAR_DEFAULT_AUTO_HIDE_DELAY,
   SCROLLBAR_DEFAULT_HOVER_SHOW_DELAY,
   SCROLLBAR_DEFAULT_MIN_THUMB_HEIGHT,
-} from "../../../utils/constants";
-
-import { WrapperRoot } from "../../elements/WrapperRoot";
-import type { CustomVerticalScrollbarProps } from "./CustomVerticalScrollbar.types";
+} from "@utils/constants";
 
 export const CustomVerticalScrollbar = ({
   containerRef: containerRefProp,

@@ -1,13 +1,14 @@
-import InfiniteScroll from "react-infinite-scroll-component";
 import { useCallback, useRef } from "react";
+
 import { clsx } from "clsx";
+import InfiniteScroll from "react-infinite-scroll-component";
 
-import { getAdapters } from "../../../adapters";
+import { getAdapters } from "@adapters";
 
-import { ConversationItem } from "../../elements/ConversationItem";
-import { WrapperRoot } from "../../elements/WrapperRoot";
+import type { ConversationItemListProps } from "@composites/ConversationItemList/ConversationItemList.types";
 
-import type { ConversationItemListProps } from "./ConversationItemList.types";
+import { ConversationItem } from "@elements/ConversationItem";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const ConversationItemList = ({
   conversations,

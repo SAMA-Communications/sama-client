@@ -1,5 +1,5 @@
-import { SamaAdapters } from "./types";
-import { defaultAdapters } from "./defaults";
+import { defaultAdapters } from "@adapters/defaults";
+import { SamaAdapters } from "@adapters/types";
 
 let currentAdapters: SamaAdapters = { ...defaultAdapters };
 

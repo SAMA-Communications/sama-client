@@ -1,10 +1,9 @@
+import { WandSparkles, X } from "lucide-react";
 import * as m from "motion/react-m";
 
-import { OvalLoader } from "../../elements/OvalLoader";
+import { SummaryContainerProps } from "@composites/SummaryContainer/SummaryContainer.types";
 
-import { WandSparkles, X } from "lucide-react";
-
-import { SummaryContainerProps } from "./SummaryContainer.types";
+import { OvalLoader } from "@elements/OvalLoader";
 
 export const SummaryContainer = ({ summaryContent, onClose, getFilterLabel }: SummaryContainerProps) => {
   if (!summaryContent) return null;

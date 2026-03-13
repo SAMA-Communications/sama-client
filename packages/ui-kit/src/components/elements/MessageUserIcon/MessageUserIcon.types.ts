@@ -1,5 +1,6 @@
-import type { WrapperRootProps } from "../WrapperRoot";
 import type { User } from "types/samaWssModels";
+
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface MessageUserIconProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   user: User | null | undefined;
@@ -12,3 +13,4 @@ export interface MessageUserIconProps extends Omit<WrapperRootProps<"div">, "as"
   /** Optional custom fallback for other user when user is null/empty. */
   fallbackOtherUser?: React.ReactNode;
 }
+

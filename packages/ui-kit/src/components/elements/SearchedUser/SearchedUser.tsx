@@ -1,11 +1,13 @@
 import { memo, useCallback } from "react";
+
 import { clsx } from "clsx";
-import { getAdapters } from "../../../adapters";
 import { Check } from "lucide-react";
 
-import { DynamicAvatar } from "../DynamicAvatar";
-import { WrapperRoot } from "../WrapperRoot";
-import type { SearchedUserProps } from "./SearchedUser.types";
+import { getAdapters } from "@adapters";
+
+import { DynamicAvatar } from "@elements/DynamicAvatar";
+import type { SearchedUserProps } from "@elements/SearchedUser/SearchedUser.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 const baseClassName =
   "ui:relative ui:flex ui:w-full ui:cursor-pointer ui:items-center ui:gap-3.75 ui:rounded-2xl ui:px-1.5 ui:py-2.5 ui:duration-100 ui:hover:bg-accent-500/20 ui:focus:outline-none";

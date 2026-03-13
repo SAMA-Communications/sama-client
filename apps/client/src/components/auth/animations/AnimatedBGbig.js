@@ -1,6 +1,7 @@
-import * as m from "motion/react-m";
-import { useAnimate } from "motion/react";
 import { useEffect } from "react";
+
+import { useAnimate } from "motion/react";
+import * as m from "motion/react-m";
 
 export default function AnimatedBGbig({ customClassName = "", isTriggered }) {
   const [scope, animate] = useAnimate();

@@ -1,6 +1,5 @@
-import { Blurhash } from "react-blurhash";
 import { ImageIcon, VideoIcon } from "lucide-react";
-
+import { Blurhash } from "react-blurhash";
 import type { MessageAttachment } from "types/samaWssModels";
 
 export interface LastMessageMediaProps {

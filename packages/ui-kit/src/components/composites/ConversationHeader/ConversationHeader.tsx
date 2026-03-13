@@ -1,18 +1,18 @@
 import { useMemo } from "react";
+
 import { clsx } from "clsx";
-
-import { getAdapters } from "../../../adapters";
-
-import { useKeyDown } from "../../../hooks/useKeyDown";
-
-import { TypingLine } from "../../elements/TypingLine";
-import { WrapperRoot } from "../../elements/WrapperRoot";
-
-import { CHAT_CONTENT_TABS, KEY_CODES } from "../../../utils/constants";
-
 import { ChevronLeft, EllipsisVertical, Code, Trash, Forward } from "lucide-react";
 
-import type { ConversationHeaderProps } from "./ConversationHeader.types";
+import { getAdapters } from "@adapters";
+
+import type { ConversationHeaderProps } from "@composites/ConversationHeader/ConversationHeader.types";
+
+import { TypingLine } from "@elements/TypingLine";
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { useKeyDown } from "@src/hooks/useKeyDown";
+
+import { CHAT_CONTENT_TABS, KEY_CODES } from "@utils/constants";
 
 export const ConversationHeader = ({
   conversation,

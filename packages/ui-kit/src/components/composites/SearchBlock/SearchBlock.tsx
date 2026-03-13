@@ -1,16 +1,17 @@
 import { clsx } from "clsx";
-import { getAdapters } from "../../../adapters";
-import { CustomVerticalScrollbar } from "../CustomVerticalScrollbar";
-import { SearchConversationList } from "../SearchConversationList";
-import { SearchedUser } from "../../elements/SearchedUser";
-import { WrapperRoot } from "../../elements/WrapperRoot";
 import { Users } from "lucide-react";
-
-import { EMPTY_SEARCH_BLOCK_DATA } from "../../../utils/constants";
-
 import type { User } from "types/samaWssModels";
 
-import type { SearchBlockProps } from "./SearchBlock.types";
+import { getAdapters } from "@adapters";
+
+import { CustomVerticalScrollbar } from "@composites/CustomVerticalScrollbar";
+import type { SearchBlockProps } from "@composites/SearchBlock/SearchBlock.types";
+import { SearchConversationList } from "@composites/SearchConversationList";
+
+import { SearchedUser } from "@elements/SearchedUser";
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { EMPTY_SEARCH_BLOCK_DATA } from "@utils/constants";
 
 export const SearchBlock = (props: SearchBlockProps) => {
   const {

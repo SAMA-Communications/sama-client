@@ -1,18 +1,20 @@
 import React from "react";
+
 import ReactDOM from "react-dom/client";
-import { Provider } from "react-redux";
+
 import { BrowserRouter } from "react-router";
 
-import App from "@src/App";
+import { Provider } from "react-redux";
 
 import ConnectingLine from "@components/connection/ConnectingLine";
 
-import store from "@store/store";
-
 import "@sama-communications.ui-kit.css";
 
-import "@styles/index.css";
+import App from "@src/App";
 
+import store from "@store/store";
+
+import "@styles/index.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
@@ -22,3 +24,4 @@ root.render(
     </BrowserRouter>
   </Provider>,
 );
+

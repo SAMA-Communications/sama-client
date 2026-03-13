@@ -1,7 +1,7 @@
-import { getAdapters } from "../../../adapters";
+import { getAdapters } from "@adapters";
 
-import { InfoBox } from "../../../components/elements/InfoBox";
-import { ConversationInfoAvatar } from "../../../components/elements/ConversationInfoAvatar";
+import { ConversationInfoAvatar } from "@elements/ConversationInfoAvatar";
+import { InfoBox } from "@elements/InfoBox";
 
 interface ConversationInputsGroupProps {
   onChageValue: (name: string, value: string) => void;

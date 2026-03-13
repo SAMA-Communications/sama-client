@@ -1,10 +1,9 @@
 import { useMemo, useCallback } from "react";
 
-import { Modal, ChatNameInput, UserSelectorBlock, useKeyDown, KEY_CODES } from "@sama-communications.ui-kit";
-
-import { SearchBlock, SearchInput } from "@sama-communications.ui-kit";
-
 import { useUsersSelectModal } from "@hooks/components/useUsersSelectModal";
+
+import { Modal, ChatNameInput, UserSelectorBlock, useKeyDown, KEY_CODES } from "@sama-communications.ui-kit";
+import { SearchBlock, SearchInput } from "@sama-communications.ui-kit";
 
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 

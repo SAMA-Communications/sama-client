@@ -1,7 +1,8 @@
 import type { MouseEventHandler } from "react";
 
-import type { WrapperRootProps } from "../../elements/WrapperRoot";
 import type { Conversation, User } from "types/samaWssModels";
+
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface ConversationHeaderProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   conversation: Conversation;
@@ -16,3 +17,4 @@ export interface ConversationHeaderProps extends Omit<WrapperRootProps<"div">, "
   /** Called when user taps header to open chat/participant info (conversation, participant). */
   onOpenChatOrParticipantInfo?: (conversation: Conversation, participant: User | null) => void;
 }
+

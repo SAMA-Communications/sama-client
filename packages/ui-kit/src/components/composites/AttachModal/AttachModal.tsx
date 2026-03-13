@@ -1,11 +1,11 @@
 import { clsx } from "clsx";
 
-import { MediaAttachments } from "../MediaAttachments";
-import { TextAreaInput } from "../../elements/TextAreaInput";
-import { OvalLoader } from "../../elements/OvalLoader";
-import { WrapperRoot } from "../../elements/WrapperRoot";
+import type { AttachModalProps } from "@composites/AttachModal/AttachModal.types";
+import { MediaAttachments } from "@composites/MediaAttachments";
 
-import type { AttachModalProps } from "./AttachModal.types";
+import { OvalLoader } from "@elements/OvalLoader";
+import { TextAreaInput } from "@elements/TextAreaInput";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const AttachModal = ({
   files,

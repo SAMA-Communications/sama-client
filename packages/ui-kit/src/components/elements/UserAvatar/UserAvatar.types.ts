@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import type { WrapperRootProps } from "../WrapperRoot";
+
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface UserAvatarProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   avatarUrl?: string;
@@ -11,3 +12,4 @@ export interface UserAvatarProps extends Omit<WrapperRootProps<"div">, "as" | "c
   width?: number;
   alt?: string;
 }
+

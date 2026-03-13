@@ -1,10 +1,11 @@
 import { useMemo } from "react";
-import { useSelector } from "react-redux";
 
-import { ContextMenu } from "@sama-communications.ui-kit";
+import { useSelector } from "react-redux";
 
 import ConversationActions from "@components/context/elements/ConversationActions";
 import MessageActions from "@components/context/elements/MessageActions";
+
+import { ContextMenu } from "@sama-communications.ui-kit";
 
 import { selectContextListCategory, selectContextList, selectCoords } from "@store/values/ContextMenu";
 

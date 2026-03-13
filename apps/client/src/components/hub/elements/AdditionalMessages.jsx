@@ -5,6 +5,7 @@ export { MediaAttachment } from "@sama-communications.ui-kit";
 import { AdditionalMessages as UIAdditionalMessages } from "@sama-communications.ui-kit";
 
 import { selectParticipantsEntities } from "@store/values/Participants.js";
+
 import { getUserFullName } from "@utils/UserUtils.js";
 
 export default function AdditionalMessages({

@@ -1,10 +1,11 @@
 import { memo, useMemo } from "react";
+
 import { clsx } from "clsx";
 import { Blurhash } from "react-blurhash";
 
-import { OvalLoader } from "../OvalLoader";
-import { WrapperRoot } from "../WrapperRoot";
-import type { UserAvatarProps } from "./UserAvatar.types";
+import { OvalLoader } from "@elements/OvalLoader";
+import type { UserAvatarProps } from "@elements/UserAvatar/UserAvatar.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const UserAvatar = memo(function UserAvatar({
   avatarUrl,

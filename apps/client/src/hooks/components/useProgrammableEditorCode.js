@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+
 import { useSelector } from "react-redux";
 
 import conversationHandlerService from "@services/conversationHandlerService.js";
@@ -6,9 +7,9 @@ import conversationHandlerService from "@services/conversationHandlerService.js"
 import { getConverastionById } from "@store/values/Conversations.js";
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 
+import { DEFAULT_EDITOR_CODE } from "@utils/constants.js";
 import { getFormatedTime } from "@utils/FormatedUtils.js";
 import { getUserFullName } from "@utils/UserUtils.js";
-import { DEFAULT_EDITOR_CODE } from "@utils/constants.js";
 
 export function useProgrammableEditorCode(selectedCid) {
   const participants = useSelector(selectParticipantsEntities);

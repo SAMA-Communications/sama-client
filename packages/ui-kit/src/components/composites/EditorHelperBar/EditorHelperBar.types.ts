@@ -1,4 +1,4 @@
-import type { WrapperRootProps } from "../../elements/WrapperRoot";
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface EditorHelperAction {
   label: string;

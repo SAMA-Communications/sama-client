@@ -1,11 +1,10 @@
 import { clsx } from "clsx";
 
-import { getAdapters } from "../../../adapters";
+import { getAdapters } from "@adapters";
 
-import { DynamicAvatar } from "../DynamicAvatar";
-import { WrapperRoot } from "../WrapperRoot";
-
-import { ParticipantInChatProps } from "./ParticipantInChat.types";
+import { DynamicAvatar } from "@elements/DynamicAvatar";
+import { ParticipantInChatProps } from "@elements/ParticipantInChat/ParticipantInChat.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 const defaultClassName =
   "ui:relative ui:flex ui:w-full ui:cursor-pointer ui:items-center ui:gap-3.75 ui:rounded-2xl ui:px-1.5 ui:py-2.5 ui:duration-100 ui:hover:bg-accent-500/20 ui:focus:outline-none";

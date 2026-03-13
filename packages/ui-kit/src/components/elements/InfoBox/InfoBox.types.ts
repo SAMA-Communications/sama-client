@@ -2,7 +2,7 @@ import { HTMLAttributes } from "react";
 
 export type IconType = "phone" | "email" | "login";
 
-import type { WrapperRootProps } from "../WrapperRoot";
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface InfoBoxProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   title: string;

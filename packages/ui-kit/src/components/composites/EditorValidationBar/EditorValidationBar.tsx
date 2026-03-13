@@ -1,9 +1,10 @@
 import { clsx } from "clsx";
-import { Tooltip } from "react-tooltip";
 import { SearchCode, Save } from "lucide-react";
+import { Tooltip } from "react-tooltip";
 
-import { WrapperRoot } from "../../elements/WrapperRoot";
-import type { EditorValidationBarProps } from "./EditorValidationBar.types";
+import type { EditorValidationBarProps } from "@composites/EditorValidationBar/EditorValidationBar.types";
+
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const EditorValidationBar = ({
   statusNode,
@@ -50,3 +51,4 @@ export const EditorValidationBar = ({
     </WrapperRoot>
   );
 };
+

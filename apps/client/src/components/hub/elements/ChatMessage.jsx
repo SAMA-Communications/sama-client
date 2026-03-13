@@ -1,23 +1,23 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
+
 import { useLocation } from "react-router";
+
 import { useDispatch, useSelector } from "react-redux";
 
-import { urlify, hardUrlify } from "@services/tools/urlMetaService";
-import { messageObserver as observer } from "@services/tools/visibilityObserver.js";
-import draftService from "@services/tools/draftService.js";
-
-import { MediaAttachments } from "@sama-communications.ui-kit";
 import MessageLinkPreview from "@components/hub/elements/MessageLinkPreview";
 
-import { ChatMessage as UIChatMessage } from "@sama-communications.ui-kit";
+import { ChatMessage as UIChatMessage, MediaAttachments } from "@sama-communications.ui-kit";
 
-import { addExternalProps } from "@store/values/ContextMenu.js";
-import { setAllParams } from "@store/values/ContextMenu.js";
+import draftService from "@services/tools/draftService.js";
+import { hardUrlify, urlify } from "@services/tools/urlMetaService";
+import { messageObserver as observer } from "@services/tools/visibilityObserver.js";
+
+import { addExternalProps, setAllParams } from "@store/values/ContextMenu.js";
 import { selectParticipantsEntities } from "@store/values/Participants";
 
+import { ALLOWED_FORMATS_TO_COPY, SWIPE_THRESHOLD } from "@utils/constants.js";
 import { addSuffix } from "@utils/NavigationUtils.js";
 import { getUserFullName } from "@utils/UserUtils.js";
-import { SWIPE_THRESHOLD, ALLOWED_FORMATS_TO_COPY } from "@utils/constants.js";
 
 export default function ChatMessage({
   sender,

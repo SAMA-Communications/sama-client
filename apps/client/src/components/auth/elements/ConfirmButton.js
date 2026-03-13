@@ -1,23 +1,26 @@
-import * as m from "motion/react-m";
-import { AnimatePresence } from "motion/react";
 import { useCallback, useState, useTransition } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
 
-import subscribeForNotifications from "@services/tools/notifications";
-import usersService from "@services/usersService";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
+
 import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import { DotsLoader } from "@sama-communications.ui-kit";
 
+import subscribeForNotifications from "@services/tools/notifications";
+import usersService from "@services/usersService";
+
 import { setCurrentUserId } from "@store/values/CurrentUserId";
+import { getIsMobileView } from "@store/values/IsMobileView.js";
+import { upsertUser } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
-import { upsertUser } from "@store/values/Participants";
-import { getIsMobileView } from "@store/values/IsMobileView.js";
 
-import { navigateTo } from "@utils/NavigationUtils.js";
-import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/constants.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { navigateTo } from "@utils/NavigationUtils.js";
 
 export default function ConfirmButton({ page, content, onClickEvent, isResetModalOpen }) {
   const dispatch = useDispatch();

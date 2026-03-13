@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import type { WrapperRootProps } from "../WrapperRoot";
+
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface ModalProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   children: ReactNode;
@@ -10,3 +11,4 @@ export interface ModalProps extends Omit<WrapperRootProps<"div">, "as" | "childr
   /** If true, panel has min height for forms (e.g. 80svh). */
   tall?: boolean;
 }
+

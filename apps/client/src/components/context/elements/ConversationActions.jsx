@@ -1,18 +1,20 @@
-import { useLocation } from "react-router";
 import { useMemo } from "react";
+
+import { useLocation } from "react-router";
+
 import { useSelector } from "react-redux";
 
-import conversationService from "@services/conversationsService";
+import { Info, MessageCircleOff, MessageSquareMore, SquarePen, Trash, UserMinus, UserPlus } from "lucide-react";
 
 import { useConfirmWindow, ContextMenuItem } from "@sama-communications.ui-kit";
 
+import conversationService from "@services/conversationsService";
+
 import { selectContextExternalProps } from "@store/values/ContextMenu.js";
-import { getIsTabletView } from "@store/values/IsTabletView.js";
 import { getConverastionById, selectAllConversations } from "@store/values/Conversations.js";
+import { getIsTabletView } from "@store/values/IsTabletView.js";
 
 import { addPrefix, addSuffix, navigateTo } from "@utils/NavigationUtils.js";
-
-import { Info, MessageCircleOff, MessageSquareMore, SquarePen, Trash, UserMinus, UserPlus } from "lucide-react";
 
 export default function ConversationActions({ listOfIds }) {
   const confirm = useConfirmWindow();

@@ -1,20 +1,22 @@
 import { useMemo } from "react";
-import { useSelector, useDispatch } from "react-redux";
+
 import { useLocation } from "react-router";
 
-import draftService from "@services/tools/draftService.js";
-import messagesService from "@services/messagesService.js";
+import { useSelector, useDispatch } from "react-redux";
+
+import { ArrowDownToLine, CircleCheck, Copy, Forward, Reply, Trash, SquarePen, MessageCircleX } from "lucide-react";
 
 import { useConfirmWindow, ContextMenuItem } from "@sama-communications.ui-kit";
 
+import messagesService from "@services/messagesService.js";
+import draftService from "@services/tools/draftService.js";
+
 import { addExternalProps } from "@store/values/ContextMenu.js";
-import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
 import { selectContextExternalProps } from "@store/values/ContextMenu.js";
+import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
 
-import { addSuffix, upsertMidsInPath } from "@utils/NavigationUtils.js";
 import { writeToCanvas } from "@utils/MediaUtils.js";
-
-import { ArrowDownToLine, CircleCheck, Copy, Forward, Reply, Trash, SquarePen, MessageCircleX } from "lucide-react";
+import { addSuffix, upsertMidsInPath } from "@utils/NavigationUtils.js";
 
 export default function MessageActions({ listOfIds }) {
   const dispatch = useDispatch();

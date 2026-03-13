@@ -1,10 +1,10 @@
+import { AlertCircle } from "lucide-react";
 import { Blurhash } from "react-blurhash";
 import { Oval } from "react-loader-spinner";
 
-import { AlertCircle } from "lucide-react";
+import { MediaBlurHashProps } from "@elements/MediaBlurHash/MediaBlurHash.types";
 
-import { DEFAULT_BLUR_HASH } from "../../../utils/constants";
-import { MediaBlurHashProps } from "./MediaBlurHash.types";
+import { DEFAULT_BLUR_HASH } from "@utils/constants";
 
 export { DEFAULT_BLUR_HASH } from "../../../utils/constants";
 

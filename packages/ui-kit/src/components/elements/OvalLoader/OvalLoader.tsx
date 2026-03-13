@@ -1,9 +1,10 @@
 import { memo } from "react";
+
 import { clsx } from "clsx";
 import { Oval } from "react-loader-spinner";
 
-import { WrapperRoot } from "../WrapperRoot";
-import type { OvalLoaderProps } from "./OvalLoader.types";
+import type { OvalLoaderProps } from "@elements/OvalLoader/OvalLoader.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const OvalLoader = memo(function OvalLoader({
   height = 32,
@@ -28,3 +29,4 @@ export const OvalLoader = memo(function OvalLoader({
     </WrapperRoot>
   );
 });
+

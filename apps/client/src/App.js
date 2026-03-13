@@ -1,35 +1,38 @@
-import * as m from "motion/react-m";
-import { AnimatePresence, LazyMotion, domAnimation } from "motion/react";
-import { Route, Routes, useLocation, useNavigate } from "react-router";
 import { lazy, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+
+import { Route, Routes, useLocation, useNavigate } from "react-router";
+
 import { useDispatch, useSelector } from "react-redux";
 
-import "@lib/samaAdapter";
-
-import autoLoginService from "@services/autoLoginService";
-import activityService from "@services/activityService";
-import conversationService from "@services/conversationsService";
-import messagesService from "@services/messagesService";
-
-import BetterSuspense from "@hooks/tools/BetterSuspense.js";
-// import ConfirmWindowProvider from "@hooks/tools/useConfirmWindow.js";
-import { ConfirmWindowProvider } from "@sama-communications.ui-kit";
+import { AnimatePresence, LazyMotion, domAnimation } from "motion/react";
+import * as m from "motion/react-m";
 
 import ContextMenuHub from "@components/context/ContextMenuHub";
 
-import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
-import { getIsTabletView, setIsTabletView } from "@store/values/IsTabletView";
-import { selectIsClicked, setClicked } from "@store/values/ContextMenu";
-import { setIsTabInFocus } from "@store/values/IsTabInFocus";
-import { setSelectedConversation } from "@store/values/SelectedConversation";
-import { updateNetworkState } from "@store/values/NetworkState";
+import BetterSuspense from "@hooks/tools/BetterSuspense.js";
 
-import { removeAndNavigateSubLink, navigateTo } from "@utils/NavigationUtils.js";
-import { history } from "@utils/history.js";
-import { MOBILE_VIEW_WIDTH, TABLET_VIEW_WIDTH } from "@utils/constants.js";
+// import ConfirmWindowProvider from "@hooks/tools/useConfirmWindow.js";
 
+import "@lib/samaAdapter";
+
+import { ConfirmWindowProvider } from "@sama-communications.ui-kit";
 import { PageLoaderSkeleton } from "@sama-communications.ui-kit";
 
+import activityService from "@services/activityService";
+import autoLoginService from "@services/autoLoginService";
+import conversationService from "@services/conversationsService";
+import messagesService from "@services/messagesService";
+
+import { selectIsClicked, setClicked } from "@store/values/ContextMenu";
+import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
+import { setIsTabInFocus } from "@store/values/IsTabInFocus";
+import { getIsTabletView, setIsTabletView } from "@store/values/IsTabletView";
+import { updateNetworkState } from "@store/values/NetworkState";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
+
+import { MOBILE_VIEW_WIDTH, TABLET_VIEW_WIDTH } from "@utils/constants.js";
+import { history } from "@utils/history.js";
+import { removeAndNavigateSubLink, navigateTo } from "@utils/NavigationUtils.js";
 const Main = lazy(() => import("@components/Main"));
 const AuthorizationHub = lazy(() => import("@components/auth/AuthorizationHub"));
 

@@ -1,13 +1,15 @@
 import { useEffect, useMemo, memo } from "react";
+
 import { clsx } from "clsx";
-import { getAdapters } from "../../../adapters";
 import { Users, UserRoundX } from "lucide-react";
 
-import { DynamicAvatar } from "../DynamicAvatar";
-import { LastMessage } from "../LastMessage/LastMessage";
-import { TypingLine } from "../TypingLine";
-import { WrapperRoot } from "../WrapperRoot";
-import type { ConversationItemProps } from "./ConversationItem.types";
+import { getAdapters } from "@adapters";
+
+import type { ConversationItemProps } from "@elements/ConversationItem/ConversationItem.types";
+import { DynamicAvatar } from "@elements/DynamicAvatar";
+import { LastMessage } from "@elements/LastMessage/LastMessage";
+import { TypingLine } from "@elements/TypingLine";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const ConversationItem = memo(function ConversationItem({
   conversation,

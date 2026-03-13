@@ -1,6 +1,6 @@
 import { ThreeDots } from "react-loader-spinner";
 
-import { DotsLoaderProps } from "./DotsLoader.types";
+import { DotsLoaderProps } from "@elements/DotsLoader/DotsLoader.types";
 
 export const DotsLoader = ({
   wrapperClassName = "",
@@ -20,3 +20,4 @@ export const DotsLoader = ({
     />
   );
 };
+

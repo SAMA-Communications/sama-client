@@ -1,11 +1,11 @@
 import { ChevronLeft, Reply, User } from "lucide-react";
 
-import { CustomVerticalScrollbar } from "../CustomVerticalScrollbar";
-import { DynamicAvatar } from "../../elements/DynamicAvatar";
-import { InfoBox } from "../../elements/InfoBox";
-import { WrapperRoot } from "../../elements/WrapperRoot";
+import { CustomVerticalScrollbar } from "@composites/CustomVerticalScrollbar";
+import { OtherUserProfileProps } from "@composites/OtherUserProfile/OtherUserProfile.types";
 
-import { OtherUserProfileProps } from "./OtherUserProfile.types";
+import { DynamicAvatar } from "@elements/DynamicAvatar";
+import { InfoBox } from "@elements/InfoBox";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const OtherUserProfile = ({
   user,

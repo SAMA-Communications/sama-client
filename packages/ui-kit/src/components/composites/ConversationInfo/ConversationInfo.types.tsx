@@ -1,5 +1,6 @@
-import type { WrapperRootProps } from "../../elements/WrapperRoot";
 import type { Conversation, User } from "types/samaWssModels";
+
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface ConversationInfoProps extends Omit<WrapperRootProps<"section">, "as" | "children"> {
   conversation: Conversation;
@@ -23,3 +24,4 @@ export interface ConversationInfoProps extends Omit<WrapperRootProps<"section">,
     clicked: boolean;
   }) => void;
 }
+

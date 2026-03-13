@@ -1,3 +1,5 @@
+import { combineReducers } from "@reduxjs/toolkit";
+
 import contextMenuReducer from "@store/values/ContextMenu";
 import conversationsReducer from "@store/values/Conversations";
 import currentUserIdReducer from "@store/values/CurrentUserId";
@@ -9,7 +11,6 @@ import networkStateReducer from "@store/values/NetworkState";
 import participantsReducer from "@store/values/Participants";
 import selectedConversationReducer from "@store/values/SelectedConversation";
 import userIsLoggedInReducer from "@store/values/UserIsLoggedIn";
-import { combineReducers } from "@reduxjs/toolkit";
 
 const appReducer = combineReducers({
   contextMenu: contextMenuReducer,

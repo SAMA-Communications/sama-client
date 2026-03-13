@@ -1,14 +1,15 @@
 import { forwardRef } from "react";
+
 import { clsx } from "clsx";
-import * as m from "motion/react-m";
 import { Check, Forward, UserRound } from "lucide-react";
+import * as m from "motion/react-m";
 
-import { MessageUserIcon } from "../../elements/MessageUserIcon";
-import { MessageStatus } from "../../elements/MessageStatus";
-import { WrapperRoot } from "../../elements/WrapperRoot";
-import { AdditionalMessages } from "../AdditionalMessages";
+import { AdditionalMessages } from "@composites/AdditionalMessages";
+import type { ChatMessageProps } from "@composites/ChatMessage/ChatMessage.types";
 
-import type { ChatMessageProps } from "./ChatMessage.types";
+import { MessageStatus } from "@elements/MessageStatus";
+import { MessageUserIcon } from "@elements/MessageUserIcon";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function ChatMessage(
   {

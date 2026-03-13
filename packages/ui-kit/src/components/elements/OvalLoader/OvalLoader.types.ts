@@ -1,4 +1,4 @@
-import type { WrapperRootProps } from "../WrapperRoot";
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface OvalLoaderProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   /** Spinner height in pixels. */
@@ -10,3 +10,4 @@ export interface OvalLoaderProps extends Omit<WrapperRootProps<"div">, "as" | "c
   /** Class name for the wrapper (legacy; prefer className). */
   wrapperClassName?: string;
 }
+

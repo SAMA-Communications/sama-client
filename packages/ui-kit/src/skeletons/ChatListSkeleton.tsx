@@ -1,4 +1,4 @@
-import { ConversationItemSkeleton } from "./ConversationItemSkeleton";
+import { ConversationItemSkeleton } from "@src/skeletons/ConversationItemSkeleton";
 
 export interface ChatListSkeletonProps {
   /** Number of conversation item skeletons to show (default 8) */

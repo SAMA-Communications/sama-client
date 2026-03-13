@@ -1,6 +1,6 @@
 import type { Conversation, User } from "types/samaWssModels";
 
-import { SamaAdapters } from "./types";
+import { SamaAdapters } from "@adapters/types";
 
 const defaultuser = {
   _id: "default_id",

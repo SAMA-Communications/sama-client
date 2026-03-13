@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
+
 import { useMonaco } from "@monaco-editor/react";
 
 import conversationHandlerService from "@services/conversationHandlerService.js";
 
 import { getConversationHandler } from "@store/values/Conversations.js";
-import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
 import { updateHandler, upsertChat } from "@store/values/Conversations.js";
+import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
 
 import { DEFAULT_EDITOR_CODE } from "@utils/constants.js";
 

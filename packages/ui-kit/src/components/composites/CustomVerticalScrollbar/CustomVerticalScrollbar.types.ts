@@ -38,3 +38,4 @@ export interface CustomVerticalScrollbarProps {
   /** Max height (px or string) when autoHeight is true */
   autoHeightMax?: number | string;
 }
+

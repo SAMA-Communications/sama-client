@@ -1,12 +1,15 @@
 import { memo } from "react";
+
 import { clsx } from "clsx";
-import { getAdapters } from "../../../adapters";
 import { User } from "lucide-react";
 
-import { DynamicAvatar } from "../DynamicAvatar";
-import { WrapperRoot } from "../WrapperRoot";
-import { DEFAULT_MESSAGE_USER_ICON_SIZE } from "../../../utils/constants";
-import type { MessageUserIconProps } from "./MessageUserIcon.types";
+import { getAdapters } from "@adapters";
+
+import { DynamicAvatar } from "@elements/DynamicAvatar";
+import type { MessageUserIconProps } from "@elements/MessageUserIcon/MessageUserIcon.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { DEFAULT_MESSAGE_USER_ICON_SIZE } from "@utils/constants";
 
 export const MessageUserIcon = memo(function MessageUserIcon({
   user,

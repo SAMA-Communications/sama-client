@@ -1,18 +1,19 @@
 import { useCallback, useState } from "react";
+
 import { clsx } from "clsx";
-
-import { getAdapters } from "../../../adapters";
-
-import { useKeyDown } from "../../../hooks/useKeyDown";
-import { KEY_CODES } from "../../../utils/constants";
-
-import { WrapperRoot } from "../../elements/WrapperRoot";
-import { UserInputsGroup } from "./UserInputsGroup";
-import { ConversationInputsGroup } from "./ConversationInputsGroup";
-
 import { Save } from "lucide-react";
 
-import type { EditModalContainerProps } from "./EditModalContainer.types";
+import { getAdapters } from "@adapters";
+
+import { ConversationInputsGroup } from "@composites/EditModalContainer/ConversationInputsGroup";
+import type { EditModalContainerProps } from "@composites/EditModalContainer/EditModalContainer.types";
+import { UserInputsGroup } from "@composites/EditModalContainer/UserInputsGroup";
+
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { useKeyDown } from "@src/hooks/useKeyDown";
+
+import { KEY_CODES } from "@utils/constants";
 
 export const EditModalContainer = ({ type, onClose, className, ...rest }: EditModalContainerProps) => {
   const { useParticipants, useConversations } = getAdapters();

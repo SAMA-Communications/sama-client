@@ -1,20 +1,21 @@
 import { useMemo } from "react";
+
 import { clsx } from "clsx";
-
-import { getAdapters } from "../../../adapters";
-
-import { useConfirmWindow } from "../../../hooks/useConfirmWindow";
-import { useKeyDown } from "../../../hooks/useKeyDown";
-import { KEY_CODES } from "../../../utils/constants";
-
-import { CustomVerticalScrollbar } from "../CustomVerticalScrollbar";
-import { ParticipantInChat } from "../../elements/ParticipantInChat";
-import { ConversationInfoAvatar } from "../../elements/ConversationInfoAvatar";
-import { WrapperRoot } from "../../elements/WrapperRoot";
-
 import { UserPlus, X, Users, LogOut, MessageCircleOff } from "lucide-react";
 
-import type { ConversationInfoProps } from "./ConversationInfo.types";
+import { getAdapters } from "@adapters";
+
+import type { ConversationInfoProps } from "@composites/ConversationInfo/ConversationInfo.types";
+import { CustomVerticalScrollbar } from "@composites/CustomVerticalScrollbar";
+
+import { ConversationInfoAvatar } from "@elements/ConversationInfoAvatar";
+import { ParticipantInChat } from "@elements/ParticipantInChat";
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { useConfirmWindow } from "@src/hooks/useConfirmWindow";
+import { useKeyDown } from "@src/hooks/useKeyDown";
+
+import { KEY_CODES } from "@utils/constants";
 
 export const ConversationInfo = ({
   conversation,

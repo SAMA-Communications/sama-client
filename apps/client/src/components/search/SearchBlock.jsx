@@ -1,18 +1,20 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+
 import { useLocation } from "react-router";
+
+import { useDispatch, useSelector } from "react-redux";
+
+import { useSearchBlock } from "@hooks/components/useSearchBlock";
 
 import { setAdapters, SearchBlock as UISearchBlock } from "@sama-communications.ui-kit";
 
 import conversationService from "@services/conversationsService";
 
 import { getConverastionById } from "@store/values/Conversations";
-import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { addUsers } from "@store/values/Participants";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
 
 import { addSuffix, navigateTo } from "@utils/NavigationUtils.js";
-
-import { useSearchBlock } from "@hooks/components/useSearchBlock";
 
 const initialSearchData = {
   searchedUsers: [],

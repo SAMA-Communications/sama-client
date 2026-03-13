@@ -1,24 +1,26 @@
 import { cloneElement, useMemo } from "react";
+
 import { useLocation } from "react-router";
+
 import { useSelector } from "react-redux";
+
+import AttachHub from "@components/attach/AttachHub";
+import MediaHub from "@components/attach/MediaHub";
+import ChatForm from "@components/hub/ChatForm";
+import ChatList from "@components/hub/ChatList";
+import OtherUserProfile from "@components/info/OtherUserProfile";
+import UserProfileContainer from "@components/info/UserProfileContainer";
+import ConversationSelectHub from "@components/modals/ConversationSelectHub";
+import UsersSelectModalHub from "@components/modals/UsersSelectModalHub";
+
+import useHistory from "@hooks/api/useHistory.js";
 
 import { EditModalContainer, ConversationInfo } from "@sama-communications.ui-kit";
 
-import ChatForm from "@components/hub/ChatForm";
-import ChatList from "@components/hub/ChatList";
-
-import AttachHub from "@components/attach/AttachHub";
-import ConversationSelectHub from "@components/modals/ConversationSelectHub";
-import MediaHub from "@components/attach/MediaHub";
-import OtherUserProfile from "@components/info/OtherUserProfile";
-import UserProfileContainer from "@components/info/UserProfileContainer";
-import UsersSelectModalHub from "@components/modals/UsersSelectModalHub";
-
+import { getConverastionById, selectConversationsEntities } from "@store/values/Conversations";
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView } from "@store/values/IsTabletView";
-import { getConverastionById, selectConversationsEntities } from "@store/values/Conversations";
 
-import useHistory from "@hooks/api/useHistory.js";
 import { getEditWindowTypeFromUrl } from "@utils/NavigationUtils.js";
 
 const blockMap = {

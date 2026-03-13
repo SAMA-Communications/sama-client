@@ -1,10 +1,12 @@
 import { memo, useMemo } from "react";
-import { clsx } from "clsx";
-import { getAdapters } from "../../../adapters";
 
-import { DotsLoader } from "../DotsLoader";
-import { WrapperRoot } from "../WrapperRoot";
-import type { TypingLineInternalProps } from "./TypingLine.types";
+import { clsx } from "clsx";
+
+import { getAdapters } from "@adapters";
+
+import { DotsLoader } from "@elements/DotsLoader";
+import type { TypingLineInternalProps } from "@elements/TypingLine/TypingLine.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const TypingLine = memo(function TypingLine({
   typingUserIds,

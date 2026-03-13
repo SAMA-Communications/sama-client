@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+
 import type { User } from "types/samaWssModels";
 
 export interface UserSelectorBlockProps {
@@ -20,3 +21,4 @@ export interface UserSelectorBlockProps {
   /** Label for submit button: "Create" or "Add" */
   submitLabel?: "Create" | "Add";
 }
+

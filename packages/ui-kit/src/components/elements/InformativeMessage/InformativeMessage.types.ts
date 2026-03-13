@@ -1,4 +1,4 @@
-import type { WrapperRootProps } from "../WrapperRoot";
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface InformativeMessageProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   text: string;
@@ -7,3 +7,4 @@ export interface InformativeMessageProps extends Omit<WrapperRootProps<"div">, "
   /** When true, adds bottom margin (mb-1.5). */
   isNextMessageUsers?: boolean;
 }
+

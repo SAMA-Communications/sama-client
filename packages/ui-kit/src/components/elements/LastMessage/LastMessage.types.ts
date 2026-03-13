@@ -10,3 +10,4 @@ export interface LastMessageProps {
   countOfUnreadMessages: number;
   isShowUserName?: boolean;
 }
+

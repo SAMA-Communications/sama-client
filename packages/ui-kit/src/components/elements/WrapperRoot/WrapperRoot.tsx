@@ -1,9 +1,9 @@
 import { createElement, forwardRef, memo } from "react";
+
 import * as m from "motion/react-m";
 
-import { OvalLoader } from "../OvalLoader";
-
-import { MOTION_PROPS, type WrapperRootElement, type WrapperRootProps } from "./WrapperRoot.types";
+import { OvalLoader } from "@elements/OvalLoader";
+import { MOTION_PROPS, type WrapperRootElement, type WrapperRootProps } from "@elements/WrapperRoot/WrapperRoot.types";
 
 const MOTION_PROPS_SET = new Set<string>(MOTION_PROPS);
 

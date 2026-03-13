@@ -1,5 +1,5 @@
-import type { MediaAttachmentData } from "../../elements/MediaAttachment";
-import type { WrapperRootProps } from "../../elements/WrapperRoot";
+import type { MediaAttachmentData } from "@elements/MediaAttachment";
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface MediaAttachmentsProps extends Omit<WrapperRootProps<"div">, "as" | "children" | "onContextMenu"> {
   attachments: MediaAttachmentData[];
@@ -13,3 +13,4 @@ export interface MediaAttachmentsProps extends Omit<WrapperRootProps<"div">, "as
   /** Called when user clicks an attachment (e.g. open media viewer) */
   onOpenMedia?: (index: number) => void;
 }
+

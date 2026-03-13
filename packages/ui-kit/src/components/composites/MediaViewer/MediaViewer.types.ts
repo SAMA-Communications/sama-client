@@ -1,5 +1,5 @@
-import type { MediaAttachmentData } from "../../elements/MediaAttachment";
-import type { WrapperRootProps } from "../../elements/WrapperRoot";
+import type { MediaAttachmentData } from "@elements/MediaAttachment";
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface MediaViewerProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   /** List of attachments (image/video) */
@@ -17,3 +17,4 @@ export interface MediaViewerProps extends Omit<WrapperRootProps<"div">, "as" | "
   /** Optional ref for swipe area (touch) */
   swipeRef?: React.RefObject<HTMLDivElement | null>;
 }
+

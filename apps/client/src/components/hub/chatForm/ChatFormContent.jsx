@@ -1,20 +1,21 @@
-import { AnimatePresence } from "motion/react";
 import { useMemo, useRef } from "react";
+
 import { useSelector } from "react-redux";
 
-import draftService from "@services/tools/draftService.js";
+import { AnimatePresence } from "motion/react";
 
 import ChatFormInputContent from "@components/hub/chatForm/ChatFormInputContent";
 import MessagesList from "@components/hub/elements/MessagesList";
 import SummaryContainer from "@components/hub/elements/SummaryContainer";
 
 import { CustomVerticalScrollbar, ConversationInput } from "@sama-communications.ui-kit";
+import { MessageListSkeleton } from "@sama-communications.ui-kit";
 
+import draftService from "@services/tools/draftService.js";
+
+import { selectContextExternalProps } from "@store/values/ContextMenu.js";
 import { getConverastionById } from "@store/values/Conversations.js";
 import { selectMessagesEntities } from "@store/values/Messages.js";
-import { selectContextExternalProps } from "@store/values/ContextMenu.js";
-
-import { MessageListSkeleton } from "@sama-communications.ui-kit";
 
 export default function ChatFormContent({ onOpenAttachmentHub, isLocationIncludeAttach }) {
   const chatMessagesBlock = useRef(null);

@@ -1,33 +1,35 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+
 import { useLocation } from "react-router";
+
 import { useSelector, useDispatch } from "react-redux";
 
 import api from "@api/api";
 
-import draftService from "@services/tools/draftService.js";
-
-import { useKeyDown } from "@hooks/tools/useKeyDown";
-import useHistory from "@hooks/api/useHistory.js";
-
-import { ConversationHeader } from "@sama-communications.ui-kit";
-
 import ChatFormContent from "@components/hub/chatForm/ChatFormContent";
 import ChatFormEditor from "@components/hub/chatForm/ChatFormEditor";
 
-import { getIsTabInFocus } from "@store/values/IsTabInFocus";
-import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
-import { selectCurrentUserId } from "@store/values/CurrentUserId.js";
+import useHistory from "@hooks/api/useHistory.js";
+import { useKeyDown } from "@hooks/tools/useKeyDown";
+
+import { ConversationHeader } from "@sama-communications.ui-kit";
+
+import draftService from "@services/tools/draftService.js";
+
+import { addExternalProps, setClicked } from "@store/values/ContextMenu";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
   selectConversationsEntities,
 } from "@store/values/Conversations";
-import { clearSelectedConversation, setSelectedConversation } from "@store/values/SelectedConversation";
-import { addExternalProps, setClicked } from "@store/values/ContextMenu";
+import { selectCurrentUserId } from "@store/values/CurrentUserId.js";
 import { getIsMobileView } from "@store/values/IsMobileView.js";
+import { getIsTabInFocus } from "@store/values/IsTabInFocus";
+import { clearSelectedConversation, setSelectedConversation } from "@store/values/SelectedConversation";
+import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
 
-import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 import { KEY_CODES, CHAT_CONTENT_TABS } from "@utils/constants.js";
+import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 
 export default function ChatForm() {
   const dispatch = useDispatch();

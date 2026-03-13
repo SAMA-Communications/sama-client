@@ -1,22 +1,15 @@
 import { useSelector } from "react-redux";
 
-import messagesService from "@services/messagesService.js";
-import draftService from "@services/tools/draftService.js";
-import aiService from "@services/tools/AIService.js";
-
 import DownloadManager from "@lib/downloadManager.js";
 
 import { useConfirmWindow } from "@sama-communications.ui-kit";
 
+import messagesService from "@services/messagesService.js";
+import aiService from "@services/tools/AIService.js";
+import draftService from "@services/tools/draftService.js";
+
 import store from "@store/store.js";
 import { addExternalProps } from "@store/values/ContextMenu.js";
-import {
-  addMessage,
-  removeMessage,
-  selectActiveConversationMessages,
-  selectMessagesEntities,
-  upsertMessage,
-} from "@store/values/Messages.js";
 import {
   removeChat,
   removeDraftField,
@@ -24,11 +17,18 @@ import {
   setLastMessageField,
   updateLastMessageField,
 } from "@store/values/Conversations.js";
-import { setSelectedConversation } from "@store/values/SelectedConversation.js";
 import { selectCurrentUserId } from "@store/values/CurrentUserId.js";
+import {
+  addMessage,
+  removeMessage,
+  selectActiveConversationMessages,
+  selectMessagesEntities,
+  upsertMessage,
+} from "@store/values/Messages.js";
+import { setSelectedConversation } from "@store/values/SelectedConversation.js";
 
-import { history } from "@utils/history.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { history } from "@utils/history.js";
 import { navigateTo, removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 
 export default function useMessages() {

@@ -1,10 +1,18 @@
 import jwtDecode from "jwt-decode";
 
 import api from "@api/api";
+
 import DownloadManager from "@lib/downloadManager";
 
 import store from "@store/store";
-import { addUser, upsertUsers } from "@store/values/Participants";
+import {
+  markConversationAsRead,
+  removeChat,
+  updateLastMessageField,
+  upsertChat,
+  upsertParticipants,
+  setLastMessageField,
+} from "@store/values/Conversations";
 import {
   addMessage,
   addMessages,
@@ -14,18 +22,11 @@ import {
   upsertMessage,
   upsertMessages,
 } from "@store/values/Messages";
+import { addUser, upsertUsers } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
-import {
-  markConversationAsRead,
-  removeChat,
-  updateLastMessageField,
-  upsertChat,
-  upsertParticipants,
-  setLastMessageField,
-} from "@store/values/Conversations";
 
-import { navigateTo } from "@utils/NavigationUtils.js";
 import { TYPING_DURATION_MS } from "@utils/constants.js";
+import { navigateTo } from "@utils/NavigationUtils.js";
 
 class MessagesService {
   currentChatId;

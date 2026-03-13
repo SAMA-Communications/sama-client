@@ -1,7 +1,8 @@
 import { memo } from "react";
+
 import { clsx } from "clsx";
 
-import type { TextAreaInputProps } from "./TextAreaInput.types";
+import type { TextAreaInputProps } from "@elements/TextAreaInput/TextAreaInput.types";
 
 export const TextAreaInput = memo(function TextAreaInput({
   id = "",
@@ -30,3 +31,4 @@ export const TextAreaInput = memo(function TextAreaInput({
     />
   );
 });
+

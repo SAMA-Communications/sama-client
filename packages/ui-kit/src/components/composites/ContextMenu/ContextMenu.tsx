@@ -1,8 +1,10 @@
 import { memo } from "react";
+
 import { clsx } from "clsx";
 
-import { WrapperRoot } from "../../elements/WrapperRoot";
-import type { ContextMenuProps } from "./ContextMenu.types";
+import type { ContextMenuProps } from "@composites/ContextMenu/ContextMenu.types";
+
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 const baseClassName =
   "ui:absolute ui:z-50 ui:flex ui:w-50 ui:flex-col ui:gap-px ui:rounded-xl ui:bg-white ui:p-3 ui:shadow-md";

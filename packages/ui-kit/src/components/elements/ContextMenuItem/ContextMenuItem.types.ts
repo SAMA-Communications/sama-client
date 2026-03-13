@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import type { WrapperRootProps } from "../WrapperRoot";
+
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface ContextMenuItemProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   /** Label text. */
@@ -13,3 +14,4 @@ export interface ContextMenuItemProps extends Omit<WrapperRootProps<"div">, "as"
   /** Optional key for list. */
   id?: string;
 }
+

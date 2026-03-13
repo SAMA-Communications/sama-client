@@ -1,6 +1,7 @@
-import { setAllParams } from "@store/values/ContextMenu.js";
 import store from "@store/store.js";
+import { setAllParams } from "@store/values/ContextMenu.js";
 
+import { history } from "@utils/history.js";
 import {
   addPrefix,
   addSuffix,
@@ -9,7 +10,6 @@ import {
   removeAndNavigateSubLink,
   removeSectionAndNavigate,
 } from "@utils/NavigationUtils.js";
-import { history } from "@utils/history.js";
 
 export default function useHistory() {
   const { pathname, hash, search } = history.location;

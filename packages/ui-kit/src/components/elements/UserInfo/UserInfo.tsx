@@ -1,11 +1,12 @@
 import { memo, useCallback, useState } from "react";
-import { clsx } from "clsx";
 
-import { getAdapters } from "../../../adapters";
+import { clsx } from "clsx";
 import { X } from "lucide-react";
 
-import { WrapperRoot } from "../WrapperRoot";
-import { UserInfoProps } from "./UserInfo.types";
+import { getAdapters } from "@adapters";
+
+import { UserInfoProps } from "@elements/UserInfo/UserInfo.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 const baseClassName =
   "ui:flex ui:max-h-[32px] ui:min-w-max ui:cursor-pointer ui:flex-row ui:items-center ui:gap-[7px] ui:rounded-[12px] ui:bg-hover-light ui:p-[4px]";

@@ -1,9 +1,9 @@
 import { clsx } from "clsx";
 import { SquarePen, X, Reply, Forward } from "lucide-react";
 
-import { WrapperRoot } from "../../elements/WrapperRoot";
+import type { AdditionalMessagesProps } from "@composites/AdditionalMessages/AdditionalMessages.types";
 
-import type { AdditionalMessagesProps } from "./AdditionalMessages.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const AdditionalMessages = ({
   type,

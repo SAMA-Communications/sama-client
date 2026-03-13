@@ -1,7 +1,8 @@
 import { clsx } from "clsx";
 
-import { WrapperRoot } from "../../elements/WrapperRoot";
-import type { EditorCodePanelProps } from "./EditorCodePanel.types";
+import type { EditorCodePanelProps } from "@composites/EditorCodePanel/EditorCodePanel.types";
+
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const EditorCodePanel = ({ statusText, children, className, ...rest }: EditorCodePanelProps) => {
   return (
@@ -15,3 +16,4 @@ export const EditorCodePanel = ({ statusText, children, className, ...rest }: Ed
     </WrapperRoot>
   );
 };
+

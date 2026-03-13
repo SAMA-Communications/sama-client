@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { Tooltip } from "react-tooltip";
-
-import { getAdapters } from "../../../adapters";
-
-import { OvalLoader } from "../OvalLoader";
 
 import { Sparkles, CloudFog, ScrollText } from "lucide-react";
+import { Tooltip } from "react-tooltip";
 
-import { MagicButtonProps } from "./MagicButton.type";
+import { getAdapters } from "@adapters";
+
+import { MagicButtonProps } from "@elements/MagicButton/MagicButton.type";
+import { OvalLoader } from "@elements/OvalLoader";
 
 interface Action {
   label: string;

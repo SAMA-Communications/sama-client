@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import type { WrapperRootProps } from "../../elements/WrapperRoot";
+
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface EditorLogsPanelProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   /** When false, panel is not rendered */
@@ -8,3 +9,4 @@ export interface EditorLogsPanelProps extends Omit<WrapperRootProps<"div">, "as"
   /** Content (e.g. read-only Monaco editor) */
   children: ReactNode;
 }
+

@@ -1,4 +1,4 @@
-import type { WrapperRootProps } from "../../elements/WrapperRoot";
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface EditModalContainerProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   /** Which form to show (conversation or user profile). */
@@ -6,3 +6,4 @@ export interface EditModalContainerProps extends Omit<WrapperRootProps<"div">, "
   /** Called when user cancels or after successful save (close modal). */
   onClose: () => void;
 }
+

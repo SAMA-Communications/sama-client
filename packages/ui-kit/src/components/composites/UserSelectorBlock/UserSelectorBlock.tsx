@@ -1,15 +1,16 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { CustomVerticalScrollbar } from "../CustomVerticalScrollbar";
-import { OvalLoader } from "../../elements/OvalLoader";
-import { UserInfo } from "../../elements/UserInfo";
-
-import { useKeyDown } from "../../../hooks/useKeyDown";
-
-import { KEY_CODES } from "../../../utils/constants";
-
 import type { User } from "types/samaWssModels";
-import { UserSelectorBlockProps } from "./UserSelectorBlock.types";
+
+import { CustomVerticalScrollbar } from "@composites/CustomVerticalScrollbar";
+import { UserSelectorBlockProps } from "@composites/UserSelectorBlock/UserSelectorBlock.types";
+
+import { OvalLoader } from "@elements/OvalLoader";
+import { UserInfo } from "@elements/UserInfo";
+
+import { useKeyDown } from "@src/hooks/useKeyDown";
+
+import { KEY_CODES } from "@utils/constants";
 
 export const UserSelectorBlock = ({
   selectedUsers,

@@ -1,5 +1,5 @@
-import type { MediaAttachmentData } from "../../elements/MediaAttachment";
-import type { WrapperRootProps } from "../../elements/WrapperRoot";
+import type { MediaAttachmentData } from "@elements/MediaAttachment";
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface AttachModalProps extends Omit<WrapperRootProps<"div">, "as" | "children" | "onInput" | "onKeyDown"> {
   /** List of files to show (shape for MediaAttachments) */
@@ -31,3 +31,4 @@ export interface AttachModalProps extends Omit<WrapperRootProps<"div">, "as" | "
   /** Additional class for the modal content box */
   contentClassName?: string;
 }
+

@@ -1,9 +1,10 @@
 import { clsx } from "clsx";
-import { Tooltip } from "react-tooltip";
 import { Info, ListStart } from "lucide-react";
+import { Tooltip } from "react-tooltip";
 
-import { WrapperRoot } from "../../elements/WrapperRoot";
-import type { EditorHelperBarProps } from "./EditorHelperBar.types";
+import type { EditorHelperBarProps } from "@composites/EditorHelperBar/EditorHelperBar.types";
+
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const EditorHelperBar = ({
   docsHref,
@@ -44,3 +45,4 @@ export const EditorHelperBar = ({
     </WrapperRoot>
   );
 };
+

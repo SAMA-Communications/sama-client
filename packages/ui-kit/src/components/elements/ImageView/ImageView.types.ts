@@ -1,4 +1,4 @@
-import { MediaBlurHashProps } from "../MediaBlurHash";
+import { MediaBlurHashProps } from "@elements/MediaBlurHash";
 
 export interface ImageData {
   file_name?: string;

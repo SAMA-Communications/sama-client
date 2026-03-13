@@ -1,4 +1,4 @@
-import { ProgrammableEditorDocsBannerProps } from "./ProgrammableEditorDocsBanner.types";
+import { ProgrammableEditorDocsBannerProps } from "@composites/ProgrammableEditorDocsBanner/ProgrammableEditorDocsBanner.types";
 
 export const ProgrammableEditorDocsBanner = ({ href, label = "documentation" }: ProgrammableEditorDocsBannerProps) => {
   return (
@@ -17,3 +17,4 @@ export const ProgrammableEditorDocsBanner = ({ href, label = "documentation" }: 
     </div>
   );
 };
+

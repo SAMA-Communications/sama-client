@@ -1,8 +1,9 @@
 import { memo } from "react";
+
 import { clsx } from "clsx";
 
-import { WrapperRoot } from "../WrapperRoot";
-import type { ModalProps } from "./Modal.types";
+import type { ModalProps } from "@elements/Modal/Modal.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 const overlayClassName =
   "ui:absolute ui:top-0 ui:z-10 ui:flex ui:h-dvh ui:w-dvw ui:items-center ui:justify-center ui:bg-black/50";

@@ -1,5 +1,6 @@
-import type { WrapperRootProps } from "../WrapperRoot";
 import type { User } from "types/samaWssModels";
+
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface SearchedUserProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   user: User;
@@ -10,3 +11,4 @@ export interface SearchedUserProps extends Omit<WrapperRootProps<"div">, "as" | 
   /** Called when the row is activated. */
   onClick: () => void;
 }
+

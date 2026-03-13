@@ -6,12 +6,12 @@ import conversationService from "@services/conversationsService.js";
 
 import store from "@store/store.js";
 import { insertChats } from "@store/values/Conversations.js";
+import { upsertChat } from "@store/values/Conversations.js";
 import { setSelectedConversation as setSConversation } from "@store/values/SelectedConversation.js";
 
-import { navigateTo } from "@utils/NavigationUtils.js";
-import { isHeic, processFile } from "@utils/MediaUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
-import { upsertChat } from "@store/values/Conversations.js";
+import { isHeic, processFile } from "@utils/MediaUtils.js";
+import { navigateTo } from "@utils/NavigationUtils.js";
 import { validateFieldLength } from "@utils/ValidationGeneral.js";
 
 export default function useConversations() {

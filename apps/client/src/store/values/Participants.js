@@ -1,4 +1,5 @@
 import { createEntityAdapter, createSelector, createSlice } from "@reduxjs/toolkit";
+
 import { selectCurrentUserId } from "./CurrentUserId.js";
 
 export const participantsAdapter = createEntityAdapter({

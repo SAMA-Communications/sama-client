@@ -1,5 +1,6 @@
-import type { WrapperRootProps } from "../WrapperRoot";
 import type { Message } from "types/samaWssModels";
+
+import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface MessageStatusProps extends Omit<WrapperRootProps<"span">, "as" | "children"> {
   status?: "sent" | "read";
@@ -7,3 +8,4 @@ export interface MessageStatusProps extends Omit<WrapperRootProps<"span">, "as" 
   /** Icon color variant. */
   color?: "accent" | "white";
 }
+

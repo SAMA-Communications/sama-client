@@ -1,13 +1,13 @@
 import { clsx } from "clsx";
-import { ImageView } from "../../elements/ImageView";
-import { VideoView } from "../../elements/VideoView";
-import { WrapperRoot } from "../../elements/WrapperRoot";
-
-import { getFileType as defaultGetFileType } from "../../../utils/mediaUtils";
-
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
-import type { MediaViewerProps } from "./MediaViewer.types";
+import type { MediaViewerProps } from "@composites/MediaViewer/MediaViewer.types";
+
+import { ImageView } from "@elements/ImageView";
+import { VideoView } from "@elements/VideoView";
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { getFileType as defaultGetFileType } from "@utils/mediaUtils";
 
 export const MediaViewer = ({
   attachments,

@@ -9,3 +9,4 @@ export interface SearchConversationListProps {
   /** Shown when the list is empty. */
   emptyMessage?: string | null;
 }
+

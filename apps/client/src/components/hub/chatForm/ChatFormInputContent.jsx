@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 
-import draftService from "@services/tools/draftService.js";
-
 import AdditionalMessages from "@components/hub/elements/AdditionalMessages";
 
-import { removeDraftField, getConverastionById } from "@store/values/Conversations.js";
+import draftService from "@services/tools/draftService.js";
+
 import { addExternalProps } from "@store/values/ContextMenu.js";
+import { removeDraftField, getConverastionById } from "@store/values/Conversations.js";
 
 export default function ChatFormInputContent({ editedMessage, repliedMessage, forwardedMessages = [] }) {
   const selectedCID = useSelector(getConverastionById)._id;

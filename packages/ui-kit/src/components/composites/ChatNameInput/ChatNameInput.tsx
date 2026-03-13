@@ -1,17 +1,16 @@
 import { useCallback, useRef, useState } from "react";
+
 import { clsx } from "clsx";
-
-import { useKeyDown } from "../../../hooks/useKeyDown";
-
-import { KEY_CODES, ALLOWED_AVATAR_FORMATS, MAX_CHAT_NAME_LENGTH } from "../../../utils/constants";
-
-import { generateSoftPastelGradient } from "../../../utils/generateSoftPastelGradient";
-
 import { Camera, Image } from "lucide-react";
 
-import { WrapperRoot } from "../../elements/WrapperRoot";
+import type { ChatNameInputProps } from "@composites/ChatNameInput/ChatNameInput.types";
 
-import type { ChatNameInputProps } from "./ChatNameInput.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { useKeyDown } from "@src/hooks/useKeyDown";
+
+import { KEY_CODES, ALLOWED_AVATAR_FORMATS, MAX_CHAT_NAME_LENGTH } from "@utils/constants";
+import { generateSoftPastelGradient } from "@utils/generateSoftPastelGradient";
 
 export const ChatNameInput = ({ onConfirm, onCancel, onValidationError, className, ...rest }: ChatNameInputProps) => {
   const [name, setName] = useState("");

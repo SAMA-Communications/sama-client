@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+
 import { clsx } from "clsx";
 
-import { getAdapters } from "../../../adapters";
+import { getAdapters } from "@adapters";
 
-import { MessageInput } from "../../elements/MessageInput";
-import { WrapperRoot } from "../../elements/WrapperRoot";
+import type { ConversationInputProps } from "@composites/ConversationInput/ConversationInput.type";
 
-import type { ConversationInputProps } from "./ConversationInput.type";
+import { MessageInput } from "@elements/MessageInput";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const ConversationInput = ({
   chatMessagesBlockRef,

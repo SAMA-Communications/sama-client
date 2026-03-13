@@ -6,13 +6,13 @@ import subscribeForNotifications from "@services/tools/notifications";
 
 import store from "@store/store";
 import { setCurrentUserId } from "@store/values/CurrentUserId";
+import { upsertUser } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
-import { upsertUser } from "@store/values/Participants";
 
-import { navigateTo } from "@utils/NavigationUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { history } from "@utils/history.js";
+import { navigateTo } from "@utils/NavigationUtils.js";
 
 class AutoLoginService {
   constructor() {

@@ -1,16 +1,16 @@
-import { UserProfileProps } from "./UserProfile.types";
-
-import { getAdapters } from "../../../adapters";
-
-import { InfoBox } from "../../elements/InfoBox";
-import { UserProfileAvatar } from "../../../components/elements/UserProfileAvatar";
-
-import { useKeyDown } from "../../../hooks/useKeyDown";
-import { useConfirmWindow } from "../../../hooks/useConfirmWindow";
-
-import { KEY_CODES } from "../../../utils/constants";
-
 import { RotateCcwKey, LogOut, Trash, ChevronLeft, UserRoundX } from "lucide-react";
+
+import { getAdapters } from "@adapters";
+
+import { UserProfileProps } from "@composites/UserProfile/UserProfile.types";
+
+import { InfoBox } from "@elements/InfoBox";
+import { UserProfileAvatar } from "@elements/UserProfileAvatar";
+
+import { useConfirmWindow } from "@src/hooks/useConfirmWindow";
+import { useKeyDown } from "@src/hooks/useKeyDown";
+
+import { KEY_CODES } from "@utils/constants";
 
 export const UserProfile = ({
   user,

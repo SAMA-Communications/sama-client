@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { MediaBlurHash } from "../MediaBlurHash";
-
-import { ImageViewProps } from "./ImageView.types";
+import { ImageViewProps } from "@elements/ImageView/ImageView.types";
+import { MediaBlurHash } from "@elements/MediaBlurHash";
 
 export const ImageView = ({ image, onClick, isFullSize = true, mediaBlurHashProps = {} }: ImageViewProps) => {
   const [loadStatus, setLoadStatus] = useState<"loading" | "error" | "success">("loading");

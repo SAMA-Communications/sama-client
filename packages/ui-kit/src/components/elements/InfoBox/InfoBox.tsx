@@ -1,9 +1,10 @@
 import { memo } from "react";
+
 import { clsx } from "clsx";
 import { User, Mail, Phone, Pencil } from "lucide-react";
 
-import { WrapperRoot } from "../WrapperRoot";
-import type { InfoBoxProps } from "./InfoBox.types";
+import type { InfoBoxProps } from "@elements/InfoBox/InfoBox.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 const INFO_ICONS = {
   phone: Phone,

@@ -1,26 +1,29 @@
-import * as m from "motion/react-m";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
+
 import { useLocation } from "react-router";
+
+import { useDispatch, useSelector } from "react-redux";
+
+import { ArrowLeft, X } from "lucide-react";
+import * as m from "motion/react-m";
 
 import api from "@api/api";
 
-import activityService from "@services/activityService";
-import conversationService from "@services/conversationsService";
 import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import { OtherUserProfile as UIOtherUserProfile } from "@sama-communications.ui-kit";
 
-import { addUser, selectParticipantsEntities } from "@store/values/Participants.js";
+import activityService from "@services/activityService";
+import conversationService from "@services/conversationsService";
+
 import { getIsMobileView } from "@store/values/IsMobileView";
+import { addUser, selectParticipantsEntities } from "@store/values/Participants.js";
 
-import { extractUserIdFromUrl, getUserFullName } from "@utils/UserUtils.js";
-import { navigateTo, removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 import { showOtherUserProfileContainer, showOtherUserProfileContent } from "@utils/AnimationUtils.js";
-import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/constants.js";
-
-import { ArrowLeft, X } from "lucide-react";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { navigateTo, removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
+import { extractUserIdFromUrl, getUserFullName } from "@utils/UserUtils.js";
 
 export default function OtherUserProfile() {
   const dispatch = useDispatch();

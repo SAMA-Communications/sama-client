@@ -1,18 +1,20 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useMonaco } from "@monaco-editor/react";
 
-import conversationHandlerService from "@services/conversationHandlerService.js";
+import { useDispatch, useSelector } from "react-redux";
+
+import { Check, RefreshCw, X } from "lucide-react";
+
+import { useMonaco } from "@monaco-editor/react";
 
 import { OvalLoader } from "@sama-communications.ui-kit";
 
+import conversationHandlerService from "@services/conversationHandlerService.js";
+
+import { updateHandler } from "@store/values/Conversations.js";
 import { getCurrentUserFromParticipants } from "@store/values/Participants.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
-import { updateHandler } from "@store/values/Conversations.js";
 
 import { debounce } from "@utils/debounce.js";
-
-import { Check, RefreshCw, X } from "lucide-react";
 
 const VALIDATION_CHECKS = [
   { key: "noSyntaxError", label: "No syntax errors" },

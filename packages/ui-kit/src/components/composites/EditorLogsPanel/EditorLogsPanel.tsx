@@ -1,8 +1,9 @@
 import { clsx } from "clsx";
 import { Minimize2 } from "lucide-react";
 
-import { WrapperRoot } from "../../elements/WrapperRoot";
-import type { EditorLogsPanelProps } from "./EditorLogsPanel.types";
+import type { EditorLogsPanelProps } from "@composites/EditorLogsPanel/EditorLogsPanel.types";
+
+import { WrapperRoot } from "@elements/WrapperRoot";
 
 export const EditorLogsPanel = ({ visible, onClose, children, className, ...rest }: EditorLogsPanelProps) => {
   if (!visible) return null;

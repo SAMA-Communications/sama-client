@@ -1,8 +1,7 @@
 import { Blurhash } from "react-blurhash";
 
-import { OvalLoader } from "../OvalLoader";
-
-import { ImageLoaderProps } from "./ImageLoader.types";
+import { ImageLoaderProps } from "@elements/ImageLoader/ImageLoader.types";
+import { OvalLoader } from "@elements/OvalLoader";
 
 export const ImageLoader = ({ blurHash = "LEHLk~WB2yk8pyo0adR*.7kCMdnj", isShowLoader = true }: ImageLoaderProps) => {
   return (
@@ -16,3 +15,4 @@ export const ImageLoader = ({ blurHash = "LEHLk~WB2yk8pyo0adR*.7kCMdnj", isShowL
     </div>
   );
 };
+

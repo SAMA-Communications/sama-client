@@ -1,16 +1,15 @@
-import localforage from "localforage";
 import { useEffect, useRef } from "react";
 
-import { getAdapters } from "../../../adapters";
-
-import { OvalLoader } from "../OvalLoader";
-import { MagicButton } from "../MagicButton";
-
-import { KEY_CODES, TYPING_DURATION_MS } from "../../../utils/constants";
-
+import localforage from "localforage";
 import { Paperclip, Send, Check } from "lucide-react";
 
-import { MessageInputProps } from "./MessageInput.type";
+import { getAdapters } from "@adapters";
+
+import { MagicButton } from "@elements/MagicButton";
+import { MessageInputProps } from "@elements/MessageInput/MessageInput.type";
+import { OvalLoader } from "@elements/OvalLoader";
+
+import { KEY_CODES, TYPING_DURATION_MS } from "@utils/constants";
 
 export const MessageInput = ({
   inputTextRef,

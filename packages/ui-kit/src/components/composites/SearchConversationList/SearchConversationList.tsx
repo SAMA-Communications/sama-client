@@ -1,8 +1,8 @@
 import { MessageCircle } from "lucide-react";
 
-import { ConversationItem } from "../../elements/ConversationItem";
+import { SearchConversationListProps } from "@composites/SearchConversationList/SearchConversationList.types";
 
-import { SearchConversationListProps } from "./SearchConversationList.types";
+import { ConversationItem } from "@elements/ConversationItem";
 
 export const SearchConversationList = ({
   conversations,
@@ -30,3 +30,4 @@ export const SearchConversationList = ({
     </>
   );
 };
+

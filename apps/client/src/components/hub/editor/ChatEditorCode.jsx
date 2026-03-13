@@ -1,14 +1,16 @@
-import Editor, { useMonaco } from "@monaco-editor/react";
 import { useEffect } from "react";
+
 import { useSelector } from "react-redux";
 
-import conversationHandlerService from "@services/conversationHandlerService.js";
+import { useProgrammableEditorCode } from "@hooks/components/useProgrammableEditorCode";
+
+import Editor, { useMonaco } from "@monaco-editor/react";
 
 import { EditorCodePanel } from "@sama-communications.ui-kit";
 
-import { getConverastionById } from "@store/values/Conversations.js";
+import conversationHandlerService from "@services/conversationHandlerService.js";
 
-import { useProgrammableEditorCode } from "@hooks/components/useProgrammableEditorCode";
+import { getConverastionById } from "@store/values/Conversations.js";
 
 export default function ChatEditorCode() {
   const monaco = useMonaco();

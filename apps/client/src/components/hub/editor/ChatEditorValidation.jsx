@@ -1,6 +1,6 @@
-import { EditorValidationBar } from "@sama-communications.ui-kit";
-
 import { useEditorValidation } from "@hooks/components/useEditorValidation";
+
+import { EditorValidationBar } from "@sama-communications.ui-kit";
 
 export default function ChatEditorValidation({ setLogs }) {
   const { statusNode, tooltipContent, onCheck, onSave, saveDisabled, testMessageRef } = useEditorValidation(setLogs);

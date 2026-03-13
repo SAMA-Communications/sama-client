@@ -1,22 +1,22 @@
 import { useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+
 import { useLocation } from "react-router";
 
-import { ConversationItemList } from "@sama-communications.ui-kit";
+import { useSelector } from "react-redux";
+
+import { Settings, MessageCirclePlus } from "lucide-react";
 
 import SearchBlock from "@components/search/SearchBlock";
+
+import { ConversationItemList } from "@sama-communications.ui-kit";
 import { SearchInput } from "@sama-communications.ui-kit";
-
 import { CustomVerticalScrollbar } from "@sama-communications.ui-kit";
-
 import { ChatListSkeleton } from "@sama-communications.ui-kit";
-
-import { addPrefix } from "@utils/NavigationUtils.js";
 
 import { getDisplayableConversations, getConverastionById } from "@store/values/Conversations.js";
 import { getIsMobileView } from "@store/values/IsMobileView";
 
-import { Settings, MessageCirclePlus } from "lucide-react";
+import { addPrefix } from "@utils/NavigationUtils.js";
 
 export default function ChatList() {
   const { pathname, hash } = useLocation();

@@ -1,4 +1,5 @@
 import { createEntityAdapter, createSelector, createSlice } from "@reduxjs/toolkit";
+
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 
 export const conversationsAdapter = createEntityAdapter({
