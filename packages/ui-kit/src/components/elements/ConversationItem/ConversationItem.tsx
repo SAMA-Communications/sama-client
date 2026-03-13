@@ -1,16 +1,20 @@
-import { useEffect, useMemo } from "react";
-
+import { useEffect, useMemo, memo } from "react";
+import { clsx } from "clsx";
 import { getAdapters } from "../../../adapters";
-
-import { TypingLine } from "../TypingLine";
-import { DynamicAvatar } from "../DynamicAvatar";
-import { LastMessage } from "../LastMessage/LastMessage";
-
 import { Users, UserRoundX } from "lucide-react";
 
-import { ConversationItemProps } from "./ConversationItem.types";
+import { DynamicAvatar } from "../DynamicAvatar";
+import { LastMessage } from "../LastMessage/LastMessage";
+import { TypingLine } from "../TypingLine";
+import { WrapperRoot } from "../WrapperRoot";
+import type { ConversationItemProps } from "./ConversationItem.types";
 
-export const ConversationItem = ({ conversation, isSelected, ...rest }: ConversationItemProps) => {
+export const ConversationItem = memo(function ConversationItem({
+  conversation,
+  isSelected,
+  className,
+  ...rest
+}: ConversationItemProps) {
   const { useDrafts, useParticipants, conversationUtils, userUtils } = getAdapters();
   const { syncDraftByCid } = useDrafts();
   const { getUserById, getCurrentUser } = useParticipants();
@@ -61,10 +65,12 @@ export const ConversationItem = ({ conversation, isSelected, ...rest }: Conversa
   );
 
   return (
-    <div
-      className={`ui:relative ui:flex ui:w-full ui:cursor-pointer ui:items-center ui:gap-3.75 ui:rounded-2xl ui:px-2.5 ui:py-2.5 ui:duration-100 ui:focus:outline-none ${
-        isSelected ? "ui:bg-accent-100 ui:shadow-btn" : "ui:hover:bg-accent-100/50"
-      } `}
+    <WrapperRoot
+      className={clsx(
+        "ui:relative ui:flex ui:w-full ui:cursor-pointer ui:items-center ui:gap-3.75 ui:rounded-2xl ui:px-2.5 ui:py-2.5 ui:duration-100 ui:focus:outline-none",
+        isSelected ? "ui:bg-accent-100 ui:shadow-btn" : "ui:hover:bg-accent-100/50",
+        className,
+      )}
       {...rest}
     >
       <DynamicAvatar
@@ -106,6 +112,6 @@ export const ConversationItem = ({ conversation, isSelected, ...rest }: Conversa
           )}
         </div>
       </div>
-    </div>
+    </WrapperRoot>
   );
-};
+});

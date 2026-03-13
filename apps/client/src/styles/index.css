@@ -97,21 +97,7 @@ body {
   margin: 0 12px;
 }
 
-/* vertical scroll */
-.scroll-bar__outer-container > div:nth-child(3) {
-  width: 6px !important;
 
-  right: 4px !important;
-  bottom: 4px !important;
-  top: 4px !important;
-
-  border-radius: 3px !important;
-}
-
-#chatFormContainer .scroll-bar__outer-container > div:nth-child(3) {
-  display: flex;
-  flex-direction: column-reverse;
-}
 
 #conversationItemsScrollable .infinite-scroll-component {
   display: flex;

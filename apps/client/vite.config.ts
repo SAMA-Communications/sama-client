@@ -20,7 +20,6 @@ export default defineConfig({
       "@generic": createPath("src/components/generic"),
       "@screens": createPath("src/components/screens"),
       "@static": createPath("src/components/static"),
-      "@skeletons": createPath("src/components/skeletons"),
 
       "@store": createPath("src/store"),
       "@services": createPath("src/services"),

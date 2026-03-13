@@ -1,4 +1,4 @@
-import { Message } from "../../../types/samaWssModels";
+import type { Message } from "types/samaWssModels";
 
 export interface LastMessageProps {
   message?: Message;

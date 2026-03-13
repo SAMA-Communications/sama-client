@@ -1,22 +1,31 @@
+import { memo } from "react";
 import { Check, CheckCheck, Clock } from "lucide-react";
 
-import { MessageStatusProps } from "./MessageStatus.types";
+import { WrapperRoot } from "../WrapperRoot";
+import type { MessageStatusProps } from "./MessageStatus.types";
 
-export const MessageStatus = ({ status, message, color = "accent" }: MessageStatusProps) => {
+const ICONS = {
+  sent: Check,
+  read: CheckCheck,
+  default: Clock,
+} as const;
+
+export const MessageStatus = memo(function MessageStatus({
+  status,
+  message,
+  color = "accent",
+  className,
+  ...rest
+}: MessageStatusProps) {
   if (!(message || status)) return null;
 
-  const messageStatus: "sent" | "read" | "default" = (status || message?.status || "default") as
-    | "sent"
-    | "read"
-    | "default";
-
+  const messageStatus: keyof typeof ICONS = (status || message?.status || "default") as keyof typeof ICONS;
   const iconColor = color === "white" ? "white" : "#7678e5";
+  const Icon = ICONS[messageStatus] ?? ICONS.default;
 
-  const icons = {
-    sent: <Check size={18} color={iconColor} />,
-    read: <CheckCheck size={18} color={iconColor} />,
-    default: <Clock size={18} color={iconColor} />,
-  };
-
-  return icons[messageStatus || "default"];
-};
+  return (
+    <WrapperRoot as="span" className={className} {...rest}>
+      <Icon size={18} color={iconColor} />
+    </WrapperRoot>
+  );
+});

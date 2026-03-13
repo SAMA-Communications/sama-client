@@ -1,22 +1,33 @@
 import { useMemo } from "react";
+import { clsx } from "clsx";
 
 import { getAdapters } from "../../../adapters";
 
 import { useConfirmWindow } from "../../../hooks/useConfirmWindow";
 
-import { CustomScrollBar } from "../CustomScrollBar";
+import { CustomVerticalScrollbar } from "../CustomVerticalScrollbar";
 import { ParticipantInChat } from "../../elements/ParticipantInChat";
 import { ConversationInfoAvatar } from "../../elements/ConversationInfoAvatar";
+import { WrapperRoot } from "../../elements/WrapperRoot";
 
 import { UserPlus, X, Users, LogOut, MessageCircleOff } from "lucide-react";
 
-import { ConversationInfoProps } from "./ConversationInfo.types";
+import type { ConversationInfoProps } from "./ConversationInfo.types";
 
-export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoProps) => {
-  const { useParticipants, useHistory, useConversations } = getAdapters();
+export const ConversationInfo = ({
+  conversation,
+  isMobile,
+  onClose,
+  onEditConversation,
+  onAddParticipants,
+  onParticipantOpenProfile,
+  onParticipantContextMenu,
+  className,
+  ...rest
+}: ConversationInfoProps) => {
+  const { useParticipants, useConversations } = getAdapters();
   const { getParticipantsByIdsAsObject, getCurrentUser } = useParticipants();
-  const { openEditConversationWindow, openAddParticipantsWindow, closeChatInfoPage } = useHistory();
-  const { deleteAndLevae } = useConversations();
+  const { deleteAndLeave } = useConversations();
 
   const confirm = useConfirmWindow();
 
@@ -42,7 +53,16 @@ export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoPro
 
       const isOwner = user._id === conversationOwner;
 
-      return <ParticipantInChat key={uId} user={user} isOwner={isOwner} isCurrentUserOwner={isCurrentUserOwner} />;
+      return (
+        <ParticipantInChat
+          key={uId}
+          user={user}
+          isOwner={isOwner}
+          isCurrentUserOwner={isCurrentUserOwner}
+          onOpenProfile={onParticipantOpenProfile}
+          onRequestContextMenu={onParticipantContextMenu}
+        />
+      );
     });
   }, [conversation, participants, currentUserId]);
 
@@ -55,16 +75,16 @@ export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoPro
       icon: <MessageCircleOff size={40} color="red" strokeWidth={2} />,
     });
     if (!isConfirm) return;
-    deleteAndLevae();
+    deleteAndLeave();
   };
 
   return (
-    <section className="ui:flex ui:h-full ui:w-100 ui:flex-col ui:gap-2.75 ui:p-3.5 ui:max-md:w-full">
+    <WrapperRoot as="section" className={clsx("ui:flex ui:h-full ui:w-100 ui:flex-col ui:gap-2.75 ui:p-3.5 ui:max-md:w-full", className)} {...rest}>
       <div className="ui:relative ui:flex ui:flex-col ui:items-center ui:justify-center ui:gap-2.75">
         <div className="ui:flex ui:w-full ui:justify-between ui:gap-2.5">
           <button
             className="ui:mb-1.5 ui:cursor-pointer ui:self-end ui:rounded-xl ui:bg-white ui:p-2 ui:shadow-btn ui:duration-150 ui:hover:bg-bg-dark ui:hover:text-white"
-            onClick={closeChatInfoPage}
+            onClick={onClose}
           >
             <X size={18} />
           </button>
@@ -82,7 +102,7 @@ export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoPro
           {isCurrentUserOwner ? (
             <p
               className="ui:-mt-1.75 ui:cursor-pointer ui:text-center ui:text-lg ui:text-accent-500"
-              onClick={openEditConversationWindow}
+              onClick={onEditConversation}
             >
               Edit Group Info
             </p>
@@ -102,15 +122,15 @@ export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoPro
           {isCurrentUserOwner ? (
             <button
               className="ui:cursor-pointer ui:rounded-xl ui:bg-hover-light ui:p-2 ui:duration-150 ui:hover:bg-accent-500 ui:hover:text-white"
-              onClick={openAddParticipantsWindow}
+              onClick={onAddParticipants}
             >
               <UserPlus size={18} />
             </button>
           ) : null}
         </div>
-        <CustomScrollBar autoHeight={isMobile ? true : false} autoHeightMax={isMobile ? 400 : 0}>
+        <CustomVerticalScrollbar autoHeight={!!isMobile} autoHeightMax={isMobile ? 400 : undefined}>
           {participantsList}
-        </CustomScrollBar>
+        </CustomVerticalScrollbar>
       </div>
 
       <hr className="ui:mt-auto ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
@@ -120,6 +140,6 @@ export const ConversationInfo = ({ conversation, isMobile }: ConversationInfoPro
       >
         <LogOut size={18} /> Leave Group
       </button>
-    </section>
+    </WrapperRoot>
   );
 };

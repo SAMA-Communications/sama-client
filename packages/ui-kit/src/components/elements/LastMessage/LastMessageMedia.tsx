@@ -1,7 +1,7 @@
 import { Blurhash } from "react-blurhash";
 import { ImageIcon, VideoIcon } from "lucide-react";
 
-import { MessageAttachment } from "../../../types/samaWssModels";
+import type { MessageAttachment } from "types/samaWssModels";
 
 export interface LastMessageMediaProps {
   isSelected: boolean;

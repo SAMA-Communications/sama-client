@@ -1,2 +1,2 @@
 export * from "./ConversationHeader";
-export * from "./ConversatonHeader.types";
+export * from "./ConversationHeader.types";

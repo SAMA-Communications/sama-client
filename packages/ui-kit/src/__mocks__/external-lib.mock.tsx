@@ -42,6 +42,8 @@ vi.mock("lucide-react", () => ({
   ),
   Check: (props: any) => <div data-testid="icon-check" {...props} />,
   CheckCheck: (props: any) => <div data-testid="icon-check-check" {...props} />,
+  Clock: (props: any) => <div data-testid="icon-clock" {...props} />,
+  Forward: (props: any) => <div data-testid="icon-forward" {...props} />,
   CircleQuestionMark: () => <div data-testid="icon-question" />,
   ImageIcon: (props: any) => <div data-testid="icon-image" {...props} />,
   Loader: (props: any) => <div data-testid="icon-loader" {...props} />,
@@ -103,6 +105,9 @@ const getAdaptersMock = () => ({
   userUtils,
   mediaUtils,
   useDrafts,
+  useConversations: () => ({}),
+  useMessages: () => ({}),
+  useContextMenu: () => ({}),
 });
 
 // @ts-expect-error: Ignore type validation for this line

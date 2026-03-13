@@ -8,19 +8,18 @@ import ChatForm from "@components/hub/ChatForm";
 import ChatList from "@components/hub/ChatList";
 
 import AttachHub from "@components/attach/AttachHub";
-import ConversationSelectHub from "@components/modals/ConversationSelectHub.js";
+import ConversationSelectHub from "@components/modals/ConversationSelectHub";
 import MediaHub from "@components/attach/MediaHub";
 import OtherUserProfile from "@components/info/OtherUserProfile";
-import UserProfileContainer from "@components/info/UserProfileContainer.js";
+import UserProfileContainer from "@components/info/UserProfileContainer";
 import UsersSelectModalHub from "@components/modals/UsersSelectModalHub";
 
 import { getIsMobileView } from "@store/values/IsMobileView";
 import { getIsTabletView } from "@store/values/IsTabletView";
 import { getConverastionById, selectConversationsEntities } from "@store/values/Conversations";
 
+import useHistory from "@hooks/api/useHistory.js";
 import { getEditWindowTypeFromUrl } from "@utils/NavigationUtils.js";
-
-import "react-loading-skeleton/dist/skeleton.css";
 
 const blockMap = {
   "/info": <ConversationInfo />,
@@ -35,6 +34,7 @@ const blockMap = {
 
 export default function Main({ isNeedToAnimate }) {
   const location = useLocation();
+  const history = useHistory();
 
   const isMobileView = useSelector(getIsMobileView);
   const isTabletView = useSelector(getIsTabletView);
@@ -54,22 +54,29 @@ export default function Main({ isNeedToAnimate }) {
       .map(([key, component]) =>
         cloneElement(component, {
           key,
-          ...(isChatInfo
+          ...(key === "/info" && isChatInfo
             ? {
                 conversation: selectedConversation,
                 isMobile: isMobileView,
+                onClose: history.closeChatInfoPage,
+                onEditConversation: history.openEditConversationWindow,
+                onAddParticipants: history.openAddParticipantsWindow,
+                onParticipantOpenProfile: (uid) =>
+                  uid === null ? history.openCurrentUserProfile() : history.openProfileById(uid),
+                onParticipantContextMenu: history.openContextMenuWithParams,
               }
             : {}),
-          ...(isEditModal
+          ...(key === "/edit" && isEditModal
             ? {
                 type: getEditWindowTypeFromUrl(location.pathname + location.hash + location.search),
+                onClose: history.undoLastSection,
               }
             : {}),
         }),
       );
 
     return isMobileView ? allBlocks.slice(-2) : allBlocks;
-  }, [location, isMobileView]);
+  }, [location, isMobileView, selectedConversation, history]);
 
   const hubContainer = useMemo(() => {
     if (isMobileView) {

@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router";
 
 import App from "@src/App";
 
-import ConnectingLine from "@components/connection/ConnectingLine.js";
+import ConnectingLine from "@components/connection/ConnectingLine";
 
 import store from "@store/store";
 
@@ -16,11 +16,9 @@ import "@styles/index.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
-    <BrowserRouter
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ConnectingLine />
       <App />
     </BrowserRouter>
-  </Provider>
+  </Provider>,
 );

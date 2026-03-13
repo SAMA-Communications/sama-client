@@ -1,4 +1,4 @@
-import { Conversation, User } from "types/samaWssModels";
+import type { Conversation, User } from "types/samaWssModels";
 
 import { SamaAdapters } from "./types";
 
@@ -103,7 +103,7 @@ const useConversations = () => {
 
   const sendTypingStatus = (cid: string) => {};
 
-  const deleteAndLevae = () => {};
+  const deleteAndLeave = () => {};
 
   return {
     storeNewConversations,
@@ -118,53 +118,9 @@ const useConversations = () => {
 
     sendTypingStatus,
 
-    deleteAndLevae,
+    deleteAndLeave,
   };
 };
-
-function useHistory() {
-  const openProfileById = (uid: string) => {};
-  const openCurrentUserProfile = () => {};
-  const openContextMenuWithParams = (params: any) => {};
-  const openAddParticipantsWindow = () => {};
-  const openEditUserProfileWindow = () => {};
-  const openEditConversationWindow = () => {};
-  const openForwardSection = () => {};
-  const openChatOrPaticipantInfo = (conversation?: Conversation, participant?: User | null | undefined) => {};
-  const openAttachmentHub = () => {};
-
-  const undoLastSection = () => {};
-
-  const closeChatInfoPage = () => {};
-  const closeCurrentUserProfile = () => {};
-  const closeSelectionMode = () => {};
-
-  const isLocationIncludeAttach = () => true;
-
-  const navigateToAuthPage = () => {};
-
-  return {
-    openProfileById,
-    openContextMenuWithParams,
-    openCurrentUserProfile,
-    openAddParticipantsWindow,
-    openEditUserProfileWindow,
-    openEditConversationWindow,
-    openForwardSection,
-    openChatOrPaticipantInfo,
-    openAttachmentHub,
-
-    undoLastSection,
-
-    closeChatInfoPage,
-    closeCurrentUserProfile,
-    closeSelectionMode,
-
-    isLocationIncludeAttach,
-
-    navigateToAuthPage,
-  };
-}
 
 function useMessages() {
   const deleteSelectedMessages = async (selectedCID: string, mids: string[]) => {};
@@ -212,7 +168,6 @@ export const defaultAdapters: SamaAdapters = {
   useDrafts,
   useParticipants,
   useConversations,
-  useHistory,
   useMessages,
   useContextMenu,
 

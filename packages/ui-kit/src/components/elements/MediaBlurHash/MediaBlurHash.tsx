@@ -3,9 +3,10 @@ import { Oval } from "react-loader-spinner";
 
 import { AlertCircle } from "lucide-react";
 
+import { DEFAULT_BLUR_HASH } from "../../../utils/constants";
 import { MediaBlurHashProps } from "./MediaBlurHash.types";
 
-export const DEFAULT_BLUR_HASH = "U27nLE$*00_N^k,@s9xu#7$2$%xtVD-B-pkW";
+export { DEFAULT_BLUR_HASH } from "../../../utils/constants";
 
 export const MediaBlurHash = ({
   status = "loading",

@@ -1,27 +1,33 @@
-import { useRef } from "react";
-
+import { memo, useCallback, useRef } from "react";
+import { clsx } from "clsx";
 import { getAdapters } from "../../../adapters";
-
-import { DynamicAvatar } from "../DynamicAvatar";
-
-import { ALLOWED_AVATAR_FORMATS } from "../../../utils/constants";
-
 import { Camera, Image } from "lucide-react";
 
-import { ConversationInfoAvatarProps } from "./ConversationInfoAvatar.types";
+import { DynamicAvatar } from "../DynamicAvatar";
+import { WrapperRoot } from "../WrapperRoot";
+import { ALLOWED_AVATAR_FORMATS } from "../../../utils/constants";
+import type { ConversationInfoAvatarProps } from "./ConversationInfoAvatar.types";
 
-export const ConversationInfoAvatar = ({ conversation, isEditDisabled }: ConversationInfoAvatarProps) => {
+export const ConversationInfoAvatar = memo(function ConversationInfoAvatar({
+  conversation,
+  isEditDisabled,
+  className,
+  ...rest
+}: ConversationInfoAvatarProps) {
   const { useConversations } = getAdapters();
   const { updateChatImage } = useConversations();
-
   const inputFilesRef = useRef<HTMLInputElement | null>(null);
 
-  const pickFileClick = () => inputFilesRef.current?.click();
-
-  const changeChatAvatar = async (file: any) => void (await updateChatImage(file));
+  const pickFileClick = useCallback(() => inputFilesRef.current?.click(), []);
+  const changeChatAvatar = useCallback(
+    async (file: File | undefined) => {
+      if (file) await updateChatImage(file);
+    },
+    [updateChatImage],
+  );
 
   return (
-    <div className="ui:relative ui:h-30 ui:w-30 ui:self-center">
+    <WrapperRoot className={clsx("ui:relative ui:h-30 ui:w-30 ui:self-center", className)} {...rest}>
       <div
         className={`ui:flex ui:h-full ui:w-full ui:items-center ui:justify-center ui:gap-2.75 ui:overflow-hidden ui:rounded-3xl ui:bg-hover-light`}
       >
@@ -38,7 +44,7 @@ export const ConversationInfoAvatar = ({ conversation, isEditDisabled }: Convers
           className="ui:invisible ui:hidden"
           ref={inputFilesRef}
           type="file"
-          onChange={(e: any) => changeChatAvatar(Array.from(e.target.files).at(0))}
+          onChange={(e) => changeChatAvatar(Array.from(e.target.files ?? []).at(0))}
           accept={ALLOWED_AVATAR_FORMATS.join(",")}
           multiple
         />
@@ -51,6 +57,6 @@ export const ConversationInfoAvatar = ({ conversation, isEditDisabled }: Convers
           <Camera size={28} color="white" />
         </div>
       )}
-    </div>
+    </WrapperRoot>
   );
-};
+});

@@ -28,7 +28,7 @@ import { removeAndNavigateSubLink, navigateTo } from "@utils/NavigationUtils.js"
 import { history } from "@utils/history.js";
 import { MOBILE_VIEW_WIDTH, TABLET_VIEW_WIDTH } from "@utils/constants.js";
 
-import SPageLoader from "@skeletons/SPageLoader";
+import { PageLoaderSkeleton } from "@sama-communications.ui-kit";
 
 const Main = lazy(() => import("@components/Main"));
 const AuthorizationHub = lazy(() => import("@components/auth/AuthorizationHub"));
@@ -124,7 +124,7 @@ export default function App() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <BetterSuspense fallback={<SPageLoader />} fallbackMinDurationMs={isUserLoggedIn ? 700 : 400}>
+      <BetterSuspense fallback={<PageLoaderSkeleton />} fallbackMinDurationMs={isUserLoggedIn ? 700 : 400}>
         <ConfirmWindowProvider>
           {isContextClicked && <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />}
           <AnimatePresence mode="wait">

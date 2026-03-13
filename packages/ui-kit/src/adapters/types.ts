@@ -1,4 +1,4 @@
-import { Conversation, User } from "types/samaWssModels";
+import type { Conversation, User } from "types/samaWssModels";
 
 export interface useDraftsProps {
   syncDraftByCid: (cid: string, oldDraft: object, convUpdatedAt: string) => void;
@@ -46,29 +46,7 @@ export interface useConversationsProps {
 
   sendTypingStatus: (cid: string) => void;
 
-  deleteAndLevae: () => void;
-}
-
-export interface useHistoryProps {
-  openProfileById: (uid: string) => void;
-  openCurrentUserProfile: () => void;
-  openContextMenuWithParams: (params: any) => void;
-  openAddParticipantsWindow: () => void;
-  openEditUserProfileWindow: () => void;
-  openEditConversationWindow: () => void;
-  openForwardSection: () => void;
-  openChatOrPaticipantInfo: (conversation?: Conversation, participant?: User | null) => void;
-  openAttachmentHub: () => void;
-
-  undoLastSection: () => void;
-
-  closeChatInfoPage: () => void;
-  closeCurrentUserProfile: () => void;
-  closeSelectionMode: () => void;
-
-  isLocationIncludeAttach: () => boolean;
-
-  navigateToAuthPage: () => void;
+  deleteAndLeave: () => void;
 }
 
 export interface useMessagesProps {
@@ -119,11 +97,24 @@ export interface formatedUtilsProps {
   calcInputHeight: (text: string) => number;
 }
 
+export interface SearchBlockDataOptions {
+  isSearchOnlyUsers?: boolean;
+  isShowDefaultConvs?: boolean;
+}
+
+export interface SearchBlockDataResult {
+  searchedUsers: User[];
+  searchedChats: Conversation[];
+  defaultChats: Conversation[];
+  isUserSearched: string | null;
+  isChatSearched: string | null;
+  isPending: boolean;
+}
+
 export interface SamaAdapters {
   useDrafts(): useDraftsProps;
   useParticipants(): useParticipantsProps;
   useConversations(): useConversationsProps;
-  useHistory(): useHistoryProps;
   useMessages(): useMessagesProps;
   useContextMenu(): useContextMenuProps;
 
@@ -131,4 +122,7 @@ export interface SamaAdapters {
   conversationUtils: conversationUtilsProps;
   mediaUtils: mediaUtilsProps;
   formatedUtils: formatedUtilsProps;
+
+  /** Optional. When set, SearchBlock can call it to get current search data (client updates a ref from useSearchBlock) so the client can pass only searchText + options. */
+  getSearchBlockData?: () => SearchBlockDataResult;
 }

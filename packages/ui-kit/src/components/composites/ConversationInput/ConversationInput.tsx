@@ -1,15 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { clsx } from "clsx";
 
 import { getAdapters } from "../../../adapters";
 
 import { MessageInput } from "../../elements/MessageInput";
+import { WrapperRoot } from "../../elements/WrapperRoot";
 
-import { ConversationInputProps } from "./ConversationInput.type";
+import type { ConversationInputProps } from "./ConversationInput.type";
 
 export const ConversationInput = ({
   chatMessagesBlockRef,
   editedMessage,
   isEnableMagicButton = true,
+  onOpenAttachmentHub,
+  isLocationIncludeAttach,
+  className,
+  ...rest
 }: ConversationInputProps) => {
   const { useDrafts, useMessages, useConversations, useParticipants, formatedUtils } = getAdapters();
   const { saveDraft, saveLastInputText, getLastInputText, getDraftMessage, getExternalProps } = useDrafts();
@@ -101,16 +107,16 @@ export const ConversationInput = ({
 
   if (isBlockedConv) {
     return (
-      <div className="ui:mb-3.5 ui:flex ui:min-h-11 ui:w-full ui:justify-center ui:gap-2.5 ui:self-center ui:overflow-hidden ui:p-2 ui:lg:max-w-300">
+      <WrapperRoot className={clsx("ui:mb-3.5 ui:flex ui:min-h-11 ui:w-full ui:justify-center ui:gap-2.5 ui:self-center ui:overflow-hidden ui:p-2 ui:lg:max-w-300", className)} {...rest}>
         <p className="ui:font-light ui:text-text-dark">
           The user you are currently chatting with has deleted their account. You can no longer continue the chat.
         </p>
-      </div>
+      </WrapperRoot>
     );
   }
 
   return (
-    <div className="ui:flex ui:w-full ui:items-end ui:gap-2.5 ui:self-center ui:pb-3.5 ui:lg:max-w-300">
+    <WrapperRoot className={clsx("ui:flex ui:w-full ui:items-end ui:gap-2.5 ui:self-center ui:pb-3.5 ui:lg:max-w-300", className)} {...rest}>
       <MessageInput
         inputTextRef={inputRef}
         isBlockedConv={isBlockedConv}
@@ -119,7 +125,9 @@ export const ConversationInput = ({
         isMobile={false}
         isEnableMagicButton={isEnableMagicButton}
         onSubmitFunc={onSubmitFunc}
+        onOpenAttachmentHub={onOpenAttachmentHub}
+        isLocationIncludeAttach={isLocationIncludeAttach}
       />
-    </div>
+    </WrapperRoot>
   );
 };

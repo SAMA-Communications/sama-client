@@ -1,6 +1,6 @@
 export default function EmailInput({ setState }) {
   return (
-    <div className="flex w-full rounded-lg bg-(--color-hover-light) px-[14px] py-[7px] font-light">
+    <div className="bg-hover-light flex w-full rounded-lg px-[14px] py-[7px] font-light normal-nums!">
       <input
         className="h-[40px] flex-1 outline-none"
         onKeyDown={(e) => e.key === " " && e.preventDefault()}

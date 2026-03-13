@@ -1,18 +1,21 @@
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useCallback, useRef } from "react";
+import { clsx } from "clsx";
 
 import { getAdapters } from "../../../adapters";
 
 import { ConversationItem } from "../../elements/ConversationItem";
+import { WrapperRoot } from "../../elements/WrapperRoot";
 
-import { ConversationItemListProps } from "./ConversationItemList.types";
+import type { ConversationItemListProps } from "./ConversationItemList.types";
 
 export const ConversationItemList = ({
   conversations,
   selectedConversation,
   additionalOnClickfunc,
-}: // isHideDeletedUsers = false,
-ConversationItemListProps) => {
+  className,
+  ...rest
+}: ConversationItemListProps) => {
   const { useConversations } = getAdapters();
   const { setSelectedConversation, storeNewConversations, fetchConversations } = useConversations();
 
@@ -37,6 +40,7 @@ ConversationItemListProps) => {
   }, [conversations, needToGetMoreChats]);
 
   return (
+    <WrapperRoot className={clsx(className)} {...rest}>
     <InfiniteScroll
       dataLength={conversations.length}
       next={lastConversationRef}
@@ -53,5 +57,6 @@ ConversationItemListProps) => {
         />
       ))}
     </InfiniteScroll>
+    </WrapperRoot>
   );
 };

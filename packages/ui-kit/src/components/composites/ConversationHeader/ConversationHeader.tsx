@@ -1,14 +1,16 @@
 import { useMemo } from "react";
+import { clsx } from "clsx";
 
 import { getAdapters } from "../../../adapters";
 
 import { TypingLine } from "../../elements/TypingLine";
+import { WrapperRoot } from "../../elements/WrapperRoot";
 
 import { CHAT_CONTENT_TABS } from "../../../utils/constants";
 
 import { ChevronLeft, EllipsisVertical, Code, Trash, Forward } from "lucide-react";
 
-import { ConversationHeaderProps } from "./ConversatonHeader.types";
+import type { ConversationHeaderProps } from "./ConversationHeader.types";
 
 export const ConversationHeader = ({
   conversation,
@@ -16,10 +18,14 @@ export const ConversationHeader = ({
   currentTab,
   changeTabFunc,
   closeFormFunc,
+  onForwardSection,
+  onCloseSelectionMode,
+  onOpenChatOrParticipantInfo,
+  className,
+  ...rest
 }: ConversationHeaderProps) => {
-  const { useParticipants, useHistory, useMessages, useContextMenu, userUtils } = getAdapters();
+  const { useParticipants, useMessages, useContextMenu, userUtils } = getAdapters();
   const { getCurrentUser, getOpponentByCid } = useParticipants();
-  const { openForwardSection, closeSelectionMode, openChatOrPaticipantInfo } = useHistory();
   const { deleteSelectedMessages, getSelectedMessages } = useMessages();
   const { openContextMenu } = useContextMenu();
   const { getLastVisitTime, getUserFullName } = userUtils;
@@ -85,10 +91,9 @@ export const ConversationHeader = ({
   const viewChatOrPaticipantInfo = () => {
     if (!isGroupChat && !isOpponentExist) {
       console.warn("This account has been deleted.");
-      //   showCustomAlert("This account has been deleted.", "warning");
       return;
     }
-    openChatOrPaticipantInfo(selectedConversation, opponentUser);
+    onOpenChatOrParticipantInfo?.(selectedConversation, opponentUser ?? null);
   };
 
   const onContextMenu = (e: any) => {
@@ -112,10 +117,10 @@ export const ConversationHeader = ({
   //   useKeyDown(KEY_CODES.ESCAPE, closeSelectionMode);
 
   return isSelectionMode ? (
-    <div className="ui:flex ui:h-16 ui:w-full ui:gap-2.5 ui:rounded-xl ui:pt-3.5 ui:pb-1">
+    <WrapperRoot className={clsx("ui:flex ui:h-16 ui:w-full ui:gap-2.5 ui:rounded-xl ui:pt-3.5 ui:pb-1", className)} {...rest}>
       <button
         className="ui:flex ui:h-max ui:cursor-pointer ui:items-center ui:gap-1.5 ui:self-center ui:rounded-xl ui:bg-accent-500 ui:px-2.5 ui:py-1.5 ui:text-white ui:shadow-btn"
-        onClick={openForwardSection}
+        onClick={onForwardSection}
       >
         <Forward size={18} color="white" />
         <p className="ui:text-base">Forward</p>
@@ -131,13 +136,13 @@ export const ConversationHeader = ({
       </button>
       <button
         className="ui:ml-auto ui:h-max ui:cursor-pointer ui:self-center ui:p-1.5 ui:font-normal ui:text-accent-500"
-        onClick={closeSelectionMode}
+        onClick={onCloseSelectionMode}
       >
         Cancel
       </button>
-    </div>
+    </WrapperRoot>
   ) : (
-    <div className="ui:flex ui:h-16 ui:w-full ui:gap-2.5 ui:rounded-xl ui:pt-2 ui:pb-1">
+    <WrapperRoot className={clsx("ui:flex ui:h-16 ui:w-full ui:gap-2.5 ui:rounded-xl ui:pt-2 ui:pb-1", className)} {...rest}>
       <button
         className="ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:bg-white ui:p-2 ui:shadow-btn ui:duration-150 ui:hover:bg-bg-dark ui:hover:text-white"
         onClick={closeFormFunc}
@@ -173,6 +178,6 @@ export const ConversationHeader = ({
       >
         <EllipsisVertical size={18} />
       </button>
-    </div>
+    </WrapperRoot>
   );
 };

@@ -10,10 +10,16 @@ import { useConfirmWindow } from "../../../hooks/useConfirmWindow";
 
 import { RotateCcwKey, LogOut, Trash, ChevronLeft, UserRoundX } from "lucide-react";
 
-export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
-  const { useParticipants, useHistory } = getAdapters();
+export const UserProfile = ({
+  user,
+  isMobile,
+  onLogout,
+  onClose,
+  onEditProfile,
+  onNavigateToAuth,
+}: UserProfileProps) => {
+  const { useParticipants } = getAdapters();
   const { updateCurrentUserPassword, deleteCurrentUser } = useParticipants();
-  const { openEditUserProfileWindow, closeCurrentUserProfile, navigateToAuthPage } = useHistory();
 
   const confirm = useConfirmWindow();
 
@@ -31,7 +37,7 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
     });
     if (!isConfirm) return;
     const isSuccess = await deleteCurrentUser();
-    if (isSuccess) navigateToAuthPage();
+    if (isSuccess) onNavigateToAuth?.();
   };
 
   return (
@@ -40,7 +46,7 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
         <div className="ui:flex ui:w-full ui:justify-between">
           <button
             className="ui:mb-1.5 ui:cursor-pointer ui:self-start ui:rounded-xl ui:bg-white ui:p-2 ui:shadow-btn ui:hover:bg-bg-dark ui:hover:text-white"
-            onClick={closeCurrentUserProfile}
+            onClick={onClose}
           >
             <ChevronLeft size={18} />
           </button>
@@ -54,7 +60,7 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
         </div>
         <p
           className="ui:-mt-1.75 ui:cursor-pointer ui:text-center ui:text-lg ui:text-accent-500"
-          onClick={openEditUserProfileWindow}
+          onClick={onEditProfile}
         >
           Edit User Info
         </p>
@@ -68,7 +74,7 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
           value={phone}
           iconType="phone"
           placeholder={"Enter your phone number"}
-          onClick={openEditUserProfileWindow}
+          onClick={onEditProfile}
           isEnableToEdit={true}
         />
         <InfoBox
@@ -76,7 +82,7 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
           value={email}
           iconType="email"
           placeholder={"Enter your email address"}
-          onClick={openEditUserProfileWindow}
+          onClick={onEditProfile}
           isEnableToEdit={true}
         />
 
@@ -113,7 +119,7 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
         <button
           className="ui:mt-2.75 ui:flex ui:cursor-pointer ui:items-center ui:justify-center ui:gap-2.75 ui:rounded-xl ui:bg-white ui:p-2 ui:text-accent-500 ui:shadow-btn ui:duration-150 ui:hover:bg-accent-500 ui:hover:text-white"
           onClick={() => {
-            navigateToAuthPage();
+            onNavigateToAuth?.();
             onLogout();
           }}
         >
