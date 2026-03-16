@@ -4,8 +4,7 @@ import { Route, Routes, useLocation, useNavigate } from "react-router";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { AnimatePresence, LazyMotion, domAnimation } from "motion/react";
-import * as m from "motion/react-m";
+import { AnimatePresence, LazyMotion, domAnimation, motion as m } from "motion/react";
 
 import ContextMenuHub from "@components/context/ContextMenuHub";
 

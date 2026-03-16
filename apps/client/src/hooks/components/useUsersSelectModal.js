@@ -4,6 +4,10 @@ import { useLocation } from "react-router";
 
 import { useSelector } from "react-redux";
 
+import { UserPlus } from "lucide-react";
+
+import { useConfirmWindow } from "@sama-communications.ui-kit";
+
 import conversationService from "@services/conversationsService";
 
 import { getConverastionById } from "@store/values/Conversations";
@@ -12,6 +16,7 @@ import { selectParticipantsEntities } from "@store/values/Participants";
 import { removeAndNavigateSubLink, removeAndNavigateLastSection, navigateTo } from "@utils/NavigationUtils.js";
 
 export function useUsersSelectModal({ type } = {}) {
+  const requestConfirm = useConfirmWindow();
   const selectedConversation = useSelector(getConverastionById);
   const participants = useSelector(selectParticipantsEntities);
   const { pathname, hash } = useLocation();
@@ -46,12 +51,18 @@ export function useUsersSelectModal({ type } = {}) {
 
   const sendEditRequest = useCallback(
     async (users) => {
+      const { isConfirm } = await requestConfirm({
+        title: "Add participants",
+        description: `Add selected user${users.length > 1 ? "s" : ""} to the chat?`,
+        icon: <UserPlus size={40} color="red" strokeWidth={2} />
+      });
+      if (!isConfirm) return;
       const success = await conversationService.addParticipants(users);
       if (success !== false) {
         removeAndNavigateLastSection(pathname + hash);
       }
     },
-    [pathname, hash],
+    [pathname, hash, requestConfirm],
   );
 
   const addUser = useCallback((user) => {

@@ -11,7 +11,8 @@ import { ContextMenuItem, useConfirmWindow, useViewportBreakpoints } from "@sama
 import conversationService from "@services/conversationsService";
 
 import { selectContextExternalProps } from "@store/values/ContextMenu.js";
-import { getConverastionById, selectAllConversations } from "@store/values/Conversations.js";
+import { getConverastionById } from "@store/values/Conversations.js";
+import { selectCurrentUserId } from "@store/values/CurrentUserId";
 
 import { addPrefix, addSuffix, navigateTo } from "@utils/NavigationUtils.js";
 
@@ -21,12 +22,14 @@ export default function ConversationActions({ listOfIds }) {
   const { pathname, hash } = useLocation();
   const { type, opponent_id, owner_id } = useSelector(getConverastionById) || {};
 
-  const currentUser = useSelector(selectAllConversations);
+  const currentUserId = useSelector(selectCurrentUserId);
   const currentPath = pathname + hash;
   const { userObject } = useSelector(selectContextExternalProps);
 
-  const isCurrentUserOwner = currentUser._id === owner_id;
+  const isCurrentUser = currentUserId?.toString() === userObject?._id?.toString();
   const { isTablet: isTabletView } = useViewportBreakpoints();
+
+  const opponentId = owner_id === currentUserId ? opponent_id : owner_id;
 
   const links = {
     convInfo: (
@@ -37,7 +40,7 @@ export default function ConversationActions({ listOfIds }) {
         onClick={() => {
           const tmpPath =
             isTabletView && currentPath.includes("/profile") ? currentPath.replace("/profile", "") : currentPath;
-          addSuffix(tmpPath, type === "g" ? "/info" : `/user?uid=${opponent_id}`);
+          addSuffix(tmpPath, type === "g" ? "/info" : `/user?uid=${opponentId}`);
         }}
       />
     ),
@@ -57,7 +60,7 @@ export default function ConversationActions({ listOfIds }) {
         isDangerStyle={true}
         onClick={async () => {
           const { isConfirm } = await confirm({
-            title: "Delate And Leave",
+            title: "Delete And Leave",
             description: `Do you want to delete this chat?`,
             icon: <MessageCircleOff size={40} color="red" strokeWidth={2} />,
           });
@@ -81,7 +84,15 @@ export default function ConversationActions({ listOfIds }) {
         text="Remove participant"
         icon={<UserMinus size={18} color="red" />}
         isDangerStyle={true}
-        onClick={() => conversationService.removeParticipant(userObject?._id)}
+        onClick={async () => {
+          const { isConfirm } = await confirm({
+            title: "Remove participant",
+            description: "Do you want to remove this user from the chat?",
+            icon: <UserMinus size={40} color="red" strokeWidth={2} />,
+          });
+          if (!isConfirm) return;
+          await conversationService.removeParticipant(userObject?._id);
+        }}
       />
     ),
 
@@ -92,9 +103,7 @@ export default function ConversationActions({ listOfIds }) {
         icon={<Info size={18} />}
         uId={userObject?._id}
         onClick={() => {
-          isCurrentUserOwner
-            ? addPrefix(currentPath, "/profile")
-            : addSuffix(currentPath, `/user?uid=${userObject?._id}`);
+          isCurrentUser ? addPrefix(currentPath, "/profile") : addSuffix(currentPath, `/user?uid=${userObject?._id}`);
         }}
       />
     ),

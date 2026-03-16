@@ -300,7 +300,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
         <InformativeMessage
           key={key}
           text={body}
-          isNextMesssageUsers={isNextMessageYours}
+          isNextMessageUsers={isNextMessageYours}
           onClick={() => addSuffix(pathname + hash, `/user?uid=${x?.user?._id}&view=card`)}
         />
       ) : (
@@ -320,7 +320,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
             isMobile={isMobile}
             isSelected={isSelected}
             isSelectionMode={isSelectionMode}
-            isPrevMesssageYours={isPrevMesssageYours}
+            isPrevMessageYours={isPrevMesssageYours}
             isNextMessageYours={isNextMessageYours}
             isLongTimeBetweenMessages={isLongTimeBetweenMessages}
           />

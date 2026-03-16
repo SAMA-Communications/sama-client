@@ -6,7 +6,7 @@ export interface ParticipantContextMenuParams {
   category: string;
   list: (string | null)[];
   coords: { x: number; y: number };
-  externalProps?: { user: User };
+  externalProps?: { userObject: User };
   clicked: boolean;
 }
 

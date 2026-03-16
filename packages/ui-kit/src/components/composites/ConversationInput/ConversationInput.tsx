@@ -103,7 +103,9 @@ export const ConversationInput = ({
 
   const isBlockedConv = useMemo(() => {
     const { type, owner_id, opponent_id } = selectedConversation;
-    return type === "u" && !getUserById(opponent_id || owner_id)?.login;
+    return (
+      type === "u" && !(opponent_id && getUserById(opponent_id)?.login && owner_id && getUserById(owner_id)?.login)
+    );
   }, [selectedConversation, getUserById]);
 
   if (isBlockedConv) {

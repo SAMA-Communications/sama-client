@@ -14,6 +14,8 @@ export const ContextMenuItem = memo(function ContextMenuItem({
   isDangerStyle = false,
   id,
   className,
+  uId,
+  uObject,
   ...rest
 }: ContextMenuItemProps) {
   return (

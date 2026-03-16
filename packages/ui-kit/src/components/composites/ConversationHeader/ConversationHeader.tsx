@@ -121,7 +121,10 @@ export const ConversationHeader = ({
 
   return isSelectionMode ? (
     <WrapperRoot
-      className={clsx("ui:flex ui:h-16 ui:w-full ui:gap-2.5 ui:rounded-xl ui:pt-3.5 ui:pb-1", className)}
+      className={clsx(
+        "ui:flex ui:max-h-15 ui:min-h-[59px] ui:w-full ui:gap-2.5 ui:rounded-xl ui:pt-3.5 ui:pb-1",
+        className,
+      )}
       {...rest}
     >
       <button
@@ -149,7 +152,7 @@ export const ConversationHeader = ({
     </WrapperRoot>
   ) : (
     <WrapperRoot
-      className={clsx("ui:flex ui:h-16 ui:w-full ui:gap-2.5 ui:rounded-xl ui:pt-2 ui:pb-1", className)}
+      className={clsx("ui:flex ui:h-15 ui:max-h-15 ui:w-full ui:gap-2.5 ui:rounded-xl ui:pt-2 ui:pb-1", className)}
       {...rest}
     >
       <button

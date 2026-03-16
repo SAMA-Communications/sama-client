@@ -30,6 +30,7 @@ export default function MediaHub() {
 
   const closeModal = () => removeAndNavigateLastSection(pathname + hash);
 
+  useKeyDown(KEY_CODES.ESCAPE, closeModal);
   useKeyDown(KEY_CODES.ARROW_RIGHT, () => currentIndex < attachments.length - 1 && setCurrentIndex(currentIndex + 1));
   useKeyDown(KEY_CODES.ARROW_LEFT, () => currentIndex > 0 && setCurrentIndex(currentIndex - 1));
 

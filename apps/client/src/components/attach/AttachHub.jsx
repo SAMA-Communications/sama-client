@@ -5,12 +5,13 @@ import { useLocation } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 
 import localforage from "localforage";
+import { MessageCircleOff } from "lucide-react";
 
 import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import DownloadManager from "@lib/downloadManager";
 
-import { AttachModal, useViewportBreakpoints } from "@sama-communications.ui-kit";
+import { AttachModal, useConfirmWindow, useViewportBreakpoints } from "@sama-communications.ui-kit";
 
 import messagesService from "@services/messagesService.js";
 import draftService from "@services/tools/draftService.js";
@@ -28,6 +29,7 @@ import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 export default function AttachHub() {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
+  const requestConfirm = useConfirmWindow();
 
   const connectState = useSelector(getNetworkState);
   const { isMobile } = useViewportBreakpoints();
@@ -82,7 +84,7 @@ export default function AttachHub() {
   };
 
   const closeModal = useCallback(
-    (isForseClose) => {
+    async (isForseClose) => {
       const close = () => {
         removeAndNavigateLastSection(pathname + hash);
         localforage.removeItem("attachFiles");
@@ -90,16 +92,24 @@ export default function AttachHub() {
         return true;
       };
       if (isForseClose === true) return close();
-      if (files.length && !window.confirm("Are you sure you want to cancel sending files?")) {
-        return false;
+      if (files.length) {
+        const { isConfirm } = await requestConfirm({
+          title: "Cancel sending",
+          description: "Are you sure you want to cancel sending files?",
+          icon: <MessageCircleOff size={40} color="red" strokeWidth={2} />,
+        });
+        if (!isConfirm) return false;
       }
       return close();
     },
-    [files.length, pathname, hash],
+    [files.length, pathname, hash, requestConfirm],
   );
 
-  const removeFile = (index) => {
-    if (files.length === 1 && !closeModal()) return;
+  const removeFile = async (index) => {
+    if (files.length === 1) {
+      const closed = await closeModal();
+      if (!closed) return;
+    }
     setFiles((prevFiles) => prevFiles.slice(0, index).concat(prevFiles.slice(index + 1)));
   };
 
@@ -300,7 +310,6 @@ export default function AttachHub() {
         placeholder={isSendMessageDisable ? "Processing and sending files..." : "Type your message..."}
         isSending={isSendMessageDisable}
         isPending={isPending}
-        contentClassName="py-[30px] px-[30px] gap-[20px]"
       />
     </>
   );

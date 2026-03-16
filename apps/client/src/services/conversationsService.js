@@ -219,17 +219,10 @@ class ConversationsService {
       participants: { add: addUsersArr },
     };
 
-    if (!window.confirm(`Add selected user${participants.length > 1 ? "s" : ""} to the chat?`)) {
-      return false;
-    }
-
     return await api.conversationUpdate(requestData);
   }
 
   async removeParticipant(userId) {
-    if (!window.confirm(`Do you want to delete this user?`)) {
-      return;
-    }
     const { selectedConversation, conversations } = store.getState();
     const selectedCID = selectedConversation.value.id;
 

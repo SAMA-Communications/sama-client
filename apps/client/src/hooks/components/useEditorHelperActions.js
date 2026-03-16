@@ -1,6 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 
+import { Trash } from "lucide-react";
+
 import { useMonaco } from "@monaco-editor/react";
+
+import { useConfirmWindow } from "@sama-communications.ui-kit";
 
 import conversationHandlerService from "@services/conversationHandlerService.js";
 
@@ -13,6 +17,7 @@ import { DEFAULT_EDITOR_CODE } from "@utils/constants.js";
 export function useEditorHelperActions() {
   const monaco = useMonaco();
   const dispatch = useDispatch();
+  const requestConfirm = useConfirmWindow();
   const selectedCid = useSelector(getSelectedConversationId);
   const selectedConversationScheme = useSelector(getConversationHandler);
 
@@ -23,11 +28,15 @@ export function useEditorHelperActions() {
   };
 
   const deleteConversationHandler = async () => {
-    if (window.confirm("Are you sure you want to delete the handler?")) {
-      resetEditorContent(DEFAULT_EDITOR_CODE);
-      dispatch(upsertChat({ _id: selectedCid, handler_options: null }));
-      await conversationHandlerService.deleteConversationHandler(selectedCid);
-    }
+    const { isConfirm } = await requestConfirm({
+      title: "Delete handler",
+      description: "Are you sure you want to delete the handler?",
+      icon: <Trash size={40} color="red" strokeWidth={2} />
+    });
+    if (!isConfirm) return;
+    resetEditorContent(DEFAULT_EDITOR_CODE);
+    dispatch(upsertChat({ _id: selectedCid, handler_options: null }));
+    await conversationHandlerService.deleteConversationHandler(selectedCid);
   };
 
   const undoHandlerChanges = () => {

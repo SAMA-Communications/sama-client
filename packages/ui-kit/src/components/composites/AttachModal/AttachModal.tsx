@@ -3,9 +3,12 @@ import { clsx } from "clsx";
 import type { AttachModalProps } from "@composites/AttachModal/AttachModal.types";
 import { MediaAttachments } from "@composites/MediaAttachments";
 
+import { Modal } from "@elements/Modal";
 import { OvalLoader } from "@elements/OvalLoader";
 import { TextAreaInput } from "@elements/TextAreaInput";
-import { WrapperRoot } from "@elements/WrapperRoot";
+
+const attachPanelClassName =
+  "ui:max-h-[90svh] ui:w-[500px]! ui:flex-col ui:gap-5 ui:rounded-[32px] ui:p-7 ui:max-sm:w-[94svw]";
 
 export const AttachModal = ({
   files,
@@ -28,32 +31,31 @@ export const AttachModal = ({
   const resolvedTitle = title ?? (files.length > 1 ? `Selected ${files.length} files` : "Send attachment");
 
   return (
-    <WrapperRoot
-      className={clsx(
-        "ui:absolute ui:top-0 ui:z-[200] ui:flex ui:h-dvh ui:w-dvw ui:items-center ui:justify-center ui:bg-black/50 ui:p-2.5",
-        className,
-      )}
+    <Modal
+      className={clsx("ui:z-100 ui:p-2.5", className)}
+      panelClassName={clsx(attachPanelClassName, contentClassName)}
+      onClick={onCancel}
       {...rest}
     >
-      <div
-        className={`ui:flex ui:max-h-[90svh] ui:w-[500px] ui:flex-col ui:gap-5 ui:rounded-[32px] ui:bg-bg-light ui:p-7 ui:max-sm:w-[94svw] ${contentClassName}`}
-      >
-        <p className="ui:text-h5 ui:font-normal ui:text-black">{resolvedTitle}</p>
+      <div className="ui:flex ui:flex-col ui:gap-2.75">
+        <p className="ui:text-xl ui:font-normal ui:text-black">{resolvedTitle}</p>
 
-        {isSending ? (
-          <p className="ui:text-h5 ui:self-center ui:py-2.5">Processing...</p>
-        ) : isPending && !files.length ? (
-          <OvalLoader width={80} height={80} wrapperClassName="ui:self-center" />
-        ) : !files.length ? (
-          <p className="ui:text-h5 ui:self-center ui:py-2.5">Select files</p>
-        ) : (
-          <MediaAttachments
-            maxHeight={attachmentsMaxHeight}
-            attachments={files}
-            removeFileFunc={onRemoveFile}
-            disableAnimation
-          />
-        )}
+        <div className="ui:flex ui:min-h-50 ui:flex-col ui:items-center ui:justify-center">
+          {isSending ? (
+            <p className="ui:self-center ui:py-2.5 ui:text-lg">Processing...</p>
+          ) : isPending && !files.length ? (
+            <OvalLoader width={80} height={80} wrapperClassName="ui:self-center" />
+          ) : !files.length ? (
+            <p className="ui:self-center ui:py-2.5 ui:text-lg ui:text-gray-500">Select files</p>
+          ) : (
+            <MediaAttachments
+              maxHeight={attachmentsMaxHeight}
+              attachments={files}
+              removeFileFunc={onRemoveFile}
+              disableAnimation
+            />
+          )}
+        </div>
 
         <TextAreaInput
           className="ui:max-h-[140px] ui:min-h-10 ui:resize-none ui:rounded-xl ui:bg-hover-light ui:px-3.5 ui:py-3 ui:text-black ui:[&::-webkit-scrollbar]:hidden"
@@ -66,20 +68,30 @@ export const AttachModal = ({
           autoFocus
         />
 
+        <hr className="ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
         {!isSending && (
           <div className="ui:mt-auto ui:flex ui:items-center ui:justify-end ui:gap-7">
-            <p className="ui:text-h6 ui:mr-auto ui:cursor-pointer ui:font-light ui:text-accent-500" onClick={onAddMore}>
+            <button
+              className="ui:mr-auto ui:flex ui:cursor-pointer ui:items-center ui:px-3 ui:py-2 ui:text-accent-500"
+              onClick={onAddMore}
+            >
               Add
-            </p>
-            <p className="ui:text-h6 ui:cursor-pointer ui:font-light ui:text-accent-500" onClick={onCancel}>
+            </button>
+            <button
+              className="ui:flex ui:cursor-pointer ui:items-center ui:px-3 ui:py-2 ui:text-text-dark"
+              onClick={onCancel}
+            >
               Cancel
-            </p>
-            <p className="ui:text-h6 ui:cursor-pointer ui:font-light ui:text-accent-500" onClick={onSend}>
+            </button>
+            <button
+              className="ui:flex ui:cursor-pointer ui:items-center ui:rounded-xl ui:bg-accent-500 ui:px-6 ui:py-2 ui:text-white ui:duration-150 ui:hover:bg-black"
+              onClick={onSend}
+            >
               Send
-            </p>
+            </button>
           </div>
         )}
       </div>
-    </WrapperRoot>
+    </Modal>
   );
 };

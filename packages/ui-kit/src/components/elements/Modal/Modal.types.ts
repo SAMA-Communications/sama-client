@@ -11,4 +11,3 @@ export interface ModalProps extends Omit<WrapperRootProps<"div">, "as" | "childr
   /** If true, panel has min height for forms (e.g. 80svh). */
   tall?: boolean;
 }
-

@@ -20,7 +20,7 @@ export interface ConversationInfoProps extends Omit<WrapperRootProps<"section">,
     category: string;
     list: (string | null)[];
     coords: { x: number; y: number };
-    externalProps?: { user: User };
+    externalProps?: { userObject: User };
     clicked: boolean;
   }) => void;
 }

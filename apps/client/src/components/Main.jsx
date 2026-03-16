@@ -42,8 +42,8 @@ export default function Main() {
   const selectedConversation = useSelector(getConverastionById);
   const { isMobile: isMobileView, isTablet: isTabletView, isLaptop: isLaptopView } = useViewportBreakpoints();
 
-  const { pathname, hash } = location;
-  const fullPath = pathname + hash;
+  const { pathname, hash, search } = location;
+  const fullPath = pathname + hash + search;
   const isChatInfo = hash.includes("/info");
   const isUserProfile = hash.includes("/user");
   const isEditModal = fullPath.includes("/edit");

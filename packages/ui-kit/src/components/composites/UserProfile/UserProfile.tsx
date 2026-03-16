@@ -59,6 +59,7 @@ export const UserProfile = ({
           {last_name ? (
             <p className="ui:overflow-hidden ui:text-2xl ui:text-ellipsis ui:whitespace-nowrap">{last_name}</p>
           ) : null}
+          {!first_name && !last_name ? <p className="ui:text-2xl ui:text-text-dark/45">First & Last Name</p> : null}
         </div>
         <p
           className="ui:-mt-1.75 ui:cursor-pointer ui:text-center ui:text-lg ui:text-accent-500"

@@ -13,5 +13,9 @@ export interface ContextMenuItemProps extends Omit<WrapperRootProps<"div">, "as"
   isDangerStyle?: boolean;
   /** Optional key for list. */
   id?: string;
+  /** Optional; consumed by app, not forwarded to DOM. */
+  uId?: string;
+  /** Optional; consumed by app, not forwarded to DOM. */
+  uObject?: unknown;
 }
 

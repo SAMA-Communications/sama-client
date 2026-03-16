@@ -87,15 +87,15 @@ export const ChatNameInput = ({ onConfirm, onCancel, onValidationError, classNam
       </div>
       <hr className="ui:my-2.75 ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
       <div className="ui:flex ui:items-center ui:justify-between ui:gap-8">
-        <p className="ui:cursor-pointer ui:px-3 ui:font-light ui:text-text-dark/75" onClick={onCancel}>
+        <button className="ui:cursor-pointer ui:px-3 ui:font-light ui:text-text-dark/75" onClick={onCancel}>
           Cancel
-        </p>
-        <p
+        </button>
+        <button
           className="ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75 ui:rounded-xl ui:bg-accent-500 ui:px-6 ui:py-2 ui:text-white ui:duration-150 ui:hover:bg-black"
           onClick={confirmChatName}
         >
           Continue
-        </p>
+        </button>
       </div>
     </WrapperRoot>
   );

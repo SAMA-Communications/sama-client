@@ -45,6 +45,7 @@ export { MessageInput } from "./components/elements/MessageInput";
 export { MessageLinkPreview } from "./components/elements/MessageLinkPreview";
 export { MessageStatus } from "./components/elements/MessageStatus";
 export { MessageUserIcon } from "./components/elements/MessageUserIcon";
+export { AnimatePresence } from "motion/react";
 export { Modal } from "./components/elements/Modal";
 export { OvalLoader } from "./components/elements/OvalLoader";
 export { SearchInput } from "./components/elements/SearchInput";

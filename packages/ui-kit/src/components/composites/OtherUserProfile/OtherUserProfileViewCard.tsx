@@ -45,6 +45,8 @@ export function OtherUserProfileViewCard({
           avatarBlurHash={avatar_object?.file_blur_hash}
           defaultIcon={<User size={80} color="white" />}
           altText="User's Profile"
+          className="rounded-full"
+          bgColorKey={user?._id}
         />
         <div className="ui:w-[90%]">
           <p className="ui:-mt-1.25 ui:overflow-hidden ui:text-center ui:text-2xl ui:font-medium ui:text-ellipsis ui:whitespace-nowrap ui:text-black">
@@ -57,12 +59,12 @@ export function OtherUserProfileViewCard({
           ) : null}
         </div>
       </div>
-      <div className="ui:flex ui:flex-col ui:rounded-[32px] ui:bg-bg-light ui:px-5 ui:py-7.5 ui:max-md:flex-1 ui:max-md:rounded-b-none">
+      <div className="ui:flex ui:flex-col ui:gap-2.75 ui:rounded-[32px] ui:bg-bg-light ui:px-5 ui:py-7.5 ui:max-md:flex-1 ui:max-md:rounded-b-none">
         <p className="ui:mb-2.5 ui:text-center ui:text-xl ui:font-normal ui:text-text-dark">Personal information</p>
         <InfoBox iconType="login" title="Username" value={login} hideIfNull />
         <InfoBox iconType="phone" title="Mobile phone" value={phone} hideIfNull />
         <InfoBox iconType="email" title="Email address" value={email} hideIfNull />
-        <hr className="ui:mt-5 ui:mb-2.5 ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
+        <hr className="ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
         {onStartConversation && (
           <div
             className="ui:mt-2.5 ui:flex ui:cursor-pointer ui:items-center ui:gap-2.5 ui:px-0.5"

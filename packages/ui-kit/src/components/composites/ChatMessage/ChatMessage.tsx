@@ -118,23 +118,24 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
                   isCurrentUser={isCurrentUser}
                   fallbackCurrentUser={<UserRound color="white" />}
                   fallbackOtherUser={<UserRound color="black" />}
+                  className="ui:flex ui:h-11.5 ui:w-11.5 ui:cursor-pointer ui:items-center ui:justify-center ui:overflow-hidden ui:rounded-xl ui:bg-hover-light"
                 />
               </button>
             )}
           </div>
         )}
         <div
-          className={`ui:flex ui:flex-col ui:max-2xl:max-w-[min(80dvw,520px)] ui:2xl:max-w-[min(60%,520px)] ${
+          className={`ui:flex ui:min-w-0 ui:flex-col ui:max-2xl:max-w-[min(80dvw,520px)] ui:2xl:max-w-[min(60%,520px)] ${
             isCurrentUser ? "ui:ml-auto" : "ui:mr-auto"
           }`}
         >
           {prev ? null : (
-            <div className="ui:mb-1.25 ui:cursor-pointer ui:text-text-dark/60" onClick={() => openUserProfile(from)}>
+            <div className="ui:mb-1.25 ui:cursor-pointer ui:truncate ui:text-text-dark/60" onClick={() => openUserProfile(from)}>
               &zwnj;{senderDisplayName || "Deleted account"}
             </div>
           )}
           <div
-            className={`ui:flex ui:w-max ui:max-w-full ui:flex-col ui:rounded-xl ui:shadow-btn ${
+            className={`ui:flex ui:min-w-0 ui:w-max ui:max-w-full ui:flex-col ui:rounded-xl ui:shadow-btn ${
               next ? "" : isCurrentUser ? "ui:rounded-br-none" : "ui:rounded-bl-none"
             } ${isCurrentUser ? "ui:self-end" : "ui:self-start"}`}
           >
@@ -160,7 +161,7 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
               />
             ) : null}
             <m.div
-              className={`ui:relative ui:flex ui:min-h-11.5 ui:max-w-full ui:flex-col ui:justify-between ui:gap-1 ui:rounded-xl ui:p-1 ${
+              className={`ui:relative ui:flex ui:min-h-11.5 ui:min-w-0 ui:max-w-full ui:flex-col ui:justify-between ui:gap-1 ui:rounded-xl ui:p-1 ${
                 isCurrentUser ? "ui:bg-accent-100" : "ui:bg-white"
               } ${next ? "" : isCurrentUser ? "ui:rounded-br-none" : "ui:rounded-bl-none"} ${
                 isForwardMessage ? "ui:min-w-28" : "ui:min-w-14"
@@ -172,7 +173,7 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
               onPointerLeave={onBubblePointerLeave}
               onContextMenu={isSelectionMode ? handleSelectionContextMenu : handleBubbleContextMenu}
             >
-              <div className="ui:flex ui:flex-col ui:flex-wrap">
+              <div className="ui:flex ui:min-w-0 ui:w-full ui:flex-col ui:flex-wrap ui:overflow-hidden">
                 {hasAttachments && attachmentsNode}
                 {bodyContent}
                 {!hasAttachments && linkPreviewNode}

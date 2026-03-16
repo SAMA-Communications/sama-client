@@ -42,6 +42,7 @@ export function OtherUserProfileViewCompact({
             avatarBlurHash={avatar_object?.file_blur_hash}
             defaultIcon={<User size={80} color="white" />}
             altText="User's Profile"
+            bgColorKey={user?._id}
           />
         </div>
         <div className="ui:flex ui:w-4/5 ui:flex-nowrap ui:items-center ui:justify-center ui:gap-2.75">

@@ -61,20 +61,20 @@ export const EditModalContainer = ({ type, onClose, className, ...rest }: EditMo
   useKeyDown(KEY_CODES.ESCAPE, onClose);
 
   return (
-    <Modal className={className} {...rest}>
+    <Modal className={className} onClick={onClose} {...rest}>
       <p className="ui:text-center ui:text-xl">{title}</p>
       <div className="ui:mt-3.5 ui:flex ui:flex-col ui:gap-2.75">{component}</div>
       <hr className="ui:my-1.75 ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
       <div className="ui:-mt-1.75 ui:flex ui:items-center ui:justify-between ui:gap-2.75">
-        <p className="ui:cursor-pointer ui:rounded-xl ui:px-3 ui:text-text-dark" onClick={onClose}>
+        <button className="ui:cursor-pointer ui:rounded-xl ui:px-3 ui:text-text-dark" onClick={onClose}>
           Cancel
-        </p>
-        <p
+        </button>
+        <button
           className="ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75 ui:rounded-xl ui:bg-accent-500 ui:px-6 ui:py-2 ui:text-white ui:duration-150 ui:hover:bg-black"
           onClick={sendRequest}
         >
           Save
-        </p>
+        </button>
       </div>
     </Modal>
   );

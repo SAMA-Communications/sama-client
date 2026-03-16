@@ -41,7 +41,7 @@ export const ParticipantInChat = ({
         !isCurrentUserOwner || isCurrentUser ? null : "convRemoveParticipants",
       ],
       coords: { x: e.pageX, y: e.pageY },
-      externalProps: { user },
+      externalProps: { userObject: user },
       clicked: true,
     });
   };

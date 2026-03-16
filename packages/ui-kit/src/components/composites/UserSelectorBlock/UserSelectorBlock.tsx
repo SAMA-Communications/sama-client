@@ -82,18 +82,18 @@ export const UserSelectorBlock = ({
       </div>
       <hr className="ui:my-1.75 ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
       <div className="ui:-mt-1.75 ui:flex ui:items-center ui:justify-between ui:gap-2.75">
-        <p className="ui:cursor-pointer ui:rounded-xl ui:px-3 ui:text-text-dark" onClick={onClose}>
+        <button className="ui:cursor-pointer ui:rounded-xl ui:px-3 ui:text-text-dark" onClick={onClose}>
           Cancel
-        </p>
+        </button>
         {isLoading ? (
           <OvalLoader wrapperClassName="ui:p-[0px]!" height={60} width={23} />
         ) : (
-          <p
+          <button
             className="ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75 ui:rounded-xl ui:bg-accent-500 ui:px-6 ui:py-2 ui:text-white ui:duration-150 ui:hover:bg-black"
             onClick={() => validateClick()}
           >
             {effectiveSubmitLabel}
-          </p>
+          </button>
         )}
       </div>
     </>
