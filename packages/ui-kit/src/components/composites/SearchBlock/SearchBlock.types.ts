@@ -26,8 +26,12 @@ export interface SearchBlockProps {
   isPending?: boolean;
 
   selectedUsers: User[];
-  onAddUser: (user: User) => void;
-  onRemoveUser: (user: User) => void;
+  onAddUser?: (user: User) => void;
+  onRemoveUser?: (user: User) => void;
+  /** Alias for onAddUser (when using Select modal) */
+  addUserToArray?: (user: User) => void;
+  /** Alias for onRemoveUser (when using Select modal) */
+  removeUserFromArray?: (user: User) => void;
   isClickDisabledFunc?: (user: User) => boolean;
   isMaxLimit: boolean;
   onClearInputText?: () => void;

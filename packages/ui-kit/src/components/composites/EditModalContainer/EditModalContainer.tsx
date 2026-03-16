@@ -1,15 +1,12 @@
 import { useCallback, useState } from "react";
 
-import { clsx } from "clsx";
-import { Save } from "lucide-react";
-
 import { getAdapters } from "@adapters";
 
 import { ConversationInputsGroup } from "@composites/EditModalContainer/ConversationInputsGroup";
 import type { EditModalContainerProps } from "@composites/EditModalContainer/EditModalContainer.types";
 import { UserInputsGroup } from "@composites/EditModalContainer/UserInputsGroup";
 
-import { WrapperRoot } from "@elements/WrapperRoot";
+import { Modal } from "@elements/Modal";
 
 import { useKeyDown } from "@src/hooks/useKeyDown";
 
@@ -64,29 +61,21 @@ export const EditModalContainer = ({ type, onClose, className, ...rest }: EditMo
   useKeyDown(KEY_CODES.ESCAPE, onClose);
 
   return (
-    <WrapperRoot
-      className={clsx(
-        "ui:absolute ui:top-0 ui:z-10 ui:flex ui:h-dvh ui:w-dvw ui:items-center ui:justify-center ui:bg-black/50",
-        className,
-      )}
-      {...rest}
-    >
-      <div className="ui:flex ui:flex-col ui:gap-2.75 ui:rounded-2xl ui:bg-bg-light ui:px-7 ui:py-3.5 ui:max-md:w-[94svw] ui:md:w-100">
-        <p className="ui:text-center ui:text-xl">{title}</p>
-        <div className="ui:mt-3.5 ui:flex ui:flex-col ui:gap-2.75">{component}</div>
-        <div className="ui:mt-3.5 ui:flex ui:items-center ui:justify-between ui:gap-2.75">
-          <p className="ui:cursor-pointer ui:rounded-xl ui:p-2 ui:text-text-dark" onClick={onClose}>
-            Cancel
-          </p>
-          <p
-            className="ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75 ui:rounded-xl ui:border ui:border-accent-500 ui:p-2 ui:text-accent-500"
-            onClick={sendRequest}
-          >
-            Save
-            <Save size={18} color="var(--color-accent-500)" />
-          </p>
-        </div>
+    <Modal className={className} {...rest}>
+      <p className="ui:text-center ui:text-xl">{title}</p>
+      <div className="ui:mt-3.5 ui:flex ui:flex-col ui:gap-2.75">{component}</div>
+      <hr className="ui:my-1.75 ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
+      <div className="ui:-mt-1.75 ui:flex ui:items-center ui:justify-between ui:gap-2.75">
+        <p className="ui:cursor-pointer ui:rounded-xl ui:px-3 ui:text-text-dark" onClick={onClose}>
+          Cancel
+        </p>
+        <p
+          className="ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75 ui:rounded-xl ui:bg-accent-500 ui:px-6 ui:py-2 ui:text-white ui:duration-150 ui:hover:bg-black"
+          onClick={sendRequest}
+        >
+          Save
+        </p>
       </div>
-    </WrapperRoot>
+    </Modal>
   );
 };

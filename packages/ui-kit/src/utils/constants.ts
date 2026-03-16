@@ -44,3 +44,6 @@ export const VIEWPORT_BREAKPOINTS = {
   TABLET: 1279,
   LAPTOP: 1536,
 } as const;
+
+export const SEARCH_AREA_MIN_HEIGHT = "0px";
+export const SEARCH_AREA_MAX_HEIGHT = "60dvh";

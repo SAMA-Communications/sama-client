@@ -26,8 +26,10 @@ export const SearchBlock = (props: SearchBlockProps) => {
     isChatSearched: isChatSearchedProp,
     isPending: isPendingProp,
     selectedUsers,
-    onAddUser,
-    onRemoveUser,
+    onAddUser: onAddUserProp,
+    onRemoveUser: onRemoveUserProp,
+    addUserToArray,
+    removeUserFromArray,
     isClickDisabledFunc,
     isMaxLimit,
     onClearInputText,
@@ -39,23 +41,22 @@ export const SearchBlock = (props: SearchBlockProps) => {
     customClassName = "",
   } = props;
 
+  const onAddUser = onAddUserProp ?? addUserToArray;
+  const onRemoveUser = onRemoveUserProp ?? removeUserFromArray;
+
   const adapters = getAdapters();
   const useAdapterData = adapters.getSearchBlockData && searchTextProp !== undefined && searchOptions !== undefined;
-
   const adapterData = useAdapterData ? adapters.getSearchBlockData!() : null;
   const searchText = searchTextProp ?? null;
 
-  const { searchedUsers, searchedChats, defaultChats, isUserSearched, isChatSearched, isPending } =
-    useAdapterData && adapterData
-      ? adapterData
-      : {
-          searchedUsers: searchedUsersProp ?? EMPTY_SEARCH_BLOCK_DATA.searchedUsers,
-          searchedChats: searchedChatsProp ?? EMPTY_SEARCH_BLOCK_DATA.searchedChats,
-          defaultChats: defaultChatsProp ?? EMPTY_SEARCH_BLOCK_DATA.defaultChats,
-          isUserSearched: isUserSearchedProp ?? EMPTY_SEARCH_BLOCK_DATA.isUserSearched,
-          isChatSearched: isChatSearchedProp ?? EMPTY_SEARCH_BLOCK_DATA.isChatSearched,
-          isPending: isPendingProp ?? EMPTY_SEARCH_BLOCK_DATA.isPending,
-        };
+  const fromAdapter = useAdapterData && adapterData ? adapterData : null;
+  const searchedUsers = searchedUsersProp ?? fromAdapter?.searchedUsers ?? EMPTY_SEARCH_BLOCK_DATA.searchedUsers;
+  const searchedChats = searchedChatsProp ?? fromAdapter?.searchedChats ?? EMPTY_SEARCH_BLOCK_DATA.searchedChats;
+  const defaultChats = defaultChatsProp ?? fromAdapter?.defaultChats ?? EMPTY_SEARCH_BLOCK_DATA.defaultChats;
+  const isUserSearched = isUserSearchedProp ?? fromAdapter?.isUserSearched ?? EMPTY_SEARCH_BLOCK_DATA.isUserSearched;
+  const isChatSearched = isChatSearchedProp ?? fromAdapter?.isChatSearched ?? EMPTY_SEARCH_BLOCK_DATA.isChatSearched;
+  const isPending = isPendingProp ?? fromAdapter?.isPending ?? EMPTY_SEARCH_BLOCK_DATA.isPending;
+
   const handleUserClick = (user: User) => {
     if (isSelectUserToArray) {
       const isSelected = selectedUsers.some((u) => u._id === user._id);
@@ -63,9 +64,9 @@ export const SearchBlock = (props: SearchBlockProps) => {
       if (disabled) return;
       isClearInputText && onClearInputText?.();
       if (isSelected) {
-        onRemoveUser(user);
+        onRemoveUser?.(user);
       } else {
-        onAddUser(user);
+        onAddUser?.(user);
       }
     } else {
       isClearInputText && onClearInputText?.();
@@ -76,13 +77,13 @@ export const SearchBlock = (props: SearchBlockProps) => {
   return (
     <WrapperRoot
       className={clsx(
-        "ui:mt-[5px] ui:flex ui:items-center ui:justify-center ui:max-xl:mt-0 ui:max-xl:w-full ui:max-xl:rounded-[16px] ui:max-xl:bg-bg-light",
+        "ui:mt-[5px] ui:flex ui:h-100 ui:items-center ui:justify-start ui:max-xl:mt-0 ui:max-xl:w-full ui:max-xl:rounded-[16px] ui:max-xl:bg-bg-light",
         customClassName,
       )}
     >
       <CustomVerticalScrollbar
-        customClassName="ui:w-[400px]! ui:min-h-0 ui:max-xl:w-full!"
-        childrenClassName="ui:flex ui:flex-col ui:px-1 ui:!overflow-x-hidden"
+        customClassName="ui:w-[400px]! ui:min-h-0 ui:max-xl:w-full! ui:self-start!"
+        childrenClassName="ui:flex ui:flex-col ui:!overflow-x-hidden"
       >
         {isShowDefaultConvs && !searchText?.length ? (
           <SearchConversationList

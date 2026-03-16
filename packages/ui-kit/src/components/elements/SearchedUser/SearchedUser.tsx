@@ -41,22 +41,26 @@ export const SearchedUser = memo(function SearchedUser({
       tabIndex={0}
       {...rest}
     >
-      <DynamicAvatar
-        size={60}
-        avatarUrl={user.avatar_url}
-        avatarBlurHash={user.avatar_object?.file_blur_hash}
-        defaultIcon={userUtils.getUserInitials(user)}
-        altText="User's Profile"
-        bgColorKey={user._id}
-      />
-      {isSelected ? (
-        <div className="ui:absolute ui:right-[3px] ui:bottom-[3px] ui:z-10 ui:flex ui:h-[20px] ui:w-[20px] ui:items-center ui:justify-center ui:rounded-full ui:bg-accent-500">
-          <Check size={12} color="white" />
-        </div>
-      ) : null}
-      <p className="ui:text-h6 ui:flex-1 ui:overflow-hidden ui:font-medium! ui:overflow-ellipsis ui:whitespace-nowrap ui:text-black">
-        {userUtils.getUserFullName(user)}
-      </p>
+      <div className="relative">
+        <DynamicAvatar
+          size={60}
+          avatarUrl={user.avatar_url}
+          avatarBlurHash={user.avatar_object?.file_blur_hash}
+          defaultIcon={userUtils.getUserInitials(user)}
+          altText="User's Profile"
+          bgColorKey={user._id}
+        />
+        {isSelected ? (
+          <div className="ui:absolute ui:-right-2 ui:-bottom-1 ui:z-10 ui:flex ui:h-6 ui:w-6 ui:items-center ui:justify-center ui:rounded-full ui:bg-accent-500">
+            <Check size={14} color="white" />
+          </div>
+        ) : null}
+      </div>
+      <div className="ui:flex ui:flex-1 ui:flex-col ui:gap-0.75 ui:overflow-hidden">
+        <p className="ui:overflow-hidden ui:text-lg ui:text-ellipsis ui:whitespace-nowrap">
+          {userUtils.getUserFullName(user)}
+        </p>
+      </div>
     </WrapperRoot>
   );
 });

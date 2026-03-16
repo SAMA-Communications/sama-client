@@ -1,7 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
 
-import type { User } from "types/samaWssModels";
-
 import { CustomVerticalScrollbar } from "@composites/CustomVerticalScrollbar";
 import { UserSelectorBlockProps } from "@composites/UserSelectorBlock/UserSelectorBlock.types";
 
@@ -10,7 +8,7 @@ import { UserInfo } from "@elements/UserInfo";
 
 import { useKeyDown } from "@src/hooks/useKeyDown";
 
-import { KEY_CODES } from "@utils/constants";
+import { KEY_CODES, SEARCH_AREA_MAX_HEIGHT, SEARCH_AREA_MIN_HEIGHT } from "@utils/constants";
 
 export const UserSelectorBlock = ({
   selectedUsers,
@@ -21,6 +19,7 @@ export const UserSelectorBlock = ({
   onCreate,
   searchInputSlot,
   searchResultsSlot,
+  isSearchExpanded = false,
   maxCount = 50,
   submitLabel,
 }: UserSelectorBlockProps) => {
@@ -60,7 +59,7 @@ export const UserSelectorBlock = ({
           ))}
         </CustomVerticalScrollbar>
       ) : (
-        <p className="ui:text-h6">Select users to add...</p>
+        <p className="ui:text-md ui:text-text-dark">Select users to add...</p>
       )}
     </div>
   );
@@ -68,22 +67,31 @@ export const UserSelectorBlock = ({
   return (
     <>
       <div className="ui:flex ui:justify-between">
-        <p className="ui:text-h5 ui:font-normal ui:text-black">Add participants</p>
-        <p className="ui:text-h5 ui:font-normal ui:text-text-dark">
+        <p className="ui:text-xl ui:font-normal ui:text-black">Add participants</p>
+        <p className="ui:text-xl ui:font-normal ui:text-text-dark">
           {counter}/{maxCount}
         </p>
       </div>
       {searchInputSlot}
       {selectedUsersBlock}
-      {searchResultsSlot}
-      <div className="ui:mt-auto ui:flex ui:items-center ui:justify-end ui:gap-[30px]">
-        <p className="ui:text-h6 ui:cursor-pointer ui:font-light ui:text-accent-500" onClick={onClose}>
+      <div
+        className="ui:flex ui:flex-col ui:overflow-hidden ui:transition-[max-height] ui:duration-700 ui:ease-out"
+        style={{ maxHeight: isSearchExpanded ? SEARCH_AREA_MAX_HEIGHT : SEARCH_AREA_MIN_HEIGHT }}
+      >
+        <div className="ui:min-h-0 ui:overflow-auto">{searchResultsSlot}</div>
+      </div>
+      <hr className="ui:my-1.75 ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
+      <div className="ui:-mt-1.75 ui:flex ui:items-center ui:justify-between ui:gap-2.75">
+        <p className="ui:cursor-pointer ui:rounded-xl ui:px-3 ui:text-text-dark" onClick={onClose}>
           Cancel
         </p>
         {isLoading ? (
           <OvalLoader wrapperClassName="ui:p-[0px]!" height={60} width={23} />
         ) : (
-          <p className="ui:text-h6 ui:cursor-pointer ui:font-light ui:text-accent-500" onClick={() => validateClick()}>
+          <p
+            className="ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75 ui:rounded-xl ui:bg-accent-500 ui:px-6 ui:py-2 ui:text-white ui:duration-150 ui:hover:bg-black"
+            onClick={() => validateClick()}
+          >
             {effectiveSubmitLabel}
           </p>
         )}

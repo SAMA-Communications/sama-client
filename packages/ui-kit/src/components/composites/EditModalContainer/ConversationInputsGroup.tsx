@@ -14,9 +14,9 @@ export const ConversationInputsGroup = ({ onChageValue }: ConversationInputsGrou
   const selectedConversation = getSelectedConversation();
 
   return (
-    <div className="flex flex-row gap-[12px]">
+    <>
       <ConversationInfoAvatar conversation={selectedConversation} isEditDisabled={false} />
-      <div className="flex grow flex-col">
+      <div className="ui:flex ui:grow ui:flex-col ui:gap-1.75">
         <InfoBox
           title={"Group name"}
           value={selectedConversation.name}
@@ -32,6 +32,6 @@ export const ConversationInputsGroup = ({ onChageValue }: ConversationInputsGrou
           onChangeValue={onChageValue}
         />
       </div>
-    </div>
+    </>
   );
 };

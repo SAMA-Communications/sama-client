@@ -46,7 +46,7 @@ export default function ConversationActions({ listOfIds }) {
         key={"convEdit"}
         text="Edit"
         icon={<SquarePen size={18} />}
-        onClick={() => addSuffix(currentPath, "/edit?type=chat")}
+        onClick={() => addSuffix(currentPath, "/edit?type=conversation")}
       />
     ),
     convLeave: (

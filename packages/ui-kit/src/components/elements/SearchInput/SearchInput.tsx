@@ -66,7 +66,6 @@ export const SearchInput = memo(function SearchInput({
       <Search size={isLargeSize ? 24 : 18} className="ui:shrink-0 ui:text-text-dark" />
       <input
         ref={inputRef}
-        type="search"
         className="ui:min-w-0 ui:flex-1 ui:border-0 ui:bg-transparent ui:font-light ui:text-black ui:placeholder:text-text-dark ui:focus:outline-none"
         style={{ fontSize: isLargeSize ? "var(--text-h6, 1rem)" : "1rem" }}
         placeholder={placeholder}
@@ -77,7 +76,7 @@ export const SearchInput = memo(function SearchInput({
       {isTextInInput ? (
         <button
           type="button"
-          className="ui:shrink-0 ui:cursor-pointer ui:rounded ui:p-0.5 ui:text-text-dark ui:hover:bg-hover-light"
+          className="ui:shrink-0 ui:cursor-pointer ui:rounded ui:p-0.5 ui:text-text-dark ui:duration-150 ui:hover:bg-hover-light"
           onClick={handleClearClick}
           aria-label="Clear search"
         >

@@ -21,7 +21,7 @@ export const Modal = memo(function Modal({
       <div
         key={contentKey}
         className={clsx(
-          "ui:flex ui:w-[min(400px,100%)] ui:flex-col ui:gap-3 ui:rounded-3xl ui:bg-bg-light ui:px-4 ui:py-6 ui:max-md:w-[94svw] ui:max-md:p-[20px]",
+          "ui:flex ui:w-[min(400px,100%)] ui:flex-col ui:gap-3 ui:rounded-3xl ui:bg-bg-light ui:px-6 ui:pt-6 ui:pb-4 ui:max-md:w-[94svw] ui:max-md:p-[20px]",
           tall && "ui:h-[80svh]",
           panelClassName,
         )}

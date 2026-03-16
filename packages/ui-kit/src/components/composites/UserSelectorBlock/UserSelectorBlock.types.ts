@@ -16,6 +16,8 @@ export interface UserSelectorBlockProps {
   searchInputSlot: ReactNode;
   /** Search results / user list (client provides e.g. SearchBlock) */
   searchResultsSlot: ReactNode;
+  /** When true, the search area expands to 60dvh with smooth transition (e.g. when user types in search). */
+  isSearchExpanded?: boolean;
   /** Max participants (default 50) */
   maxCount?: number;
   /** Label for submit button: "Create" or "Add" */
