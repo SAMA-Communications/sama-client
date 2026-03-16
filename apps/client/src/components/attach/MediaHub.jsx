@@ -7,9 +7,8 @@ import { useSelector } from "react-redux";
 import { useKeyDown } from "@hooks/tools/useKeyDown";
 import { useTouchScreen } from "@hooks/tools/useTouchScreen";
 
-import { MediaViewer } from "@sama-communications.ui-kit";
+import { MediaViewer, useViewportBreakpoints } from "@sama-communications.ui-kit";
 
-import { getIsMobileView } from "@store/values/IsMobileView";
 import { getMessageById } from "@store/values/Messages";
 
 import { KEY_CODES } from "@utils/constants.js";
@@ -18,7 +17,7 @@ import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 
 export default function MediaHub() {
   const { pathname, hash } = useLocation();
-  const isMobile = useSelector(getIsMobileView);
+  const { isMobile } = useViewportBreakpoints();
   const swipedBlockRef = useRef(null);
 
   const [currentIndex, setCurrentIndex] = useState(() => {

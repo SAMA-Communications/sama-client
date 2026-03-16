@@ -6,13 +6,12 @@ import { useSelector } from "react-redux";
 
 import { Info, MessageCircleOff, MessageSquareMore, SquarePen, Trash, UserMinus, UserPlus } from "lucide-react";
 
-import { useConfirmWindow, ContextMenuItem } from "@sama-communications.ui-kit";
+import { ContextMenuItem, useConfirmWindow, useViewportBreakpoints } from "@sama-communications.ui-kit";
 
 import conversationService from "@services/conversationsService";
 
 import { selectContextExternalProps } from "@store/values/ContextMenu.js";
 import { getConverastionById, selectAllConversations } from "@store/values/Conversations.js";
-import { getIsTabletView } from "@store/values/IsTabletView.js";
 
 import { addPrefix, addSuffix, navigateTo } from "@utils/NavigationUtils.js";
 
@@ -27,7 +26,7 @@ export default function ConversationActions({ listOfIds }) {
   const { userObject } = useSelector(selectContextExternalProps);
 
   const isCurrentUserOwner = currentUser._id === owner_id;
-  const isTabletView = useSelector(getIsTabletView);
+  const { isTablet: isTabletView } = useViewportBreakpoints();
 
   const links = {
     convInfo: (

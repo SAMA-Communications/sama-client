@@ -37,9 +37,6 @@ export const DAY_IN_MS = 86400000;
 // export const MONTH_IN_MS = 2629743830;
 export const YEAR_IN_MS = 31556926000;
 
-export const MOBILE_VIEW_WIDTH = 767;
-export const TABLET_VIEW_WIDTH = 1023;
-
 export const LINKS_REGEXP = /https:\/\/\S+/g; // /(((https?:\/\/)|(www\.))[^\s]+)/g
 export const URL_METADATA_EXPIRE = 3600000;
 export const URL_MAX_PARALLEL_REQUESTS = 5;

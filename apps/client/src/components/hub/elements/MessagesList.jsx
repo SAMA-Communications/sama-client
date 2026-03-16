@@ -11,12 +11,12 @@ import ChatMessage from "@components/hub/elements/ChatMessage";
 import { InformativeMessage } from "@sama-communications.ui-kit";
 import { CustomVerticalScrollbar } from "@sama-communications.ui-kit";
 import { InteractiveDate } from "@sama-communications.ui-kit";
+import { useViewportBreakpoints } from "@sama-communications.ui-kit";
 
 import messagesService from "@services/messagesService.js";
 
 import { getConverastionById } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
-import { getIsMobileView } from "@store/values/IsMobileView.js";
 import { selectActiveConversationMessagesEntities } from "@store/values/Messages";
 import { addUsers, selectParticipantsEntities } from "@store/values/Participants";
 
@@ -27,7 +27,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
 
-  const isMobile = useSelector(getIsMobileView);
+  const { isMobile } = useViewportBreakpoints();
 
   const [isScrolling, setIsScrolling] = useState(true);
   const [isScrollToBottomVisible, setIsScrollToBottomVisible] = useState(false);
@@ -301,7 +301,7 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
           key={key}
           text={body}
           isNextMesssageUsers={isNextMessageYours}
-          onClick={() => addSuffix(pathname + hash, `/user?uid=${x?.user?._id}`)}
+          onClick={() => addSuffix(pathname + hash, `/user?uid=${x?.user?._id}&view=card`)}
         />
       ) : (
         <Fragment key={key}>

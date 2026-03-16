@@ -20,6 +20,7 @@ export const ConversationHeader = ({
   currentTab,
   changeTabFunc,
   closeFormFunc,
+  closeIcon,
   onForwardSection,
   onCloseSelectionMode,
   onOpenChatOrParticipantInfo,
@@ -116,7 +117,7 @@ export const ConversationHeader = ({
 
   const { countOfSelectedMessages, midsArrayOfSelectedMessages } = getSelectedMessages() || {};
 
-  useKeyDown(KEY_CODES.ESCAPE, onCloseSelectionMode);
+  useKeyDown(KEY_CODES.ESCAPE, () => onCloseSelectionMode?.());
 
   return isSelectionMode ? (
     <WrapperRoot
@@ -155,7 +156,7 @@ export const ConversationHeader = ({
         className="ui:h-max ui:cursor-pointer ui:self-center ui:rounded-xl ui:bg-white ui:p-2 ui:shadow-btn ui:duration-150 ui:hover:bg-bg-dark ui:hover:text-white"
         onClick={closeFormFunc}
       >
-        <ChevronLeft size={18} />
+        {closeIcon ?? <ChevronLeft size={18} />}
       </button>
       <div
         className={`ui:flex ui:max-w-[calc(100%-92px)] ui:flex-1 ui:cursor-pointer ui:flex-col ui:justify-center`}

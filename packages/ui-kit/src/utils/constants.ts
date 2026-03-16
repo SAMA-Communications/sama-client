@@ -37,3 +37,10 @@ export const SCROLL_STOP_DEBOUNCE_MS = 150;
 export const MAX_CHAT_NAME_LENGTH = 255;
 
 export const DEFAULT_BLUR_HASH = "U27nLE$*00_N^k,@s9xu#7$2$%xtVD-B-pkW";
+
+/** Viewport breakpoints (px) for responsive layout */
+export const VIEWPORT_BREAKPOINTS = {
+  MOBILE: 767,
+  TABLET: 1279,
+  LAPTOP: 1536,
+} as const;

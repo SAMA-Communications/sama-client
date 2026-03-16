@@ -8,13 +8,14 @@ import { Settings, MessageCirclePlus } from "lucide-react";
 
 import SearchBlock from "@components/search/SearchBlock";
 
-import { ConversationItemList } from "@sama-communications.ui-kit";
-import { SearchInput } from "@sama-communications.ui-kit";
-import { CustomVerticalScrollbar } from "@sama-communications.ui-kit";
-import { ChatListSkeleton } from "@sama-communications.ui-kit";
+import {
+  ChatListSkeleton,
+  ConversationItemList,
+  CustomVerticalScrollbar,
+  SearchInput,
+} from "@sama-communications.ui-kit";
 
 import { getDisplayableConversations, getConverastionById } from "@store/values/Conversations.js";
-import { getIsMobileView } from "@store/values/IsMobileView";
 
 import { addPrefix } from "@utils/NavigationUtils.js";
 
@@ -23,8 +24,6 @@ export default function ChatList() {
   const currentPath = pathname + hash;
 
   const [inputText, setInputText] = useState(null);
-
-  const isMobileView = useSelector(getIsMobileView);
 
   const selectedConversation = useSelector(getConverastionById);
   const filteredConversations = useSelector(getDisplayableConversations);
@@ -48,7 +47,7 @@ export default function ChatList() {
   }, [filteredConversations, selectedConversation]);
 
   return (
-    <section key="chaList" className="relative h-dvh w-100 overflow-hidden max-lg:w-dvw">
+    <aside key="chatList" className="relative h-dvh w-full min-w-[400px] overflow-hidden max-md:w-dvw max-md:min-w-0">
       {/* <div
         className="from-bg-light/90 absolute top-0 left-0 z-1 h-17 w-full bg-linear-to-b from-50% to-transparent"
         style={{ pointerEvents: "none" }}
@@ -84,6 +83,6 @@ export default function ChatList() {
           {chatsList}
         </CustomVerticalScrollbar>
       )}
-    </section>
+    </aside>
   );
 }

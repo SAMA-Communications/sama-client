@@ -68,28 +68,22 @@ export default function ConfirmWindowProvider({ children }) {
             transition={{ duration: 0.2 }}
           >
             <div
-              className={`flex max-h-[80svh] w-[min(460px,100%)] flex-col gap-[10px] rounded-[32px] bg-(--color-bg-light) p-[30px] max-md:w-[94svw] max-md:p-[20px]`}
+              className={`bg-bg-light flex max-h-[80svh] w-[min(460px,100%)] flex-col gap-[10px] rounded-[32px] p-[30px] max-md:w-[94svw] max-md:p-[20px]`}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1, transition: { delay: 0.1 } }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <p className="!text-h5 !font-normal text-black">{options.title || "Confirm"}</p>
-              {options.description && <p className="!text-h6 !font-normal text-black">{options.description}</p>}
+              <p className="!text-h5 font-normal text-black">{options.title || "Confirm"}</p>
+              {options.description && <p className="!text-h6 font-normal text-black">{options.description}</p>}
 
               {ActionComponent && <ActionComponent data={data} setData={setData} />}
 
               <div className="mt-2 flex items-center justify-end gap-[30px]">
-                <p
-                  className="text-h6 !forn-light cursor-pointer text-(--color-accent-500)"
-                  onClick={() => handleClose(false)}
-                >
+                <p className="text-h6 !forn-light text-accent-500 cursor-pointer" onClick={() => handleClose(false)}>
                   {options.cancelText || "Cancel"}
                 </p>
-                <p
-                  className="text-h6 !forn-light cursor-pointer text-(--color-accent-500)"
-                  onClick={() => handleClose(true)}
-                >
+                <p className="text-h6 !forn-light text-accent-500 cursor-pointer" onClick={() => handleClose(true)}>
                   {options.confirmText || "Confirm"}
                 </p>
               </div>

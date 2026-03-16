@@ -10,14 +10,13 @@ import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import DownloadManager from "@lib/downloadManager";
 
-import { AttachModal } from "@sama-communications.ui-kit";
+import { AttachModal, useViewportBreakpoints } from "@sama-communications.ui-kit";
 
 import messagesService from "@services/messagesService.js";
 import draftService from "@services/tools/draftService.js";
 
 import { getConverastionById, setLastMessageField, updateLastMessageField } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
-import { getIsMobileView } from "@store/values/IsMobileView";
 import { addMessage, upsertMessage, selectAllMessages } from "@store/values/Messages";
 import { getNetworkState } from "@store/values/NetworkState";
 
@@ -31,7 +30,7 @@ export default function AttachHub() {
   const { pathname, hash } = useLocation();
 
   const connectState = useSelector(getNetworkState);
-  const isMobile = useSelector(getIsMobileView);
+  const { isMobile } = useViewportBreakpoints();
 
   const messages = useSelector(selectAllMessages);
   const selectedConversation = useSelector(getConverastionById);

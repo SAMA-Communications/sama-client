@@ -61,8 +61,10 @@ export { setAdapters } from "./adapters";
 export { ConfirmWindowProvider, useConfirmWindow } from "./hooks/useConfirmWindow";
 export { useKeyDown } from "./hooks/useKeyDown";
 export type { UseKeyDownOptions, UseKeyDownResult } from "./hooks/useKeyDown";
+export { useViewportBreakpoints } from "./hooks/useViewportBreakpoints";
+export type { ViewportBreakpointsResult } from "./hooks/useViewportBreakpoints";
 
-export { KEY_CODES, ALLOWED_AVATAR_FORMATS } from "./utils/constants";
+export { KEY_CODES, ALLOWED_AVATAR_FORMATS, VIEWPORT_BREAKPOINTS } from "./utils/constants";
 export { chunkMedia, normalizeRatio, getFileType } from "./utils/mediaUtils";
 
 export {

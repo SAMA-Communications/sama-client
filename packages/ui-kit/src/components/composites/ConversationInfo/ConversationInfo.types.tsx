@@ -24,4 +24,3 @@ export interface ConversationInfoProps extends Omit<WrapperRootProps<"section">,
     clicked: boolean;
   }) => void;
 }
-

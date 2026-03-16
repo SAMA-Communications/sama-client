@@ -84,7 +84,10 @@ export const ConversationInfo = ({
   return (
     <WrapperRoot
       as="section"
-      className={clsx("ui:flex ui:h-full ui:w-100 ui:flex-col ui:gap-2.75 ui:p-3.5 ui:max-md:w-full", className)}
+      className={clsx(
+        "ui:flex ui:h-full ui:w-100 ui:min-w-100 ui:flex-col ui:gap-2.75 ui:bg-bg-light ui:p-3.5 ui:max-md:w-full",
+        className,
+      )}
       {...rest}
     >
       <div className="ui:relative ui:flex ui:flex-col ui:items-center ui:justify-center ui:gap-2.75">

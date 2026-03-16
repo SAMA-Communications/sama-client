@@ -43,7 +43,7 @@ export const UserProfile = ({
   useKeyDown(KEY_CODES.ESCAPE, onClose);
 
   return (
-    <section className="ui:flex ui:h-full ui:w-full ui:flex-col ui:gap-2.75 ui:p-3.5 ui:md:w-100">
+    <aside className="ui:flex ui:h-full ui:w-full ui:flex-col ui:gap-2.75 ui:p-3.5 ui:md:w-100">
       <div className="ui:relative ui:flex ui:flex-col ui:items-center ui:justify-center ui:gap-2.75">
         <div className="ui:flex ui:w-full ui:justify-between">
           <button
@@ -129,6 +129,6 @@ export const UserProfile = ({
           Log out
         </button>
       </div>
-    </section>
+    </aside>
   );
 };

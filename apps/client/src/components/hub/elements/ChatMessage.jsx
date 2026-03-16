@@ -45,7 +45,7 @@ export default function ChatMessage({
   const linkColor = "text-accent-500";
 
   const openUserProfile = (uid) => {
-    if (sender) addSuffix(pathname + hash, `/user?uid=${uid}`);
+    if (sender) addSuffix(pathname + hash, `/user?uid=${uid}&view=card`);
   };
 
   const refreshLinkPreview = (event, url) => {

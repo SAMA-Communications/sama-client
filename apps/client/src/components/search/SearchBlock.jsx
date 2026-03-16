@@ -64,7 +64,7 @@ export default function SearchBlock({
     async (user) => {
       if (isPreviewUserProfile) {
         dispatch(addUsers([user]));
-        addSuffix(pathname + hash, `/user?uid=${user._id}`);
+        addSuffix(pathname + hash, `/user?uid=${user._id}&view=card`);
         return;
       }
       const chatId = await conversationService.createPrivateChat(user._id, user);

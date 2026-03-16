@@ -15,8 +15,7 @@ import BetterSuspense from "@hooks/tools/BetterSuspense.js";
 
 import "@lib/samaAdapter";
 
-import { ConfirmWindowProvider } from "@sama-communications.ui-kit";
-import { PageLoaderSkeleton } from "@sama-communications.ui-kit";
+import { ConfirmWindowProvider, PageLoaderSkeleton, useViewportBreakpoints } from "@sama-communications.ui-kit";
 
 import activityService from "@services/activityService";
 import autoLoginService from "@services/autoLoginService";
@@ -24,15 +23,13 @@ import conversationService from "@services/conversationsService";
 import messagesService from "@services/messagesService";
 
 import { selectIsClicked, setClicked } from "@store/values/ContextMenu";
-import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
 import { setIsTabInFocus } from "@store/values/IsTabInFocus";
-import { getIsTabletView, setIsTabletView } from "@store/values/IsTabletView";
 import { updateNetworkState } from "@store/values/NetworkState";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 
-import { MOBILE_VIEW_WIDTH, TABLET_VIEW_WIDTH } from "@utils/constants.js";
 import { history } from "@utils/history.js";
 import { removeAndNavigateSubLink, navigateTo } from "@utils/NavigationUtils.js";
+
 const Main = lazy(() => import("@components/Main"));
 const AuthorizationHub = lazy(() => import("@components/auth/AuthorizationHub"));
 
@@ -44,11 +41,20 @@ export default function App() {
   const isContextClicked = useSelector(selectIsClicked);
   const isUserLoggedIn = !!localStorage.getItem("sessionId");
 
-  const isMobileView = useSelector(getIsMobileView);
-  const isMobileViewRef = useRef(isMobileView);
+  const { isMobile, isTablet } = useViewportBreakpoints();
+  const isMobileRef = useRef(isMobile);
+  const isTabletRef = useRef(isTablet);
 
-  const isTabletView = useSelector(getIsTabletView);
-  const isTabletViewRef = useRef(isTabletView);
+  useEffect(() => {
+    if (isMobile && isMobile !== isMobileRef.current) {
+      removeAndNavigateSubLink(history.location.pathname + history.location.hash, "/profile");
+    }
+    if (isTablet && isTablet !== isTabletRef.current) {
+      removeAndNavigateSubLink(history.location.pathname + history.location.hash, "/profile");
+    }
+    isMobileRef.current = isMobile;
+    isTabletRef.current = isTablet;
+  }, [isMobile, isTablet]);
 
   useEffect(() => {
     window.onfocus = () => dispatch(setIsTabInFocus(true));
@@ -56,24 +62,7 @@ export default function App() {
 
     window.addEventListener("offline", () => dispatch(updateNetworkState(false)));
     window.addEventListener("online", () => dispatch(updateNetworkState(true)));
-    window.addEventListener("resize", () => {
-      const isMobileView = window.innerWidth <= MOBILE_VIEW_WIDTH;
-      if (isMobileView !== isMobileViewRef.current) {
-        isMobileView === true &&
-          removeAndNavigateSubLink(history.location.pathname + history.location.hash, "/profile");
-        isMobileViewRef.current = isMobileView;
-        dispatch(setIsMobileView(isMobileView));
-      }
-
-      const isTabletView = window.innerWidth <= TABLET_VIEW_WIDTH && window.innerWidth > MOBILE_VIEW_WIDTH;
-      if (isTabletView !== isTabletViewRef.current) {
-        isTabletView === true &&
-          removeAndNavigateSubLink(history.location.pathname + history.location.hash, "/profile");
-        isTabletViewRef.current = isTabletView;
-        dispatch(setIsTabletView(isTabletView));
-      }
-      dispatch(setClicked(false));
-    });
+    window.addEventListener("resize", () => dispatch(setClicked(false)));
     window.addEventListener("popstate", () => {
       if (!history.location.hash.includes("#")) {
         dispatch(setSelectedConversation({}));
@@ -87,8 +76,6 @@ export default function App() {
     document.addEventListener("click", handleClick);
 
     dispatch(setIsTabInFocus(true));
-    dispatch(setIsMobileView(window.innerWidth <= MOBILE_VIEW_WIDTH));
-    dispatch(setIsTabletView(window.innerWidth <= TABLET_VIEW_WIDTH && window.innerWidth > MOBILE_VIEW_WIDTH));
 
     const { pathname, hash } = history.location;
     const token = localStorage.getItem("sessionId");

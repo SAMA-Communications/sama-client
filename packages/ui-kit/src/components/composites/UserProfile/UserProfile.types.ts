@@ -13,4 +13,3 @@ export interface UserProfileProps {
   /** Called when user is redirected to auth (e.g. after delete account). */
   onNavigateToAuth?: () => void;
 }
-

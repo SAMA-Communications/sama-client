@@ -1,4 +1,4 @@
-import type { MouseEventHandler } from "react";
+import type { MouseEventHandler, ReactNode } from "react";
 
 import type { Conversation, User } from "types/samaWssModels";
 
@@ -10,6 +10,8 @@ export interface ConversationHeaderProps extends Omit<WrapperRootProps<"div">, "
   currentTab: string;
   changeTabFunc: (tab: string) => void;
   closeFormFunc: MouseEventHandler<HTMLButtonElement>;
+  /** Optional icon for the close/back button (e.g. X on tablet). When not set, ChevronLeft is used. */
+  closeIcon?: ReactNode;
   /** Called when user taps Forward in selection mode. */
   onForwardSection?: () => void;
   /** Called when user cancels selection mode. */

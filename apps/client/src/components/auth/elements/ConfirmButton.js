@@ -7,13 +7,12 @@ import * as m from "motion/react-m";
 
 import { useKeyDown } from "@hooks/tools/useKeyDown";
 
-import { DotsLoader } from "@sama-communications.ui-kit";
+import { DotsLoader, useViewportBreakpoints } from "@sama-communications.ui-kit";
 
 import subscribeForNotifications from "@services/tools/notifications";
 import usersService from "@services/usersService";
 
 import { setCurrentUserId } from "@store/values/CurrentUserId";
-import { getIsMobileView } from "@store/values/IsMobileView.js";
 import { upsertUser } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
@@ -27,7 +26,7 @@ export default function ConfirmButton({ page, content, onClickEvent, isResetModa
 
   const [isPending, startTransition] = useTransition();
   const [isAutoAuth, setIsAutoAuth] = useState(true);
-  const isMobileView = useSelector(getIsMobileView);
+  const { isMobile: isMobileView } = useViewportBreakpoints();
 
   const isLoginPage = page === "login";
 

@@ -1,3 +1,5 @@
+import { useViewportBreakpoints } from "@sama-communications.ui-kit";
+
 import store from "@store/store.js";
 import { setAllParams } from "@store/values/ContextMenu.js";
 
@@ -13,7 +15,19 @@ import {
 
 export default function useHistory() {
   const { pathname, hash, search } = history.location;
-  const url = pathname + hash + search;
+  const url = pathname + hash + (search || "");
+  const { isTablet } = useViewportBreakpoints();
+
+  const closeChatCompletely = () => {
+    history.navigate(pathname + (search ? "?" + search : ""));
+  };
+
+  const openTabletListView = () => {
+    if (!hash || hash.includes("/list")) return;
+    const cid = hash.slice(1).split("/")[0];
+    if (!cid) return;
+    history.navigate(pathname + "#" + cid + "/list" + (search ? "?" + search : ""));
+  };
 
   const openProfileById = (uid) => {
     addSuffix(pathname + hash, `/user?uid=${uid}`);
@@ -74,20 +88,17 @@ export default function useHistory() {
   const openChatOrPaticipantInfo = (conversation, participant) => {
     const path = conversation?.type === "g" ? "/info" : "/user?uid=" + participant?._id;
 
-    const tmpPath =
-      store.getState()?.isTablet?.value && path === "/info" && pathname.includes("/profile")
-        ? url.replace("/profile", "")
-        : url;
+    const tmpPath = isTablet && path === "/info" && pathname.includes("/profile") ? url.replace("/profile", "") : url;
 
     (tmpPath.includes(path) ? removeAndNavigateLastSection : addSuffix)(tmpPath, path);
   };
 
   const openAttachmentHub = () => {
-    addSuffix(location.pathname + location.hash, "/attach");
+    addSuffix(pathname + hash, "/attach");
   };
 
   const isLocationIncludeAttach = () => {
-    return location.hash.includes("/attach");
+    return hash.includes("/attach");
   };
 
   return {
@@ -98,7 +109,9 @@ export default function useHistory() {
     closeChatInfoPage,
     closeCurrentUserProfile,
     closeSelectionMode,
+    closeChatCompletely,
 
+    openTabletListView,
     openCurrentUserProfile,
     openAddParticipantsWindow,
     openEditUserProfileWindow,

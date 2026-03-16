@@ -11,12 +11,11 @@ import api from "@api/api";
 
 import { useKeyDown } from "@hooks/tools/useKeyDown";
 
-import { OtherUserProfile as UIOtherUserProfile } from "@sama-communications.ui-kit";
+import { OtherUserProfile as UIOtherUserProfile, useViewportBreakpoints } from "@sama-communications.ui-kit";
 
 import activityService from "@services/activityService";
 import conversationService from "@services/conversationsService";
 
-import { getIsMobileView } from "@store/values/IsMobileView";
 import { addUser, selectParticipantsEntities } from "@store/values/Participants.js";
 
 import { showOtherUserProfileContainer, showOtherUserProfileContent } from "@utils/AnimationUtils.js";
@@ -25,11 +24,11 @@ import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { navigateTo, removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 import { extractUserIdFromUrl, getUserFullName } from "@utils/UserUtils.js";
 
-export default function OtherUserProfile() {
+export default function OtherUserProfile({ view: viewProp = "compact" }) {
   const dispatch = useDispatch();
   const { pathname, hash, search } = useLocation();
 
-  const isMobileView = useSelector(getIsMobileView);
+  const { isMobile: isMobileView } = useViewportBreakpoints();
   const participants = useSelector(selectParticipantsEntities);
 
   const [userObject, setUserObject] = useState({});
@@ -71,6 +70,31 @@ export default function OtherUserProfile() {
     navigateTo(`/#${chatId}`);
   };
 
+  const handleClose = () => removeAndNavigateLastSection(pathname + hash);
+  const isCardView = viewProp === "card";
+
+  const uiProfileProps = {
+    user: userObject,
+    view: viewProp,
+    displayName: getUserFullName(userObject) || "Unknown",
+    statusActivity: viewStatusActivity,
+    isMobile: isMobileView,
+    onClose: handleClose,
+    onBack: handleClose,
+    onStartConversation: handleStartConversation,
+    contentClassName: "py-[20px] flex flex-col gap-[15px] max-md:py-[0px]",
+    closeButton: isMobileView ? null : <X className="cursor-pointer" />,
+    backButton: isMobileView ? <ArrowLeft className="cursor-pointer max-md:top-[34px] max-md:left-[4svw]" /> : null,
+  };
+
+  if (!isCardView) {
+    return (
+      <div className="bg-bg-light flex h-full min-h-0 w-full flex-col">
+        <UIOtherUserProfile {...uiProfileProps} />
+      </div>
+    );
+  }
+
   return (
     <m.div
       className="absolute top-[0px] left-[0px] z-[200] flex h-dvh w-dvw flex-col items-center justify-start overflow-hidden bg-(--color-black)/50 p-[30px] max-md:bg-(--color-bg-dark) max-md:p-[0px]"
@@ -88,20 +112,7 @@ export default function OtherUserProfile() {
         exit="exit"
         transition="transition"
       >
-        <UIOtherUserProfile
-          user={userObject}
-          displayName={getUserFullName(userObject) || "Unknown"}
-          statusActivity={viewStatusActivity}
-          isMobile={isMobileView}
-          onClose={() => removeAndNavigateLastSection(pathname + hash)}
-          onBack={() => removeAndNavigateLastSection(pathname + hash)}
-          onStartConversation={handleStartConversation}
-          contentClassName="py-[20px] flex flex-col gap-[15px] max-md:py-[0px]"
-          closeButton={isMobileView ? null : <X className="cursor-pointer" />}
-          backButton={
-            isMobileView ? <ArrowLeft className="cursor-pointer max-md:top-[34px] max-md:left-[4svw]" /> : null
-          }
-        />
+        <UIOtherUserProfile {...uiProfileProps} />
       </m.div>
     </m.div>
   );

@@ -4,6 +4,8 @@ import { useLocation } from "react-router";
 
 import { useSelector, useDispatch } from "react-redux";
 
+import { X } from "lucide-react";
+
 import api from "@api/api";
 
 import ChatFormContent from "@components/hub/chatForm/ChatFormContent";
@@ -12,7 +14,7 @@ import ChatFormEditor from "@components/hub/chatForm/ChatFormEditor";
 import useHistory from "@hooks/api/useHistory.js";
 import { useKeyDown } from "@hooks/tools/useKeyDown";
 
-import { ConversationHeader } from "@sama-communications.ui-kit";
+import { ConversationHeader, useViewportBreakpoints } from "@sama-communications.ui-kit";
 
 import draftService from "@services/tools/draftService.js";
 
@@ -23,13 +25,11 @@ import {
   selectConversationsEntities,
 } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId.js";
-import { getIsMobileView } from "@store/values/IsMobileView.js";
 import { getIsTabInFocus } from "@store/values/IsTabInFocus";
 import { clearSelectedConversation, setSelectedConversation } from "@store/values/SelectedConversation";
 import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
 
 import { KEY_CODES, CHAT_CONTENT_TABS } from "@utils/constants.js";
-import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ export default function ChatForm() {
 
   const isUserLogin = useSelector(getUserIsLoggedIn);
   const isTabInFocus = useSelector(getIsTabInFocus);
-  const isMobileView = useSelector(getIsMobileView);
+  const { isMobile: isMobileView, isTablet: isTabletView } = useViewportBreakpoints();
 
   const conversations = useSelector(selectConversationsEntities);
   const selectedConversation = useSelector(getConverastionById);
@@ -53,8 +53,6 @@ export default function ChatForm() {
   const isEnableProgrammableChat = import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true" && !isMobileView;
 
   const closeForm = (e) => {
-    const { pathname, hash } = location;
-
     if (e && e.stopPropagation) {
       e.stopPropagation();
     }
@@ -72,7 +70,28 @@ export default function ChatForm() {
     dispatch(setClicked(false));
     dispatch(clearSelectedConversation());
     api.unsubscribeFromUserActivity({});
-    removeAndNavigateLastSection(pathname + hash);
+    history.closeChatCompletely();
+  };
+
+  const onBackButton = () => {
+    if (!selectedCID) return;
+    if (draftService.getDraftEditedMessageId(selectedCID)) {
+      dispatch(addExternalProps({ [selectedCID]: {} }));
+      draftService.removeDraftWithOptions(selectedCID, "edited_mid");
+      return;
+    }
+    if (isTabletView) {
+      if (location.hash.includes("/list")) {
+        dispatch(setClicked(false));
+        dispatch(clearSelectedConversation());
+        api.unsubscribeFromUserActivity({});
+        history.closeChatCompletely();
+      } else {
+        history.openTabletListView();
+      }
+    } else {
+      closeForm();
+    }
   };
 
   const readMessage = useCallback(() => {
@@ -138,7 +157,7 @@ export default function ChatForm() {
     <section
       key="chatForm"
       id="chatFormContainer"
-      className={`relative flex flex-1 flex-col gap-1.25 px-3.5 shadow-[inset_7px_0_14px_-3px_rgba(0,0,0,0.05),inset_-7px_0_14px_-3px_rgba(0,0,0,0.05)] max-md:w-dvw`}
+      className="relative flex h-full min-w-0 flex-1 flex-col gap-1.25 overflow-hidden px-3.5 shadow-[inset_7px_0_14px_-3px_rgba(0,0,0,0.05),inset_-7px_0_14px_-3px_rgba(0,0,0,0.05)] max-md:w-dvw"
     >
       {selectedCID ? (
         <>
@@ -147,12 +166,12 @@ export default function ChatForm() {
             isSelectionMode={location.hash.includes("/selection")}
             currentTab={currentTab}
             changeTabFunc={setCurrentTab}
-            closeFormFunc={closeForm}
+            closeFormFunc={onBackButton}
+            closeIcon={isTabletView && location.hash.includes("/list") ? <X size={18} /> : undefined}
             onForwardSection={history.openForwardSection}
             onCloseSelectionMode={history.closeSelectionMode}
             onOpenChatOrParticipantInfo={history.openChatOrPaticipantInfo}
           />
-          {/* {isGroup && isOwner && isEnableProgrammableChat ? null : null} */}
           {formComponent}
         </>
       ) : (

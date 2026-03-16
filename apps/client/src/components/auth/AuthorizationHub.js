@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { useSelector } from "react-redux";
-
 import { useAnimate } from "motion/react";
 import * as m from "motion/react-m";
 
@@ -18,11 +16,9 @@ import Discord from "@icons/socials/DiscordIcon.svg?react";
 import GitHub from "@icons/socials/GitHubIcon.png";
 import Medium from "@icons/socials/MediumIcon.svg?react";
 
-import { ResetPasswordModal } from "@sama-communications.ui-kit";
+import { ResetPasswordModal, useViewportBreakpoints } from "@sama-communications.ui-kit";
 
 import autoLoginService from "@services/autoLoginService.js";
-
-import { getIsMobileView } from "@store/values/IsMobileView.js";
 
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 
@@ -33,7 +29,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
   const [scope, animate] = useAnimate();
   const [triggerBGAnimation, setTriggerBGAnimation] = useState(false);
 
-  const isMobileView = useSelector(getIsMobileView);
+  const { isMobile: isMobileView } = useViewportBreakpoints();
 
   const isLoginPage = page === "login";
 
