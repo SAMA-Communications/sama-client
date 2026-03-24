@@ -1,34 +1,54 @@
-// import variant from "https://esm.sh/@jitl/quickjs-ng-wasmfile-release-sync";
-// import { loadQuickJs } from "https://esm.sh/@sebastianwessel/quickjs@3.0.0?deps=memfs@4.0.0";
+/**
+ * QuickJS у Vite + React (client): варіант singlefile-browser — WASM у бандлі, без окремого .wasm
+ * (wasmfile у dev часто дає HTML замість wasm і помилку MIME / magic bytes).
+ * @see https://github.com/justjake/quickjs-emscripten/tree/main/doc/@jitl
+ */
+
+import variant from "@jitl/quickjs-singlefile-browser-release-sync";
+import { loadQuickJs } from "@sebastianwessel/quickjs";
 
 import api from "@api/api.js";
-
 import store from "@store/store.js";
 import { updateHandler, upsertChat } from "@store/values/Conversations.js";
-
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { EDITOR_FETCH_ERROR_MESSAGE } from "@utils/constants.js";
 
+const SANDBOX_OPTIONS = { allowFetch: true, allowFs: false, executionTimeout: 3000 };
+
+const REGEX = {
+  exportHandler: /export\s+default\s+await\s+handler\s*\(.*\)/,
+  handlerHeader:
+    /const\s+handler\s*=\s*async\s*\(message,\s*user,\s*accept,\s*resolve,\s*reject,\s*fetch\)\s*=>\s*\{/,
+};
+
 class ConversationHandlerService {
-  #options = { allowFetch: true, allowFs: false, executionTimeout: 3000 };
   #sandBox = null;
+  #initPromise = null;
 
-  constructor() {
-    this.initializeSandbox();
-  }
-
-  async initializeSandbox() {
+  /** Ініціалізація sandbox: loadQuickJs(variant) — один раз при першому використанні. */
+  async #initSandbox() {
     try {
-      this.#sandBox = null; //await loadQuickJs(variant);
+      this.#sandBox = await loadQuickJs(variant);
+      return this.#sandBox;
     } catch (error) {
       console.error("Failed to initialize sandbox:", error);
+      return null;
     }
   }
 
-  async runHandler(code, message, user) {
-    if (!this.#sandBox) throw new Error("Sandbox is not initialized");
-    let errorMessage = null;
+  /** Чекає завершення ініціалізації; не кидає — при збої this.#sandBox лишається null. */
+  async #ensureReady() {
+    if (!this.#initPromise) this.#initPromise = this.#initSandbox();
+    await this.#initPromise;
+  }
 
+  async runHandler(code, message, user) {
+    await this.#ensureReady();
+    if (!this.#sandBox) {
+      return { ok: false, data: null, error: "Sandbox is not available" };
+    }
+
+    let errorMessage = null;
     const env = {
       MESSAGE: message,
       USER: user,
@@ -46,7 +66,7 @@ class ConversationHandlerService {
             json: async () => data,
             text: async () => JSON.stringify(data),
           };
-        } catch (e) {
+        } catch {
           errorMessage = EDITOR_FETCH_ERROR_MESSAGE;
           return {
             ok: false,
@@ -58,30 +78,42 @@ class ConversationHandlerService {
       },
     };
 
-    const result = await this.#sandBox.runSandboxed(async ({ evalCode }) => evalCode(code), { ...this.#options, env });
+    const result = await this.#sandBox.runSandboxed(
+      async ({ evalCode }) => evalCode(code),
+      { ...SANDBOX_OPTIONS, env },
+    );
 
     return errorMessage ? { ...result, error: errorMessage } : result;
   }
 
   getHandlerModelByCid(monaco, id) {
     const uri = monaco?.Uri.parse(`file://${id}`);
-    const model = monaco?.editor.getModel(uri);
-    return model;
+    return monaco?.editor.getModel(uri);
   }
 
+  /**
+   * Валідує handler-код. Не кидає помилок: при збої sandbox або ініціалізації повертає noSyntaxError: false.
+   */
   async validateHandler(code, originCode) {
-    if (!this.#sandBox) throw new Error("Sandbox is not initialized");
-
-    const { ok } = await this.#sandBox.runSandboxed(async ({ validateCode }) => validateCode(code));
-
-    return {
-      noSyntaxError: ok,
-      isExportHandler: /export\s+default\s+await\s+handler\s*\(.*\)/.test(originCode),
-      isHandlerHeader:
-        /const\s+handler\s*=\s*async\s*\(message,\s*user,\s*accept,\s*resolve,\s*reject,\s*fetch\)\s*=>\s*\{/.test(
-          originCode,
-        ),
+    const fallbackResult = {
+      noSyntaxError: false,
+      isExportHandler: REGEX.exportHandler.test(originCode ?? ""),
+      isHandlerHeader: REGEX.handlerHeader.test(originCode ?? ""),
     };
+
+    await this.#ensureReady();
+    if (!this.#sandBox) return fallbackResult;
+
+    try {
+      const { ok } = await this.#sandBox.runSandboxed(async ({ evalCode }) => evalCode(code));
+      return {
+        noSyntaxError: ok,
+        isExportHandler: REGEX.exportHandler.test(originCode ?? ""),
+        isHandlerHeader: REGEX.handlerHeader.test(originCode ?? ""),
+      };
+    } catch {
+      return fallbackResult;
+    }
   }
 
   async saveHandlerByConversation(cid, content) {
@@ -105,22 +137,18 @@ class ConversationHandlerService {
     }
   }
 
-  async getHandlerFromLocalStorage(cid) {
-    const localStoredHandlerContent = localStorage.getItem(`conversation_handler_${cid}`);
-    if (localStoredHandlerContent) store.dispatch(updateHandler({ _id: cid, not_saved: true }));
-    return localStoredHandlerContent;
+  getHandlerFromLocalStorage(cid) {
+    const content = localStorage.getItem(`conversation_handler_${cid}`);
+    if (content) store.dispatch(updateHandler({ _id: cid, not_saved: true }));
+    return content;
   }
 
   async syncConversationHandler(cid) {
-    // const localStoredHandlerContent = await this.getHandlerFromLocalStorage(cid);
-    // if (localStoredHandlerContent) return;
-
-    const reduxStoredScheme = store.getState().conversations.entities[cid]?.handler_options;
-    if (reduxStoredScheme?.scheme) {
-      store.dispatch(updateHandler({ _id: cid, ...reduxStoredScheme }));
+    const stored = store.getState().conversations.entities[cid]?.handler_options;
+    if (stored?.scheme) {
+      store.dispatch(updateHandler({ _id: cid, ...stored }));
       return;
     }
-
     try {
       const schemeOptions = await api.getConversationHandler({ cid });
       store.dispatch(updateHandler({ _id: cid, ...schemeOptions }));

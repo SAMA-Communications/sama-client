@@ -1,5 +1,4 @@
 import { clsx } from "clsx";
-import { SearchCode, Save } from "lucide-react";
 import { Tooltip } from "react-tooltip";
 
 import type { EditorValidationBarProps } from "@composites/EditorValidationBar/EditorValidationBar.types";
@@ -31,24 +30,21 @@ export const EditorValidationBar = ({
       </div>
       <button
         type="button"
-        className="ui:flex ui:h-11.5 ui:cursor-pointer ui:items-center ui:gap-1.75 ui:self-end ui:rounded-xl ui:border ui:bg-accent-500 ui:p-2 ui:text-base ui:text-white"
+        className="ui:flex ui:h-11.5 ui:cursor-pointer ui:items-center ui:gap-1.75 ui:self-end ui:rounded-xl ui:border ui:bg-accent-500 ui:px-6 ui:py-2 ui:text-base ui:text-white ui:duration-150 ui:hover:bg-black"
         onClick={onCheck}
       >
-        <SearchCode size={24} color="white" />
         Check
       </button>
       <button
         type="button"
-        className={`ui:flex ui:h-11.5 ui:cursor-pointer ui:items-center ui:gap-1.75 ui:self-end ui:rounded-xl ui:border ui:p-2 ui:text-base ui:text-white ${
-          saveDisabled ? "ui:bg-gray-500" : "ui:bg-accent-500"
+        className={`ui:flex ui:h-11.5 ui:cursor-pointer ui:items-center ui:gap-1.75 ui:self-end ui:rounded-xl ui:border ui:px-6 ui:py-2 ui:text-base ui:text-white ui:duration-150 ${
+          saveDisabled ? "ui:bg-gray-500" : "ui:bg-accent-500 ui:hover:bg-black"
         }`}
         disabled={saveDisabled}
         onClick={onSave}
       >
-        <Save size={24} color="white" />
         Save
       </button>
     </WrapperRoot>
   );
 };
-

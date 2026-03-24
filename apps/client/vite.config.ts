@@ -2,19 +2,43 @@ import path from "node:path";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 import tailwindcss from "@tailwindcss/vite";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
-
 const r = (dir: string) => path.resolve(__dirname, dir);
 
+/**
+ * Vite + React (client): QuickJS requires Node (`node:fs`, `node:path`, `memfs` etc.).
+ * @see https://sebastianwessel.github.io/quickjs/docs/index.html#vite
+ *
+ * Buffer/global/process: false in the plugin — otherwise __*_polyfill in .vite/deps (react-dom).
+ * Global process is imported once in src/process-browser-polyfill.js (import first in index.js).
+ */
 export default defineConfig({
-  plugins: [react(), svgr(), tailwindcss()],
+  plugins: [
+    nodePolyfills({
+      protocolImports: true,
+      globals: {
+        Buffer: false,
+        global: false,
+        process: false,
+      },
+      // QuickJS createVirtualFileSystem imports readFileSync from node:fs — empty shim is not suitable
+      overrides: {
+        fs: "memfs",
+      },
+    }),
+    react(),
+    svgr(),
+    tailwindcss(),
+  ],
   preview: { port: 3000 },
   server: { port: 3000 },
   resolve: {
     alias: {
+      "rate-limiter-flexible": r("src/stubs/rate-limiter-flexible-browser.js"),
       "@src": r("src"),
       "@api": r("src/api"),
 
@@ -48,10 +72,11 @@ export default defineConfig({
     exclude: [],
   },
   optimizeDeps: {
-    esbuildOptions: {
-      loader: {
-        ".js": "jsx",
-      },
+    include: ["memfs", "@sebastianwessel/quickjs", "@jitl/quickjs-singlefile-browser-release-sync", "process"],
+  },
+  build: {
+    commonjsOptions: {
+      transformMixedEsModules: true,
     },
   },
 });
