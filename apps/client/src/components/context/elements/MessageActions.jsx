@@ -198,7 +198,6 @@ export default function MessageActions({ listOfIds }) {
         text={`Edited at: ${formatEpochMs(messageEpochMs(message, "updated"), MESSAGE_META_TIME)}`}
         className="text-text-dark/60 mt-1 cursor-default text-sm"
         icon={<PenTool size={16} />}
-        additionalContent={<hr className="ui:mt-auto ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />}
         onClick={() => {}}
       />
     ),
@@ -208,6 +207,7 @@ export default function MessageActions({ listOfIds }) {
         text={`Sent at: ${formatEpochMs(messageEpochMs(message, "sent"), MESSAGE_META_TIME)}`}
         className="text-text-dark/60 -mt-2 cursor-default text-sm"
         icon={<CheckCheck size={16} />}
+        additionalContent={<hr className="ui:mt-auto ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />}
         onClick={() => {}}
       />
     ),

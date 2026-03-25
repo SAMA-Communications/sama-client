@@ -77,8 +77,8 @@ export default function ChatMessage({
       "messageForward",
       "messageDelete",
       "messageSelect",
-      hasDistinctUpdatedAt ? "messageMetaEditedAt" : null,
       "messageMetaSentAt",
+      hasDistinctUpdatedAt ? "messageMetaEditedAt" : null,
     ].filter(Boolean);
 
     dispatch(
