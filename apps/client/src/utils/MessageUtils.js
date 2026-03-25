@@ -1,4 +1,4 @@
-import { FIFTEEN_MIN_MS, FIVE_MIN_MS } from "@utils/constants";
+import { FIFTEEN_MIN_MS, FIVE_MIN_MS, MAX_MESSAGES_WITHOUT_TIMESTAMP } from "@utils/constants";
 
 export function messageEpochMs(message, kind) {
   if (kind === "updated") {
@@ -25,6 +25,7 @@ export function computeMessageChatLayouts(messages) {
   const n = messages.length;
   const layouts = [];
   let lastTimestampShownAt = null;
+  let messagesSinceLastTimestamp = 0;
 
   const sentMs = (m) => messageEpochMs(m, "sent");
   const isSystem = (m) => m.x?.type != null && m.x.type !== "";
@@ -55,6 +56,8 @@ export function computeMessageChatLayouts(messages) {
 
     const showAuthor = !system && isBlockStart;
 
+    if (system || isBlockStart) messagesSinceLastTimestamp = 0;
+
     let showTimestamp;
     if (i === 0) {
       showTimestamp = true;
@@ -64,10 +67,19 @@ export function computeMessageChatLayouts(messages) {
       const timeSinceLastTimestamp =
         lastTimestampShownAt === null ? Number.POSITIVE_INFINITY : curMs - lastTimestampShownAt;
 
-      showTimestamp = isBlockEnd || timeDiffPrev >= FIVE_MIN_MS || timeSinceLastTimestamp >= FIFTEEN_MIN_MS;
+      showTimestamp =
+        isBlockEnd ||
+        timeDiffPrev >= FIVE_MIN_MS ||
+        timeSinceLastTimestamp >= FIFTEEN_MIN_MS ||
+        (!system && messagesSinceLastTimestamp >= MAX_MESSAGES_WITHOUT_TIMESTAMP);
     }
 
-    if (showTimestamp) lastTimestampShownAt = curMs;
+    if (showTimestamp) {
+      lastTimestampShownAt = curMs;
+      messagesSinceLastTimestamp = 0;
+    } else {
+      messagesSinceLastTimestamp++;
+    }
 
     layouts.push({ isBlockStart, isBlockEnd, showAuthor, showTimestamp });
   }
