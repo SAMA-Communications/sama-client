@@ -4,17 +4,31 @@ import { useLocation } from "react-router";
 
 import { useSelector, useDispatch } from "react-redux";
 
-import { ArrowDownToLine, CircleCheck, Copy, Forward, Reply, Trash, SquarePen, MessageCircleX } from "lucide-react";
+import {
+  ArrowDownToLine,
+  CircleCheck,
+  Copy,
+  Forward,
+  Reply,
+  Trash,
+  SquarePen,
+  MessageCircleX,
+  CheckCheck,
+  PenTool,
+} from "lucide-react";
 
 import { useConfirmWindow, ContextMenuItem } from "@sama-communications.ui-kit";
 
 import messagesService from "@services/messagesService.js";
 import draftService from "@services/tools/draftService.js";
 
+import { formatEpochMs, messageEpochMs } from "@src/utils/MessageUtils";
+
 import { addExternalProps } from "@store/values/ContextMenu.js";
 import { selectContextExternalProps } from "@store/values/ContextMenu.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
 
+import { MESSAGE_META_TIME } from "@utils/constants";
 import { writeToCanvas } from "@utils/MediaUtils.js";
 import { addSuffix, upsertMidsInPath } from "@utils/NavigationUtils.js";
 
@@ -148,11 +162,11 @@ export default function MessageActions({ listOfIds }) {
             cancelText: "Cancel",
             actions: [
               ({ data, setData }) => (
-                <label className="flex items-center gap-2">
+                <label className="flex items-center justify-center gap-2">
                   <input
                     type="checkbox"
-                    checked={data.scope === "all"}
-                    onChange={(e) => setData({ scope: e.target.checked ? "all" : "self" })}
+                    checked={data.type === "all"}
+                    onChange={(e) => setData({ type: e.target.checked ? "all" : "myself" })}
                   />
                   <span>Delete for everyone</span>
                 </label>
@@ -160,7 +174,7 @@ export default function MessageActions({ listOfIds }) {
             ],
           });
           const { _id } = message;
-          isConfirm && messagesService.sendMessageDelete(selectedCID, [_id], data.type || "self");
+          isConfirm && messagesService.sendMessageDelete(selectedCID, [_id], data.type || "myself");
         }}
       />
     ),
@@ -178,7 +192,26 @@ export default function MessageActions({ listOfIds }) {
         }}
       />
     ),
+    messageMetaEditedAt: (
+      <ContextMenuItem
+        key="messageMetaEditedAt"
+        text={`Edited at: ${formatEpochMs(messageEpochMs(message, "updated"), MESSAGE_META_TIME)}`}
+        className="text-text-dark/60 mt-1 cursor-default text-sm"
+        icon={<PenTool size={16} />}
+        additionalContent={<hr className="ui:mt-auto ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />}
+        onClick={() => {}}
+      />
+    ),
+    messageMetaSentAt: (
+      <ContextMenuItem
+        key="messageMetaSentAt"
+        text={`Sent at: ${formatEpochMs(messageEpochMs(message, "sent"), MESSAGE_META_TIME)}`}
+        className="text-text-dark/60 -mt-2 cursor-default text-sm"
+        icon={<CheckCheck size={16} />}
+        onClick={() => {}}
+      />
+    ),
   };
 
-  return useMemo(() => listOfIds.map((linkId) => links[linkId]).filter(Boolean), [listOfIds]);
+  return useMemo(() => listOfIds.map((linkId) => links[linkId]).filter(Boolean), [listOfIds, message, attachment]);
 }

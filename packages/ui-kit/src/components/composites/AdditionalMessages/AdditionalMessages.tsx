@@ -53,7 +53,7 @@ export const AdditionalMessages = ({
       className={clsx(
         "ui:flex ui:shrink ui:items-center ui:lg:max-w-272",
         isPreview
-          ? "ui:w-[calc(100%-7rem)] ui:gap-2.75 ui:self-center ui:rounded-xl ui:border ui:border-text-dark ui:px-2 ui:py-1"
+          ? "ui:w-[calc(100%-7rem)] ui:gap-2.75 ui:self-center ui:rounded-xl ui:bg-white ui:p-2 ui:px-2 ui:py-1 ui:shadow-btn"
           : `ui:-mb-3 ui:flex ui:min-h-15.5 ui:flex-row ui:flex-nowrap ui:items-center ui:gap-1.75 ui:rounded-t-xl ui:pt-0.5 ui:pr-3 ui:pb-3 ui:pl-1 ${isAccent ? "ui:bg-bg-dark/5" : "ui:bg-accent-500/65"} ${onClickFunc ? "ui:cursor-pointer" : ""}`,
         className,
       )}
@@ -80,7 +80,7 @@ export const AdditionalMessages = ({
       ) : null}
       <div className="ui:flex ui:w-[calc(100%-5rem)] ui:max-w-full ui:grow ui:flex-col">
         <p
-          className={`ui:w-full ui:overflow-hidden ui:font-medium ui:text-ellipsis ui:whitespace-nowrap ${isAccent ? "ui:text-text-dark" : "ui:text-white"}`}
+          className={`ui:w-full ui:overflow-hidden ui:font-medium ui:text-ellipsis ui:whitespace-nowrap ${isAccent ? "ui:text-accent-500" : "ui:text-white"}`}
         >
           {titleLine}
         </p>

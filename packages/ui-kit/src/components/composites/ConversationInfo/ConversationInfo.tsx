@@ -105,8 +105,8 @@ export const ConversationInfo = ({
             {conversation.name || "Group name"}
           </p>
           {conversation.description ? (
-            <p className="ui:line-clamp-2 ui:max-h-12 ui:overflow-hidden ui:text-text-dark">
-              (<span className="">{conversation.description}</span>)
+            <p className="ui:line-clamp-2 ui:max-h-12 ui:overflow-hidden ui:text-center ui:text-text-dark">
+              {conversation.description}
             </p>
           ) : null}
           {isCurrentUserOwner ? (

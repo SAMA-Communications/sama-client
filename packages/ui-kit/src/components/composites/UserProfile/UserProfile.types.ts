@@ -2,7 +2,6 @@ import type { User } from "types/samaWssModels";
 
 export interface UserProfileProps {
   user: User;
-  isMobile: boolean;
   shareRef?: React.Ref<HTMLElement>;
   onLogout: () => void | Promise<void>;
   triggerExitEvent?: () => void;

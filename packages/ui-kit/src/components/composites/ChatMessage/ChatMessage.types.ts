@@ -45,6 +45,14 @@ export interface ChatMessageProps extends Omit<WrapperRootProps<"div">, "as" | "
   isLongTimeBetweenMessages?: boolean;
   isPrevMessageYours?: boolean;
   isNextMessageYours?: boolean;
+  /** Start of a same-author, same-calendar-day, non-system block */
+  isBlockStart?: boolean;
+  /** End of a same-author, same-calendar-day, non-system block */
+  isBlockEnd?: boolean;
+  /** Show sender name row (typically equals block start for user messages) */
+  showAuthor?: boolean;
+  /** Show inline sent time / read status row (independent of context menu meta) */
+  showTimestamp?: boolean;
   /** Sender display name (e.g. "John Doe" or "Deleted account") */
   senderDisplayName?: string;
   /** Display name for the replied message sender (e.g. "Reply to John") */

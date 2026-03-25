@@ -91,3 +91,12 @@ export default await handler(env.MESSAGE, env.USER, env.ACCEPT, env.RESOLVE, env
 `;
 export const EDITOR_FETCH_ERROR_MESSAGE =
   "A CORS error occurred while trying to perform a network request. This is likely due to browser restrictions that prevent fetching data from external sites in this environment. Please save your code and try running this script directly within a chat conversation instead.";
+
+export const MESSAGE_META_TIME = new Intl.DateTimeFormat(undefined, {
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
+
+export const FIVE_MIN_MS = 5 * 60 * 1000;
+export const FIFTEEN_MIN_MS = 15 * 60 * 1000;

@@ -12,14 +12,7 @@ import { useKeyDown } from "@src/hooks/useKeyDown";
 
 import { KEY_CODES } from "@utils/constants";
 
-export const UserProfile = ({
-  user,
-  isMobile,
-  onLogout,
-  onClose,
-  onEditProfile,
-  onNavigateToAuth,
-}: UserProfileProps) => {
+export const UserProfile = ({ user, onLogout, onClose, onEditProfile, onNavigateToAuth }: UserProfileProps) => {
   const { useParticipants } = getAdapters();
   const { updateCurrentUserPassword, deleteCurrentUser } = useParticipants();
 

@@ -62,13 +62,15 @@ export const ConversationInput = ({
         disableInput,
         enableInput,
         () => {
-          chatMessagesBlockRef.current.scrollTop = chatMessagesBlockRef.current.scrollHeight;
           if (inputRef.current) {
             inputRef.current.style.height = `28px`;
           }
         },
       );
-      setTimeout(() => inputRef.current?.focus(), 50);
+      setTimeout(() => {
+        inputRef.current?.focus();
+        chatMessagesBlockRef.current.scrollTop = chatMessagesBlockRef.current.scrollHeight;
+      }, 50);
     }
     inputRef.current && (inputRef.current.value = body || "");
   };

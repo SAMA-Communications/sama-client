@@ -15,14 +15,14 @@ import draftService from "@services/tools/draftService.js";
 
 import { selectContextExternalProps } from "@store/values/ContextMenu.js";
 import { getConverastionById } from "@store/values/Conversations.js";
-import { selectActiveConversationMessagesEntities } from "@store/values/Messages.js";
+import { selectMessagesEntities } from "@store/values/Messages.js";
 
 export default function ChatFormContent({ onOpenAttachmentHub, isLocationIncludeAttach }) {
   const chatMessagesBlock = useRef(null);
 
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
-  const messagesEntities = useSelector(selectActiveConversationMessagesEntities);
+  const messagesEntities = useSelector(selectMessagesEntities);
   const messages = Object.values(messagesEntities);
 
   const draftExtenralProps = useSelector(selectContextExternalProps);

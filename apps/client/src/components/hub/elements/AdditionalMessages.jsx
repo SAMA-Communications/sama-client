@@ -1,8 +1,6 @@
 import { useSelector } from "react-redux";
 
-export { MediaAttachment } from "@sama-communications.ui-kit";
-
-import { AdditionalMessages as UIAdditionalMessages } from "@sama-communications.ui-kit";
+import { MediaAttachment, AdditionalMessages as UIAdditionalMessages } from "@sama-communications.ui-kit";
 
 import { selectParticipantsEntities } from "@store/values/Participants.js";
 

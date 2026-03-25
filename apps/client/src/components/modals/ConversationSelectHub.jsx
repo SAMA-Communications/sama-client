@@ -12,7 +12,7 @@ import { SearchInput } from "@sama-communications.ui-kit";
 import { selectConversationsEntities, updateWithDrafts } from "@store/values/Conversations.js";
 
 import { extractForwardedMids } from "@utils/ConversationUtils.js";
-import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
+import { navigateTo, removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 
 export default function ConversationSelectHub({ title }) {
   const dispatch = useDispatch();
@@ -30,7 +30,9 @@ export default function ConversationSelectHub({ title }) {
         ...(forwardToConversation?.draft || {}),
         forwarded_mids: forwardedMids,
       };
+
       dispatch(updateWithDrafts({ cid: forwardToCid, draft: newDraft }));
+      navigateTo(`/#${forwardToCid}`);
     },
     [hash, conversations, dispatch],
   );

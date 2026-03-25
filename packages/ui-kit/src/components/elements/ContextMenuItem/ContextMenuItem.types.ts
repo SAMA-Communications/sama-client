@@ -17,5 +17,6 @@ export interface ContextMenuItemProps extends Omit<WrapperRootProps<"div">, "as"
   uId?: string;
   /** Optional; consumed by app, not forwarded to DOM. */
   uObject?: unknown;
+  /** Optional additional content. */
+  additionalContent?: ReactNode;
 }
-

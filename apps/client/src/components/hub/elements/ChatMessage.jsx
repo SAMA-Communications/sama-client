@@ -16,7 +16,7 @@ import { addExternalProps, setAllParams } from "@store/values/ContextMenu.js";
 import { selectParticipantsEntities } from "@store/values/Participants";
 
 import { ALLOWED_FORMATS_TO_COPY, SWIPE_THRESHOLD } from "@utils/constants.js";
-import { addSuffix } from "@utils/NavigationUtils.js";
+import { addPrefix, addSuffix } from "@utils/NavigationUtils.js";
 import { getUserFullName } from "@utils/UserUtils.js";
 
 export default function ChatMessage({
@@ -32,8 +32,12 @@ export default function ChatMessage({
   isSelected,
   isSelectionMode = false,
   isLongTimeBetweenMessages = false,
-  isPrevMesssageYours: prev,
+  isPrevMessageYours: prev,
   isNextMessageYours: next,
+  isBlockStart,
+  isBlockEnd,
+  showAuthor,
+  showTimestamp,
 }) {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
@@ -45,7 +49,8 @@ export default function ChatMessage({
   const linkColor = "text-accent-500";
 
   const openUserProfile = (uid) => {
-    if (sender) addSuffix(pathname + hash, `/user?uid=${uid}&view=card`);
+    if (sender)
+      isCurrentUser ? addPrefix(pathname + hash, `/profile`) : addSuffix(pathname + hash, `/user?uid=${uid}&view=card`);
   };
 
   const refreshLinkPreview = (event, url) => {
@@ -61,6 +66,9 @@ export default function ChatMessage({
       isAttachment && ALLOWED_FORMATS_TO_COPY.includes(externalProps?.attachment?.file_content_type);
     const copyOption = (isCopyableAttachment && "messageCopyAttachment") || (message.body && "messageCopyText") || null;
 
+    const hasDistinctUpdatedAt =
+      message.updated_at != null && message.created_at != null && message.created_at !== message.updated_at;
+
     const list = [
       "messageReply",
       message.body && isCurrentUser && !message.forwarded_message_id ? "messageEdit" : null,
@@ -69,6 +77,8 @@ export default function ChatMessage({
       "messageForward",
       "messageDelete",
       "messageSelect",
+      hasDistinctUpdatedAt ? "messageMetaEditedAt" : null,
+      "messageMetaSentAt",
     ].filter(Boolean);
 
     dispatch(
@@ -159,6 +169,10 @@ export default function ChatMessage({
       isLongTimeBetweenMessages={isLongTimeBetweenMessages}
       isPrevMessageYours={prev}
       isNextMessageYours={next}
+      isBlockStart={isBlockStart}
+      isBlockEnd={isBlockEnd}
+      showAuthor={showAuthor}
+      showTimestamp={showTimestamp}
       senderDisplayName={getUserFullName(sender)}
       repliedMessageSenderName={repliedMessage ? getUserFullName(participants[repliedMessage.from]) : undefined}
       swipeReplyThreshold={SWIPE_THRESHOLD}

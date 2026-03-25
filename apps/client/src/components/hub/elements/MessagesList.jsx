@@ -20,6 +20,7 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectActiveConversationMessagesEntities } from "@store/values/Messages";
 import { addUsers, selectParticipantsEntities } from "@store/values/Participants";
 
+import { computeMessageChatLayouts } from "@utils/MessageUtils";
 import { upsertMidsInPath } from "@utils/NavigationUtils.js";
 import { addSuffix } from "@utils/NavigationUtils.js";
 
@@ -275,6 +276,8 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     upsertMidsInPath(pathname + hash, [mid], "remove");
   };
 
+  const messageChatLayouts = useMemo(() => computeMessageChatLayouts(messages), [messages]);
+
   const messagesView = useMemo(() => {
     return messages.map((msg, i) => {
       const { _id, old_id, body, from, replied_message_id, x } = msg;
@@ -283,16 +286,11 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
 
       const repliedMessage = messagesEntites[replied_message_id] || additionalMessages?.[replied_message_id];
 
-      const isPrevMesssageUsers = i > 0 ? !messages[i - 1].x?.type : false;
-      const isPrevMesssageYours = i > 0 ? messages[i - 1].from === messages[i].from && !messages[i - 1].x?.type : false;
       const isNextMessageYours =
         i < messages.length - 1 ? messages[i].from === messages[i + 1].from && !messages[i + 1].x?.type : false;
       const isSelected = forwardedMids.includes(_id);
 
-      const isLongTimeBetweenMessages =
-        i < messages.length - 1
-          ? +(Date.parse(messages[i + 1].created_at) - Date.parse(msg.created_at)) / 60000 > 5
-          : true;
+      const layout = messageChatLayouts[i];
       const isSameDayAsPrevMessage =
         i > 0 ? new Date(msg.t * 1000).toDateString() === new Date(messages[i - 1].t * 1000).toDateString() : false;
 
@@ -320,14 +318,15 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
             isMobile={isMobile}
             isSelected={isSelected}
             isSelectionMode={isSelectionMode}
-            isPrevMessageYours={isPrevMesssageYours}
-            isNextMessageYours={isNextMessageYours}
-            isLongTimeBetweenMessages={isLongTimeBetweenMessages}
+            isBlockStart={layout.isBlockStart}
+            isBlockEnd={layout.isBlockEnd}
+            showAuthor={layout.showAuthor}
+            showTimestamp={layout.showTimestamp}
           />
         </Fragment>
       );
     });
-  }, [isScrolling, messages, messagesFetchFunc, forwardedMids, hash]);
+  }, [isScrolling, messages, messagesFetchFunc, messageChatLayouts, forwardedMids, hash, pathname]);
 
   const savePosTimer = useRef(null);
 

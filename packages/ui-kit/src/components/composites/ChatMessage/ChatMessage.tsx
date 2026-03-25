@@ -33,6 +33,10 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
     isLongTimeBetweenMessages = false,
     isPrevMessageYours: prev = false,
     isNextMessageYours: next = false,
+    isBlockStart: _isBlockStart,
+    isBlockEnd: isBlockEndProp,
+    showAuthor: showAuthorProp,
+    showTimestamp: showTimestampProp,
     senderDisplayName = "",
     repliedMessageSenderName = "",
     swipeReplyThreshold = 50,
@@ -50,6 +54,11 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
   const isForwardMessage = !!message.forwarded_message_id;
   const isEdited = created_at !== updated_at;
   const hasAttachments = !!attachments?.length;
+
+  const atBlockEnd = isBlockEndProp !== undefined ? isBlockEndProp : !next;
+  const continuesBlockBelow = !atBlockEnd;
+  const showAuthorName = showAuthorProp !== undefined ? showAuthorProp : !prev;
+  const showTimeFooter = showTimestampProp !== undefined ? showTimestampProp : isLongTimeBetweenMessages || !next;
 
   const timeSend = (() => {
     const time = new Date(t * 1000);
@@ -96,7 +105,7 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
         ref={ref}
         key={old_id || _id}
         data-message-id={_id}
-        className={`ui:relative ui:flex ui:flex-row ui:gap-2.75 ${next ? "" : "ui:mb-1.5"}`}
+        className={`ui:relative ui:flex ui:flex-row ui:gap-2.75 ${continuesBlockBelow ? "" : "ui:mb-1.5"}`}
         drag={isMobile ? "x" : false}
         dragDirectionLock
         dragConstraints={{ left: 0, right: 0 }}
@@ -107,7 +116,7 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
       >
         {hideUserIcon ? null : (
           <div className="ui:flex ui:min-w-11.5 ui:items-end">
-            {next || isCurrentUser ? null : (
+            {continuesBlockBelow || isCurrentUser ? null : (
               <button
                 type="button"
                 onClick={() => openUserProfile(from)}
@@ -129,14 +138,17 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
             isCurrentUser ? "ui:ml-auto" : "ui:mr-auto"
           }`}
         >
-          {prev ? null : (
-            <div className="ui:mb-1.25 ui:cursor-pointer ui:truncate ui:text-text-dark/60" onClick={() => openUserProfile(from)}>
+          {!showAuthorName ? null : (
+            <div
+              className="ui:mb-1.25 ui:cursor-pointer ui:truncate ui:text-text-dark/60"
+              onClick={() => openUserProfile(from)}
+            >
               &zwnj;{senderDisplayName || "Deleted account"}
             </div>
           )}
           <div
-            className={`ui:flex ui:min-w-0 ui:w-max ui:max-w-full ui:flex-col ui:rounded-xl ui:shadow-btn ${
-              next ? "" : isCurrentUser ? "ui:rounded-br-none" : "ui:rounded-bl-none"
+            className={`ui:flex ui:w-max ui:max-w-full ui:min-w-0 ui:flex-col ui:rounded-xl ui:shadow-btn ${
+              continuesBlockBelow ? "" : isCurrentUser ? "ui:rounded-br-none" : "ui:rounded-bl-none"
             } ${isCurrentUser ? "ui:self-end" : "ui:self-start"}`}
           >
             {isForwardMessage ? (
@@ -161,9 +173,9 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
               />
             ) : null}
             <m.div
-              className={`ui:relative ui:flex ui:min-h-11.5 ui:min-w-0 ui:max-w-full ui:flex-col ui:justify-between ui:gap-1 ui:rounded-xl ui:p-1 ${
+              className={`ui:relative ui:flex ui:min-h-11.5 ui:max-w-full ui:min-w-0 ui:flex-col ui:justify-between ui:gap-1 ui:rounded-xl ui:p-1 ${
                 isCurrentUser ? "ui:bg-accent-100" : "ui:bg-white"
-              } ${next ? "" : isCurrentUser ? "ui:rounded-br-none" : "ui:rounded-bl-none"} ${
+              } ${continuesBlockBelow ? "" : isCurrentUser ? "ui:rounded-br-none" : "ui:rounded-bl-none"} ${
                 isForwardMessage ? "ui:min-w-28" : "ui:min-w-14"
               } ${isSelected ? "ui:bg-accent-200!" : ""} ${repliedMessage ? "ui:w-full" : "ui:w-max"}`}
               whileTap={isMobile ? { scale: 0.95, transition: { duration: 0.3, delay: 0.05 } } : undefined}
@@ -173,21 +185,21 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
               onPointerLeave={onBubblePointerLeave}
               onContextMenu={isSelectionMode ? handleSelectionContextMenu : handleBubbleContextMenu}
             >
-              <div className="ui:flex ui:min-w-0 ui:w-full ui:flex-col ui:flex-wrap ui:overflow-hidden">
+              <div className="ui:flex ui:w-full ui:min-w-0 ui:flex-col ui:flex-wrap ui:overflow-hidden">
                 {hasAttachments && attachmentsNode}
                 {bodyContent}
                 {!hasAttachments && linkPreviewNode}
               </div>
             </m.div>
           </div>
-          {(isEdited || isLongTimeBetweenMessages || !next) && (
+          {(isEdited || showTimeFooter) && (
             <div
               className={`ui:relative ui:mt-1.25 ui:mb-0.5 ui:flex ui:w-full ui:flex-row ui:items-center ui:gap-0.75 ui:self-end ${
                 isCurrentUser ? "ui:justify-end" : "ui:justify-start"
               }`}
             >
-              {isEdited ? <span className="ui:text-xs ui:leading-4.5 ui:text-text-dark">edited</span> : null}
-              {(isLongTimeBetweenMessages || !next) && (
+              {isEdited ? <span className="ui:text-xs ui:leading-4.5 ui:text-text-dark/60">edited</span> : null}
+              {showTimeFooter && (
                 <>
                   <div className="ui:text-xs ui:text-text-dark/60">{timeSend}</div>
                   {isCurrentUser ? (
@@ -200,7 +212,7 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
         </div>
         {hideUserIcon ? null : (
           <div className="ui:flex ui:min-w-11.5 ui:items-end">
-            {next || !isCurrentUser ? null : (
+            {continuesBlockBelow || !isCurrentUser ? null : (
               <button
                 type="button"
                 onClick={() => openUserProfile(from)}
