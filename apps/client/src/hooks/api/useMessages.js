@@ -39,7 +39,7 @@ export default function useMessages() {
   const messagesEntities = useSelector(selectMessagesEntities);
   const messages = useSelector(selectActiveConversationMessages);
 
-  const confirmWindow = useConfirmWindow();
+  const confirm = useConfirmWindow();
 
   const _prepareAttachmentMetadata = (attachments, originalAttachments = []) =>
     attachments.map((file, i) => ({
@@ -170,7 +170,7 @@ export default function useMessages() {
   };
 
   const deleteSelectedMessages = async (selectedCID, mids) => {
-    const { isConfirm, data } = await confirmWindow({
+    const { isConfirm, data } = await confirm({
       title: `Delete selected message${mids.length > 1 ? "s" : ""}?`,
       confirmText: "Delete",
       cancelText: "Cancel",
@@ -268,7 +268,7 @@ export default function useMessages() {
 
     const eMid = editedMessage._id;
     if (!inputValue.length) {
-      const { isConfirm } = await confirmWindow({
+      const { isConfirm } = await confirm({
         title: "Are you sure you want to delete the message?",
         confirmText: "Delete",
         cancelText: "Cancel",

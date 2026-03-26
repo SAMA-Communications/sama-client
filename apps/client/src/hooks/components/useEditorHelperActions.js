@@ -17,7 +17,7 @@ import { DEFAULT_EDITOR_CODE } from "@utils/constants.js";
 export function useEditorHelperActions() {
   const monaco = useMonaco();
   const dispatch = useDispatch();
-  const requestConfirm = useConfirmWindow();
+  const confirm = useConfirmWindow();
   const selectedCid = useSelector(getSelectedConversationId);
   const selectedConversationScheme = useSelector(getConversationHandler);
 
@@ -28,10 +28,10 @@ export function useEditorHelperActions() {
   };
 
   const deleteConversationHandler = async () => {
-    const { isConfirm } = await requestConfirm({
+    const { isConfirm } = await confirm({
       title: "Delete handler",
       description: "Are you sure you want to delete the handler?",
-      icon: <Trash size={40} color="red" strokeWidth={2} />
+      icon: <Trash size={40} color="red" strokeWidth={2} />,
     });
     if (!isConfirm) return;
     resetEditorContent(DEFAULT_EDITOR_CODE);

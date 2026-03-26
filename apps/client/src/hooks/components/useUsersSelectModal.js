@@ -16,7 +16,7 @@ import { selectParticipantsEntities } from "@store/values/Participants";
 import { removeAndNavigateSubLink, removeAndNavigateLastSection, navigateTo } from "@utils/NavigationUtils.js";
 
 export function useUsersSelectModal({ type } = {}) {
-  const requestConfirm = useConfirmWindow();
+  const confirm = useConfirmWindow();
   const selectedConversation = useSelector(getConverastionById);
   const participants = useSelector(selectParticipantsEntities);
   const { pathname, hash } = useLocation();
@@ -51,10 +51,11 @@ export function useUsersSelectModal({ type } = {}) {
 
   const sendEditRequest = useCallback(
     async (users) => {
-      const { isConfirm } = await requestConfirm({
+      const { isConfirm } = await confirm({
         title: "Add participants",
+        color: "success",
         description: `Add selected user${users.length > 1 ? "s" : ""} to the chat?`,
-        icon: <UserPlus size={40} color="red" strokeWidth={2} />
+        icon: <UserPlus size={40} color="var(--ui-color-green-500)" strokeWidth={2} />,
       });
       if (!isConfirm) return;
       const success = await conversationService.addParticipants(users);
@@ -62,7 +63,7 @@ export function useUsersSelectModal({ type } = {}) {
         removeAndNavigateLastSection(pathname + hash);
       }
     },
-    [pathname, hash, requestConfirm],
+    [pathname, hash, confirm],
   );
 
   const addUser = useCallback((user) => {

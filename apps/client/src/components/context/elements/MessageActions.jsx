@@ -22,13 +22,13 @@ import { useConfirmWindow, ContextMenuItem } from "@sama-communications.ui-kit";
 import messagesService from "@services/messagesService.js";
 import draftService from "@services/tools/draftService.js";
 
-import { formatEpochMs, messageEpochMs } from "@src/utils/MessageUtils";
+import { messageEpochMs } from "@src/utils/MessageUtils";
 
 import { addExternalProps } from "@store/values/ContextMenu.js";
 import { selectContextExternalProps } from "@store/values/ContextMenu.js";
 import { getSelectedConversationId } from "@store/values/SelectedConversation.js";
 
-import { MESSAGE_META_TIME } from "@utils/constants";
+import { formatMessageDateTime } from "@utils/FormatedUtils";
 import { writeToCanvas } from "@utils/MediaUtils.js";
 import { addSuffix, upsertMidsInPath } from "@utils/NavigationUtils.js";
 
@@ -195,7 +195,7 @@ export default function MessageActions({ listOfIds }) {
     messageMetaSentAt: (
       <ContextMenuItem
         key="messageMetaSentAt"
-        text={`Sent at: ${formatEpochMs(messageEpochMs(message, "sent"), MESSAGE_META_TIME)}`}
+        text={`${formatMessageDateTime(messageEpochMs(message, "sent"))}`}
         className="text-text-dark/60 mt-1 cursor-default text-sm"
         icon={<CheckCheck size={16} />}
         additionalContent={<hr className="ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />}
@@ -205,8 +205,8 @@ export default function MessageActions({ listOfIds }) {
     messageMetaEditedAt: (
       <ContextMenuItem
         key="messageMetaEditedAt"
-        text={`Edited at: ${formatEpochMs(messageEpochMs(message, "updated"), MESSAGE_META_TIME)}`}
-        className="text-text-dark/60 -mt-2cursor-default text-sm"
+        text={`${formatMessageDateTime(messageEpochMs(message, "updated"))}`}
+        className="text-text-dark/60 -mt-2 cursor-default text-sm"
         icon={<PenTool size={16} />}
         onClick={() => {}}
       />

@@ -65,7 +65,7 @@ export type { UseKeyDownOptions, UseKeyDownResult } from "./hooks/useKeyDown";
 export { useViewportBreakpoints } from "./hooks/useViewportBreakpoints";
 export type { ViewportBreakpointsResult } from "./hooks/useViewportBreakpoints";
 
-export { KEY_CODES, ALLOWED_AVATAR_FORMATS, VIEWPORT_BREAKPOINTS } from "./utils/constants";
+export { KEY_CODES, ALLOWED_AVATAR_FORMATS, VIEWPORT_BREAKPOINTS, PREVIEW_EXPAND_DIRECTION } from "./utils/constants";
 export { chunkMedia, normalizeRatio, getFileType } from "./utils/mediaUtils";
 
 export {

@@ -86,7 +86,7 @@ export const UserSelectorBlock = ({
           Cancel
         </button>
         {isLoading ? (
-          <OvalLoader wrapperClassName="ui:p-[0px]!" height={60} width={23} />
+          <OvalLoader wrapperClassName="ui:px-[31px]!" height={40} width={16} />
         ) : (
           <button
             className="ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75 ui:rounded-xl ui:bg-accent-500 ui:px-6 ui:py-2 ui:text-white ui:duration-150 ui:hover:bg-black"

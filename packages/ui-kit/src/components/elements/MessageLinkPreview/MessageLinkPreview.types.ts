@@ -9,6 +9,8 @@ export interface UrlPreviewData {
   size?: number;
 }
 
+export type MessageLinkPreviewExpandDirection = "up" | "down";
+
 export interface MessageLinkPreviewProps {
   urlData: UrlPreviewData | null | undefined;
   /** "white" | "accent" for styling */
@@ -18,4 +20,6 @@ export interface MessageLinkPreviewProps {
   isDocument?: boolean;
   /** Formatted file size string (e.g. "1.2 MB") when isDocument */
   formattedFileSize?: string;
+  /** Expand rich preview toward the bubble (`up`) or downward (`down`). Default: `PREVIEW_EXPAND_DIRECTION`. */
+  expandDirection?: MessageLinkPreviewExpandDirection;
 }

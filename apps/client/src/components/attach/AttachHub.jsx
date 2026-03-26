@@ -29,7 +29,7 @@ import { removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 export default function AttachHub() {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
-  const requestConfirm = useConfirmWindow();
+  const confirm = useConfirmWindow();
 
   const connectState = useSelector(getNetworkState);
   const { isMobile } = useViewportBreakpoints();
@@ -93,7 +93,7 @@ export default function AttachHub() {
       };
       if (isForseClose === true) return close();
       if (files.length) {
-        const { isConfirm } = await requestConfirm({
+        const { isConfirm } = await confirm({
           title: "Cancel sending",
           description: "Are you sure you want to cancel sending files?",
           icon: <MessageCircleOff size={40} color="red" strokeWidth={2} />,
@@ -102,7 +102,7 @@ export default function AttachHub() {
       }
       return close();
     },
-    [files.length, pathname, hash, requestConfirm],
+    [files.length, pathname, hash, confirm],
   );
 
   const removeFile = async (index) => {

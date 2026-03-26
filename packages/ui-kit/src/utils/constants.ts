@@ -38,7 +38,6 @@ export const MAX_CHAT_NAME_LENGTH = 255;
 
 export const DEFAULT_BLUR_HASH = "U27nLE$*00_N^k,@s9xu#7$2$%xtVD-B-pkW";
 
-/** Viewport breakpoints (px) for responsive layout */
 export const VIEWPORT_BREAKPOINTS = {
   MOBILE: 767,
   TABLET: 1279,
@@ -47,3 +46,6 @@ export const VIEWPORT_BREAKPOINTS = {
 
 export const SEARCH_AREA_MIN_HEIGHT = "0px";
 export const SEARCH_AREA_MAX_HEIGHT = "60dvh";
+
+export const PREVIEW_EXPAND_DIRECTION: "down" | "down" = "down";
+export const PREVIEW_EXPAND_DURATION_MS = 250;

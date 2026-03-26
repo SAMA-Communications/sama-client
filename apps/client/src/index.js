@@ -1,5 +1,3 @@
-import "./process-browser-polyfill.js";
-
 import React from "react";
 
 import ReactDOM from "react-dom/client";
@@ -26,3 +24,6 @@ root.render(
     </BrowserRouter>
   </Provider>,
 );
+
+import "./process-browser-polyfill.js";
+

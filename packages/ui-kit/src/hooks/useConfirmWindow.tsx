@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useRef, useState, type MouseEvent, type ReactNode } from "react";
 
+import clsx from "clsx";
 import { AnimatePresence, motion } from "motion/react";
 
 import { useKeyDown } from "@src/hooks/useKeyDown";
@@ -21,6 +22,7 @@ export type ConfirmAction<T = unknown> = React.FC<ConfirmActionProps<T>>;
 
 export type ConfirmOptions<T = unknown> = {
   title?: string;
+  color?: "success" | "danger";
   description?: string;
   confirmText?: string;
   cancelText?: string;
@@ -129,7 +131,10 @@ export const ConfirmWindowProvider = ({ children }: { children: ReactNode }) => 
                   {options.cancelText ?? "Cancel"}
                 </button>
                 <button
-                  className="ui:cursor-pointer ui:rounded-lg ui:bg-red-500 ui:px-6 ui:py-2 ui:text-white ui:hover:bg-black"
+                  className={clsx(
+                    "ui:cursor-pointer ui:rounded-lg ui:px-6 ui:py-2 ui:text-white ui:hover:bg-black",
+                    options.color === "danger" ? "ui:bg-red-500" : "ui:bg-green-500",
+                  )}
                   onClick={() => close(true)}
                 >
                   {options.confirmText ?? "Confirm"}
