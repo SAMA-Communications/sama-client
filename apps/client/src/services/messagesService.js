@@ -372,6 +372,22 @@ class MessagesService {
 
     return { messagesIds: updatedMessagesIds, conversation };
   }
+
+  buildForwardedSnapshots(mids) {
+    const messages = store.getState().messages?.entities || {};
+    return mids.map((mid) => {
+      const m = messages[mid];
+      if (!m) return { _id: mid, body: "", attachments: [] };
+      return {
+        _id: m._id,
+        body: m.body ?? "",
+        attachments: Array.isArray(m.attachments) ? m.attachments.map((a) => ({ ...a })) : [],
+        from: m.from,
+        t: m.t,
+        forwarded_message_id: m.forwarded_message_id,
+      };
+    });
+  }
 }
 
 const messagesService = new MessagesService();

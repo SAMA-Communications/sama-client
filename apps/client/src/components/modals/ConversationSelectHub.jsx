@@ -11,6 +11,7 @@ import { SearchInput } from "@sama-communications.ui-kit";
 
 import { extractForwardedMids } from "@utils/ConversationUtils.js";
 import { navigateTo, removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
+import messagesService from "@services/messagesService";
 
 export default function ConversationSelectHub({ title }) {
   const { pathname, hash } = useLocation();
@@ -21,7 +22,10 @@ export default function ConversationSelectHub({ title }) {
       const forwardedMids = extractForwardedMids(hash);
       if (!forwardedMids.length) return;
 
-      saveDraft(forwardToCid, { forwarded_mids: forwardedMids });
+      saveDraft(forwardToCid, {
+        forwarded_mids: forwardedMids,
+        forwarded_snapshots: messagesService.buildForwardedSnapshots(forwardedMids),
+      });
       navigateTo(`/#${forwardToCid}`);
     },
     [hash],

@@ -12,7 +12,7 @@ function preEditComposeKey(cid) {
 const LS_DEBOUNCE_MS = 300;
 const REDUX_SYNC_DELAY_MS = 800;
 
-const REDUX_LIST_EXCLUDED_KEYS = ["edited_mid", "forwarded_mids", "forwarded_mid"];
+const REDUX_LIST_EXCLUDED_KEYS = ["edited_mid", "forwarded_mids", "forwarded_mid", "forwarded_snapshots"];
 
 const memory = new Map();
 const lsTimers = new Map();
@@ -188,7 +188,7 @@ export function saveDraft(cid, patch = {}) {
   const p = normalizePatch(patch);
   mergeDraft(cid, patch);
   scheduleLsWrite(cid, debounce);
-  if (["forwarded_mids", "edited_mid", "replied_mid", "forwarded_mid"].some((k) => p[k] != null)) {
+  if ([...REDUX_LIST_EXCLUDED_KEYS,  "edited_mid"].some((k) => p[k] != null)) {
     bumpDraftRevision(cid);
   }
 }

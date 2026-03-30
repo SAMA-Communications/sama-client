@@ -17,7 +17,7 @@ export default function ChatFormInputContent({ editedMessage, repliedMessage, fo
       dispatch(addExternalProps({ [editedMessage.cid]: {} }));
       removeDraftWithOptions(editedMessage.cid, "edited_mid");
     } else if (forwardedMessages.length) {
-      removeDraftWithOptions(selectedCID, ["forwarded_mids"]);
+      removeDraftWithOptions(selectedCID, ["forwarded_mids", "forwarded_snapshots"]);
     } else if (repliedMessage) {
       dispatch(addExternalProps({ [repliedMessage.cid]: {} }));
       removeDraftWithOptions(repliedMessage.cid, "replied_mid");

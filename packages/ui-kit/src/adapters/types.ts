@@ -7,6 +7,7 @@ export interface DraftPatch {
   updated_mid?: string;
   forwarded_mid?: string | string[];
   forwarded_mids?: string[];
+  forwarded_snapshots?: Record<string, unknown>[];
 }
 
 export interface useDraftsProps {

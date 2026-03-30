@@ -1,8 +1,11 @@
 import { useSelector } from "react-redux";
 
+import api from "@api/api.js";
+
 import DownloadManager from "@lib/downloadManager.js";
 import {
   consumePreEditComposeText,
+  getDraft,
   getDraftRepliedMessageId,
   purgeDraft,
   removeDraftFields,
@@ -94,6 +97,7 @@ export default function useMessages() {
 
   const _sendForwardMessages = async (
     forwardedMids,
+    forwardedSnapshots,
     selectedCID,
     isSendMessageDisable,
     disableInput,
@@ -105,9 +109,22 @@ export default function useMessages() {
       return;
     }
 
-    const forwardedMessages = forwardedMids.map((mid) => messagesEntities[mid]);
+    const messages = store.getState().messages?.entities || {};
+    const snapshots = Array.isArray(forwardedSnapshots) ? forwardedSnapshots : [];
+    const forwardedMessages = forwardedMids
+      .map((mid, i) => {
+        const fromStore = messages[mid];
+        const snap = snapshots[i];
+        if (fromStore) return fromStore;
+        if (snap && snap._id === mid) return snap;
+        return snap || null;
+      })
+      .filter(Boolean);
 
-    if (!forwardedMessages.length) return;
+    if (!forwardedMessages.length) {
+      showCustomAlert("Forwarded messages are no longer available.", "warning");
+      return;
+    }
 
     let lastMessage = null;
 
@@ -138,31 +155,48 @@ export default function useMessages() {
           forwarded_message_id: message._id,
         };
 
-        let originalAttachments = message.attachments;
-        if (message.attachments?.length) {
-          const files = await DownloadManager.getFileObjectsFromUrls(
-            message.attachments.map((att) => ({
-              url: att.file_url,
-              fileName: att.file_name,
-              contentType: att.file_content_type,
-            })),
-          );
-          mObject.attachments = files.map((att, i) => {
-            const { file_url, _id, ...rest } = originalAttachments[i];
-            const newAtt = { ...rest, ...att };
-            delete newAtt.file_url;
-            return newAtt;
-          });
+        const originalAttachments = message.attachments;
+        if (originalAttachments?.length) {
+          const resolved = [];
+          for (const att of originalAttachments) {
+            let url = att.file_url;
+            if (!url && att.file_id) {
+              const urls = await api.getDownloadUrlForFiles({ file_ids: [att.file_id] });
+              url = urls[att.file_id];
+            }
+            if (url) {
+              resolved.push({ att, url });
+            }
+          }
+          if (resolved.length) {
+            const files = await DownloadManager.getFileObjectsFromUrls(
+              resolved.map(({ att, url }) => ({
+                url,
+                fileName: att.file_name,
+                contentType: att.file_content_type || "application/octet-stream",
+              })),
+            );
+            const originals = resolved.map((r) => r.att);
+            mObject.attachments = files.map((fileAtt, idx) => {
+              const orig = originals[idx];
+              const { file_url, _id, ...rest } = orig;
+              const newAtt = { ...rest, ...fileAtt };
+              delete newAtt.file_url;
+              return newAtt;
+            });
+            await _sendMessageToServer(mObject, originals);
+            continue;
+          }
         }
 
-        await _sendMessageToServer(mObject, originalAttachments);
+        await _sendMessageToServer(mObject, originalAttachments || []);
       }
     } catch (err) {
       await _handleMessageError(err, selectedCID, lastMessage, disableInput);
       return;
     }
 
-    removeDraftFields(forwardedMessages[0].cid, ["forwarded_mids"], { syncReduxNow: true });
+    removeDraftFields(selectedCID, ["forwarded_mids", "forwarded_snapshots"], { syncReduxNow: true });
     enableInput?.();
     purgeDraft(selectedCID);
     store.dispatch(addExternalProps({ [selectedCID]: {} }));
@@ -218,10 +252,13 @@ export default function useMessages() {
 
     const selectedCID = selectedConversation._id;
 
-    const forwardedMessages = selectedConversation.draft?.forwarded_mids;
-    if (forwardedMessages) {
+    const draft = getDraft(selectedCID);
+    const forwardedMids =
+      Array.isArray(draft.forwarded_mids) && draft.forwarded_mids.length ? draft.forwarded_mids : null;
+    if (forwardedMids) {
       await _sendForwardMessages(
-        forwardedMessages,
+        forwardedMids,
+        draft.forwarded_snapshots,
         selectedCID,
         isSendMessageDisable,
         disableInput,

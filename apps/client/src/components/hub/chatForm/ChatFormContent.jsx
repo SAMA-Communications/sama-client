@@ -51,8 +51,16 @@ export default function ChatFormContent({ onOpenAttachmentHub, isLocationInclude
   ]);
   const draftForwardedMessage = useMemo(() => {
     const localDraft = getDraft(selectedCID);
-    const forwardedMessageId = localDraft.forwarded_mids ?? selectedConversation?.draft?.forwarded_mids;
-    return forwardedMessageId?.map((mid) => messagesEntities[mid]);
+    const forwardedMids = localDraft.forwarded_mids ?? selectedConversation?.draft?.forwarded_mids;
+    const snapshots = localDraft.forwarded_snapshots;
+    if (!Array.isArray(forwardedMids) || !forwardedMids.length) return undefined;
+    return forwardedMids.map((mid, i) => {
+      const fromStore = messagesEntities[mid];
+      const snap = Array.isArray(snapshots) ? snapshots[i] : undefined;
+      if (fromStore) return fromStore;
+      if (snap && snap._id === mid) return snap;
+      return snap || { _id: mid, error: "Message unavailable" };
+    });
   }, [selectedConversation, messagesEntities, selectedCID, getDraft, localDraftRevision]);
   const draftEditedMessage = useMemo(() => {
     const editedMessageId =
