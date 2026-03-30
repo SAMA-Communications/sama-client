@@ -47,7 +47,7 @@ export const VIEWPORT_BREAKPOINTS = {
 export const SEARCH_AREA_MIN_HEIGHT = "0px";
 export const SEARCH_AREA_MAX_HEIGHT = "60dvh";
 
-export const PREVIEW_EXPAND_DIRECTION: "down" | "down" = "down";
+export const PREVIEW_EXPAND_DIRECTION: "up" | "down" = "up";
 export const PREVIEW_EXPAND_DURATION_MS = 250;
 
 export const LOAD_MORE_EDGE_PX = 160;

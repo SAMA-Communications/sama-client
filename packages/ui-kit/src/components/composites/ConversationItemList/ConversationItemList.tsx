@@ -29,6 +29,7 @@ export const ConversationItemList = ({
   const isLoadingRef = useRef(false);
   const hasMoreRef = useRef(true);
   const conversationsRef = useRef(conversations);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   hasMoreRef.current = hasMore;
   conversationsRef.current = conversations;
@@ -52,12 +53,25 @@ export const ConversationItemList = ({
       updated_at: { lt: last.updated_at },
     })
       .then((batch) => {
+        const el = scrollContainerRef.current;
+        const prevScrollHeight = el?.scrollHeight ?? 0;
+        const prevScrollTop = el?.scrollTop ?? 0;
+
         if (!batch.length) {
           hasMoreRef.current = false;
           setHasMore(false);
           return;
         }
         storeNewConversations(batch);
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const c = scrollContainerRef.current;
+            if (!c || prevScrollHeight <= 0) return;
+            const delta = c.scrollHeight - prevScrollHeight;
+            if (delta !== 0) c.scrollTop = prevScrollTop + delta;
+          });
+        });
       })
       .finally(() => {
         isLoadingRef.current = false;
@@ -76,6 +90,7 @@ export const ConversationItemList = ({
   return (
     <WrapperRoot className={clsx("ui:flex ui:h-full ui:min-h-0 ui:flex-col", className)} {...rest}>
       <CustomVerticalScrollbar
+        containerRef={scrollContainerRef}
         customId={scrollContainerId}
         customClassName={clsx("ui:min-h-0 ui:flex-1 ui:w-full", scrollbarClassName)}
         childrenClassName={scrollbarContentClassName}

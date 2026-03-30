@@ -19,6 +19,8 @@ export interface CustomVerticalScrollbarProps {
   autoHideDelay?: number;
   /** Delay in ms to keep scrollbar visible on track hover before hiding */
   hoverShowDelay?: number;
+  /** When false, do not read/write `scroll_pos_${id}` (still sets element `id` if containerId/customId is set). */
+  persistScrollPosition?: boolean;
   /** Id for the scrollable div; when set, scroll position is restored from and saved to localStorage `scroll_pos_${id}` */
   containerId?: string;
   /** Alias for containerId (backward compat with CustomScrollBar) */

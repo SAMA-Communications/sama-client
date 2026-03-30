@@ -26,6 +26,7 @@ export const CustomVerticalScrollbar = ({
   hoverShowDelay = SCROLLBAR_DEFAULT_HOVER_SHOW_DELAY,
   containerId: containerIdProp,
   customId,
+  persistScrollPosition = true,
   className = "",
   contentClassName = "",
   customClassName = "",
@@ -38,6 +39,7 @@ export const CustomVerticalScrollbar = ({
   const internalRef = useRef<HTMLDivElement>(null);
   const containerRef = containerRefProp ?? internalRef;
   const containerId = containerIdProp ?? customId;
+  const shouldPersistScroll = Boolean(containerId) && persistScrollPosition;
 
   const trackRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
@@ -92,10 +94,10 @@ export const CustomVerticalScrollbar = ({
     const scrollFromBottom = scrollHeight - scrollTop - clientHeight;
     onScroll?.(scrollFromBottom);
 
-    if (containerId || onScrollStop) {
+    if (shouldPersistScroll || onScrollStop) {
       if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
       scrollStopTimerRef.current = setTimeout(() => {
-        if (containerId && container) {
+        if (shouldPersistScroll && container) {
           try {
             localStorage.setItem(`scroll_pos_${containerId}`, String(container.scrollTop));
           } catch (_) {}
@@ -104,12 +106,12 @@ export const CustomVerticalScrollbar = ({
         scrollStopTimerRef.current = null;
       }, SCROLL_STOP_DEBOUNCE_MS);
     }
-  }, [containerRef, containerId, minThumbHeight, autoHideDelay, onScroll, onScrollStop, scheduleHide]);
+  }, [containerRef, containerId, shouldPersistScroll, minThumbHeight, autoHideDelay, onScroll, onScrollStop, scheduleHide]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    if (containerId) {
+    if (shouldPersistScroll) {
       try {
         const saved = localStorage.getItem(`scroll_pos_${containerId}`);
         if (saved != null) container.scrollTop = Number(saved);
@@ -124,7 +126,7 @@ export const CustomVerticalScrollbar = ({
       ro.disconnect();
       if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
     };
-  }, [containerRef, containerId, handleScroll]);
+  }, [containerRef, containerId, shouldPersistScroll, handleScroll]);
 
   const startDrag = useCallback(
     (e: React.MouseEvent) => {

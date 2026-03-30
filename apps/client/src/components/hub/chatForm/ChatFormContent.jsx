@@ -72,6 +72,7 @@ export default function ChatFormContent({ onOpenAttachmentHub, isLocationInclude
       return (
         <CustomVerticalScrollbar
           customId="chatMessagesScrollable"
+          persistScrollPosition={false}
           customClassName="rounded-3xl h-[calc(100%+9px)]!"
           childrenClassName="py-1.5"
         >

@@ -30,6 +30,32 @@ import conversationService from "@services/conversationsService";
 import { TYPING_DURATION_MS } from "@utils/constants.js";
 import { navigateTo } from "@utils/NavigationUtils.js";
 
+function getMessageSortKey(msg) {
+  if (!msg || typeof msg !== "object") return 0;
+  if (typeof msg.t === "number") return msg.t;
+  if (msg.created_at != null) {
+    const ms = Date.parse(msg.created_at);
+    if (!Number.isNaN(ms)) return ms / 1000;
+  }
+  if (msg.updated_at != null) {
+    const ms = Date.parse(msg.updated_at);
+    if (!Number.isNaN(ms)) return ms / 1000;
+  }
+  return 0;
+}
+
+function mergeChronologicalMessageIds(oldIds, incomingIds, entities) {
+  const set = new Set([...(oldIds || []), ...incomingIds]);
+  const list = [...set];
+  list.sort((a, b) => {
+    const ka = getMessageSortKey(entities[a]);
+    const kb = getMessageSortKey(entities[b]);
+    if (ka !== kb) return ka - kb;
+    return String(a).localeCompare(String(b));
+  });
+  return list;
+}
+
 class MessagesService {
   currentChatId;
   typingTimers = {};
@@ -199,9 +225,7 @@ class MessagesService {
     try {
       const messages = await this.getMessagesByCid(cid, {});
 
-      const { conversation } = await this.processMessages(messages, {
-        position: "reverseOld",
-      });
+      const { conversation } = await this.processMessages(messages);
 
       if (conversation?.type !== "u") {
         api
@@ -275,33 +299,19 @@ class MessagesService {
     this.updateConversationAfterDeleteMessages(cid, mids);
   }
 
-  async processMessages(newMessages, additionalOptions) {
+  async processMessages(newMessages) {
     if (!newMessages.length) return {};
 
     const convId = newMessages[0].cid;
     const conversation = store.getState().conversations.entities?.[convId];
-
-    const { anchor_mid, position } = additionalOptions;
-
-    const newMessagesIds = newMessages.map((el) => el._id).reverse();
     const oldMessagesIds = conversation?.messagesIds || [];
-
-    let updatedMessagesIds = [...oldMessagesIds];
-
-    if (anchor_mid && position && oldMessagesIds.includes(anchor_mid)) {
-      const anchorIndex = oldMessagesIds.indexOf(anchor_mid);
-      if (position === "gt") {
-        updatedMessagesIds.splice(anchorIndex + 1, 0, ...newMessagesIds);
-      } else if (position === "lt") {
-        updatedMessagesIds.splice(anchorIndex, 0, ...newMessagesIds);
-      }
-    } else {
-      updatedMessagesIds =
-        position === "reverseOld" ? [...oldMessagesIds, ...newMessagesIds] : [...newMessagesIds, ...oldMessagesIds];
-    }
-    updatedMessagesIds = [...new Set(updatedMessagesIds)];
+    const incomingIds = newMessages.map((el) => el._id);
 
     store.dispatch(addMessages(newMessages));
+
+    const entities = store.getState().messages.entities || {};
+    const updatedMessagesIds = mergeChronologicalMessageIds(oldMessagesIds, incomingIds, entities);
+
     store.dispatch(
       upsertChat({
         _id: convId,

@@ -105,3 +105,6 @@ export const MESSAGE_META_TIME = new Intl.DateTimeFormat(undefined, {
 
 export const FIVE_MIN_MS = 5 * 60 * 1000;
 export const FIFTEEN_MIN_MS = 15 * 60 * 1000;
+
+export const CHAT_SCROLL_BOTTOM_THRESHOLD_PX = 80;
+export const REPLY_SCROLL_MAX_MS = 2800;
