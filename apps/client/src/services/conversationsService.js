@@ -52,6 +52,13 @@ class ConversationsService {
 
   handleConversationCreate = async (chat) => {
     try {
+      const conversation = store.getState().conversations.entities?.[chat._id];
+      if (conversation?._id) {
+        store.dispatch(upsertChat({ ...chat }));
+        notificationQueueByCid[chat._id]?.forEach((pushMessage) => eventEmitter.emit("onMessage", pushMessage));
+        return;
+      }
+
       const { users } = await api.getParticipantsByCids({ cids: [chat._id] });
       store.dispatch(
         upsertChat({

@@ -25,6 +25,8 @@ import {
 import { addUser, upsertUsers } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 
+import conversationService from "@services/conversationsService";
+
 import { TYPING_DURATION_MS } from "@utils/constants.js";
 import { navigateTo } from "@utils/NavigationUtils.js";
 
@@ -58,6 +60,11 @@ class MessagesService {
     };
 
     api.onMessageListener = async (message) => {
+      const cid = message.cid;
+      if (cid && !store.getState().conversations.entities?.[cid]?._id) {
+        await conversationService.ensureConversationInStoreIfMissing(cid);
+      }
+
       const attachments = message.attachments;
       if (attachments) {
         const attachmentsIds = attachments.filter((obj) => !obj.file_url && obj.file_id).map((obj) => obj.file_id);
@@ -127,6 +134,7 @@ class MessagesService {
       const { cid, from } = data;
 
       const conversation = store.getState().conversations.entities[cid];
+      if (!conversation) return;
       const newTypingUsersArray = [...(conversation.typing_users || [])];
       !newTypingUsersArray.includes(from) && newTypingUsersArray.push(from);
       store.dispatch(

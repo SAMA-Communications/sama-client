@@ -251,7 +251,7 @@ export const conversations = createSlice({
       }
 
       const lastMessageField = conv.last_message;
-      mid === lastMessageField._id &&
+      mid === lastMessageField?._id &&
         conversationsAdapter.upsertOne(state, {
           _id: cid,
           last_message: { ...lastMessageField, status: "read" },
