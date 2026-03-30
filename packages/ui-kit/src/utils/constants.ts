@@ -49,3 +49,5 @@ export const SEARCH_AREA_MAX_HEIGHT = "60dvh";
 
 export const PREVIEW_EXPAND_DIRECTION: "down" | "down" = "down";
 export const PREVIEW_EXPAND_DURATION_MS = 250;
+
+export const LOAD_MORE_EDGE_PX = 160;

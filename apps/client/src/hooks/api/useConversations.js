@@ -27,7 +27,7 @@ export default function useConversations() {
   };
 
   const setSelectedConversation = (cid) => {
-    store.dispatch(setSConversation({ cid }));
+    store.dispatch(setSConversation({ id: cid }));
     navigateTo(`/#${cid}`);
   };
 

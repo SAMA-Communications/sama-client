@@ -27,6 +27,8 @@ import { processFile, isHeic } from "@utils/MediaUtils.js";
 import { navigateTo } from "@utils/NavigationUtils.js";
 import { validateFieldLength } from "@utils/ValidationGeneral.js";
 
+const ensureConversationPromises = new Map();
+
 class ConversationsService {
   userIsLoggedIn = false;
 
@@ -314,6 +316,57 @@ class ConversationsService {
         showCustomAlert(err.message, "danger");
       }
     }
+  }
+
+  async ensureConversationInStoreIfMissing(cid) {
+    if (!cid) return true;
+
+    const conversations = store.getState().conversations.entities || {};
+    if (conversations[cid]?._id) return true;
+
+    const existing = ensureConversationPromises.get(cid);
+    if (existing) return existing;
+
+    const promise = (async () => {
+      try {
+        const chats = await api.conversationList({ ids: [cid] });
+        if (!chats?.length) {
+          this.redirectFromUnavailableConversation(cid);
+          return false;
+        }
+
+        store.dispatch(upsertChats(chats.map((obj) => ({ ...obj, participants: [] }))));
+        await this.getAndStoreParticipantsFromChats(chats);
+
+        const stillMissing = !store.getState().conversations.entities?.[cid]?._id;
+        if (stillMissing) {
+          this.redirectFromUnavailableConversation(cid);
+          return false;
+        }
+
+        return true;
+      } catch (err) {
+        showCustomAlert(err.message, "danger");
+        this.redirectFromUnavailableConversation(cid);
+        return false;
+      } finally {
+        ensureConversationPromises.delete(cid);
+      }
+    })();
+
+    ensureConversationPromises.set(cid, promise);
+    return promise;
+  }
+
+  redirectFromUnavailableConversation(expectedCid) {
+    const currentCid = history.location.hash?.slice(1)?.split("/")[0] || null;
+    if (expectedCid && currentCid !== expectedCid) {
+      return;
+    }
+
+    store.dispatch(clearSelectedConversation());
+    const { pathname, search } = history.location;
+    history.navigate(`${pathname}${search || ""}`);
   }
 
   async resolveConversationsByIds(convIds) {

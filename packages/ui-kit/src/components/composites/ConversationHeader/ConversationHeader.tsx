@@ -70,16 +70,16 @@ export const ConversationHeader = ({
       if (!isOpponentExist) return null;
       const opponentLastActivity = opponentUser.recent_activity;
       return (
-        <p className="ui:text-sm ui:text-text-light">
+        <div className="ui:text-sm ui:text-text-light">
           {opponentLastActivity === 0 ? (
-            <ul className="ui:flex ui:items-center ui:gap-2">
-              <span className="ui:h-1.25 ui:w-1.25 ui:rounded-full ui:bg-accent-500"></span>
-              <li className="ui:font-light ui:text-accent-500">online</li>
-            </ul>
+            <div className="ui:flex ui:items-center ui:gap-2">
+              <span className="ui:h-1.25 ui:w-1.25 ui:shrink-0 ui:rounded-full ui:bg-accent-500" aria-hidden />
+              <span className="ui:font-light ui:text-accent-500">online</span>
+            </div>
           ) : (
             getLastVisitTime(opponentLastActivity)
           )}
-        </p>
+        </div>
       );
     }
 

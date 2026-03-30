@@ -8,12 +8,7 @@ import { Settings, MessageCirclePlus } from "lucide-react";
 
 import SearchBlock from "@components/search/SearchBlock";
 
-import {
-  ChatListSkeleton,
-  ConversationItemList,
-  CustomVerticalScrollbar,
-  SearchInput,
-} from "@sama-communications.ui-kit";
+import { ChatListSkeleton, ConversationItemList, SearchInput } from "@sama-communications.ui-kit";
 
 import { getDisplayableConversations, getConverastionById } from "@store/values/Conversations.js";
 
@@ -39,7 +34,6 @@ export default function ChatList() {
 
     return (
       <ConversationItemList
-        id="conversationItemsScrollable"
         selectedConversation={selectedConversation}
         conversations={filteredConversations}
       />
@@ -75,13 +69,7 @@ export default function ChatList() {
           clearInputText={() => setInputText(null)}
         />
       ) : (
-        <CustomVerticalScrollbar
-          customId="conversationItemsScrollable"
-          customClassName="h-[calc(100%-64px)]!"
-          childrenClassName="px-1"
-        >
-          {chatsList}
-        </CustomVerticalScrollbar>
+        <div className="h-[calc(100%-64px)]! min-h-0 px-1">{chatsList}</div>
       )}
     </aside>
   );

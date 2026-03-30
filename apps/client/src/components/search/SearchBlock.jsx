@@ -77,6 +77,7 @@ export default function SearchBlock({
   const handleConversationClick = useCallback(
     (cid) => {
       dispatch(setSelectedConversation({ id: cid }));
+      navigateTo(`/#${cid}`);
       additionalOnClickfunc?.(cid);
     },
     [dispatch, additionalOnClickfunc],

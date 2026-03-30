@@ -1,53 +1,85 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { clsx } from "clsx";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 import { getAdapters } from "@adapters";
 
 import type { ConversationItemListProps } from "@composites/ConversationItemList/ConversationItemList.types";
+import { CustomVerticalScrollbar } from "@composites/CustomVerticalScrollbar";
 
 import { ConversationItem } from "@elements/ConversationItem";
 import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { LOAD_MORE_EDGE_PX } from "@utils/constants";
 
 export const ConversationItemList = ({
   conversations,
   selectedConversation,
   additionalOnClickfunc,
   className,
+  scrollContainerId = "conversationItemsScrollable",
+  scrollbarClassName,
+  scrollbarContentClassName,
   ...rest
 }: ConversationItemListProps) => {
   const { useConversations } = getAdapters();
   const { setSelectedConversation, storeNewConversations, fetchConversations } = useConversations();
 
-  const convItemOnClickFunc = (cid: string) => {
-    setSelectedConversation(cid);
-    additionalOnClickfunc && additionalOnClickfunc(cid);
-  };
+  const [hasMore, setHasMore] = useState(true);
+  const isLoadingRef = useRef(false);
+  const hasMoreRef = useRef(true);
+  const conversationsRef = useRef(conversations);
 
-  const needToGetMoreChats = useRef(true);
-  const lastConversationRef = useCallback(() => {
-    if (conversations.length === 0) return;
+  hasMoreRef.current = hasMore;
+  conversationsRef.current = conversations;
+
+  const convItemOnClickFunc = useCallback(
+    (cid: string) => {
+      setSelectedConversation(cid);
+      additionalOnClickfunc && additionalOnClickfunc(cid);
+    },
+    [additionalOnClickfunc, setSelectedConversation],
+  );
+
+  const loadMore = useCallback(() => {
+    if (!hasMoreRef.current || isLoadingRef.current) return;
+    const list = conversationsRef.current;
+    const last = list[list.length - 1];
+    if (!last) return;
+
+    isLoadingRef.current = true;
     fetchConversations({
-      updated_at: { lt: conversations[conversations.length - 1].updated_at },
-    }).then((conversations) => {
-      if (!conversations.length) {
-        needToGetMoreChats.current = false;
-        return;
-      }
-      needToGetMoreChats.current = !(conversations.length < 10);
-      storeNewConversations(conversations);
-    });
-  }, [conversations, needToGetMoreChats]);
+      updated_at: { lt: last.updated_at },
+    })
+      .then((batch) => {
+        if (!batch.length) {
+          hasMoreRef.current = false;
+          setHasMore(false);
+          return;
+        }
+        storeNewConversations(batch);
+      })
+      .finally(() => {
+        isLoadingRef.current = false;
+      });
+  }, [fetchConversations, storeNewConversations]);
+
+  const onScrollNearBottom = useCallback(
+    (scrollFromBottom: number) => {
+      if (!hasMoreRef.current || isLoadingRef.current) return;
+      if (scrollFromBottom > LOAD_MORE_EDGE_PX) return;
+      loadMore();
+    },
+    [loadMore],
+  );
 
   return (
-    <WrapperRoot className={clsx(className)} {...rest}>
-      <InfiniteScroll
-        dataLength={conversations.length}
-        next={lastConversationRef}
-        hasMore={true && needToGetMoreChats.current}
-        scrollableTarget="conversationItemsScrollable"
-        loader={undefined}
+    <WrapperRoot className={clsx("ui:flex ui:h-full ui:min-h-0 ui:flex-col", className)} {...rest}>
+      <CustomVerticalScrollbar
+        customId={scrollContainerId}
+        customClassName={clsx("ui:min-h-0 ui:flex-1 ui:w-full", scrollbarClassName)}
+        childrenClassName={scrollbarContentClassName}
+        onScroll={onScrollNearBottom}
       >
         {conversations.map((obj) => (
           <ConversationItem
@@ -57,7 +89,7 @@ export const ConversationItemList = ({
             isSelected={selectedConversation?._id === obj._id}
           />
         ))}
-      </InfiniteScroll>
+      </CustomVerticalScrollbar>
     </WrapperRoot>
   );
 };

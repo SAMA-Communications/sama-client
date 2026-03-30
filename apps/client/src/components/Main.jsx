@@ -55,12 +55,13 @@ export default function Main() {
   const conversationIdFromHash = hash ? hash.slice(1).split("/")[0] : null;
   const otherUserProfileView = isUserProfile && hash?.includes("view=card") ? "card" : "compact";
 
-  const prevRef = useRef(selectedConversation._id);
+  const prevRef = useRef(selectedConversation?._id);
   useEffect(() => {
+    if (!selectedConversation?._id) return;
     const prev = prevRef.current;
     prevRef.current = selectedConversation._id;
     if (prev && prev !== selectedConversation._id) scheduleReduxDraftSync(prev);
-  }, [selectedConversation._id]);
+  }, [selectedConversation?._id]);
 
   const rightPanelContent = useMemo(() => {
     if (isUserProfile && otherUserProfileView === "compact") {

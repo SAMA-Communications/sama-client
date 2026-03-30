@@ -74,6 +74,11 @@ export const SearchBlock = (props: SearchBlockProps) => {
     }
   };
 
+  const handleConversationClick = (cid: string) => {
+    isClearInputText && onClearInputText?.();
+    onConversationClick?.(cid);
+  };
+
   return (
     <WrapperRoot
       className={clsx(
@@ -90,7 +95,7 @@ export const SearchBlock = (props: SearchBlockProps) => {
             conversations={defaultChats}
             showTitle={false}
             selectedConversationId={selectedConversationId}
-            onConversationClick={(cid) => onConversationClick?.(cid)}
+            onConversationClick={handleConversationClick}
           />
         ) : (
           <>
@@ -122,7 +127,7 @@ export const SearchBlock = (props: SearchBlockProps) => {
                 showTitle={true}
                 emptyMessage={isChatSearched}
                 selectedConversationId={selectedConversationId}
-                onConversationClick={(cid) => onConversationClick?.(cid)}
+                onConversationClick={handleConversationClick}
               />
             ) : null}
           </>
