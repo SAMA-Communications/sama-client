@@ -17,10 +17,11 @@ import {
   PenTool,
 } from "lucide-react";
 
+import useDrafts from "@hooks/api/useDrafts.js";
+
 import { useConfirmWindow, ContextMenuItem } from "@sama-communications.ui-kit";
 
 import messagesService from "@services/messagesService.js";
-import draftService from "@services/tools/draftService.js";
 
 import { messageEpochMs } from "@src/utils/MessageUtils";
 
@@ -37,6 +38,7 @@ export default function MessageActions({ listOfIds }) {
   const location = useLocation();
 
   const confirmWindow = useConfirmWindow();
+  const { saveDraft } = useDrafts();
 
   const selectedCID = useSelector(getSelectedConversationId);
 
@@ -94,7 +96,7 @@ export default function MessageActions({ listOfIds }) {
               [selectedCID]: { draft_replied_mid: message._id },
             }),
           );
-          draftService.saveDraft(selectedCID, { replied_mid: message._id });
+          saveDraft(selectedCID, { replied_mid: message._id });
         }}
       />
     ),
@@ -145,7 +147,7 @@ export default function MessageActions({ listOfIds }) {
               [selectedCID]: { draft_edited_mid: message._id },
             }),
           );
-          draftService.saveDraft(selectedCID, { edited_mid: message._id });
+          saveDraft(selectedCID, { edited_mid: message._id });
         }}
       />
     ),
@@ -213,5 +215,5 @@ export default function MessageActions({ listOfIds }) {
     ),
   };
 
-  return useMemo(() => listOfIds.map((linkId) => links[linkId]).filter(Boolean), [listOfIds, message, attachment]);
+  return useMemo(() => listOfIds.map((linkId) => links[linkId]).filter(Boolean), [listOfIds, message, attachment, saveDraft]);
 }

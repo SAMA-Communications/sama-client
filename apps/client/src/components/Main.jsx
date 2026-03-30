@@ -1,4 +1,4 @@
-import { cloneElement, useMemo } from "react";
+import { cloneElement, useEffect, useMemo, useRef } from "react";
 
 import { useLocation } from "react-router";
 
@@ -17,6 +17,8 @@ import ConversationSelectHub from "@components/modals/ConversationSelectHub";
 import UsersSelectModalHub from "@components/modals/UsersSelectModalHub";
 
 import useHistory from "@hooks/api/useHistory.js";
+
+import { scheduleReduxDraftSync } from "@lib/draftsEngine";
 
 import { EditModalContainer, ConversationInfo, useViewportBreakpoints } from "@sama-communications.ui-kit";
 
@@ -52,6 +54,13 @@ export default function Main() {
   const hasConversationHash = !!hash && hash.split("/").length > 0;
   const conversationIdFromHash = hash ? hash.slice(1).split("/")[0] : null;
   const otherUserProfileView = isUserProfile && hash?.includes("view=card") ? "card" : "compact";
+
+  const prevRef = useRef(selectedConversation._id);
+  useEffect(() => {
+    const prev = prevRef.current;
+    prevRef.current = selectedConversation._id;
+    if (prev && prev !== selectedConversation._id) scheduleReduxDraftSync(prev);
+  }, [selectedConversation._id]);
 
   const rightPanelContent = useMemo(() => {
     if (isUserProfile && otherUserProfileView === "compact") {

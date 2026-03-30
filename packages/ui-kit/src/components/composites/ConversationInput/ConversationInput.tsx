@@ -19,7 +19,15 @@ export const ConversationInput = ({
   ...rest
 }: ConversationInputProps) => {
   const { useDrafts, useMessages, useConversations, useParticipants, formatedUtils } = getAdapters();
-  const { saveDraft, saveLastInputText, getLastInputText, getDraftMessage, getExternalProps } = useDrafts();
+  const {
+    saveDraft,
+    savePreEditComposeText,
+    consumePreEditComposeText,
+    getDraft,
+    getDraftEditedMessageId,
+    getDraftMessage,
+    getExternalProps,
+  } = useDrafts();
   const { editMessage, createAndSendMessage } = useMessages();
   const { getSelectedConversation } = useConversations();
   const { getUserById } = useParticipants();
@@ -31,6 +39,9 @@ export const ConversationInput = ({
   const selectedCID = selectedConversation?._id;
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const prevCidRef = useRef<string | undefined>(undefined);
+  const wasInEditModeRef = useRef(false);
+  const skipExitDraftRestoreRef = useRef(false);
   const [isSendMessageDisable, setIsSendMessageDisable] = useState(false);
 
   useEffect(() => {
@@ -53,6 +64,7 @@ export const ConversationInput = ({
     let body;
     if (editedMessage) {
       body = await editMessage(inputValue, selectedConversation, editedMessage);
+      skipExitDraftRestoreRef.current = true;
     } else {
       body = await createAndSendMessage(
         inputValue,
@@ -79,25 +91,55 @@ export const ConversationInput = ({
   const enableInput = () => setIsSendMessageDisable(false);
 
   useEffect(() => {
-    if (!inputRef.current) return;
-    if (editedMessage) {
-      inputRef.current.value && saveLastInputText(selectedCID, inputRef.current.value);
-      saveDraft(selectedCID, { text: editedMessage.body });
-      inputRef.current.value = editedMessage.body;
-      inputRef.current?.focus({ preventScroll: true });
-    } else {
-      inputRef.current.value = getLastInputText(selectedCID);
-      saveDraft(selectedCID, { text: inputRef.current.value });
-    }
-  }, [editedMessage]);
+    if (!inputRef.current || !selectedCID) return;
 
-  useEffect(() => {
-    if (inputRef.current) {
-      const draftText = getDraftMessage(selectedCID) || "";
-      inputRef.current.value = draftText;
-      inputRef.current.style.height = `${calcInputHeight(draftText)}px`;
+    const cidChanged = prevCidRef.current !== selectedCID;
+    if (cidChanged) {
+      prevCidRef.current = selectedCID;
+      wasInEditModeRef.current = false;
+      skipExitDraftRestoreRef.current = false;
     }
-  }, [selectedCID]);
+
+    if (editedMessage) {
+      if (!wasInEditModeRef.current) {
+        savePreEditComposeText(selectedCID, inputRef.current?.value ?? "");
+      }
+      wasInEditModeRef.current = true;
+      const diskDraft = getDraft(selectedCID);
+      const sameEdit = getDraftEditedMessageId(selectedCID) === editedMessage._id;
+      const hasPersistedText = Object.prototype.hasOwnProperty.call(diskDraft, "text");
+      const textForInput =
+        sameEdit && hasPersistedText
+          ? diskDraft.text == null
+            ? ""
+            : String(diskDraft.text)
+          : editedMessage.body;
+      saveDraft(selectedCID, { text: textForInput });
+      inputRef.current.value = textForInput;
+      inputRef.current.style.height = `${calcInputHeight(textForInput)}px`;
+      inputRef.current?.focus({ preventScroll: true });
+      return;
+    }
+
+    if (wasInEditModeRef.current && !cidChanged) {
+      wasInEditModeRef.current = false;
+      if (skipExitDraftRestoreRef.current) {
+        skipExitDraftRestoreRef.current = false;
+        wasInEditModeRef.current = false;
+        return;
+      }
+      const restored = consumePreEditComposeText(selectedCID);
+      inputRef.current.value = restored;
+      saveDraft(selectedCID, { text: restored });
+      inputRef.current.style.height = `${calcInputHeight(restored)}px`;
+      return;
+    }
+
+    wasInEditModeRef.current = false;
+    const draftText = getDraftMessage(selectedCID) || "";
+    inputRef.current.value = draftText;
+    inputRef.current.style.height = `${calcInputHeight(draftText)}px`;
+  }, [selectedCID, editedMessage]);
 
   useEffect(() => {
     draftExtenralProps[selectedCID]?.draft_replied_mid && inputRef.current?.focus();

@@ -1,5 +1,6 @@
 import type { Conversation, User } from "types/samaWssModels";
 
+import type { DraftPatch } from "@adapters/types";
 import { SamaAdapters } from "@adapters/types";
 
 const defaultuser = {
@@ -27,27 +28,43 @@ const defaultconversation = {
 
 const useDrafts = () => {
   const syncDraftByCid = (cid: string, oldDraft: object, convUpdatedAt: string) => ({});
-  const saveDraft = (cid: string, options: { text?: string; replied_mid?: string; edited_mid?: string }) => {};
+  const saveDraft = (cid: string, options: DraftPatch) => {};
+  const flushDraftToLocalStorage = (cid: string) => {};
   const saveLastInputText = (cid: string, text: string) => {};
 
   const removeDraft = (cid: string) => {};
-  const removeDraftWithOptions = (cid: string, fields: string | string[]) => {};
+  const removeDraftWithOptions = (cid: string, fields: string | string[], opts?: { syncReduxNow?: boolean }) => {};
+  const purgeDraft = (cid: string) => {};
+  const pushLocalDraftToReduxNow = (cid: string) => {};
+  const savePreEditComposeText = (cid: string, text: string) => {};
+  const consumePreEditComposeText = (cid: string) => "";
 
-  const getDraft = (cid: string) => ({ text: "", replied_mid: "", edited_mid: "", updated_at: 0 });
+  const getDraft = (cid: string) => ({});
+  const getDraftField = (cid: string, field: string) => undefined;
   const getDraftMessage = (cid: string) => "";
+  const getDraftRepliedMessageId = (cid: string) => undefined;
+  const getDraftEditedMessageId = (cid: string) => undefined;
   const getLastInputText = (cid: string) => "";
   const getExternalProps = () => ({});
 
   return {
     syncDraftByCid,
     saveDraft,
+    flushDraftToLocalStorage,
     saveLastInputText,
 
     removeDraft,
     removeDraftWithOptions,
+    purgeDraft,
+    pushLocalDraftToReduxNow,
+    savePreEditComposeText,
+    consumePreEditComposeText,
 
     getDraft,
+    getDraftField,
     getDraftMessage,
+    getDraftRepliedMessageId,
+    getDraftEditedMessageId,
     getLastInputText,
     getExternalProps,
   };

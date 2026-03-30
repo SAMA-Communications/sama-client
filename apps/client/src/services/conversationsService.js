@@ -1,6 +1,7 @@
 import api from "@api/api";
 
 import DownloadManager from "@lib/downloadManager";
+import { hydrateDraftsFromLocalStorage, purgeDraft } from "@lib/draftsEngine.js";
 import eventEmitter from "@lib/eventEmitter";
 
 import { notificationQueueByCid } from "@services/tools/notifications";
@@ -25,8 +26,6 @@ import { history } from "@utils/history.js";
 import { processFile, isHeic } from "@utils/MediaUtils.js";
 import { navigateTo } from "@utils/NavigationUtils.js";
 import { validateFieldLength } from "@utils/ValidationGeneral.js";
-
-import draftService from "./tools/draftService.js";
 
 class ConversationsService {
   userIsLoggedIn = false;
@@ -93,6 +92,7 @@ class ConversationsService {
     try {
       const chats = await api.conversationList({});
       store.dispatch(insertChats(chats.map((obj) => ({ ...obj, participants: [] }))));
+      hydrateDraftsFromLocalStorage();
       if (chats.length > 0) await this.getAndStoreParticipantsFromChats(chats);
     } catch (error) {
       showCustomAlert(error.message, "danger");
@@ -287,7 +287,7 @@ class ConversationsService {
       await api.conversationDelete({ cid: selectedConversation.id });
       store.dispatch(clearSelectedConversation());
       store.dispatch(removeChat(selectedConversation.id));
-      draftService.removeDraft(selectedConversation.id);
+      purgeDraft(selectedConversation.id);
     } catch (err) {
       showCustomAlert(err.message, "warning");
     }

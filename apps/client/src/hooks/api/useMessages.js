@@ -1,18 +1,23 @@
 import { useSelector } from "react-redux";
 
 import DownloadManager from "@lib/downloadManager.js";
+import {
+  consumePreEditComposeText,
+  getDraftRepliedMessageId,
+  purgeDraft,
+  removeDraftFields,
+  saveDraft,
+} from "@lib/draftsEngine.js";
 
 import { useConfirmWindow } from "@sama-communications.ui-kit";
 
 import messagesService from "@services/messagesService.js";
 import aiService from "@services/tools/AIService.js";
-import draftService from "@services/tools/draftService.js";
 
 import store from "@store/store.js";
 import { addExternalProps } from "@store/values/ContextMenu.js";
 import {
   removeChat,
-  removeDraftField,
   removeLastMessage,
   setLastMessageField,
   updateLastMessageField,
@@ -157,14 +162,9 @@ export default function useMessages() {
       return;
     }
 
-    store.dispatch(
-      removeDraftField({
-        cid: forwardedMessages[0].cid,
-        fields: ["forwarded_mids"],
-      }),
-    );
+    removeDraftFields(forwardedMessages[0].cid, ["forwarded_mids"], { syncReduxNow: true });
     enableInput?.();
-    draftService.removeDraft(selectedCID);
+    purgeDraft(selectedCID);
     store.dispatch(addExternalProps({ [selectedCID]: {} }));
     onSend?.();
   };
@@ -235,7 +235,10 @@ export default function useMessages() {
 
     disableInput?.();
 
-    const repliedMid = draftExtenralProps[selectedCID]?.draft_replied_mid || selectedConversation?.draft?.replied_mid;
+    const repliedMid =
+      draftExtenralProps[selectedCID]?.draft_replied_mid ||
+      selectedConversation?.draft?.replied_mid ||
+      getDraftRepliedMessageId(selectedCID);
 
     const msg = _createLocalMessage({ body, repliedMessageId: repliedMid });
 
@@ -258,7 +261,7 @@ export default function useMessages() {
     }
 
     enableInput?.();
-    draftService.removeDraft(selectedCID);
+    purgeDraft(selectedCID);
     store.dispatch(addExternalProps({ [selectedCID]: {} }));
     onSend?.();
   };
@@ -273,7 +276,10 @@ export default function useMessages() {
         confirmText: "Delete",
         cancelText: "Cancel",
       });
-      isConfirm && messagesService.sendMessageDelete(selectedCID, [eMid], "all");
+      if (isConfirm) {
+        messagesService.sendMessageDelete(selectedCID, [eMid], "all");
+        consumePreEditComposeText(selectedCID);
+      }
       return;
     }
     if (editedMessage.body !== inputValue) {
@@ -282,8 +288,10 @@ export default function useMessages() {
       });
     }
     store.dispatch(addExternalProps({ [selectedCID]: {} }));
-    await draftService.removeDraftWithOptions(selectedCID, "edited_mid");
-    return draftService.getLastInputText(selectedCID);
+    const restored = consumePreEditComposeText(selectedCID);
+    removeDraftFields(selectedCID, ["edited_mid"], { syncReduxNow: false });
+    saveDraft(selectedCID, { text: restored });
+    return restored;
   };
 
   return {

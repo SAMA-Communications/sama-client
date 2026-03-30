@@ -6,9 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 
 import MessageLinkPreview from "@components/hub/elements/MessageLinkPreview";
 
+import useDrafts from "@hooks/api/useDrafts.js";
+
 import { ChatMessage as UIChatMessage, MediaAttachments } from "@sama-communications.ui-kit";
 
-import draftService from "@services/tools/draftService.js";
 import { hardUrlify, urlify } from "@services/tools/urlMetaService";
 import { messageObserver as observer } from "@services/tools/visibilityObserver.js";
 
@@ -41,6 +42,7 @@ export default function ChatMessage({
 }) {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
+  const { saveDraft } = useDrafts();
   const participants = useSelector(selectParticipantsEntities);
   const messageRef = useRef(null);
 
@@ -161,7 +163,7 @@ export default function ChatMessage({
       onVisible={onViewFunc}
       onSwipeReply={() => {
         dispatch(addExternalProps({ [message.cid]: { draft_replied_mid: _id } }));
-        draftService.saveDraft(message.cid, { replied_mid: _id });
+        saveDraft(message.cid, { replied_mid: _id });
       }}
       isMobile={isMobile}
       isSelected={isSelected}

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import localforage from "localforage";
 import { MessageCircleOff } from "lucide-react";
 
+import useDrafts from "@hooks/api/useDrafts.js";
 import { useKeyDown } from "@hooks/tools/useKeyDown";
 
 import DownloadManager from "@lib/downloadManager";
@@ -14,7 +15,6 @@ import DownloadManager from "@lib/downloadManager";
 import { AttachModal, useConfirmWindow, useViewportBreakpoints } from "@sama-communications.ui-kit";
 
 import messagesService from "@services/messagesService.js";
-import draftService from "@services/tools/draftService.js";
 
 import { getConverastionById, setLastMessageField, updateLastMessageField } from "@store/values/Conversations";
 import { selectCurrentUserId } from "@store/values/CurrentUserId";
@@ -30,6 +30,7 @@ export default function AttachHub() {
   const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
   const confirm = useConfirmWindow();
+  const { saveDraft, getDraftMessage, flushDraftToLocalStorage, purgeDraft } = useDrafts();
 
   const connectState = useSelector(getNetworkState);
   const { isMobile } = useViewportBreakpoints();
@@ -72,14 +73,16 @@ export default function AttachHub() {
   };
 
   const storeInputText = () => {
-    if (inputTextRef.current?.value) {
-      draftService.saveDraft(selectedCID, { text: inputTextRef.current.value });
-      inputTextRef.current.value = "";
-    }
+    if (!selectedCID || !inputTextRef.current?.value) return;
+    saveDraft(selectedCID, { text: inputTextRef.current.value });
+    flushDraftToLocalStorage(selectedCID);
+    inputTextRef.current.value = "";
   };
 
   const syncInputText = () => {
-    const messageBody = draftService.getDraftMessage(selectedCID);
+    if (!selectedCID) return;
+    flushDraftToLocalStorage(selectedCID);
+    const messageBody = getDraftMessage(selectedCID);
     messageBody && (inputTextRef.current.value = messageBody);
   };
 
@@ -191,7 +194,7 @@ export default function AttachHub() {
           })),
         };
         dispatch(upsertMessage(upsertMessageParams));
-        draftService.removeDraftWithOptions(selectedCID, ["replied_mid", "text"]);
+        purgeDraft(selectedCID);
         scrollToBottom();
       } catch (err) {
         showCustomAlert("The server connection is unavailable.", "warning");
@@ -211,7 +214,8 @@ export default function AttachHub() {
       isSendMessageDisable,
       messages,
       selectedCID,
-      selectedConversation.draft?.replied_mid,
+      selectedConversation,
+      purgeDraft,
     ],
   );
 
@@ -274,7 +278,9 @@ export default function AttachHub() {
     };
   }, []);
 
-  useKeyDown(KEY_CODES.ESCAPE, closeModal);
+  useKeyDown(KEY_CODES.ESCAPE, () => {
+    void closeModal();
+  });
   useKeyDown(KEY_CODES.ENTER, (e) => ((!isMobile && !e.shiftKey) || (isMobile && e.shiftKey)) && sendMessage());
 
   const filesForModal = files.map((file) => ({

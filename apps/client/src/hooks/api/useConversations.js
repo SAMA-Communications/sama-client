@@ -1,6 +1,7 @@
 import api from "@api/api.js";
 
 import DownloadManager from "@lib/downloadManager.js";
+import { hydrateDraftsFromLocalStorage } from "@lib/draftsEngine.js";
 
 import conversationService from "@services/conversationsService.js";
 
@@ -36,6 +37,7 @@ export default function useConversations() {
 
   const storeNewConversations = (conversations) => {
     store.dispatch(insertChats(conversations.map((obj) => ({ ...obj, participants: [] }))));
+    hydrateDraftsFromLocalStorage();
 
     if (conversations.length > 0) conversationService.getAndStoreParticipantsFromChats(conversations);
   };

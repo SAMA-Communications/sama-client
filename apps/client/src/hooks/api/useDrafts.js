@@ -1,46 +1,56 @@
-import draftService from "@services/tools/draftService.js";
+import { useMemo } from "react";
+
+import {
+  clearDraftLocal,
+  consumePreEditComposeText,
+  flushDraftToLocalStorage,
+  getDraft,
+  getDraftEditedMessageId,
+  getDraftField,
+  getDraftMessage,
+  getDraftRepliedMessageId,
+  getLastInputText,
+  purgeDraft,
+  pushLocalDraftToReduxNow,
+  removeDraftFields,
+  saveDraft,
+  saveLastInputText,
+  savePreEditComposeText,
+} from "@lib/draftsEngine.js";
+
 import store from "@store/store.js";
 
 export default function useDrafts() {
-  const syncDraftByCid = (cid, _oldDraft, _convUpdatedAt) => {
-    draftService.flushDraftSyncToStore(cid);
-  };
+  return useMemo(
+    () => ({
+      syncDraftByCid: () => {},
 
-  const saveDraft = (cid, options, meta) => {
-    draftService.saveDraft(cid, options, meta);
-  };
+      saveDraft,
 
-  const removeDraft = (cid) => {
-    draftService.removeDraft(cid);
-  };
+      flushDraftToLocalStorage,
 
-  const removeDraftWithOptions = (cid, fields) => {
-    draftService.removeDraftWithOptions(cid, fields);
-  };
+      removeDraft: clearDraftLocal,
 
-  const getDraft = (cid) => draftService.getDraft(cid);
+      removeDraftWithOptions: (cid, fields, opts) =>
+        removeDraftFields(cid, fields, { syncReduxNow: opts?.syncReduxNow ?? false }),
 
-  const getDraftMessage = (cid) => draftService.getDraftMessage(cid);
+      purgeDraft,
+      pushLocalDraftToReduxNow,
 
-  const saveLastInputText = (cid, text) => {
-    draftService.saveLastInputText(cid, text);
-  };
+      savePreEditComposeText,
+      consumePreEditComposeText,
 
-  const getLastInputText = (cid) => draftService.getLastInputText(cid);
+      getDraft,
+      getDraftField,
+      getDraftMessage,
+      getDraftRepliedMessageId,
+      getDraftEditedMessageId,
 
-  const getExternalProps = () => {
-    return store.getState().contextMenu.externalProps;
-  };
+      saveLastInputText,
+      getLastInputText,
 
-  return {
-    syncDraftByCid,
-    saveDraft,
-    removeDraft,
-    removeDraftWithOptions,
-    getDraft,
-    getDraftMessage,
-    getExternalProps,
-    saveLastInputText,
-    getLastInputText,
-  };
+      getExternalProps: () => store.getState().contextMenu.externalProps,
+    }),
+    [],
+  );
 }

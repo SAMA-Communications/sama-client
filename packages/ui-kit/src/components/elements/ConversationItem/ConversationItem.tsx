@@ -1,4 +1,4 @@
-import { useEffect, useMemo, memo } from "react";
+import { useMemo, memo } from "react";
 
 import { clsx } from "clsx";
 import { Users, UserRoundX } from "lucide-react";
@@ -17,8 +17,7 @@ export const ConversationItem = memo(function ConversationItem({
   className,
   ...rest
 }: ConversationItemProps) {
-  const { useDrafts, useParticipants, conversationUtils, userUtils } = getAdapters();
-  const { syncDraftByCid } = useDrafts();
+  const { useParticipants, conversationUtils, userUtils } = getAdapters();
   const { getUserById, getCurrentUser } = useParticipants();
 
   const {
@@ -58,8 +57,6 @@ export const ConversationItem = memo(function ConversationItem({
     }
     return "Deleted account";
   }, [name, isGroup, participant, userUtils]);
-
-  useEffect(() => syncDraftByCid(cid, draft, updated_at), [isSelected]);
 
   const tView = useMemo(
     () => conversationUtils.getLastUpdateTime(updated_at, last_message?.t),

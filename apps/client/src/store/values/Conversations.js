@@ -124,43 +124,59 @@ export const conversations = createSlice({
     updateWithDrafts: (state, { payload }) => {
       const { cid, isRemove = false, draft } = payload;
       const conv = state.entities[cid];
+      if (!conv) return;
 
-      if (isRemove && !conv?.draft) return;
-      const updateParams = { _id: cid };
-
-      if (!isRemove && draft?.edited_mid) {
-        if (draft) updateParams.draft = draft;
-        conversationsAdapter.upsertOne(state, updateParams);
+      if (isRemove && !conv.draft) {
+        const updateParams = { _id: cid, draft: null };
+        let changed = false;
+        const lm0 = conv.last_message;
+        if (lm0?.old_t != null) {
+          updateParams.last_message = { ...lm0, t: lm0.old_t, old_t: null };
+          changed = true;
+        }
+        if (conv.old_updated_at != null) {
+          updateParams.updated_at = conv.old_updated_at;
+          updateParams.old_updated_at = null;
+          changed = true;
+        }
+        if (changed) conversationsAdapter.upsertOne(state, updateParams);
         return;
       }
 
-      if (conv.last_message?.t > draft?.updated_at) {
+      if (!isRemove && draft?.edited_mid) {
+        conversationsAdapter.upsertOne(state, { _id: cid, draft });
+        return;
+      }
+
+      const updateParams = { _id: cid };
+      const lm = conv.last_message;
+      const draftT = draft?.updated_at;
+
+      if (lm?.t > draftT) {
         if (draft) updateParams.draft = draft;
-      } else if (conv.last_message) {
+      } else if (lm) {
         updateParams.last_message = {
-          ...conv.last_message,
+          ...lm,
           ...(isRemove
-            ? { t: conv.last_message.old_t || conv.last_message.t, old_t: null }
-            : draft.updated_at
-              ? { t: draft.updated_at, ...(conv.last_message.old_t ? {} : { old_t: conv.last_message.t }) }
+            ? { t: lm.old_t ?? lm.t, old_t: null }
+            : draftT
+              ? { t: draftT, ...(lm.old_t ? {} : { old_t: lm.t }) }
               : {}),
         };
-        if (isRemove) {
-          updateParams.draft = null;
-        } else if (draft) {
-          updateParams.draft = draft;
-        }
+        if (isRemove) updateParams.draft = null;
+        else if (draft) updateParams.draft = draft;
       } else {
         if (draft) updateParams.draft = draft;
         if (isRemove) {
           updateParams.updated_at = conv.old_updated_at;
           updateParams.old_updated_at = null;
           updateParams.draft = null;
-        } else if (draft.updated_at) {
-          updateParams.updated_at = new Date(draft.updated_at * 1000).toISOString();
+        } else if (draftT) {
+          updateParams.updated_at = new Date(draftT * 1000).toISOString();
           updateParams.old_updated_at = conv.updated_at;
         }
       }
+
       conversationsAdapter.upsertOne(state, updateParams);
     },
     removeDraftField: (state, action) => {

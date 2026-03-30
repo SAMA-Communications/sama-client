@@ -14,11 +14,11 @@ import ChatFormEditor from "@components/hub/chatForm/ChatFormEditor";
 import useHistory from "@hooks/api/useHistory.js";
 import { useKeyDown } from "@hooks/tools/useKeyDown";
 
+import { getDraftEditedMessageId, removeDraftFields } from "@lib/draftsEngine.js";
+
 import { ConversationHeader, useViewportBreakpoints } from "@sama-communications.ui-kit";
 
-import draftService from "@services/tools/draftService.js";
-
-import { addExternalProps, setClicked } from "@store/values/ContextMenu";
+import { addExternalProps, selectContextExternalProps, setClicked } from "@store/values/ContextMenu";
 import {
   clearCountOfUnreadMessages,
   getConverastionById,
@@ -29,7 +29,7 @@ import { getIsTabInFocus } from "@store/values/IsTabInFocus";
 import { clearSelectedConversation, setSelectedConversation } from "@store/values/SelectedConversation";
 import { getUserIsLoggedIn } from "@store/values/UserIsLoggedIn.js";
 
-import { KEY_CODES, CHAT_CONTENT_TABS } from "@utils/constants.js";
+import { CHAT_CONTENT_TABS, KEY_CODES } from "@utils/constants.js";
 
 export default function ChatForm() {
   const dispatch = useDispatch();
@@ -41,6 +41,7 @@ export default function ChatForm() {
   const { isMobile: isMobileView, isTablet: isTabletView } = useViewportBreakpoints();
 
   const conversations = useSelector(selectConversationsEntities);
+  const draftExternalProps = useSelector(selectContextExternalProps);
   const selectedConversation = useSelector(getConverastionById);
   const selectedCID = selectedConversation?._id;
   const isGroup = selectedConversation?.type === "g";
@@ -52,47 +53,57 @@ export default function ChatForm() {
   const [currentTab, setCurrentTab] = useState(CHAT_CONTENT_TABS.MESSAGES);
   const isEnableProgrammableChat = import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true" && !isMobileView;
 
-  const closeForm = (e) => {
-    if (e && e.stopPropagation) {
-      e.stopPropagation();
-    }
+  /** Exit edit mode only (local draft + context props). Returns true if edit was active. */
+  const cancelMessageEditIfActive = useCallback(() => {
+    if (!selectedCID) return false;
+    const isEditing =
+      !!getDraftEditedMessageId(selectedCID) || !!draftExternalProps[selectedCID]?.draft_edited_mid;
+    if (!isEditing) return false;
+    dispatch(addExternalProps({ [selectedCID]: {} }));
+    removeDraftFields(selectedCID, ["edited_mid"]);
+    return true;
+  }, [selectedCID, draftExternalProps, dispatch]);
 
-    if (!selectedCID) {
-      return;
-    }
+  const closeChatCompletely = useCallback(
+    (e) => {
+      if (e && e.stopPropagation) e.stopPropagation();
+      if (!selectedCID) return;
+      dispatch(setClicked(false));
+      dispatch(clearSelectedConversation());
+      api.unsubscribeFromUserActivity({});
+      history.closeChatCompletely();
+    },
+    [selectedCID, dispatch, history],
+  );
 
-    if (draftService.getDraftEditedMessageId(selectedCID)) {
-      dispatch(addExternalProps({ [selectedCID]: {} }));
-      draftService.removeDraftWithOptions(selectedCID, "edited_mid");
-      return;
-    }
+  /** Close chat (back button / swipe). Does not exit edit mode — ESC / preview cancel only. */
+  const closeForm = useCallback(
+    (e) => {
+      if (e && e.stopPropagation) e.stopPropagation();
+      if (!selectedCID) return;
+      closeChatCompletely();
+    },
+    [selectedCID, closeChatCompletely],
+  );
 
-    dispatch(setClicked(false));
-    dispatch(clearSelectedConversation());
-    api.unsubscribeFromUserActivity({});
-    history.closeChatCompletely();
-  };
-
-  const onBackButton = () => {
+  const onBackButton = useCallback(() => {
     if (!selectedCID) return;
-    if (draftService.getDraftEditedMessageId(selectedCID)) {
-      dispatch(addExternalProps({ [selectedCID]: {} }));
-      draftService.removeDraftWithOptions(selectedCID, "edited_mid");
-      return;
-    }
     if (isTabletView) {
       if (location.hash.includes("/list")) {
-        dispatch(setClicked(false));
-        dispatch(clearSelectedConversation());
-        api.unsubscribeFromUserActivity({});
-        history.closeChatCompletely();
+        closeChatCompletely();
       } else {
         history.openTabletListView();
       }
     } else {
       closeForm();
     }
-  };
+  }, [selectedCID, closeChatCompletely, closeForm, isTabletView, location.hash, history]);
+
+  const handleEscapeKey = useCallback(() => {
+    if (!selectedCID) return;
+    if (cancelMessageEditIfActive()) return;
+    closeChatCompletely();
+  }, [selectedCID, cancelMessageEditIfActive, closeChatCompletely]);
 
   const readMessage = useCallback(() => {
     if (!conversations || !conversations[selectedCID] || !document.hasFocus()) {
@@ -119,7 +130,7 @@ export default function ChatForm() {
       document.removeEventListener("swiped-left", closeForm);
       document.removeEventListener("swiped-right", closeForm);
     };
-  }, [location, selectedCID]);
+  }, [closeForm]);
 
   useEffect(() => {
     const { hash } = location;
@@ -131,7 +142,7 @@ export default function ChatForm() {
     dispatch(setSelectedConversation({ id: hash.slice(1).split("/")[0] }));
   }, [location, isUserLogin]);
 
-  useKeyDown(KEY_CODES.ESCAPE, closeForm);
+  useKeyDown(KEY_CODES.ESCAPE, handleEscapeKey);
 
   useLayoutEffect(() => setCurrentTab(CHAT_CONTENT_TABS.MESSAGES), [selectedCID]);
 

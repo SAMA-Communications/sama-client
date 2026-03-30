@@ -1,17 +1,34 @@
 import type { Conversation, User } from "types/samaWssModels";
 
+export interface DraftPatch {
+  text?: string;
+  replied_mid?: string;
+  edited_mid?: string;
+  updated_mid?: string;
+  forwarded_mid?: string | string[];
+  forwarded_mids?: string[];
+}
+
 export interface useDraftsProps {
   syncDraftByCid: (cid: string, oldDraft: object, convUpdatedAt: string) => void;
-  saveDraft: (cid: string, options: { text?: string; replied_mid?: string; edited_mid?: string }) => any;
+  saveDraft: (cid: string, options: DraftPatch) => void;
+  flushDraftToLocalStorage: (cid: string) => void;
   saveLastInputText: (cid: string, text: string) => void;
 
-  getDraft: (cid: string) => { text: string; replied_mid: string; edited_mid: string; updated_at: number };
+  getDraft: (cid: string) => Record<string, unknown>;
+  getDraftField: (cid: string, field: string) => unknown;
   getDraftMessage: (cid: string) => string;
+  getDraftRepliedMessageId: (cid: string) => string | undefined;
+  getDraftEditedMessageId: (cid: string) => string | undefined;
   getLastInputText: (cid: string) => string;
-  getExternalProps: () => Record<string, { draft_replied_mid?: boolean }>;
+  getExternalProps: () => Record<string, { draft_replied_mid?: boolean; draft_edited_mid?: boolean }>;
 
   removeDraft: (cid: string) => void;
-  removeDraftWithOptions: (cid: string, fields: string | string[]) => void;
+  removeDraftWithOptions: (cid: string, fields: string | string[], opts?: { syncReduxNow?: boolean }) => void;
+  purgeDraft: (cid: string) => void;
+  pushLocalDraftToReduxNow: (cid: string) => void;
+  savePreEditComposeText: (cid: string, text: string) => void;
+  consumePreEditComposeText: (cid: string) => string;
 }
 
 export interface useParticipantsProps {

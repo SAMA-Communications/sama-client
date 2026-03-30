@@ -2,24 +2,25 @@ import { useDispatch, useSelector } from "react-redux";
 
 import AdditionalMessages from "@components/hub/elements/AdditionalMessages";
 
-import draftService from "@services/tools/draftService.js";
+import useDrafts from "@hooks/api/useDrafts.js";
 
 import { addExternalProps } from "@store/values/ContextMenu.js";
-import { removeDraftField, getConverastionById } from "@store/values/Conversations.js";
+import { getConverastionById } from "@store/values/Conversations.js";
 
 export default function ChatFormInputContent({ editedMessage, repliedMessage, forwardedMessages = [] }) {
   const selectedCID = useSelector(getConverastionById)._id;
   const dispatch = useDispatch();
+  const { removeDraftWithOptions } = useDrafts();
 
   const handleClose = () => {
     if (editedMessage) {
       dispatch(addExternalProps({ [editedMessage.cid]: {} }));
-      draftService.removeDraftWithOptions(editedMessage.cid, "edited_mid");
+      removeDraftWithOptions(editedMessage.cid, "edited_mid");
     } else if (forwardedMessages.length) {
-      dispatch(removeDraftField({ cid: selectedCID, fields: ["forwarded_mids"] }));
+      removeDraftWithOptions(selectedCID, ["forwarded_mids"]);
     } else if (repliedMessage) {
       dispatch(addExternalProps({ [repliedMessage.cid]: {} }));
-      draftService.removeDraftWithOptions(repliedMessage.cid, "replied_mid");
+      removeDraftWithOptions(repliedMessage.cid, "replied_mid");
     }
   };
 

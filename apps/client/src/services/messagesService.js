@@ -25,8 +25,6 @@ import {
 import { addUser, upsertUsers } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 
-import draftService from "@services/tools/draftService.js";
-
 import { TYPING_DURATION_MS } from "@utils/constants.js";
 import { navigateTo } from "@utils/NavigationUtils.js";
 
@@ -163,10 +161,6 @@ class MessagesService {
     store.subscribe(() => {
       let previousValue = this.currentChatId;
       this.currentChatId = store.getState().selectedConversation.value.id;
-
-      // if (previousValue && previousValue !== this.currentChatId) {
-      //   draftService.flushDraftSyncToStore(previousValue);
-      // }
 
       if (this.currentChatId && (!previousValue || previousValue !== this.currentChatId)) {
         this.syncData();

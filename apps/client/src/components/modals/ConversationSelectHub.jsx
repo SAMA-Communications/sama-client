@@ -2,39 +2,29 @@ import { useCallback, useState } from "react";
 
 import { useLocation } from "react-router";
 
-import { useDispatch, useSelector } from "react-redux";
-
 import SearchBlock from "@components/search/SearchBlock";
+
+import { saveDraft } from "@lib/draftsEngine.js";
 
 import { ConversationSelectModal } from "@sama-communications.ui-kit";
 import { SearchInput } from "@sama-communications.ui-kit";
-
-import { selectConversationsEntities, updateWithDrafts } from "@store/values/Conversations.js";
 
 import { extractForwardedMids } from "@utils/ConversationUtils.js";
 import { navigateTo, removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
 
 export default function ConversationSelectHub({ title }) {
-  const dispatch = useDispatch();
   const { pathname, hash } = useLocation();
   const [inputText, setInputText] = useState(null);
-  const conversations = useSelector(selectConversationsEntities);
 
   const onClickFunc = useCallback(
     (forwardToCid) => {
       const forwardedMids = extractForwardedMids(hash);
       if (!forwardedMids.length) return;
 
-      const forwardToConversation = conversations[forwardToCid];
-      const newDraft = {
-        ...(forwardToConversation?.draft || {}),
-        forwarded_mids: forwardedMids,
-      };
-
-      dispatch(updateWithDrafts({ cid: forwardToCid, draft: newDraft }));
+      saveDraft(forwardToCid, { forwarded_mids: forwardedMids });
       navigateTo(`/#${forwardToCid}`);
     },
-    [hash, conversations, dispatch],
+    [hash],
   );
 
   const closeModal = useCallback(() => removeAndNavigateLastSection(pathname + hash), [pathname, hash]);

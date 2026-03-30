@@ -24,7 +24,7 @@ export const MessageInput = ({
 }: MessageInputProps) => {
   const { useConversations, useDrafts, formatedUtils, mediaUtils } = getAdapters();
   const { getSelectedConversation, sendTypingStatus } = useConversations();
-  const { saveDraft, removeDraftWithOptions, getDraftMessage } = useDrafts();
+  const { saveDraft, removeDraftWithOptions, getDraftMessage, flushDraftToLocalStorage } = useDrafts();
   const { calcInputHeight } = formatedUtils;
   const { extractFilesFromClipboard } = mediaUtils;
 
@@ -59,10 +59,16 @@ export const MessageInput = ({
     }
   };
 
+  const handleBlur = (e: any) => {
+    handleInput(e);
+    if (isEditAction && selectedConversationId) flushDraftToLocalStorage(selectedConversationId);
+  };
+
   const storeInputText = () => {
     const inputText = inputTextRef.current?.value;
     if (inputText) {
       saveDraft(selectedConversationId, { text: inputText });
+      flushDraftToLocalStorage(selectedConversationId);
       inputTextRef.current.value = "";
       inputTextRef.current.style.height = `28px`;
     }
@@ -79,7 +85,7 @@ export const MessageInput = ({
     }
   };
 
-  useEffect(() => syncInputText(), []); //location
+  useEffect(() => syncInputText(), [selectedConversationId, isLocationIncludeAttach, isEditAction]);
 
   useEffect(() => {
     function preventDefaults(e: any) {
@@ -138,7 +144,7 @@ export const MessageInput = ({
           ref={inputTextRef}
           onInput={handleInput}
           onKeyDown={handeOnKeyDown}
-          onBlur={handleInput}
+          onBlur={handleBlur}
           autoComplete="off"
           autoFocus={!isMobile}
           disabled={isSending}
