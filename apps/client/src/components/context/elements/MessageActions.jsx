@@ -147,7 +147,7 @@ export default function MessageActions({ listOfIds }) {
               [selectedCID]: { draft_edited_mid: message._id },
             }),
           );
-          saveDraft(selectedCID, { edited_mid: message._id });
+          saveDraft(selectedCID, { edited_mid: message._id, text: message.body ?? "" });
         }}
       />
     ),

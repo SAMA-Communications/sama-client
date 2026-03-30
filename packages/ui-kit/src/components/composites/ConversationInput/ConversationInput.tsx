@@ -81,7 +81,10 @@ export const ConversationInput = ({
       );
       setTimeout(() => {
         inputRef.current?.focus({ preventScroll: true });
-        chatMessagesBlockRef.current.scrollTop = chatMessagesBlockRef.current.scrollHeight;
+        const messagesBlock = chatMessagesBlockRef.current;
+        if (messagesBlock) {
+          messagesBlock.scrollTop = messagesBlock.scrollHeight;
+        }
       }, 50);
     }
     inputRef.current && (inputRef.current.value = body || "");
@@ -102,18 +105,15 @@ export const ConversationInput = ({
 
     if (editedMessage) {
       if (!wasInEditModeRef.current) {
-        savePreEditComposeText(selectedCID, inputRef.current?.value ?? "");
+        const composeSnapshot = inputRef.current?.value ?? "";
+        if (composeSnapshot.length > 0) savePreEditComposeText(selectedCID, composeSnapshot);
       }
       wasInEditModeRef.current = true;
       const diskDraft = getDraft(selectedCID);
       const sameEdit = getDraftEditedMessageId(selectedCID) === editedMessage._id;
       const hasPersistedText = Object.prototype.hasOwnProperty.call(diskDraft, "text");
       const textForInput =
-        sameEdit && hasPersistedText
-          ? diskDraft.text == null
-            ? ""
-            : String(diskDraft.text)
-          : editedMessage.body;
+        sameEdit && hasPersistedText ? (diskDraft.text == null ? "" : String(diskDraft.text)) : editedMessage.body;
       saveDraft(selectedCID, { text: textForInput });
       inputRef.current.value = textForInput;
       inputRef.current.style.height = `${calcInputHeight(textForInput)}px`;
@@ -122,7 +122,6 @@ export const ConversationInput = ({
     }
 
     if (wasInEditModeRef.current && !cidChanged) {
-      wasInEditModeRef.current = false;
       if (skipExitDraftRestoreRef.current) {
         skipExitDraftRestoreRef.current = false;
         wasInEditModeRef.current = false;

@@ -257,6 +257,7 @@ export default function useMessages() {
       await _sendMessageToServer(mObject);
     } catch (e) {
       await _handleMessageError(e, selectedCID, msg);
+      enableInput?.();
       return body;
     }
 

@@ -57,10 +57,15 @@ export default function Main() {
 
   const prevRef = useRef(selectedConversation?._id);
   useEffect(() => {
-    if (!selectedConversation?._id) return;
+    const id = selectedConversation?._id;
     const prev = prevRef.current;
-    prevRef.current = selectedConversation._id;
-    if (prev && prev !== selectedConversation._id) scheduleReduxDraftSync(prev);
+    if (!id) {
+      if (prev) scheduleReduxDraftSync(prev);
+      prevRef.current = undefined;
+      return;
+    }
+    if (prev && prev !== id) scheduleReduxDraftSync(prev);
+    prevRef.current = id;
   }, [selectedConversation?._id]);
 
   const rightPanelContent = useMemo(() => {
