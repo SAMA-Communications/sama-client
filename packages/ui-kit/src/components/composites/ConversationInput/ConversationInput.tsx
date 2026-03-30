@@ -68,7 +68,7 @@ export const ConversationInput = ({
         },
       );
       setTimeout(() => {
-        inputRef.current?.focus();
+        inputRef.current?.focus({ preventScroll: true });
         chatMessagesBlockRef.current.scrollTop = chatMessagesBlockRef.current.scrollHeight;
       }, 50);
     }
@@ -84,7 +84,7 @@ export const ConversationInput = ({
       inputRef.current.value && saveLastInputText(selectedCID, inputRef.current.value);
       saveDraft(selectedCID, { text: editedMessage.body });
       inputRef.current.value = editedMessage.body;
-      inputRef.current.focus();
+      inputRef.current?.focus({ preventScroll: true });
     } else {
       inputRef.current.value = getLastInputText(selectedCID);
       saveDraft(selectedCID, { text: inputRef.current.value });

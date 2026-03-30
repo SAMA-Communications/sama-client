@@ -48,13 +48,10 @@ export function useSearchBlock(searchText, options = {}) {
             name: searchText,
             limit: 10,
           });
-          const existingConversations = (conversationIds || []).reduce((chats, id) => {
-            const chat = conversations[id];
-            if (chat) chats.push(chat);
-            return chats;
-          }, []);
-          setSearchedChats(existingConversations);
-          setIsChatSearched(existingConversations.length ? null : "We couldn't find the specified chats.");
+
+          const mergedConversations = await conversationService.resolveConversationsByIds(conversationIds || []);
+          setSearchedChats(mergedConversations);
+          setIsChatSearched(mergedConversations.length ? null : "We couldn't find the specified chats.");
         });
       } else {
         setSearchedChats([]);
@@ -62,7 +59,7 @@ export function useSearchBlock(searchText, options = {}) {
       }
     }, 300);
     return () => clearTimeout(debounce);
-  }, [searchText, isSearchOnlyUsers, conversations]);
+  }, [searchText, isSearchOnlyUsers]);
 
   useEffect(() => {
     if (!isShowDefaultConvs || !conversations) return;

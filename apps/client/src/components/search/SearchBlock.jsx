@@ -84,22 +84,22 @@ export default function SearchBlock({
 
   return (
     <UISearchBlock
-      searchText={searchText ?? null}
-      searchOptions={{ isSearchOnlyUsers, isShowDefaultConvs }}
-      isShowDefaultConvs={isShowDefaultConvs}
-      isSearchOnlyUsers={isSearchOnlyUsers}
-      selectedUsers={selectedUsers}
-      onAddUser={addUserToArray ?? (() => {})}
-      onRemoveUser={removeUserFromArray ?? (() => {})}
+      customClassName={customClassName}
+      isClearInputText={isClearInputText}
       isClickDisabledFunc={isClickDisabledFunc}
       isMaxLimit={isMaxLimit}
-      onClearInputText={clearInputText}
-      isClearInputText={isClearInputText}
-      onUserClick={!isSelectUserToArray ? handleUserClick : undefined}
-      onConversationClick={handleConversationClick}
+      isSearchOnlyUsers={isSearchOnlyUsers}
       isSelectUserToArray={isSelectUserToArray}
+      isShowDefaultConvs={isShowDefaultConvs}
+      onAddUser={addUserToArray ?? (() => {})}
+      onClearInputText={clearInputText}
+      onConversationClick={handleConversationClick}
+      onRemoveUser={removeUserFromArray ?? (() => {})}
+      onUserClick={!isSelectUserToArray ? handleUserClick : undefined}
+      searchOptions={{ isSearchOnlyUsers, isShowDefaultConvs }}
+      searchText={searchText ?? null}
       selectedConversationId={selectedConversation?._id}
-      customClassName={customClassName}
+      selectedUsers={selectedUsers}
     />
   );
 }

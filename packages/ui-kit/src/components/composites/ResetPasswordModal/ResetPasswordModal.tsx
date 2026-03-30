@@ -2,7 +2,10 @@ import { useState, useEffect, useCallback } from "react";
 
 import { clsx } from "clsx";
 
-import { ResetPasswordModalProps, ResetPasswordFormData } from "@composites/ResetPasswordModal/ResetPasswordModal.types";
+import {
+  ResetPasswordModalProps,
+  ResetPasswordFormData,
+} from "@composites/ResetPasswordModal/ResetPasswordModal.types";
 
 import { WrapperRoot } from "@elements/WrapperRoot";
 

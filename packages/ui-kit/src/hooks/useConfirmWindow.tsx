@@ -133,7 +133,7 @@ export const ConfirmWindowProvider = ({ children }: { children: ReactNode }) => 
                 <button
                   className={clsx(
                     "ui:cursor-pointer ui:rounded-lg ui:px-6 ui:py-2 ui:text-white ui:hover:bg-black",
-                    options.color === "danger" ? "ui:bg-red-500" : "ui:bg-green-500",
+                    options.color === "success" ? "ui:bg-green-500" : "ui:bg-red-500",
                   )}
                   onClick={() => close(true)}
                 >

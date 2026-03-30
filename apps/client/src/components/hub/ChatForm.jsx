@@ -46,7 +46,7 @@ export default function ChatForm() {
   const isGroup = selectedConversation?.type === "g";
 
   const currentUserId = useSelector(selectCurrentUserId);
-  const conversationOwner = selectedConversation.owner_id?.toString();
+  const conversationOwner = selectedConversation?.owner_id?.toString();
   const isOwner = currentUserId === conversationOwner;
 
   const [currentTab, setCurrentTab] = useState(CHAT_CONTENT_TABS.MESSAGES);

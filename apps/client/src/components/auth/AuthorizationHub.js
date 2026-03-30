@@ -44,7 +44,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
 
   return (
     <section className="flex h-full w-full flex-col items-center justify-center overflow-hidden">
-      <AnimatedBGbig customClassName="absolute w-dvw h-dvh overflow-hidden z-0" isTriggered={triggerBGAnimation} />
+      <AnimatedBGbig customClassName="absolute w-full h-full overflow-hidden z-0" isTriggered={triggerBGAnimation} />
       <m.div
         ref={scope}
         className={`shadow-white-100/90 bg-bg-light relative flex h-[800px] max-h-[94dvh] w-[1200px] max-w-[95dvw] flex-row justify-center gap-[20px] rounded-[32px] p-[20px] shadow-lg max-lg:h-max max-lg:w-[min(600px,94dvw)] max-lg:py-[4dvh]`}

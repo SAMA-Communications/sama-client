@@ -382,10 +382,11 @@ class SAMAClient {
     }, "conversation");
   }
 
-  async conversationList(data: { limit?: number; updated_at?: { gt?: string, lt?: string } }): Promise<IConversation[]> {
+  async conversationList(data: { limit?: number; updated_at?: { gt?: string, lt?: string }; ids?: string[] }): Promise<IConversation[]> {
     const listParams = {
       ...(data.limit && { limit: data.limit }),
       ...(data.updated_at && { updated_at: { gt: data.updated_at.gt, lt: data.updated_at.lt } }),
+      ...(data.ids?.length && { ids: data.ids }),
     };
     return this.sendRequest("conversation_list", listParams, "conversations");
   }
@@ -394,8 +395,12 @@ class SAMAClient {
     return this.sendRequest("conversation_delete", { id: data.cid });
   }
 
-  async conversationSearch(data: { name: string }): Promise<IConversation[]> {
-    return this.sendRequest("conversation_search", { name: data.name }, "conversations");
+  async conversationSearch(data: { name: string; limit?: number }): Promise<IConversation[]> {
+    return this.sendRequest(
+      "conversation_search",
+      { name: data.name, ...(data.limit != null && { limit: data.limit }) },
+      "conversations",
+    );
   }
 
   async conversationHandlerCreate(data: { cid: string, content: string }): Promise<any> {

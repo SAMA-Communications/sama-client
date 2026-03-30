@@ -29,7 +29,10 @@ export const TOAST_THEME = {
   },
 };
 
+export const CONVERSATION_LIST_IDS_CHUNK = 15;
+
 export const TYPING_DURATION_MS = 6000;
+
 export const MAX_TTOASTS = 3;
 export const SWIPE_THRESHOLD = 90;
 

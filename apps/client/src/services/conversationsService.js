@@ -5,6 +5,8 @@ import eventEmitter from "@lib/eventEmitter";
 
 import { notificationQueueByCid } from "@services/tools/notifications";
 
+import { CONVERSATION_LIST_IDS_CHUNK } from "@src/utils/constants.js";
+
 import store from "@store/store";
 import {
   insertChat,
@@ -293,6 +295,34 @@ class ConversationsService {
 
   async search(data) {
     return await api.conversationSearch(data);
+  }
+
+  async fetchConversationsByIds(ids) {
+    const conversations = store.getState().conversations.entities || {};
+    const missingConvIds = ids.filter((id) => !conversations[id]);
+    const chunkSize = CONVERSATION_LIST_IDS_CHUNK;
+
+    for (let i = 0; i < missingConvIds.length; i += chunkSize) {
+      const chunkConvIds = missingConvIds.slice(i, i + chunkSize);
+      try {
+        const chats = await api.conversationList({ ids: chunkConvIds });
+        if (!chats?.length) continue;
+
+        store.dispatch(upsertChats(chats.map((obj) => ({ ...obj, participants: [] }))));
+        await this.getAndStoreParticipantsFromChats(chats);
+      } catch (err) {
+        showCustomAlert(err.message, "danger");
+      }
+    }
+  }
+
+  async resolveConversationsByIds(convIds) {
+    if (!convIds?.length) return [];
+
+    await this.fetchConversationsByIds(convIds);
+    const conversations = store.getState().conversations.entities || {};
+
+    return convIds.map((id) => conversations[id]).filter(Boolean);
   }
 }
 

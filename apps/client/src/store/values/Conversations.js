@@ -128,6 +128,12 @@ export const conversations = createSlice({
       if (isRemove && !conv?.draft) return;
       const updateParams = { _id: cid };
 
+      if (!isRemove && draft?.edited_mid) {
+        if (draft) updateParams.draft = draft;
+        conversationsAdapter.upsertOne(state, updateParams);
+        return;
+      }
+
       if (conv.last_message?.t > draft?.updated_at) {
         if (draft) updateParams.draft = draft;
       } else if (conv.last_message) {
@@ -136,7 +142,7 @@ export const conversations = createSlice({
           ...(isRemove
             ? { t: conv.last_message.old_t || conv.last_message.t, old_t: null }
             : draft.updated_at
-              ? { t: draft.updated_at, old_t: conv.last_message.t }
+              ? { t: draft.updated_at, ...(conv.last_message.old_t ? {} : { old_t: conv.last_message.t }) }
               : {}),
         };
         if (isRemove) {
