@@ -36,7 +36,7 @@ export const UserProfile = ({ user, onLogout, onClose, onEditProfile, onNavigate
   useKeyDown(KEY_CODES.ESCAPE, onClose);
 
   return (
-    <aside className="ui:flex ui:h-full ui:w-full ui:flex-col ui:gap-2.75 ui:p-3.5 ui:md:w-100">
+    <aside className="ui:flex ui:h-full ui:min-h-0 ui:w-full ui:flex-col ui:gap-2.75 ui:overflow-x-hidden ui:p-3.5 ui:max-md:max-h-dvh ui:max-md:overflow-y-auto ui:md:w-100">
       <div className="ui:relative ui:flex ui:flex-col ui:items-center ui:justify-center ui:gap-2.75">
         <div className="ui:flex ui:w-full ui:justify-between">
           <button
