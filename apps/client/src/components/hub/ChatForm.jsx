@@ -53,11 +53,9 @@ export default function ChatForm() {
   const [currentTab, setCurrentTab] = useState(CHAT_CONTENT_TABS.MESSAGES);
   const isEnableProgrammableChat = import.meta.env.VITE_ENABLE_PROGRAMMABLE_CHAT === "true" && !isMobileView;
 
-  /** Exit edit mode only (local draft + context props). Returns true if edit was active. */
   const cancelMessageEditIfActive = useCallback(() => {
     if (!selectedCID) return false;
-    const isEditing =
-      !!getDraftEditedMessageId(selectedCID) || !!draftExternalProps[selectedCID]?.draft_edited_mid;
+    const isEditing = !!getDraftEditedMessageId(selectedCID) || !!draftExternalProps[selectedCID]?.draft_edited_mid;
     if (!isEditing) return false;
     dispatch(addExternalProps({ [selectedCID]: {} }));
     removeDraftFields(selectedCID, ["edited_mid"]);
@@ -76,7 +74,6 @@ export default function ChatForm() {
     [selectedCID, dispatch, history],
   );
 
-  /** Close chat (back button / swipe). Does not exit edit mode — ESC / preview cancel only. */
   const closeForm = useCallback(
     (e) => {
       if (e && e.stopPropagation) e.stopPropagation();

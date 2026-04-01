@@ -81,8 +81,8 @@ export const ConfirmWindowProvider = ({ children }: { children: ReactNode }) => 
     }
   };
 
-  useKeyDown(KEY_CODES.ESCAPE, () => isOpen && close(false));
-  useKeyDown(KEY_CODES.ENTER, () => isOpen && close(true));
+  useKeyDown(KEY_CODES.ESCAPE, () => close(false), isOpen);
+  useKeyDown(KEY_CODES.ENTER, () => close(true), isOpen);
 
   return (
     <ConfirmContext.Provider value={{ requestConfirm }}>

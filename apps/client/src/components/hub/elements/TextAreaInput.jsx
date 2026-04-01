@@ -1,6 +1,5 @@
 import { TextAreaInput as UITextAreaInput } from "@sama-communications.ui-kit";
 
-/** Client wrapper: maps legacy prop names to ui-kit TextAreaInput */
 export default function TextAreaInput({
   customId = "",
   customClassName = "",
@@ -25,4 +24,3 @@ export default function TextAreaInput({
     />
   );
 }
-

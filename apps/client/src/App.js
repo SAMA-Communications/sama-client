@@ -10,11 +10,14 @@ import ContextMenuHub from "@components/context/ContextMenuHub";
 
 import BetterSuspense from "@hooks/tools/BetterSuspense.js";
 
-// import ConfirmWindowProvider from "@hooks/tools/useConfirmWindow.js";
-
 import "@lib/samaAdapter";
 
-import { ConfirmWindowProvider, PageLoaderSkeleton, useViewportBreakpoints } from "@sama-communications.ui-kit";
+import {
+  ConfirmWindowProvider,
+  PageLoaderSkeleton,
+  initDocumentKeyDown,
+  useViewportBreakpoints,
+} from "@sama-communications.ui-kit";
 
 import activityService from "@services/activityService";
 import autoLoginService from "@services/autoLoginService";
@@ -31,6 +34,8 @@ import { removeAndNavigateSubLink, navigateTo } from "@utils/NavigationUtils.js"
 
 const Main = lazy(() => import("@components/Main"));
 const AuthorizationHub = lazy(() => import("@components/auth/AuthorizationHub"));
+
+initDocumentKeyDown();
 
 export default function App() {
   const dispatch = useDispatch();

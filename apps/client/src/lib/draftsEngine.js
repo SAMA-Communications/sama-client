@@ -176,10 +176,6 @@ function scheduleLsWrite(cid, debounce) {
   );
 }
 
-/**
- * Merge draft fields. Text-only updates are debounced to localStorage (300ms).
- * Structural fields (replied_mid, edited_mid, etc.) flush to localStorage immediately.
- */
 export function saveDraft(cid, patch = {}) {
   if (!cid) return;
   const keys = Object.keys(patch);
@@ -188,7 +184,7 @@ export function saveDraft(cid, patch = {}) {
   const p = normalizePatch(patch);
   mergeDraft(cid, patch);
   scheduleLsWrite(cid, debounce);
-  if ([...REDUX_LIST_EXCLUDED_KEYS,  "edited_mid"].some((k) => p[k] != null)) {
+  if ([...REDUX_LIST_EXCLUDED_KEYS, "edited_mid"].some((k) => p[k] != null)) {
     bumpDraftRevision(cid);
   }
 }
@@ -292,7 +288,6 @@ export function scheduleReduxDraftSync(cid) {
   );
 }
 
-/** Full removal from localStorage, memory, and Redux (send, delete chat, forward complete, attach send). */
 export function purgeDraft(cid) {
   if (!cid) return;
   cancelLsTimer(cid);

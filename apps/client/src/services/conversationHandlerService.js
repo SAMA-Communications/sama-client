@@ -1,9 +1,3 @@
-/**
- * QuickJS у Vite + React (client): варіант singlefile-browser — WASM у бандлі, без окремого .wasm
- * (wasmfile у dev часто дає HTML замість wasm і помилку MIME / magic bytes).
- * @see https://github.com/justjake/quickjs-emscripten/tree/main/doc/@jitl
- */
-
 import variant from "@jitl/quickjs-singlefile-browser-release-sync";
 import { loadQuickJs } from "@sebastianwessel/quickjs";
 
@@ -17,15 +11,13 @@ const SANDBOX_OPTIONS = { allowFetch: true, allowFs: false, executionTimeout: 30
 
 const REGEX = {
   exportHandler: /export\s+default\s+await\s+handler\s*\(.*\)/,
-  handlerHeader:
-    /const\s+handler\s*=\s*async\s*\(message,\s*user,\s*accept,\s*resolve,\s*reject,\s*fetch\)\s*=>\s*\{/,
+  handlerHeader: /const\s+handler\s*=\s*async\s*\(message,\s*user,\s*accept,\s*resolve,\s*reject,\s*fetch\)\s*=>\s*\{/,
 };
 
 class ConversationHandlerService {
   #sandBox = null;
   #initPromise = null;
 
-  /** Ініціалізація sandbox: loadQuickJs(variant) — один раз при першому використанні. */
   async #initSandbox() {
     try {
       this.#sandBox = await loadQuickJs(variant);
@@ -36,7 +28,6 @@ class ConversationHandlerService {
     }
   }
 
-  /** Чекає завершення ініціалізації; не кидає — при збої this.#sandBox лишається null. */
   async #ensureReady() {
     if (!this.#initPromise) this.#initPromise = this.#initSandbox();
     await this.#initPromise;
@@ -78,10 +69,10 @@ class ConversationHandlerService {
       },
     };
 
-    const result = await this.#sandBox.runSandboxed(
-      async ({ evalCode }) => evalCode(code),
-      { ...SANDBOX_OPTIONS, env },
-    );
+    const result = await this.#sandBox.runSandboxed(async ({ evalCode }) => evalCode(code), {
+      ...SANDBOX_OPTIONS,
+      env,
+    });
 
     return errorMessage ? { ...result, error: errorMessage } : result;
   }
@@ -91,9 +82,6 @@ class ConversationHandlerService {
     return monaco?.editor.getModel(uri);
   }
 
-  /**
-   * Валідує handler-код. Не кидає помилок: при збої sandbox або ініціалізації повертає noSyntaxError: false.
-   */
   async validateHandler(code, originCode) {
     const fallbackResult = {
       noSyntaxError: false,

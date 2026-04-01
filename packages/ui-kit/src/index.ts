@@ -60,8 +60,7 @@ export { VideoView } from "./components/elements/VideoView";
 export { setAdapters } from "./adapters";
 
 export { ConfirmWindowProvider, useConfirmWindow } from "./hooks/useConfirmWindow";
-export { useKeyDown } from "./hooks/useKeyDown";
-export type { UseKeyDownOptions, UseKeyDownResult } from "./hooks/useKeyDown";
+export { useKeyDown, initDocumentKeyDown } from "./hooks/useKeyDown";
 export { useViewportBreakpoints } from "./hooks/useViewportBreakpoints";
 export type { ViewportBreakpointsResult } from "./hooks/useViewportBreakpoints";
 

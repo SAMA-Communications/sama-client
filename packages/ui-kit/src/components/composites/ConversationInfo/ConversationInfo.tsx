@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import { clsx } from "clsx";
 import { UserPlus, X, Users, LogOut, MessageCircleOff } from "lucide-react";
@@ -43,7 +43,10 @@ export const ConversationInfo = ({
     return currentUserId === conversation.owner_id?.toString();
   }, [currentUserId, conversation]);
 
+  const handleEscape = useCallback(() => onClose(), [onClose]);
+
   useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
+  useKeyDown(KEY_CODES.ESCAPE, handleEscape);
 
   const participantsList = useMemo(() => {
     if (!conversation.participants || !currentUserId) {

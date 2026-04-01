@@ -117,7 +117,7 @@ export const ConversationHeader = ({
 
   const { countOfSelectedMessages, midsArrayOfSelectedMessages } = getSelectedMessages() || {};
 
-  useKeyDown(KEY_CODES.ESCAPE, () => onCloseSelectionMode?.());
+  useKeyDown(KEY_CODES.ESCAPE, () => onCloseSelectionMode?.(), isSelectionMode);
 
   return isSelectionMode ? (
     <WrapperRoot
