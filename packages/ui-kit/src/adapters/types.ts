@@ -57,7 +57,7 @@ export interface useConversationsProps {
 
   getConversationById: (cid: string) => Conversation;
   getSelectedConversation: () => Conversation;
-  /** Next page; pagination cursor is maintained by the host app (e.g. Redux), not from the sorted UI list. */
+
   fetchConversations: () => Promise<Conversation[]>;
 
   updateChatImage: (file: File) => void;
