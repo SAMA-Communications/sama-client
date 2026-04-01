@@ -35,14 +35,21 @@ export const getConversationHandler = createSelector(
 
 export const conversations = createSlice({
   name: "Conversations",
-  initialState: conversationsAdapter.getInitialState({ entities: null }),
+  initialState: conversationsAdapter.getInitialState({ entities: {}, listPaginationLt: null }),
   reducers: {
+    setConversationListPaginationLt: (state, action) => {
+      state.listPaginationLt = action.payload;
+    },
+
     setChats: (state, action) => {
       const conversations = action.payload;
       conversations.forEach((conv) => {
         conv.messagesIds = null;
       });
       conversationsAdapter.setAll(state, conversations);
+      const lastId = state.ids[state.ids.length - 1];
+      state.listPaginationLt =
+        lastId && state.entities[lastId]?.updated_at != null ? state.entities[lastId].updated_at : null;
     },
 
     insertChats: (state, action) => {
@@ -288,6 +295,7 @@ export const {
   removeLastMessage,
   removeDraftField,
   setChats,
+  setConversationListPaginationLt,
   setLastMessageField,
   updateChatIndicator,
   updateLastMessageField,

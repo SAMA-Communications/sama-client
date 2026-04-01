@@ -44,14 +44,9 @@ export const ConversationItemList = ({
 
   const loadMore = useCallback(() => {
     if (!hasMoreRef.current || isLoadingRef.current) return;
-    const list = conversationsRef.current;
-    const last = list[list.length - 1];
-    if (!last) return;
 
     isLoadingRef.current = true;
-    fetchConversations({
-      updated_at: { lt: last.updated_at },
-    })
+    fetchConversations()
       .then((batch) => {
         const el = scrollContainerRef.current;
         const prevScrollHeight = el?.scrollHeight ?? 0;

@@ -6,7 +6,7 @@ import { hydrateDraftsFromLocalStorage } from "@lib/draftsEngine.js";
 import conversationService from "@services/conversationsService.js";
 
 import store from "@store/store.js";
-import { insertChats } from "@store/values/Conversations.js";
+import { insertChats, setConversationListPaginationLt } from "@store/values/Conversations.js";
 import { upsertChat } from "@store/values/Conversations.js";
 import { setSelectedConversation as setSConversation } from "@store/values/SelectedConversation.js";
 
@@ -31,12 +31,15 @@ export default function useConversations() {
     navigateTo(`/#${cid}`);
   };
 
-  const fetchConversations = async ({ updated_at: { lt } }) => {
-    return await api.conversationList({ updated_at: { lt } });
+  const fetchConversations = async () => {
+    const lt = store.getState().conversations.listPaginationLt ?? null;
+    return await api.conversationList(lt != null ? { updated_at: { lt } } : {});
   };
 
   const storeNewConversations = (conversations) => {
     store.dispatch(insertChats(conversations.map((obj) => ({ ...obj, participants: [] }))));
+    conversations.length > 0 &&
+      store.dispatch(setConversationListPaginationLt(conversations[conversations.length - 1].updated_at));
     hydrateDraftsFromLocalStorage();
 
     if (conversations.length > 0) conversationService.getAndStoreParticipantsFromChats(conversations);

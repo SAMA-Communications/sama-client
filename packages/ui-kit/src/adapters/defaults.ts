@@ -111,9 +111,7 @@ const useConversations = () => {
 
   const getConversationById = (cid: string) => defaultconversation;
   const getSelectedConversation = () => defaultconversation;
-  const fetchConversations = async (): Promise<Conversation[]> => {
-    return Promise.resolve([defaultconversation]);
-  };
+  const fetchConversations = async (): Promise<Conversation[]> => Promise.resolve([defaultconversation]);
 
   const updateChatImage = (file: File) => {};
   const updateNameAndDescription = (data: { name?: string; description?: string }) => true;

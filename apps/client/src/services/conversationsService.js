@@ -13,6 +13,7 @@ import {
   insertChat,
   insertChats,
   removeChat,
+  setConversationListPaginationLt,
   upsertChat,
   upsertChats,
   upsertParticipants,
@@ -101,6 +102,9 @@ class ConversationsService {
     try {
       const chats = await api.conversationList({});
       store.dispatch(insertChats(chats.map((obj) => ({ ...obj, participants: [] }))));
+      store.dispatch(
+        setConversationListPaginationLt(chats.length ? chats[chats.length - 1].updated_at : null),
+      );
       hydrateDraftsFromLocalStorage();
       if (chats.length > 0) await this.getAndStoreParticipantsFromChats(chats);
     } catch (error) {
