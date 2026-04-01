@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { useLocation } from "react-router";
 
@@ -341,6 +341,10 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     if (!col || !container) return;
 
     const ro = new ResizeObserver(() => {
+      if (pinnedRef.current && scrollRestoreDoneRef.current) {
+        container.scrollTop = container.scrollHeight;
+        return;
+      }
       if (pinnedRef.current) return;
       const p = pendingStableScrollRef.current;
       if (!p) return;
@@ -354,13 +358,15 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
 
   const lastMid = orderedMessages.at(-1)?._id;
 
-  useEffect(() => {
-    const c = scrollableContainer?.current;
-    if (!selectedCID || !c || !lastMid || !scrollRestoreDoneRef.current) return;
+  useLayoutEffect(() => {
+    const container = scrollableContainer?.current;
+    if (!selectedCID || !container || !lastMid || !scrollRestoreDoneRef.current) return;
     if (!pinnedRef.current) return;
+    container.scrollTop = container.scrollHeight;
     requestAnimationFrame(() => {
-      if (!scrollableContainer?.current) return;
-      scrollableContainer.current.scrollTop = scrollableContainer.current.scrollHeight;
+      const el = scrollableContainer?.current;
+      if (!el || !pinnedRef.current) return;
+      el.scrollTop = el.scrollHeight;
     });
   }, [lastMid, selectedCID, scrollableContainer]);
 
