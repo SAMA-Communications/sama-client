@@ -37,7 +37,7 @@ export const ConversationInfo = ({
   const confirm = useConfirmWindow();
 
   const participants = getParticipantsByIdsAsObject(conversation.participants || []);
-  const currentUserId = getCurrentUser()._id;
+  const currentUserId = getCurrentUser()?._id;
   const conversationOwner = conversation.owner_id?.toString();
 
   const isCurrentUserOwner = useMemo(() => {
