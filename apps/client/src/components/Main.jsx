@@ -223,7 +223,7 @@ export default function Main() {
       <aside className="flex w-[400px] shrink-0 flex-col overflow-hidden">{leftSection}</aside>
       <ChatForm />
       {rightPanelVisible && (
-        <aside className="mr-[15px] flex h-full w-[400px] shrink-0 flex-col overflow-hidden">{rightPanelContent}</aside>
+        <aside className="flex h-full w-[400px] shrink-0 flex-col overflow-hidden">{rightPanelContent}</aside>
       )}
       {overlayModals}
       {isUserProfile && otherUserProfileView === "card" && (

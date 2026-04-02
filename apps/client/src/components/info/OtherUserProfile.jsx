@@ -97,7 +97,7 @@ export default function OtherUserProfile({ view: viewProp = "compact" }) {
 
   return (
     <m.div
-      className="absolute top-[0px] left-[0px] z-[200] flex h-dvh w-dvw flex-col items-center justify-start overflow-hidden bg-(--color-black)/50 p-[30px] max-md:bg-(--color-bg-dark) max-md:p-[0px]"
+      className="max-md:bg-bg-dark absolute top-0 left-0 z-200 flex h-dvh w-dvw flex-col items-center justify-start overflow-hidden bg-black/50 p-7.5 max-md:p-0"
       variants={showOtherUserProfileContainer(isMobileView)}
       initial="hidden"
       animate="visible"
@@ -105,7 +105,7 @@ export default function OtherUserProfile({ view: viewProp = "compact" }) {
       transition="transition"
     >
       <m.div
-        className="mr-[15px] h-full w-[400px] max-md:mr-[0px] max-md:h-dvh max-md:w-dvw"
+        className="max-md:mr- h-full w-[400px] max-md:h-dvh max-md:w-dvw"
         variants={showOtherUserProfileContent(isMobileView)}
         initial="hidden"
         animate="visible"

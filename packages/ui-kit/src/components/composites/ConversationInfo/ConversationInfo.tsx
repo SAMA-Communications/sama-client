@@ -90,7 +90,10 @@ export const ConversationInfo = ({
     <WrapperRoot
       as="section"
       className={clsx(
-        "ui:flex ui:h-full ui:min-h-0 ui:w-100 ui:min-w-100 ui:flex-col ui:gap-2.75 ui:overflow-x-hidden ui:bg-bg-light ui:p-3.5 ui:max-md:max-h-dvh ui:max-md:w-full ui:max-md:overflow-y-auto",
+        "ui:flex ui:min-h-0 ui:flex-col ui:gap-2.75 ui:bg-bg-light ui:p-3.5",
+        isMobile
+          ? "ui:h-full ui:max-h-dvh ui:min-h-dvh ui:w-full ui:flex-1 ui:overflow-y-auto ui:overscroll-y-contain"
+          : "ui:h-full ui:max-h-dvh ui:w-100 ui:min-w-100 ui:overflow-hidden",
         className,
       )}
       {...rest}
@@ -126,7 +129,7 @@ export const ConversationInfo = ({
       </div>
 
       <hr className="ui:mt-5 ui:mb-2.5 ui:h-0.5 ui:border-dashed ui:text-text-dark/40" />
-      <div className="ui:flex ui:flex-1 ui:flex-col ui:gap-2.75">
+      <div className="ui:flex ui:min-h-100 ui:flex-1 ui:flex-col ui:gap-2.75">
         <div className="ui:flex ui:justify-between ui:gap-2.75">
           <div className="ui:flex ui:items-center ui:gap-1.75 ui:rounded-xl ui:bg-bg-dark/5 ui:p-2 ui:text-text-dark">
             <Users size={18} />
@@ -143,7 +146,7 @@ export const ConversationInfo = ({
             </button>
           ) : null}
         </div>
-        <CustomVerticalScrollbar autoHeight={!!isMobile} autoHeightMax={isMobile ? 400 : undefined}>
+        <CustomVerticalScrollbar className="ui:flex ui:flex-1 ui:flex-col ui:overflow-hidden">
           {participantsList}
         </CustomVerticalScrollbar>
       </div>
