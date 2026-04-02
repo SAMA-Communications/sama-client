@@ -39,11 +39,19 @@
 }
 
 body {
+  height: 100vh;
+  margin: 0;
+
   /* background-image: url("../assets/background.png") !important; */
   background-color: var(--color-bg-dark);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 .monaco-editor span {

@@ -102,9 +102,7 @@ class ConversationsService {
     try {
       const chats = await api.conversationList({});
       store.dispatch(insertChats(chats.map((obj) => ({ ...obj, participants: [] }))));
-      store.dispatch(
-        setConversationListPaginationLt(chats.length ? chats[chats.length - 1].updated_at : null),
-      );
+      store.dispatch(setConversationListPaginationLt(chats.length ? chats[chats.length - 1].updated_at : null));
       hydrateDraftsFromLocalStorage();
       if (chats.length > 0) await this.getAndStoreParticipantsFromChats(chats);
     } catch (error) {
@@ -302,7 +300,7 @@ class ConversationsService {
       store.dispatch(removeChat(selectedConversation.id));
       purgeDraft(selectedConversation.id);
     } catch (err) {
-      showCustomAlert(err.message, "warning");
+      showCustomAlert(err.message ? err.message : "An error occurred while trying to delete the chat", "warning");
     }
   }
 

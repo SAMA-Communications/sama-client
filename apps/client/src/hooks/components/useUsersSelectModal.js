@@ -55,7 +55,7 @@ export function useUsersSelectModal({ type } = {}) {
         title: "Add participants",
         color: "success",
         description: `Add selected user${users.length > 1 ? "s" : ""} to the chat?`,
-        icon: <UserPlus size={40} color="var(--ui-color-green-500)" strokeWidth={2} />,
+        icon: <UserPlus size={40} color="var(--ui-color-green-800)" strokeWidth={2} />,
       });
       if (!isConfirm) return;
       const success = await conversationService.addParticipants(users);
