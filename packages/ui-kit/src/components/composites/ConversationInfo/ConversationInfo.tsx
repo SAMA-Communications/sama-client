@@ -28,6 +28,8 @@ export const ConversationInfo = ({
   className,
   ...rest
 }: ConversationInfoProps) => {
+  if (!conversation) return null;
+
   const { useParticipants, useConversations } = getAdapters();
   const { getParticipantsByIdsAsObject, getCurrentUser } = useParticipants();
   const { deleteAndLeave } = useConversations();
