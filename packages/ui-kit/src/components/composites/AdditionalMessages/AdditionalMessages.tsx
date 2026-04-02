@@ -22,23 +22,11 @@ export const AdditionalMessages = ({
   const msg = data as { body?: string; attachments?: unknown[]; from?: string; error?: string };
   const { attachments, body, error } = msg;
 
+  if (error) return null;
+
   const isReply = type === "reply";
   const isEdit = type === "edit";
   const isAccent = color === "accent";
-
-  if (error) {
-    return (
-      <WrapperRoot
-        className={clsx(
-          "ui:w-[calc(100%-7rem)] ui:gap-2.75 ui:self-center ui:rounded-xl ui:border ui:border-text-dark ui:p-2 ui:lg:max-w-272",
-          className,
-        )}
-        {...rest}
-      >
-        <p>{error}</p>
-      </WrapperRoot>
-    );
-  }
 
   const titleLine = isEdit ? "Edit message" : (isPreview && isReply ? "Reply to " : "") + senderName;
   const bodyLine =

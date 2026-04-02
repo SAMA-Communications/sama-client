@@ -32,12 +32,7 @@ export default function ChatList() {
       return <p className="text-text-dark text-center text-lg">No chats are available.</p>;
     }
 
-    return (
-      <ConversationItemList
-        selectedConversation={selectedConversation}
-        conversations={filteredConversations}
-      />
-    );
+    return <ConversationItemList selectedConversation={selectedConversation} conversations={filteredConversations} />;
   }, [filteredConversations, selectedConversation]);
 
   return (
