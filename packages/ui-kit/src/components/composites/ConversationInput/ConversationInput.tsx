@@ -155,7 +155,7 @@ export const ConversationInput = ({
     return (
       <WrapperRoot
         className={clsx(
-          "ui:mb-3.5 ui:flex ui:min-h-11 ui:w-full ui:justify-center ui:gap-2.5 ui:self-center ui:overflow-hidden ui:p-2 ui:lg:max-w-300",
+          "ui:mb-3.5 ui:flex ui:min-h-11 ui:w-full ui:justify-center ui:gap-2.5 ui:self-center ui:overflow-hidden ui:p-2 ui:pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] ui:lg:max-w-300",
           className,
         )}
         {...rest}
@@ -169,7 +169,10 @@ export const ConversationInput = ({
 
   return (
     <WrapperRoot
-      className={clsx("ui:flex ui:w-full ui:items-end ui:gap-2.5 ui:self-center ui:pb-3.5 ui:lg:max-w-300", className)}
+      className={clsx(
+        "ui:flex ui:w-full ui:items-end ui:gap-2.5 ui:self-center ui:pb-[calc(0.875rem+env(safe-area-inset-bottom,0px))] ui:lg:max-w-300",
+        className,
+      )}
       {...rest}
     >
       <MessageInput

@@ -38,20 +38,41 @@
   font-variant-numeric: tabular-nums;
 }
 
-body {
-  height: 100vh;
+html {
   margin: 0;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  background-color: var(--color-bg-dark);
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  box-sizing: border-box;
 
   /* background-image: url("../assets/background.png") !important; */
   background-color: var(--color-bg-dark);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+}
 
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+#root {
+  margin: 0;
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
 }
 
 .monaco-editor span {

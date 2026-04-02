@@ -1,8 +1,10 @@
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useState, useEffect, useRef, useCallback, type MouseEvent } from "react";
 
 import { MediaBlurHash } from "@elements/MediaBlurHash";
 import { PlayButton } from "@elements/VideoView/PlayButton";
 import { VideoViewProps } from "@elements/VideoView/VideoView.types";
+
+import { requestElementFullscreen } from "@utils/requestFullscreen";
 
 export const VideoView = ({
   video,
@@ -40,6 +42,16 @@ export const VideoView = ({
     };
   }, [file_url]);
 
+  const onVideoDoubleClick = useCallback(
+    (e: MouseEvent<HTMLVideoElement>) => {
+      if (enableControls && videoRef.current) {
+        e.preventDefault();
+        requestElementFullscreen(videoRef.current);
+      }
+    },
+    [enableControls],
+  );
+
   return (
     <>
       <video
@@ -51,6 +63,7 @@ export const VideoView = ({
         src={file_url ? `${file_url}#t=0.1` : undefined}
         poster={file_name}
         onClick={onClick}
+        onDoubleClick={onVideoDoubleClick}
       />
       {preloaderView}
     </>

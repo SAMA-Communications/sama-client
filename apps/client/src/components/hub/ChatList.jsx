@@ -41,7 +41,7 @@ export default function ChatList() {
   }, [filteredConversations, selectedConversation]);
 
   return (
-    <aside key="chatList" className="relative h-dvh w-full min-w-[400px] overflow-hidden max-md:w-dvw max-md:min-w-0">
+    <aside key="chatList" className="relative h-full min-h-0 w-full min-w-[400px] overflow-hidden max-md:min-w-0">
       {/* <div
         className="from-bg-light/90 absolute top-0 left-0 z-1 h-17 w-full bg-linear-to-b from-50% to-transparent"
         style={{ pointerEvents: "none" }}

@@ -66,6 +66,7 @@ export type { ViewportBreakpointsResult } from "./hooks/useViewportBreakpoints";
 
 export { KEY_CODES, ALLOWED_AVATAR_FORMATS, VIEWPORT_BREAKPOINTS, PREVIEW_EXPAND_DIRECTION } from "./utils/constants";
 export { chunkMedia, normalizeRatio, getFileType } from "./utils/mediaUtils";
+export { requestElementFullscreen, exitDocumentFullscreen } from "./utils/requestFullscreen";
 
 export {
   ChatListSkeleton,
