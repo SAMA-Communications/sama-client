@@ -1,7 +1,7 @@
 import { memo, useCallback } from "react";
 
 import { clsx } from "clsx";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 
 import type { ModalProps } from "@elements/Modal/Modal.types";
 
@@ -33,23 +33,30 @@ export const Modal = memo(function Modal({
   );
 
   return (
-    <div className={clsx(overlayBaseClassName, className)} style={MODAL_IOS_FULL_BLEED_STYLE} onClick={handleOverlayClick}>
-      <motion.div
-        key={contentKey}
-        role="dialog"
-        aria-modal="true"
-        className={clsx(
-          panelBaseClassName,
-          tall && "ui:max-h-[min(80svh,80dvh)] ui:min-h-0 ui:overflow-y-auto",
-          panelClassName,
-        )}
-        initial={{ scale: 0.96 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: DURATION, ease: "easeOut" }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {children}
-      </motion.div>
+    <div
+      className={clsx(overlayBaseClassName, className)}
+      style={MODAL_IOS_FULL_BLEED_STYLE}
+      onClick={handleOverlayClick}
+    >
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={contentKey ?? "modal-panel"}
+          role="dialog"
+          aria-modal="true"
+          className={clsx(
+            panelBaseClassName,
+            tall && "ui:max-h-[min(80svh,80dvh)] ui:min-h-0 ui:overflow-y-auto",
+            panelClassName,
+          )}
+          initial={{ scale: 0.96 }}
+          animate={{ scale: 1 }}
+          exit={{ scale: 0.96 }}
+          transition={{ duration: DURATION, ease: "easeOut" }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {children}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 });

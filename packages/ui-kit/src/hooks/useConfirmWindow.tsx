@@ -104,6 +104,7 @@ export const ConfirmWindowProvider = ({ children }: { children: ReactNode }) => 
               className="ui:w-100 ui:max-w-sm ui:origin-center ui:justify-center ui:rounded-3xl ui:bg-bg-light ui:px-6 ui:pt-6 ui:pb-4 ui:shadow-xl ui:will-change-transform"
               initial={{ scale: 0.96 }}
               animate={{ scale: 1 }}
+              exit={{ scale: 0.96 }}
               transition={{ duration: DURATION, ease: "easeOut" }}
               onClick={(e) => e.stopPropagation()}
             >
