@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 
 import { useKeyDown } from "@src/hooks/useKeyDown";
 import { KEY_CODES } from "@src/utils/constants";
+import { MODAL_IOS_FULL_BLEED_STYLE } from "@src/utils/modalOverlayStyle";
 
 const DURATION = 0.25;
 
@@ -91,18 +92,18 @@ export const ConfirmWindowProvider = ({ children }: { children: ReactNode }) => 
         {isOpen ? (
           <motion.div
             key="confirm-window"
-            className="ui:fixed ui:inset-0 ui:z-200 ui:flex ui:items-center ui:justify-center ui:bg-black/50"
-            initial={{ opacity: 0 }}
+            className="ui:fixed ui:inset-0 ui:z-200 ui:flex ui:w-screen ui:max-w-none ui:items-center ui:justify-center ui:bg-black/50 ui:[-webkit-tap-highlight-color:transparent] ui:isolate"
+            style={MODAL_IOS_FULL_BLEED_STYLE}
+            initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: DURATION, ease: "easeOut" }}
+            exit={{ opacity: 1 }}
+            transition={{ duration: 0 }}
             onClick={onBackdropClick}
           >
             <motion.div
-              className="ui:w-100 ui:max-w-sm ui:origin-center ui:justify-center ui:rounded-3xl ui:bg-bg-light ui:px-6 ui:pt-6 ui:pb-4 ui:shadow-xl"
-              initial={{ opacity: 1, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 1, scale: 0.95 }}
+              className="ui:w-100 ui:max-w-sm ui:origin-center ui:justify-center ui:rounded-3xl ui:bg-bg-light ui:px-6 ui:pt-6 ui:pb-4 ui:shadow-xl ui:will-change-transform"
+              initial={{ scale: 0.96 }}
+              animate={{ scale: 1 }}
               transition={{ duration: DURATION, ease: "easeOut" }}
               onClick={(e) => e.stopPropagation()}
             >

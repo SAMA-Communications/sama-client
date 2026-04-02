@@ -9,6 +9,8 @@ import {
 
 import { WrapperRoot } from "@elements/WrapperRoot";
 
+import { MODAL_IOS_FULL_BLEED_STYLE } from "@utils/modalOverlayStyle";
+
 function formatTimer(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
@@ -99,12 +101,15 @@ export const ResetPasswordModal = ({
   if (!isOpen) return null;
 
   return (
-    <WrapperRoot className="ui:fixed ui:inset-0 ui:z-50 ui:flex ui:items-center ui:justify-center ui:bg-black/50">
+    <WrapperRoot
+      className="ui:fixed ui:inset-0 ui:isolate ui:z-50 ui:flex ui:w-screen ui:max-w-none ui:items-center ui:justify-center ui:overflow-y-auto ui:overscroll-y-contain ui:bg-black/50 ui:[-webkit-tap-highlight-color:transparent]"
+      style={MODAL_IOS_FULL_BLEED_STYLE}
+    >
       <div className="ui:flex ui:max-h-[80svh] ui:w-[min(460px,100%)] ui:flex-col ui:gap-[10px] ui:rounded-[32px] ui:bg-(--color-bg-light) ui:p-[30px] ui:max-md:w-[94svw] ui:max-md:p-[20px]">
         <p className="ui:mb-[5px] ui:text-xl ui:font-medium ui:text-black">Reset Password</p>
         {step === 1 && (
           <>
-            <p className="ui:mb-[5px]">
+            <p className="ui:mb-[5px] ui:font-light">
               To reset your password, enter the email that you used assigned to your account.
             </p>
             <div className="ui:flex ui:w-full ui:rounded-lg ui:bg-(--color-hover-light) ui:px-[14px] ui:py-[7px] ui:font-light">
@@ -130,7 +135,7 @@ export const ResetPasswordModal = ({
         )}
         {step === 2 && (
           <>
-            <p className="ui:mb-[5px]">
+            <p className="ui:mb-[5px] ui:font-light">
               We have sent a verification code to <span className="text-accent-500">{data.email}</span>
             </p>
             <div className="ui:flex ui:w-full ui:rounded-lg ui:bg-(--color-hover-light) ui:px-[14px] ui:py-[7px]">
