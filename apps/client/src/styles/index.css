@@ -39,9 +39,6 @@
 }
 
 body {
-  height: 100vh;
-  margin: 0;
-
   /* background-image: url("../assets/background.png") !important; */
   background-color: var(--color-bg-dark);
   background-repeat: no-repeat;
