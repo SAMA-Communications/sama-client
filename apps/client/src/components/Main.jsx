@@ -155,7 +155,7 @@ export default function Main() {
               exit="exit"
               transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <div className="w-[400px] shrink-0">{leftSection}</div>
+              <div className="w-[400px] shrink-0 grow">{leftSection}</div>
             </m.aside>
           )}
         </AnimatePresence>
@@ -194,7 +194,7 @@ export default function Main() {
   if (isLaptopView) {
     return (
       <>
-        <aside className="flex w-[400px] shrink-0 flex-col overflow-hidden">{leftSection}</aside>
+        <aside className="flex w-[400px] shrink-0 grow flex-col overflow-hidden">{leftSection}</aside>
         <ChatForm />
         <AnimatePresence>
           {rightPanelVisible && (
@@ -220,10 +220,12 @@ export default function Main() {
 
   return (
     <>
-      <aside className="flex w-[400px] shrink-0 flex-col overflow-hidden">{leftSection}</aside>
+      <aside className="flex w-[400px] shrink-0 grow flex-col overflow-hidden">{leftSection}</aside>
       <ChatForm />
       {rightPanelVisible && (
-        <aside className="mr-[15px] flex h-full w-[400px] shrink-0 flex-col overflow-hidden">{rightPanelContent}</aside>
+        <aside className="mr-[15px] flex h-full w-[400px] shrink-0 grow flex-col overflow-hidden">
+          {rightPanelContent}
+        </aside>
       )}
       {overlayModals}
       {isUserProfile && otherUserProfileView === "card" && (
