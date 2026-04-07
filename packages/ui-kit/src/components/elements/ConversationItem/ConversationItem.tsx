@@ -65,6 +65,7 @@ export const ConversationItem = memo(function ConversationItem({
 
   return (
     <WrapperRoot
+      data-conversation-id={cid}
       className={clsx(
         "ui:relative ui:flex ui:w-full ui:cursor-pointer ui:items-center ui:gap-3.75 ui:rounded-2xl ui:px-2.5 ui:py-2.5 ui:duration-100 ui:focus:outline-none",
         isSelected ? "ui:bg-accent-100 ui:shadow-btn" : "ui:hover:bg-accent-100/50",

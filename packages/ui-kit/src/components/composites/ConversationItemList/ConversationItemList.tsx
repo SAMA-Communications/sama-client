@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 
 import { clsx } from "clsx";
 
@@ -12,11 +12,21 @@ import { WrapperRoot } from "@elements/WrapperRoot";
 
 import { LOAD_MORE_EDGE_PX } from "@utils/constants";
 
+function preserveScrollAfterAppendBelow(container: HTMLDivElement, prevScrollHeight: number, prevScrollTop: number) {
+  if (prevScrollHeight <= 0) return;
+  const delta = container.scrollHeight - prevScrollHeight;
+  if (delta !== 0) container.scrollTop = prevScrollTop + delta;
+}
+
 export const ConversationItemList = ({
   conversations,
   selectedConversation,
   additionalOnClickfunc,
   className,
+  scrollContainerRef: scrollContainerRefProp,
+  listInnerRef: listInnerRefProp,
+  disableBuiltinScrollPersistence = false,
+  onListScrollFromBottom,
   scrollContainerId = "conversationItemsScrollable",
   scrollbarClassName,
   scrollbarContentClassName,
@@ -28,23 +38,34 @@ export const ConversationItemList = ({
   const [hasMore, setHasMore] = useState(true);
   const isLoadingRef = useRef(false);
   const hasMoreRef = useRef(true);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const internalScrollRef = useRef<HTMLDivElement>(null);
+  const internalInnerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = scrollContainerRefProp ?? internalScrollRef;
+  const listInnerRef = listInnerRefProp ?? internalInnerRef;
+  const pendingScrollPreserveRef = useRef<{ prevScrollHeight: number; prevScrollTop: number } | null>(null);
 
   hasMoreRef.current = hasMore;
 
-  const convItemOnClickFunc = useCallback(
-    (cid: string) => {
-      setSelectedConversation(cid);
-      additionalOnClickfunc && additionalOnClickfunc(cid);
-    },
-    [additionalOnClickfunc, setSelectedConversation],
-  );
+  useLayoutEffect(() => {
+    const pending = pendingScrollPreserveRef.current;
+    if (!pending) return;
+    const container = scrollContainerRef.current;
+    pendingScrollPreserveRef.current = null;
+    if (!container) return;
+    const copy = { ...pending };
+    preserveScrollAfterAppendBelow(container, pending.prevScrollHeight, pending.prevScrollTop);
+    requestAnimationFrame(() => {
+      const el = scrollContainerRef.current;
+      if (!el) return;
+      preserveScrollAfterAppendBelow(el, copy.prevScrollHeight, copy.prevScrollTop);
+    });
+  }, [conversations.length]);
 
-  const loadMore = useCallback(() => {
-    if (!hasMoreRef.current || isLoadingRef.current) return;
+  const appendOlderChats = useCallback(() => {
+    if (!hasMoreRef.current || isLoadingRef.current) return Promise.resolve();
 
     isLoadingRef.current = true;
-    fetchConversations()
+    return fetchConversations()
       .then((batch) => {
         const el = scrollContainerRef.current;
         const prevScrollHeight = el?.scrollHeight ?? 0;
@@ -55,21 +76,20 @@ export const ConversationItemList = ({
           setHasMore(false);
           return;
         }
+        if (prevScrollHeight > 0) {
+          pendingScrollPreserveRef.current = { prevScrollHeight, prevScrollTop };
+        }
         storeNewConversations(batch);
-
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            const c = scrollContainerRef.current;
-            if (!c || prevScrollHeight <= 0) return;
-            const delta = c.scrollHeight - prevScrollHeight;
-            if (delta !== 0) c.scrollTop = prevScrollTop + delta;
-          });
-        });
       })
       .finally(() => {
         isLoadingRef.current = false;
       });
   }, [fetchConversations, storeNewConversations]);
+
+  const loadMore = useCallback(() => {
+    if (!hasMoreRef.current || isLoadingRef.current) return;
+    void appendOlderChats();
+  }, [appendOlderChats]);
 
   const onScrollNearBottom = useCallback(
     (scrollFromBottom: number) => {
@@ -80,23 +100,42 @@ export const ConversationItemList = ({
     [loadMore],
   );
 
+  const mergedOnScroll = useCallback(
+    (scrollFromBottom: number) => {
+      onScrollNearBottom(scrollFromBottom);
+      onListScrollFromBottom?.(scrollFromBottom);
+    },
+    [onListScrollFromBottom, onScrollNearBottom],
+  );
+
+  const convItemOnClickFunc = useCallback(
+    (cid: string) => {
+      setSelectedConversation(cid);
+      additionalOnClickfunc && additionalOnClickfunc(cid);
+    },
+    [additionalOnClickfunc, setSelectedConversation],
+  );
+
   return (
     <WrapperRoot className={clsx("ui:flex ui:h-full ui:min-h-0 ui:flex-col", className)} {...rest}>
       <CustomVerticalScrollbar
         containerRef={scrollContainerRef}
         customId={scrollContainerId}
+        persistScrollPosition={!disableBuiltinScrollPersistence}
         customClassName={clsx("ui:min-h-0 ui:flex-1 ui:w-full", scrollbarClassName)}
         childrenClassName={scrollbarContentClassName}
-        onScroll={onScrollNearBottom}
+        onScroll={mergedOnScroll}
       >
-        {conversations.map((obj) => (
-          <ConversationItem
-            key={obj._id}
-            conversation={obj}
-            onClick={() => convItemOnClickFunc(obj._id)}
-            isSelected={selectedConversation?._id === obj._id}
-          />
-        ))}
+        <div ref={listInnerRef} className="ui:flex ui:w-full ui:min-w-0 ui:flex-col">
+          {conversations.map((obj) => (
+            <ConversationItem
+              key={obj._id}
+              conversation={obj}
+              onClick={() => convItemOnClickFunc(obj._id)}
+              isSelected={selectedConversation?._id === obj._id}
+            />
+          ))}
+        </div>
       </CustomVerticalScrollbar>
     </WrapperRoot>
   );

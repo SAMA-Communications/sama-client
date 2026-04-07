@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useLocation } from "react-router";
 
@@ -21,18 +21,11 @@ import { selectCurrentUserId } from "@store/values/CurrentUserId";
 import { selectActiveConversationMessagesEntities } from "@store/values/Messages";
 import { addUsers, selectParticipantsEntities } from "@store/values/Participants";
 
-import {
-  applyAnchorScroll,
-  findFirstVisibleMessageAnchor,
-  readChatScrollPersisted,
-  removeLegacyGlobalChatScrollbarKey,
-  scrollChatMessageIntoViewReliable,
-  writeChatScrollPersisted,
-} from "@utils/chatScrollPersistence";
+import { usePersistedScroll } from "@hooks/tools/usePersistedScroll.js";
+import { scrollChatMessageIntoViewReliable } from "@utils/scrollPersistence";
 import { computeMessageChatLayouts } from "@utils/MessageUtils";
 import { upsertMidsInPath } from "@utils/NavigationUtils.js";
 import { addSuffix } from "@utils/NavigationUtils.js";
-import { CHAT_SCROLL_BOTTOM_THRESHOLD_PX } from "@utils/constants";
 
 export default function MessagesList({ scrollRef: scrollableContainer }) {
   const dispatch = useDispatch();
@@ -59,12 +52,6 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
 
   const [messagesFetchFunc, setMessagesFetchFunc] = useState({});
   const [forwardedMids, setForwardedMids] = useState([]);
-
-  const pinnedRef = useRef(true);
-  const pendingStableScrollRef = useRef(null);
-  const scrollRestoreDoneRef = useRef(false);
-  const savePosTimer = useRef(null);
-  const messagesColumnRef = useRef(null);
 
   const updateParticipantsFromMessages = (messageArray) => {
     messageArray ??= orderedMessages;
@@ -99,13 +86,6 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
         : [],
     );
   }, [hash]);
-
-  useEffect(() => {
-    removeLegacyGlobalChatScrollbarKey();
-  }, []);
-  useEffect(() => {
-    scrollRestoreDoneRef.current = false;
-  }, [selectedCID]);
 
   const removeFetchFuncFromMessage = useCallback((message) => {
     setMessagesFetchFunc((prev) => {
@@ -237,150 +217,18 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     return true;
   }
 
-  useEffect(() => {
-    if (!selectedCID || !scrollableContainer?.current || !orderedMessages.length) return;
-    if (scrollRestoreDoneRef.current) return;
-
-    const cidAtStart = selectedCID;
-    let cancelled = false;
-
-    const finishPinned = () => {
-      pinnedRef.current = true;
-      pendingStableScrollRef.current = null;
-      requestAnimationFrame(() => {
-        if (cancelled || !scrollableContainer.current) return;
-        scrollableContainer.current.scrollTop = scrollableContainer.current.scrollHeight;
-        setIsScrolling(false);
-      });
-    };
-
-    const applyPersisted = async () => {
-      const persisted = readChatScrollPersisted(selectedCID);
-
-      if (!persisted) {
-        finishPinned();
-        return;
-      }
-
-      if (persisted.v === 1 && persisted.legacyFromBottom != null) {
-        const sfb = persisted.legacyFromBottom;
-        pinnedRef.current = sfb <= CHAT_SCROLL_BOTTOM_THRESHOLD_PX;
-        pendingStableScrollRef.current = pinnedRef.current ? null : { kind: "sfb", sfb };
-        requestAnimationFrame(() => {
-          if (cancelled || !scrollableContainer.current) return;
-          const c = scrollableContainer.current;
-          c.scrollTop = Math.max(0, c.scrollHeight - c.clientHeight - sfb);
-          setIsScrolling(false);
-        });
-        return;
-      }
-
-      if (persisted.pb === true) {
-        finishPinned();
-        return;
-      }
-
-      const { mid, oy, sfb } = persisted;
-      if (mid != null && oy != null) {
-        let rMessage = store.getState().messages.entities[mid];
-        if (!rMessage) {
-          const batch = await api.messageList({ cid: selectedCID, ids: [mid], limit: 1 });
-          rMessage = batch[0];
-        }
-        if (cancelled) return;
-        if (rMessage) {
-          const mids = store.getState().conversations.entities[cidAtStart]?.messagesIds;
-          const inList = mids?.includes(rMessage._id);
-          if (!inList) {
-            await loadMessagesAroundReply(rMessage);
-          }
-        }
-        if (cancelled) return;
-        pinnedRef.current = false;
-        pendingStableScrollRef.current = { kind: "anchor", mid, oy };
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            if (cancelled || !scrollableContainer.current) return;
-            applyAnchorScroll(scrollableContainer.current, mid, oy);
-            setIsScrolling(false);
-          });
-        });
-        return;
-      }
-
-      if (sfb != null && Number.isFinite(sfb)) {
-        pinnedRef.current = false;
-        pendingStableScrollRef.current = { kind: "sfb", sfb };
-        requestAnimationFrame(() => {
-          if (cancelled || !scrollableContainer.current) return;
-          const c = scrollableContainer.current;
-          c.scrollTop = Math.max(0, c.scrollHeight - c.clientHeight - sfb);
-          setIsScrolling(false);
-        });
-        return;
-      }
-
-      finishPinned();
-    };
-
-    (async () => {
-      await applyPersisted();
-      if (!cancelled && store.getState().selectedConversation.value.id === cidAtStart) {
-        scrollRestoreDoneRef.current = true;
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [selectedCID, orderedMessages.length, scrollableContainer]);
-
-  useEffect(() => {
-    const col = messagesColumnRef.current;
-    const container = scrollableContainer?.current;
-    if (!col || !container) return;
-
-    const ro = new ResizeObserver(() => {
-      if (pinnedRef.current && scrollRestoreDoneRef.current) {
-        container.scrollTop = container.scrollHeight;
-        return;
-      }
-      if (pinnedRef.current) return;
-      const p = pendingStableScrollRef.current;
-      if (!p) return;
-      if (p.kind === "anchor") applyAnchorScroll(container, p.mid, p.oy);
-      else if (p.kind === "sfb")
-        container.scrollTop = Math.max(0, container.scrollHeight - container.clientHeight - p.sfb);
-    });
-    ro.observe(col);
-    return () => ro.disconnect();
-  }, [scrollableContainer, selectedCID]);
-
   const lastMid = orderedMessages.at(-1)?._id;
 
-  useLayoutEffect(() => {
-    const container = scrollableContainer?.current;
-    if (!selectedCID || !container || !lastMid || !scrollRestoreDoneRef.current) return;
-    if (!pinnedRef.current) return;
-    container.scrollTop = container.scrollHeight;
-    requestAnimationFrame(() => {
-      const el = scrollableContainer?.current;
-      if (!el || !pinnedRef.current) return;
-      el.scrollTop = el.scrollHeight;
-    });
-  }, [lastMid, selectedCID, scrollableContainer]);
-
-  const scrollToBottom = () => {
-    setIsScrolling(true);
-    const container = scrollableContainer.current;
-    if (container) {
-      container.scrollTop = container.scrollHeight;
-      setIsScrolling(false);
-    }
-    pinnedRef.current = true;
-    pendingStableScrollRef.current = null;
-    if (selectedCID) writeChatScrollPersisted(selectedCID, { pb: true });
-  };
+  const { columnRef, onScroll, scrollToBottom } = usePersistedScroll({
+    scope: "thread",
+    scrollRef: scrollableContainer,
+    conversationId: selectedCID,
+    messagesLength: orderedMessages.length,
+    lastMessageId: lastMid,
+    setIsScrolling,
+    setScrollDownVisible: setIsScrollToBottomVisible,
+    loadMessagesAroundReply,
+  });
 
   useEffect(() => {
     if (!orderedMessages.length) return;
@@ -407,14 +255,14 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     const rIndex = messagesIds.indexOf(rMessage._id);
 
     if (rIndex > 0) {
-      await scrollChatMessageIntoViewReliable(scrollableContainer?.current, messagesColumnRef.current, mid);
+      await scrollChatMessageIntoViewReliable(scrollableContainer?.current, columnRef.current, mid);
       setIsScrolling(false);
       return;
     }
 
     await loadMessagesAroundReply(rMessage);
     await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-    await scrollChatMessageIntoViewReliable(scrollableContainer?.current, messagesColumnRef.current, mid);
+    await scrollChatMessageIntoViewReliable(scrollableContainer?.current, columnRef.current, mid);
     setIsScrolling(false);
   };
 
@@ -483,47 +331,18 @@ export default function MessagesList({ scrollRef: scrollableContainer }) {
     });
   }, [isScrolling, orderedMessages, messagesFetchFunc, messageChatLayouts, forwardedMids, hash, pathname]);
 
-  const handleScrollFromBottom = (scrollFromBottom) => {
-    pinnedRef.current = scrollFromBottom <= CHAT_SCROLL_BOTTOM_THRESHOLD_PX;
-    setIsScrollToBottomVisible(scrollFromBottom > 200);
-
-    if (savePosTimer.current !== null) clearTimeout(savePosTimer.current);
-    savePosTimer.current = setTimeout(() => {
-      const container = scrollableContainer.current;
-      if (!selectedCID || !container) return;
-
-      const sfb = container.scrollHeight - container.scrollTop - container.clientHeight;
-      const atBottom = sfb <= CHAT_SCROLL_BOTTOM_THRESHOLD_PX;
-      pinnedRef.current = atBottom;
-
-      if (atBottom) {
-        writeChatScrollPersisted(selectedCID, { pb: true });
-        pendingStableScrollRef.current = null;
-      } else {
-        const anchor = findFirstVisibleMessageAnchor(container);
-        if (anchor) {
-          writeChatScrollPersisted(selectedCID, { pb: false, mid: anchor.mid, oy: anchor.oy });
-          pendingStableScrollRef.current = { kind: "anchor", mid: anchor.mid, oy: anchor.oy };
-        } else {
-          writeChatScrollPersisted(selectedCID, { pb: false, sfb });
-          pendingStableScrollRef.current = { kind: "sfb", sfb };
-        }
-      }
-    }, 150);
-  };
-
   return (
     <CustomVerticalScrollbar
       containerRef={scrollableContainer}
       containerId="chatMessagesScrollable"
       persistScrollPosition={false}
-      onScroll={handleScrollFromBottom}
+      onScroll={onScroll}
       isScrollToBottomVisible={isScrollToBottomVisible}
       onScrollToBottom={scrollToBottom}
       className="lg:max-w-300"
       contentClassName="h-full"
     >
-      <div ref={messagesColumnRef} className="flex min-h-full flex-col justify-end">
+      <div ref={columnRef} className="flex min-h-full flex-col justify-end">
         <div className="flex flex-col gap-1.75">{messagesView}</div>
       </div>
     </CustomVerticalScrollbar>
