@@ -68,64 +68,57 @@ export const CustomVerticalScrollbar = ({
     [autoHideDelay, clearHideTimer],
   );
 
- 
-  const applyScrollLayout = useCallback(
-    (notify: boolean) => {
-      const container = containerRef.current;
-      const thumb = thumbRef.current;
-      const track = trackRef.current;
-      if (!container || !thumb || !track) return;
+  const handleScroll = useCallback(() => {
+    const container = containerRef.current;
+    const thumb = thumbRef.current;
+    const track = trackRef.current;
+    if (!container || !thumb || !track) return;
 
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      const scrollableHeight = scrollHeight - clientHeight;
+    const { scrollTop, scrollHeight, clientHeight } = container;
+    const scrollableHeight = scrollHeight - clientHeight;
+    if (scrollableHeight <= 0) {
+      thumb.style.height = "0";
+      thumb.style.transform = "translateY(0)";
+      onScroll?.(scrollHeight - scrollTop - clientHeight);
+      return;
+    }
 
-      if (scrollableHeight <= 0) {
-        thumb.style.height = "0";
-        thumb.style.transform = "translateY(0)";
-        onScroll?.(scrollHeight - scrollTop - clientHeight);
-        return;
-      }
+    const thumbHeight = Math.max((clientHeight / scrollHeight) * track.clientHeight, minThumbHeight);
+    const thumbTop = (scrollTop / scrollableHeight) * (track.clientHeight - thumbHeight);
+    thumb.style.height = `${thumbHeight}px`;
+    thumb.style.transform = `translateY(${thumbTop}px)`;
 
-      const thumbHeight = Math.max((clientHeight / scrollHeight) * track.clientHeight, minThumbHeight);
-      const thumbTop = (scrollTop / scrollableHeight) * (track.clientHeight - thumbHeight);
-      thumb.style.height = `${thumbHeight}px`;
-      thumb.style.transform = `translateY(${thumbTop}px)`;
+    setScrollbarVisible(true);
+    scheduleHide(autoHideDelay);
 
-      if (!notify) return;
+    const scrollFromBottom = scrollHeight - scrollTop - clientHeight;
+    onScroll?.(scrollFromBottom);
 
-      setScrollbarVisible(true);
-      scheduleHide(autoHideDelay);
+    if (shouldPersistScroll || onScrollStop) {
+      if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
+      scrollStopTimerRef.current = setTimeout(() => {
+        if (shouldPersistScroll && container) {
+          try {
+            localStorage.setItem(`scroll_pos_${containerId}`, String(container.scrollTop));
+          } catch (_) {}
+        }
+        onScrollStop?.(container.scrollTop);
+        scrollStopTimerRef.current = null;
+      }, SCROLL_STOP_DEBOUNCE_MS);
+    }
+  }, [
+    containerRef,
+    containerId,
+    shouldPersistScroll,
+    minThumbHeight,
+    autoHideDelay,
+    onScroll,
+    onScrollStop,
+    scheduleHide,
+  ]);
 
-      const scrollFromBottom = scrollHeight - scrollTop - clientHeight;
-      onScroll?.(scrollFromBottom);
-
-      if (shouldPersistScroll || onScrollStop) {
-        if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
-        scrollStopTimerRef.current = setTimeout(() => {
-          if (shouldPersistScroll && container) {
-            try {
-              localStorage.setItem(`scroll_pos_${containerId}`, String(container.scrollTop));
-            } catch (_) {}
-          }
-          onScrollStop?.(container.scrollTop);
-          scrollStopTimerRef.current = null;
-        }, SCROLL_STOP_DEBOUNCE_MS);
-      }
-    },
-    [
-      containerRef,
-      containerId,
-      shouldPersistScroll,
-      minThumbHeight,
-      autoHideDelay,
-      onScroll,
-      onScrollStop,
-      scheduleHide,
-    ],
-  );
-
-  const applyScrollLayoutRef = useRef(applyScrollLayout);
-  applyScrollLayoutRef.current = applyScrollLayout;
+  const handleScrollRef = useRef(handleScroll);
+  handleScrollRef.current = handleScroll;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -138,16 +131,15 @@ export const CustomVerticalScrollbar = ({
       } catch (_) {}
     }
 
-    const onScrollEvent = () => applyScrollLayoutRef.current(true);
-    const onResize = () => applyScrollLayoutRef.current(false);
+    const runScrollHandlers = () => handleScrollRef.current();
 
-    container.addEventListener("scroll", onScrollEvent, { passive: true });
-    onScrollEvent();
-    const ro = new ResizeObserver(() => onResize());
+    container.addEventListener("scroll", runScrollHandlers, { passive: true });
+    runScrollHandlers();
+    const ro = new ResizeObserver(() => runScrollHandlers());
     ro.observe(container);
 
     return () => {
-      container.removeEventListener("scroll", onScrollEvent);
+      container.removeEventListener("scroll", runScrollHandlers);
       ro.disconnect();
       if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
     };
@@ -215,6 +207,7 @@ export const CustomVerticalScrollbar = ({
         ref={containerRef}
         id={containerId}
         className={`ui:h-full ui:w-full ui:min-w-0 ui:overflow-y-scroll ui:[&::-webkit-scrollbar]:hidden ${resolvedContentClassName}`}
+        onScroll={handleScroll}
       >
         {children}
       </div>

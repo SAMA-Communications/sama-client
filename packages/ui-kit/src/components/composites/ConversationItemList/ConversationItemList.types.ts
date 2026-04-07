@@ -14,4 +14,3 @@ export interface ConversationItemListProps extends Omit<WrapperRootProps<"div">,
   /** Optional class on the scrollable content area (passed as `childrenClassName` to the scrollbar). */
   scrollbarContentClassName?: string;
 }
-
