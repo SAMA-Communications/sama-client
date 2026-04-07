@@ -105,6 +105,7 @@ body {
 #conversationItemsScrollable {
   display: flex;
   flex-direction: column;
+  overflow-anchor: none;
 }
 
 /* dissable search input decorations */
