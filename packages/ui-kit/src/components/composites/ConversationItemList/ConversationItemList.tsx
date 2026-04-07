@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { clsx } from "clsx";
 
@@ -29,8 +29,21 @@ export const ConversationItemList = ({
   const isLoadingRef = useRef(false);
   const hasMoreRef = useRef(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const listScrollRoRef = useRef<ResizeObserver | null>(null);
+  const listScrollRoIdleRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   hasMoreRef.current = hasMore;
+
+  useEffect(() => {
+    return () => {
+      listScrollRoRef.current?.disconnect();
+      listScrollRoRef.current = null;
+      if (listScrollRoIdleRef.current != null) {
+        clearTimeout(listScrollRoIdleRef.current);
+        listScrollRoIdleRef.current = null;
+      }
+    };
+  }, []);
 
   const convItemOnClickFunc = useCallback(
     (cid: string) => {
@@ -47,24 +60,66 @@ export const ConversationItemList = ({
     fetchConversations()
       .then((batch) => {
         const el = scrollContainerRef.current;
-        const prevScrollHeight = el?.scrollHeight ?? 0;
-        const prevScrollTop = el?.scrollTop ?? 0;
+        if (!el) {
+          return;
+        }
+
+        const baseH = el.scrollHeight;
+        const baseT = el.scrollTop;
+        const clientH = el.clientHeight;
 
         if (!batch.length) {
           hasMoreRef.current = false;
           setHasMore(false);
           return;
         }
+
+        if (baseH <= clientH) {
+          storeNewConversations(batch);
+          return;
+        }
+
+        listScrollRoRef.current?.disconnect();
+        if (listScrollRoIdleRef.current != null) {
+          clearTimeout(listScrollRoIdleRef.current);
+          listScrollRoIdleRef.current = null;
+        }
+
+        const applyScrollAnchor = () => {
+          const node = scrollContainerRef.current;
+          if (!node) {
+            return;
+          }
+          const h = node.scrollHeight;
+          const ch = node.clientHeight;
+          const maxTop = Math.max(0, h - ch);
+          const nextTop = baseT + (h - baseH);
+          node.scrollTop = Math.max(0, Math.min(nextTop, maxTop));
+        };
+
+        const scheduleRoDone = () => {
+          if (listScrollRoIdleRef.current != null) {
+            clearTimeout(listScrollRoIdleRef.current);
+          }
+          listScrollRoIdleRef.current = setTimeout(() => {
+            listScrollRoRef.current?.disconnect();
+            listScrollRoRef.current = null;
+            listScrollRoIdleRef.current = null;
+          }, 450);
+        };
+
         storeNewConversations(batch);
 
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            const c = scrollContainerRef.current;
-            if (!c || prevScrollHeight <= 0) return;
-            const delta = c.scrollHeight - prevScrollHeight;
-            if (delta !== 0) c.scrollTop = prevScrollTop + delta;
-          });
+        const ro = new ResizeObserver(() => {
+          applyScrollAnchor();
+          scheduleRoDone();
         });
+        listScrollRoRef.current = ro;
+        ro.observe(el);
+
+        queueMicrotask(applyScrollAnchor);
+        requestAnimationFrame(applyScrollAnchor);
+        scheduleRoDone();
       })
       .finally(() => {
         isLoadingRef.current = false;
