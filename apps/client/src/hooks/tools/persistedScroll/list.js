@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import {
+  afterLayoutStable,
   applyConversationAnchorScroll,
   buildChatListScrollSavePayload,
+  commitScrollToBottom,
+  commitScrollTop,
   readChatListScrollPersisted,
   reapplyChatListPendingScroll,
   writeChatListScrollPersisted,
@@ -48,7 +51,7 @@ export function useListPersistedScroll(active, p) {
 
   const runRestore = useCallback((container, persisted) => {
     if (!persisted) {
-      container.scrollTop = 0;
+      commitScrollTop(container, 0);
       pinnedBottomRef.current = false;
       pendingScrollRef.current = null;
       anchorRetryRef.current = null;
@@ -58,7 +61,7 @@ export function useListPersistedScroll(active, p) {
     if (persisted.v === 1 && persisted.legacyScrollTop != null) {
       const top = persisted.legacyScrollTop;
       const maxScroll = Math.max(0, container.scrollHeight - container.clientHeight);
-      container.scrollTop = Math.min(top, maxScroll);
+      commitScrollTop(container, Math.min(top, maxScroll));
       pendingScrollRef.current = { kind: "legacyTop", top };
       pinnedBottomRef.current = top >= maxScroll - CLAMP_EPS_PX;
       anchorRetryRef.current = null;
@@ -67,7 +70,7 @@ export function useListPersistedScroll(active, p) {
 
     if (persisted.v === 2) {
       if (persisted.pb === true) {
-        container.scrollTop = container.scrollHeight;
+        commitScrollToBottom(container);
         pinnedBottomRef.current = true;
         pendingScrollRef.current = null;
         anchorRetryRef.current = null;
@@ -87,7 +90,7 @@ export function useListPersistedScroll(active, p) {
         if (sfb != null && Number.isFinite(sfb)) {
           const maxScroll = Math.max(0, container.scrollHeight - container.clientHeight);
           const desiredTop = Math.max(0, container.scrollHeight - container.clientHeight - sfb);
-          container.scrollTop = Math.min(desiredTop, maxScroll);
+          commitScrollTop(container, Math.min(desiredTop, maxScroll));
           pendingScrollRef.current = { kind: "sfb", sfb };
         }
         pinnedBottomRef.current = false;
@@ -97,7 +100,7 @@ export function useListPersistedScroll(active, p) {
       if (sfb != null && Number.isFinite(sfb)) {
         const maxScroll = Math.max(0, container.scrollHeight - container.clientHeight);
         const desiredTop = Math.max(0, container.scrollHeight - container.clientHeight - sfb);
-        container.scrollTop = Math.min(desiredTop, maxScroll);
+        commitScrollTop(container, Math.min(desiredTop, maxScroll));
         pendingScrollRef.current = { kind: "sfb", sfb };
         pinnedBottomRef.current = sfb <= CHAT_SCROLL_BOTTOM_THRESHOLD_PX;
         anchorRetryRef.current = null;
@@ -123,12 +126,10 @@ export function useListPersistedScroll(active, p) {
         return;
       }
       const persisted = readChatListScrollPersisted();
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          if (cancelled || !listScrollRef.current) return;
-          runRestore(listScrollRef.current, persisted);
-          restoreDoneRef.current = true;
-        });
+      afterLayoutStable(() => {
+        if (cancelled || !listScrollRef.current) return;
+        runRestore(listScrollRef.current, persisted);
+        restoreDoneRef.current = true;
       });
     };
 
@@ -197,17 +198,15 @@ export function useListPersistedScroll(active, p) {
         const prevH = el?.scrollHeight ?? 0;
         const prevTop = el?.scrollTop ?? 0;
         storeNewConversations(batch);
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            const cont = listScrollRef.current;
-            if (!cont) return;
-            if (prevH > 0) {
-              const delta = cont.scrollHeight - prevH;
-              if (delta !== 0) cont.scrollTop = prevTop + delta;
-            }
-            const persistedAgain = readChatListScrollPersisted();
-            if (persistedAgain) runRestore(cont, persistedAgain);
-          });
+        afterLayoutStable(() => {
+          const cont = listScrollRef.current;
+          if (!cont) return;
+          if (prevH > 0) {
+            const delta = cont.scrollHeight - prevH;
+            if (delta !== 0) commitScrollTop(cont, prevTop + delta);
+          }
+          const persistedAgain = readChatListScrollPersisted();
+          if (persistedAgain) runRestore(cont, persistedAgain);
         });
       })
       .finally(() => {
@@ -227,22 +226,41 @@ export function useListPersistedScroll(active, p) {
   useEffect(() => {
     if (!active) return;
     if (searchActive) return;
-    const inner = listInnerRef.current;
-    const container = listScrollRef.current;
-    if (!inner || !container) return;
 
-    const ro = new ResizeObserver(() => {
+    let cancelled = false;
+    let ro = null;
+    let rafAttempts = 0;
+    const maxAttachAttempts = 90;
+
+    const onResize = () => {
       const c = listScrollRef.current;
       if (!c) return;
       if (pinnedBottomRef.current && restoreDoneRef.current) {
-        c.scrollTop = c.scrollHeight;
+        commitScrollToBottom(c);
         return;
       }
       if (pinnedBottomRef.current) return;
       reapplyChatListPendingScroll(c, pendingScrollRef.current);
-    });
-    ro.observe(inner);
-    return () => ro.disconnect();
+    };
+
+    const tryAttach = () => {
+      if (cancelled) return;
+      const inner = listInnerRef.current;
+      if (!inner) {
+        rafAttempts += 1;
+        if (rafAttempts < maxAttachAttempts) requestAnimationFrame(tryAttach);
+        return;
+      }
+      ro = new ResizeObserver(onResize);
+      ro.observe(inner);
+      onResize();
+    };
+
+    tryAttach();
+    return () => {
+      cancelled = true;
+      ro?.disconnect();
+    };
   }, [active, searchActive, conversationCount, listScrollRef, listInnerRef]);
 
   const onPersist = useCallback(() => {
