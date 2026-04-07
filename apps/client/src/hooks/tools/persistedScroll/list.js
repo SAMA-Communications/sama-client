@@ -136,7 +136,7 @@ export function useListPersistedScroll(active, p) {
     return () => {
       cancelled = true;
     };
-  }, [active, filteredConversations, searchActive, runRestore, listScrollRef]);
+  }, [active, filteredConversations?.length, searchActive, runRestore, listScrollRef]);
 
   useEffect(() => {
     if (!active) return;
@@ -200,9 +200,11 @@ export function useListPersistedScroll(active, p) {
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             const cont = listScrollRef.current;
-            if (!cont || prevH <= 0) return;
-            const delta = cont.scrollHeight - prevH;
-            if (delta !== 0) cont.scrollTop = prevTop + delta;
+            if (!cont) return;
+            if (prevH > 0) {
+              const delta = cont.scrollHeight - prevH;
+              if (delta !== 0) cont.scrollTop = prevTop + delta;
+            }
             const persistedAgain = readChatListScrollPersisted();
             if (persistedAgain) runRestore(cont, persistedAgain);
           });

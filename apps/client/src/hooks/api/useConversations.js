@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import api from "@api/api.js";
 
 import DownloadManager from "@lib/downloadManager.js";
@@ -31,19 +33,19 @@ export default function useConversations() {
     navigateTo(`/#${cid}`);
   };
 
-  const fetchConversations = async () => {
+  const fetchConversations = useCallback(async () => {
     const lt = store.getState().conversations.listPaginationLt ?? null;
     return await api.conversationList(lt != null ? { updated_at: { lt } } : {});
-  };
+  }, []);
 
-  const storeNewConversations = (conversations) => {
+  const storeNewConversations = useCallback((conversations) => {
     store.dispatch(insertChats(conversations.map((obj) => ({ ...obj, participants: [] }))));
     conversations.length > 0 &&
       store.dispatch(setConversationListPaginationLt(conversations[conversations.length - 1].updated_at));
     hydrateDraftsFromLocalStorage();
 
     if (conversations.length > 0) conversationService.getAndStoreParticipantsFromChats(conversations);
-  };
+  }, []);
 
   const updateChatImage = async (file) => {
     if (!file) {
