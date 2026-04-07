@@ -1,23 +1,13 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import {
-  afterLayoutStable,
   applyConversationAnchorScroll,
   buildChatListScrollSavePayload,
-  commitScrollToBottom,
-  commitScrollTop,
   readChatListScrollPersisted,
   reapplyChatListPendingScroll,
   writeChatListScrollPersisted,
 } from "@utils/scrollPersistence";
 import { CHAT_SCROLL_BOTTOM_THRESHOLD_PX } from "@utils/constants";
-
-import {
-  CHAT_LIST_POST_FETCH_DELAY_MS,
-  CHAT_LIST_RESIZE_REAPPLY_DEBOUNCE_MS,
-  CHAT_LIST_SCROLL_SUPPRESS_MS,
-  isIosSafariLike,
-} from "./chatListIos.js";
 
 const SAVE_DEBOUNCE_MS = 150;
 const CLAMP_EPS_PX = 2;
@@ -36,8 +26,6 @@ export function useListPersistedScroll(active, p) {
   const anchorRetryRef = useRef(null);
   const fetchCountRef = useRef(0);
   const loadingRef = useRef(false);
-  const suppressReapplyUntilRef = useRef(0);
-  const resizeReapplyTimerRef = useRef(null);
 
   const listScrollRef = p?.listScrollRef;
   const listInnerRef = p?.listInnerRef;
@@ -46,10 +34,6 @@ export function useListPersistedScroll(active, p) {
   const conversationCount = p?.conversationCount;
   const fetchConversations = p?.fetchConversations;
   const storeNewConversations = p?.storeNewConversations;
-
-  const armScrollSuppress = useCallback((ms = CHAT_LIST_SCROLL_SUPPRESS_MS) => {
-    suppressReapplyUntilRef.current = performance.now() + ms;
-  }, []);
 
   useEffect(() => {
     if (!active) return;
@@ -64,7 +48,7 @@ export function useListPersistedScroll(active, p) {
 
   const runRestore = useCallback((container, persisted) => {
     if (!persisted) {
-      commitScrollTop(container, 0);
+      container.scrollTop = 0;
       pinnedBottomRef.current = false;
       pendingScrollRef.current = null;
       anchorRetryRef.current = null;
@@ -74,7 +58,7 @@ export function useListPersistedScroll(active, p) {
     if (persisted.v === 1 && persisted.legacyScrollTop != null) {
       const top = persisted.legacyScrollTop;
       const maxScroll = Math.max(0, container.scrollHeight - container.clientHeight);
-      commitScrollTop(container, Math.min(top, maxScroll));
+      container.scrollTop = Math.min(top, maxScroll);
       pendingScrollRef.current = { kind: "legacyTop", top };
       pinnedBottomRef.current = top >= maxScroll - CLAMP_EPS_PX;
       anchorRetryRef.current = null;
@@ -83,7 +67,7 @@ export function useListPersistedScroll(active, p) {
 
     if (persisted.v === 2) {
       if (persisted.pb === true) {
-        commitScrollToBottom(container);
+        container.scrollTop = container.scrollHeight;
         pinnedBottomRef.current = true;
         pendingScrollRef.current = null;
         anchorRetryRef.current = null;
@@ -103,7 +87,7 @@ export function useListPersistedScroll(active, p) {
         if (sfb != null && Number.isFinite(sfb)) {
           const maxScroll = Math.max(0, container.scrollHeight - container.clientHeight);
           const desiredTop = Math.max(0, container.scrollHeight - container.clientHeight - sfb);
-          commitScrollTop(container, Math.min(desiredTop, maxScroll));
+          container.scrollTop = Math.min(desiredTop, maxScroll);
           pendingScrollRef.current = { kind: "sfb", sfb };
         }
         pinnedBottomRef.current = false;
@@ -113,7 +97,7 @@ export function useListPersistedScroll(active, p) {
       if (sfb != null && Number.isFinite(sfb)) {
         const maxScroll = Math.max(0, container.scrollHeight - container.clientHeight);
         const desiredTop = Math.max(0, container.scrollHeight - container.clientHeight - sfb);
-        commitScrollTop(container, Math.min(desiredTop, maxScroll));
+        container.scrollTop = Math.min(desiredTop, maxScroll);
         pendingScrollRef.current = { kind: "sfb", sfb };
         pinnedBottomRef.current = sfb <= CHAT_SCROLL_BOTTOM_THRESHOLD_PX;
         anchorRetryRef.current = null;
@@ -139,11 +123,12 @@ export function useListPersistedScroll(active, p) {
         return;
       }
       const persisted = readChatListScrollPersisted();
-      afterLayoutStable(() => {
-        if (cancelled || !listScrollRef.current) return;
-        runRestore(listScrollRef.current, persisted);
-        restoreDoneRef.current = true;
-        armScrollSuppress();
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (cancelled || !listScrollRef.current) return;
+          runRestore(listScrollRef.current, persisted);
+          restoreDoneRef.current = true;
+        });
       });
     };
 
@@ -151,7 +136,7 @@ export function useListPersistedScroll(active, p) {
     return () => {
       cancelled = true;
     };
-  }, [active, armScrollSuppress, filteredConversations?.length, searchActive, runRestore, listScrollRef]);
+  }, [active, filteredConversations, searchActive, runRestore, listScrollRef]);
 
   useEffect(() => {
     if (!active) return;
@@ -169,9 +154,8 @@ export function useListPersistedScroll(active, p) {
       writeChatListScrollPersisted(write);
       pendingScrollRef.current = pending;
       pinnedBottomRef.current = pinnedBottom;
-      armScrollSuppress();
     }
-  }, [active, armScrollSuppress, conversationCount, filteredConversations, searchActive, listScrollRef]);
+  }, [active, conversationCount, filteredConversations, searchActive, listScrollRef]);
 
   useEffect(() => {
     if (!active) return;
@@ -213,30 +197,15 @@ export function useListPersistedScroll(active, p) {
         const prevH = el?.scrollHeight ?? 0;
         const prevTop = el?.scrollTop ?? 0;
         storeNewConversations(batch);
-        const persistedAgain = readChatListScrollPersisted();
-        const applyDelta = () => {
-          const cont = listScrollRef.current;
-          if (!cont) return;
-          if (prevH > 0) {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const cont = listScrollRef.current;
+            if (!cont || prevH <= 0) return;
             const delta = cont.scrollHeight - prevH;
-            if (delta !== 0) commitScrollTop(cont, prevTop + delta);
-          }
-        };
-        const finalizeRestore = () => {
-          const cont = listScrollRef.current;
-          if (!cont) return;
-          if (persistedAgain) runRestore(cont, persistedAgain);
-          armScrollSuppress();
-        };
-        afterLayoutStable(() => {
-          applyDelta();
-          if (isIosSafariLike()) {
-            window.setTimeout(() => {
-              afterLayoutStable(finalizeRestore);
-            }, CHAT_LIST_POST_FETCH_DELAY_MS);
-          } else {
-            finalizeRestore();
-          }
+            if (delta !== 0) cont.scrollTop = prevTop + delta;
+            const persistedAgain = readChatListScrollPersisted();
+            if (persistedAgain) runRestore(cont, persistedAgain);
+          });
         });
       })
       .finally(() => {
@@ -244,7 +213,6 @@ export function useListPersistedScroll(active, p) {
       });
   }, [
     active,
-    armScrollSuppress,
     conversationCount,
     fetchConversations,
     filteredConversations?.length,
@@ -257,59 +225,22 @@ export function useListPersistedScroll(active, p) {
   useEffect(() => {
     if (!active) return;
     if (searchActive) return;
+    const inner = listInnerRef.current;
+    const container = listScrollRef.current;
+    if (!inner || !container) return;
 
-    let cancelled = false;
-    let ro = null;
-    let rafAttempts = 0;
-    const maxAttachAttempts = 90;
-
-    const flushReapply = () => {
-      resizeReapplyTimerRef.current = null;
-      const c = listScrollRef.current;
-      if (!c) return;
-      if (performance.now() < suppressReapplyUntilRef.current) return;
-      reapplyChatListPendingScroll(c, pendingScrollRef.current);
-    };
-
-    const onResize = () => {
+    const ro = new ResizeObserver(() => {
       const c = listScrollRef.current;
       if (!c) return;
       if (pinnedBottomRef.current && restoreDoneRef.current) {
-        if (resizeReapplyTimerRef.current != null) {
-          clearTimeout(resizeReapplyTimerRef.current);
-          resizeReapplyTimerRef.current = null;
-        }
-        commitScrollToBottom(c);
+        c.scrollTop = c.scrollHeight;
         return;
       }
       if (pinnedBottomRef.current) return;
-      if (performance.now() < suppressReapplyUntilRef.current) return;
-      if (resizeReapplyTimerRef.current != null) clearTimeout(resizeReapplyTimerRef.current);
-      resizeReapplyTimerRef.current = window.setTimeout(flushReapply, CHAT_LIST_RESIZE_REAPPLY_DEBOUNCE_MS);
-    };
-
-    const tryAttach = () => {
-      if (cancelled) return;
-      const inner = listInnerRef.current;
-      if (!inner) {
-        rafAttempts += 1;
-        if (rafAttempts < maxAttachAttempts) requestAnimationFrame(tryAttach);
-        return;
-      }
-      ro = new ResizeObserver(onResize);
-      ro.observe(inner);
-      onResize();
-    };
-
-    tryAttach();
-    return () => {
-      cancelled = true;
-      ro?.disconnect();
-      if (resizeReapplyTimerRef.current != null) {
-        clearTimeout(resizeReapplyTimerRef.current);
-        resizeReapplyTimerRef.current = null;
-      }
-    };
+      reapplyChatListPendingScroll(c, pendingScrollRef.current);
+    });
+    ro.observe(inner);
+    return () => ro.disconnect();
   }, [active, searchActive, conversationCount, listScrollRef, listInnerRef]);
 
   const onPersist = useCallback(() => {

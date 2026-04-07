@@ -32,7 +32,6 @@ export const CustomVerticalScrollbar = ({
   customClassName = "",
   childrenClassName = "",
   customStyle,
-  contentStyle,
   autoHeight = false,
   autoHeightMax,
   ...rest
@@ -207,7 +206,6 @@ export const CustomVerticalScrollbar = ({
       <div
         ref={containerRef}
         id={containerId}
-        style={contentStyle}
         className={`ui:h-full ui:w-full ui:min-w-0 ui:overflow-y-scroll ui:[&::-webkit-scrollbar]:hidden ${resolvedContentClassName}`}
         onScroll={handleScroll}
       >

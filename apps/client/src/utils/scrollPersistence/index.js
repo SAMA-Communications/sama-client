@@ -7,6 +7,5 @@
  */
 
 export * from "./core.js";
-export * from "./scrollCommit.js";
 export * from "./conversationListScroll.js";
 export * from "./messageThreadScroll.js";

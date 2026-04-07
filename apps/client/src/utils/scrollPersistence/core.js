@@ -1,7 +1,5 @@
 import { CHAT_SCROLL_BOTTOM_THRESHOLD_PX } from "../constants";
 
-import { commitScrollTop } from "./scrollCommit.js";
-
 /**
  * Shared scroll persistence primitives for vertically scrollable lists.
  *
@@ -98,7 +96,7 @@ export function applyAnchorScrollByAttribute(
   }
   if (!anchorElement) return false;
   const offsetPx = offsetFromViewportTopPx ?? 0;
-  commitScrollTop(scrollContainer, elementTopInScrollContainer(anchorElement, scrollContainer) - offsetPx);
+  scrollContainer.scrollTop = elementTopInScrollContainer(anchorElement, scrollContainer) - offsetPx;
   return true;
 }
 
@@ -127,12 +125,12 @@ export function reapplyPendingScrollAfterResize(scrollContainer, pendingScrollSt
     return;
   }
   if (pendingScrollState.kind === "sfb") {
-    commitScrollTop(scrollContainer, scrollContainerMaxScrollTop(scrollContainer) - pendingScrollState.sfb);
+    scrollContainer.scrollTop = Math.max(0, scrollContainerMaxScrollTop(scrollContainer) - pendingScrollState.sfb);
     return;
   }
   if (pendingScrollState.kind === "legacyTop") {
     const maxScrollTop = scrollContainerMaxScrollTop(scrollContainer);
-    commitScrollTop(scrollContainer, Math.min(pendingScrollState.top, maxScrollTop));
+    scrollContainer.scrollTop = Math.min(pendingScrollState.top, maxScrollTop);
   }
 }
 
