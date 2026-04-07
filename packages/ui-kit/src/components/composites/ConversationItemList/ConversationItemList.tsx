@@ -15,7 +15,23 @@ import { LOAD_MORE_EDGE_PX } from "@utils/constants";
 function preserveScrollAfterAppendBelow(container: HTMLDivElement, prevScrollHeight: number, prevScrollTop: number) {
   if (prevScrollHeight <= 0) return;
   const delta = container.scrollHeight - prevScrollHeight;
-  if (delta !== 0) container.scrollTop = prevScrollTop + delta;
+  if (delta === 0) return;
+  const target = prevScrollTop + delta;
+  const apply = () => {
+    container.scrollTop = target;
+    if (typeof container.scrollTo === "function") {
+      try {
+        container.scrollTo(0, target);
+      } catch {
+        container.scrollTo({ top: target, left: 0 });
+      }
+    }
+  };
+  apply();
+  requestAnimationFrame(() => {
+    apply();
+    requestAnimationFrame(apply);
+  });
 }
 
 export const ConversationItemList = ({
@@ -30,6 +46,7 @@ export const ConversationItemList = ({
   scrollContainerId = "conversationItemsScrollable",
   scrollbarClassName,
   scrollbarContentClassName,
+  scrollbarViewportStyle,
   ...rest
 }: ConversationItemListProps) => {
   const { useConversations } = getAdapters();
@@ -94,7 +111,8 @@ export const ConversationItemList = ({
   const onScrollNearBottom = useCallback(
     (scrollFromBottom: number) => {
       if (!hasMoreRef.current || isLoadingRef.current) return;
-      if (scrollFromBottom > LOAD_MORE_EDGE_PX) return;
+      const fromBottom = Math.max(0, Number.isFinite(scrollFromBottom) ? scrollFromBottom : 0);
+      if (fromBottom > LOAD_MORE_EDGE_PX) return;
       loadMore();
     },
     [loadMore],
@@ -124,6 +142,7 @@ export const ConversationItemList = ({
         persistScrollPosition={!disableBuiltinScrollPersistence}
         customClassName={clsx("ui:min-h-0 ui:flex-1 ui:w-full", scrollbarClassName)}
         childrenClassName={scrollbarContentClassName}
+        contentStyle={scrollbarViewportStyle}
         onScroll={mergedOnScroll}
       >
         <div ref={listInnerRef} className="ui:flex ui:w-full ui:min-w-0 ui:flex-col">

@@ -60,6 +60,7 @@ export default function ChatList() {
         listInnerRef={listInnerRef}
         disableBuiltinScrollPersistence
         onListScrollFromBottom={onPersist}
+        scrollbarViewportStyle={{ WebkitOverflowScrolling: "touch" }}
       />
     );
   }, [filteredConversations, onPersist, selectedConversation]);

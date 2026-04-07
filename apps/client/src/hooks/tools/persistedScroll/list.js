@@ -12,6 +12,13 @@ import {
 } from "@utils/scrollPersistence";
 import { CHAT_SCROLL_BOTTOM_THRESHOLD_PX } from "@utils/constants";
 
+import {
+  CHAT_LIST_POST_FETCH_DELAY_MS,
+  CHAT_LIST_RESIZE_REAPPLY_DEBOUNCE_MS,
+  CHAT_LIST_SCROLL_SUPPRESS_MS,
+  isIosSafariLike,
+} from "./chatListIos.js";
+
 const SAVE_DEBOUNCE_MS = 150;
 const CLAMP_EPS_PX = 2;
 const EXTRA_FETCH_CAP = 48;
@@ -29,6 +36,8 @@ export function useListPersistedScroll(active, p) {
   const anchorRetryRef = useRef(null);
   const fetchCountRef = useRef(0);
   const loadingRef = useRef(false);
+  const suppressReapplyUntilRef = useRef(0);
+  const resizeReapplyTimerRef = useRef(null);
 
   const listScrollRef = p?.listScrollRef;
   const listInnerRef = p?.listInnerRef;
@@ -37,6 +46,10 @@ export function useListPersistedScroll(active, p) {
   const conversationCount = p?.conversationCount;
   const fetchConversations = p?.fetchConversations;
   const storeNewConversations = p?.storeNewConversations;
+
+  const armScrollSuppress = useCallback((ms = CHAT_LIST_SCROLL_SUPPRESS_MS) => {
+    suppressReapplyUntilRef.current = performance.now() + ms;
+  }, []);
 
   useEffect(() => {
     if (!active) return;
@@ -130,6 +143,7 @@ export function useListPersistedScroll(active, p) {
         if (cancelled || !listScrollRef.current) return;
         runRestore(listScrollRef.current, persisted);
         restoreDoneRef.current = true;
+        armScrollSuppress();
       });
     };
 
@@ -137,7 +151,7 @@ export function useListPersistedScroll(active, p) {
     return () => {
       cancelled = true;
     };
-  }, [active, filteredConversations?.length, searchActive, runRestore, listScrollRef]);
+  }, [active, armScrollSuppress, filteredConversations?.length, searchActive, runRestore, listScrollRef]);
 
   useEffect(() => {
     if (!active) return;
@@ -155,8 +169,9 @@ export function useListPersistedScroll(active, p) {
       writeChatListScrollPersisted(write);
       pendingScrollRef.current = pending;
       pinnedBottomRef.current = pinnedBottom;
+      armScrollSuppress();
     }
-  }, [active, conversationCount, filteredConversations, searchActive, listScrollRef]);
+  }, [active, armScrollSuppress, conversationCount, filteredConversations, searchActive, listScrollRef]);
 
   useEffect(() => {
     if (!active) return;
@@ -198,15 +213,30 @@ export function useListPersistedScroll(active, p) {
         const prevH = el?.scrollHeight ?? 0;
         const prevTop = el?.scrollTop ?? 0;
         storeNewConversations(batch);
-        afterLayoutStable(() => {
+        const persistedAgain = readChatListScrollPersisted();
+        const applyDelta = () => {
           const cont = listScrollRef.current;
           if (!cont) return;
           if (prevH > 0) {
             const delta = cont.scrollHeight - prevH;
             if (delta !== 0) commitScrollTop(cont, prevTop + delta);
           }
-          const persistedAgain = readChatListScrollPersisted();
+        };
+        const finalizeRestore = () => {
+          const cont = listScrollRef.current;
+          if (!cont) return;
           if (persistedAgain) runRestore(cont, persistedAgain);
+          armScrollSuppress();
+        };
+        afterLayoutStable(() => {
+          applyDelta();
+          if (isIosSafariLike()) {
+            window.setTimeout(() => {
+              afterLayoutStable(finalizeRestore);
+            }, CHAT_LIST_POST_FETCH_DELAY_MS);
+          } else {
+            finalizeRestore();
+          }
         });
       })
       .finally(() => {
@@ -214,6 +244,7 @@ export function useListPersistedScroll(active, p) {
       });
   }, [
     active,
+    armScrollSuppress,
     conversationCount,
     fetchConversations,
     filteredConversations?.length,
@@ -232,15 +263,29 @@ export function useListPersistedScroll(active, p) {
     let rafAttempts = 0;
     const maxAttachAttempts = 90;
 
+    const flushReapply = () => {
+      resizeReapplyTimerRef.current = null;
+      const c = listScrollRef.current;
+      if (!c) return;
+      if (performance.now() < suppressReapplyUntilRef.current) return;
+      reapplyChatListPendingScroll(c, pendingScrollRef.current);
+    };
+
     const onResize = () => {
       const c = listScrollRef.current;
       if (!c) return;
       if (pinnedBottomRef.current && restoreDoneRef.current) {
+        if (resizeReapplyTimerRef.current != null) {
+          clearTimeout(resizeReapplyTimerRef.current);
+          resizeReapplyTimerRef.current = null;
+        }
         commitScrollToBottom(c);
         return;
       }
       if (pinnedBottomRef.current) return;
-      reapplyChatListPendingScroll(c, pendingScrollRef.current);
+      if (performance.now() < suppressReapplyUntilRef.current) return;
+      if (resizeReapplyTimerRef.current != null) clearTimeout(resizeReapplyTimerRef.current);
+      resizeReapplyTimerRef.current = window.setTimeout(flushReapply, CHAT_LIST_RESIZE_REAPPLY_DEBOUNCE_MS);
     };
 
     const tryAttach = () => {
@@ -260,6 +305,10 @@ export function useListPersistedScroll(active, p) {
     return () => {
       cancelled = true;
       ro?.disconnect();
+      if (resizeReapplyTimerRef.current != null) {
+        clearTimeout(resizeReapplyTimerRef.current);
+        resizeReapplyTimerRef.current = null;
+      }
     };
   }, [active, searchActive, conversationCount, listScrollRef, listInnerRef]);
 

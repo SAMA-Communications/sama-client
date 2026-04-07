@@ -29,6 +29,8 @@ export interface CustomVerticalScrollbarProps {
   className?: string;
   /** Optional class for the scrollable content area */
   contentClassName?: string;
+  /** Optional style for the scrollable viewport (e.g. `-webkit-overflow-scrolling` on iOS). */
+  contentStyle?: CSSProperties;
   /** Alias for className (backward compat) */
   customClassName?: string;
   /** Alias for contentClassName (backward compat) */

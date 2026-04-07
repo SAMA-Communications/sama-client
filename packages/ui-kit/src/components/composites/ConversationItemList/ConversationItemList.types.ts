@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import type { CSSProperties, RefObject } from "react";
 
 import type { Conversation } from "types/samaWssModels";
 
@@ -31,4 +31,6 @@ export interface ConversationItemListProps extends Omit<WrapperRootProps<"div">,
   scrollbarClassName?: string;
   /** Class names for the scrollable viewport (`childrenClassName` on the scrollbar). */
   scrollbarContentClassName?: string;
+  /** Inline style for the scroll viewport (e.g. iOS momentum scrolling). */
+  scrollbarViewportStyle?: CSSProperties;
 }
