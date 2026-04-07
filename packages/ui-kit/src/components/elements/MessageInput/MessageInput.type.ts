@@ -1,4 +1,6 @@
+/** Chat composer; requires `getAdapters()` (drafts/messages) like `ConversationInput`. */
 export interface MessageInputProps {
+  /** Ref to the internal text field; typed `any` in source for legacy integration. */
   inputTextRef: React.RefObject<any>;
   isBlockedConv: boolean;
   isEditAction: boolean;

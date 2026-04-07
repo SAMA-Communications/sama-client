@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import type { WrapperRootProps } from "@elements/WrapperRoot";
 
+/** Search field; `onChange` is `(value: string) => void`, not a DOM change event. */
 export interface SearchInputProps extends Omit<WrapperRootProps<"div">, "as" | "children" | "onChange"> {
   /** Placeholder text. */
   placeholder?: string;

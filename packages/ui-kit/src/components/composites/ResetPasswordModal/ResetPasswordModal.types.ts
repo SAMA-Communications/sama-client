@@ -4,6 +4,7 @@ export interface ResetPasswordFormData {
   new_password?: string;
 }
 
+/** OTP + new password steps; booleans from async handlers drive navigation. */
 export interface ResetPasswordModalProps {
   isOpen: boolean;
   onClose: () => void;
