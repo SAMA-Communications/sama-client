@@ -108,25 +108,33 @@ export const CustomVerticalScrollbar = ({
     }
   }, [containerRef, containerId, shouldPersistScroll, minThumbHeight, autoHideDelay, onScroll, onScrollStop, scheduleHide]);
 
+  const handleScrollRef = useRef(handleScroll);
+  handleScrollRef.current = handleScroll;
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+
     if (shouldPersistScroll) {
       try {
         const saved = localStorage.getItem(`scroll_pos_${containerId}`);
         if (saved != null) container.scrollTop = Number(saved);
       } catch (_) {}
     }
-    container.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    const ro = new ResizeObserver(() => handleScroll());
+
+    const runScrollHandlers = () => handleScrollRef.current();
+
+    container.addEventListener("scroll", runScrollHandlers, { passive: true });
+    runScrollHandlers();
+    const ro = new ResizeObserver(() => runScrollHandlers());
     ro.observe(container);
+
     return () => {
-      container.removeEventListener("scroll", handleScroll);
+      container.removeEventListener("scroll", runScrollHandlers);
       ro.disconnect();
       if (scrollStopTimerRef.current) clearTimeout(scrollStopTimerRef.current);
     };
-  }, [containerRef, containerId, shouldPersistScroll, handleScroll]);
+  }, [containerRef, containerId, shouldPersistScroll]);
 
   const startDrag = useCallback(
     (e: React.MouseEvent) => {

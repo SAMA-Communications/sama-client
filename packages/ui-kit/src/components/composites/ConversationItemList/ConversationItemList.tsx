@@ -30,9 +30,13 @@ export const ConversationItemList = ({
   const hasMoreRef = useRef(true);
   const conversationsRef = useRef(conversations);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const fetchConversationsRef = useRef(fetchConversations);
+  const storeNewConversationsRef = useRef(storeNewConversations);
 
   hasMoreRef.current = hasMore;
   conversationsRef.current = conversations;
+  fetchConversationsRef.current = fetchConversations;
+  storeNewConversationsRef.current = storeNewConversations;
 
   const convItemOnClickFunc = useCallback(
     (cid: string) => {
@@ -46,7 +50,8 @@ export const ConversationItemList = ({
     if (!hasMoreRef.current || isLoadingRef.current) return;
 
     isLoadingRef.current = true;
-    fetchConversations()
+    fetchConversationsRef
+      .current()
       .then((batch) => {
         const el = scrollContainerRef.current;
         const prevScrollHeight = el?.scrollHeight ?? 0;
@@ -57,7 +62,7 @@ export const ConversationItemList = ({
           setHasMore(false);
           return;
         }
-        storeNewConversations(batch);
+        storeNewConversationsRef.current(batch);
 
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
@@ -71,7 +76,7 @@ export const ConversationItemList = ({
       .finally(() => {
         isLoadingRef.current = false;
       });
-  }, [fetchConversations, storeNewConversations]);
+  }, []);
 
   const onScrollNearBottom = useCallback(
     (scrollFromBottom: number) => {
