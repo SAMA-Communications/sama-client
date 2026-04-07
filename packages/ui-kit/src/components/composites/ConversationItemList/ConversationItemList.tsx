@@ -28,9 +28,11 @@ export const ConversationItemList = ({
   const [hasMore, setHasMore] = useState(true);
   const isLoadingRef = useRef(false);
   const hasMoreRef = useRef(true);
+  const conversationsRef = useRef(conversations);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   hasMoreRef.current = hasMore;
+  conversationsRef.current = conversations;
 
   const convItemOnClickFunc = useCallback(
     (cid: string) => {
@@ -46,12 +48,25 @@ export const ConversationItemList = ({
     isLoadingRef.current = true;
     fetchConversations()
       .then((batch) => {
+        const el = scrollContainerRef.current;
+        const prevScrollHeight = el?.scrollHeight ?? 0;
+        const prevScrollTop = el?.scrollTop ?? 0;
+
         if (!batch.length) {
           hasMoreRef.current = false;
           setHasMore(false);
           return;
         }
         storeNewConversations(batch);
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const c = scrollContainerRef.current;
+            if (!c || prevScrollHeight <= 0) return;
+            const delta = c.scrollHeight - prevScrollHeight;
+            if (delta !== 0) c.scrollTop = prevScrollTop + delta;
+          });
+        });
       })
       .finally(() => {
         isLoadingRef.current = false;
