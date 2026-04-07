@@ -108,7 +108,7 @@ export function useListPersistedScroll(active, p) {
   useEffect(() => {
     if (!active) return;
     if (searchActive) return;
-    if (conversationCount <= 0) return;
+    if (!filteredConversations?.length) return;
     if (restoreDoneRef.current) return;
 
     let cancelled = false;
@@ -136,7 +136,7 @@ export function useListPersistedScroll(active, p) {
     return () => {
       cancelled = true;
     };
-  }, [active, conversationCount, searchActive, runRestore, listScrollRef]);
+  }, [active, filteredConversations, searchActive, runRestore, listScrollRef]);
 
   useEffect(() => {
     if (!active) return;
@@ -202,10 +202,7 @@ export function useListPersistedScroll(active, p) {
             const cont = listScrollRef.current;
             if (!cont || prevH <= 0) return;
             const delta = cont.scrollHeight - prevH;
-            if (delta !== 0) {
-              cont.scrollTop = prevTop + delta;
-              return;
-            }
+            if (delta !== 0) cont.scrollTop = prevTop + delta;
             const persistedAgain = readChatListScrollPersisted();
             if (persistedAgain) runRestore(cont, persistedAgain);
           });
@@ -232,32 +229,19 @@ export function useListPersistedScroll(active, p) {
     const container = listScrollRef.current;
     if (!inner || !container) return;
 
-    let rafOuter = 0;
-    let rafInner = 0;
     const ro = new ResizeObserver(() => {
-      cancelAnimationFrame(rafOuter);
-      rafOuter = requestAnimationFrame(() => {
-        cancelAnimationFrame(rafInner);
-        rafInner = requestAnimationFrame(() => {
-          const c = listScrollRef.current;
-          if (!c) return;
-          if (pinnedBottomRef.current && restoreDoneRef.current) {
-            c.scrollTop = c.scrollHeight;
-            return;
-          }
-          if (pinnedBottomRef.current) return;
-          reapplyChatListPendingScroll(c, pendingScrollRef.current);
-        });
-      });
+      const c = listScrollRef.current;
+      if (!c) return;
+      if (pinnedBottomRef.current && restoreDoneRef.current) {
+        c.scrollTop = c.scrollHeight;
+        return;
+      }
+      if (pinnedBottomRef.current) return;
+      reapplyChatListPendingScroll(c, pendingScrollRef.current);
     });
     ro.observe(inner);
-    return () => {
-      cancelAnimationFrame(rafOuter);
-      cancelAnimationFrame(rafInner);
-      ro.disconnect();
-    };
-    /* `conversationCount > 0`: re-attach when the list replaces skeleton; omit raw count to avoid reconnecting on each fetch batch. */
-  }, [active, searchActive, conversationCount > 0, listScrollRef, listInnerRef]);
+    return () => ro.disconnect();
+  }, [active, searchActive, conversationCount, listScrollRef, listInnerRef]);
 
   const onPersist = useCallback(() => {
     if (!active) return;
