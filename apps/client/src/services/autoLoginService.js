@@ -106,7 +106,7 @@ class AutoLoginService {
       }, 20);
     } catch (error) {
       handleLoginFailure();
-      showCustomAlert(error.message, "warning");
+      showCustomAlert(error.message ? error.message : "on login error", "warning");
     }
   }
 

@@ -28,11 +28,9 @@ export const ConversationItemList = ({
   const [hasMore, setHasMore] = useState(true);
   const isLoadingRef = useRef(false);
   const hasMoreRef = useRef(true);
-  const conversationsRef = useRef(conversations);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   hasMoreRef.current = hasMore;
-  conversationsRef.current = conversations;
 
   const convItemOnClickFunc = useCallback(
     (cid: string) => {
