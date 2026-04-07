@@ -26,6 +26,8 @@ export function useListPersistedScroll(active, p) {
   const anchorRetryRef = useRef(null);
   const fetchCountRef = useRef(0);
   const loadingRef = useRef(false);
+  /** Skip ResizeObserver while we adjust scroll after a fetch (avoids fighting rAF + RO). */
+  const suppressResizeReapplyRef = useRef(false);
 
   const listScrollRef = p?.listScrollRef;
   const listInnerRef = p?.listInnerRef;
@@ -200,11 +202,34 @@ export function useListPersistedScroll(active, p) {
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             const cont = listScrollRef.current;
-            if (!cont || prevH <= 0) return;
-            const delta = cont.scrollHeight - prevH;
-            if (delta !== 0) cont.scrollTop = prevTop + delta;
-            const persistedAgain = readChatListScrollPersisted();
-            if (persistedAgain) runRestore(cont, persistedAgain);
+            if (!cont) return;
+
+            suppressResizeReapplyRef.current = true;
+            try {
+              const retry = anchorRetryRef.current;
+              if (retry && applyConversationAnchorScroll(cont, retry.cid, retry.oy)) {
+                anchorRetryRef.current = null;
+                const { write, pending, pinnedBottom } = buildChatListScrollSavePayload(cont);
+                writeChatListScrollPersisted(write);
+                pendingScrollRef.current = pending;
+                pinnedBottomRef.current = pinnedBottom;
+                return;
+              }
+
+              const delta = cont.scrollHeight - prevH;
+              if (prevH > 0 && delta !== 0) {
+                const maxTop = Math.max(0, cont.scrollHeight - cont.clientHeight);
+                cont.scrollTop = Math.min(prevTop + delta, maxTop);
+              }
+
+              const { pending, pinnedBottom } = buildChatListScrollSavePayload(cont);
+              pendingScrollRef.current = pending;
+              pinnedBottomRef.current = pinnedBottom;
+            } finally {
+              requestAnimationFrame(() => {
+                suppressResizeReapplyRef.current = false;
+              });
+            }
           });
         });
       })
@@ -230,6 +255,7 @@ export function useListPersistedScroll(active, p) {
     if (!inner || !container) return;
 
     const ro = new ResizeObserver(() => {
+      if (suppressResizeReapplyRef.current) return;
       const c = listScrollRef.current;
       if (!c) return;
       if (pinnedBottomRef.current && restoreDoneRef.current) {
