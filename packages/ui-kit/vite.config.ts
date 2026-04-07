@@ -14,7 +14,7 @@ export default defineConfig({
     alias: {
       "@src": createPath("src"),
       "@elements": createPath("src/components/elements"),
-      "@composite": createPath("src/components/composite"),
+      "@composites": createPath("src/components/composites"),
 
       "@adapters": createPath("src/adapters"),
 
@@ -25,7 +25,7 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: path.resolve(__dirname, "src/index.js"),
+      entry: path.resolve(__dirname, "src/index.ts"),
       name: "SAMAuikit",
       fileName: (format) => `@sama-communications.ui-kit.${format}.js`,
       formats: ["es", "cjs"],

@@ -1,10 +1,21 @@
+import { memo } from "react";
+
+import { clsx } from "clsx";
 import { Oval } from "react-loader-spinner";
 
-import { OvalLoaderProps } from "./OvalLoader.types";
+import type { OvalLoaderProps } from "@elements/OvalLoader/OvalLoader.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
-export const OvalLoader = ({ height = 32, width = 32, color = "#ffffff", wrapperClassName = "" }: OvalLoaderProps) => {
+export const OvalLoader = memo(function OvalLoader({
+  height = 32,
+  width = 32,
+  color = "#ffffff",
+  wrapperClassName = "",
+  className,
+  ...rest
+}: OvalLoaderProps) {
   return (
-    <div data-testid="oval-loader" className={wrapperClassName}>
+    <WrapperRoot data-testid="oval-loader" className={clsx(wrapperClassName, className)} {...rest}>
       <Oval
         height={height}
         width={width}
@@ -15,6 +26,7 @@ export const OvalLoader = ({ height = 32, width = 32, color = "#ffffff", wrapper
         ariaLabel="oval-loading"
         visible
       />
-    </div>
+    </WrapperRoot>
   );
-};
+});
+

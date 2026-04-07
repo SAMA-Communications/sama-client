@@ -1,11 +1,12 @@
+import { AlertCircle } from "lucide-react";
 import { Blurhash } from "react-blurhash";
 import { Oval } from "react-loader-spinner";
 
-import { AlertCircle } from "lucide-react";
+import { MediaBlurHashProps } from "@elements/MediaBlurHash/MediaBlurHash.types";
 
-import { MediaBlurHashProps } from "./MediaBlurHash.types";
+import { DEFAULT_BLUR_HASH } from "@utils/constants";
 
-export const DEFAULT_BLUR_HASH = "U27nLE$*00_N^k,@s9xu#7$2$%xtVD-B-pkW";
+export { DEFAULT_BLUR_HASH } from "../../../utils/constants";
 
 export const MediaBlurHash = ({
   status = "loading",

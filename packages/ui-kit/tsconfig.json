@@ -18,12 +18,18 @@
     "strict": true,
 
     "paths": {
-      "@src": ["src"],
-      "@elements": ["src/components/elements"],
-      "@composite": ["src/components/composite"],
-      "@adapters": ["src/adapters"],
-      "@types": ["src/types"],
-      "@utils": ["src/utils"]
+      "@src": ["."],
+      "@src/*": ["./*"],
+      "@elements": ["components/elements"],
+      "@elements/*": ["components/elements/*"],
+      "@composites": ["components/composites"],
+      "@composites/*": ["components/composites/*"],
+      "@adapters": ["adapters"],
+      "@adapters/*": ["adapters/*"],
+      "@types": ["types"],
+      "@types/*": ["types/*"],
+      "@utils": ["utils"],
+      "@utils/*": ["utils/*"]
     }
   },
   "include": ["src"],

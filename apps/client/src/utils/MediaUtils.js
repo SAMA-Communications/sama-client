@@ -1,16 +1,9 @@
-import imageCompression from "browser-image-compression";
 import { encode } from "blurhash";
+import imageCompression from "browser-image-compression";
 
 import { ALLOWED_FILE_FORMATS, DEFAULT_BLUR_HASH } from "@utils/constants.js";
 
-const imageMimeTypes = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/gif",
-  "image/bmp",
-  "image/heic",
-];
+const imageMimeTypes = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/bmp", "image/heic"];
 const videoMimeTypes = ["video/mp4", "video/webm", "video/quicktime"];
 
 const imageExtensions = ["jpeg", "jpg", "gif", "bmp", "png", "heic", "HEIC"];
@@ -19,18 +12,9 @@ const videoExtensions = ["mp4", "webm", "mov"];
 export function chunkMedia(media) {
   const len = media.length;
   if (len <= 2) return [media];
-  if (len <= 5)
-    return [
-      media.slice(0, Math.ceil(len / 2)),
-      media.slice(Math.ceil(len / 2)),
-    ];
+  if (len <= 5) return [media.slice(0, Math.ceil(len / 2)), media.slice(Math.ceil(len / 2))];
   if (len <= 9) return [media.slice(0, 3), media.slice(3, 6), media.slice(6)];
-  return [
-    media.slice(0, 3),
-    media.slice(3, 6),
-    media.slice(6, 9),
-    media.slice(9),
-  ];
+  return [media.slice(0, 3), media.slice(3, 6), media.slice(6, 9), media.slice(9)];
 }
 
 export function extractFilesFromClipboard(clipboardItems) {
@@ -57,9 +41,7 @@ export function formatFileSize(sizeInKb) {
 }
 
 export async function getFileSize(url) {
-  return ((await fetch(url)).headers.get("Content-Length") / 1000000).toFixed(
-    2
-  );
+  return ((await fetch(url)).headers.get("Content-Length") / 1000000).toFixed(2);
 }
 
 export function getFileType(fileName, mimeType) {
@@ -119,10 +101,7 @@ export async function processFile(fileObj, maxSizeMB, maxWidthOrHeight) {
 
   const fileExtension = file.name.split(".").slice(-1)[0];
 
-  if (
-    !ALLOWED_FILE_FORMATS.includes(file.type) &&
-    !["heic", "HEIC"].includes(fileExtension)
-  ) {
+  if (!ALLOWED_FILE_FORMATS.includes(file.type) && !["heic", "HEIC"].includes(fileExtension)) {
     throw new Error("Please select an image file.", {
       message: "Please select an image file.",
     });
@@ -147,9 +126,7 @@ export async function processFile(fileObj, maxSizeMB, maxWidthOrHeight) {
 
     try {
       const firstFrameUrl = await extractFirstFrame(file);
-      file.blurHash = firstFrameUrl
-        ? await encodeImageToBlurhash(firstFrameUrl)
-        : DEFAULT_BLUR_HASH;
+      file.blurHash = firstFrameUrl ? await encodeImageToBlurhash(firstFrameUrl) : DEFAULT_BLUR_HASH;
     } catch (e) {
       file.blurHash = DEFAULT_BLUR_HASH;
     }

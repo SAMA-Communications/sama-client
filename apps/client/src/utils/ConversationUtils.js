@@ -6,7 +6,7 @@ export function getLastUpdateTime(convUpdatedAt, lastMessageTime) {
       ? lastMessageTime / 1000000000 < 10
         ? lastMessageTime * 1000
         : lastMessageTime
-      : Date.parse(convUpdatedAt)
+      : Date.parse(convUpdatedAt),
   );
   const tToday = new Date(Date.now());
 
@@ -26,9 +26,7 @@ export function getLastUpdateTime(convUpdatedAt, lastMessageTime) {
 
   return tToday.getDay() - t.getDay()
     ? WEEK_DAYS[t.getDay()]
-    : t.getHours() +
-        ":" +
-        (t.getMinutes() < 10 ? "0" + t.getMinutes() : t.getMinutes());
+    : t.getHours() + ":" + (t.getMinutes() < 10 ? "0" + t.getMinutes() : t.getMinutes());
 }
 
 export function extractForwardedMids(hash) {
@@ -44,7 +42,5 @@ export function extractForwardedMids(hash) {
 }
 
 export function getOpponentId(chatObject, currentUserId) {
-  return chatObject.opponent_id === currentUserId
-    ? chatObject.owner_id
-    : chatObject.opponent_id;
+  return chatObject.opponent_id === currentUserId ? chatObject.owner_id : chatObject.opponent_id;
 }

@@ -10,11 +10,7 @@ class EventEmitter {
 
   resubscribe(eventName, callback) {
     !this.events[eventName] && (this.events[eventName] = []);
-    if (
-      !this.events[eventName].find(
-        (eventCallback) => callback.toString() === eventCallback.toString()
-      )
-    ) {
+    if (!this.events[eventName].find((eventCallback) => callback.toString() === eventCallback.toString())) {
       this.events[eventName].push(callback);
     }
   }
@@ -36,7 +32,7 @@ class EventEmitter {
 
   unsubscribe(eventName, callback) {
     this.events[eventName] = this.events[eventName].filter(
-      (eventCallback) => callback.toString() !== eventCallback.toString()
+      (eventCallback) => callback.toString() !== eventCallback.toString(),
     );
   }
 

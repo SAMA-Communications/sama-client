@@ -45,8 +45,7 @@ export function getLastVisitTime(timestamp, userLocale) {
   if (timestamp >= todayStart && timestamp <= now) {
     baseMessage += "at " + visitDate.toLocaleTimeString(userLocale, options);
   } else if (timestamp >= yesterdayStart && timestamp < todayStart) {
-    baseMessage +=
-      "yesterday at " + visitDate.toLocaleTimeString(userLocale, options);
+    baseMessage += "yesterday at " + visitDate.toLocaleTimeString(userLocale, options);
   } else if (timestamp >= yearToStart && timestamp < yesterdayStart) {
     baseMessage +=
       "on " +
@@ -76,24 +75,21 @@ export function getUserInitials(user) {
   const userInfo = user
     ? user
     : localStorage.getItem("sessionId")
-    ? jwtDecode(localStorage.getItem("sessionId"))
-    : null;
+      ? jwtDecode(localStorage.getItem("sessionId"))
+      : null;
 
   if (!userInfo) {
     return "AA";
   }
 
-  const userObject =
-    store.getState().participants.entities[userInfo._id] || user;
+  const userObject = store.getState().participants.entities[userInfo._id] || user;
   if (!userObject || !Object.keys(userObject).length || !userObject.login) {
     return "AA";
   }
 
   const { first_name, last_name, login } = userObject;
   if (first_name) {
-    return last_name
-      ? first_name.slice(0, 1) + last_name.slice(0, 1)
-      : first_name.slice(0, 2);
+    return last_name ? first_name.slice(0, 1) + last_name.slice(0, 1) : first_name.slice(0, 2);
   }
 
   return login.slice(0, 2).toUpperCase();

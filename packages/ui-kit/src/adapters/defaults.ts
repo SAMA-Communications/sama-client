@@ -1,6 +1,7 @@
-import { Conversation, User } from "types/samaWssModels";
+import type { Conversation, User } from "types/samaWssModels";
 
-import { SamaAdapters } from "./types";
+import type { DraftPatch } from "@adapters/types";
+import { SamaAdapters } from "@adapters/types";
 
 const defaultuser = {
   _id: "default_id",
@@ -27,27 +28,43 @@ const defaultconversation = {
 
 const useDrafts = () => {
   const syncDraftByCid = (cid: string, oldDraft: object, convUpdatedAt: string) => ({});
-  const saveDraft = (cid: string, options: { text?: string; replied_mid?: string; edited_mid?: string }) => {};
+  const saveDraft = (cid: string, options: DraftPatch) => {};
+  const flushDraftToLocalStorage = (cid: string) => {};
   const saveLastInputText = (cid: string, text: string) => {};
 
   const removeDraft = (cid: string) => {};
-  const removeDraftWithOptions = (cid: string, fields: string | string[]) => {};
+  const removeDraftWithOptions = (cid: string, fields: string | string[], opts?: { syncReduxNow?: boolean }) => {};
+  const purgeDraft = (cid: string) => {};
+  const pushLocalDraftToReduxNow = (cid: string) => {};
+  const savePreEditComposeText = (cid: string, text: string) => {};
+  const consumePreEditComposeText = (cid: string) => "";
 
-  const getDraft = (cid: string) => ({ text: "", replied_mid: "", edited_mid: "", updated_at: 0 });
+  const getDraft = (cid: string) => ({});
+  const getDraftField = (cid: string, field: string) => undefined;
   const getDraftMessage = (cid: string) => "";
+  const getDraftRepliedMessageId = (cid: string) => undefined;
+  const getDraftEditedMessageId = (cid: string) => undefined;
   const getLastInputText = (cid: string) => "";
   const getExternalProps = () => ({});
 
   return {
     syncDraftByCid,
     saveDraft,
+    flushDraftToLocalStorage,
     saveLastInputText,
 
     removeDraft,
     removeDraftWithOptions,
+    purgeDraft,
+    pushLocalDraftToReduxNow,
+    savePreEditComposeText,
+    consumePreEditComposeText,
 
     getDraft,
+    getDraftField,
     getDraftMessage,
+    getDraftRepliedMessageId,
+    getDraftEditedMessageId,
     getLastInputText,
     getExternalProps,
   };
@@ -94,16 +111,14 @@ const useConversations = () => {
 
   const getConversationById = (cid: string) => defaultconversation;
   const getSelectedConversation = () => defaultconversation;
-  const fetchConversations = async (): Promise<Conversation[]> => {
-    return Promise.resolve([defaultconversation]);
-  };
+  const fetchConversations = async (): Promise<Conversation[]> => Promise.resolve([defaultconversation]);
 
   const updateChatImage = (file: File) => {};
   const updateNameAndDescription = (data: { name?: string; description?: string }) => true;
 
   const sendTypingStatus = (cid: string) => {};
 
-  const deleteAndLevae = () => {};
+  const deleteAndLeave = () => {};
 
   return {
     storeNewConversations,
@@ -118,53 +133,9 @@ const useConversations = () => {
 
     sendTypingStatus,
 
-    deleteAndLevae,
+    deleteAndLeave,
   };
 };
-
-function useHistory() {
-  const openProfileById = (uid: string) => {};
-  const openCurrentUserProfile = () => {};
-  const openContextMenuWithParams = (params: any) => {};
-  const openAddParticipantsWindow = () => {};
-  const openEditUserProfileWindow = () => {};
-  const openEditConversationWindow = () => {};
-  const openForwardSection = () => {};
-  const openChatOrPaticipantInfo = (conversation?: Conversation, participant?: User | null | undefined) => {};
-  const openAttachmentHub = () => {};
-
-  const undoLastSection = () => {};
-
-  const closeChatInfoPage = () => {};
-  const closeCurrentUserProfile = () => {};
-  const closeSelectionMode = () => {};
-
-  const isLocationIncludeAttach = () => true;
-
-  const navigateToAuthPage = () => {};
-
-  return {
-    openProfileById,
-    openContextMenuWithParams,
-    openCurrentUserProfile,
-    openAddParticipantsWindow,
-    openEditUserProfileWindow,
-    openEditConversationWindow,
-    openForwardSection,
-    openChatOrPaticipantInfo,
-    openAttachmentHub,
-
-    undoLastSection,
-
-    closeChatInfoPage,
-    closeCurrentUserProfile,
-    closeSelectionMode,
-
-    isLocationIncludeAttach,
-
-    navigateToAuthPage,
-  };
-}
 
 function useMessages() {
   const deleteSelectedMessages = async (selectedCID: string, mids: string[]) => {};
@@ -212,7 +183,6 @@ export const defaultAdapters: SamaAdapters = {
   useDrafts,
   useParticipants,
   useConversations,
-  useHistory,
   useMessages,
   useContextMenu,
 

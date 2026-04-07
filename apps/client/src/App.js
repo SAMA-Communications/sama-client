@@ -1,37 +1,41 @@
-import * as m from "motion/react-m";
-import { AnimatePresence, LazyMotion, domAnimation } from "motion/react";
-import { Route, Routes, useLocation, useNavigate } from "react-router";
 import { lazy, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+
+import { Route, Routes, useLocation, useNavigate } from "react-router";
+
 import { useDispatch, useSelector } from "react-redux";
 
-import "@lib/samaAdapter";
-
-import autoLoginService from "@services/autoLoginService";
-import activityService from "@services/activityService";
-import conversationService from "@services/conversationsService";
-import messagesService from "@services/messagesService";
-
-import BetterSuspense from "@hooks/tools/BetterSuspense.js";
-// import ConfirmWindowProvider from "@hooks/tools/useConfirmWindow.js";
-import { ConfirmWindowProvider } from "@sama-communications.ui-kit";
+import { AnimatePresence, LazyMotion, domAnimation, motion as m } from "motion/react";
 
 import ContextMenuHub from "@components/context/ContextMenuHub";
 
-import { getIsMobileView, setIsMobileView } from "@store/values/IsMobileView";
-import { getIsTabletView, setIsTabletView } from "@store/values/IsTabletView";
+import BetterSuspense from "@hooks/tools/BetterSuspense.js";
+
+import "@lib/samaAdapter";
+
+import {
+  ConfirmWindowProvider,
+  PageLoaderSkeleton,
+  initDocumentKeyDown,
+  useViewportBreakpoints,
+} from "@sama-communications.ui-kit";
+
+import activityService from "@services/activityService";
+import autoLoginService from "@services/autoLoginService";
+import conversationService from "@services/conversationsService";
+import messagesService from "@services/messagesService";
+
 import { selectIsClicked, setClicked } from "@store/values/ContextMenu";
 import { setIsTabInFocus } from "@store/values/IsTabInFocus";
-import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { updateNetworkState } from "@store/values/NetworkState";
+import { setSelectedConversation } from "@store/values/SelectedConversation";
 
-import { removeAndNavigateSubLink, navigateTo } from "@utils/NavigationUtils.js";
 import { history } from "@utils/history.js";
-import { MOBILE_VIEW_WIDTH, TABLET_VIEW_WIDTH } from "@utils/constants.js";
-
-import SPageLoader from "@skeletons/SPageLoader";
+import { removeAndNavigateSubLink, navigateTo } from "@utils/NavigationUtils.js";
 
 const Main = lazy(() => import("@components/Main"));
 const AuthorizationHub = lazy(() => import("@components/auth/AuthorizationHub"));
+
+initDocumentKeyDown();
 
 export default function App() {
   const dispatch = useDispatch();
@@ -41,11 +45,20 @@ export default function App() {
   const isContextClicked = useSelector(selectIsClicked);
   const isUserLoggedIn = !!localStorage.getItem("sessionId");
 
-  const isMobileView = useSelector(getIsMobileView);
-  const isMobileViewRef = useRef(isMobileView);
+  const { isMobile, isTablet } = useViewportBreakpoints();
+  const isMobileRef = useRef(isMobile);
+  const isTabletRef = useRef(isTablet);
 
-  const isTabletView = useSelector(getIsTabletView);
-  const isTabletViewRef = useRef(isTabletView);
+  useEffect(() => {
+    if (isMobile && isMobile !== isMobileRef.current) {
+      removeAndNavigateSubLink(history.location.pathname + history.location.hash, "/profile");
+    }
+    if (isTablet && isTablet !== isTabletRef.current) {
+      removeAndNavigateSubLink(history.location.pathname + history.location.hash, "/profile");
+    }
+    isMobileRef.current = isMobile;
+    isTabletRef.current = isTablet;
+  }, [isMobile, isTablet]);
 
   useEffect(() => {
     window.onfocus = () => dispatch(setIsTabInFocus(true));
@@ -53,24 +66,7 @@ export default function App() {
 
     window.addEventListener("offline", () => dispatch(updateNetworkState(false)));
     window.addEventListener("online", () => dispatch(updateNetworkState(true)));
-    window.addEventListener("resize", () => {
-      const isMobileView = window.innerWidth <= MOBILE_VIEW_WIDTH;
-      if (isMobileView !== isMobileViewRef.current) {
-        isMobileView === true &&
-          removeAndNavigateSubLink(history.location.pathname + history.location.hash, "/profile");
-        isMobileViewRef.current = isMobileView;
-        dispatch(setIsMobileView(isMobileView));
-      }
-
-      const isTabletView = window.innerWidth <= TABLET_VIEW_WIDTH && window.innerWidth > MOBILE_VIEW_WIDTH;
-      if (isTabletView !== isTabletViewRef.current) {
-        isTabletView === true &&
-          removeAndNavigateSubLink(history.location.pathname + history.location.hash, "/profile");
-        isTabletViewRef.current = isTabletView;
-        dispatch(setIsTabletView(isTabletView));
-      }
-      dispatch(setClicked(false));
-    });
+    window.addEventListener("resize", () => dispatch(setClicked(false)));
     window.addEventListener("popstate", () => {
       if (!history.location.hash.includes("#")) {
         dispatch(setSelectedConversation({}));
@@ -84,8 +80,6 @@ export default function App() {
     document.addEventListener("click", handleClick);
 
     dispatch(setIsTabInFocus(true));
-    dispatch(setIsMobileView(window.innerWidth <= MOBILE_VIEW_WIDTH));
-    dispatch(setIsTabletView(window.innerWidth <= TABLET_VIEW_WIDTH && window.innerWidth > MOBILE_VIEW_WIDTH));
 
     const { pathname, hash } = history.location;
     const token = localStorage.getItem("sessionId");
@@ -111,7 +105,7 @@ export default function App() {
     const mainElement = document.getElementsByTagName("main")[0];
     const bodyElement = document.getElementsByTagName("body")[0];
     mainElement.style.backgroundColor = routePathKey === "/*" ? "#f6f6f6" : "#DBDCFC";
-    bodyElement.style.backgroundColor = routePathKey === "/*" ? "#1b1b1d" : "#DBDCFC";
+    bodyElement.style.backgroundColor = routePathKey === "/*" ? "#f6f6f6" : "#DBDCFC";
   }, [routePathKey]);
 
   const exitAnimation = {
@@ -124,7 +118,7 @@ export default function App() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <BetterSuspense fallback={<SPageLoader />} fallbackMinDurationMs={isUserLoggedIn ? 700 : 400}>
+      <BetterSuspense fallback={<PageLoaderSkeleton />} fallbackMinDurationMs={isUserLoggedIn ? 700 : 400}>
         <ConfirmWindowProvider>
           {isContextClicked && <ContextMenuHub key={"ContextMenu"} id={"ContextMenu"} />}
           <AnimatePresence mode="wait">

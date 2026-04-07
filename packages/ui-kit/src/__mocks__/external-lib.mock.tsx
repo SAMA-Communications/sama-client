@@ -42,6 +42,8 @@ vi.mock("lucide-react", () => ({
   ),
   Check: (props: any) => <div data-testid="icon-check" {...props} />,
   CheckCheck: (props: any) => <div data-testid="icon-check-check" {...props} />,
+  Clock: (props: any) => <div data-testid="icon-clock" {...props} />,
+  Forward: (props: any) => <div data-testid="icon-forward" {...props} />,
   CircleQuestionMark: () => <div data-testid="icon-question" />,
   ImageIcon: (props: any) => <div data-testid="icon-image" {...props} />,
   Loader: (props: any) => <div data-testid="icon-loader" {...props} />,
@@ -96,6 +98,22 @@ const mediaUtils = {
 
 const useDrafts = () => ({
   syncDraftByCid: vi.fn(),
+  saveDraft: vi.fn(),
+  flushDraftToLocalStorage: vi.fn(),
+  removeDraft: vi.fn(),
+  removeDraftWithOptions: vi.fn(),
+  purgeDraft: vi.fn(),
+  pushLocalDraftToReduxNow: vi.fn(),
+  savePreEditComposeText: vi.fn(),
+  consumePreEditComposeText: vi.fn(() => ""),
+  getDraft: vi.fn(() => ({})),
+  getDraftField: vi.fn(),
+  getDraftMessage: vi.fn(() => ""),
+  getDraftRepliedMessageId: vi.fn(),
+  getDraftEditedMessageId: vi.fn(),
+  saveLastInputText: vi.fn(),
+  getLastInputText: vi.fn(() => ""),
+  getExternalProps: vi.fn(() => ({})),
 });
 
 const getAdaptersMock = () => ({
@@ -103,6 +121,9 @@ const getAdaptersMock = () => ({
   userUtils,
   mediaUtils,
   useDrafts,
+  useConversations: () => ({}),
+  useMessages: () => ({}),
+  useContextMenu: () => ({}),
 });
 
 // @ts-expect-error: Ignore type validation for this line

@@ -1,32 +1,34 @@
 import api from "@api/api";
 
-import eventEmitter from "@lib/eventEmitter";
 import DownloadManager from "@lib/downloadManager";
+import { hydrateDraftsFromLocalStorage, purgeDraft } from "@lib/draftsEngine.js";
+import eventEmitter from "@lib/eventEmitter";
 
-import draftService from "./tools/draftService.js";
+import { notificationQueueByCid } from "@services/tools/notifications";
+
+import { CONVERSATION_LIST_IDS_CHUNK } from "@src/utils/constants.js";
 
 import store from "@store/store";
-import { addUsers, upsertUsers } from "@store/values/Participants";
 import {
   insertChat,
   insertChats,
   removeChat,
+  setConversationListPaginationLt,
   upsertChat,
   upsertChats,
   upsertParticipants,
 } from "@store/values/Conversations";
-
+import { addUsers, upsertUsers } from "@store/values/Participants";
 import { clearSelectedConversation, setSelectedConversation } from "@store/values/SelectedConversation";
 
 import { getOpponentId } from "@utils/ConversationUtils.js";
-import { navigateTo } from "@utils/NavigationUtils.js";
-import { processFile, isHeic } from "@utils/MediaUtils.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { history } from "@utils/history.js";
-
-import { notificationQueueByCid } from "@services/tools/notifications";
-
+import { processFile, isHeic } from "@utils/MediaUtils.js";
+import { navigateTo } from "@utils/NavigationUtils.js";
 import { validateFieldLength } from "@utils/ValidationGeneral.js";
+
+const ensureConversationPromises = new Map();
 
 class ConversationsService {
   userIsLoggedIn = false;
@@ -51,6 +53,13 @@ class ConversationsService {
 
   handleConversationCreate = async (chat) => {
     try {
+      const conversation = store.getState().conversations.entities?.[chat._id];
+      if (conversation?._id) {
+        store.dispatch(upsertChat({ ...chat }));
+        notificationQueueByCid[chat._id]?.forEach((pushMessage) => eventEmitter.emit("onMessage", pushMessage));
+        return;
+      }
+
       const { users } = await api.getParticipantsByCids({ cids: [chat._id] });
       store.dispatch(
         upsertChat({
@@ -93,6 +102,8 @@ class ConversationsService {
     try {
       const chats = await api.conversationList({});
       store.dispatch(insertChats(chats.map((obj) => ({ ...obj, participants: [] }))));
+      store.dispatch(setConversationListPaginationLt(chats.length ? chats[chats.length - 1].updated_at : null));
+      hydrateDraftsFromLocalStorage();
       if (chats.length > 0) await this.getAndStoreParticipantsFromChats(chats);
     } catch (error) {
       showCustomAlert(error.message, "danger");
@@ -221,17 +232,10 @@ class ConversationsService {
       participants: { add: addUsersArr },
     };
 
-    if (!window.confirm(`Add selected user${participants.length > 1 ? "s" : ""} to the chat?`)) {
-      return false;
-    }
-
     return await api.conversationUpdate(requestData);
   }
 
   async removeParticipant(userId) {
-    if (!window.confirm(`Do you want to delete this user?`)) {
-      return;
-    }
     const { selectedConversation, conversations } = store.getState();
     const selectedCID = selectedConversation.value.id;
 
@@ -294,14 +298,93 @@ class ConversationsService {
       await api.conversationDelete({ cid: selectedConversation.id });
       store.dispatch(clearSelectedConversation());
       store.dispatch(removeChat(selectedConversation.id));
-      draftService.removeDraft(selectedConversation.id);
+      purgeDraft(selectedConversation.id);
     } catch (err) {
-      showCustomAlert(err.message, "warning");
+      showCustomAlert(err.message ? err.message : "An error occurred while trying to delete the chat", "warning");
     }
   }
 
   async search(data) {
     return await api.conversationSearch(data);
+  }
+
+  async fetchConversationsByIds(ids) {
+    const conversations = store.getState().conversations.entities || {};
+    const missingConvIds = ids.filter((id) => !conversations[id]);
+    const chunkSize = CONVERSATION_LIST_IDS_CHUNK;
+
+    for (let i = 0; i < missingConvIds.length; i += chunkSize) {
+      const chunkConvIds = missingConvIds.slice(i, i + chunkSize);
+      try {
+        const chats = await api.conversationList({ ids: chunkConvIds });
+        if (!chats?.length) continue;
+
+        store.dispatch(upsertChats(chats.map((obj) => ({ ...obj, participants: [] }))));
+        await this.getAndStoreParticipantsFromChats(chats);
+      } catch (err) {
+        showCustomAlert(err.message, "danger");
+      }
+    }
+  }
+
+  async ensureConversationInStoreIfMissing(cid) {
+    if (!cid) return true;
+
+    const conversations = store.getState().conversations.entities || {};
+    if (conversations[cid]?._id) return true;
+
+    const existing = ensureConversationPromises.get(cid);
+    if (existing) return existing;
+
+    const promise = (async () => {
+      try {
+        const chats = await api.conversationList({ ids: [cid] });
+        if (!chats?.length) {
+          this.redirectFromUnavailableConversation(cid);
+          return false;
+        }
+
+        store.dispatch(upsertChats(chats.map((obj) => ({ ...obj, participants: [] }))));
+        await this.getAndStoreParticipantsFromChats(chats);
+
+        const stillMissing = !store.getState().conversations.entities?.[cid]?._id;
+        if (stillMissing) {
+          this.redirectFromUnavailableConversation(cid);
+          return false;
+        }
+
+        return true;
+      } catch (err) {
+        showCustomAlert(err.message, "danger");
+        this.redirectFromUnavailableConversation(cid);
+        return false;
+      } finally {
+        ensureConversationPromises.delete(cid);
+      }
+    })();
+
+    ensureConversationPromises.set(cid, promise);
+    return promise;
+  }
+
+  redirectFromUnavailableConversation(expectedCid) {
+    const currentCid = history.location.hash?.slice(1)?.split("/")[0] || null;
+    if (expectedCid && currentCid !== expectedCid) {
+      return;
+    }
+
+    store.dispatch(clearSelectedConversation());
+    const { pathname, search } = history.location;
+    history.navigate(`${pathname}${search || ""}`);
+  }
+
+  async resolveConversationsByIds(convIds) {
+    if (!convIds?.length) return [];
+
+    await this.fetchConversationsByIds(convIds);
+    const conversations = store.getState().conversations.entities || {};
+
+    return convIds.map((id) => conversations[id]).filter(Boolean);
   }
 }
 

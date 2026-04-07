@@ -1,25 +1,26 @@
-import * as m from "motion/react-m";
-import { useAnimate } from "motion/react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
-import SAMALogo from "@components/static/SAMALogo";
+import { useAnimate } from "motion/react";
+import * as m from "motion/react-m";
+
 import AnimatedBGbig from "@components/auth/animations/AnimatedBGbig.js";
 import AnimatedBGmini from "@components/auth/animations/AnimatedBGmini.js";
-
-import PasswordInput from "@components/auth/elements/PasswordInput";
-import UserNameInput from "@components/auth/elements/UserNameInput";
-import EmailInput from "@components/auth/elements/EmailInput";
 import ConfirmButton from "@components/auth/elements/ConfirmButton";
-
-import ResetPasswordModal from "@components/modals/ResetPasswordModal.js";
-
-import { getIsMobileView } from "@store/values/IsMobileView.js";
+import EmailInput from "@components/auth/elements/EmailInput";
+import PasswordInput from "@components/auth/elements/PasswordInput";
+import SAMALogo from "@components/auth/elements/SAMALogo";
+import UserNameInput from "@components/auth/elements/UserNameInput";
 
 import HeaderWaves from "@icons/_helpers/HeaderWaves.svg?react";
 import Discord from "@icons/socials/DiscordIcon.svg?react";
-import Medium from "@icons/socials/MediumIcon.svg?react";
 import GitHub from "@icons/socials/GitHubIcon.png";
+import Medium from "@icons/socials/MediumIcon.svg?react";
+
+import { ResetPasswordModal, useViewportBreakpoints } from "@sama-communications.ui-kit";
+
+import autoLoginService from "@services/autoLoginService.js";
+
+import { showCustomAlert } from "@utils/GeneralUtils.js";
 
 export default function AuthorizationHub({ showDemoMessage = false }) {
   const [content, setContent] = useState({});
@@ -28,7 +29,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
   const [scope, animate] = useAnimate();
   const [triggerBGAnimation, setTriggerBGAnimation] = useState(false);
 
-  const isMobileView = useSelector(getIsMobileView);
+  const { isMobile: isMobileView } = useViewportBreakpoints();
 
   const isLoginPage = page === "login";
 
@@ -43,10 +44,13 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
 
   return (
     <section className="flex h-full w-full flex-col items-center justify-center overflow-hidden">
-      <AnimatedBGbig customClassName="absolute w-dvw h-dvh overflow-hidden z-0" isTriggered={triggerBGAnimation} />
+      <AnimatedBGbig
+        customClassName="absolute w-full h-full overflow-hidden max-sm:hidden z-0 "
+        isTriggered={triggerBGAnimation}
+      />
       <m.div
         ref={scope}
-        className={`shadow-white-100/90 relative flex h-[800px] max-h-[95dvh] w-[1200px] max-w-[95dvw] flex-row justify-center gap-[20px] rounded-[32px] bg-(--color-bg-light) p-[20px] shadow-lg max-lg:h-max max-lg:w-[min(600px,95dvw)] max-lg:py-[4dvh]`}
+        className={`shadow-white-100/90 bg-bg-light relative flex h-[800px] max-h-[94dvh] w-[1200px] max-w-[95dvw] flex-row justify-center gap-[20px] rounded-[32px] p-[20px] shadow-lg max-lg:h-max max-lg:w-[min(600px,94dvw)] max-lg:py-[4dvh]`}
         initial={{ scale: 0 }}
         animate={{
           scale: [0, 1.1, 1],
@@ -96,8 +100,8 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
             </p>
           </m.div>
           {showDemoMessage ? (
-            <div className="rounded-lg bg-(--color-accent-500) px-[20px] py-[10px] text-center text-white">
-              <p className="text-h6 !font-light">Welcome to the SAMA demo.</p>
+            <div className="bg-accent-500 rounded-lg px-[20px] py-[10px] text-center text-white">
+              <p className="text-h6 font-light">Welcome to the SAMA demo.</p>
               <p className="mt-[10px]">
                 You can connect using the following credentials:
                 <br></br>
@@ -124,9 +128,9 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
             />
           </div>
           <div className="flex w-full flex-row items-center gap-[10px]">
-            <span className="h-[1px] flex-1 rounded-[2px] bg-gray-700/30"></span>
+            <span className="h-px flex-1 rounded-[2px] bg-gray-700/30"></span>
             <p className="font-extralight text-gray-700/80">Our socials</p>
-            <span className="h-[1px] flex-1 rounded-[2px] bg-gray-700/30"></span>
+            <span className="h-px flex-1 rounded-[2px] bg-gray-700/30"></span>
           </div>
           <div className="grid flex-row gap-[15px] max-sm:grid-cols-2 sm:grid-cols-3">
             <a
@@ -136,7 +140,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
               className="col-span-1 flex cursor-pointer flex-row items-center justify-center gap-[10px] rounded-lg border border-gray-700/30 px-[14px] py-[7px] transition-colors hover:bg-(--color-hover-light)"
             >
               <Discord className="h-[28px] w-[28px]" />
-              <p className="!font-light">Discord</p>
+              <p className="font-light">Discord</p>
             </a>
             <a
               href="https://medium.com/sama-communications"
@@ -145,7 +149,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
               className="col-span-1 flex cursor-pointer flex-row items-center justify-center gap-[10px] rounded-lg border border-gray-700/30 px-[14px] py-[7px] transition-colors hover:bg-(--color-hover-light)"
             >
               <Medium className="h-[28px] w-[28px]" />
-              <p className="!font-light">Medium</p>
+              <p className="font-light">Medium</p>
             </a>
             <a
               href="https://github.com/SAMA-Communications"
@@ -154,7 +158,7 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
               className="flex cursor-pointer flex-row items-center justify-center gap-[10px] rounded-lg border border-gray-700/30 px-[14px] py-[7px] transition-colors hover:bg-(--color-hover-light) max-sm:col-span-2 sm:col-span-1"
             >
               <img className="h-[28px] w-[28px]" src={GitHub} alt="" />
-              <p className="!font-light">GitHub</p>
+              <p className="font-light">GitHub</p>
             </a>
           </div>
         </m.div>
@@ -210,7 +214,22 @@ export default function AuthorizationHub({ showDemoMessage = false }) {
           </div>
         </div>
       </m.div>
-      <ResetPasswordModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <ResetPasswordModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSendOTP={async (email) => {
+          const success = await autoLoginService.sendOtpToken(email);
+          return !!success;
+        }}
+        onResetPassword={async (data) => {
+          const success = await autoLoginService.sendResetPassword(data.email, data.token, data.new_password);
+          return !!success;
+        }}
+        onResendOTP={async (email) => {
+          await autoLoginService.resendOtpToken(email);
+        }}
+        onValidationError={(msg) => showCustomAlert(msg, "warning")}
+      />
     </section>
   );
 }

@@ -1,8 +1,18 @@
+import { memo } from "react";
+
+import { clsx } from "clsx";
 import { User, Mail, Phone, Pencil } from "lucide-react";
 
-import { InfoBoxProps } from "./InfoBox.types";
+import type { InfoBoxProps } from "@elements/InfoBox/InfoBox.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
-export const InfoBox = ({
+const INFO_ICONS = {
+  phone: Phone,
+  email: Mail,
+  login: User,
+} as const;
+
+export const InfoBox = memo(function InfoBox({
   title,
   systemTitle,
   value,
@@ -13,23 +23,22 @@ export const InfoBox = ({
   isIconEnable = true,
   onClick,
   onChangeValue,
-}: InfoBoxProps) => {
+  className,
+  ...rest
+}: InfoBoxProps) {
   if (!value && hideIfNull) return null;
 
-  const infoIcons = {
-    phone: <Phone size={16} />,
-    email: <Mail size={16} />,
-    login: <User size={16} />,
-  };
+  const Icon = INFO_ICONS[iconType] ?? INFO_ICONS.login;
 
   return (
-    <div
-      className={`ui:flex ui:flex-col ui:gap-0.75 ui:rounded-xl ${onClick && "ui:cursor-pointer"}`}
+    <WrapperRoot
+      className={clsx("ui:flex ui:flex-col ui:gap-0.75 ui:rounded-xl", onClick && "ui:cursor-pointer", className)}
       onClick={onClick}
+      {...rest}
     >
       <p className="ui:font-light ui:text-text-dark">{title}</p>
       <div className="ui:flex ui:items-center ui:gap-2.75 ui:rounded-xl ui:bg-text-dark/5 ui:p-2">
-        {isIconEnable ? infoIcons[iconType] : null}
+        {isIconEnable ? <Icon size={16} /> : null}
         {onChangeValue && systemTitle ? (
           <input
             className="ui:grow ui:font-light ui:focus:outline-none"
@@ -44,6 +53,6 @@ export const InfoBox = ({
         )}
         {isEnableToEdit && !onChangeValue ? <Pencil size={18} color="var(--color-accent-500)" /> : null}
       </div>
-    </div>
+    </WrapperRoot>
   );
-};
+});

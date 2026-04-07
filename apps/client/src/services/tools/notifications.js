@@ -32,18 +32,10 @@ async function showLocalNotification(pushMessage) {
   const { attachments, from, body } = pushMessage;
   const userLogin = storeState.participants.entities[from]?.login;
 
-  const typeOfLastAttachment = attachments
-    ? getFileType(attachments?.slice(-1)[0].file_name)
-    : "file";
-  const attachmentText =
-    attachments?.length > 0
-      ? `\n${typeOfLastAttachment}${attachments.length > 1 ? "s" : ""}`
-      : "";
+  const typeOfLastAttachment = attachments ? getFileType(attachments?.slice(-1)[0].file_name) : "file";
+  const attachmentText = attachments?.length > 0 ? `\n${typeOfLastAttachment}${attachments.length > 1 ? "s" : ""}` : "";
 
-  const title =
-    conversation?.name && conversation?.type === "g"
-      ? `${userLogin} | ${conversation?.name}`
-      : userLogin;
+  const title = conversation?.name && conversation?.type === "g" ? `${userLogin} | ${conversation?.name}` : userLogin;
 
   const bodyCrop = body.length > 75 ? body.slice(0, 75) + "..." : body;
   const notificationMessage = {
@@ -75,21 +67,15 @@ export default function subscribeForNotifications() {
           reg.pushManager
             .subscribe({
               userVisibleOnly: true,
-              applicationServerKey: urlBase64ToUint8Array(
-                import.meta.env.VITE_PUBLIC_VAPID_KEY
-              ),
+              applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_PUBLIC_VAPID_KEY),
             })
             .then((sub) =>
               //TODO: optimize ?btoa?
               api.pushSubscriptionCreate({
                 web_endpoint: sub.endpoint,
-                web_key_auth: btoa(
-                  String.fromCharCode(...new Uint8Array(sub.getKey("auth")))
-                ),
-                web_key_p256dh: btoa(
-                  String.fromCharCode(...new Uint8Array(sub.getKey("p256dh")))
-                ),
-              })
+                web_key_auth: btoa(String.fromCharCode(...new Uint8Array(sub.getKey("auth")))),
+                web_key_p256dh: btoa(String.fromCharCode(...new Uint8Array(sub.getKey("p256dh")))),
+              }),
             );
         })
         .catch((err) => console.log(err));

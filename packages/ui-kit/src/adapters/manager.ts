@@ -1,5 +1,5 @@
-import { SamaAdapters } from "./types";
-import { defaultAdapters } from "./defaults";
+import { defaultAdapters } from "@adapters/defaults";
+import { SamaAdapters } from "@adapters/types";
 
 let currentAdapters: SamaAdapters = { ...defaultAdapters };
 
@@ -11,10 +11,7 @@ export function getAdapters(): SamaAdapters {
   return currentAdapters;
 }
 
-function deepMerge<T extends object, U extends object>(
-  target: T,
-  source: U
-): T & U {
+function deepMerge<T extends object, U extends object>(target: T, source: U): T & U {
   const output = { ...target } as T & U;
 
   if (isObject(target) && isObject(source)) {
@@ -23,13 +20,9 @@ function deepMerge<T extends object, U extends object>(
       const targetValue = (target as any)[key];
 
       if (Array.isArray(sourceValue)) {
-        (output as any)[key] = Array.isArray(targetValue)
-          ? [...targetValue, ...sourceValue]
-          : [...sourceValue];
+        (output as any)[key] = Array.isArray(targetValue) ? [...targetValue, ...sourceValue] : [...sourceValue];
       } else if (isObject(sourceValue)) {
-        (output as any)[key] = isObject(targetValue)
-          ? deepMerge(targetValue, sourceValue)
-          : sourceValue;
+        (output as any)[key] = isObject(targetValue) ? deepMerge(targetValue, sourceValue) : sourceValue;
       } else {
         (output as any)[key] = sourceValue;
       }

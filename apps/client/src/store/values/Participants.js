@@ -1,8 +1,5 @@
-import {
-  createEntityAdapter,
-  createSelector,
-  createSlice,
-} from "@reduxjs/toolkit";
+import { createEntityAdapter, createSelector, createSlice } from "@reduxjs/toolkit";
+
 import { selectCurrentUserId } from "./CurrentUserId.js";
 
 export const participantsAdapter = createEntityAdapter({
@@ -32,10 +29,9 @@ const participants = createSlice({
 
 export const getCurrentUserFromParticipants = createSelector(
   [selectCurrentUserId, selectParticipantsEntities],
-  (id, participants) => participants[id] || {}
+  (id, participants) => participants[id] || {},
 );
 
-export const { addUser, addUsers, setUsers, upsertUser, upsertUsers } =
-  participants.actions;
+export const { addUser, addUsers, setUsers, upsertUser, upsertUsers } = participants.actions;
 
 export default participants.reducer;

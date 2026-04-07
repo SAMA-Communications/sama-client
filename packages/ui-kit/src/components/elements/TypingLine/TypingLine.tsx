@@ -1,16 +1,20 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 
-import { getAdapters } from "../../../adapters";
+import { clsx } from "clsx";
 
-import { DotsLoader } from "../DotsLoader";
+import { getAdapters } from "@adapters";
 
-import { TypingLineInternalProps } from "./TypingLine.types";
+import { DotsLoader } from "@elements/DotsLoader";
+import type { TypingLineInternalProps } from "@elements/TypingLine/TypingLine.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
-export const TypingLine = ({
+export const TypingLine = memo(function TypingLine({
   typingUserIds,
   isDisplayUserNames = false,
   isDisplayBackground = false,
-}: TypingLineInternalProps) => {
+  className,
+  ...rest
+}: TypingLineInternalProps) {
   const { useParticipants, userUtils } = getAdapters();
   const { getParticipantsByIdsAsList } = useParticipants();
 
@@ -38,9 +42,9 @@ export const TypingLine = ({
   }, [typingUsers, isDisplayUserNames, userUtils]);
 
   return (
-    <div className={`ui:flex ui:items-center ui:gap-2.5`}>
+    <WrapperRoot className={clsx("ui:flex ui:items-center ui:gap-2.5", className)} {...rest}>
       <DotsLoader height={22} width={16} />
       <p className="ui:font-light ui:text-accent-500">{usersNameView}typing</p>
-    </div>
+    </WrapperRoot>
   );
-};
+});

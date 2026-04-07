@@ -1,27 +1,26 @@
-import { UserProfileProps } from "./UserProfile.types";
-
-import { getAdapters } from "../../../adapters";
-
-import { InfoBox } from "../../elements/InfoBox";
-import { UserProfileAvatar } from "../../../components/elements/UserProfileAvatar";
-
-// import { useKeyDown } from "../../../utils/tools/useKeyDown";
-import { useConfirmWindow } from "../../../hooks/useConfirmWindow";
-
 import { RotateCcwKey, LogOut, Trash, ChevronLeft, UserRoundX } from "lucide-react";
 
-export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
-  const { useParticipants, useHistory } = getAdapters();
+import { getAdapters } from "@adapters";
+
+import { UserProfileProps } from "@composites/UserProfile/UserProfile.types";
+
+import { InfoBox } from "@elements/InfoBox";
+import { UserProfileAvatar } from "@elements/UserProfileAvatar";
+
+import { useConfirmWindow } from "@src/hooks/useConfirmWindow";
+import { useKeyDown } from "@src/hooks/useKeyDown";
+
+import { KEY_CODES } from "@utils/constants";
+
+export const UserProfile = ({ user, onLogout, onClose, onEditProfile, onNavigateToAuth }: UserProfileProps) => {
+  const { useParticipants } = getAdapters();
   const { updateCurrentUserPassword, deleteCurrentUser } = useParticipants();
-  const { openEditUserProfileWindow, closeCurrentUserProfile, navigateToAuthPage } = useHistory();
 
   const confirm = useConfirmWindow();
 
   const { login, email, phone, first_name, last_name } = user;
 
   const isCurrentUserCantLeave = login?.startsWith("sama-user-"); // ...
-
-  // useKeyDown(KEY_CODES.ESCAPE, closeCurrentUserProfile);
 
   const onDeleteUserFunc = async () => {
     const { isConfirm } = await confirm<{}>({
@@ -31,16 +30,18 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
     });
     if (!isConfirm) return;
     const isSuccess = await deleteCurrentUser();
-    if (isSuccess) navigateToAuthPage();
+    if (isSuccess) onNavigateToAuth?.();
   };
 
+  useKeyDown(KEY_CODES.ESCAPE, onClose);
+
   return (
-    <section className="ui:flex ui:h-full ui:w-full ui:flex-col ui:gap-2.75 ui:p-3.5 ui:md:w-100">
+    <aside className="ui:flex ui:h-full ui:min-h-0 ui:w-full ui:flex-col ui:gap-2.75 ui:overflow-x-hidden ui:p-3.5 ui:max-md:max-h-dvh ui:max-md:overflow-y-auto ui:md:w-100">
       <div className="ui:relative ui:flex ui:flex-col ui:items-center ui:justify-center ui:gap-2.75">
         <div className="ui:flex ui:w-full ui:justify-between">
           <button
             className="ui:mb-1.5 ui:cursor-pointer ui:self-start ui:rounded-xl ui:bg-white ui:p-2 ui:shadow-btn ui:hover:bg-bg-dark ui:hover:text-white"
-            onClick={closeCurrentUserProfile}
+            onClick={onClose}
           >
             <ChevronLeft size={18} />
           </button>
@@ -51,10 +52,11 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
           {last_name ? (
             <p className="ui:overflow-hidden ui:text-2xl ui:text-ellipsis ui:whitespace-nowrap">{last_name}</p>
           ) : null}
+          {!first_name && !last_name ? <p className="ui:text-2xl ui:text-text-dark/45">First & Last Name</p> : null}
         </div>
         <p
           className="ui:-mt-1.75 ui:cursor-pointer ui:text-center ui:text-lg ui:text-accent-500"
-          onClick={openEditUserProfileWindow}
+          onClick={onEditProfile}
         >
           Edit User Info
         </p>
@@ -68,7 +70,7 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
           value={phone}
           iconType="phone"
           placeholder={"Enter your phone number"}
-          onClick={openEditUserProfileWindow}
+          onClick={onEditProfile}
           isEnableToEdit={true}
         />
         <InfoBox
@@ -76,7 +78,7 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
           value={email}
           iconType="email"
           placeholder={"Enter your email address"}
-          onClick={openEditUserProfileWindow}
+          onClick={onEditProfile}
           isEnableToEdit={true}
         />
 
@@ -104,7 +106,7 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
             className="ui:mt-2.75 ui:flex ui:cursor-pointer ui:items-center ui:gap-2.75"
             onClick={onDeleteUserFunc}
           >
-            <Trash size={18} color="var(--color-danger)" />
+            <Trash size={18} className="ui:text-danger" />
             <p className="ui:font-light ui:text-danger">Delete account</p>
           </button>
         )}
@@ -113,7 +115,7 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
         <button
           className="ui:mt-2.75 ui:flex ui:cursor-pointer ui:items-center ui:justify-center ui:gap-2.75 ui:rounded-xl ui:bg-white ui:p-2 ui:text-accent-500 ui:shadow-btn ui:duration-150 ui:hover:bg-accent-500 ui:hover:text-white"
           onClick={() => {
-            navigateToAuthPage();
+            onNavigateToAuth?.();
             onLogout();
           }}
         >
@@ -121,6 +123,6 @@ export const UserProfile = ({ user, isMobile, onLogout }: UserProfileProps) => {
           Log out
         </button>
       </div>
-    </section>
+    </aside>
   );
 };

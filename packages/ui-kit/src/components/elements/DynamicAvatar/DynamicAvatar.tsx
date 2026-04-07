@@ -1,13 +1,15 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 
-import { AvatarWithFallback } from "./AvatarWithFallback";
-import { ImageLoader } from "../ImageLoader";
+import { clsx } from "clsx";
 
-import { generateSoftPastelGradient } from "../../../utils/generateSoftPastelGradient";
+import { AvatarWithFallback } from "@elements/DynamicAvatar/AvatarWithFallback";
+import type { DynamicAvatarProps } from "@elements/DynamicAvatar/DynamicAvatar.types";
+import { ImageLoader } from "@elements/ImageLoader";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
-import { DynamicAvatarProps } from "./DynamicAvatar.types";
+import { generateSoftPastelGradient } from "@utils/generateSoftPastelGradient";
 
-export const DynamicAvatar = ({
+export const DynamicAvatar = memo(function DynamicAvatar({
   customClassName = "",
   size = 64,
   avatarUrl,
@@ -16,30 +18,37 @@ export const DynamicAvatar = ({
   altText,
   bgColorKey,
   imageLoaderProps = {},
-}: DynamicAvatarProps) => {
+  className,
+  style,
+  ...rest
+}: DynamicAvatarProps) {
   const avatarView = useMemo(() => {
     if (avatarUrl) {
       return <AvatarWithFallback avatarUrl={avatarUrl} altText={altText} fallbackIcon={defaultIcon} />;
     }
-
     return avatarBlurHash ? <ImageLoader blurHash={avatarBlurHash} {...imageLoaderProps} /> : defaultIcon;
   }, [avatarBlurHash, avatarUrl, defaultIcon, altText, imageLoaderProps]);
 
+  const sizePx = `${size}px`;
+  const mergedStyle = {
+    width: sizePx,
+    height: sizePx,
+    background: generateSoftPastelGradient(bgColorKey || ""),
+    ...style,
+  };
+
   return (
-    <div
-      className={
-        `ui:flex ui:items-center ui:justify-center ui:overflow-hidden ui:rounded-3xl ui:font-light ui:text-white ui:uppercase ` +
-        (size > 50 ? "ui:text-2xl " : "ui:text-lg ") +
-        customClassName
-      }
-      style={{
-        width: `${size}px`,
-        height: `${size}px`,
-        background: generateSoftPastelGradient(bgColorKey || ""),
-      }}
+    <WrapperRoot
+      className={clsx(
+        "ui:flex ui:items-center ui:justify-center ui:overflow-hidden ui:rounded-3xl ui:font-light ui:text-white ui:uppercase",
+        size > 50 ? "ui:text-2xl" : "ui:text-lg",
+        customClassName,
+        className,
+      )}
+      style={mergedStyle}
+      {...rest}
     >
-      {/* ui:corner-squircle */}
       {avatarView}
-    </div>
+    </WrapperRoot>
   );
-};
+});

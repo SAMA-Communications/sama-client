@@ -1,30 +1,42 @@
-import { useRef } from "react";
+import { memo, useCallback, useRef } from "react";
 
-import { getAdapters } from "../../../adapters";
-
-import { DynamicAvatar } from "../DynamicAvatar";
-
-import { ALLOWED_AVATAR_FORMATS } from "../../../utils/constants";
-
+import { clsx } from "clsx";
 import { Camera, User } from "lucide-react";
 
-import { UserProfileAvatarProps } from "./UserProfileAvatar.types";
+import { getAdapters } from "@adapters";
 
-export const UserProfileAvatar = ({ user, swapAccentAndMainColor }: UserProfileAvatarProps) => {
+import { DynamicAvatar } from "@elements/DynamicAvatar";
+import type { UserProfileAvatarProps } from "@elements/UserProfileAvatar/UserProfileAvatar.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { ALLOWED_AVATAR_FORMATS } from "@utils/constants";
+
+export const UserProfileAvatar = memo(function UserProfileAvatar({
+  user,
+  swapAccentAndMainColor,
+  className,
+  ...rest
+}: UserProfileAvatarProps) {
   const { useParticipants } = getAdapters();
   const { updateCurrentUserAvatar } = useParticipants();
   const { avatar_url, avatar_blur_hash, _id } = user;
-
   const inputFilesRef = useRef<HTMLInputElement | null>(null);
 
-  const pickFileClick = () => inputFilesRef.current?.click();
-
-  const changeUserAvatar = async (file: any) => void (await updateCurrentUserAvatar(file));
+  const pickFileClick = useCallback(() => inputFilesRef.current?.click(), []);
+  const changeUserAvatar = useCallback(
+    async (file: File | undefined) => {
+      if (file) await updateCurrentUserAvatar(file);
+    },
+    [updateCurrentUserAvatar],
+  );
 
   return (
-    <div className="ui:relative ui:h-30 ui:w-30 ui:self-center">
+    <WrapperRoot className={clsx("ui:relative ui:h-30 ui:w-30 ui:self-center", className)} {...rest}>
       <div
-        className={`ui:flex ui:h-full ui:w-full ui:items-center ui:justify-center ui:gap-2.75 ui:overflow-hidden ui:rounded-full ui:bg-hover-light ${swapAccentAndMainColor ? "ui:bg-accent-100" : "ui:bg-bg-light"} `}
+        className={clsx(
+          "ui:flex ui:h-full ui:w-full ui:items-center ui:justify-center ui:gap-2.75 ui:overflow-hidden ui:rounded-full ui:bg-hover-light",
+          swapAccentAndMainColor ? "ui:bg-accent-100" : "ui:bg-bg-light",
+        )}
       >
         <DynamicAvatar
           size={120}
@@ -39,7 +51,7 @@ export const UserProfileAvatar = ({ user, swapAccentAndMainColor }: UserProfileA
           className="ui:invisible ui:hidden"
           ref={inputFilesRef}
           type="file"
-          onChange={(e: any) => changeUserAvatar(Array.from(e.target.files).at(0))}
+          onChange={(e) => changeUserAvatar(Array.from(e.target.files ?? []).at(0))}
           accept={ALLOWED_AVATAR_FORMATS.join(",")}
           multiple
         />
@@ -50,6 +62,6 @@ export const UserProfileAvatar = ({ user, swapAccentAndMainColor }: UserProfileA
       >
         <Camera strokeWidth={1} size={28} color="white" />
       </div>
-    </div>
+    </WrapperRoot>
   );
-};
+});

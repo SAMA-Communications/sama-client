@@ -1,11 +1,13 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
+
+import { clsx } from "clsx";
 import { Blurhash } from "react-blurhash";
 
-import { OvalLoader } from "../OvalLoader";
+import { OvalLoader } from "@elements/OvalLoader";
+import type { UserAvatarProps } from "@elements/UserAvatar/UserAvatar.types";
+import { WrapperRoot } from "@elements/WrapperRoot";
 
-import { UserAvatarProps } from "./UserAvatar.types";
-
-export const UserAvatar = ({
+export const UserAvatar = memo(function UserAvatar({
   avatarUrl,
   avatarBlurHash,
   defaultIcon,
@@ -13,7 +15,10 @@ export const UserAvatar = ({
   height = 64,
   width = 64,
   alt = "User's profile picture",
-}: UserAvatarProps) => {
+  className,
+  style,
+  ...rest
+}: UserAvatarProps) {
   const avatarView = useMemo(() => {
     if (avatarUrl) {
       return (
@@ -27,7 +32,6 @@ export const UserAvatar = ({
         />
       );
     }
-
     if (avatarBlurHash) {
       return (
         <div className="ui:relative ui:h-full ui:w-full">
@@ -47,7 +51,6 @@ export const UserAvatar = ({
         </div>
       );
     }
-
     return (
       defaultIcon || (
         <div className="flex ui:h-full ui:w-full ui:items-center ui:justify-center ui:rounded-full ui:bg-gray-200">
@@ -58,8 +61,12 @@ export const UserAvatar = ({
   }, [avatarUrl, avatarBlurHash, defaultIcon, alt, height, width]);
 
   return (
-    <div className={`ui:relative ui:overflow-hidden ui:rounded-full ${wrapperClassName}`} style={{ width, height }}>
+    <WrapperRoot
+      className={clsx("ui:relative ui:overflow-hidden ui:rounded-full", wrapperClassName, className)}
+      style={{ width, height, ...style }}
+      {...rest}
+    >
       {avatarView}
-    </div>
+    </WrapperRoot>
   );
-};
+});

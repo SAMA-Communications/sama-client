@@ -1,2 +1,2 @@
-export * from "./ImageLoader"
-export * from "./ImageLoader.types"
+export * from "./ImageLoader";
+export * from "./ImageLoader.types";

@@ -1,16 +1,15 @@
-import localforage from "localforage";
 import { useEffect, useRef } from "react";
 
-import { getAdapters } from "../../../adapters";
-
-import { OvalLoader } from "../OvalLoader";
-import { MagicButton } from "../MagicButton";
-
-import { KEY_CODES, TYPING_DURATION_MS } from "../../../utils/constants";
-
+import localforage from "localforage";
 import { Paperclip, Send, Check } from "lucide-react";
 
-import { MessageInputProps } from "./MessageInput.type";
+import { getAdapters } from "@adapters";
+
+import { MagicButton } from "@elements/MagicButton";
+import { MessageInputProps } from "@elements/MessageInput/MessageInput.type";
+import { OvalLoader } from "@elements/OvalLoader";
+
+import { KEY_CODES, TYPING_DURATION_MS } from "@utils/constants";
 
 export const MessageInput = ({
   inputTextRef,
@@ -20,11 +19,12 @@ export const MessageInput = ({
   isMobile = false,
   isSending = false,
   isEnableMagicButton = false,
+  onOpenAttachmentHub,
+  isLocationIncludeAttach = false,
 }: MessageInputProps) => {
-  const { useConversations, useDrafts, useHistory, formatedUtils, mediaUtils } = getAdapters();
+  const { useConversations, useDrafts, formatedUtils, mediaUtils } = getAdapters();
   const { getSelectedConversation, sendTypingStatus } = useConversations();
-  const { saveDraft, removeDraftWithOptions, getDraftMessage } = useDrafts();
-  const { openAttachmentHub, isLocationIncludeAttach } = useHistory();
+  const { saveDraft, removeDraftWithOptions, getDraftMessage, flushDraftToLocalStorage } = useDrafts();
   const { calcInputHeight } = formatedUtils;
   const { extractFilesFromClipboard } = mediaUtils;
 
@@ -59,17 +59,23 @@ export const MessageInput = ({
     }
   };
 
+  const handleBlur = (e: any) => {
+    handleInput(e);
+    if (isEditAction && selectedConversationId) flushDraftToLocalStorage(selectedConversationId);
+  };
+
   const storeInputText = () => {
     const inputText = inputTextRef.current?.value;
     if (inputText) {
       saveDraft(selectedConversationId, { text: inputText });
+      flushDraftToLocalStorage(selectedConversationId);
       inputTextRef.current.value = "";
       inputTextRef.current.style.height = `28px`;
     }
   };
 
   const syncInputText = () => {
-    const message = isLocationIncludeAttach() ? "" : getDraftMessage(selectedConversationId);
+    const message = isLocationIncludeAttach ? "" : getDraftMessage(selectedConversationId);
     if (message && !isEditAction) {
       if (inputTextRef.current) {
         inputTextRef.current.value = message || "";
@@ -79,7 +85,7 @@ export const MessageInput = ({
     }
   };
 
-  useEffect(() => syncInputText(), []); //location
+  useEffect(() => syncInputText(), [selectedConversationId, isLocationIncludeAttach, isEditAction]);
 
   useEffect(() => {
     function preventDefaults(e: any) {
@@ -100,7 +106,7 @@ export const MessageInput = ({
 
       if (!files.length) return;
       localforage.setItem("attachFiles", files);
-      openAttachmentHub();
+      onOpenAttachmentHub?.();
       storeInputText();
     }
 
@@ -117,7 +123,7 @@ export const MessageInput = ({
       document.removeEventListener("drop", handleInput);
       document.removeEventListener("paste", handleInput);
     };
-  }, [selectedConversationId]);
+  }, [selectedConversationId, onOpenAttachmentHub]);
 
   return (
     <div className="ui:flex ui:w-full ui:gap-2.5">
@@ -125,7 +131,7 @@ export const MessageInput = ({
         className="ui:h-max ui:cursor-pointer ui:self-end ui:rounded-xl ui:bg-white ui:p-2 ui:text-text-dark ui:shadow-btn ui:duration-150 ui:hover:bg-bg-dark ui:hover:text-white"
         onClick={() => {
           if (!isSending) {
-            openAttachmentHub();
+            onOpenAttachmentHub?.();
             storeInputText();
           }
         }}
@@ -138,7 +144,7 @@ export const MessageInput = ({
           ref={inputTextRef}
           onInput={handleInput}
           onKeyDown={handeOnKeyDown}
-          onBlur={handleInput}
+          onBlur={handleBlur}
           autoComplete="off"
           autoFocus={!isMobile}
           disabled={isSending}

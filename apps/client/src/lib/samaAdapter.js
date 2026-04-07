@@ -1,22 +1,20 @@
+import useContextMenu from "@hooks/api/useContextMenu.js";
+import useConversations from "@hooks/api/useConversations.js";
+import useDrafts from "@hooks/api/useDrafts.js";
+import useMessages from "@hooks/api/useMessages.js";
+import useParticipants from "@hooks/api/useParticipants.js";
+
 import { setAdapters } from "@sama-communications.ui-kit";
 
-import useDrafts from "@hooks/useDrafts.js";
-import useParticipants from "@hooks/useParticipants.js";
-import useConversations from "@hooks/useConversations.js";
-import useHistory from "@hooks/useHistory.js";
-import useContextMenu from "@hooks/useContextMenu.js";
-import useMessages from "@hooks/useMessages.js";
-
-import { getLastMessageUserName, getUserFullName, getUserInitials, getLastVisitTime } from "@utils/UserUtils.js";
 import { getLastUpdateTime } from "@utils/ConversationUtils.js";
-import { getFileType, extractFilesFromClipboard } from "@utils/MediaUtils.js";
 import { calcInputHeight, getFormatedTime } from "@utils/FormatedUtils.js";
+import { getFileType, extractFilesFromClipboard } from "@utils/MediaUtils.js";
+import { getLastMessageUserName, getUserFullName, getUserInitials, getLastVisitTime } from "@utils/UserUtils.js";
 
 setAdapters({
   useDrafts,
   useParticipants,
   useConversations,
-  useHistory,
   useMessages,
   useContextMenu,
 

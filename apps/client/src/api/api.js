@@ -1,9 +1,10 @@
 import { default as EventEmitter } from "@lib/eventEmitter";
-import { default as reduxStore } from "@store/store";
-import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
-import { updateNetworkState } from "@store/values/NetworkState";
 
 import { SAMAClient } from "@sama-communications.sdk";
+
+import { default as reduxStore } from "@store/store";
+import { updateNetworkState } from "@store/values/NetworkState";
+import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
 
 const onConnect = () => {
   EventEmitter.emit("onConnect");

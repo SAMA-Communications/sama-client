@@ -87,7 +87,7 @@
     "react-blurhash": "^0.3.0",
     "react-custom-scrollbars-2": "^4.5.0",
     "react-dom": "^18.3.0",
-    "react-infinite-scroll-component": "^6.1.0",
+    "react-loading-skeleton": "^3.4.0",
     "react-loader-spinner": "^7.0.3",
     "react-tooltip": "^5.30.0",
     "tailwind-merge": "^3.3.1"

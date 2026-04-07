@@ -1,22 +1,14 @@
-import DownloadManager from "@lib/downloadManager";
-
 import api from "@api/api";
+
+import DownloadManager from "@lib/downloadManager";
 
 import store from "@store/store";
 import { upsertUser } from "@store/values/Participants";
 
-import { processFile, isHeic } from "@utils/MediaUtils.js";
-import {
-  validateEmail,
-  validateLogin,
-  validatePassword,
-  validatePhone,
-} from "@utils/ValidationUser.js";
-import {
-  validateIsEmptyObject,
-  validateFieldLength,
-} from "@utils/ValidationGeneral.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { processFile, isHeic } from "@utils/MediaUtils.js";
+import { validateIsEmptyObject, validateFieldLength } from "@utils/ValidationGeneral.js";
+import { validateEmail, validateLogin, validatePassword, validatePhone } from "@utils/ValidationUser.js";
 
 class UsersService {
   async login(data) {
@@ -27,15 +19,11 @@ class UsersService {
     }
 
     if (!validateLogin(login)) {
-      throw new Error(
-        "The username field must contain from 3 to 20 characters."
-      );
+      throw new Error("The username field must contain from 3 to 20 characters.");
     }
 
     if (!validatePassword(password)) {
-      throw new Error(
-        "The password field must contain from 3 to 20 characters"
-      );
+      throw new Error("The password field must contain from 3 to 20 characters");
     }
 
     const {
@@ -75,15 +63,11 @@ class UsersService {
     }
 
     if (!validateLogin(login)) {
-      throw new Error(
-        "The username field must contain from 3 to 20 characters."
-      );
+      throw new Error("The username field must contain from 3 to 20 characters.");
     }
 
     if (!validatePassword(password)) {
-      throw new Error(
-        "The password field must contain from 3 to 20 characters"
-      );
+      throw new Error("The password field must contain from 3 to 20 characters");
     }
 
     return await api.userCreate({
@@ -156,12 +140,7 @@ class UsersService {
     try {
       const reg = await Promise.race([
         navigator.serviceWorker.ready,
-        new Promise((_, reject) =>
-          setTimeout(
-            () => reject(new Error("Service Worker ready timed out")),
-            500
-          )
-        ),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Service Worker ready timed out")), 500)),
       ]);
       const sub = await reg.pushManager.getSubscription();
       if (sub) {
@@ -188,7 +167,7 @@ class UsersService {
       upsertUser({
         _id: currentUserId,
         avatar_url: isHeic(file.name) ? null : URL.createObjectURL(file),
-      })
+      }),
     );
 
     const avatarFile = await processFile(file, 0.2, 300);
@@ -198,9 +177,7 @@ class UsersService {
       return;
     }
 
-    const avatarObject = (
-      await DownloadManager.getFileObjects([avatarFile])
-    ).at(0);
+    const avatarObject = (await DownloadManager.getFileObjects([avatarFile])).at(0);
     const requestData = {
       avatar_object: {
         file_id: avatarObject.file_id,
@@ -220,18 +197,14 @@ class UsersService {
   }
 
   async deleteCurrentUser() {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      try {
-        await api.userDelete();
-        store.dispatch({ type: "RESET_STORE" });
-        localStorage.clear();
-        localStorage.setItem("isUsedBefore", true);
-        return true;
-      } catch (err) {
-        showCustomAlert(err.message, "danger");
-        return false;
-      }
-    } else {
+    try {
+      await api.userDelete();
+      store.dispatch({ type: "RESET_STORE" });
+      localStorage.clear();
+      localStorage.setItem("isUsedBefore", true);
+      return true;
+    } catch (err) {
+      showCustomAlert(err.message, "danger");
       return false;
     }
   }

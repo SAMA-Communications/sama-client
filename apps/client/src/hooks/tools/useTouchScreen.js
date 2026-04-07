@@ -1,10 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export const useTouchScreen = (
-  targetRef,
-  callbacks,
-  minDistances = { x: 100, y: 50 }
-) => {
+export const useTouchScreen = (targetRef, callbacks, minDistances = { x: 100, y: 50 }) => {
   const callbackRef = useRef(callbacks);
 
   useEffect(() => {
@@ -31,14 +27,9 @@ export const useTouchScreen = (
       const isHorizontal = Math.abs(xDiff) > Math.abs(yDiff);
       const swipeDistance = isHorizontal ? Math.abs(xDiff) : Math.abs(yDiff);
 
-      if (
-        (isHorizontal && swipeDistance > minDistances.x) ||
-        (!isHorizontal && swipeDistance > minDistances.y)
-      ) {
+      if ((isHorizontal && swipeDistance > minDistances.x) || (!isHorizontal && swipeDistance > minDistances.y)) {
         if (isHorizontal) {
-          xDiff > 0
-            ? callbackRef.current.right?.()
-            : callbackRef.current.left?.();
+          xDiff > 0 ? callbackRef.current.right?.() : callbackRef.current.left?.();
         } else {
           yDiff > 0 ? callbackRef.current.down?.() : callbackRef.current.up?.();
         }

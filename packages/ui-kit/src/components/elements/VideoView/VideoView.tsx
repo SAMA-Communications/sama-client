@@ -1,9 +1,8 @@
 import { useMemo, useState, useEffect, useRef } from "react";
 
-import { MediaBlurHash } from "../MediaBlurHash";
-import { PlayButton } from "./PlayButton";
-
-import { VideoViewProps } from "./VideoView.types";
+import { MediaBlurHash } from "@elements/MediaBlurHash";
+import { PlayButton } from "@elements/VideoView/PlayButton";
+import { VideoViewProps } from "@elements/VideoView/VideoView.types";
 
 export const VideoView = ({
   video,
