@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { ComponentProps } from "react";
 import userEvent from "@testing-library/user-event";
 import { render, screen } from "@testing-library/react";
@@ -5,10 +6,22 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 import { SearchInput } from "./SearchInput";
 
-const defaultProps: ComponentProps<typeof SearchInput> = {};
-
-const renderComponent = (props: Partial<ComponentProps<typeof SearchInput>> = {}) =>
-  render(<SearchInput {...defaultProps} {...props} />);
+const renderComponent = (props: Partial<ComponentProps<typeof SearchInput>> = {}) => {
+  const Wrapper = () => {
+    const [value, setValue] = useState(props.value ?? "");
+    return (
+      <SearchInput
+        {...props}
+        value={value}
+        onChange={(v) => {
+          setValue(v);
+          props.onChange?.(v);
+        }}
+      />
+    );
+  };
+  return render(<Wrapper />);
+};
 
 describe("SearchInput", () => {
   let user: ReturnType<typeof userEvent.setup>;

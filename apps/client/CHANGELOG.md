@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.13.0
+
+### Refactor
+
+- Large-scale refactor and code cleanup
+- Integrated `@sama-communications/ui-kit` and moved a substantial portion of UI into the package
+
+### Features
+
+- New hooks supporting the updated structure
+
+### Improvements
+
+- Better lazy-loading and data-fetching behavior across the app
+
 ## 1.12.0
 
 ### Features

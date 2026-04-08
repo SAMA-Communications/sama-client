@@ -1,7 +1,7 @@
 {
   "name": "@sama-communications/sdk",
   "description": "A SDK client for interacting with the SAMA chat server from Web/Node.js apps",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "keywords": [
     "chat",
     "chat-application",
@@ -45,9 +45,9 @@
   },
   "types": "./dist/types/index.d.ts",
   "scripts": {
-    "clean": "rimraf dist",
-    "build": "npm run clean && vite build",
-    "build:dev": "npm run clean && vite build --mode development"
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "vite build",
+    "build:dev": "vite build --mode development"
   },
   "browser": {
     "ws": false

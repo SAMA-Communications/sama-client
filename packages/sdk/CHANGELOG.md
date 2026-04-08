@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.17.0
+
+### Features
+
+- Added `onMessageReactionsListener` for incoming message reaction updates
+
+### Improvements
+
+- WebSocket initialization reliability and flow
+- Refined handling for several API requests
+
 ## 0.16.0
 
 ### Features
