@@ -1,3 +1,4 @@
+/** OpenGraph-style payload for link (and optional file) preview. */
 export interface UrlPreviewData {
   url: string;
   title?: string;

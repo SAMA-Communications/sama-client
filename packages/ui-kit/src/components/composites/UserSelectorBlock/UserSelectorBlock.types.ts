@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 
 import type { User } from "types/samaWssModels";
 
+/** Create chat / add participants with injected search UI slots. */
 export interface UserSelectorBlockProps {
   /** Controlled selected users (client holds state and passes to SearchBlock too) */
   selectedUsers: User[];

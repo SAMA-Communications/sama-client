@@ -1,3 +1,4 @@
+/** Attachment-shaped rows (image, video, PDF) for message and media tests. */
 export const attachmentsMock = [
   {
     _id: "a1",

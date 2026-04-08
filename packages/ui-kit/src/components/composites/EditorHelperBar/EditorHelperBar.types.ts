@@ -1,5 +1,6 @@
 import type { WrapperRootProps } from "@elements/WrapperRoot";
 
+/** Single action in the editor help tooltip. */
 export interface EditorHelperAction {
   label: string;
   onClick: () => void;

@@ -5,9 +5,9 @@ export interface OvalLoaderProps extends Omit<WrapperRootProps<"div">, "as" | "c
   height?: number;
   /** Spinner width in pixels. */
   width?: number;
-  /** Stroke color. */
+  /** Stroke / spinner color (CSS color). */
   color?: string;
-  /** Class name for the wrapper (legacy; prefer className). */
+  /** Legacy wrapper class; root also accepts `className` from `WrapperRoot`. */
   wrapperClassName?: string;
 }
 

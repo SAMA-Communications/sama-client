@@ -1,3 +1,4 @@
+/** Unstyled textarea with explicit ref and event props (no WrapperRoot). */
 export interface TextAreaInputProps {
   id?: string;
   className?: string;

@@ -7,7 +7,7 @@ import type { WrapperRootProps } from "@elements/WrapperRoot";
 export interface ConversationItemListProps extends Omit<WrapperRootProps<"div">, "as" | "children"> {
   conversations: Conversation[];
   selectedConversation: Conversation | null;
-  /** Called when a conversation row is clicked (in addition to default selection). */
+  /** Extra handler on row click, alongside default selection (typed as `Function` in source). */
   additionalOnClickfunc?: Function;
   /**
    * External ref to the scrollable element. Use with `disableBuiltinScrollPersistence` when the app

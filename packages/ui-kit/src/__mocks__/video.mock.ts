@@ -1,3 +1,4 @@
+/** Minimal video payload for `VideoView` tests. */
 export const videoMock = {
   file_name: "video.mp4",
   file_url: "https://example.com/video.mp4",

@@ -1,3 +1,4 @@
+/** Five synthetic users (`u1`–`u5`) aligned with adapter mocks and typing/search tests. */
 export const participantsMock = {
   u1: {
     _id: "u1",

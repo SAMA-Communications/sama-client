@@ -1,12 +1,14 @@
 import type { User, Conversation } from "types/samaWssModels";
 
+/** Flags passed with `searchText` for adapter `getSearchBlockData` resolution. */
 export interface SearchBlockDataOptions {
   isSearchOnlyUsers?: boolean;
   isShowDefaultConvs?: boolean;
 }
 
+/** User + conversation search UI; data from props or `getAdapters().getSearchBlockData`. */
 export interface SearchBlockProps {
-  /** When getSearchBlockData is provided by adapter, pass searchText + searchOptions and data will be resolved from adapter. Otherwise pass the data props below. */
+  /** When `getSearchBlockData` exists on adapters, pass `searchText` + `searchOptions`; else pass lists below. */
   searchText?: string | null;
   searchOptions?: SearchBlockDataOptions;
 

@@ -4,8 +4,9 @@ import type { WrapperRootProps } from "@elements/WrapperRoot";
 
 export interface ConversationInfoProps extends Omit<WrapperRootProps<"section">, "as" | "children"> {
   conversation: Conversation;
+  /** Layout density and scroll behavior (mobile full-bleed vs fixed width). */
   isMobile: boolean;
-  /** Optional ref for parent (e.g. share target). */
+  /** Optional ref for share/export targets; not used inside `ConversationInfo` today. */
   shareRef?: React.Ref<HTMLDivElement>;
   /** Called when user closes the info panel (e.g. back button). */
   onClose: () => void;

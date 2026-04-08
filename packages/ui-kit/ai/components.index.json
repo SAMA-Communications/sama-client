@@ -1,0 +1,2853 @@
+{
+  "ChatMessage": {
+    "path": "ai/components/ChatMessage.md",
+    "description": "One chat message row: selection mode, avatars, forward/reply chrome, bubble (body, attachments or link preview), edited/time/read footer; mobile swipe-to-reply. Props extend Omit<WrapperRootProps<'div'>, 'as'|'children'|'onContextMenu'>.",
+    "props": {
+      "message": {
+        "type": "ChatMessageMessage",
+        "required": true,
+        "values": []
+      },
+      "sender": {
+        "type": "User | null",
+        "required": true,
+        "values": []
+      },
+      "isCurrentUser": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "repliedMessage": {
+        "type": "ChatMessageMessage | null",
+        "required": false,
+        "values": []
+      },
+      "bodyContent": {
+        "type": "ReactNode",
+        "required": true,
+        "values": []
+      },
+      "attachmentsNode": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "linkPreviewNode": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "onUserProfile": {
+        "type": "(uid: string) => void",
+        "required": false,
+        "values": []
+      },
+      "onContextMenu": {
+        "type": "(e: React.MouseEvent, copyType: string | null, externalProps?: Record<string, unknown>) => void",
+        "required": false,
+        "values": []
+      },
+      "onSelectClick": {
+        "type": "(() => void) | null",
+        "required": false,
+        "values": []
+      },
+      "onUnselectClick": {
+        "type": "(() => void) | null",
+        "required": false,
+        "values": []
+      },
+      "onReplyClick": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "onVisible": {
+        "type": "(() => void) | null",
+        "required": false,
+        "values": []
+      },
+      "onSwipeReply": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "isMobile": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "isSelected": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "isSelectionMode": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "isLongTimeBetweenMessages": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "isPrevMessageYours": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "isNextMessageYours": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "isBlockStart": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "isBlockEnd": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "showAuthor": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "showTimestamp": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "senderDisplayName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "repliedMessageSenderName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "swipeReplyThreshold": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "onBubblePointerDown": {
+        "type": "(e: React.PointerEvent) => void",
+        "required": false,
+        "values": []
+      },
+      "onBubblePointerUp": {
+        "type": "(e: React.PointerEvent) => void",
+        "required": false,
+        "values": []
+      },
+      "onBubblePointerLeave": {
+        "type": "(e: React.PointerEvent) => void",
+        "required": false,
+        "values": []
+      },
+      "onBubbleClick": {
+        "type": "(e: React.MouseEvent) => void",
+        "required": false,
+        "values": []
+      },
+      "hideUserIcon": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ChatNameInput": {
+    "path": "ai/components/ChatNameInput.md",
+    "description": "Group chat name + optional single avatar file, validation, Cancel/Continue; Enter submits same as Continue. Props extend Omit<WrapperRootProps<'div'>, 'as'|'children'>.",
+    "props": {
+      "onConfirm": {
+        "type": "(name: string, image: File | null) => void",
+        "required": true,
+        "values": []
+      },
+      "onCancel": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "onValidationError": {
+        "type": "(message: string) => void",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "AdditionalMessages": {
+    "path": "ai/components/AdditionalMessages.md",
+    "description": "Reply/edit/forward strip with optional attachment thumb and close; returns null if message.error. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'>.",
+    "props": {
+      "type": {
+        "type": "AdditionalMessagesType",
+        "required": true,
+        "values": [
+          "reply",
+          "edit",
+          "forward"
+        ]
+      },
+      "message": {
+        "type": "AdditionalMessagesMessage | null | undefined",
+        "required": false,
+        "values": []
+      },
+      "messages": {
+        "type": "unknown[]",
+        "required": false,
+        "values": []
+      },
+      "isPreview": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "color": {
+        "type": "\"accent\" | \"white\"",
+        "required": false,
+        "values": [
+          "accent",
+          "white"
+        ]
+      },
+      "onCloseFunc": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "onClickFunc": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "senderName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "attachmentSlot": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "AttachModal": {
+    "path": "ai/components/AttachModal.md",
+    "description": "Modal: attachments list + textarea + send/cancel/add-more; states isSending/isPending. Rest to Modal. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'|'onInput'|'onKeyDown'>.",
+    "props": {
+      "files": {
+        "type": "MediaAttachmentData[]",
+        "required": true,
+        "values": []
+      },
+      "onRemoveFile": {
+        "type": "(index: number) => void",
+        "required": true,
+        "values": []
+      },
+      "onSend": {
+        "type": "(e?: React.MouseEvent) => void",
+        "required": true,
+        "values": []
+      },
+      "onCancel": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "onAddMore": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "inputRef": {
+        "type": "React.RefObject<HTMLTextAreaElement | null>",
+        "required": false,
+        "values": []
+      },
+      "onInput": {
+        "type": "(e: React.FormEvent<HTMLTextAreaElement>) => void",
+        "required": false,
+        "values": []
+      },
+      "onKeyDown": {
+        "type": "(e: React.KeyboardEvent<HTMLTextAreaElement>) => void",
+        "required": false,
+        "values": []
+      },
+      "placeholder": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "isSending": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "isPending": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "title": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "attachmentsMaxHeight": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "contentClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ContextMenu": {
+    "path": "ai/components/ContextMenu.md",
+    "description": "Absolute positioned menu (role=menu) at x/y; children are menu items. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'> with required children.",
+    "props": {
+      "position": {
+        "type": "{ x: number; y: number }",
+        "required": true,
+        "values": []
+      },
+      "children": {
+        "type": "ReactNode",
+        "required": true,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ConversationHeader": {
+    "path": "ai/components/ConversationHeader.md",
+    "description": "Chat header: tabs, selection actions, close/back, open info. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'>.",
+    "props": {
+      "conversation": {
+        "type": "Conversation",
+        "required": true,
+        "values": []
+      },
+      "isSelectionMode": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "currentTab": {
+        "type": "string",
+        "required": true,
+        "values": []
+      },
+      "changeTabFunc": {
+        "type": "(tab: string) => void",
+        "required": true,
+        "values": []
+      },
+      "closeFormFunc": {
+        "type": "MouseEventHandler<HTMLButtonElement>",
+        "required": true,
+        "values": []
+      },
+      "closeIcon": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "onForwardSection": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "onCloseSelectionMode": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "onOpenChatOrParticipantInfo": {
+        "type": "(conversation: Conversation, participant: User | null) => void",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ConversationInfo": {
+    "path": "ai/components/ConversationInfo.md",
+    "description": "Conversation details section: participants, edit/add actions, profile/context hooks. Root as=section. Extends Omit<WrapperRootProps<'section'>, 'as'|'children'>.",
+    "props": {
+      "conversation": {
+        "type": "Conversation",
+        "required": true,
+        "values": []
+      },
+      "isMobile": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "shareRef": {
+        "type": "React.Ref<HTMLDivElement>",
+        "required": false,
+        "values": []
+      },
+      "onClose": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "onEditConversation": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "onAddParticipants": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "onParticipantOpenProfile": {
+        "type": "(uid: string | null) => void",
+        "required": false,
+        "values": []
+      },
+      "onParticipantContextMenu": {
+        "type": "(params: object) => void",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "MessageStatus": {
+    "path": "ai/components/MessageStatus.md",
+    "description": "Sent/read/clock icon in a span via WrapperRoot; status or message.status. Extends Omit<WrapperRootProps<'span'>, 'as'|'children'>.",
+    "props": {
+      "status": {
+        "type": "\"sent\" | \"read\"",
+        "required": false,
+        "values": [
+          "sent",
+          "read"
+        ]
+      },
+      "message": {
+        "type": "Message",
+        "required": false,
+        "values": []
+      },
+      "color": {
+        "type": "\"accent\" | \"white\"",
+        "required": false,
+        "values": [
+          "accent",
+          "white"
+        ]
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "DotsLoader": {
+    "path": "ai/components/DotsLoader.md",
+    "description": "Inline ThreeDots spinner (react-loader-spinner); width/height/color props only.",
+    "props": {
+      "wrapperClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "mainColor": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "width": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "height": {
+        "type": "number",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ConversationInput": {
+    "path": "ai/components/ConversationInput.md",
+    "description": "Composer around MessageInput; requires getAdapters (drafts/messages/conversations). Extends Omit<WrapperRootProps<'div'>, 'as'|'children'>.",
+    "props": {
+      "chatMessagesBlockRef": {
+        "type": "React.RefObject<HTMLDivElement>",
+        "required": true,
+        "values": []
+      },
+      "editedMessage": {
+        "type": "{ _id: string; body: string } | null | undefined",
+        "required": false,
+        "values": []
+      },
+      "isEnableMagicButton": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "onOpenAttachmentHub": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "isLocationIncludeAttach": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ConversationItemList": {
+    "path": "ai/components/ConversationItemList.md",
+    "description": "Conversation list + CustomVerticalScrollbar; optional scroll_pos localStorage. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'>.",
+    "props": {
+      "conversations": {
+        "type": "Conversation[]",
+        "required": true,
+        "values": []
+      },
+      "selectedConversation": {
+        "type": "Conversation | null",
+        "required": true,
+        "values": []
+      },
+      "additionalOnClickfunc": {
+        "type": "Function",
+        "required": false,
+        "values": []
+      },
+      "scrollContainerRef": {
+        "type": "React.RefObject<HTMLDivElement | null>",
+        "required": false,
+        "values": []
+      },
+      "listInnerRef": {
+        "type": "React.RefObject<HTMLDivElement | null>",
+        "required": false,
+        "values": []
+      },
+      "disableBuiltinScrollPersistence": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "onListScrollFromBottom": {
+        "type": "(scrollFromBottom: number) => void",
+        "required": false,
+        "values": []
+      },
+      "scrollContainerId": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "scrollbarClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "scrollbarContentClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ConversationSelectModal": {
+    "path": "ai/components/ConversationSelectModal.md",
+    "description": "Modal with title, close, optional topContent, CustomVerticalScrollbar body.",
+    "props": {
+      "title": {
+        "type": "string",
+        "required": true,
+        "values": []
+      },
+      "onClose": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "topContent": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "children": {
+        "type": "ReactNode",
+        "required": true,
+        "values": []
+      }
+    }
+  },
+  "CustomVerticalScrollbar": {
+    "path": "ai/components/CustomVerticalScrollbar.md",
+    "description": "Custom scrollbar + optional scroll-to-bottom, localStorage scroll_pos_*, autoHeight. Standalone props (no WrapperRoot).",
+    "props": {
+      "children": {
+        "type": "ReactNode",
+        "required": true,
+        "values": []
+      },
+      "containerRef": {
+        "type": "React.RefObject<HTMLDivElement | null>",
+        "required": false,
+        "values": []
+      },
+      "onScroll": {
+        "type": "(scrollFromBottom: number) => void",
+        "required": false,
+        "values": []
+      },
+      "onScrollStop": {
+        "type": "(scrollTop: number) => void",
+        "required": false,
+        "values": []
+      },
+      "isScrollToBottomVisible": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "onScrollToBottom": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "minThumbHeight": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "autoHideDelay": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "hoverShowDelay": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "persistScrollPosition": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "containerId": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "customId": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "contentClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "customClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "childrenClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "customStyle": {
+        "type": "React.CSSProperties",
+        "required": false,
+        "values": []
+      },
+      "autoHeight": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "autoHeightMax": {
+        "type": "number | string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "MediaAttachments": {
+    "path": "ai/components/MediaAttachments.md",
+    "description": "Grid of MediaAttachment tiles; custom onContextMenu per file. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'|'onContextMenu'>.",
+    "props": {
+      "attachments": {
+        "type": "MediaAttachmentData[]",
+        "required": true,
+        "values": []
+      },
+      "mid": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "maxWidth": {
+        "type": "number | string | null",
+        "required": false,
+        "values": []
+      },
+      "maxHeight": {
+        "type": "number | string | null",
+        "required": false,
+        "values": []
+      },
+      "removeFileFunc": {
+        "type": "(index: number) => void",
+        "required": false,
+        "values": []
+      },
+      "disableAnimation": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "onContextMenu": {
+        "type": "(e: React.MouseEvent, attachment: MediaAttachmentData) => void",
+        "required": false,
+        "values": []
+      },
+      "onOpenMedia": {
+        "type": "(index: number) => void",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "MediaViewer": {
+    "path": "ai/components/MediaViewer.md",
+    "description": "Full-screen media carousel; index, close, optional getFileType and mobile. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'>.",
+    "props": {
+      "attachments": {
+        "type": "MediaAttachmentData[]",
+        "required": true,
+        "values": []
+      },
+      "currentIndex": {
+        "type": "number",
+        "required": true,
+        "values": []
+      },
+      "onIndexChange": {
+        "type": "(index: number) => void",
+        "required": true,
+        "values": []
+      },
+      "onClose": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "getFileType": {
+        "type": "(fileName?: string | null, fileContentType?: string | null) => string | null",
+        "required": false,
+        "values": []
+      },
+      "isMobile": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "swipeRef": {
+        "type": "React.RefObject<HTMLDivElement | null>",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "Modal": {
+    "path": "ai/components/Modal.md",
+    "description": "Centered dialog; overlay className + onClick only from WrapperRoot props in implementation. Extends WrapperRootProps<'div'> minus as/children plus panelClassName, contentKey, tall.",
+    "props": {
+      "children": {
+        "type": "ReactNode",
+        "required": true,
+        "values": []
+      },
+      "panelClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "contentKey": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "tall": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "onClick": {
+        "type": "React.MouseEventHandler<HTMLDivElement>",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "OvalLoader": {
+    "path": "ai/components/OvalLoader.md",
+    "description": "Oval SVG loader; width/height/color. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'>.",
+    "props": {
+      "height": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "width": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "color": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "wrapperClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ContextMenuItem": {
+    "path": "ai/components/ContextMenuItem.md",
+    "description": "Menu row with text, icon, onClick; uId/uObject app-only. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'>.",
+    "props": {
+      "text": {
+        "type": "string",
+        "required": true,
+        "values": []
+      },
+      "icon": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "onClick": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "isDangerStyle": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "id": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "uId": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "uObject": {
+        "type": "unknown",
+        "required": false,
+        "values": []
+      },
+      "additionalContent": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ConversationItem": {
+    "path": "ai/components/ConversationItem.md",
+    "description": "Single conversation list row. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'>.",
+    "props": {
+      "conversation": {
+        "type": "Conversation",
+        "required": true,
+        "values": []
+      },
+      "isSelected": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "SearchBlock": {
+    "path": "ai/components/SearchBlock.md",
+    "description": "Search users/chats with adapter or props data; CustomVerticalScrollbar; selection modes. Standalone props (no WrapperRoot on type).",
+    "props": {
+      "searchText": {
+        "type": "string | null | undefined",
+        "required": false,
+        "values": []
+      },
+      "searchOptions": {
+        "type": "SearchBlockDataOptions",
+        "required": false,
+        "values": []
+      },
+      "searchedUsers": {
+        "type": "User[]",
+        "required": false,
+        "values": []
+      },
+      "searchedChats": {
+        "type": "Conversation[]",
+        "required": false,
+        "values": []
+      },
+      "defaultChats": {
+        "type": "Conversation[]",
+        "required": false,
+        "values": []
+      },
+      "isShowDefaultConvs": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "isSearchOnlyUsers": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "isUserSearched": {
+        "type": "string | null | undefined",
+        "required": false,
+        "values": []
+      },
+      "isChatSearched": {
+        "type": "string | null | undefined",
+        "required": false,
+        "values": []
+      },
+      "isPending": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "selectedUsers": {
+        "type": "User[]",
+        "required": true,
+        "values": []
+      },
+      "onAddUser": {
+        "type": "(user: User) => void",
+        "required": false,
+        "values": []
+      },
+      "onRemoveUser": {
+        "type": "(user: User) => void",
+        "required": false,
+        "values": []
+      },
+      "addUserToArray": {
+        "type": "(user: User) => void",
+        "required": false,
+        "values": []
+      },
+      "removeUserFromArray": {
+        "type": "(user: User) => void",
+        "required": false,
+        "values": []
+      },
+      "isClickDisabledFunc": {
+        "type": "(user: User) => boolean",
+        "required": false,
+        "values": []
+      },
+      "isMaxLimit": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "onClearInputText": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "isClearInputText": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "onConversationClick": {
+        "type": "(cid: string) => void",
+        "required": false,
+        "values": []
+      },
+      "onUserClick": {
+        "type": "(user: User) => void",
+        "required": false,
+        "values": []
+      },
+      "isSelectUserToArray": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "selectedConversationId": {
+        "type": "string | null | undefined",
+        "required": false,
+        "values": []
+      },
+      "customClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "SearchConversationList": {
+    "path": "ai/components/SearchConversationList.md",
+    "description": "Conversation picker list with optional title and empty message.",
+    "props": {
+      "conversations": {
+        "type": "Conversation[]",
+        "required": true,
+        "values": []
+      },
+      "selectedConversationId": {
+        "type": "string | null | undefined",
+        "required": false,
+        "values": []
+      },
+      "onConversationClick": {
+        "type": "(cid: string) => void",
+        "required": true,
+        "values": []
+      },
+      "showTitle": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "emptyMessage": {
+        "type": "string | null | undefined",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "SearchInput": {
+    "path": "ai/components/SearchInput.md",
+    "description": "Search field; controlled onChange(value) or legacy setState. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'|'onChange'>.",
+    "props": {
+      "placeholder": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "value": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "onChange": {
+        "type": "(value: string) => void",
+        "required": false,
+        "values": []
+      },
+      "setState": {
+        "type": "(value: string | null) => void",
+        "required": false,
+        "values": []
+      },
+      "isLargeSize": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "disableAnimation": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "customClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "inputRef": {
+        "type": "React.RefObject<HTMLInputElement | null>",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "TextAreaInput": {
+    "path": "ai/components/TextAreaInput.md",
+    "description": "Plain textarea with ref and event handlers; no WrapperRoot.",
+    "props": {
+      "id": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "inputRef": {
+        "type": "React.RefObject<HTMLTextAreaElement | null>",
+        "required": false,
+        "values": []
+      },
+      "onInput": {
+        "type": "(e: React.FormEvent<HTMLTextAreaElement>) => void",
+        "required": false,
+        "values": []
+      },
+      "onKeyDown": {
+        "type": "(e: React.KeyboardEvent<HTMLTextAreaElement>) => void",
+        "required": false,
+        "values": []
+      },
+      "onBlur": {
+        "type": "(e: React.FocusEvent<HTMLTextAreaElement>) => void",
+        "required": false,
+        "values": []
+      },
+      "placeholder": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "disabled": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "autoFocus": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "autoComplete": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "UserProfile": {
+    "path": "ai/components/UserProfile.md",
+    "description": "Current user profile; adapters; shareRef unused in implementation.",
+    "props": {
+      "user": {
+        "type": "User",
+        "required": true,
+        "values": []
+      },
+      "shareRef": {
+        "type": "React.Ref<HTMLElement>",
+        "required": false,
+        "values": []
+      },
+      "onLogout": {
+        "type": "() => void | Promise<void>",
+        "required": true,
+        "values": []
+      },
+      "triggerExitEvent": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "onClose": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "onEditProfile": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "onNavigateToAuth": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "UserSelectorBlock": {
+    "path": "ai/components/UserSelectorBlock.md",
+    "description": "Create/add participants UI with search slots and maxCount.",
+    "props": {
+      "selectedUsers": {
+        "type": "User[]",
+        "required": true,
+        "values": []
+      },
+      "onAddUser": {
+        "type": "(user: User) => void",
+        "required": true,
+        "values": []
+      },
+      "onRemoveUser": {
+        "type": "(user: User) => void",
+        "required": true,
+        "values": []
+      },
+      "initSelectedUsers": {
+        "type": "User[]",
+        "required": false,
+        "values": []
+      },
+      "onClose": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "onCreate": {
+        "type": "(users: User[]) => void | Promise<void>",
+        "required": true,
+        "values": []
+      },
+      "searchInputSlot": {
+        "type": "ReactNode",
+        "required": true,
+        "values": []
+      },
+      "searchResultsSlot": {
+        "type": "ReactNode",
+        "required": true,
+        "values": []
+      },
+      "isSearchExpanded": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "maxCount": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "submitLabel": {
+        "type": "\"Create\" | \"Add\"",
+        "required": false,
+        "values": [
+          "Create",
+          "Add"
+        ]
+      }
+    }
+  },
+  "SummaryContainer": {
+    "path": "ai/components/SummaryContainer.md",
+    "description": "Floating AI summary card; null summaryContent renders nothing.",
+    "props": {
+      "summaryContent": {
+        "type": "SummaryContent | null | undefined",
+        "required": false,
+        "values": []
+      },
+      "onClose": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "getFilterLabel": {
+        "type": "(filter: string | undefined) => string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ResetPasswordModal": {
+    "path": "ai/components/ResetPasswordModal.md",
+    "description": "OTP + reset password steps; async boolean gates.",
+    "props": {
+      "isOpen": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "onClose": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "onSendOTP": {
+        "type": "(email: string) => Promise<boolean>",
+        "required": true,
+        "values": []
+      },
+      "onResetPassword": {
+        "type": "(data: ResetPasswordFormData) => Promise<boolean>",
+        "required": true,
+        "values": []
+      },
+      "onResendOTP": {
+        "type": "(email: string) => Promise<void>",
+        "required": true,
+        "values": []
+      },
+      "onValidationError": {
+        "type": "(message: string) => void",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "EditModalContainer": {
+    "path": "ai/components/EditModalContainer.md",
+    "description": "Modal edit chat or user profile; getAdapters; Enter/Escape. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'>; rest spread to Modal.",
+    "props": {
+      "type": {
+        "type": "\"conversation\" | \"user\"",
+        "required": true,
+        "values": [
+          "conversation",
+          "user"
+        ]
+      },
+      "onClose": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "MessageLinkPreview": {
+    "path": "ai/components/MessageLinkPreview.md",
+    "description": "URL/document preview card; refresh handler; expandDirection up|down.",
+    "props": {
+      "urlData": {
+        "type": "UrlPreviewData | null | undefined",
+        "required": false,
+        "values": []
+      },
+      "color": {
+        "type": "\"white\" | \"accent\"",
+        "required": false,
+        "values": [
+          "white",
+          "accent"
+        ]
+      },
+      "onRefresh": {
+        "type": "(e: React.MouseEvent, url: string) => void",
+        "required": true,
+        "values": []
+      },
+      "isDocument": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "formattedFileSize": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "expandDirection": {
+        "type": "\"up\" | \"down\"",
+        "required": false,
+        "values": [
+          "up",
+          "down"
+        ]
+      }
+    }
+  },
+  "MessageInput": {
+    "path": "ai/components/MessageInput.md",
+    "description": "Chat composer row; requires adapters; inputTextRef typed as any in source.",
+    "props": {
+      "inputTextRef": {
+        "type": "React.RefObject<any>",
+        "required": true,
+        "values": []
+      },
+      "isBlockedConv": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "isEditAction": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "isMobile": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "isSending": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "isEnableMagicButton": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "onSubmitFunc": {
+        "type": "React.MouseEventHandler<SVGSVGElement>",
+        "required": true,
+        "values": []
+      },
+      "onOpenAttachmentHub": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "isLocationIncludeAttach": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "EditorCodePanel": {
+    "path": "ai/components/EditorCodePanel.md",
+    "description": "Editor code area with statusText line and children slot.",
+    "props": {
+      "statusText": {
+        "type": "string",
+        "required": true,
+        "values": []
+      },
+      "children": {
+        "type": "ReactNode",
+        "required": true,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "EditorHelperBar": {
+    "path": "ai/components/EditorHelperBar.md",
+    "description": "Docs link + tooltip actions for programmable editor.",
+    "props": {
+      "docsHref": {
+        "type": "string",
+        "required": true,
+        "values": []
+      },
+      "docsLabel": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "tooltipId": {
+        "type": "string",
+        "required": true,
+        "values": []
+      },
+      "actions": {
+        "type": "EditorHelperAction[]",
+        "required": true,
+        "values": []
+      },
+      "actionButtonClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "EditorLogsPanel": {
+    "path": "ai/components/EditorLogsPanel.md",
+    "description": "Collapsible logs panel; visible=false renders null.",
+    "props": {
+      "visible": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "onClose": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "children": {
+        "type": "ReactNode",
+        "required": true,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "EditorValidationBar": {
+    "path": "ai/components/EditorValidationBar.md",
+    "description": "Validation toolbar: status, tooltip, check/save, optional children.",
+    "props": {
+      "statusNode": {
+        "type": "ReactNode",
+        "required": true,
+        "values": []
+      },
+      "tooltipId": {
+        "type": "string",
+        "required": true,
+        "values": []
+      },
+      "tooltipContent": {
+        "type": "ReactNode",
+        "required": true,
+        "values": []
+      },
+      "onCheck": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "onSave": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "saveDisabled": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "children": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "OtherUserProfile": {
+    "path": "ai/components/OtherUserProfile.md",
+    "description": "Other user profile card/compact; start conversation, back/close.",
+    "props": {
+      "user": {
+        "type": "OtherUserProfileUser",
+        "required": true,
+        "values": []
+      },
+      "displayName": {
+        "type": "string",
+        "required": true,
+        "values": []
+      },
+      "statusActivity": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "isMobile": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "onClose": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "onBack": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "onStartConversation": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "contentClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "closeButton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "backButton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "view": {
+        "type": "\"card\" | \"compact\"",
+        "required": false,
+        "values": [
+          "card",
+          "compact"
+        ]
+      },
+      "defaultView": {
+        "type": "\"card\" | \"compact\"",
+        "required": false,
+        "values": [
+          "card",
+          "compact"
+        ]
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ProgrammableEditorDocsBanner": {
+    "path": "ai/components/ProgrammableEditorDocsBanner.md",
+    "description": "Simple docs link banner.",
+    "props": {
+      "href": {
+        "type": "string",
+        "required": true,
+        "values": []
+      },
+      "label": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "DynamicAvatar": {
+    "path": "ai/components/DynamicAvatar.md",
+    "description": "Avatar with ImageLoader, blur hash, gradient fallback.",
+    "props": {
+      "customClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "size": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "avatarUrl": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "avatarBlurHash": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "defaultIcon": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "altText": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "bgColorKey": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "imageLoaderProps": {
+        "type": "Partial<ImageLoaderProps>",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ImageLoader": {
+    "path": "ai/components/ImageLoader.md",
+    "description": "Blur-hash image loader primitive.",
+    "props": {
+      "blurHash": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "isShowLoader": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ImageView": {
+    "path": "ai/components/ImageView.md",
+    "description": "Image tile with optional click and MediaBlurHash props.",
+    "props": {
+      "image": {
+        "type": "ImageData",
+        "required": false,
+        "values": []
+      },
+      "onClick": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "isFullSize": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "mediaBlurHashProps": {
+        "type": "Partial<MediaBlurHashProps>",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "InfoBox": {
+    "path": "ai/components/InfoBox.md",
+    "description": "Labeled info row; optional edit and icon.",
+    "props": {
+      "title": {
+        "type": "string",
+        "required": true,
+        "values": []
+      },
+      "systemTitle": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "value": {
+        "type": "string | undefined",
+        "required": true,
+        "values": []
+      },
+      "iconType": {
+        "type": "IconType",
+        "required": false,
+        "values": [
+          "phone",
+          "email",
+          "login"
+        ]
+      },
+      "placeholder": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "hideIfNull": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "onClick": {
+        "type": "React.MouseEventHandler<HTMLDivElement>",
+        "required": false,
+        "values": []
+      },
+      "onChangeValue": {
+        "type": "(name: string, value: string) => void",
+        "required": false,
+        "values": []
+      },
+      "isEnableToEdit": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "isIconEnable": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "InformativeMessage": {
+    "path": "ai/components/InformativeMessage.md",
+    "description": "System/info message strip in chat list.",
+    "props": {
+      "text": {
+        "type": "string",
+        "required": true,
+        "values": []
+      },
+      "onClick": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "isNextMessageUsers": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "InteractiveDate": {
+    "path": "ai/components/InteractiveDate.md",
+    "description": "Formatted date; numeric input is Unix seconds (multiplied by 1000 internally).",
+    "props": {
+      "date": {
+        "type": "DateInput",
+        "required": true,
+        "values": []
+      },
+      "locale": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "options": {
+        "type": "Intl.DateTimeFormatOptions",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "MagicButton": {
+    "path": "ai/components/MagicButton.md",
+    "description": "AI/magic composer button; adapters; inputTextRef any.",
+    "props": {
+      "inputTextRef": {
+        "type": "React.RefObject<any>",
+        "required": true,
+        "values": []
+      },
+      "isBlockedConv": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      }
+    }
+  },
+  "MediaAttachment": {
+    "path": "ai/components/MediaAttachment.md",
+    "description": "Single attachment tile; exports MediaAttachmentData type.",
+    "props": {
+      "index": {
+        "type": "number",
+        "required": true,
+        "values": []
+      },
+      "attachment": {
+        "type": "MediaAttachmentData",
+        "required": true,
+        "values": []
+      },
+      "flexGrow": {
+        "type": "number",
+        "required": true,
+        "values": []
+      },
+      "onClick": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "onContextMenu": {
+        "type": "(e: React.MouseEvent) => void",
+        "required": false,
+        "values": []
+      },
+      "removeFileFunc": {
+        "type": "(index: number) => void",
+        "required": false,
+        "values": []
+      },
+      "disableAnimation": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "MediaBlurHash": {
+    "path": "ai/components/MediaBlurHash.md",
+    "description": "BlurHash placeholder with loading/error/success status.",
+    "props": {
+      "status": {
+        "type": "MediaStatus",
+        "required": false,
+        "values": [
+          "loading",
+          "error",
+          "success"
+        ]
+      },
+      "blurHash": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "loaderColor": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "loaderSecondaryColor": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "loaderSize": {
+        "type": "number",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "MessageUserIcon": {
+    "path": "ai/components/MessageUserIcon.md",
+    "description": "User avatar for message row with fallbacks.",
+    "props": {
+      "user": {
+        "type": "User | null | undefined",
+        "required": true,
+        "values": []
+      },
+      "isCurrentUser": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "size": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "fallbackCurrentUser": {
+        "type": "React.ReactNode",
+        "required": false,
+        "values": []
+      },
+      "fallbackOtherUser": {
+        "type": "React.ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "SearchedUser": {
+    "path": "ai/components/SearchedUser.md",
+    "description": "User row in search results.",
+    "props": {
+      "user": {
+        "type": "User",
+        "required": true,
+        "values": []
+      },
+      "isSelected": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "isClickDisabled": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "onClick": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "SocketConnectingLine": {
+    "path": "ai/components/SocketConnectingLine.md",
+    "description": "Connecting banner; hidden when socket connected.",
+    "props": {
+      "isSocketConnected": {
+        "type": "boolean",
+        "required": true,
+        "values": []
+      },
+      "message": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "TypingLine": {
+    "path": "ai/components/TypingLine.md",
+    "description": "Typing indicator; getAdapters participants; TypingLineProps + internal optional fields.",
+    "props": {
+      "typingUserIds": {
+        "type": "string[]",
+        "required": false,
+        "values": []
+      },
+      "isDisplayUserNames": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "isDisplayBackground": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "participants": {
+        "type": "Record<string, User>",
+        "required": false,
+        "values": []
+      },
+      "getUserName": {
+        "type": "(user: User) => string",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "UserAvatar": {
+    "path": "ai/components/UserAvatar.md",
+    "description": "Avatar image or default icon.",
+    "props": {
+      "avatarUrl": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "avatarBlurHash": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "defaultIcon": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "wrapperClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "height": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "width": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "alt": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "UserInfo": {
+    "path": "ai/components/UserInfo.md",
+    "description": "Participant row with remove.",
+    "props": {
+      "user": {
+        "type": "User",
+        "required": true,
+        "values": []
+      },
+      "onRemove": {
+        "type": "() => void",
+        "required": true,
+        "values": []
+      },
+      "loading": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "skeleton": {
+        "type": "ReactNode",
+        "required": false,
+        "values": []
+      },
+      "loaderClassName": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "VideoView": {
+    "path": "ai/components/VideoView.md",
+    "description": "Video tile with blur hash and optional controls.",
+    "props": {
+      "video": {
+        "type": "VideoData",
+        "required": false,
+        "values": []
+      },
+      "onClick": {
+        "type": "() => void",
+        "required": false,
+        "values": []
+      },
+      "isFullSize": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "removePlayButton": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "enableControls": {
+        "type": "boolean",
+        "required": false,
+        "values": []
+      },
+      "mediaBlurHashProps": {
+        "type": "Partial<MediaBlurHashProps>",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "PageLoaderSkeleton": {
+    "path": "ai/components/PageLoaderSkeleton.md",
+    "description": "Full-page centered OvalLoader skeleton.",
+    "props": {
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ChatMessageSkeleton": {
+    "path": "ai/components/ChatMessageSkeleton.md",
+    "description": "Message row loading placeholder.",
+    "props": {
+      "bubbleWidth": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ChatListSkeleton": {
+    "path": "ai/components/ChatListSkeleton.md",
+    "description": "Repeats ConversationItemSkeleton count times.",
+    "props": {
+      "count": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "ConversationItemSkeleton": {
+    "path": "ai/components/ConversationItemSkeleton.md",
+    "description": "Single conversation row skeleton.",
+    "props": {
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  },
+  "MessageListSkeleton": {
+    "path": "ai/components/MessageListSkeleton.md",
+    "description": "Scroll list of ChatMessageSkeleton.",
+    "props": {
+      "count": {
+        "type": "number",
+        "required": false,
+        "values": []
+      },
+      "className": {
+        "type": "string",
+        "required": false,
+        "values": []
+      },
+      "scrollContainerId": {
+        "type": "string",
+        "required": false,
+        "values": []
+      }
+    }
+  }
+}

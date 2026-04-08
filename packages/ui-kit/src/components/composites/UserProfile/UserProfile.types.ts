@@ -2,6 +2,7 @@ import type { User } from "types/samaWssModels";
 
 export interface UserProfileProps {
   user: User;
+  /** Not used inside `UserProfile.tsx` today (reserved for share/export targets). */
   shareRef?: React.Ref<HTMLElement>;
   onLogout: () => void | Promise<void>;
   triggerExitEvent?: () => void;

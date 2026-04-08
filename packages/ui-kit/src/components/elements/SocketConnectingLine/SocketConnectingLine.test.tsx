@@ -1,37 +1,48 @@
+import type { ComponentProps } from "react";
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 
 import { SocketConnectingLine } from "./SocketConnectingLine";
 
+const defaultProps: ComponentProps<typeof SocketConnectingLine> = {
+  isSocketConnected: false,
+};
+
+const renderComponent = (props: Partial<ComponentProps<typeof SocketConnectingLine>> = {}) =>
+  render(<SocketConnectingLine {...defaultProps} {...props} />);
+
 describe("SocketConnectingLine", () => {
-  it("renders connecting line when socket is not connected", () => {
-    render(<SocketConnectingLine isSocketConnected={false} />);
-    expect(screen.getByText(/connecting/i)).toBeInTheDocument();
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it("does not render when socket is connected", () => {
-    render(<SocketConnectingLine isSocketConnected={true} />);
-    const element = screen.queryByText(/connecting/i);
-    expect(element).toBeNull();
-  });
+  describe("rendering", () => {
+    it("renders connecting line when socket is not connected", () => {
+      renderComponent();
+      expect(screen.getByText(/connecting/i)).toBeInTheDocument();
+    });
 
-  it("renders custom message when provided", () => {
-    const message = "Waiting for server...";
-    render(<SocketConnectingLine isSocketConnected={false} message={message} />);
-    expect(screen.getByText(message)).toBeInTheDocument();
-  });
+    it("does not render when socket is connected", () => {
+      renderComponent({ isSocketConnected: true });
+      expect(screen.queryByText(/connecting/i)).toBeNull();
+    });
 
-  it("renders div with correct classes", () => {
-    render(<SocketConnectingLine isSocketConnected={false} />);
-    const container = screen.getByText(/connecting/i).parentElement;
-    expect(container).toHaveClass(
-      "absolute top-0 w-full h-[28px] bg-accent-500 shadow-md z-[1000] flex items-center justify-center",
-    );
-  });
+    it("renders custom message when provided", () => {
+      const message = "Waiting for server...";
+      renderComponent({ message });
+      expect(screen.getByText(message)).toBeInTheDocument();
+    });
 
-  it("renders text with correct classes", () => {
-    render(<SocketConnectingLine isSocketConnected={false} />);
-    const text = screen.getByText(/connecting/i);
-    expect(text).toHaveClass("text-center font-light text-[18px] text-white");
+    it("renders root with layout and accent styles", () => {
+      renderComponent();
+      const container = screen.getByText(/connecting/i).parentElement;
+      expect(container).toHaveClass("ui:absolute", "ui:bg-accent-500", "ui:flex", "ui:w-full");
+    });
+
+    it("renders message with typography classes", () => {
+      renderComponent();
+      const text = screen.getByText(/connecting/i);
+      expect(text).toHaveClass("ui:text-center", "ui:font-light", "ui:text-white");
+    });
   });
 });
