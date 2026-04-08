@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { vi } from "vitest";
 import { participantsMock } from "./participants.mock";
 import { setAdapters } from "../adapters";
@@ -54,6 +56,12 @@ vi.mock("lucide-react", () => ({
   Users: (props: any) => <div data-testid="icon-users" {...props} />,
   VideoIcon: (props: any) => <div data-testid="icon-video" {...props} />,
 }));
+
+const useOpponentByCid = (cid: string, currentUserId: string) =>
+  useMemo(() => {
+    const users = Object.values(participantsMock);
+    return users.find((u) => u._id !== currentUserId) ?? null;
+  }, [cid, currentUserId]);
 
 const useParticipants = () => {
   return {
@@ -118,6 +126,7 @@ const useDrafts = () => ({
 
 const getAdaptersMock = () => ({
   useParticipants,
+  useOpponentByCid,
   userUtils,
   mediaUtils,
   useDrafts,

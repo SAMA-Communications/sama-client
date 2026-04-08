@@ -27,8 +27,8 @@ export const ConversationHeader = ({
   className,
   ...rest
 }: ConversationHeaderProps) => {
-  const { useParticipants, useMessages, useContextMenu, userUtils } = getAdapters();
-  const { getCurrentUser, getOpponentByCid } = useParticipants();
+  const { useParticipants, useOpponentByCid, useMessages, useContextMenu, userUtils } = getAdapters();
+  const { getCurrentUser } = useParticipants();
   const { deleteSelectedMessages, getSelectedMessages } = useMessages();
   const { openContextMenu } = useContextMenu();
   const { getLastVisitTime, getUserFullName } = userUtils;
@@ -43,7 +43,7 @@ export const ConversationHeader = ({
   const isGroupChat = selectedConversation.type === "g";
   const isCurrentUserCantLeave = currentUser.login.startsWith("sama-user-");
 
-  const opponentUser = useMemo(() => getOpponentByCid(selectedCID, currentUserId), [selectedCID]);
+  const opponentUser = useOpponentByCid(selectedCID, currentUserId);
   const opponentId = opponentUser?._id;
 
   const isOpponentExist = !!opponentUser;
@@ -69,6 +69,7 @@ export const ConversationHeader = ({
     if (selectedConversation.type === "u") {
       if (!isOpponentExist) return null;
       const opponentLastActivity = opponentUser.recent_activity;
+
       return (
         <div className="ui:text-sm ui:text-text-light">
           {opponentLastActivity === 0 ? (

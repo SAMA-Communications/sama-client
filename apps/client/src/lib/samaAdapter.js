@@ -2,6 +2,7 @@ import useContextMenu from "@hooks/api/useContextMenu.js";
 import useConversations from "@hooks/api/useConversations.js";
 import useDrafts from "@hooks/api/useDrafts.js";
 import useMessages from "@hooks/api/useMessages.js";
+import useOpponentByCid from "@hooks/api/useOpponentByCid.js";
 import useParticipants from "@hooks/api/useParticipants.js";
 
 import { setAdapters } from "@sama-communications.ui-kit";
@@ -14,6 +15,7 @@ import { getLastMessageUserName, getUserFullName, getUserInitials, getLastVisitT
 setAdapters({
   useDrafts,
   useParticipants,
+  useOpponentByCid,
   useConversations,
   useMessages,
   useContextMenu,

@@ -239,6 +239,8 @@ class MessagesService {
                 participants: users.map((obj) => obj._id),
               }),
             );
+            console.log(users);
+
             store.dispatch(upsertUsers(users));
           });
       }

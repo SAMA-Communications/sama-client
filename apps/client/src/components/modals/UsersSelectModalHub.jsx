@@ -52,7 +52,12 @@ export default function UsersSelectModalHub({ type }) {
           onCreate={sendEditRequest}
           isSearchExpanded={inputText?.length > 0}
           searchInputSlot={
-            <SearchInput customClassName="h-9 w-full" placeholder="Enter a username" setState={setInputText} />
+            <SearchInput
+              customClassName="h-9 w-full"
+              placeholder="Enter a username"
+              value={inputText ?? ""}
+              onChange={(v) => setInputText(v || null)}
+            />
           }
           searchResultsSlot={
             <SearchBlock
@@ -87,7 +92,12 @@ export default function UsersSelectModalHub({ type }) {
           onCreate={sendCreateRequest}
           isSearchExpanded={inputText?.length > 0}
           searchInputSlot={
-            <SearchInput customClassName="h-9 w-full" placeholder="Enter a username" setState={setInputText} />
+            <SearchInput
+              customClassName="h-9 w-full"
+              placeholder="Enter a username"
+              value={inputText ?? ""}
+              onChange={(v) => setInputText(v || null)}
+            />
           }
           searchResultsSlot={
             <SearchBlock
