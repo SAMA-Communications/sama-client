@@ -54,7 +54,11 @@ export default function useHistory() {
   };
 
   const openCurrentUserProfile = () => {
-    addPrefix(pathname + hash, "/profile");
+    let currentPath = pathname + hash;
+    if (isTablet && currentPath.includes("/info")) {
+      currentPath = currentPath.replace(/\/info/g, "/list");
+    }
+    addPrefix(currentPath, "/profile");
   };
 
   const closeChatInfoPage = () => {

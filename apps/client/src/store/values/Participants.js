@@ -32,6 +32,9 @@ export const getCurrentUserFromParticipants = createSelector(
   (id, participants) => participants[id] || {},
 );
 
+export const selectParticipantLastActivityById = (state, userId) =>
+  userId ? selectParticipantById(state, userId)?.recent_activity : undefined;
+
 export const { addUser, addUsers, setUsers, upsertUser, upsertUsers } = participants.actions;
 
 export default participants.reducer;
