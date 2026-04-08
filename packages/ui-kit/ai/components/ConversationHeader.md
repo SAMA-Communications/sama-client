@@ -2,7 +2,15 @@
 
 ## Description
 
-Chat header: tab strip (`currentTab` / `changeTabFunc`), selection-mode actions (forward, close selection), close/back (`closeFormFunc`, optional `closeIcon`), tap to open info (`onOpenChatOrParticipantInfo`). Uses `Conversation` + `User` from wire models.
+Chat header: **group-owner** tab toggle (messages ↔ apps via `CHAT_CONTENT_TABS`), **selection-mode** toolbar (forward, delete, cancel), **close/back** (`closeFormFunc`, optional `closeIcon`), **overflow** menu (`openContextMenu` with conversation actions), tap on title area to open info (`onOpenChatOrParticipantInfo`).
+
+**Subtitle / status row** (`viewStatusActivity`), adapter-driven:
+
+1. If **`conversation.typing_users`** is non-empty → **`TypingLine`** (group: background + names; 1:1: same component with flags from group check).
+2. Else if **direct chat** (`type === "u"`): resolves **opponent** via **`getAdapters().useOpponentByCid(conversation._id, currentUserId)`** (hook-style selector on adapters — must stay in sync with Redux/store participant data in the host). If opponent missing → **no** status row. If **`opponent.recent_activity === 0`** → **“online”** (green dot + accent text). Else → **`userUtils.getLastVisitTime(opponent.recent_activity)`** for last-seen style text.
+3. Else **group** → **“N member(s)”** from `participants.length`.
+
+**Adapters:** `useParticipants`, **`useOpponentByCid`**, `useMessages`, `useContextMenu`, `userUtils` (`getLastVisitTime`, `getUserFullName`). Opponent display name for title when conversation has no `name` uses **`getUserFullName(opponentUser)`** or **“Deleted account”**.
 
 **Source:** `src/components/composites/ConversationHeader/ConversationHeader.tsx`, `ConversationHeader.types.ts`.
 
@@ -10,15 +18,15 @@ Chat header: tab strip (`currentTab` / `changeTabFunc`), selection-mode actions 
 
 | Name | Type | Required | Default | Description |
 | ---- | ---- | -------- | ------- | ----------- |
-| `conversation` | `Conversation` | Yes | — | Active conversation. |
-| `isSelectionMode` | `boolean` | Yes | — | Shows forward / cancel selection UI when true. |
-| `currentTab` | `string` | Yes | — | Active tab id for controlled tabs. |
-| `changeTabFunc` | `(tab: string) => void` | Yes | — | Tab change handler. |
-| `closeFormFunc` | `MouseEventHandler<HTMLButtonElement>` | Yes | — | Close/back control. |
-| `closeIcon` | `ReactNode` | No | — | Replaces default `ChevronLeft` when set. |
-| `onForwardSection` | `() => void` | No | — | Selection mode: forward. |
-| `onCloseSelectionMode` | `() => void` | No | — | Selection mode: exit. |
-| `onOpenChatOrParticipantInfo` | `(conversation: Conversation, participant: User \| null) => void` | No | — | Header tap → info sheet. |
+| `conversation` | `Conversation` | Yes | — | Active conversation (`typing_users`, `participants`, `type`, etc.). |
+| `isSelectionMode` | `boolean` | Yes | — | Selection toolbar vs normal header. |
+| `currentTab` | `string` | Yes | — | Tab id for messages/apps toggle. |
+| `changeTabFunc` | `(tab: string) => void` | Yes | — | Tab change. |
+| `closeFormFunc` | `MouseEventHandler<HTMLButtonElement>` | Yes | — | Close/back. |
+| `closeIcon` | `ReactNode` | No | — | Replaces default `ChevronLeft`. |
+| `onForwardSection` | `() => void` | No | — | Selection: forward. |
+| `onCloseSelectionMode` | `() => void` | No | — | Selection: cancel (also **Escape** via `useKeyDown`). |
+| `onOpenChatOrParticipantInfo` | `(conversation: Conversation, participant: User \| null) => void` | No | — | Title block tap; warns if 1:1 and opponent deleted. |
 | `className` | `string` | No | — | Root. |
 | *(extends)* | `Omit<WrapperRootProps<"div">, "as" \| "children">` | — | — | `WrapperRoot` + `div` + motion. |
 
@@ -30,7 +38,8 @@ Chat header: tab strip (`currentTab` / `changeTabFunc`), selection-mode actions 
 
 ### Preferred
 
-- Wire `onCloseSelectionMode` whenever `isSelectionMode` can become true.
+- Implement **`setAdapters({ useOpponentByCid, userUtils, … })`** so 1:1 title and **online / last visit** match app state (see [`ADAPTERS.md`](../ADAPTERS.md)).
+- Wire `onCloseSelectionMode` when `isSelectionMode` can be true.
 
 ## Examples
 
@@ -51,4 +60,5 @@ Chat header: tab strip (`currentTab` / `changeTabFunc`), selection-mode actions 
 
 ## Anti-patterns
 
-- Using empty `currentTab` without defining tab ids used by `changeTabFunc`.
+- Empty **`currentTab`** without ids aligned with `changeTabFunc` / `CHAT_CONTENT_TABS`.
+- Stale **`recent_activity`** on participants — online/last-seen will be wrong until store updates.

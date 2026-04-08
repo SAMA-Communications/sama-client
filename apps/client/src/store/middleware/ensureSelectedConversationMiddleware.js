@@ -1,3 +1,4 @@
+import conversationService from "@services/conversationsService";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 
 export const ensureSelectedConversationMiddleware = (storeApi) => (next) => (action) => {
@@ -13,9 +14,7 @@ export const ensureSelectedConversationMiddleware = (storeApi) => (next) => (act
   if (state.conversations.entities?.[cid]?._id) return result;
 
   queueMicrotask(() => {
-    import("@services/conversationsService").then(({ default: conversationService }) => {
-      void conversationService.ensureConversationInStoreIfMissing(cid);
-    });
+    void conversationService.ensureConversationInStoreIfMissing(cid);
   });
 
   return result;

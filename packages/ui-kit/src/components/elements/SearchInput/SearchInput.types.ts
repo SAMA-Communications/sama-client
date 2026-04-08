@@ -1,6 +1,9 @@
 import type { WrapperRootProps } from "@elements/WrapperRoot";
 
-/** Search field; `onChange` is `(value: string) => void`, not a DOM change event. */
+/**
+ * Controlled search field: `onChange` receives a string (not a DOM event).
+ * Wrapper click focuses the input; non-empty value shows a clear control calling `onChange("")`.
+ */
 export interface SearchInputProps extends Omit<WrapperRootProps<"div">, "as" | "children" | "onChange"> {
   placeholder?: string;
   value: string;

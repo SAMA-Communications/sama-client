@@ -62,10 +62,9 @@ export default defineConfig(({ mode }) => ({
 
       "@hooks": r("src/hooks"),
 
-      "@sama-communications.sdk": r("../../packages/sdk/dist/@sama-communications.sdk.es.js"),
-      "@sama-communications.ui-kit": r("../../packages/ui-kit/dist/@sama-communications.ui-kit.es.js"),
-      "@sama-communications.ui-kit.css": r("../../packages/ui-kit/dist/ui-kit.css"),
-
+      "@sama-communications.sdk": r("../../packages/sdk/dist/@sama-communications.sdk.mjs"),
+      "@sama-communications.ui-kit": r("../../packages/ui-kit/dist/@sama-communications.ui-kit.mjs"),
+      "@sama-communications.ui-kit.css": r("../../packages/ui-kit/dist/@sama-communications.ui-kit.css"),
     },
   },
   esbuild: {

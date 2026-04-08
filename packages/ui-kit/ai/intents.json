@@ -10,6 +10,8 @@
   "reply or forward preview strip": ["AdditionalMessages"],
   "floating context menu at coordinates": ["ContextMenu"],
   "chat header tabs and selection": ["ConversationHeader"],
+  "typing or online status in chat header": ["ConversationHeader", "TypingLine"],
+  "search field with clear button": ["SearchInput"],
   "conversation details side panel": ["ConversationInfo"],
   "attach files before send modal": ["AttachModal"],
   "inline loading dots": ["DotsLoader"],

@@ -438,7 +438,7 @@
   },
   "ConversationHeader": {
     "path": "ai/components/ConversationHeader.md",
-    "description": "Chat header: tabs, selection actions, close/back, open info. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'>.",
+    "description": "Chat header: tabs, selection toolbar, close/back, context menu, open info. Status: TypingLine, or DM online/recent_activity via useOpponentByCid + getLastVisitTime, or group member count. Adapters: useParticipants, useOpponentByCid, useMessages, useContextMenu, userUtils.",
     "props": {
       "conversation": {
         "type": "Conversation",
@@ -1385,25 +1385,20 @@
   },
   "SearchInput": {
     "path": "ai/components/SearchInput.md",
-    "description": "Search field; controlled onChange(value) or legacy setState. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'|'onChange'>.",
+    "description": "Controlled search: value + onChange(string). Wrapper role=search, input type=search, clear button when non-empty. Click wrapper focuses input. Extends Omit<WrapperRootProps<'div'>, 'as'|'children'|'onChange'>.",
     "props": {
-      "placeholder": {
-        "type": "string",
-        "required": false,
-        "values": []
-      },
       "value": {
         "type": "string",
-        "required": false,
+        "required": true,
         "values": []
       },
       "onChange": {
         "type": "(value: string) => void",
-        "required": false,
+        "required": true,
         "values": []
       },
-      "setState": {
-        "type": "(value: string | null) => void",
+      "placeholder": {
+        "type": "string",
         "required": false,
         "values": []
       },
@@ -1412,18 +1407,8 @@
         "required": false,
         "values": []
       },
-      "disableAnimation": {
-        "type": "boolean",
-        "required": false,
-        "values": []
-      },
       "customClassName": {
         "type": "string",
-        "required": false,
-        "values": []
-      },
-      "inputRef": {
-        "type": "React.RefObject<HTMLInputElement | null>",
         "required": false,
         "values": []
       },

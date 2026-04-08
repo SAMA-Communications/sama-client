@@ -24,9 +24,9 @@
 
       "@hooks/*": ["src/hooks/*"],
 
-      "@sama-communications.sdk": ["../../packages/sdk/dist/@sama-communications.sdk.es.js"],
-      "@sama-communications.ui-kit": ["../../packages/ui-kit/dist/@sama-communications.ui-kit.es.js"],
-      "@sama-communications.ui-kit.css": ["../../packages/ui-kit/dist/ui-kit.css"]
+      "@sama-communications.sdk": ["../../packages/sdk/dist/@sama-communications.sdk.mjs"],
+      "@sama-communications.ui-kit": ["../../packages/ui-kit/dist/@sama-communications.ui-kit.mjs"],
+      "@sama-communications.ui-kit.css": ["../../packages/ui-kit/dist/@sama-communications.ui-kit.css"]
     }
   },
   "include": ["src"],

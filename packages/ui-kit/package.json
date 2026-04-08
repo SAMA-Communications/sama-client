@@ -49,10 +49,9 @@
   },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "clean": "rm -rf ./dist",
-    "build": "npm run clean && npm run build:ui-kit",
-    "build:dev": "vite build --mode development --config vite.config.ts",
-    "build:ui-kit": "vite build --config vite.config.ts",
+    "clean": "rimraf dist",
+    "build": "npm run clean && vite build",
+    "build:dev": "npm run clean && vite build --mode development",
     "test": "vitest"
   },
   "devDependencies": {
@@ -64,13 +63,11 @@
     "@typescript-eslint/parser": "^8.53.0",
     "@vitejs/plugin-react": "^4.4.1",
     "@vitest/ui": "^4.0.17",
-    "autoprefixer": "^10.4.23",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "jsdom": "^27.4.0",
-    "postcss": "^8.4.49",
     "prettier": "^3.8.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.1.18",

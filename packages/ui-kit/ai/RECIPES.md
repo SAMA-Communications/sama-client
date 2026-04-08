@@ -31,7 +31,7 @@ export function ChatSidebar() {
 
 ## 2. Active chat: header + composer
 
-Header actions (selection, context menu, summaries) need **`useMessages`**, **`useContextMenu`**, **`userUtils`**. Composer needs drafts, messages, conversations, participants.
+Header needs **`useParticipants`**, **`useOpponentByCid`** (1:1 title + **`recent_activity`** → online vs **`getLastVisitTime`**), **`useMessages`**, **`useContextMenu`**, **`userUtils`**. Composer needs drafts, messages, conversations, participants.
 
 ```tsx
 import { ConversationHeader, ConversationInput } from "@sama/ui-kit";

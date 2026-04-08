@@ -17,7 +17,8 @@ Many composites and elements **do not** fetch data from React context. They call
 | `useConversations()` | Selected conversation, list fetch/store, chat image/name, typing, leave/delete. |
 | `useMessages()` | Selection, send/edit/summarize/tone, bulk delete. |
 | `useContextMenu()` | Open context menu by category + item ids + coords. |
-| `userUtils` | Display names, initials, last-visit formatting. |
+| `useOpponentByCid(cid, currentUserId)` | Returns **`User | null`** for the **1:1** opponent (not for groups). Hook-style: must be called during render like a React hook; host usually backs it with `useSelector`. Used by **`ConversationHeader`** for title + **`recent_activity`** → online (`0`) or **`userUtils.getLastVisitTime`**. |
+| `userUtils` | Display names, initials, **`getLastVisitTime(timestamp)`** for last-seen strings. |
 | `conversationUtils` | Last-update label from conversation + last message time. |
 | `mediaUtils` | File type label, clipboard files. |
 | `formatedUtils` | Time formatting, textarea height helper. |
@@ -34,7 +35,7 @@ Use this when wiring or debugging “component does nothing” / wrong data.
 | `ConversationInput` | `useDrafts`, `useMessages`, `useConversations`, `useParticipants`, `formatedUtils` |
 | `MessageInput` | `useConversations`, `useDrafts`, `formatedUtils`, `mediaUtils` |
 | `MagicButton` | `useConversations`, `useMessages` |
-| `ConversationHeader` | `useParticipants`, `useMessages`, `useContextMenu`, `userUtils` |
+| `ConversationHeader` | `useParticipants`, **`useOpponentByCid`**, `useMessages`, `useContextMenu`, `userUtils` |
 | `ConversationItemList` | `useConversations` |
 | `ConversationItem` | `useParticipants`, `conversationUtils`, `userUtils` |
 | `TypingLine` | `useParticipants`, `userUtils` |
