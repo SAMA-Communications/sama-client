@@ -1,10 +1,18 @@
 import jwtDecode from "jwt-decode";
 
 import api from "@api/api";
+
 import DownloadManager from "@lib/downloadManager";
 
 import store from "@store/store";
-import { addUser, upsertUsers } from "@store/values/Participants";
+import {
+  markConversationAsRead,
+  removeChat,
+  updateLastMessageField,
+  upsertChat,
+  upsertParticipants,
+  setLastMessageField,
+} from "@store/values/Conversations";
 import {
   addMessage,
   addMessages,
@@ -14,18 +22,39 @@ import {
   upsertMessage,
   upsertMessages,
 } from "@store/values/Messages";
+import { addUser, upsertUsers } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
-import {
-  markConversationAsRead,
-  removeChat,
-  updateLastMessageField,
-  upsertChat,
-  upsertParticipants,
-  setLastMessageField,
-} from "@store/values/Conversations";
 
-import { navigateTo } from "@utils/NavigationUtils.js";
+import conversationService from "@services/conversationsService";
+
 import { TYPING_DURATION_MS } from "@utils/constants.js";
+import { navigateTo } from "@utils/NavigationUtils.js";
+
+function getMessageSortKey(msg) {
+  if (!msg || typeof msg !== "object") return 0;
+  if (typeof msg.t === "number") return msg.t;
+  if (msg.created_at != null) {
+    const ms = Date.parse(msg.created_at);
+    if (!Number.isNaN(ms)) return ms / 1000;
+  }
+  if (msg.updated_at != null) {
+    const ms = Date.parse(msg.updated_at);
+    if (!Number.isNaN(ms)) return ms / 1000;
+  }
+  return 0;
+}
+
+function mergeChronologicalMessageIds(oldIds, incomingIds, entities) {
+  const set = new Set([...(oldIds || []), ...incomingIds]);
+  const list = [...set];
+  list.sort((a, b) => {
+    const ka = getMessageSortKey(entities[a]);
+    const kb = getMessageSortKey(entities[b]);
+    if (ka !== kb) return ka - kb;
+    return String(a).localeCompare(String(b));
+  });
+  return list;
+}
 
 class MessagesService {
   currentChatId;
@@ -37,13 +66,10 @@ class MessagesService {
       if (conversation) {
         const oldMessagesIds = conversation.messagesIds || [];
         const isUpdateLastMessage = mids.includes(oldMessagesIds.at(-1));
-        const newMessagesIds = oldMessagesIds.filter(
-          (mid) => !mids.includes(mid)
-        );
+        const newMessagesIds = oldMessagesIds.filter((mid) => !mids.includes(mid));
         store.dispatch(upsertChat({ _id: cid, messagesIds: newMessagesIds }));
         if (isUpdateLastMessage) {
-          const lastMessage =
-            store.getState().messages.entities?.[newMessagesIds.at(-1)];
+          const lastMessage = store.getState().messages.entities?.[newMessagesIds.at(-1)];
           store.dispatch(setLastMessageField({ cid, msg: lastMessage }));
         }
       }
@@ -55,16 +81,19 @@ class MessagesService {
         markConversationAsRead({
           cid: message.cid,
           mid: Array.isArray(message.ids) ? message.ids[0] : message.ids,
-        })
+        }),
       );
     };
 
     api.onMessageListener = async (message) => {
+      const cid = message.cid;
+      if (cid && !store.getState().conversations.entities?.[cid]?._id) {
+        await conversationService.ensureConversationInStoreIfMissing(cid);
+      }
+
       const attachments = message.attachments;
       if (attachments) {
-        const attachmentsIds = attachments
-          .filter((obj) => !obj.file_url && obj.file_id)
-          .map((obj) => obj.file_id);
+        const attachmentsIds = attachments.filter((obj) => !obj.file_url && obj.file_id).map((obj) => obj.file_id);
         if (attachmentsIds.length) {
           const urls = await api.getDownloadUrlForFiles({
             file_ids: attachmentsIds,
@@ -92,7 +121,7 @@ class MessagesService {
           cid: message.cid,
           msg: message,
           countOfNewMessages,
-        })
+        }),
       );
 
       const conv = store.getState().conversations.entities[message.cid];
@@ -103,29 +132,23 @@ class MessagesService {
           upsertChat({
             _id: message.cid,
             participants: [...(conv.participants || []), user._id],
-          })
+          }),
         );
       }
-      if (
-        conv &&
-        (message.x?.type === "removed_participant" ||
-          message.x?.type === "left_participants")
-      ) {
+      if (conv && (message.x?.type === "removed_participant" || message.x?.type === "left_participants")) {
         const user = message.x.user;
         store.dispatch(
           upsertChat({
             _id: message.cid,
             participants: conv.participants.filter((uId) => uId !== user._id),
-          })
+          }),
         );
       }
     };
 
     api.onMessageEditListener = async (message) => {
       const { id, body } = message;
-      store.dispatch(
-        upsertMessage({ _id: id, body, updated_at: new Date().toISOString() })
-      );
+      store.dispatch(upsertMessage({ _id: id, body, updated_at: new Date().toISOString() }));
     };
 
     api.onMessageDeleteListener = async (message) => {
@@ -137,17 +160,17 @@ class MessagesService {
       const { cid, from } = data;
 
       const conversation = store.getState().conversations.entities[cid];
+      if (!conversation) return;
       const newTypingUsersArray = [...(conversation.typing_users || [])];
       !newTypingUsersArray.includes(from) && newTypingUsersArray.push(from);
       store.dispatch(
         upsertChat({
           _id: cid,
           typing_users: newTypingUsersArray,
-        })
+        }),
       );
 
-      const { clearTypingStatus, lastRequestTime } =
-        this.typingTimers[cid] || {};
+      const { clearTypingStatus, lastRequestTime } = this.typingTimers[cid] || {};
 
       const typingDuration = TYPING_DURATION_MS;
       const now = Date.now();
@@ -161,10 +184,8 @@ class MessagesService {
           store.dispatch(
             upsertChat({
               _id: cid,
-              typing_users: conversation.typing_users?.filter(
-                (id) => id !== from
-              ),
-            })
+              typing_users: conversation.typing_users?.filter((id) => id !== from),
+            }),
           );
         }, +typingDuration),
         lastRequestTime: now,
@@ -175,10 +196,7 @@ class MessagesService {
       let previousValue = this.currentChatId;
       this.currentChatId = store.getState().selectedConversation.value.id;
 
-      if (
-        this.currentChatId &&
-        (!previousValue || previousValue !== this.currentChatId)
-      ) {
+      if (this.currentChatId && (!previousValue || previousValue !== this.currentChatId)) {
         this.syncData();
       }
     });
@@ -207,9 +225,7 @@ class MessagesService {
     try {
       const messages = await this.getMessagesByCid(cid, {});
 
-      const { conversation } = await this.processMessages(messages, {
-        position: "reverseOld",
-      });
+      const { conversation } = await this.processMessages(messages);
 
       if (conversation?.type !== "u") {
         api
@@ -221,7 +237,7 @@ class MessagesService {
               upsertParticipants({
                 cid,
                 participants: users.map((obj) => obj._id),
-              })
+              }),
             );
             store.dispatch(upsertUsers(users));
           });
@@ -234,19 +250,9 @@ class MessagesService {
   }
 
   async sendMessage(message) {
-    const { server_mid, t, modified, bot_message } = await api.messageCreate(
-      message
-    );
+    const { server_mid, t, modified, bot_message } = await api.messageCreate(message);
 
-    const {
-      mid,
-      body,
-      cid,
-      from,
-      attachments,
-      replied_message_id,
-      forwarded_message_id,
-    } = message;
+    const { mid, body, cid, from, attachments, replied_message_id, forwarded_message_id } = message;
     const mObject = {
       _id: server_mid,
       old_id: mid,
@@ -260,9 +266,7 @@ class MessagesService {
     };
 
     store.dispatch(addMessage(mObject));
-    store.dispatch(
-      updateLastMessageField({ cid, resaveLastMessageId: mid, msg: mObject })
-    );
+    store.dispatch(updateLastMessageField({ cid, resaveLastMessageId: mid, msg: mObject }));
     store.dispatch(removeMessage(mid));
 
     if (bot_message) {
@@ -285,7 +289,7 @@ class MessagesService {
         _id: mid,
         body: newFields.body,
         updated_at: new Date().toISOString(),
-      })
+      }),
     );
   }
 
@@ -295,41 +299,25 @@ class MessagesService {
     this.updateConversationAfterDeleteMessages(cid, mids);
   }
 
-  async processMessages(newMessages, additionalOptions) {
+  async processMessages(newMessages) {
     if (!newMessages.length) return {};
 
     const convId = newMessages[0].cid;
     const conversation = store.getState().conversations.entities?.[convId];
-
-    const { anchor_mid, position } = additionalOptions;
-
-    const newMessagesIds = newMessages.map((el) => el._id).reverse();
     const oldMessagesIds = conversation?.messagesIds || [];
-
-    let updatedMessagesIds = [...oldMessagesIds];
-
-    if (anchor_mid && position && oldMessagesIds.includes(anchor_mid)) {
-      const anchorIndex = oldMessagesIds.indexOf(anchor_mid);
-      if (position === "gt") {
-        updatedMessagesIds.splice(anchorIndex + 1, 0, ...newMessagesIds);
-      } else if (position === "lt") {
-        updatedMessagesIds.splice(anchorIndex, 0, ...newMessagesIds);
-      }
-    } else {
-      updatedMessagesIds =
-        position === "reverseOld"
-          ? [...oldMessagesIds, ...newMessagesIds]
-          : [...newMessagesIds, ...oldMessagesIds];
-    }
-    updatedMessagesIds = [...new Set(updatedMessagesIds)];
+    const incomingIds = newMessages.map((el) => el._id);
 
     store.dispatch(addMessages(newMessages));
+
+    const entities = store.getState().messages.entities || {};
+    const updatedMessagesIds = mergeChronologicalMessageIds(oldMessagesIds, incomingIds, entities);
+
     store.dispatch(
       upsertChat({
         _id: convId,
         messagesIds: updatedMessagesIds,
         activated: true,
-      })
+      }),
     );
 
     const mAttachments = {};
@@ -344,9 +332,7 @@ class MessagesService {
         }
 
         const mids = mAttachmentsObject._id;
-        mAttachments[obj.file_id]._id = Array.isArray(mids)
-          ? [mid, ...mids]
-          : [mid, mids];
+        mAttachments[obj.file_id]._id = Array.isArray(mids) ? [mid, ...mids] : [mid, mids];
       });
     };
 
@@ -365,17 +351,12 @@ class MessagesService {
         repliedMsgs.map((msg) => {
           msg.attachments && handleAttachments(msg._id, msg.attachments);
           return msg._id;
-        })
+        }),
       );
       repliedMsgs.length && store.dispatch(addMessages(repliedMsgs));
 
       const notReceived = repliedMids.filter((mid) => !receivedIds.has(mid));
-      notReceived.length &&
-        store.dispatch(
-          addMessages(
-            notReceived.map((_id) => ({ _id, error: "Message deleted" }))
-          )
-        );
+      notReceived.length && store.dispatch(addMessages(notReceived.map((_id) => ({ _id, error: "Message deleted" }))));
     }
 
     if (Object.keys(mAttachments).length > 0) {
@@ -390,6 +371,22 @@ class MessagesService {
     }
 
     return { messagesIds: updatedMessagesIds, conversation };
+  }
+
+  buildForwardedSnapshots(mids) {
+    const messages = store.getState().messages?.entities || {};
+    return mids.map((mid) => {
+      const m = messages[mid];
+      if (!m) return { _id: mid, body: "", attachments: [] };
+      return {
+        _id: m._id,
+        body: m.body ?? "",
+        attachments: Array.isArray(m.attachments) ? m.attachments.map((a) => ({ ...a })) : [],
+        from: m.from,
+        t: m.t,
+        forwarded_message_id: m.forwarded_message_id,
+      };
+    });
   }
 }
 

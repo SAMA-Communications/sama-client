@@ -1,11 +1,7 @@
-import jwtDecode from "jwt-decode";
-
 import api from "@api/api";
 
 import store from "@store/store";
 import { upsertUser } from "@store/values/Participants";
-
-import { getLastVisitTime } from "@utils/UserUtils.js";
 
 class ActivityService {
   currentChatId;
@@ -44,43 +40,60 @@ class ActivityService {
     });
   }
 
-  async syncData() {
-    const userInfo = localStorage.getItem("sessionId")
-      ? jwtDecode(localStorage.getItem("sessionId"))
-      : null;
+  async fetchAndApplyUserActivity(uId, isCancelled = () => false) {
+    if (!uId) return;
 
-    if (!userInfo) {
-      return;
-    }
+    try {
+      const activity = await api.subscribeToUserActivity(uId);
+      if (isCancelled()) return;
 
-    const uId =
-      this.activeChat.owner_id === userInfo._id
-        ? this.activeChat.opponent_id
-        : this.activeChat.owner_id;
-
-    if (!uId) {
-      return;
-    }
-
-    api.subscribeToUserActivity(uId).then((activity) => {
       store.dispatch(
         upsertUser({
           _id: uId,
           recent_activity: activity[uId],
-        })
+        }),
       );
-    });
+    } catch {}
   }
 
-  getUserLastActivity(userId) {
-    const opponentLastActivity =
-      store.getState().participants.entities[userId]?.recent_activity;
+  async syncData() {
+    const state = store.getState();
+    const currentUserId = state.currentUserId.value.id;
+    if (!currentUserId) return;
 
-    return opponentLastActivity === 0 ? (
-      <span className="text-(--color-accent-dark) text-h5">online</span>
-    ) : (
-      getLastVisitTime(opponentLastActivity)
-    );
+    const activeConv = this.activeChat;
+    const uId = String(activeConv.owner_id) === String(currentUserId) ? activeConv.opponent_id : activeConv.owner_id;
+    if (!uId) return;
+
+    await this.fetchAndApplyUserActivity(uId);
+  }
+
+  isSelectedPrivateChatWithUser(profileUserId) {
+    if (!profileUserId) return false;
+
+    const state = store.getState();
+    const currentUserId = state.currentUserId.value.id;
+    if (!currentUserId) return false;
+
+    const selectedConversationId = state.selectedConversation.value.id;
+    if (!selectedConversationId) return false;
+
+    const chat =
+      this.currentChatId != null && String(this.currentChatId) === String(selectedConversationId)
+        ? this.activeChat
+        : state.conversations.entities[selectedConversationId];
+    if (!chat?.created_at || chat.type !== "u") return false;
+
+    const opponentId = String(chat.owner_id) === String(currentUserId) ? chat.opponent_id : chat.owner_id;
+    if (opponentId == null) return false;
+
+    return String(opponentId) === String(profileUserId);
+  }
+
+  unsubscribeProfileActivityIfNeeded(profileUserId) {
+    if (!this.isSelectedPrivateChatWithUser(profileUserId)) {
+      return api.unsubscribeFromUserActivity({});
+    }
   }
 }
 

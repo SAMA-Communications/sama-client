@@ -1,15 +1,11 @@
-import {
-  createEntityAdapter,
-  createSelector,
-  createSlice,
-} from "@reduxjs/toolkit";
+import { createEntityAdapter, createSelector, createSlice } from "@reduxjs/toolkit";
+
 import { getSelectedConversationId } from "@store/values/SelectedConversation";
 
 export const conversationsAdapter = createEntityAdapter({
   selectId: ({ _id }) => _id,
   sortComparer: (a, b) =>
-    (b.last_message?.t * 1000 || Date.parse(b.updated_at)) -
-    (a.last_message?.t * 1000 || Date.parse(a.updated_at)),
+    (b.last_message?.t * 1000 || Date.parse(b.updated_at)) - (a.last_message?.t * 1000 || Date.parse(a.updated_at)),
 });
 
 export const {
@@ -23,33 +19,37 @@ export const getConverastionById = createSelector(
   [getSelectedConversationId, selectConversationsEntities],
   (id, conversations) => {
     return conversations && id ? conversations[id] : {};
-  }
+  },
 );
 
-export const getDisplayableConversations = createSelector(
-  [selectAllConversations],
-  (conversations) => {
-    return conversations.filter((obj) => obj.type === "g" || obj.last_message);
-  }
-);
+export const getDisplayableConversations = createSelector([selectAllConversations], (conversations) => {
+  return conversations.filter((obj) => obj.type === "g" || obj.last_message);
+});
 
 export const getConversationHandler = createSelector(
   [getSelectedConversationId, selectConversationsEntities],
   (id, conversations) => {
     return conversations && id ? conversations[id].handler_options : null;
-  }
+  },
 );
 
 export const conversations = createSlice({
   name: "Conversations",
-  initialState: conversationsAdapter.getInitialState({ entities: null }),
+  initialState: conversationsAdapter.getInitialState({ entities: {}, listPaginationLt: null }),
   reducers: {
+    setConversationListPaginationLt: (state, action) => {
+      state.listPaginationLt = action.payload;
+    },
+
     setChats: (state, action) => {
       const conversations = action.payload;
       conversations.forEach((conv) => {
         conv.messagesIds = null;
       });
       conversationsAdapter.setAll(state, conversations);
+      const lastId = state.ids[state.ids.length - 1];
+      state.listPaginationLt =
+        lastId && state.entities[lastId]?.updated_at != null ? state.entities[lastId].updated_at : null;
     },
 
     insertChats: (state, action) => {
@@ -76,10 +76,7 @@ export const conversations = createSlice({
 
     insertChat: (state, action) => {
       const conversation = action.payload;
-      conversationsAdapter.setAll(state, [
-        conversation,
-        ...Object.values(state.entities),
-      ]);
+      conversationsAdapter.setAll(state, [conversation, ...Object.values(state.entities)]);
     },
 
     upsertChat: (state, action) => {
@@ -88,8 +85,7 @@ export const conversations = createSlice({
         state.entities = {};
       }
 
-      const { messagesIds, unread_messages_count } =
-        state.entities[conversation._id] || {};
+      const { messagesIds, unread_messages_count } = state.entities[conversation._id] || {};
       // messagesIds && delete conversation.messagesIds;
       unread_messages_count && delete conversation.unread_messages_count;
 
@@ -111,8 +107,7 @@ export const conversations = createSlice({
       };
 
       if (!conv) {
-        countOfNewMessages &&
-          (updateParams.unread_messages_count = countOfNewMessages);
+        countOfNewMessages && (updateParams.unread_messages_count = countOfNewMessages);
         conversationsAdapter.upsertOne(state, updateParams);
         return;
       }
@@ -128,8 +123,7 @@ export const conversations = createSlice({
 
       updateParams.messagesIds = [...mids, msg._id];
       if (countOfNewMessages) {
-        updateParams.unread_messages_count =
-          (conv.unread_messages_count || 0) + countOfNewMessages;
+        updateParams.unread_messages_count = (conv.unread_messages_count || 0) + countOfNewMessages;
       }
 
       conversationsAdapter.upsertOne(state, updateParams);
@@ -137,39 +131,59 @@ export const conversations = createSlice({
     updateWithDrafts: (state, { payload }) => {
       const { cid, isRemove = false, draft } = payload;
       const conv = state.entities[cid];
+      if (!conv) return;
 
-      if (isRemove && !conv?.draft) return;
-      const updateParams = { _id: cid };
-
-      if (conv.last_message?.t > draft?.updated_at) {
-        if (draft) updateParams.draft = draft;
-      } else if (conv.last_message) {
-        updateParams.last_message = {
-          ...conv.last_message,
-          ...(isRemove
-            ? { t: conv.last_message.old_t || conv.last_message.t, old_t: null }
-            : draft.updated_at
-            ? { t: draft.updated_at, old_t: conv.last_message.t }
-            : {}),
-        };
-        if (isRemove) {
-          updateParams.draft = null;
-        } else if (draft) {
-          updateParams.draft = draft;
+      if (isRemove && !conv.draft) {
+        const updateParams = { _id: cid, draft: null };
+        let changed = false;
+        const lm0 = conv.last_message;
+        if (lm0?.old_t != null) {
+          updateParams.last_message = { ...lm0, t: lm0.old_t, old_t: null };
+          changed = true;
         }
+        if (conv.old_updated_at != null) {
+          updateParams.updated_at = conv.old_updated_at;
+          updateParams.old_updated_at = null;
+          changed = true;
+        }
+        if (changed) conversationsAdapter.upsertOne(state, updateParams);
+        return;
+      }
+
+      if (!isRemove && draft?.edited_mid) {
+        conversationsAdapter.upsertOne(state, { _id: cid, draft });
+        return;
+      }
+
+      const updateParams = { _id: cid };
+      const lm = conv.last_message;
+      const draftT = draft?.updated_at;
+
+      if (lm?.t > draftT) {
+        if (draft) updateParams.draft = draft;
+      } else if (lm) {
+        updateParams.last_message = {
+          ...lm,
+          ...(isRemove
+            ? { t: lm.old_t ?? lm.t, old_t: null }
+            : draftT
+              ? { t: draftT, ...(lm.old_t ? {} : { old_t: lm.t }) }
+              : {}),
+        };
+        if (isRemove) updateParams.draft = null;
+        else if (draft) updateParams.draft = draft;
       } else {
         if (draft) updateParams.draft = draft;
         if (isRemove) {
           updateParams.updated_at = conv.old_updated_at;
           updateParams.old_updated_at = null;
           updateParams.draft = null;
-        } else if (draft.updated_at) {
-          updateParams.updated_at = new Date(
-            draft.updated_at * 1000
-          ).toISOString();
+        } else if (draftT) {
+          updateParams.updated_at = new Date(draftT * 1000).toISOString();
           updateParams.old_updated_at = conv.updated_at;
         }
       }
+
       conversationsAdapter.upsertOne(state, updateParams);
     },
     removeDraftField: (state, action) => {
@@ -224,9 +238,7 @@ export const conversations = createSlice({
       const updateParams = {
         _id: cid,
         last_message: msg,
-        updated_at: msg
-          ? new Date(msg.t * 1000).toISOString()
-          : conv.created_at,
+        updated_at: msg ? new Date(msg.t * 1000).toISOString() : conv.created_at,
       };
       conversationsAdapter.upsertOne(state, updateParams);
     },
@@ -246,7 +258,7 @@ export const conversations = createSlice({
       }
 
       const lastMessageField = conv.last_message;
-      mid === lastMessageField._id &&
+      mid === lastMessageField?._id &&
         conversationsAdapter.upsertOne(state, {
           _id: cid,
           last_message: { ...lastMessageField, status: "read" },
@@ -254,8 +266,7 @@ export const conversations = createSlice({
     },
 
     updateHandler: (state, action) => {
-      const { _id, content, updated_at, updated_by, not_saved } =
-        action.payload;
+      const { _id, content, updated_at, updated_by, not_saved } = action.payload;
       const conv = state.entities[_id];
 
       const existingHandlerOptions = conv?.handler_options || {};
@@ -284,6 +295,7 @@ export const {
   removeLastMessage,
   removeDraftField,
   setChats,
+  setConversationListPaginationLt,
   setLastMessageField,
   updateChatIndicator,
   updateLastMessageField,

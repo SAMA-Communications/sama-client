@@ -7,9 +7,7 @@ import { showCustomAlert } from "@utils/GeneralUtils.js";
 
 class AIService {
   async summarizeMessages({ cid, filter }) {
-    store.dispatch(
-      upsertChat({ _id: cid, summary: { isLoading: true, filter } })
-    );
+    store.dispatch(upsertChat({ _id: cid, summary: { isLoading: true, filter } }));
 
     try {
       const summMessage = await api.messageSummary({ cid, filter });
@@ -19,7 +17,7 @@ class AIService {
         upsertChat({
           _id: cid,
           summary: { isLoading: false, text: summMessage, filter },
-        })
+        }),
       );
     } catch (err) {
       console.error(err);
@@ -31,7 +29,7 @@ class AIService {
             text: "AI assistant error. Failed to create message.",
             filter,
           },
-        })
+        }),
       );
     }
   }
@@ -42,10 +40,7 @@ class AIService {
       return modifiedMessage;
     } catch (err) {
       console.error(err);
-      showCustomAlert(
-        "AI assistant error. Failed to create message.",
-        "danger"
-      );
+      showCustomAlert("AI assistant error. Failed to create message.", "danger");
     }
   }
 }

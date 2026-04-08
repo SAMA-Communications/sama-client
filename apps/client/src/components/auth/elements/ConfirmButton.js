@@ -1,35 +1,32 @@
-import * as m from "motion/react-m";
-import { AnimatePresence } from "motion/react";
 import { useCallback, useState, useTransition } from "react";
+
 import { useDispatch, useSelector } from "react-redux";
+
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
+
+import { useKeyDown } from "@hooks/tools/useKeyDown";
+
+import { DotsLoader, useViewportBreakpoints } from "@sama-communications.ui-kit";
 
 import subscribeForNotifications from "@services/tools/notifications";
 import usersService from "@services/usersService";
-import { useKeyDown } from "@hooks/useKeyDown";
-
-import { DotsLoader } from "@sama-communications.ui-kit";
 
 import { setCurrentUserId } from "@store/values/CurrentUserId";
+import { upsertUser } from "@store/values/Participants";
 import { setSelectedConversation } from "@store/values/SelectedConversation";
 import { setUserIsLoggedIn } from "@store/values/UserIsLoggedIn";
-import { upsertUser } from "@store/values/Participants";
-import { getIsMobileView } from "@store/values/IsMobileView.js";
 
-import { navigateTo } from "@utils/NavigationUtils.js";
-import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { KEY_CODES } from "@utils/constants.js";
+import { showCustomAlert } from "@utils/GeneralUtils.js";
+import { navigateTo } from "@utils/NavigationUtils.js";
 
-export default function ConfirmButton({
-  page,
-  content,
-  onClickEvent,
-  isResetModalOpen,
-}) {
+export default function ConfirmButton({ page, content, onClickEvent, isResetModalOpen }) {
   const dispatch = useDispatch();
 
   const [isPending, startTransition] = useTransition();
   const [isAutoAuth, setIsAutoAuth] = useState(true);
-  const isMobileView = useSelector(getIsMobileView);
+  const { isMobile: isMobileView } = useViewportBreakpoints();
 
   const isLoginPage = page === "login";
 
@@ -46,10 +43,8 @@ export default function ConfirmButton({
             userData = await usersService.login(content);
           }
           showCustomAlert(
-            `You’ve successfully created a new user${
-              isAutoAuth ? " and logged in" : ". You can log in now"
-            }.`,
-            "success"
+            `You’ve successfully created a new user${isAutoAuth ? " and logged in" : ". You can log in now"}.`,
+            "success",
           );
         }
       } catch (err) {
@@ -78,7 +73,7 @@ export default function ConfirmButton({
           <m.label
             key="isAutoAuthLabel"
             htmlFor="isAutoAuth"
-            className="w-full text-gray-500 cursor-pointer select-none flex items-center max-md:items-start overflow-hidden max-sm:h-[42px] "
+            className="flex w-full cursor-pointer items-center overflow-hidden text-gray-500 select-none max-md:items-start max-sm:h-[42px]"
             animate={{ height: ["0px", isMobileView ? "42px" : "24px"] }}
             exit={{
               height: [isMobileView ? "42px" : "24px", "0px"],
@@ -100,7 +95,7 @@ export default function ConfirmButton({
       <AnimatePresence mode="wait">
         <m.button
           key={isLoginPage ? "login" : "signup"}
-          className="w-full sm:mt-[25px] py-[7px] px-[14px] flex justify-center bg-(--color-accent-dark) hover:bg-(--color-accent-dark)/80 transition-colors  rounded-lg cursor-pointer"
+          className="flex w-full cursor-pointer justify-center rounded-lg bg-(--color-accent-500) px-[14px] py-[7px] transition-colors hover:bg-(--color-accent-500)/80 sm:mt-[25px]"
           disabled={isPending}
           onClick={sendRequest}
           animate={{ opacity: [0.7, 1], scale: [1.02, 1] }}
@@ -108,13 +103,9 @@ export default function ConfirmButton({
           transition={{ duration: 0.2 }}
         >
           {isPending ? (
-            <DotsLoader
-              height={40}
-              width={40}
-              mainColor={"var(--color-accent-light)"}
-            />
+            <DotsLoader height={40} width={40} mainColor={"var(--color-accent-100)"} />
           ) : (
-            <p className="h-[40px] flex-1 text-center flex items-center justify-center !font-normal text-white ">
+            <p className="flex h-[40px] flex-1 items-center justify-center text-center !font-normal text-white">
               {isLoginPage ? "Log in" : "Create account"}
             </p>
           )}
