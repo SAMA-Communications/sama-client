@@ -1,7 +1,7 @@
 {
   "name": "@sama-communications/ui-kit",
   "description": "A UI component library for building SAMA chat interfaces in Web applications.",
-  "version": "0.11.0",
+  "version": "1.0.0",
   "keywords": [
     "chat",
     "chat-application",
@@ -49,9 +49,9 @@
   },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "clean": "rimraf dist",
-    "build": "npm run clean && vite build",
-    "build:dev": "npm run clean && vite build --mode development",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
     "test": "vitest"
   },
   "devDependencies": {
