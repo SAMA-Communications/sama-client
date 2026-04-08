@@ -37,7 +37,14 @@ export default function ConversationSelectHub({ title }) {
     <ConversationSelectModal
       title={title}
       onClose={closeModal}
-      topContent={<SearchInput customClassName="w-full" placeholder="Search" setState={setInputText} />}
+      topContent={
+        <SearchInput
+          customClassName="w-full"
+          placeholder="Search"
+          value={inputText ?? ""}
+          onChange={(v) => setInputText(v || null)}
+        />
+      }
     >
       <SearchBlock
         customClassName="w-full md:max-xl:!w-[400px] max-xl:px-[2svw] max-xl:pt-[2swh] max-xl:pb-[2px]"

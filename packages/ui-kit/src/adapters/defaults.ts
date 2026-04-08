@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import type { Conversation, User } from "types/samaWssModels";
 
 import type { DraftPatch } from "@adapters/types";
@@ -105,6 +107,9 @@ const useParticipants = () => {
   };
 };
 
+const useOpponentByCid = (_cid: string, _currentUserId: string): User | null =>
+  useMemo(() => defaultuser, [_cid, _currentUserId]);
+
 const useConversations = () => {
   const setSelectedConversation = (cid: string) => {};
   const storeNewConversations = (conversations: Conversation[]) => {};
@@ -182,6 +187,7 @@ function useContextMenu() {
 export const defaultAdapters: SamaAdapters = {
   useDrafts,
   useParticipants,
+  useOpponentByCid,
   useConversations,
   useMessages,
   useContextMenu,

@@ -1,4 +1,4 @@
-import { memo, useCallback, useRef, useState } from "react";
+import { memo, useRef } from "react";
 
 import { clsx } from "clsx";
 import { Search, X } from "lucide-react";
@@ -11,55 +11,20 @@ const baseClassName =
 
 export const SearchInput = memo(function SearchInput({
   placeholder = "Search",
-  value: controlledValue,
+  value,
   onChange,
-  setState,
   isLargeSize = false,
-  disableAnimation = true,
   customClassName = "",
-  inputRef: inputRefProp,
   className,
   ...rest
 }: SearchInputProps) {
-  const internalRef = useRef<HTMLInputElement | null>(null);
-  const inputRef = inputRefProp ?? internalRef;
-
-  const [internalValue, setInternalValue] = useState("");
-  const isControlled = controlledValue !== undefined;
-  const value = isControlled ? controlledValue : internalValue;
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const isTextInInput = value.length > 0;
-
-  const onClear = useCallback(() => {
-    if (inputRef?.current) inputRef.current.value = "";
-    if (isControlled && onChange) onChange("");
-    else setInternalValue("");
-    setState?.(null);
-  }, [inputRef, isControlled, onChange, setState]);
-
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const v = e.target.value;
-      if (isControlled && onChange) onChange(v);
-      else setInternalValue(v);
-      setState?.(v || null);
-    },
-    [isControlled, onChange, setState],
-  );
-
-  const focusInput = useCallback(() => inputRef?.current?.focus(), [inputRef]);
-
-  const handleClearClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      onClear();
-    },
-    [onClear],
-  );
 
   return (
     <WrapperRoot
       className={clsx(baseClassName, customClassName, className)}
-      onClick={focusInput}
+      onClick={() => inputRef.current?.focus()}
       role="search"
       {...rest}
     >
@@ -71,14 +36,17 @@ export const SearchInput = memo(function SearchInput({
         style={{ fontSize: isLargeSize ? "var(--text-h6, 1rem)" : "1rem" }}
         placeholder={placeholder}
         value={value}
-        onChange={handleChange}
+        onChange={(e) => onChange(e.target.value)}
         aria-label={placeholder}
       />
       {isTextInInput ? (
         <button
           type="button"
           className="ui:shrink-0 ui:cursor-pointer ui:rounded ui:p-0.5 ui:text-text-dark ui:duration-150 ui:hover:bg-hover-light"
-          onClick={handleClearClick}
+          onClick={(e) => {
+            e.stopPropagation();
+            onChange("");
+          }}
           aria-label="Clear search"
         >
           <X size={isLargeSize ? 24 : 18} />

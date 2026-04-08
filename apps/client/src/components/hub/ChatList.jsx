@@ -73,7 +73,12 @@ export default function ChatList() {
         >
           <Settings size={18} />
         </button>
-        <SearchInput customClassName="flex-1" placeholder="Search" setState={setInputText} />
+        <SearchInput
+          customClassName="flex-1"
+          placeholder="Search"
+          value={inputText ?? ""}
+          onChange={(v) => setInputText(v || null)}
+        />
         <button
           onClick={() => addPrefix(pathname + hash, "/create")}
           className="hover:bg-bg-dark shadow-btn cursor-pointer rounded-xl bg-white p-2 duration-150 hover:text-white"

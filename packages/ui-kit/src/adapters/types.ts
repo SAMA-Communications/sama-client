@@ -95,6 +95,8 @@ export interface useContextMenuProps {
   openContextMenu: (category: string, list: string[], coords: { x: number; y: number }) => void;
 }
 
+export type useOpponentByCidProps = User | null;
+
 export interface userUtilsProps {
   getLastMessageUserName: (user: User) => string;
   getUserFullName: (user: User) => string;
@@ -136,6 +138,8 @@ export interface SamaAdapters {
   useConversations(): useConversationsProps;
   useMessages(): useMessagesProps;
   useContextMenu(): useContextMenuProps;
+
+  useOpponentByCid(cid: string, currentUserId: string): useOpponentByCidProps;
 
   userUtils: userUtilsProps;
   conversationUtils: conversationUtilsProps;

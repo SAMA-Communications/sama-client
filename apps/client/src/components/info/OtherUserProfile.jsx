@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useLocation } from "react-router";
 
@@ -16,13 +16,13 @@ import { OtherUserProfile as UIOtherUserProfile, useViewportBreakpoints } from "
 import activityService from "@services/activityService";
 import conversationService from "@services/conversationsService";
 
-import { addUser, selectParticipantsEntities } from "@store/values/Participants.js";
+import { addUser, selectParticipantLastActivityById, selectParticipantsEntities } from "@store/values/Participants.js";
 
 import { showOtherUserProfileContainer, showOtherUserProfileContent } from "@utils/AnimationUtils.js";
 import { KEY_CODES } from "@utils/constants.js";
 import { showCustomAlert } from "@utils/GeneralUtils.js";
 import { navigateTo, removeAndNavigateLastSection } from "@utils/NavigationUtils.js";
-import { extractUserIdFromUrl, getUserFullName } from "@utils/UserUtils.js";
+import { extractUserIdFromUrl, getLastVisitTime, getUserFullName } from "@utils/UserUtils.js";
 
 export default function OtherUserProfile({ view: viewProp = "compact" }) {
   const dispatch = useDispatch();
@@ -32,7 +32,8 @@ export default function OtherUserProfile({ view: viewProp = "compact" }) {
   const participants = useSelector(selectParticipantsEntities);
 
   const [userObject, setUserObject] = useState({});
-  const { _id: userId } = userObject;
+  const userId = userObject._id;
+  const opponentLastActivity = useSelector((state) => selectParticipantLastActivityById(state, userId));
 
   useEffect(() => {
     const uid = extractUserIdFromUrl(pathname + hash + search);
@@ -56,13 +57,29 @@ export default function OtherUserProfile({ view: viewProp = "compact" }) {
     setUserObject(user);
   }, [pathname, hash, search, participants, dispatch]);
 
+  useEffect(() => {
+    if (!userId) return;
+
+    const alreadySubscribedViaChat = activityService.isSelectedPrivateChatWithUser(userId);
+    let effectDisposed = false;
+    if (!alreadySubscribedViaChat) {
+      activityService.fetchAndApplyUserActivity(userId, () => effectDisposed);
+    }
+
+    return () => {
+      effectDisposed = true;
+      activityService.unsubscribeProfileActivityIfNeeded(userId);
+    };
+  }, [userId]);
+
   useKeyDown(KEY_CODES.ENTER, (e) => e.preventDefault());
   useKeyDown(KEY_CODES.ESCAPE, () => removeAndNavigateLastSection(pathname + hash, "/profile"));
 
-  const viewStatusActivity = useMemo(
-    () => (userId ? activityService.getUserLastActivity(userId) : ""),
-    [userId, participants],
-  );
+  const viewStatusActivity = () => {
+    if (!userId) return "";
+    if (opponentLastActivity === 0) return <span className="text-h5 text-accent-500">online</span>;
+    return getLastVisitTime(opponentLastActivity);
+  };
 
   const handleStartConversation = async () => {
     if (!userId) return;
@@ -77,7 +94,7 @@ export default function OtherUserProfile({ view: viewProp = "compact" }) {
     user: userObject,
     view: viewProp,
     displayName: getUserFullName(userObject) || "Unknown",
-    statusActivity: viewStatusActivity,
+    statusActivity: viewStatusActivity(),
     isMobile: isMobileView,
     onClose: handleClose,
     onBack: handleClose,

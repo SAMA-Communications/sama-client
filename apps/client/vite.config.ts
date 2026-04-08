@@ -16,7 +16,7 @@ const r = (dir: string) => path.resolve(__dirname, dir);
  * Buffer/global/process: false in the plugin — otherwise __*_polyfill in .vite/deps (react-dom).
  * Global process is imported once in src/process-browser-polyfill.js (import first in index.js).
  */
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     nodePolyfills({
       protocolImports: true,
@@ -36,6 +36,7 @@ export default defineConfig({
   ],
   preview: { port: 3000 },
   server: { port: 3000 },
+  css: { devSourcemap: mode === "development" },
   resolve: {
     alias: {
       "rate-limiter-flexible": r("src/stubs/rate-limiter-flexible-browser.js"),
@@ -78,5 +79,6 @@ export default defineConfig({
     commonjsOptions: {
       transformMixedEsModules: true,
     },
+    sourcemap: mode === "development",
   },
-});
+}));

@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import path from "path";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
@@ -10,12 +10,13 @@ export default defineConfig({
       formats: ["es", "cjs", "umd"],
     },
     rollupOptions: {
-      external: ['get-browser-fingerprint'],
+      external: ["get-browser-fingerprint"],
       output: {
         globals: {
-          'get-browser-fingerprint': 'getBrowserFingerprint'
-        }
+          "get-browser-fingerprint": "getBrowserFingerprint",
+        },
       },
     },
+    sourcemap: mode === "development",
   },
-});
+}));

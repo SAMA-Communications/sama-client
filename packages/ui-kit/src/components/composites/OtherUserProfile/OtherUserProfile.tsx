@@ -1,6 +1,3 @@
-import { ChevronLeft } from "lucide-react";
-
-import { CustomVerticalScrollbar } from "@composites/CustomVerticalScrollbar";
 import { OtherUserProfileProps, OtherUserProfileViewMode } from "@composites/OtherUserProfile/OtherUserProfile.types";
 import { OtherUserProfileViewCard } from "@composites/OtherUserProfile/OtherUserProfileViewCard";
 import { OtherUserProfileViewCompact } from "@composites/OtherUserProfile/OtherUserProfileViewCompact";

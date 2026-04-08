@@ -4,7 +4,8 @@
  * Order: dependency mocks (motion, spinners, tooltip, blurhash, lucide) → adapter singleton.
  */
 import type { CSSProperties, ReactNode } from "react";
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useMemo } from "react";
+
 import { vi } from "vitest";
 
 import { setAdapters } from "../adapters";
@@ -189,6 +190,12 @@ const participantsAdapterImpl = {
 
 const useParticipants = () => participantsAdapterImpl;
 
+const useOpponentByCid = (cid: string, currentUserId: string) =>
+  useMemo(() => {
+    const users = Object.values(participantsMock);
+    return users.find((u) => u._id !== currentUserId) ?? null;
+  }, [cid, currentUserId]);
+
 const userUtils = {
   getLastMessageUserName: (user: any) => {
     if (!user) return "Unknown";
@@ -283,6 +290,7 @@ const contextMenuAdapterImpl = {
 /** Default adapter bundle wired into `setAdapters` below for every Vitest run. */
 const getAdaptersMock = () => ({
   useParticipants,
+  useOpponentByCid,
   userUtils,
   mediaUtils,
   conversationUtils,
