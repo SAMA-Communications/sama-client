@@ -32,7 +32,15 @@ class SAMAClient {
     this.config = config
   }
 
-  async connect(): Promise<void> {
+  async connect(wsEndpoint?: string, httpEndpoint?: string): Promise<void> {
+    if (wsEndpoint) {
+      this.config.endpoint.ws = wsEndpoint
+    }
+
+    if (httpEndpoint) {
+      this.config.endpoint.http = httpEndpoint
+    }
+
     return new Promise((resolve, reject) => {
       this.socket = new WebSocketImp(this.config.endpoint.ws);
 
@@ -242,7 +250,7 @@ class SAMAClient {
   }
 
   async socketLogin(data: { user: { userId: UserId, login: string, password: string, }, deviceId?: string, token?: string }): Promise<any> {
-    return this.sendRequest("user_login", { organization_id: this.config.organization_id, ...data.user, device_id: data.deviceId ?? this.deviceId, token: data.token }, "user");
+    return this.sendRequest("user_login", { organization_id: this.config.organization_id, ...data.user, device_id: data.deviceId ?? this.deviceId, token: data.token }, ["user", "token"]);
   }
 
   async disconnectSocket(): Promise<any> {
