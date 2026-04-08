@@ -10,6 +10,8 @@ dist/
 
 /build
 
+.cursor
+
 .DS_Store
 .env
 .env.local

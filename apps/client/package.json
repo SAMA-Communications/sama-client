@@ -18,6 +18,7 @@
   "scripts": {
     "start": "vite --host",
     "build": "vite build",
+    "build:dev": "vite build --mode development",
     "preview": "vite preview"
   },
   "dependencies": {

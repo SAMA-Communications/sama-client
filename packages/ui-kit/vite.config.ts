@@ -8,8 +8,9 @@ import { fileURLToPath, URL } from "node:url";
 
 const createPath = (dir: String) => fileURLToPath(new URL(`./${dir}`, import.meta.url));
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react(), dts({ insertTypesEntry: true }), tailwindcss()],
+  css: { devSourcemap: mode === "development" },
   resolve: {
     alias: {
       "@src": createPath("src"),
@@ -39,5 +40,6 @@ export default defineConfig({
         },
       },
     },
+    sourcemap: mode === "development",
   },
-});
+}));
