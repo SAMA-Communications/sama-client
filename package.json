@@ -27,5 +27,8 @@
     "build:dev": "npm run build:dev:sdk && npm run build:dev:ui-kit && npm run build:dev:app",
     "preview": "npm run preview --workspace=sama",
     "test:ui-kit": "npm run test --workspace=@sama-communications/ui-kit"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.40.1"
   }
 }
