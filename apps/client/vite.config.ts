@@ -65,6 +65,7 @@ export default defineConfig(({ mode }) => ({
       "@sama-communications.sdk": r("../../packages/sdk/dist/@sama-communications.sdk.es.js"),
       "@sama-communications.ui-kit": r("../../packages/ui-kit/dist/@sama-communications.ui-kit.es.js"),
       "@sama-communications.ui-kit.css": r("../../packages/ui-kit/dist/ui-kit.css"),
+
     },
   },
   esbuild: {

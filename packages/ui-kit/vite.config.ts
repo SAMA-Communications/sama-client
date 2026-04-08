@@ -8,6 +8,7 @@ import { fileURLToPath, URL } from "node:url";
 
 const createPath = (dir: String) => fileURLToPath(new URL(`./${dir}`, import.meta.url));
 
+
 export default defineConfig(({ mode }) => ({
   plugins: [react(), dts({ insertTypesEntry: true }), tailwindcss()],
   css: { devSourcemap: mode === "development" },
@@ -28,8 +29,12 @@ export default defineConfig(({ mode }) => ({
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "SAMAuikit",
-      fileName: (format) => `@sama-communications.ui-kit.${format}.js`,
-      formats: ["es", "cjs"],
+      fileName: (format) => {
+        if (format === "es") return `@sama-communications.ui-kit.mjs`
+        if (format === "cjs") return `@sama-communications.ui-kit.cjs`
+        return `@sama-communications.ui-kit.js`
+      },
+      formats: ["es", "cjs", "umd"],
     },
     rollupOptions: {
       external: ["react", "react-dom"],

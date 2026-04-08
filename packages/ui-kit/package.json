@@ -35,22 +35,24 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/sama-ui-kit.cjs.js",
-  "module": "./dist/sama-ui-kit.es.js",
+  "main": "./dist/@sama-communications.ui-kit.cjs",
+  "module": "./dist/@sama-communications.ui-kit.mjs",
   "exports": {
     ".": {
-      "import": "./dist/sama-ui-kit.es.js",
-      "require": "./dist/sama-ui-kit.cjs.js"
+      "import": "./dist/@sama-communications.ui-kit.mjs",
+      "require": "./dist/@sama-communications.ui-kit.cjs"
     },
     "./css": {
-      "import": "./dist/ui-kit.css",
-      "require": "./dist/ui-kit.css"
+      "import": "./dist/@sama-communications.ui-kit.css",
+      "require": "./dist/@sama-communications.ui-kit.css"
     }
   },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "vite build",
-    "build:dev": "vite build --mode development",
+    "clean": "rm -rf ./dist",
+    "build": "npm run clean && npm run build:ui-kit",
+    "build:dev": "vite build --mode development --config vite.config.ts",
+    "build:ui-kit": "vite build --config vite.config.ts",
     "test": "vitest"
   },
   "devDependencies": {

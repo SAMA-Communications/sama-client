@@ -1,6 +1,5 @@
 import variant from "@jitl/quickjs-singlefile-browser-release-sync";
 import { loadQuickJs } from "@sebastianwessel/quickjs";
-
 import api from "@api/api.js";
 import store from "@store/store.js";
 import { updateHandler, upsertChat } from "@store/values/Conversations.js";

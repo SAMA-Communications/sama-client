@@ -1,4 +1,6 @@
 {
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "__tests__"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
@@ -10,9 +12,5 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "outDir": "dist",
-    "declaration": true,
-    "declarationDir": "dist",
-    "emitDeclarationOnly": true
   },
-  "include": ["src"]
 }

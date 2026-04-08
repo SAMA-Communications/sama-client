@@ -1,3 +1,5 @@
+import getBrowserFingerprint from "get-browser-fingerprint";
+
 import { default as EventEmitter } from "@lib/eventEmitter";
 
 import { SAMAClient } from "@sama-communications.sdk";
@@ -26,6 +28,9 @@ const config = {
   organization_id: import.meta.env.VITE_ORGANIZATION_ID,
 };
 const api = new SAMAClient(config);
+getBrowserFingerprint({ hardwareOnly: true }).then(
+  (deviceId) => (api.deviceId = deviceId.toString())
+);
 
 api.onConnectEvent = onConnect;
 api.onDisconnectEvent = onDisconnect;
