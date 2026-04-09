@@ -1,34 +1,25 @@
 import { useState } from "react";
 
-import HidePassword from "@icons/actions/HidePassword.svg?react";
-import ShowPassword from "@icons/actions/ShowPassword.svg?react";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function PasswordInput({ setState }) {
   const [passwordType, setPasswordType] = useState("password");
 
   return (
-    <div className="w-full py-[7px] px-[14px] flex gap-[10px] bg-(--color-hover-light) rounded-lg">
+    <div className="bg-hover-light flex w-full gap-[10px] rounded-lg px-[14px] py-[7px]">
       <input
-        className="h-[40px] flex-1 outline-none"
+        className="h-[40px] flex-1 font-light outline-none"
         onKeyDown={(e) => e.key === " " && e.preventDefault()}
-        onChange={({ target }) =>
-          setState((prev) => ({ ...prev, password: target.value }))
-        }
+        onChange={({ target }) => setState((prev) => ({ ...prev, password: target.value }))}
         placeholder="Enter your password"
         type={passwordType}
         autoComplete="off"
       />
-      <div className="flex items-center justify-center select-none cursor-pointer">
+      <div className="flex cursor-pointer items-center justify-center select-none">
         {passwordType === "password" ? (
-          <ShowPassword
-            className="mt-[5px]"
-            onClick={() => setPasswordType("text")}
-          />
+          <EyeOff className="mt-[5px]" color="grey" onClick={() => setPasswordType("text")} />
         ) : (
-          <HidePassword
-            className="mt-[6px]"
-            onClick={() => setPasswordType("password")}
-          />
+          <Eye className="mt-[6px]" color="grey" onClick={() => setPasswordType("password")} />
         )}
       </div>
     </div>

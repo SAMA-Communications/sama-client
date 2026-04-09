@@ -1,3 +1,21 @@
+# Changelog
+
+## 1.0.0
+
+### Release
+
+- **Stable 1.0** — migrated all required components from the SAMA client into the kit
+
+### Features
+
+- AI agent description and integration guidance
+- Added tests for every component
+- Improved project build pipeline
+
+### Improvements
+
+- Adapters updated to support new client capabilities
+
 ## 0.11.0
 
 ### Features

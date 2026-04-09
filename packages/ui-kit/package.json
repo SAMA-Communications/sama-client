@@ -1,7 +1,7 @@
 {
   "name": "@sama-communications/ui-kit",
   "description": "A UI component library for building SAMA chat interfaces in Web applications.",
-  "version": "0.11.0",
+  "version": "1.0.0",
   "keywords": [
     "chat",
     "chat-application",
@@ -35,33 +35,53 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/sama-ui-kit.cjs.js",
-  "module": "./dist/sama-ui-kit.es.js",
+  "main": "./dist/@sama-communications.ui-kit.cjs",
+  "module": "./dist/@sama-communications.ui-kit.mjs",
   "exports": {
     ".": {
-      "import": "./dist/sama-ui-kit.es.js",
-      "require": "./dist/sama-ui-kit.cjs.js"
+      "import": "./dist/@sama-communications.ui-kit.mjs",
+      "require": "./dist/@sama-communications.ui-kit.cjs"
+    },
+    "./css": {
+      "import": "./dist/@sama-communications.ui-kit.css",
+      "require": "./dist/@sama-communications.ui-kit.css"
     }
   },
   "types": "./dist/index.d.ts",
   "scripts": {
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
     "build": "vite build",
+    "build:dev": "vite build --mode development",
     "test": "vitest"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
+    "@testing-library/react": "^16.3.1",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^24.9.1",
-    "jsdom": "^27.0.1",
+    "@typescript-eslint/eslint-plugin": "^8.53.0",
+    "@typescript-eslint/parser": "^8.53.0",
+    "@vitejs/plugin-react": "^4.4.1",
+    "@vitest/ui": "^4.0.17",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "jsdom": "^27.4.0",
+    "prettier": "^3.8.0",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "tailwindcss": "^4.1.18",
     "typescript": "~5.7.2",
-    "vite": "^6.2.0",
-    "vitest": "^4.0.2"
+    "vite": "^6.4.1",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^4.0.17"
   },
   "dependencies": {
-    "@tailwindcss/oxide": "^4.1.14",
-    "@tailwindcss/vite": "^4.1.14",
-    "@vitejs/plugin-react": "^4.4.1",
+    "@tailwindcss/oxide": "^4.1.18",
+    "@tailwindcss/vite": "^4.1.18",
+    "@toolwind/corner-shape": "^0.0.8-3",
     "clsx": "^2.1.1",
+    "localforage": "^1.10.0",
     "lucide-react": "^0.545.0",
     "motion": "^12.9.2",
     "react": "^18.3.0",
@@ -69,12 +89,12 @@
     "react-custom-scrollbars-2": "^4.5.0",
     "react-dom": "^18.3.0",
     "react-loader-spinner": "^7.0.3",
-    "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.1.14",
-    "vite-plugin-dts": "^4.5.4"
+    "react-loading-skeleton": "^3.4.0",
+    "react-tooltip": "^5.30.0",
+    "tailwind-merge": "^3.3.1"
   },
   "optionalDependencies": {
-    "@tailwindcss/oxide-linux-x64-gnu": "^4.0.1",
-    "lightningcss-linux-x64-gnu": "^1.29.1"
+    "@tailwindcss/oxide-linux-x64-gnu": "^4.1.18",
+    "lightningcss-linux-x64-gnu": "^1.30.2"
   }
 }

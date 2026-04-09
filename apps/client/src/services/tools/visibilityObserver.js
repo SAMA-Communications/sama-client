@@ -53,7 +53,7 @@ export default class VisibilityObserver {
         root: rootElement,
         rootMargin: this.#triggerArea,
         threshold: 0.01,
-      }
+      },
     );
   }
 

@@ -1,8 +1,5 @@
-import {
-  createEntityAdapter,
-  createSelector,
-  createSlice,
-} from "@reduxjs/toolkit";
+import { createEntityAdapter, createSelector, createSlice } from "@reduxjs/toolkit";
+
 import { getConverastionById } from "@store/values/Conversations";
 
 export const messagesAdapter = createEntityAdapter({
@@ -43,7 +40,7 @@ export const selectActiveConversationMessages = createSelector(
   [getConverastionById, selectMessagesEntities],
   (conversation, messages) => {
     return conversation?.messagesIds?.map((id) => messages[id]) || [];
-  }
+  },
 );
 export const selectActiveConversationMessagesEntities = createSelector(
   [getConverastionById, selectMessagesEntities],
@@ -59,27 +56,19 @@ export const selectActiveConversationMessagesEntities = createSelector(
       result[mid] = message;
 
       const repliedId = message.replied_message_id;
-      if (
-        repliedId &&
-        !result[repliedId] &&
-        !notVisibleMessages[repliedId] &&
-        messages[repliedId]
-      ) {
+      if (repliedId && !result[repliedId] && !notVisibleMessages[repliedId] && messages[repliedId]) {
         notVisibleMessages[repliedId] = messages[repliedId];
       }
     }
 
     result.not_visible_messages = notVisibleMessages;
     return result;
-  }
+  },
 );
 
 const getId = (_, id) => id;
 
-export const getMessageById = createSelector(
-  [selectMessagesEntities, getId],
-  (messages, id) => messages[id]
-);
+export const getMessageById = createSelector([selectMessagesEntities, getId], (messages, id) => messages[id]);
 
 export const {
   addMessage,

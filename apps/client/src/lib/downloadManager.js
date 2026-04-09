@@ -66,11 +66,10 @@ export default class DownloadManager {
     const files = await Promise.all(
       filesInfo.map(async ({ url, fileName, contentType }) => {
         const response = await fetch(url);
-        if (!response.ok)
-          throw new Error(`Failed to fetch file from URL: ${url}`);
+        if (!response.ok) throw new Error(`Failed to fetch file from URL: ${url}`);
         const blob = await response.blob();
         return new File([blob], fileName, { type: contentType });
-      })
+      }),
     );
 
     const fileUploadUrls = await api.createUploadUrlForFiles({
@@ -89,7 +88,7 @@ export default class DownloadManager {
           body: files[i],
         };
         return fetch(uploadInfo.upload_url, requestOptions);
-      })
+      }),
     );
 
     const fileDownloadUrl = await api.getDownloadUrlForFiles({
