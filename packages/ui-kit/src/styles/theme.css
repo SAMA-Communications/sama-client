@@ -32,3 +32,19 @@
     color 0.15s linear,
     transform 0.15s linear;
 }
+
+@keyframes context-menu-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@utility animate-context-menu-pop-in {
+  animation: context-menu-pop-in 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+}

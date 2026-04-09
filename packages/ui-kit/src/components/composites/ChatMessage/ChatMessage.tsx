@@ -140,7 +140,10 @@ export const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(function
         >
           {!showAuthorName ? null : (
             <div
-              className="ui:mb-1.25 ui:cursor-pointer ui:truncate ui:text-text-dark/60"
+              className={clsx(
+                "ui:mb-1.25 ui:cursor-pointer ui:truncate ui:text-text-dark/60",
+                isCurrentUser && "ui:w-full ui:text-end",
+              )}
               onClick={() => openUserProfile(from)}
             >
               &zwnj;{senderDisplayName || "Deleted account"}

@@ -39,7 +39,8 @@ initDocumentKeyDown();
 
 export default function App() {
   const dispatch = useDispatch();
-  history.location = useLocation();
+  const location = useLocation();
+  history.location = location;
   history.navigate = useNavigate();
 
   const isContextClicked = useSelector(selectIsClicked);
@@ -48,6 +49,10 @@ export default function App() {
   const { isMobile, isTablet } = useViewportBreakpoints();
   const isMobileRef = useRef(isMobile);
   const isTabletRef = useRef(isTablet);
+
+  useEffect(() => {
+    dispatch(setClicked(false));
+  }, [dispatch, location.pathname, location.hash]);
 
   useEffect(() => {
     if (isMobile && isMobile !== isMobileRef.current) {
