@@ -72,7 +72,7 @@ class UsersService {
 
     return await api.userCreate({
       login: login.trim().toLowerCase(),
-      email: login.trim(),
+      email: email.trim(),
       password: password.trim(),
     });
   }
