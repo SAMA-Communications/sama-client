@@ -13,6 +13,7 @@ const SAVE_DEBOUNCE_MS = 150;
 const CLAMP_EPS_PX = 2;
 const EXTRA_FETCH_CAP = 48;
 const CONTAINER_RAF_TRIES = 40;
+const TOP_THRESHOLD_PX = 25;
 
 /**
  * Conversation list scroll persistence. When `active` is false, effects no-op (shared hook entrypoint).
@@ -50,7 +51,6 @@ export function useListPersistedScroll(active, p) {
 
   const runRestore = useCallback((container, persisted) => {
     if (!persisted) {
-      container.scrollTop = 0;
       pinnedBottomRef.current = false;
       pendingScrollRef.current = null;
       anchorRetryRef.current = null;
@@ -218,8 +218,12 @@ export function useListPersistedScroll(active, p) {
 
               const delta = cont.scrollHeight - prevH;
               if (prevH > 0 && delta !== 0) {
-                const maxTop = Math.max(0, cont.scrollHeight - cont.clientHeight);
-                cont.scrollTop = Math.min(prevTop + delta, maxTop);
+                if (prevTop <= TOP_THRESHOLD_PX) {
+                  cont.scrollTop = 0;
+                } else {
+                  const maxTop = Math.max(0, cont.scrollHeight - cont.clientHeight);
+                  cont.scrollTop = Math.min(Math.max(0, prevTop + delta), maxTop);
+                }
               }
 
               const { pending, pinnedBottom } = buildChatListScrollSavePayload(cont);
