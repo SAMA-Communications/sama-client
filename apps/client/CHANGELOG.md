@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.14.0
+
+### Improvements
+
+- Fixed summary container, updated chat lsit scroll logic
+
 ## 1.13.0
 
 ### Refactor
