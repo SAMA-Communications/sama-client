@@ -1,5 +1,4 @@
 import { WandSparkles, X } from "lucide-react";
-import * as m from "motion/react-m";
 
 import { SummaryContainerProps } from "@composites/SummaryContainer/SummaryContainer.types";
 
@@ -11,13 +10,7 @@ export const SummaryContainer = ({ summaryContent, onClose, getFilterLabel }: Su
   const { isLoading, text, filter } = summaryContent;
 
   return (
-    <m.div
-      className="ui:absolute ui:top-1/2 ui:right-2.5 ui:z-45 ui:max-w-87.5 ui:-translate-y-1/2 ui:rounded-2xl ui:bg-black/85 ui:p-3 ui:text-end ui:text-white"
-      initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
-      animate={{ backgroundColor: "rgba(0, 0, 0, 0.85)" }}
-      exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
-      transition={{ duration: 0.2 }}
-    >
+    <div className="ui:absolute ui:right-1/2 ui:bottom-17 ui:z-45 ui:w-[calc(100%-28px)] ui:max-w-300 ui:translate-x-1/2 ui:rounded-2xl ui:bg-black/65 ui:p-3 ui:text-end ui:text-white">
       <div className="ui:flex ui:items-center ui:justify-between">
         <span className="ui:text-span ui:text-gray-300">Only you can see this summary</span>
         <X color="white" size={16} className="ui:cursor-pointer" onClick={onClose} />
@@ -38,6 +31,6 @@ export const SummaryContainer = ({ summaryContent, onClose, getFilterLabel }: Su
       {getFilterLabel && (
         <span className="ui:text-span ui:mt-2.25 ui:ml-auto ui:text-gray-300">{getFilterLabel(filter)}</span>
       )}
-    </m.div>
+    </div>
   );
 };
