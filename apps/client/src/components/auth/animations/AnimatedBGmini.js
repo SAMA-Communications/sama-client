@@ -22,15 +22,13 @@ export default function AnimatedBGmini({ customClassName = "" }) {
 
   return (
     <m.div
-      className={
-        customClassName + " bg-linear-to-b from-[#C5C7FA] to-[#D4D5F7]"
-      }
+      className={customClassName + " bg-linear-to-b from-[#C5C7FA] to-[#D4D5F7]"}
       variants={showBg}
       initial="hidden"
       animate="visible"
     >
       <svg
-        className=" absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-auto"
+        className="absolute bottom-0 left-1/2 h-auto w-full -translate-x-1/2 transform"
         width="1091"
         height="526"
         viewBox="0 0 1091 526"

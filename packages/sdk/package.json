@@ -1,7 +1,7 @@
 {
   "name": "@sama-communications/sdk",
   "description": "A SDK client for interacting with the SAMA chat server from Web/Node.js apps",
-  "version": "0.16.2",
+  "version": "0.17.0",
   "keywords": [
     "chat",
     "chat-application",
@@ -18,7 +18,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SAMA-Communications/sama-client.git"
+    "url": "git+https://github.com/SAMA-Communications/sama-client.git",
+    "directory": "packages/sdk"
   },
   "author": "Igor Khomenko",
   "contributors": [
@@ -43,22 +44,22 @@
       "require": "./dist/@sama-communications.sdk.cjs"
     }
   },
-  "types": "./dist/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "scripts": {
-    "clean": "rm -rf ./dist",
-    "build:sdk": "vite build --config vite.config.ts",
-    "build": "npm run clean && npm run build:sdk"
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "vite build",
+    "build:dev": "vite build --mode development"
   },
   "browser": {
     "ws": false
   },
+  "dependencies": {
+    "ws": "8.18.3"
+  },
   "devDependencies": {
     "@types/ws": "^8.18.1",
     "typescript": "~5.7.2",
-    "vite": "^6.2.0"
-  },
-  "dependencies": {
-    "vite-plugin-dts": "^4.5.4",
-    "ws": "8.18.3"
+    "vite": "^6.2.0",
+    "vite-plugin-dts": "^4.5.4"
   }
 }

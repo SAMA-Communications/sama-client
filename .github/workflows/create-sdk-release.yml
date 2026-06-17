@@ -4,56 +4,65 @@ on:
   pull_request:
     types:
       - closed
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   publish-sdk:
     if: |
-      contains(github.event.pull_request.title, 'release') == true &&
-      contains(github.event.pull_request.title, 'sdk') == true &&
-      github.event.pull_request.merged == true &&
-      github.event.pull_request.base.ref == 'main'
-    
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' &&
+       contains(github.event.pull_request.title, 'release') &&
+       contains(github.event.pull_request.title, 'sdk') &&
+       github.event.pull_request.merged == true &&
+       github.event.pull_request.base.ref == 'main')
+
     runs-on: ubuntu-latest
-            
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
-                    
       - name: Checkout code
         uses: actions/checkout@v4
-            
+
       - name: Install node
         uses: actions/setup-node@v4
         with:
-            node-version: '20.x'
-            registry-url: 'https://registry.npmjs.org'
-            
-      - name: Run npm install
-        run: npm install
-        working-directory: packages/sdk
-            
-      - name: Run npm build
-        run: npm run build
-        working-directory: packages/sdk
-    
-      - name: Publish
-        run: npm publish --access public
-        working-directory: packages/sdk
-        env:
-            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    
+          node-version: "24.x"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Ensure npm version for OIDC publish
+        run: npm install -g npm@^11.5.1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build SDK
+        run: npm run build --workspace=@sama-communications/sdk
+
+      - name: Publish to npm
+        run: npm publish --access public --workspace=@sama-communications/sdk
 
   create-release:
     if: |
-      contains(github.event.pull_request.title, 'release') == true &&
-      contains(github.event.pull_request.title, 'sdk') == true &&
-      github.event.pull_request.merged == true &&
-      github.event.pull_request.base.ref == 'main'
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' &&
+       contains(github.event.pull_request.title, 'release') &&
+       contains(github.event.pull_request.title, 'sdk') &&
+       github.event.pull_request.merged == true &&
+       github.event.pull_request.base.ref == 'main')
     needs: publish-sdk
     runs-on: self-hosted
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
+
       - name: Extract Version
         id: extract-version
         run: |
@@ -67,7 +76,7 @@ jobs:
           # Extract the content between the last two version headers
           changelog=$(awk '/^## [0-9]+\.[0-9]+\.[0-9]+/{if (!version) {version=$0; next}} /^## [0-9]+\.[0-9]+\.[0-9]+/{exit} {if (version) description = description ORS $0} END {if (version) print description}' packages/sdk/CHANGELOG.md | sed -e '/^## [0-9]+\.[0-9]+\.[0-9]+/d; s/^# //' > changelog.txt)
           echo "changelog_file=changelog.txt" >> $GITHUB_ENV
-          
+
       - name: Create Release
         id: create-release
         uses: actions/create-release@v1
@@ -87,10 +96,10 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           REPOSITORY_NAME: ${{ github.repository }}
-          AUTHOR: ${{ github.event.pull_request.user.login }}
-          REVIEWERS: ${{ join(github.event.pull_request.requested_reviewers.*.login, ', ') }}
+          AUTHOR: ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login || github.actor }}
+          REVIEWERS: ${{ github.event_name == 'workflow_dispatch' && 'manual' || join(github.event.pull_request.requested_reviewers.*.login, ', ') }}
           RELEASE_URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/sdk-${{ env.version }}
         with:
           # You can pass in multiple channels to post to by providing a comma-delimited list of channel IDs.
-          channel-id: 'git-releases'
+          channel-id: "git-releases"
           payload-file-path: "./.github/slack/payload-slack-content.json"

@@ -1,4 +1,11 @@
-import rootReducer from "@store/reducer";
 import { configureStore } from "@reduxjs/toolkit";
 
-export default configureStore({ reducer: rootReducer });
+import { ensureSelectedConversationMiddleware } from "@store/middleware/ensureSelectedConversationMiddleware";
+import rootReducer from "@store/reducer";
+
+export default configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(ensureSelectedConversationMiddleware),
+});
+

@@ -21,8 +21,7 @@ export const contextMenu = createSlice({
     },
     setClicked: (state, { payload }) => void (state.clicked = payload),
     setList: (state, { payload }) => void (state.list = payload),
-    setExternalProps: (state, { payload }) =>
-      void (state.externalProps = payload),
+    setExternalProps: (state, { payload }) => void (state.externalProps = payload),
     addExternalProps: (state, { payload }) => {
       state.externalProps = { ...state.externalProps, ...payload };
     },
@@ -51,16 +50,8 @@ export const selectIsClicked = (state) => state.contextMenu.clicked;
 export const selectCoords = (state) => state.contextMenu.coords;
 export const selectContextList = (state) => state.contextMenu.list;
 export const selectContextListCategory = (state) => state.contextMenu.category;
-export const selectContextExternalProps = (state) =>
-  state.contextMenu.externalProps;
+export const selectContextExternalProps = (state) => state.contextMenu.externalProps;
 
-export const {
-  setCoords,
-  setClicked,
-  setList,
-  setExternalProps,
-  addExternalProps,
-  setAllParams,
-} = contextMenu.actions;
+export const { setCoords, setClicked, setList, setExternalProps, addExternalProps, setAllParams } = contextMenu.actions;
 
 export default contextMenu.reducer;

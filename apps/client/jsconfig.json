@@ -1,6 +1,34 @@
 {
   "compilerOptions": {
-    "module": "Node16",
-    "target": "ES6"
-  }
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"],
+      "@api/*": ["src/api/*"],
+
+      "@components/*": ["src/components/*"],
+      "@generic/*": ["src/components/generic/*"],
+      "@screens/*": ["src/components/screens/*"],
+      "@static/*": ["src/components/static/*"],
+
+      "@store/*": ["src/store/*"],
+      "@services/*": ["src/services/*"],
+
+      "@icons/*": ["src/assets/icons/*"],
+      "@assets/*": ["src/assets/*"],
+      "@styles/*": ["src/styles/*"],
+
+      "@lib/*": ["src/lib/*"],
+      "@utils/*": ["src/utils/*"],
+      "@animations/*": ["src/animations/*"],
+      "@validations/*": ["src/lib/validations/*"],
+
+      "@hooks/*": ["src/hooks/*"],
+
+      "@sama-communications.sdk": ["../../packages/sdk/dist/@sama-communications.sdk.mjs"],
+      "@sama-communications.ui-kit": ["../../packages/ui-kit/dist/@sama-communications.ui-kit.mjs"],
+      "@sama-communications.ui-kit.css": ["../../packages/ui-kit/dist/@sama-communications.ui-kit.css"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }

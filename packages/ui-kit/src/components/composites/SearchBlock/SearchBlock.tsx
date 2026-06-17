@@ -1,0 +1,138 @@
+import { clsx } from "clsx";
+import { Users } from "lucide-react";
+import type { User } from "types/samaWssModels";
+
+import { getAdapters } from "@adapters";
+
+import { CustomVerticalScrollbar } from "@composites/CustomVerticalScrollbar";
+import type { SearchBlockProps } from "@composites/SearchBlock/SearchBlock.types";
+import { SearchConversationList } from "@composites/SearchConversationList";
+
+import { SearchedUser } from "@elements/SearchedUser";
+import { WrapperRoot } from "@elements/WrapperRoot";
+
+import { EMPTY_SEARCH_BLOCK_DATA } from "@utils/constants";
+
+export const SearchBlock = (props: SearchBlockProps) => {
+  const {
+    searchText: searchTextProp,
+    searchOptions,
+    searchedUsers: searchedUsersProp,
+    searchedChats: searchedChatsProp,
+    defaultChats: defaultChatsProp,
+    isShowDefaultConvs,
+    isSearchOnlyUsers,
+    isUserSearched: isUserSearchedProp,
+    isChatSearched: isChatSearchedProp,
+    isPending: isPendingProp,
+    selectedUsers,
+    onAddUser: onAddUserProp,
+    onRemoveUser: onRemoveUserProp,
+    addUserToArray,
+    removeUserFromArray,
+    isClickDisabledFunc,
+    isMaxLimit,
+    onClearInputText,
+    isClearInputText,
+    onConversationClick,
+    onUserClick,
+    isSelectUserToArray,
+    selectedConversationId,
+    customClassName = "",
+  } = props;
+
+  const onAddUser = onAddUserProp ?? addUserToArray;
+  const onRemoveUser = onRemoveUserProp ?? removeUserFromArray;
+
+  const adapters = getAdapters();
+  const useAdapterData = adapters.getSearchBlockData && searchTextProp !== undefined && searchOptions !== undefined;
+  const adapterData = useAdapterData ? adapters.getSearchBlockData!() : null;
+  const searchText = searchTextProp ?? null;
+
+  const fromAdapter = useAdapterData && adapterData ? adapterData : null;
+  const searchedUsers = searchedUsersProp ?? fromAdapter?.searchedUsers ?? EMPTY_SEARCH_BLOCK_DATA.searchedUsers;
+  const searchedChats = searchedChatsProp ?? fromAdapter?.searchedChats ?? EMPTY_SEARCH_BLOCK_DATA.searchedChats;
+  const defaultChats = defaultChatsProp ?? fromAdapter?.defaultChats ?? EMPTY_SEARCH_BLOCK_DATA.defaultChats;
+  const isUserSearched = isUserSearchedProp ?? fromAdapter?.isUserSearched ?? EMPTY_SEARCH_BLOCK_DATA.isUserSearched;
+  const isChatSearched = isChatSearchedProp ?? fromAdapter?.isChatSearched ?? EMPTY_SEARCH_BLOCK_DATA.isChatSearched;
+  const isPending = isPendingProp ?? fromAdapter?.isPending ?? EMPTY_SEARCH_BLOCK_DATA.isPending;
+
+  const handleUserClick = (user: User) => {
+    if (isSelectUserToArray) {
+      const isSelected = selectedUsers.some((u) => u._id === user._id);
+      const disabled = isClickDisabledFunc?.(user) ?? false;
+      if (disabled) return;
+      isClearInputText && onClearInputText?.();
+      if (isSelected) {
+        onRemoveUser?.(user);
+      } else {
+        onAddUser?.(user);
+      }
+    } else {
+      isClearInputText && onClearInputText?.();
+      onUserClick?.(user);
+    }
+  };
+
+  const handleConversationClick = (cid: string) => {
+    isClearInputText && onClearInputText?.();
+    onConversationClick?.(cid);
+  };
+
+  return (
+    <WrapperRoot
+      className={clsx(
+        "ui:mt-[5px] ui:flex ui:h-100 ui:items-center ui:justify-start ui:max-xl:mt-0 ui:max-xl:w-full ui:max-xl:rounded-[16px] ui:max-xl:bg-bg-light",
+        customClassName,
+      )}
+    >
+      <CustomVerticalScrollbar
+        customClassName="ui:w-[400px]! ui:min-h-0 ui:max-xl:w-full! ui:self-start!"
+        childrenClassName="ui:flex ui:flex-col ui:!overflow-x-hidden"
+      >
+        {isShowDefaultConvs && !searchText?.length ? (
+          <SearchConversationList
+            conversations={defaultChats}
+            showTitle={false}
+            selectedConversationId={selectedConversationId}
+            onConversationClick={handleConversationClick}
+          />
+        ) : (
+          <>
+            {!isSearchOnlyUsers ? (
+              <div className="ui:mx-2 ui:my-0.5 ui:flex ui:items-center ui:gap-1.75 ui:rounded-xl ui:bg-bg-dark/5 ui:p-2 ui:text-sm ui:text-text-dark">
+                <Users size={18} /> Users
+              </div>
+            ) : null}
+            {isUserSearched ? <p className="ui:py-2 ui:text-center ui:text-text-dark">{isUserSearched}</p> : null}
+            {searchedUsers.map((user) => {
+              const isSelected = selectedUsers.some((u) => u._id === user._id);
+              const isClickDisabled = isMaxLimit
+                ? (isClickDisabledFunc?.(user) ?? false) || !isSelected
+                : (isClickDisabledFunc?.(user) ?? false) && isSelected;
+
+              return (
+                <SearchedUser
+                  key={user._id}
+                  user={user}
+                  isSelected={isSelected}
+                  isClickDisabled={isClickDisabled}
+                  onClick={() => handleUserClick(user)}
+                />
+              );
+            })}
+            {!isSearchOnlyUsers ? (
+              <SearchConversationList
+                conversations={searchedChats}
+                showTitle={true}
+                emptyMessage={isChatSearched}
+                selectedConversationId={selectedConversationId}
+                onConversationClick={handleConversationClick}
+              />
+            ) : null}
+          </>
+        )}
+      </CustomVerticalScrollbar>
+    </WrapperRoot>
+  );
+};
