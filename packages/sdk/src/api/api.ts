@@ -109,7 +109,8 @@ class SAMAClient {
 
         if (message.message) {
           if (message.message.error) {
-            this.responsesPromises[Object.keys(this.responsesPromises).filter(key => key.length == 37).slice(-1)[0]].reject(message.message.error);
+            const responsesPromisesKey = message.message.id ?? Object.keys(this.responsesPromises).filter(key => key.length == 37).slice(-1)[0]
+            this.responsesPromises[responsesPromisesKey].reject(message.message.error);
             return;
           }
           this.onMessageListener?.(message.message);
