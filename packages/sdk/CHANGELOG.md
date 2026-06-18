@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.17.1
+
+- Added `Config` interface
+- Added `disableAutoReconnect` option in config
+- `connect` method can receive 2 arguments (`wsEndpoint`, `httpEndpoint`)
+
 ## 0.17.0
 
 ### Features
