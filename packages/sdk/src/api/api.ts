@@ -111,6 +111,7 @@ class SAMAClient {
           if (message.message.error) {
             const responsesPromisesKey = message.message.id ?? Object.keys(this.responsesPromises).filter(key => key.length == 37).slice(-1)[0]
             this.responsesPromises[responsesPromisesKey].reject(message.message.error);
+            delete this.responsesPromises[responsesPromisesKey];
             return;
           }
           this.onMessageListener?.(message.message);
