@@ -1,12 +1,11 @@
 import getUniqueId from "../utils/uuid";
 import WebSocketImp from "../utils/websocket";
-import { ISocketRequest, UserId, IMessageCreateAck, IMessage, IConversation, IUser, IFile, ISubscription, IResponsePromise } from "../types"
+import { Config, ISocketRequest, UserId, IMessageCreateAck, IMessage, IConversation, IUser, IFile, ISubscription, IResponsePromise } from "../types"
 
 class SAMAClient {
   private socket?: WebSocket;
-  private wsEndpoint: string;
-  private httpEndpoint: string;
-  private organizationId: string;
+  private config: Config;
+  
   private currentUserId?: string;
   private responsesPromises: Record<string, IResponsePromise> = {};
   public deviceId?: string;
@@ -29,15 +28,21 @@ class SAMAClient {
   public onSystemMessageEvent?: ((message: IMessage) => void);
   public onDisconnectEvent?: (() => void);
 
-  constructor({ endpoint: { ws, http }, organization_id }: { endpoint: { ws: string; http: string }, organization_id: string }) {
-    this.wsEndpoint = ws;
-    this.httpEndpoint = http;
-    this.organizationId = organization_id;
+  constructor(config: Config) {
+    this.config = config
   }
 
-  async connect(): Promise<void> {
+  async connect(wsEndpoint?: string, httpEndpoint?: string): Promise<void> {
+    if (wsEndpoint) {
+      this.config.endpoint.ws = wsEndpoint
+    }
+
+    if (httpEndpoint) {
+      this.config.endpoint.http = httpEndpoint
+    }
+
     return new Promise((resolve, reject) => {
-      this.socket = new WebSocketImp(this.wsEndpoint);
+      this.socket = new WebSocketImp(this.config.endpoint.ws);
 
       this.socket.onopen = () => {
         console.log("[socket.open]");
@@ -104,7 +109,9 @@ class SAMAClient {
 
         if (message.message) {
           if (message.message.error) {
-            this.responsesPromises[Object.keys(this.responsesPromises).filter(key => key.length == 37).slice(-1)[0]].reject(message.message.error);
+            const responsesPromisesKey = message.message.id ?? Object.keys(this.responsesPromises).filter(key => key.length == 37).slice(-1)[0]
+            this.responsesPromises[responsesPromisesKey].reject(message.message.error);
+            delete this.responsesPromises[responsesPromisesKey];
             return;
           }
           this.onMessageListener?.(message.message);
@@ -159,7 +166,9 @@ class SAMAClient {
       this.socket.onclose = () => {
         console.log("[socket.close]");
         this.onDisconnectEvent?.();
-        this.reconnect();
+        if (!this.config.disableAutoReconnect) {
+          this.reconnect();
+        }
       };
     });
   }
@@ -224,7 +233,7 @@ class SAMAClient {
     };
     if (data) params.body = JSON.stringify(data);
 
-    const response = await fetch(`${this.httpEndpoint}/${endpoint}`, params);
+    const response = await fetch(`${this.config.endpoint.http}/${endpoint}`, params);
 
     const text = await response.text();
     if (!response.ok) {
@@ -243,7 +252,7 @@ class SAMAClient {
   }
 
   async socketLogin(data: { user: { userId: UserId, login: string, password: string, }, deviceId?: string, token?: string }): Promise<any> {
-    return this.sendRequest("user_login", { organization_id: this.organizationId, ...data.user, device_id: data.deviceId ?? this.deviceId, token: data.token }, "user");
+    return this.sendRequest("user_login", { organization_id: this.config.organization_id, ...data.user, device_id: data.deviceId ?? this.deviceId, token: data.token }, ["user", "token"]);
   }
 
   async disconnectSocket(): Promise<any> {
@@ -251,7 +260,7 @@ class SAMAClient {
   }
 
   async userCreate(data: { login: string; email: string; password: string }): Promise<IUser> {
-    return this.sendRequest("user_create", { organization_id: this.organizationId, login: data.login, email: data.email, password: data.password }, "user");
+    return this.sendRequest("user_create", { organization_id: this.config.organization_id, login: data.login, email: data.email, password: data.password }, "user");
   }
 
   async userEdit(data: { [key: string]: any }): Promise<IUser> {
@@ -265,7 +274,7 @@ class SAMAClient {
     const tokenExpiredAt = parseInt(localStorage.getItem("sessionExpiredAt") || `${currentTime}`, 10);
     if (tokenExpiredAt - currentTime <= 0) localStorage.removeItem("sessionId");
 
-    const requestData: { organization_id: string, device_id?: string; login?: string; password?: string } = { organization_id: this.organizationId, device_id: this.deviceId };
+    const requestData: { organization_id: string, device_id?: string; login?: string; password?: string } = { organization_id: this.config.organization_id, device_id: this.deviceId };
     if (login && password) {
       requestData.login = login;
       requestData.password = password;
@@ -279,13 +288,13 @@ class SAMAClient {
   }
 
   async userSendOTPToken(data: { email: string }): Promise<any> {
-    const requestData: { organization_id: string, device_id?: string; email: string; } = { organization_id: this.organizationId, device_id: this.deviceId, email: data.email };
+    const requestData: { organization_id: string, device_id?: string; email: string; } = { organization_id: this.config.organization_id, device_id: this.deviceId, email: data.email };
 
     return this.sendRequest("user_send_otp", requestData);
   }
 
   async userResetPassword(data: { email: string, token: number, new_password: string }): Promise<any> {
-    const requestData: { organization_id: string, device_id?: string; email: string; token: number; new_password: string } = { organization_id: this.organizationId, device_id: this.deviceId, email: data.email, token: data.token, new_password: data.new_password };
+    const requestData: { organization_id: string, device_id?: string; email: string; token: number; new_password: string } = { organization_id: this.config.organization_id, device_id: this.deviceId, email: data.email, token: data.token, new_password: data.new_password };
 
     return this.sendRequest("user_reset_password", requestData);
   }
